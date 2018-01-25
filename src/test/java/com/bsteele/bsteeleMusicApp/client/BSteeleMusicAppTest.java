@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.ServiceDefTarget;
 /**
  * GWT JUnit tests must extend GWTTestCase.
  */
-public class TodoListTest extends GWTTestCase {
+public class BSteeleMusicAppTest extends GWTTestCase {
 
   /**
    * Must refer to a valid module that sources this class.
@@ -17,7 +17,7 @@ public class TodoListTest extends GWTTestCase {
    */
   @Override
   public String getModuleName() {
-    return "com.bsteele.bsteeleMusicApp.TodoListJUnit";
+    return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
   }
 
   /**
@@ -40,7 +40,7 @@ public class TodoListTest extends GWTTestCase {
     // Create the service that we will test.
     GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
     ServiceDefTarget target = (ServiceDefTarget) greetingService;
-    target.setServiceEntryPoint(GWT.getModuleBaseURL() + "todolist/greet");
+    target.setServiceEntryPoint(GWT.getModuleBaseURL() + "bsteeleMusicApp/greet");
 
     // Since RPC calls are asynchronous, we will need to wait for a response
     // after this test method returns. This line tells the test runner to wait

@@ -83,8 +83,8 @@
           </execution>
         </executions>
         <configuration>
-          <moduleName>com.bsteele.bsteeleMusicApp.TodoList</moduleName>
-          <moduleShortName>TodoList</moduleShortName>
+          <moduleName>com.bsteele.bsteeleMusicApp.BSteeleMusicApp</moduleName>
+          <moduleShortName>BSteeleMusicApp</moduleShortName>
           <failOnError>true</failOnError>
           <!-- GWT compiler 2.8 requires 1.8, hence define sourceLevel here if you use
                a different source language for java compilation -->

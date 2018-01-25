@@ -6,11 +6,11 @@
     <!-- Servlets -->
     <servlet>
         <servlet-name>greetServlet</servlet-name>
-        <servlet-class>com.bsteele.bsteeleMusicApp.GreetingServiceImpl</servlet-class>
+        <servlet-class>com.bsteele.bsteeleMusicApp.server.GreetingServiceImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>greetServlet</servlet-name>
-        <url-pattern>/todolist/greet</url-pattern>
+        <url-pattern>/bsteelemusicapp/greet</url-pattern>
     </servlet-mapping>
     <!-- Default page to serve -->
     <welcome-file-list>

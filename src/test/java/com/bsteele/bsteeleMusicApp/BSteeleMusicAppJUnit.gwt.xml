@@ -5,11 +5,11 @@
 -->
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.8.2//EN"
   "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
-<module rename-to='todolist'>
+<module rename-to='bsteelemusicapp'>
   <!-- Inherit our applications main module.                      -->
-  <inherits name='com.bsteele.bsteeleMusicApp.TodoList'/>
+  <inherits name='com.bsteele.bsteeleMusicApp.BSteeleMusicApp'/>
 
   <!-- Specify the path to any remote services.                   -->
-  <servlet path="/todolist/greet" class="com.bsteele.bsteeleMusicApp.server.GreetingServiceImpl" />
+  <servlet path="/bsteeleMusicApp/greet" class="com.bsteele.bsteeleMusicApp.server.GreetingServiceImpl" />
 
 </module>
