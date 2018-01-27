@@ -37,20 +37,29 @@ public class BSteeleMusicApp implements EntryPoint {
   /**
    * This is the entry point method.
    */
+  @Override
   public void onModuleLoad() {
     final Button sendButton = new Button("Send");
+    final BpmTapButton bpmTapButton = new BpmTapButton();
+    
     final TextBox nameField = new TextBox();
+    
+    
     nameField.setText("GWT User");
     final Label errorLabel = new Label();
 
     // We can add style names to widgets
     sendButton.addStyleName("sendButton");
+    
 
     // Add the nameField and sendButton to the RootPanel
     // Use RootPanel.get() to get the entire body element
     RootPanel.get("nameFieldContainer").add(nameField);
     RootPanel.get("sendButtonContainer").add(sendButton);
     RootPanel.get("errorLabelContainer").add(errorLabel);
+    RootPanel.get("bpmTapButtonContainer").add( bpmTapButton);
+    
+     bpmTapButton.setEnabled(true);
 
     // Focus the cursor on the name field when the app loads
     nameField.setFocus(true);
@@ -76,12 +85,10 @@ public class BSteeleMusicApp implements EntryPoint {
     dialogBox.setWidget(dialogVPanel);
 
     // Add a handler to close the DialogBox
-    closeButton.addClickHandler(new ClickHandler() {
-      public void onClick(ClickEvent event) {
+    closeButton.addClickHandler((ClickEvent event) -> {
         dialogBox.hide();
         sendButton.setEnabled(true);
         sendButton.setFocus(true);
-      }
     });
 
     // Create a handler for the sendButton and nameField
@@ -89,6 +96,7 @@ public class BSteeleMusicApp implements EntryPoint {
       /**
        * Fired when the user clicks on the sendButton.
        */
+      @Override
       public void onClick(ClickEvent event) {
         sendNameToServer();
       }
@@ -96,6 +104,7 @@ public class BSteeleMusicApp implements EntryPoint {
       /**
        * Fired when the user types in the nameField.
        */
+      @Override
       public void onKeyUp(KeyUpEvent event) {
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
           sendNameToServer();
@@ -119,6 +128,7 @@ public class BSteeleMusicApp implements EntryPoint {
         textToServerLabel.setText(textToServer);
         serverResponseLabel.setText("");
         greetingService.greetServer(textToServer, new AsyncCallback<String>() {
+          @Override
           public void onFailure(Throwable caught) {
             // Show the RPC error message to the user
             dialogBox.setText("Remote Procedure Call - Failure");
@@ -128,6 +138,7 @@ public class BSteeleMusicApp implements EntryPoint {
             closeButton.setFocus(true);
           }
 
+          @Override
           public void onSuccess(String result) {
             dialogBox.setText("Remote Procedure Call");
             serverResponseLabel.removeStyleName("serverResponseLabelError");
