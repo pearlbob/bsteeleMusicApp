@@ -3,6 +3,8 @@ package com.bsteele.bsteeleMusicApp.server;
 import com.bsteele.bsteeleMusicApp.client.GreetingService;
 import com.bsteele.bsteeleMusicApp.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The server-side implementation of the RPC service.
@@ -28,8 +30,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     input = escapeHtml(input);
     userAgent = escapeHtml(userAgent);
 
-    return "Hello, " + input + "!<br><br>I am running " + serverInfo
+    String ret = "Hello, " + input + "!<br><br>I am running " + serverInfo
         + ".<br><br>It looks like you are using:<br>" + userAgent;
+    logger.log(Level.FINE, "log test: {0}", ret);
+    logger.info("info only");
+    return ret;
   }
 
   /**
@@ -46,4 +51,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(
         ">", "&gt;");
   }
+  
+  private static final Logger logger = Logger.getLogger(GreetingServiceImpl.class.getName());
 }

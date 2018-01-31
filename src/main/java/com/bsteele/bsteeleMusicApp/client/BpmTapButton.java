@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Button;
@@ -29,7 +30,7 @@ public class BpmTapButton extends Button {
 
         @Override
         public void onClick(ClickEvent event) {
-            System.out.println("BpmTapButton clicked");
+            GWT.log("BpmTapButton clicked");
         }
 
     }

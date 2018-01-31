@@ -106,8 +106,6 @@
                         <!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
                         <arg>-compileReport</arg>
                         <arg>-XcompilerMetrics</arg>
-                        <arg>-style</arg> 
-                        <arg>${compiler.style}</arg>
                     </compilerArgs>
                     <!-- DevMode configuration -->
                     <warDir>${project.build.directory}/${project.build.finalName}</warDir>
@@ -116,14 +114,10 @@
                     <startupUrls>
                         <startupUrl>bsteeleMusicApp.html</startupUrl>
                     </startupUrls>
-                    
-                    <!--    bob -->
-                    <style>${compiler.style}</style>
                     <codeserverArgs>
-                        <arg>-style</arg>
-                        <arg>${compiler.style}</arg>
+                        <arg>-logLevel</arg>
+                        <arg>INFO</arg><!--    ERROR WARN INFO TRACE DEBUG SPAM  ALL    -->
                     </codeserverArgs>
-                    
                 </configuration>
             </plugin>
 

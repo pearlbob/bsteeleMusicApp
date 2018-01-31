@@ -7,5 +7,5 @@
                 <goal>gwt:devmode</goal>
             </goals>
         </action>
-        
+     
     </actions>
