@@ -1,18 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>CUSTOM-superDevMode</actionName>
-            <displayName>superDevMode</displayName>
-            <goals>
-                <goal>gwt:compile</goal>
-                <goal>gwt:devmode</goal>
-            </goals>
-        </action>
-        <action>
-            <actionName>CUSTOM-getCompile</actionName>
-            <displayName>getCompile</displayName>
-            <goals>
-                <goal>gwt:compile</goal>
-            </goals>
-        </action>
+
     </actions>

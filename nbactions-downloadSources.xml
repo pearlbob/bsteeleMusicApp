@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-gwt super dev mode</actionName>
+            <displayName>gwt super dev mode</displayName>
+            <goals>
+                <goal>gwt:devmode</goal>
+            </goals>
+        </action>
+        
+    </actions>
