@@ -19,9 +19,8 @@
 
     <!-- Other module inherits                                      -->
     <inherits name="com.google.gwt.logging.Logging"/>
-    <set-property name="gwt.logging.logLevel" value="FINE"/>      <!--  To change the  default logLevel   -->
-   
 
+   
     <!-- Specify the app entry point class.                         -->
     <entry-point class='com.bsteele.bsteeleMusicApp.client.BSteeleMusicApp'/>
 
@@ -29,9 +28,15 @@
     <source path='client'/>
     <source path='shared'/>
 
-    <!-- allow Super Dev Mode 
-    <add-linker name="xsiframe"/>
-    -->
+    <inherits name="com.google.gwt.logging.LoggingDisabled"/>
+    <set-property name="gwt.logging.enabled" value="FALSE"/>
+    <set-property name="gwt.logging.logLevel" value="FINE"/>
+
+    <!-- Preserve the logging level in debugMode -->
+    <set-property name="gwt.logging.enabled" value="TRUE">
+        <when-property-is name="jre.debugMode" value="ENABLED"/>
+    </set-property>
+         
 
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />

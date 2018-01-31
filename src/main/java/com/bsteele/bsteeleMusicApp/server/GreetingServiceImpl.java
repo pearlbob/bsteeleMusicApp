@@ -6,6 +6,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
 /**
  * The server-side implementation of the RPC service.
  */
@@ -32,7 +34,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
     String ret = "Hello, " + input + "!<br><br>I am running " + serverInfo
         + ".<br><br>It looks like you are using:<br>" + userAgent;
-    logger.log(Level.FINE, "log test: {0}", ret);
+    logger.log(Level.INFO, "Logger name: {0}  Logger LEVEL name: {1}", new Object[]{logger.getName(), logger.getLevel()});
+    logger.log(Level.INFO, "log test: {0}", ret);
     logger.info("info only");
     return ret;
   }
@@ -52,5 +55,5 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
         ">", "&gt;");
   }
   
-  private static final Logger logger = Logger.getLogger(GreetingServiceImpl.class.getName());
+  private static final Logger logger = Logger.getLogger("");
 }
