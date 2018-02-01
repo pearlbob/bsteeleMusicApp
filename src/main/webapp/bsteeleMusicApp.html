@@ -26,6 +26,15 @@
     <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
     
     <script>
+        
+        
+        function onNativeTap( event ){
+            let bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
+            let t = event.timeStamp/1000;
+            window.console.log("tap timestamp: "+t);
+            bpmTap.tap(t);
+        }
+        
         function log( arg ){
             window.console.log(arg);
         }
@@ -60,6 +69,10 @@
       <tr>
         <td id="bpmTapButtonContainer"></td>
         <td>commit test done</td>
+      </tr>
+      <tr>
+          <td><button type="button" onclick="onNativeTap(event);" >Native Tap</button></td>
+        <td>native button</td>
       </tr>
       <tr>
         <td colspan="2" style="color:red;" id="errorLabelContainer"></td>

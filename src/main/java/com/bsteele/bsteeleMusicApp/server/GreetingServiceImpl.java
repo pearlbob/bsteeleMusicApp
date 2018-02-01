@@ -3,9 +3,6 @@ package com.bsteele.bsteeleMusicApp.server;
 import com.bsteele.bsteeleMusicApp.client.GreetingService;
 import com.bsteele.bsteeleMusicApp.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 
 /**
@@ -13,47 +10,42 @@ import java.util.logging.Logger;
  */
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
-    GreetingService {
+        GreetingService {
 
-  @Override
-  public String greetServer(String input) throws IllegalArgumentException {
-    // Verify that the input is valid. 
-    if (!FieldVerifier.isValidName(input)) {
-      // If the input is not valid, throw an IllegalArgumentException back to
-      // the client.
-      throw new IllegalArgumentException(
-          "Name must be at least 4 characters long");
+    @Override
+    public String greetServer(String input) throws IllegalArgumentException {
+        // Verify that the input is valid. 
+        if (!FieldVerifier.isValidName(input)) {
+            // If the input is not valid, throw an IllegalArgumentException back to
+            // the client.
+            throw new IllegalArgumentException(
+                    "Name must be at least 4 characters long");
+        }
+
+        String serverInfo = getServletContext().getServerInfo();
+        String userAgent = getThreadLocalRequest().getHeader("User-Agent");
+
+        // Escape data from the client to avoid cross-site script vulnerabilities.
+        input = escapeHtml(input);
+        userAgent = escapeHtml(userAgent);
+
+        String ret = "Hello, " + input + "!<br><br>I am running " + serverInfo
+                + ".<br><br>It looks like you are using:<br>" + userAgent;
+        return ret;
     }
 
-    String serverInfo = getServletContext().getServerInfo();
-    String userAgent = getThreadLocalRequest().getHeader("User-Agent");
-
-    // Escape data from the client to avoid cross-site script vulnerabilities.
-    input = escapeHtml(input);
-    userAgent = escapeHtml(userAgent);
-
-    String ret = "Hello, " + input + "!<br><br>I am running " + serverInfo
-        + ".<br><br>It looks like you are using:<br>" + userAgent;
-    logger.log(Level.INFO, "Logger name: {0}  Logger LEVEL name: {1}", new Object[]{logger.getName(), logger.getLevel()});
-    logger.log(Level.INFO, "log test: {0}", ret);
-    logger.info("info only");
-    return ret;
-  }
-
-  /**
-   * Escape an html string. Escaping data received from the client helps to
-   * prevent cross-site script vulnerabilities.
-   * 
-   * @param html the html string to escape
-   * @return the escaped string
-   */
-  private String escapeHtml(String html) {
-    if (html == null) {
-      return null;
+    /**
+     * Escape an html string. Escaping data received from the client helps to
+     * prevent cross-site script vulnerabilities.
+     *
+     * @param html the html string to escape
+     * @return the escaped string
+     */
+    private String escapeHtml(String html) {
+        if (html == null) {
+            return null;
+        }
+        return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(
+                ">", "&gt;");
     }
-    return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(
-        ">", "&gt;");
-  }
-  
-  private static final Logger logger = Logger.getLogger("");
 }

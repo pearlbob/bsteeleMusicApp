@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-gwt super dev mode</actionName>
-            <displayName>gwt super dev mode</displayName>
+            <actionName>CUSTOM-gwt dev run</actionName>
+            <displayName>gwt dev run</displayName>
             <goals>
-                <goal>gwt:devmode</goal>
+                <goal>gwt:run</goal>
             </goals>
         </action>
+        
      
     </actions>

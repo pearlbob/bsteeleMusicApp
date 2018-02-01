@@ -7,7 +7,8 @@
   "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module rename-to='bsteelemusicapp'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
-    <inherits name='com.google.gwt.user.User'/>
+    <!--<inherits name='com.google.gwt.user.User'/>-->
+    <inherits name="com.google.gwt.core.Core"/>
 
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
@@ -30,7 +31,7 @@
 
     <inherits name="com.google.gwt.logging.LoggingDisabled"/>
     <set-property name="gwt.logging.enabled" value="FALSE"/>
-    <set-property name="gwt.logging.logLevel" value="FINE"/>
+    <set-property name="gwt.logging.logLevel" value="INFO"/>
 
     <!-- Preserve the logging level in debugMode -->
     <set-property name="gwt.logging.enabled" value="TRUE">
