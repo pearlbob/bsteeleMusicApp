@@ -12,15 +12,44 @@ import jsinterop.annotations.JsType;
  */
 @JsType
 public class BpmTap {
-    public BpmTap(){
-        
+
+    public BpmTap() {
+
     }
-    
-    public void tap( double t ){
+
+    public void tap(double t) {
         double dt = t - lastT;
-        GWT.log("BpmTap: t: "+t);
+        if (dt < 3) {
+            if (hertz == 0) {
+                hertz = 1 / dt;
+            } else {
+                hertz = hertz * (1 - pass) + pass * 1 / dt;
+            }
+
+            GWT.log("BpmTap: bpm: " + getBPM());
+        } else {
+            hertz = 0;
+        }
         lastT = t;
     }
     
-    private double lastT = System.currentTimeMillis()/1000.0;
+    
+    /**
+     * @return the hertz
+     */
+    public final double getHertz() {
+        return hertz;
+    }
+    
+    /**
+     * @return the BPM
+     */
+    public final double getBPM() {
+        return Math.round(60*getHertz());
+    }
+
+    private static final double pass = 0.3;
+    private double hertz = 0;
+    private double lastT = 0;
+
 }
