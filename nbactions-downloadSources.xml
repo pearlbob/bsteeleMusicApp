@@ -4,11 +4,8 @@
             <actionName>CUSTOM-gwt dev run</actionName>
             <displayName>gwt dev run</displayName>
             <goals>
-                <goal>gwt:debug</goal>
+                <goal>gwt:run</goal>
             </goals>
-            <properties>
-                <attachDebugger>true</attachDebugger>
-            </properties>
         </action>
         <action>
             <actionName>run</actionName>

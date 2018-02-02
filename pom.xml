@@ -57,6 +57,8 @@
             <artifactId>gwt-dev</artifactId>
             <scope>provided</scope>
         </dependency>
+       
+        
         <dependency>
             <groupId>org.realityforge.gwt.websockets</groupId>
             <artifactId>gwt-websockets</artifactId>
@@ -85,9 +87,6 @@
         <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
 
         <plugins>
-
-
-
             <!-- GWT Maven Plugin-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

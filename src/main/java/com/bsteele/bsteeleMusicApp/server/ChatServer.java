@@ -9,7 +9,6 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
@@ -66,5 +65,5 @@ public class ChatServer {
         }
     }
 
-    private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
+    private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 }
