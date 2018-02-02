@@ -58,6 +58,20 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.realityforge.gwt.websockets</groupId>
+            <artifactId>gwt-websockets</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api -->
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>

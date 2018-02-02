@@ -2,6 +2,7 @@ package com.bsteele.bsteeleMusicApp.server;
 
 import com.bsteele.bsteeleMusicApp.client.GreetingService;
 import com.bsteele.bsteeleMusicApp.shared.FieldVerifier;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 
@@ -29,8 +30,9 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
         input = escapeHtml(input);
         userAgent = escapeHtml(userAgent);
 
-        String ret = "Hello, " + input + "!<br><br>I am running " + serverInfo
+        String ret = "Hello, " + input + "!<br><br>I am bobbing " + serverInfo
                 + ".<br><br>It looks like you are using:<br>" + userAgent;
+        GWT.log("GreetingServiceImpl: "+ret);
         return ret;
     }
 
@@ -48,4 +50,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
         return html.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(
                 ">", "&gt;");
     }
+    
+    
 }
