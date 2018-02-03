@@ -18,13 +18,14 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import org.realityforge.gwt.websockets.client.WebSocket;
-import org.realityforge.gwt.websockets.client.WebSocketListener;
+
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
+public class BSteeleMusicApp implements EntryPoint
+        //, WebSocketListener
+{
 
     /**
      * The message displayed to the user when the server cannot be reached or
@@ -157,49 +158,49 @@ public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
         sendButton.addClickHandler(handler);
         nameField.addKeyUpHandler(handler);
 
-        //  WS test
-        final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
-        if (null == webSocket) {
-            Window.alert("WebSocket not available!");
-        } else {
-            webSocket.setListener(this);
-            webSocket.connect( getWebSocketURL() );
-            
-        }
+//        //  WS test
+//        final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
+//        if (null == webSocket) {
+//            Window.alert("WebSocket not available!");
+//        } else {
+//            webSocket.setListener(this);
+//            webSocket.connect( getWebSocketURL() );
+//            
+//        }
     }
 
-    //   webSocket.send( message );
-    private String getWebSocketURL() {
-        final String moduleBaseURL = GWT.getHostPageBaseURL();
-        return moduleBaseURL.replaceFirst("^http\\:", "ws:") + "chat";
-    }
-
-    @Override
-    public void onOpen(WebSocket webSocket) {
-        GWT.log("ws opened");
-        if ( msgCount++ == 0)
-            webSocket.send("first message sent from client");
-    }
-
-    @Override
-    public void onClose(WebSocket webSocket, boolean wasClean, int code, String reason) {
-        GWT.log("ws closed");
-    }
-
-    @Override
-    public void onMessage(WebSocket webSocket, String data) {
-        GWT.log("ws string msg: " + data);
-    }
-
-    @Override
-    public void onMessage(WebSocket webSocket, ArrayBuffer data) {
-        GWT.log("ws array msg: " + data);
-    }
-
-    @Override
-    public void onError(WebSocket webSocket) {
-        GWT.log("ws error from: " + webSocket.getURL());
-    }
+//    //   webSocket.send( message );
+//    private String getWebSocketURL() {
+//        final String moduleBaseURL = GWT.getHostPageBaseURL();
+//        return moduleBaseURL.replaceFirst("^http\\:", "ws:") + "chat";
+//    }
+//
+//    @Override
+//    public void onOpen(WebSocket webSocket) {
+//        GWT.log("ws opened");
+//        if ( msgCount++ == 0)
+//            webSocket.send("first message sent from client");
+//    }
+//
+//    @Override
+//    public void onClose(WebSocket webSocket, boolean wasClean, int code, String reason) {
+//        GWT.log("ws closed");
+//    }
+//
+//    @Override
+//    public void onMessage(WebSocket webSocket, String data) {
+//        GWT.log("ws string msg: " + data);
+//    }
+//
+//    @Override
+//    public void onMessage(WebSocket webSocket, ArrayBuffer data) {
+//        GWT.log("ws array msg: " + data);
+//    }
+//
+//    @Override
+//    public void onError(WebSocket webSocket) {
+//        GWT.log("ws error from: " + webSocket.getURL());
+//    }
     
     private int msgCount = 0;
 }

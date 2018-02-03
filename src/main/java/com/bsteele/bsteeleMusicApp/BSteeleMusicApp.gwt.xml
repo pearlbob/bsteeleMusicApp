@@ -39,7 +39,7 @@
     </set-property>
          
     <!-- Enable the websocket library -->
-    <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
+    <!--<inherits name="org.realityforge.gwt.websockets.WebSockets"/>-->
   
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />
