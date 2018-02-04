@@ -6,16 +6,14 @@
 
 <html>
     <head>
+        <link rel="shortcut icon" href="images/runningsmall.ico" />
+        
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
         <!--                                                               -->
         <!-- Consider inlining CSS to reduce the number of requested files -->
-        <!--                                                               -->
         <link type="text/css" rel="stylesheet" href="bsteeleMusicApp.css">
 
-        <!--                                           -->
-        <!-- Any title is fine                         -->
-        <!--                                           -->
         <title>bsteele music</title>
 
         <!--                                           -->
@@ -54,6 +52,7 @@
             }
 
             function onLoad() {
+                log( "onLoad()");
                 bpmTally = inputFile = document.getElementById("bpmTally");
 
                 animationFrameUpdate();
@@ -76,9 +75,9 @@
         </div>
         </noscript>
 
-        <h1>bsteele Music App dude</h1>
+        <h1>bsteele Music App</h1>
 
-        <table align="center">
+        <table>
             <tr>
                 <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
             </tr>
@@ -87,8 +86,8 @@
                 <td id="sendButtonContainer"></td>
             </tr>
             <tr>
-                <td><button type="button" onclick="onNativeTap(event);" >Native Tap</button></td>
-                <td id="bpmTally">native button</td>
+                <td><button type="button" onclick="onNativeTap(event);" >Tap for BPM</button></td>
+                <td id="bpmTally">106</td>
             </tr>
             <tr>
                 <td colspan="2" style="color:red;" id="errorLabelContainer"></td>

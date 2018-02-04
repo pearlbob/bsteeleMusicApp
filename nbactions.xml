@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-
+        <action>
+            <actionName>CUSTOM-GWT run</actionName>
+            <displayName>GWT Debug</displayName>
+            <goals>
+                <goal>gwt:debug</goal>
+            </goals>
+            <properties>
+                <gwt.logLevel>INFO</gwt.logLevel>
+                <gwt.style>DETAILED</gwt.style>
+                <runTarget>index.html</runTarget>
+                <jpda.listen>maven</jpda.listen>
+                
+            </properties>
+        </action>
+        
     </actions>

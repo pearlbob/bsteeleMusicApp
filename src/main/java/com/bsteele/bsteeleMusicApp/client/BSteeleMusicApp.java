@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.shared.FieldVerifier;
+import com.bsteele.bsteeleMusicApp.shared.Lyrics;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -8,8 +9,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.typedarrays.shared.ArrayBuffer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -19,12 +18,10 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class BSteeleMusicApp implements EntryPoint
-        //, WebSocketListener
+public class BSteeleMusicApp implements EntryPoint //, WebSocketListener
 {
 
     /**
@@ -46,6 +43,10 @@ public class BSteeleMusicApp implements EntryPoint
      */
     @Override
     public void onModuleLoad() {
+        GWT.log("onModuleLoad()");
+
+        Lyrics.onModuleLoad();
+        
         final Button sendButton = new Button("Send");
 
         final TextBox nameField = new TextBox();
@@ -201,6 +202,5 @@ public class BSteeleMusicApp implements EntryPoint
 //    public void onError(WebSocket webSocket) {
 //        GWT.log("ws error from: " + webSocket.getURL());
 //    }
-    
-    private int msgCount = 0;
+//    private int msgCount = 0;
 }
