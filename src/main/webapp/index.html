@@ -175,6 +175,9 @@ Beat vs measure resolution on a section basis
             .oneLineTextEntry {
                 width: 80%;
             }
+            .mediumTextEntry {
+                width: 30ch;
+            }
             .smallTextEntry {
                 width: 10ch;
             }
@@ -258,6 +261,7 @@ Beat vs measure resolution on a section basis
             let chordsElement;
             let lyricsElement;
             let lyricsDisplayElement;
+            let searchEntry;
             let currentBpmEntry;
             let currentTimeSignature;
             let optionChoicesDiv;
@@ -292,7 +296,6 @@ Beat vs measure resolution on a section basis
             let isSongSelectOptionsHidden = false;
             let isStoppedHidden = false;
 
-            let clientSong;
             let bpmTap;
 
 
@@ -964,7 +967,7 @@ Beat vs measure resolution on a section basis
             function onChordSelection(selection) {
                 var selected = selection.selectedOptions[0].value;
                 let halfsteps = parseInt(selected);
-                chordDiv.innerHTML = parseIntoChordTable(transcribe(chordSet[0].innerHTML, halfsteps));
+                chordDiv.innerHTML = parseIntoChordTable(transpose(chordSet[0].innerHTML, halfsteps));
                 setTableWidths("chordTable", 1.4, 48);
             }
 
@@ -992,6 +995,7 @@ Beat vs measure resolution on a section basis
                 currentBpmEntry = document.getElementById("currentBpmEntry");
                 currentTimeSignature = document.getElementById("currentTimeSignature");
                 inputFile = document.getElementById("inputFile");
+                searchEntry = document.getElementById("searchEntry");
 
                 defaultBackgroundColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
 
@@ -1006,6 +1010,10 @@ Beat vs measure resolution on a section basis
                 audioCtx = null; //new (window.AudioContext || window.webkitAudioContext)();
                 audioBeatDisplay = new AudioBeatDisplay(audioCtx, audioBeatDisplayCanvas);
                 animationFrameUpdate();
+
+                searchEntry.addEventListener('input', function (e) {
+
+                });
 
 
                 //  look for alternative files
@@ -1044,6 +1052,10 @@ Beat vs measure resolution on a section basis
                 makeTOC('name');
                 //test();
 
+                searchEntry.addEventListener('input', function (e) {
+                    makeTOC(lastType);
+                });
+
                 //  see if a song is pre-specified in the location
                 {
                     let hash = window.location.hash;
@@ -1070,9 +1082,6 @@ Beat vs measure resolution on a section basis
             }
 
             function onModuleLoadJS() {
-                //log("js: onModuleLoadJS()");
-
-                clientSong = new com.bsteele.bsteeleMusicApp.client.Song();
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
             }
 
@@ -1152,14 +1161,16 @@ Beat vs measure resolution on a section basis
                 songs.push(song);
             }
 
-            function transcribe(chords, halfsteps) {
-               return clientSong.transcribe(chords, halfsteps);
+            function transpose(chords, halfsteps) {
+                return Song.transpose(chords, halfsteps);
             }
 
-
+            //  make the table of contents
             function makeTOC(type)
             {
-                //  make the table of contents
+                if (!type)
+                    type = 'name';
+
                 let songListElement = document.getElementById("songList");
                 if (songListElement === null)
                     return;
@@ -1180,7 +1191,7 @@ Beat vs measure resolution on a section basis
             }
 
             function sortByKey(array, key) {
-                return array.sort(function (a, b) {
+                let sorted = array.sort(function (a, b) {
                     let x = a[key];
                     let y = b[key];
 
@@ -1201,6 +1212,20 @@ Beat vs measure resolution on a section basis
 
                     return ((x < y) ? -1 : ((x > y) ? 1 : 0));
                 });
+                let search = searchEntry.valueOf().value;
+                if (search && search.length > 0) {
+                    let regex = new RegExp(search, 'i');
+
+                    let filtered = [];
+                    for (let i = 0; i < sorted.length; i++) {
+                        let item = sorted[i];
+                        if (item.name.match(regex) !== null)
+                            filtered.push(item);
+                    }
+                    return filtered;
+                }
+
+                return sorted;
             }
 
 
@@ -1640,6 +1665,8 @@ Beat vs measure resolution on a section basis
 
         <div class="toc">
             <h1>Lyrics</h1>
+            <p>Search: <input type="text" id="searchEntry" class="mediumTextEntry">
+            </p>
             <table border="0" id="songList" >
             </table>
 

@@ -4,17 +4,19 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.google.gwt.core.shared.GWT;
+import static jsinterop.annotations.JsPackage.GLOBAL;
 import jsinterop.annotations.JsType;
 
 /**
  *
  * @author bob
  */
-@JsType
+@JsType(namespace = GLOBAL)
 public class Song {
+   
 
-    public String transcribe(String chords, int halfSteps) {
-        GWT.log("Song.transcribe()  here: " + halfSteps + " to: " + chords);
+    public static String transpose(String chords, int halfSteps) {
+        //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
 
         int chordNumber = 0;
         String sout = "";
@@ -53,7 +55,7 @@ public class Song {
                             break;
                         }
 
-                        //  don't transcribe the section identifiers that happen to look like notes
+                        //  don't transpose the section identifiers that happen to look like notes
                         String toMatch = chordLine.substring(ci, Math.min(chordLine.length() - ci, Section.maxLength));
                         int matchLength = Section.matchLength(toMatch);
                         if (matchLength > 0 && chordLine.charAt(ci + matchLength) == ':') {
@@ -101,11 +103,11 @@ public class Song {
             sout += '\n';
         }
 
-        GWT.log(sout);
+        //GWT.log(sout);
         return sout;
     }
 
-    private int chordLetterToNumber(char letter) {
+    private static int chordLetterToNumber(char letter) {
         int i = letter - 'A';
         //                            a  a# b  c  c# d  d# e  f f#  g  g#
         //                            0  1  2  3  4  5  6  7  8  9  10 11
@@ -114,7 +116,7 @@ public class Song {
     }
     private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
 
-    private String chordNumberToLetter(int n) {
+    private static String chordNumberToLetter(int n) {
 
         n = n % 12;
         if (n < 0) {
