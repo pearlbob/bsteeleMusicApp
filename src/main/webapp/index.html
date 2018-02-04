@@ -1219,7 +1219,7 @@ Beat vs measure resolution on a section basis
                     let filtered = [];
                     for (let i = 0; i < sorted.length; i++) {
                         let item = sorted[i];
-                        if (item.name.match(regex) !== null)
+                        if (item.name.match(regex) !== null || item.artist.match(regex) !== null)
                             filtered.push(item);
                     }
                     return filtered;
