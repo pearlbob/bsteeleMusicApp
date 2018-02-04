@@ -22,7 +22,7 @@ public class Lyrics {
 
     @JsOverlay
     public static final void onModuleLoad() {
-        GWT.log("Lyrics.onModuleLoad()");
+//        GWT.log("Lyrics.onModuleLoad()");
         onModuleLoadJS();
     }
 

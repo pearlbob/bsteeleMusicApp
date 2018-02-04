@@ -45,7 +45,12 @@ Beat vs measure resolution on a section basis
         <title>Lyrics</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+        
+        <!-- If you add any GWT meta tags, they must   -->
+        <!-- be added before this line.                -->
+        <!--                                           -->
+        <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+        
         <style>
             :root {
                 --bg-color: #FFFDF6;
@@ -215,10 +220,7 @@ Beat vs measure resolution on a section basis
         <script src="BassAudioConstants.js"></script>
         <script src="AudioBeatDisplay20180128.js"></script>
 
-        !-- If you add any GWT meta tags, they must   -->
-        <!-- be added before this line.                -->
-        <!--                                           -->
-        <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+
 
         <script>
             'use strict';
@@ -967,7 +969,7 @@ Beat vs measure resolution on a section basis
             }
 
             function onLoad() {
-                log("onLoad()");
+                //log("onLoad()");
 
                 audioBeatDisplayCanvas = document.getElementById("audioBeatDisplayCanvas");
                 chordDiv = document.getElementById("chordDiv");
