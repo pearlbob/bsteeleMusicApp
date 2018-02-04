@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>CUSTOM-gwt debug</actionName>
-            <displayName>gwt debug</displayName>
-            <goals>
-                <goal>gwt:debug</goal>
-            </goals>
-            <properties>
-                <gwt.logLevel>DEBUG</gwt.logLevel>
-                <gwt.style>DETAILED</gwt.style>
-                <runTarget>bsteeleMusicApp.html</runTarget>
-            </properties>
-        </action>
-        
-        
+  
      
     </actions>

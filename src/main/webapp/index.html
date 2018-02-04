@@ -45,12 +45,12 @@ Beat vs measure resolution on a section basis
         <title>Lyrics</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
+
         <!-- If you add any GWT meta tags, they must   -->
         <!-- be added before this line.                -->
         <!--                                           -->
         <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
-        
+
         <style>
             :root {
                 --bg-color: #FFFDF6;
@@ -586,11 +586,11 @@ Beat vs measure resolution on a section basis
                 }
                 totalChars += maxCellWidths.length;  //  fudge for col borders
                 let maxFontPx = t.offsetParent.clientWidth / totalChars;
-                log(id + "  maxFontPx: " + maxFontPx);
+                //log(id + "  maxFontPx: " + maxFontPx);
                 let fontSize = Math.min(ratio * Math.trunc(maxFontPx), maxFontSize);
                 t.style.fontSize = fontSize + "px";
                 var fs = window.getComputedStyle(t, null).getPropertyValue('font-size');
-                log("font-size: " + fs);
+                //log("font-size: " + fs);
 
 
                 for (let r = 0; r < rows.length; r++) {
@@ -1070,7 +1070,7 @@ Beat vs measure resolution on a section basis
             }
 
             function onModuleLoadJS() {
-                log("js: onModuleLoadJS()");
+                //log("js: onModuleLoadJS()");
 
                 clientSong = new com.bsteele.bsteeleMusicApp.client.Song();
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
@@ -1094,19 +1094,9 @@ Beat vs measure resolution on a section basis
                         case " ":
                             if (event.ctrlKey)
                             {
-                                let t = Date.now() / 1000;
-                                let dt = t - lastSpaceBarT;
-                                lastSpaceBarT = t;
-                                if (dt > 60 / maxBpm && dt < 60 / minBpm)
-                                {
-                                    let b = 60 / dt;
-                                    if (tapBpm === undefined)
-                                        tapBpm = b;
-                                    let tapPass = 0.15;
-                                    tapBpm = tapBpm * (1 - tapPass) + b * tapPass;
-                                    //log("bpm: " + Math.round(tapBpm) + "  " + b);
-                                    onCurrentBpmEntry(Math.round(tapBpm));
-                                }
+                                let b = bpmTap.tap(event.timeStamp / 1000); //  input in units of seconds
+                                if (b > 0)
+                                    onCurrentBpmEntry(b);
                             } else
                             {
                                 if (isPlaying)
@@ -1123,7 +1113,7 @@ Beat vs measure resolution on a section basis
                     event.preventDefault();
                 }
             }
-            
+
             function onNativeTap(event) {
                 bpmTap.tap(event.timeStamp / 1000);//  in units of seconds
             }
@@ -14802,7 +14792,7 @@ Beat vs measure resolution on a section basis
         </div>
         </noscript>
 
-        <table>
+        <table hidden>
             <tr>
                 <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
             </tr>

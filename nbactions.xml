@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-GWT run</actionName>
+            <actionName>CUSTOM-GWT Debug</actionName>
             <displayName>GWT Debug</displayName>
             <goals>
                 <goal>gwt:debug</goal>

@@ -17,7 +17,7 @@ public class BpmTap {
 
     }
 
-    public void tap(double t) {
+    public int tap(double t) {
         double dt = t - lastT;
         if (dt < 3) {
             if (hertz == 0) {
@@ -26,11 +26,12 @@ public class BpmTap {
                 hertz = hertz * (1 - pass) + pass * 1 / dt;
             }
 
-            GWT.log("BpmTap: bpm: " + getBPM());
+            //GWT.log("BpmTap: bpm: " + getBPM());
         } else {
             hertz = 0;
         }
         lastT = t;
+        return getBPM();
     }
     
     
@@ -44,8 +45,8 @@ public class BpmTap {
     /**
      * @return the BPM
      */
-    public final double getBPM() {
-        return Math.round(60*getHertz());
+    public final int getBPM() {
+        return (int) Math.round(60*hertz);
     }
 
     private static final double pass = 0.3;
