@@ -58,7 +58,14 @@
             <artifactId>gwt-dev</artifactId>
             <scope>provided</scope>
         </dependency>
-      
+        
+        <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
+        <dependency>
+            <groupId>com.google.jsinterop</groupId>
+            <artifactId>jsinterop-annotations</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
 
         <!--        <dependency>
             <groupId>org.realityforge.gwt.websockets</groupId>
@@ -73,6 +80,15 @@
             <version>1.1</version>
             <scope>provided</scope>
         </dependency>-->
+        
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         
        
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin -->
@@ -182,6 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+                <version>3.2.0</version>
                 <configuration>
                     <packagingExcludes>
                         WEB-INF/deploy/**

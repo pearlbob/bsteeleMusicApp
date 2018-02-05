@@ -1,0 +1,49 @@
+#!/bin/tcsh
+set debug=0
+
+if ( $debug != 0 ) then
+	set echo; set verbose
+endif
+
+set dst=/var/www/html/public_html
+set drive=~/google_drive/bsteele/public_html
+set git=~/GitHub/bsteeleMusicApp
+set target=$git/target
+
+set app=$git:t:r
+set finalWar=$target/$app.war
+echo $app\: $finalWar
+
+#	compile for deployment
+set cwd=`pwd`
+cd $git
+if ( $debug == 0 ) then
+	mvn clean install -Ddeploy=true -Dgwt.logLevel=WARN \
+		-Dgwt.style=OBF -DrunTarget=index.html -Dgwt.compiler.compileReport=false
+endif
+rm -f $finalWar
+#	expecting only one war file
+set war=`find $git -iname "*.war" -print | tail -1 `
+
+#	shrink and obfuscate the java classes
+set tmp=`mktemp -d /tmp/bsteeleMusicApp_tmp.XXXXXXXXXX`
+cd $tmp
+jar -xf $war
+java -jar /home/bob/my/installs/sourceforge/proguard6.0/lib/proguard.jar @$git/bsteeleMusicApp_proguard \
+	-injars WEB-INF/classes \
+	-outjars WEB-INF/pgclasses.jar
+if ( $status != 0 ) exit -1;
+rm -rf WEB-INF/classes
+jar -cfm $finalWar META-INF/MANIFEST.MF *
+cd $cwd
+rm -rf $tmp
+
+#	generate app on localhost web
+#	note: with github, it really doesn't need to be in google_drive
+rm -rf $dst/$app	#	wow!
+mkdir $dst/$app
+cd $dst/$app
+jar -xf $finalWar
+cd $cwd
+
+echo test local version of $app at http://localhost/public_html/$app ... and deploy with bsteele_upload

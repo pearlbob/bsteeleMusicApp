@@ -3,7 +3,6 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
-import com.google.gwt.core.shared.GWT;
 import static jsinterop.annotations.JsPackage.GLOBAL;
 import jsinterop.annotations.JsType;
 
