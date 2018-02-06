@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<!--
+Copyright 2016 Robert Steele, bsteele.com
+All rights reserved.
+
+space bar should do the last type of play/loop
+loopN from end starts at first bar in song
+-->
+
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="bassWebpageStyleSheet.css" type="text/css"/>
+        <link rel="shortcut icon" href="images/runningsmall.ico" />
+        <title>Bass</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Bass Guitar Study Tool">
+        <meta name="keywords" content="bass,guitar,sheet music,audio">
+        <meta name="author" content="Robert Steele">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="./js/keyTone.js"></script>
+        <script src="./js/uploadDate.js">
+            /* global uploadDate */
+        </script>
+        <script src="./js/bass.js">
+            /* global bass */
+        </script>
+        <script src="./js/nashville.js">
+            /* global nashville */
+        </script>
+
+        <script>
+            var bass = myBass();
+
+            function toggleHintDisplay() {
+                let hints = document.getElementById("hints");
+                hints.hidden = !hints.hidden;
+
+                bass.onDisplayResize();
+            }
+
+            function toggleEntyrDisplay() {
+                let entryDiv = document.getElementById("entryDiv");
+                entryDiv.hidden = !entryDiv.hidden;
+                let hideEntryButton = document.getElementById("hideEntryButton");
+                hideEntryButton.textContent = entryDiv.hidden ? "Show Entry" : "Hide Entry";
+                bass.onDisplayResize();
+            }
+
+            function onLoad() {
+                var uploadDateSpan = document.getElementById("uploadDate");
+                uploadDateSpan.innerHTML = uploadDate;
+
+                bass.onLoad();
+                nashville.onLoad();
+
+                drawBackground();
+            }
+
+            function drawBackground() {
+                requestAnimationFrame(drawBackground);
+                bass.frameUpdate();
+                nashville.frameUpdate();
+            }
+
+        </script>
+
+        <style>
+            html, body {
+                width:  98%;
+                height: 98%;
+                margin: 5px;
+                align-items: center;
+            }
+            .myScoreLayers {
+                min-height: 500px;
+            }
+            #uploadDate {
+                font-size: xx-small;
+            }
+        </style>
+    </head>
+    <body onload="onLoad();" onbeforeunload="return bass.onUnLoad();" style="margin: 3px 3px; display:flex; flex-direction:column;">
+        <div><a name="top">Bob's Bass Study Tool</a>
+            &nbsp;
+            <a href="http://bsteele.com">
+                <img src="images/runningsmall.ico" alt="bob's running man icon" style="float: right;"
+                     title="Exit to bob's website">
+            </a>
+        </div>
+        <div id="entryDiv">
+
+            <canvas id="myCanvas" width="1100" height="220" style="border:0px solid #d3d3d3;"
+                    title="Visualize looking down over the top of a bass.  Press the strings just to left left of the frets to play a note.">
+                Your browser does not support the HTML5 canvas tag.</canvas>
+
+            <table style="width:1100px" class="buttonTable">
+                <tr>
+                    <td style="width:380px"> 
+                        <table class="buttonTable">
+                            <tr><td>
+                                    chord:
+                                    <select id="chord" class="musicalSelect" onchange="bass.onChord()" 
+                                            title="Select the chord to be used for the next fretboard press">
+                                        <option value="5">A</option>
+                                        <option value="6">A#</option>
+                                        <option value="7">B</option>
+                                        <option value="8">C</option>
+                                        <option value="9">C#</option>
+                                        <option value="10">D</option>
+                                        <option value="11">D#</option>
+                                        <option value="0">E</option>
+                                        <option value="1">F</option>
+                                        <option value="2">F#</option>
+                                        <option value="3" selected="selected">G</option>
+                                        <option value="4">G#</option>
+                                    </select>
+                                    <select id="minorMajor" class="musicalSelect"  onchange="bass.onChord()"
+                                            title="Select the chord modification to be used for the next fretboard press">
+                                        <option value="major">major</option>
+                                        <option value="major7">major 7</option>
+                                        <option value="pentatonic">pentatonic</option>
+                                        <option value="majorScale">major scale</option>
+                                        <option value="minor">minor</option>
+                                        <option value="minor7">minor 7</option>
+                                        <option value="minorPentatonic">minor Pentatonic</option>
+                                        <option value="minorScale">minor scale</option>
+                                        <option value="dominant" selected>dominant 7</option>
+                                        <option value="power5">power 5</option>
+                                        <option value="augmented">augmented (#5)</option>
+                                        <option value="augmented7">augmented 7 (#5)</option>
+                                        <option value="blues">minor blues</option>
+                                        <option value="jazz7">jazz 7</option>
+                                        <option value="mixolydianScale">mixolydian scale</option>
+                                        <option value="diminished">diminished</option>
+                                        <option value="diminished7">diminished 7</option>
+                                        <option value="boogiewoogie">boogie woogie pattern</option>
+                                        <option value="r5">R 5 pattern</option>
+                                        <option value="r56">R 5 6 pattern</option>
+                                        <option value="r5b7">R 5 &#x266d;7 pattern</option>
+                                        <option value="mdi"  >major diatonic I   (maj7)</option>
+                                        <option value="mdii" >major diatonic ii  (m7)</option>
+                                        <option value="mdiii">major diatonic iii (m7)</option>
+                                        <option value="mdiv" >major diatonic IV  (maj7)</option>
+                                        <option value="mdv"  >major diatonic V   (dom7)</option>
+                                        <option value="mdvi" >major diatonic vi  (m7)</option>
+                                        <option value="mdvii">major diatonic vii (m7b5)</option>
+                                    </select>
+
+                                    <button type="submit" onclick="bass.onPlus5th()"   style="padding: 2px"
+                                            title="Change the chord to be used by moving it up a 5th">+5th</button>
+                                    <button type="submit" onclick="bass.onMinus4th()"   style="padding: 2px"
+                                            title="Change chord to be used by moving it down a 4th">-4th</button>
+                                </td>
+                            </tr>
+                            <tr>  
+                                <td>key:<select id="key" class="musicalSelect" onchange="bass.onKey()"
+                                                title="Change the key of the score">
+                                        <option value="-7"></option>
+                                        <option value="-6"></option>
+                                        <option value="-5"></option>
+                                        <option value="-4"></option>
+                                        <option value="-3"></option>
+                                        <option value="-2"></option>
+                                        <option value="-1"></option>
+                                        <option value="0" selected="selected">C</option>
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                        <option value="5"></option>
+                                        <option value="6"></option>
+                                        <option value="7"></option>
+                                    </select>
+                                    <span id="keyScaleNotes" title="The notes in the scale of the key">scale here</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td> Time:
+                                    <select id="timeSignature" onchange="bass.onTimeSignature()"
+                                            title="Select the time signature.">
+                                        <option value="2">2/4</option>
+                                        <option value="3">3/4</option>
+                                        <option value="4" selected>4/4</option>
+                                    </select>&nbsp;BPM:
+                                    <select id="bpm" onchange="bass.onBPM()" title="Select the beats per minute to be used in playing">
+                                        <option value="55">55</option>
+                                        <option value="60">60</option>
+                                        <option value="65">65</option>
+                                        <option value="70">70</option>
+                                        <option value="75">75</option>
+                                        <option value="80">80</option>
+                                        <option value="85">85</option>
+                                        <option value="90">90</option>
+                                        <option value="95">95</option>
+                                        <option value="100" selected>100</option>
+                                        <option value="102">102</option>
+                                        <option value="104">104</option>
+                                        <option value="106">106</option>
+                                        <option value="108">108</option>
+                                        <option value="110">110</option>
+                                        <option value="112">112</option>
+                                        <option value="116">116</option>
+                                        <option value="120">120</option>
+                                        <option value="140">140</option>
+                                        <option value="160">160</option>
+                                        <option value="180">180</option>
+                                        <option value="200">200</option>
+                                    </select>
+
+                                    <input type="checkbox" id="isSwing8" name="isSwing8" value="false" onclick="bass.onIsSwing8();"
+                                           title="Check here to swing the 8th notes"
+                                           />Swing
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+
+                    <td style="width:200px;">
+                        <table class="buttonTable">
+                            <tr><td>
+                                    <input type="radio" id="radio0" name="durationSelection" onchange="bass.onChord()" >
+                                    <label for="radio0"><img src="images/wholeNote.png" alt="whole note" height="40"
+                                                             title="Select a whole note to be used for the next fretboard press"/></label>
+                                </td><td>
+                                    <input type="radio" id="radio1" name="durationSelection" onchange="bass.onChord()">
+                                    <label for="radio1"><img src="images/halfNote.png" alt="half note" height="40"
+                                                             title="Select a half note to be used for the next fretboard press"/></label>
+                                </td><td>
+                                    <input type="radio" id="radio2" name="durationSelection" onchange="bass.onChord()" checked>
+                                    <label for="radio2"><img src="images/quarterNote.png" alt="quarter note" height="40"
+                                                             title="Select a quarter note to be used for the next fretboard press"/></label> 
+                                </td><td>
+                                    <input type="radio" id="radio3" name="durationSelection" onchange="bass.onChord()">
+                                    <label for="radio3"><img src="images/eighthNote.png" alt="eighth note" height="40"
+                                                             title="Select an eighth note to be used for the next fretboard press"/></label> 
+                                </td><td>
+                                    <input type="radio" id="radio4" name="durationSelection" onchange="bass.onChord()">
+                                    <label for="radio4"><img src="images/sixteenthNote.png" alt="sixteenth note" height="40"
+                                                             title="Select a sixteenth note to be used for the next fretboard press"/></label> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="musicalNote" onclick="bass.onRestClick(0)" >
+                                    <img src="images/wholeRest.png" alt="whole rest" height="40"
+                                         title="Enter a whole rest immediately"  />
+                                </td><td class="musicalNote" onclick="bass.onRestClick(1)" >
+                                    <img src="images/halfRest.png" alt="half rest" height="40"
+                                         title="Enter a half rest immediately" />
+                                </td><td class="musicalNote" onclick="bass.onRestClick(2)" >
+                                    <img src="images/quarterRest.png" alt="quarter rest" height="40"
+                                         title="Enter a quarter rest immediately" />
+                                </td><td class="musicalNote" onclick="bass.onRestClick(3)" >
+                                    <img src="images/eighthRest.png" alt="eighth rest" height="40"
+                                         title="Enter an eighth rest immediately" />
+                                </td><td class="musicalNote" onclick="bass.onRestClick(4)" >
+                                    <img src="images/sixteenthRest.png" alt="sixteenth rest" height="40"
+                                         title="Enter a sixteenth rest immediately" />
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <table class="buttonTable">
+                            <tr><td  colspan="2">
+                                    <input type="checkbox" id="isDotted" name="isDotted" value="false" 
+                                           title="Check here to add a dot (half a note duration increase) to the note to be used for the next fretboard press."
+                                           />+dot&nbsp;&nbsp;
+                                    <input type="checkbox" id="isTied" name="isTied" value="false" 
+                                           title="Check here to tie the current note to the one following."
+                                           />+tie&nbsp;&nbsp;
+                                    Volume: 
+                                    <select id="volume" onchange="bass.onVolume()"
+                                            title="Select volume of the playback">
+                                        <option value="0" >0</option>
+                                        <option value="1" >1</option>
+                                        <option value="2" >2</option>
+                                        <option value="3" >3</option>
+                                        <option value="4" >4</option>
+                                        <option value="5" >5</option>
+                                        <option value="6" >6</option>
+                                        <option value="7" >7</option>
+                                        <option value="8" >8</option>
+                                        <option value="9" >9</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="10" >11</option>
+                                    </select>
+
+                                    <!--                                &nbsp;
+                                                                    <button type="submit" onclick="bass.onRepeatStart()" class="musicalButton" title="Start a repeated section."
+                                                                            >&#x1d106;</button>
+                                                                    &nbsp;
+                                                                      <button type="submit" onclick="bass.onRepeatEnd()" class="musicalButton" title="End a repeated section."
+                                                                            >&#x1d107;</button>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Lyric: <input type="text" name="lyric" id="lyricEntry" onchange="bass.onLyricEntry()" size="35"
+                                                  title="Enter or edit lyrics to be used for the note to be used for the next fretboard press">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button type="submit" onclick="bass.onBlankEntry()"
+                                            title="Used to immediately add a chord change or lyric entry that does not have a corresponding bass note.  This keeps the chords correct for the band without insisting that the bass play a note for every chord change."
+                                            >Noteless chord or lyric</button>
+                                </td>
+                                <td style="text-align: right">
+                                    <button type="submit" onclick="bass.onDelete()" 
+                                            title="Delete the selected note.  The delete button should work as well.">delete</button>
+
+                                    <button type="submit" onclick="bass.onUndo()" 
+                                            title="Undo the last edit">undo</button>
+
+                                    <button type="submit" onclick="bass.onRedo()" 
+                                            title="Re-do the last edit undo">redo</button>
+                                </td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <table class="buttonTable">
+            <tr>
+                <td>
+                    <button type="submit" onclick="bass.onLineUp();"
+                            title="Move the score view up one line.  Use the up arrow key as well.">Line &#x25b2;</button>                
+                </td>
+                <td>
+                    <button type="submit" onclick="bass.onLineDown();"
+                            title="Move the score view down one line.  Use the down arrow key as well.">Line &#x25bc;</button>
+                </td>
+                <td style="width:100px">
+                </td>
+                <td><button type="submit" onclick="bass.onLimitedLoop(1)" class="musicalButton"
+                            title="Loop on the current measure">loop&nbsp;1</button>
+                </td>
+                <td><button type="submit" onclick="bass.onLimitedLoop(2)" class="musicalButton"
+                            title="Loop on the current measure plus one more">loop&nbsp;2</button>
+                </td>
+                <td><button type="submit" onclick="bass.onLimitedLoop(4)" class="musicalButton"
+                            title="Loop on the current measure plus three more">loop&nbsp;4</button>
+                </td>
+                <td style="width:100px">
+                </td>
+                <td>
+                    <button type="submit" onclick="bass.onPlay()" class="musicalButton"
+                            title="Play the current song">Play</button>
+                </td>
+                <td style="width:50px">
+                </td>
+                <td>
+                    <button type="submit" onclick="bass.onLoop()" class="musicalButton"
+                            title="Loop the current song">Loop</button>
+                </td>
+                <td style="width:50px">
+                </td>
+                <td>
+                    <button type="submit" onclick="bass.onStop()" class="musicalButton"
+                            title="Stop any playing or looping">Stop</button>
+                </td>
+            </tr>
+        </table>
+        &nbsp;
+
+        <div id="myScoreLayers" style="flex-grow: 3;  min-height: 180px; width: 100%; height: 100%;">
+            <canvas id="myScore" style="width: 100%; height: 100%;">
+                Your browser does not support the HTML5 canvas tag.</canvas>
+            <canvas id="myScoreBackground"  style="width: 100%; height: 100%;" >
+                Your browser does not support the HTML5 canvas tag.</canvas>
+        </div>
+        <div>
+            Blues: 
+            <select id="blues" title='Choose a common blues, rock or practice progression to be used when getting the blues' >
+                <option value="111144115415">I-I-I-I,  IV-IV-I-I,  V-IV-I-V  Sweet Home Chicago, Common</option>
+                <option value="111144115411" selected>I-I-I-I,  IV-IV-I-I,  V-IV-I-I  Rock Me Baby, Shuffle Blues</option>
+                <option value="141144115411">I-IV-I-I, IV-IV-I-I,  V-IV-I-I Quick Change</option>
+                <option value="141144115415">I-IV-I-I, IV-IV-I-I,  V-IV-I-V Quick Change with turnaround</option>
+                <option value="111144115511">I-I-I-I,  IV-IV-I-I,  V-V-I-I  Boogie Woogie</option>
+                <option value="111144114515">I-I-I-I,  IV-IV-I-I,  IV-V-I-V</option>
+                <option value="1144">I-I-IV-IV  Practice</option>
+                <option value="1541">I-V-IV-I   Rock</option>
+            </select>
+            &#x266a;/m
+            <select id="beatsPerBluesMeasure" onchange="bass.onBeatsSelect();"
+                    title="Choose the number of notes per measure to be used when getting the blues">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="8" title="Play the eighth notes straight.">8</option>
+                <option value="8s" selected title="Swing the eighth notes on playback.">swing 8</option>
+                <option value="custom" title="Define a beat using a Nashville beat notation.">Custom</option>
+            </select>
+            Line:
+            <select id="bluesPattern" title="Choose a common bass line for the blues measure.">
+                <option value="1">R</option>
+                <option value="15">R 5</option>
+                <option value="1135">R R 3 5</option>
+                <option value="1345">R 3 4 5</option>
+                <option value="1353">R 3 5 3</option>
+                <option value="1354">R 3 5 4</option>
+                <option value="1676">R 6 7 6</option>
+                <option value="13567653" title="Useful only with a Boogie Woogie progression">R 3 5 6 7 6 5 3</option>
+                <option value="13568653" title="Useful only with a Boogie Woogie progression">R 3 5 6 8 6 5 3</option>
+                <option value="1356">R 3 5 6</option>
+                <option value="1357">R 3 5 7</option>
+                <option value="1543">R 5 4 3</option>
+                <option value="1565">R 5 6 5</option>
+                <option value="1567">R 5 6 7</option>
+                <option value="1568">R 5 6 8</option>
+                <option value="1578">R 5 7 8</option>
+                <option value="1676">R 6 7 6</option>
+                <option value="1765">R 7 6 5</option>
+                <option value="1-7-5-7">R -7 -5 -7</option>
+                <option value="1-7-6-5">R -7 -6 -5</option>
+                <option value="1875">R 8 7 5</option>
+                <option value="1865" selected>R 8 6 5</option>
+                <option value="11335565">RR 33 55 65</option>
+                <option value="11315165">RR 3R 5R 65</option>
+                <option value="11876345">RR 87 63 45</option>
+                <option value="1234">R 2 3 4</option>
+                <option value="1345">R 3 4 5</option>
+                <option value="1456">R 4 5 6</option>
+                <option value="1567">R 5 6 7</option>
+                <option value="1876">R 8 7 6</option>
+                <option value="1765">R 7 6 5</option>
+                <option value="1654">R 6 5 4</option>
+                <option value="1543">R 5 4 3</option>
+                <option value="1432">R 4 3 2</option>
+            </select>
+            or:
+            <input type="text" name="pattern" id="manualBluesPattern" 
+                   title="Make up your own blues bass line using scale numbers.  1 is the root.  8 is the octive.  White space is ignored.  A minus sign in front of a number looks for the scale note in the octive below. Any other character is considered the root, thus you can use 'r'.">
+            &nbsp;
+            Leading:
+            <select id="leadingNote" title="Choose a leading note style.">
+                <option value="000" selected>None</option>
+                <option value="001" >Lower Chromatic</option>
+                <option value="201" >Closest Chromatic</option>
+                <option value="101">Upper Chromatic</option>
+                <option value="002" >Lower Scale</option>
+                <option value="202" >Closest Scale</option>
+                <option value="102">Upper Scale</option>
+                <option value="005" >Lower Dominant</option>
+                <option value="205" >Closest Dominant</option>
+                <option value="105">Upper Dominant</option>
+            </select>
+            &nbsp;
+            <button type="submit" onclick="bass.onBlues()"
+                    title="Replace the current song with a blues progression adjusted to the blues options in this row.  Adjust the options and get the blues again to write a new progression.  Don't forget to undo if you need to."
+                    >Get the Blues</button>
+            <br/>
+            <div id="customBeat">
+                <canvas id="nashvilleEdit" width="500" height="50" 
+                        title="Drag notes to move them.  Drag note front or back end edges to change the duration."></canvas>
+                <button type="submit" onclick="nashville.onPlus()" class="nashville"
+                        title="Add a note on the right.  Manually make room for it otherwise it can't be added.">+ note</button>
+                <button type="submit" onclick="nashville.onMinus()" class="nashville"
+                        title="Remove the note on the right.">- note</button>
+                <br/>
+            </div>
+
+            <select id="lyrics" onchange="bass.onChord()"
+                    title="Select how much of the lyrics are displayed in the score">
+                <option value="0" title="Don't display any lyrics.  They remain in the song but temporarily will not be displayed.">No Lyrics</option>
+                <option value="1" title="Abreviate the lyrics to minimize horizontal space wasted between notes in the score.">Abrev Lyrics</option>
+                <option value="2" selected title="Show the lyrics in the score.">Full Lyrics</option>
+            </select>
+            &nbsp;
+            <select id="scaleExtra" onchange="bass.onChord()"
+                    title="Add additional information to the score just below the chord indicator">
+                <option value="0" selected title="Don't show any addition numbers in the score.">No Extra Numbers</option>
+                <option value="1" title="Show the scale number for the note if it exists.  'R' is the root or octive.">Scale Numbers</option>
+                <option value="2" title="Show the right hand finger to be used for the note.  'I' is index.  'M' is middle.">Right Hand</option>
+                <option value="3" 
+                        title="Show the bass string and fret number on the score for each note.  The string is in the 10's column and the fret is in the unit's column.  Examples: low G: 43, open G string: 10."
+                        >String and Fret</option>
+            </select>
+            &nbsp;
+            <select id="chordsOnScore" onchange="bass.onChord()"
+                    title="Choose how often the chord indicator is shown.">
+                <option value="0" title="Do not show any chords!">No Chords</option>
+                <option value="1" title="Only show chords on a new score line or when the chord has changed">Min Chords</option>
+                <option value="2" selected title="Show the chord indicator at every chord change and every measure start">Every Bar Start</option>
+                <!--<option value="3" title="Show the chord indicator for every note">Max Chords</option>-->
+            </select>
+            &nbsp;
+            <input type="checkbox" id="scaleNotes" onchange="bass.onChord()" >
+            <label for="scaleNotes" title="Show the scale notes in the score.  Notes sharpend by the key are in red.  Notes flatted by the key are blue.">
+                Scale notes</label>
+            &nbsp;
+            <input type="checkbox" id="allScaleNotes" onchange="bass.onAllScaleNotes()" >
+            <label for="allScaleNotes" title="Show the all the scale notes for the currently selected chord.">
+                All Scale notes</label>
+            &nbsp;
+            <input type="checkbox" id="bass" checked><label for="bass" title="Enable/disable bass playback.">Bass</label>
+            &nbsp;
+            <input type="checkbox" id="drum" checked><label for="drum" title="Enable/disable drums playback.">Drums</label>
+            &nbsp;
+            <input type="checkbox" id="chords" ><label for="chords" title="Enable/disable chords on playback.">Chords</label>
+            &nbsp;
+            <input type="checkbox" id="count" ><label for="count" title="Enable/disable counts on playback.">Count</label>
+            &nbsp;
+            <input type="checkbox" id="countAnd" ><label for="countAnd" title="Enable/disable count and's on playback.">and</label>
+            <br/>
+            <select id="hihat" onchange="bass.onHiHat()" title="Choose the hi hat beat.">
+                <option value=""			     title="Do not play the hi hat">None</option>
+                <option value="X"			     title="Beat 1">1</option>
+                <option value="X           x"	     title="Beats 1 and 3">1 & 3</option>
+                <option value="X     x     x     x"	     title="4ths">4ths</option>
+                <option value="X  x  x  x  x  x  x  x"   title="8ths">8ths</option>
+                <option value="X   x x   x X   x x   x"  title="Swing" selected >Swing</option>
+                <option value="X x x x x x x x x x x x"  title="12 beats">12ths</option>
+                <!--           123456789012345678901234	-->
+            </select>
+            <select id="swingType" onchange="bass.onSwingType()" title="Choose how hard the beat swings.">
+                <option value="1" title="Mild">Mild Swing</option>
+                <option value="2" title="Medium">Medium Swing</option>
+                <option value="3" title="Hard" selected >Hard Swing</option>
+            </select>
+            <label for="hihat" title="Control the drum hi hat." > Hi Hat</label>
+            &nbsp;
+            <input type="checkbox" id="playMode" onchange="bass.onChord()">
+            <label for="playMode" title="Enable/disable play mode.  In play mode, the playback will begin at the selected note and not the song beginning.  The fret board will not show the chord notes but will show the current note and point to the next."
+                   >Play Mode</label>
+            &nbsp;
+            <button type="submit" onclick="bass.onPrint()"
+                    title="Print the current song with the current display options.">Print</button> 
+            &nbsp;
+            <input type="file" id="fileInput" onclick="bass.onReadFileStart()" accept=".txt, .bsst"
+                   title="Read a song from a file.  The file extension will be '.bsst'.  Don't forget undo if you really wanted to save your work.">
+            &nbsp;
+            <button type="submit" onclick="bass.onSaveAs()" title="Save the current song to a file.  Watch for over-writing existing files!">Save As</button> 
+
+            <div id="output"></div>
+
+            <a href="#top" >Top of page</a>
+            &nbsp;<button type="submit" onclick="toggleHintDisplay()"
+                          title="Hide or show the hints list"
+                          >Hints</button>
+            <div id="hints" hidden >
+                Hints:
+                <ul>
+                    <li>This tool is intended specifically to study bass guitar. In particular, my study of the bass.
+                        It is not intended to be a generic music editor.
+                        This might help explain some of its slightly odd behavior.</li>
+                    <li>The app is only for 4 string basses.  Since I have no intention to playing a 5 string or more, so the app will likely remain this way.
+                        I've been told that if you can play a 5 string bass, you won't need this app.</li>
+                    <li>There are tooltips in the page but those will only appear if you can hover, thus will only be useful with a mouse.
+                        About half the hints for the app are there and will not be repeated here.</li>
+                    <li>Quick demo: click "Get the blues" button on the bottom of the page, then Play.  You will need a good set of speakers
+                        to hear the bass notes.  Typically a tablet or phone has no bass at all.  Headphones likely will help.</li>
+                    <li>To add a note to the song, first adjust the note chord, chord modifiers, duration, and lyrics.
+                        Then press the string just left of the fret.
+                        Typically is is a note in the circle or square, but all strings and frets are always active.
+                        The red circles are the roots, the orange are 5th's, the pink are 3rd's, the yellows are 7th's.
+                    <li>Selecting a rest will enter it immediately.  Rests can have lyrics.</li>
+                    <li>Occasionally there will be a chord change in a song without a corresponding bass note.  This can be
+                        accommodated with the "noteless chord or lyric" button.  Guitar players go nuts if any of the chords are missing.
+                    <li>Select a note on the score by clicking it.  You should get a blue box around it in the score and its circle
+                        on the fretboard will become a square.  All of the options will reflect the selected note.
+                        A red box in the score indicates an insert area between two notes.</li>
+                    <li>There are no bar measures to add.  When the measure is full of notes, a bar (the end of the measure) will appear.</li>
+                    <li>Delete will start deleting at the end of the note's lyrics until they are gone and then it will delete the note.</li>
+                    <li>To alter a property of a note, select it, change the property (chord, duration, lyric, etc.) and then re-click the square on the
+                        fretboard.  Adjustments to the note's properties are not immediate.  They will be forgotten if the note
+                        is not re-entered.  This is odd behavior I'm struggling to decide if it's a bug or a feature.
+                        After a single note select (in the blue box), the enter key will assign the modifications to the note.  These properties 
+                        include chord, chord modifier, duration and lyrics.</li>
+                    <li>The mouse wheel will alter the score selection. The delete key will delete.
+                        Once the score area is selected, the right arrow key, tab or enter will advance the score selection.  The left arrow key will select the
+                        prior selection.  The up and down arrow keys will change the score line offset vertically. </li>
+                    <li>While looping, click a different bar.  The loop will stop and restart with the clicked bar as the first in the sequence.
+                        This avoids the stop that would otherwise be required.
+                    </li>
+                    <li>Select multiple notes with shift click.  Control (or command) C, V, X, Z for copy, paste, delete and copy, and undo.</li>
+                </ul>
+                To Do List:
+                <ul>
+                    <li>Won't play through a rest at the end of a song on a loop.</li>
+                    <li>Fix swing pair followed by beamed eighth note.</li>
+                    <li>Reread options at every loop end.</li>
+                    <li>Introduce the notion of sections.  Start each section on the left.</li>
+                    <li>Chords are terrible.</li>
+                    <li>Add triplets.</li>
+                    <li>Use drum notes (X's) for custom rhythm</li>
+                    <li>Improve ties that don't work properly across lines.</li>
+                    <li>Indicate measures with bad beat counts.</li>
+                    <li>Select multiple notes with mouse drag.</li>
+                    <li>Entry line always visible.</li>
+                    <li>Loop multiple note selects.  Rounded out to measure boundaries.</li>
+                    <li>Add toggle to force all measures be the same size.</li>
+                    <li>And C key signature that uses flats instead of sharps</li>
+                    <li>Use sharps for notes out of scale when ascending.  Use flats when descending.  Prior note may be in prior bar.  Rests are skipped.</li>
+                    <li>Lyrics on rests.</li>
+                    <li>Add slurs</li>
+                    <li>Add copy section to OS cut buffer to paste in other instance.</li>
+                    <li>Triplets</li>
+                    <li>musical repeats</li>
+                    <li>section definition and playback sequencing.  Nashville'ish style?</li>
+                    <li>Read and write custom rhythms to/from a file</li>
+                    <li>remember custom notation</li>
+                    <li>apply custom beat to existing song</li>
+                    <li>apply custom beat and/or blues to a segment</li>
+                    <li>Undo of file read or "get the blues" should be the whole song.</li>
+                    <li>Allow notes to slide across bar boundaries.</li>
+                </ul>
+                Known bugs:
+                <ul>
+                    <li>Ties and beams together can do stupid things.</li>
+                    <li>No one who knows music well has validated the accuracy of this app.</li>
+                    <li>It's been developed on Google Chrome so I have little idea what other browsers may do.  I try to keep it running on Safari.</li>
+                    <li>The immediate voicing of notes on a fretboard click can have audio issues.</li>
+                    <li>More complicated time signatures will not likely appear.</li>
+                    <li>There are problems with 6 and 7 flats or sharps around E#, Cb and the like.</li>
+                </ul>
+                Recent updates:
+                <ul>
+                    <li>fixed broken custom rhythms.</li>
+                    <li>play chords with guitar sounds, not bass.</li>
+                    <li>Show play indicator (bright green background) on rests.</li>
+                    <li>Chords on every measure start doesn't work.</li>
+                    <li>Beams with ties don't render correctly.</li>
+                    <li>Beams are not always tall enough.</li>
+                    <li>Bass was playing when asked not to.</li>
+                    <li>Leading will repeat notes.</li>
+                    <li>Lines above score adjusted.</li>
+                    <li>Add non-blues song formats: chord progressions, scale fragments, </li>
+                    <li>Add various forms of leadin notes: none, chromatic, scale, dominant(5th), upper/lower.</li>
+                    <li>Fix leadin collisions with same next note (i.e. the following chord root)</li>
+                    <li>Fix beaming on 1/16 -> 1/16 -> 1/8 to avoid flagging middle 1/16</li>
+                    <li>Shorten 1/16 second beaming length.  eg.1/16 -> 1/8 -> 1/16</li>
+                    <li>Fixed: Mere selection of a group of notes changes the chord.</li>
+                    <li>At minimum spacing, can't insert between two notes.</li>
+                    <li>Default file name extensions have been moved from '.txt' to '.bsst'.  For a while, the web page will
+                        continue to accept '.txt'.</li>
+                    <li>Use space bar to play/stop.</li>
+                    <li>Ties improved.</li>
+                    <li>Beams like 8th and 16th's together, for now, flag by up staffs and down staffs.  Beam to common beats.</li>
+                    <li>Song title in browser tab</li>
+                    <li>Notes printed in quarter blocks i.e. timing-wise. measures nearly all the same size.  
+                        Alignment with lyrics within the measure should largely be ignored.</li>
+                    <li>Override of the key's sharps and flats from a previous note lasts through the current bar.</li>
+                    <li>Hints no longer damage score display</li>
+                    <li>Multiple select with shift click.  Control (or command) C, V, X, Z for copy, paste, delete and copy, and undo.</li>
+                    <li>Improved mouse wheeling in score area.</li>
+                    <li>Fixed quick change blues bars 9 & 10.</li>
+                </ul>
+            </div>
+            &nbsp;<button type="submit" onclick="toggleEntyrDisplay()" id="hideEntryButton"
+                          title="Hide or show the note entry area"
+                          >Hide Entry</button>
+            &nbsp;
+            &nbsp;
+            &nbsp;
+
+            <button type="submit" onclick="bass.onHalfStep(1)"
+                    title="Increase all the notes of the song by one half step.  Typically only used when changing the key of a song.  This may have to be applied a number of times before you get the final key you are after.  Does not affect the current score key."
+                    >+1 half Step</button>
+            &nbsp;
+            <button type="submit" onclick="bass.onHalfStep(-1)"
+                    title="Decrease all the notes of the song by one half step.  Typically only used when changing the key of a song.  This may have to be applied a number of times before you get the final key you are after.  Does not affect the current score key."
+                    >-1 half Step</button>
+            &nbsp;
+            <button type="submit" onclick="bass.onDeleteAll()"
+                    title="Delete the entire song.  You can undo this if you have to."
+                    >Delete All</button>
+            &nbsp;&nbsp;
+            <span id="uploadDate">Tue Dec 22 07:31:24 PST 2015</span>
+        </div>
+    </body>
+</html>

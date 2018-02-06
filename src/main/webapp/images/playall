@@ -1,0 +1,10 @@
+#!/bin/tcsh
+#set echo; set verbose
+
+@ i = 0
+while ( $i < 35 )
+	echo $i
+	set f=guitar_$i.mp3
+	if ( -e $f ) mplayer $f
+	@ i++
+end
