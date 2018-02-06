@@ -2,9 +2,9 @@
 
 <!--
 alternate versions
-search
+
 # vs b
-fontsize 
+
 pop the colors on beat transitions
 return to the search after song play
 remove list during edit
@@ -1086,8 +1086,7 @@ Beat vs measure resolution on a section basis
             function onModuleLoadJS() {
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
                 audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay();
-                audioBeatDisplay.initialize(audioCtx,
-                        document.getElementById("audioBeatDisplayCanvas"));
+                audioBeatDisplay.initialize(audioCtx, document.getElementById("audioBeatDisplayCanvas"));
             }
 
             function listenToKeyDown(event) {
@@ -1438,7 +1437,7 @@ Beat vs measure resolution on a section basis
 
                 if (measureSequencer !== undefined) {
                     measureSequencer.restart();
-                    minBarCount = getBarCount() + 3;
+                    minBarCount = getBarCount(audioCtx.currentTime) + 3;
                     start();
                 }
             }
@@ -1558,9 +1557,8 @@ Beat vs measure resolution on a section basis
             }
 
 
-            function getBarCount() {
+            function getBarCount(t) {
                 const sPerBar = beatsPerBar * 60 / bpm;
-                const t = Date.now() / 1000;
                 return Math.trunc(t / sPerBar);
             }
 
@@ -1576,12 +1574,13 @@ Beat vs measure resolution on a section basis
                 function update() {
 
                     if (isPlaying) {
-                        let barCount = getBarCount();
+                        let currentTime = audioCtx.currentTime; //  only once per vertical
+                        let barCount = getBarCount(currentTime);
                         let leadin = barCount - minBarCount;
 
                         if (doBeat || leadin < 1) {
                             audioBeatDisplayCanvas.hidden = false;
-                            audioBeatDisplay.update(bpm, doSubBeat, beatsPerBar);
+                            audioBeatDisplay.update(currentTime, bpm, doSubBeat, beatsPerBar);
                         } else {
                             audioBeatDisplayCanvas.hidden = true;
                         }
@@ -1589,6 +1588,7 @@ Beat vs measure resolution on a section basis
                         //  hightlight current measure
 
                         if (barCount > lastBarCount) {
+                            //log( barCount+" at "+audioCtx.currentTime);
                             lastBarCount = barCount;
 
                             turnOffHighlight(lastCellHighlighted);
@@ -1860,9 +1860,9 @@ Beat vs measure resolution on a section basis
                 </select>
             </div>
 
-            <canvas id="audioBeatDisplayCanvas" class="audioBeatDisplayCanvasStyle" width="600" height="45" hidden
-                        title="Diagnostic plot of audio data found.">
-                    Your browser does not support the HTML5 canvas tag.</canvas>
+            <canvas id="audioBeatDisplayCanvas" class="audioBeatDisplayCanvasStyle" width="300" height="45" hidden
+                    title="Diagnostic plot of audio data found.">
+                Your browser does not support the HTML5 canvas tag.</canvas>
 
             <div id="chordDiv"></div>
         </div>
@@ -14695,7 +14695,7 @@ Beat vs measure resolution on a section basis
         </div>
         </noscript>
 
-        <table >
+        <table hidden>
             <tr>
                 <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
             </tr>
