@@ -6,7 +6,6 @@ if ( $debug != 0 ) then
 endif
 
 set dst=/var/www/html/public_html
-set drive=~/google_drive/bsteele/public_html
 set git=~/GitHub/bsteeleMusicApp
 set target=$git/target
 
@@ -29,7 +28,7 @@ set war=`find $git -iname "*.war" -print | tail -1 `
 set tmp=`mktemp -d /tmp/bsteeleMusicApp_tmp.XXXXXXXXXX`
 cd $tmp
 jar -xf $war
-java -jar /home/bob/my/installs/sourceforge/proguard6.0/lib/proguard.jar @$git/bsteeleMusicApp_proguard \
+java -jar /home/bob/my/installs/proguard/proguard/lib/proguard.jar @$git/bsteeleMusicApp_proguard \
 	-injars WEB-INF/classes \
 	-outjars WEB-INF/pgclasses.jar
 if ( $status != 0 ) exit -1;
@@ -46,4 +45,13 @@ cd $dst/$app
 jar -xf $finalWar
 cd $cwd
 
-echo test local version of $app at http://localhost/public_html/$app ... and deploy with bsteele_upload
+#	deploy on tomcat
+cp $finalWar /opt/tomcat/webapps
+
+
+echo test local version of $app at:
+echo	http://localhost/public_html/$app
+echo	http://localhost:8080/bsteeleMusicApp
+echo ... and deploy with bsteele_upload
+
+exit 0

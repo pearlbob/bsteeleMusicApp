@@ -106,8 +106,7 @@ Beat vs measure resolution on a section basis
             }
             #chordSelection {
             }
-            #audioBeatDisplayCanvas {
-                width: 100%;
+            .audioBeatDisplayCanvasStyle {
                 border-style: solid;
                 border-width: 4px;
                 border-color: var(--bg-color);
@@ -226,8 +225,6 @@ Beat vs measure resolution on a section basis
         </style>
 
         <script src="BassAudioConstants.js"></script>
-        <script src="AudioBeatDisplay20180128.js"></script>
-
 
 
         <script>
@@ -272,7 +269,6 @@ Beat vs measure resolution on a section basis
             let optionChoicesDiv;
             let inputFile;
             let audioCtx;
-            let audioBeatDisplay;
             let songSectionSequence;
             let chordSectionMap;
             let measureSequencer;
@@ -301,7 +297,9 @@ Beat vs measure resolution on a section basis
             let isSongSelectOptionsHidden = false;
             let isStoppedHidden = false;
 
+            //  java objects
             let bpmTap;
+            let audioBeatDisplay;
 
 
             //
@@ -1012,8 +1010,7 @@ Beat vs measure resolution on a section basis
 
                 onCurrentBpmEntry(currentBpmEntry.value);    //  read in the default bpm
 
-                audioCtx = null; //new (window.AudioContext || window.webkitAudioContext)();
-                audioBeatDisplay = new AudioBeatDisplay(audioCtx, audioBeatDisplayCanvas);
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 animationFrameUpdate();
 
                 searchEntry.addEventListener('input', function (e) {
@@ -1088,6 +1085,9 @@ Beat vs measure resolution on a section basis
 
             function onModuleLoadJS() {
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
+                audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay();
+                audioBeatDisplay.initialize(audioCtx,
+                        document.getElementById("audioBeatDisplayCanvas"));
             }
 
             function listenToKeyDown(event) {
@@ -1582,8 +1582,9 @@ Beat vs measure resolution on a section basis
                         if (doBeat || leadin < 1) {
                             audioBeatDisplayCanvas.hidden = false;
                             audioBeatDisplay.update(bpm, doSubBeat, beatsPerBar);
-                        } else
+                        } else {
                             audioBeatDisplayCanvas.hidden = true;
+                        }
 
                         //  hightlight current measure
 
@@ -1858,10 +1859,10 @@ Beat vs measure resolution on a section basis
                     <option value="6/8" >6/8</option>
                 </select>
             </div>
-            <br/>
-            <canvas id="audioBeatDisplayCanvas" width="400" height="30" hidden
-                    title="Diagnostic plot of audio data found.">
-                Your browser does not support the HTML5 canvas tag.</canvas>
+
+            <canvas id="audioBeatDisplayCanvas" class="audioBeatDisplayCanvasStyle" width="600" height="45" hidden
+                        title="Diagnostic plot of audio data found.">
+                    Your browser does not support the HTML5 canvas tag.</canvas>
 
             <div id="chordDiv"></div>
         </div>
@@ -14694,7 +14695,7 @@ Beat vs measure resolution on a section basis
         </div>
         </noscript>
 
-        <table hidden>
+        <table >
             <tr>
                 <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
             </tr>
