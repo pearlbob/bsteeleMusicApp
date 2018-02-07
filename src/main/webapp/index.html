@@ -5,6 +5,9 @@ alternate versions
 
 # vs b
 
+add html to type sharps, naturals and flats
+
+
 pop the colors on beat transitions
 return to the search after song play
 remove list during edit
@@ -935,6 +938,7 @@ Beat vs measure resolution on a section basis
                     makeTOC(type);
                     lastType = type;
                 }
+
                 setTocHidden(false);
                 addSongButton.hidden = false;
                 copyrightLabel.hidden = true;
@@ -956,7 +960,15 @@ Beat vs measure resolution on a section basis
                     } while ((e = e.offsetParent) !== null);
                     window.scrollTo(0, top - window.innerHeight / 2);
                 }
+                focusOnSearchEntry();
             }
+
+            function focusOnSearchEntry() {
+                window.location.href = '#toc';
+                searchEntry.hidden = false;
+                searchEntry.focus();
+            }
+
 
             function hideAllLyrics() {
                 var songCollection = document.getElementsByClassName('song');
@@ -1012,10 +1024,6 @@ Beat vs measure resolution on a section basis
 
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 animationFrameUpdate();
-
-                searchEntry.addEventListener('input', function (e) {
-
-                });
 
 
                 //  look for alternative files
@@ -1080,6 +1088,8 @@ Beat vs measure resolution on a section basis
 //                }
 
                 window.addEventListener("keydown", listenToKeyDown, true);
+                
+                focusOnSearchEntry();
 
             }
 
@@ -1249,6 +1259,7 @@ Beat vs measure resolution on a section basis
                 songEntryElement.hidden = true;
                 addSongButton.hidden = false;
                 optionChoicesDiv.hidden = false;
+                             focusOnSearchEntry();
             }
 
             function onSongEdit()
@@ -1527,6 +1538,8 @@ Beat vs measure resolution on a section basis
             function setTocHidden(isHidden) {
                 isTocHidden = isHidden;
                 setHiddenByCssClass('toc', isHidden);
+                if ( !isHidden)
+                    focusOnSearchEntry();
             }
 
             function setSongSelectOptionsHidden(isHidden) {
@@ -1669,9 +1682,9 @@ Beat vs measure resolution on a section basis
     </head>
     <body onload="onLoad();">
 
-        <div class="toc">
-            <h1>Lyrics</h1>
-            <p>Search: <input type="search" id="searchEntry" placeholder="title or artist..." class="mediumTextEntry">
+        <div class="toc" >
+            <h1><a name="toc">Lyrics</a></h1>
+            <p>Search: <input type="search" id="searchEntry" placeholder="title or artist..." class="mediumTextEntry" >
             </p>
             <table border="0" id="songList" >
             </table>
@@ -1791,9 +1804,9 @@ Beat vs measure resolution on a section basis
 
         <div class='upperLeft'>
 
-            <a href="#toc" onClick='onTopClick("name");'>Song List</a>
+            <a href="#toc" onClick='onTopClick("name"); return false;' >Song List</a>
             &nbsp;
-            <a href="#tocByArtist" onClick='onTopClick("artist");'>by artist</a>
+            <a href="#toc" onClick='onTopClick("artist"); return false;' >by artist</a>
             <span class="songSelectedOptions" >
                 &nbsp;&nbsp;
                 <button type="button" onclick="playFromStart();" >Play</button>
