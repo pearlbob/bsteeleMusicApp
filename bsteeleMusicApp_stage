@@ -13,6 +13,10 @@ set app=$git:t:r
 set finalWar=$target/$app.war
 echo $app\: $finalWar
 
+#	get the songlyrics from the cloud
+gsutil cat gs://songlyrics.bsteele.com > $git/src/main/webapp/allSongs.songlyrics
+
+
 #	compile for deployment
 set cwd=`pwd`
 cd $git

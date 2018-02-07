@@ -2,6 +2,10 @@
 
 <!--
 alternate versions
+multiple section id's on one definition
+
+
+log operations
 
 # vs b
 
@@ -9,7 +13,9 @@ add html to type sharps, naturals and flats
 
 
 pop the colors on beat transitions
-return to the search after song play
+return to the search after s
+
+ong play
 remove list during edit
 put edited song in view after edit
 fix ctl-key on mac
@@ -227,6 +233,7 @@ Beat vs measure resolution on a section basis
 
         </style>
 
+        <script src="https://www.w3schools.com/lib/w3.js"></script>
         <script src="BassAudioConstants.js"></script>
 
 
@@ -1074,21 +1081,8 @@ Beat vs measure resolution on a section basis
                         selectSongByHash(hash);
                 }
 
-//                //  improve the functionality on a cell phone
-//                if (Math.min(window.innerWidth, window.innerHeight) < 700)
-//                {
-//                    let rules = document.styleSheets[0].cssRules;
-//                    for (let i = 0; i < rules.length; i++) {
-//                        let rule = rules[i];
-//                        if (rule.cssText.match(/font-size: /)) {
-//                            log(rule.selectorText + ": " + rule.cssText);
-//                            rule.style.fontSize = "66%";
-//                        }
-//                    }
-//                }
-
                 window.addEventListener("keydown", listenToKeyDown, true);
-                
+
                 focusOnSearchEntry();
 
             }
@@ -1259,7 +1253,7 @@ Beat vs measure resolution on a section basis
                 songEntryElement.hidden = true;
                 addSongButton.hidden = false;
                 optionChoicesDiv.hidden = false;
-                             focusOnSearchEntry();
+                focusOnSearchEntry();
             }
 
             function onSongEdit()
@@ -1538,7 +1532,7 @@ Beat vs measure resolution on a section basis
             function setTocHidden(isHidden) {
                 isTocHidden = isHidden;
                 setHiddenByCssClass('toc', isHidden);
-                if ( !isHidden)
+                if (!isHidden)
                     focusOnSearchEntry();
             }
 
@@ -14724,5 +14718,11 @@ Beat vs measure resolution on a section basis
                 <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
             </tr>
         </table>
+
+        <div w3-include-html="allSongs.songlyrics"></div> 
+
+        <script>
+            w3.includeHTML();
+        </script>
     </body>
 </html>
