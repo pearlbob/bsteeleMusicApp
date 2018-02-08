@@ -3,28 +3,161 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
-import static jsinterop.annotations.JsPackage.GLOBAL;
+import com.bsteele.bsteeleMusicApp.shared.Grid;
+import java.util.HashMap;
+import java.util.Map;
 import jsinterop.annotations.JsType;
 
 /**
  *
  * @author bob
  */
-@JsType(namespace = GLOBAL)
+@JsType
 public class Song {
-   
+    
+    public Song(){
+        
+    }
+
+    public void parseChordTable(String rawChordTableText) {
+        //  fixme: should not defer the chord parsing!
+        this.rawChordTableText = rawChordTableText;
+    }
+
+    public String generateHtmlChordTable() {
+
+        Map<Section.Version, Grid> chordSectionMap = new HashMap<>();
+        Grid grid = new Grid<>();
+        int row = 0;
+        int col = 0;
+
+        String tableStart = "<table id=\"chordTable\" "
+                + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
+        String rowStart = "<tr><td class='sectionLabel' >";
+        String rowEnd = "</tr>\n";
+        String tableEnd = "</table>\n";
+
+        String chordText = ""; //  table formatted
+        int state = 0;
+        Section.Version version = null;
+        Section.Version lastVersion = null;
+        String block = "";
+        for (int i = 0; i < rawChordTableText.length(); i++) {
+            char c = rawChordTableText.charAt(i);
+            switch (state) {
+                default:
+                    state = 0;
+                case 0:
+                    //  absorb leading white space
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                        break;
+                    }
+                    block = "";
+                    state++;
+
+                //  fall through
+                case 1:
+                    String token = rawChordTableText.substring(i);
+                    Section.Version v = Section.match(token.substring(0, 11));
+                    if (v != null) {
+                        version = v;
+                        i += version.getSourceLength() - 1;
+
+                        if (block.length() > 0) {
+                            chordText += chordBlock(version, row, col, block) + rowEnd;
+                            //block = "";
+                        }
+                        chordText += rowStart + version.toString() + ":"
+                                + "</td>\n\t";
+                        chordSectionMap.put(version, grid);
+                        lastVersion = version;
+                        grid.clear();
+                        row = 0;
+                        col = 0;
+                        block = "";
+                        state = 0;
+
+                    } else {
+                        //  absorb trailing white space
+                        switch (c) {
+                            case ' ':
+                            case '\t':
+                                if (block.length() > 0
+                                        //  version will always be null here      && sectionC.length() == 0
+                                        && chordText.length() == 0) {
+                                    //  deal with songs without sections
+                                    chordText += "<tr><td></td>";   //  empty finish for non-existent section
+                                }
+                                grid.add(col++, row, block);
+                                chordText += chordBlock(version, row, col, block);
+                                block = "";
+                                break;
+                            case '\n':
+                            case '\r':
+                                if (block.length() > 0) {
+                                    grid.add(col++, row, block);
+                                }
+                                chordText += chordBlock(version, row, col, block);
+                                row++;
+                                col = 0;
+                                block = "";
+                                chordText += rowEnd
+                                        + "<tr><td></td>";   //  empty section label col
+                                state = 0;
+                                break;
+                            default:
+                                block += c;
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+        if (lastVersion != null) {
+            chordSectionMap.put(lastVersion, grid);
+        }
+
+        //  deal with unformatted songs
+        if (chordSectionMap.isEmpty()) {
+            chordSectionMap.put(Section.getDefaultVersion(), grid);
+        }
+
+        //log(chordText);
+        //log(chordSectionMap);
+        return tableStart
+                + chordText
+                + rowEnd
+                + tableEnd;
+    }
+
+    private String chordBlock(Section.Version version, int row, int col, String raw) {
+        if (raw.length() == 0) {
+            return "";
+        }
+        
+        String htmlClass = "";
+        if ( version != null ){
+            htmlClass=" class='section" + version.getSection().getAbreviation() + "Class'";
+        }
+
+        return "<td"
+                //+ " style=''"
+                + " id='C." + version.toString() + "." + row + "." + (col - 1) + "'"
+                + " >"
+                + raw + "</td>\n\t";
+    }
+
+    private String rawChordTableText;
 
     public static String transpose(String chords, int halfSteps) {
         //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
 
         int chordNumber = 0;
         String sout = "";
-        int state = 0;
         String chordLines[] = chords.split("\n");
-        for (int li = 0; li < chordLines.length; li++) {
-            String chordLine = chordLines[li];
-            state = 0;
-            
+        for (String chordLine : chordLines) {
+            int state = 0;
+
             for (int ci = 0; ci < chordLine.length(); ci++) {
                 char c = chordLine.charAt(ci);
                 switch (state) {
@@ -45,7 +178,7 @@ public class Song {
                             break;
                         }
                         sout += chordNumberToLetter(chordNumber + halfSteps);
-                    //	fall through
+                        //	fall through
                     default:
                     case 0:
                         if (c == '(') {

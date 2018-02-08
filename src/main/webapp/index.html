@@ -4,12 +4,12 @@
 alternate versions
 multiple section id's on one definition
 
-
 log operations
 
 # vs b
 
 add html to type sharps, naturals and flats
+song title in tab
 
 
 pop the colors on beat transitions
@@ -234,7 +234,6 @@ Beat vs measure resolution on a section basis
         </style>
 
         <script src="https://www.w3schools.com/lib/w3.js"></script>
-        <script src="BassAudioConstants.js"></script>
 
 
         <script>
@@ -310,6 +309,7 @@ Beat vs measure resolution on a section basis
             //  java objects
             let bpmTap;
             let audioBeatDisplay;
+            let mySong;
 
 
             //
@@ -369,6 +369,11 @@ Beat vs measure resolution on a section basis
 
 
             function parseIntoChordTable(rawText) {
+                if (mySong !== undefined) {
+                    mySong.parseChordTable(rawText);
+                       log(mySong.generateHtmlChordTable());
+                }
+
                 chordSectionMap = new Map();
                 let grid = [];
                 let row = 0;
@@ -384,6 +389,7 @@ Beat vs measure resolution on a section basis
                     if (raw.length === 0)
                         return "";
                     return "<td class='" + tdClass + "'"
+                            + " style=''"
                             + " id='C." + lastSectionC + "." + row + "." + (col - 1) + "'"
                             + " >"
                             + raw + "</td>\n\t";
@@ -1091,6 +1097,7 @@ Beat vs measure resolution on a section basis
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
                 audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay();
                 audioBeatDisplay.initialize(audioCtx, document.getElementById("audioBeatDisplayCanvas"));
+                mySong = new com.bsteele.bsteeleMusicApp.client.Song();
             }
 
             function listenToKeyDown(event) {
