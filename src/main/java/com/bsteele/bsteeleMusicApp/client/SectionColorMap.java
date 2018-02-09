@@ -16,7 +16,6 @@ public class SectionColorMap {
             case a:
                 return verseColor;
             case b:
-                return chorusColor;
             case bridge:
                 return bridgeColor;
             case chorus:

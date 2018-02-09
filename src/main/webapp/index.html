@@ -134,10 +134,10 @@ Beat vs measure resolution on a section basis
             .sectionCClass,
             .sectionVClass,
             .sectionBrClass,
-            .sectionPcClass,
-            .sectionInClass,
+            .sectionPCClass,
+            .sectionIClass,
             .sectionOutClass,
-            .sectionCodaClass,
+            .sectionCoClass,
             .sectionTClass
             {    
                 /*float: left;*/
@@ -224,10 +224,10 @@ Beat vs measure resolution on a section basis
             .sectionCClass{ background-color: var(--c-color);}
             .sectionVClass{ background-color: var(--v-color); }
             .sectionBrClass{ background-color: var(--br-color);}
-            .sectionPcClass{ background-color: var(--pc-color);}
-            .sectionInClass{ background-color: var(--in-color);}
+            .sectionPCClass{ background-color: var(--pc-color);}
+            .sectionIClass{ background-color: var(--in-color);}
             .sectionOutClass{ background-color: var(--out-color);}
-            .sectionCodaClass{ background-color: var(--coda-color);}
+            .sectionCoClass{ background-color: var(--coda-color);}
             .sectionTClass{ background-color: var(--t-color);}
 
 
@@ -516,16 +516,16 @@ Beat vs measure resolution on a section basis
                                         tdClass = "sectionBrClass";
                                         break;
                                     case 'Pc':
-                                        tdClass = "sectionPcClass";
+                                        tdClass = "sectionPCClass";
                                         break;
                                     case 'In':
-                                        tdClass = "sectionInClass";
+                                        tdClass = "sectionIClass";
                                         break;
                                     case 'O':
                                         tdClass = "sectionOutClass";
                                         break;
                                     case 'Co':
-                                        tdClass = "sectionCodaClass";
+                                        tdClass = "sectionCoClass";
                                         break;
                                     case 'T':
                                         tdClass = "sectionTClass";
@@ -781,6 +781,7 @@ Beat vs measure resolution on a section basis
             }
 
             function parseIntoSectionSequence(rawText) {
+                mySong.parseIntoSectionSequence(rawText);
                 let seq = rawText.match(/\b(i|in|v|p|pc|c|ch|b|br|co|coda|t|o|out):/gi);
                 if (seq !== null) {
                     for (let i = 0; i < seq.length; i++) {

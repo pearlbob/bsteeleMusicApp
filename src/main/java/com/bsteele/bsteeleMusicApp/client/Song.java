@@ -22,6 +22,12 @@ public class Song {
 
     }
 
+    public void parseIntoSectionSequence(String rawLyrics) {
+        ArrayList<Section.Version> sequence = Section.matchAll(rawLyrics);
+
+       GWT.log(sequence.toString());
+    }
+
     public void parseChordTable(String rawChordTableText) {
 
         chordSectionMap.clear();
@@ -182,7 +188,6 @@ public class Song {
         }
 
         //GWT.log(tranMap.toString());
-
         return generateHtmlChordTableFromMap(tranMap);
     }
 
@@ -225,9 +230,9 @@ public class Song {
                     //  don't transpose the section identifiers that happen to look like notes
                     String toMatch = m.substring(ci, Math.min(m.length() - ci, Section.maxLength));
                     Section.Version version = Section.match(toMatch);
-                    if (version != null ) {
+                    if (version != null) {
                         sout += version.toString();
-                        ci += version.getSourceLength()-1; //  skip the end of the section id
+                        ci += version.getSourceLength() - 1; //  skip the end of the section id
                         break;
                     }
 
@@ -267,16 +272,16 @@ public class Song {
             }
         }
         //  do the last chord
-        if ( state == 1 ){
-            sout += chordNumberToLetter(chordNumber + halfSteps);  
+        if (state == 1) {
+            sout += chordNumberToLetter(chordNumber + halfSteps);
         }
         //sout += '\n';
 
         //GWT.log(sout);
         return sout;
     }
-    
-    private static HashMap<Section.Version, Grid> deepCopy(HashMap<Section.Version, Grid> map ){
+
+    private static HashMap<Section.Version, Grid> deepCopy(HashMap<Section.Version, Grid> map) {
         HashMap<Section.Version, Grid> ret = new HashMap<>();
         for (Section.Version version : map.keySet()) {
             ret.put(version, new Grid(map.get(version)));
