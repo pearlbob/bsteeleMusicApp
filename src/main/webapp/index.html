@@ -371,7 +371,7 @@ Beat vs measure resolution on a section basis
             function parseIntoChordTable(rawText) {
                 if (mySong !== undefined) {
                     mySong.parseChordTable(rawText);
-                       log(mySong.generateHtmlChordTable());
+                      return mySong.generateHtmlChordTable();
                 }
 
                 chordSectionMap = new Map();
@@ -1177,7 +1177,7 @@ Beat vs measure resolution on a section basis
             }
 
             function transpose(chords, halfsteps) {
-                return Song.transpose(chords, halfsteps);
+                return mySong.transpose(chords, halfsteps);
             }
 
             //  make the table of contents

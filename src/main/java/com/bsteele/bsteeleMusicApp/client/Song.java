@@ -4,8 +4,11 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.google.gwt.core.client.GWT;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
@@ -14,30 +17,18 @@ import jsinterop.annotations.JsType;
  */
 @JsType
 public class Song {
-    
-    public Song(){
-        
+
+    public Song() {
+
     }
 
     public void parseChordTable(String rawChordTableText) {
-        //  fixme: should not defer the chord parsing!
-        this.rawChordTableText = rawChordTableText;
-    }
 
-    public String generateHtmlChordTable() {
-
-        Map<Section.Version, Grid> chordSectionMap = new HashMap<>();
+        chordSectionMap.clear();
         Grid grid = new Grid<>();
         int row = 0;
         int col = 0;
 
-        String tableStart = "<table id=\"chordTable\" "
-                + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
-        String rowStart = "<tr><td class='sectionLabel' >";
-        String rowEnd = "</tr>\n";
-        String tableEnd = "</table>\n";
-
-        String chordText = ""; //  table formatted
         int state = 0;
         Section.Version version = null;
         Section.Version lastVersion = null;
@@ -61,17 +52,15 @@ public class Song {
                     Section.Version v = Section.match(token.substring(0, 11));
                     if (v != null) {
                         version = v;
-                        i += version.getSourceLength() - 1;
+                        i += version.getSourceLength() - 1;//   consume the section label
 
-                        if (block.length() > 0) {
-                            chordText += chordBlock(version, row, col, block) + rowEnd;
-                            //block = "";
+                        if (lastVersion != null) {
+                            chordSectionMap.put(lastVersion, grid);
+                            //  fixme: worry about chords before a section is declared
                         }
-                        chordText += rowStart + version.toString() + ":"
-                                + "</td>\n\t";
-                        chordSectionMap.put(version, grid);
                         lastVersion = version;
-                        grid.clear();
+
+                        grid = new Grid<>();
                         row = 0;
                         col = 0;
                         block = "";
@@ -82,27 +71,21 @@ public class Song {
                         switch (c) {
                             case ' ':
                             case '\t':
-                                if (block.length() > 0
-                                        //  version will always be null here      && sectionC.length() == 0
-                                        && chordText.length() == 0) {
-                                    //  deal with songs without sections
-                                    chordText += "<tr><td></td>";   //  empty finish for non-existent section
+                                if (block.length() > 0) {
+                                    grid.add(col, row, block);
+                                    col++;
                                 }
-                                grid.add(col++, row, block);
-                                chordText += chordBlock(version, row, col, block);
                                 block = "";
                                 break;
                             case '\n':
                             case '\r':
                                 if (block.length() > 0) {
-                                    grid.add(col++, row, block);
+                                    grid.add(col, row, block);
+                                    col++;
                                 }
-                                chordText += chordBlock(version, row, col, block);
                                 row++;
                                 col = 0;
                                 block = "";
-                                chordText += rowEnd
-                                        + "<tr><td></td>";   //  empty section label col
                                 state = 0;
                                 break;
                             default:
@@ -113,6 +96,7 @@ public class Song {
                     break;
             }
         }
+        //  put the last grid on the end
         if (lastVersion != null) {
             chordSectionMap.put(lastVersion, grid);
         }
@@ -122,32 +106,49 @@ public class Song {
             chordSectionMap.put(Section.getDefaultVersion(), grid);
         }
 
-        //log(chordText);
-        //log(chordSectionMap);
-        return tableStart
-                + chordText
-                + rowEnd
-                + tableEnd;
+//        for (Section.Version v : chordSectionMap.keySet()) {
+//            GWT.log(" ");
+//            GWT.log(v.toString());
+//            GWT.log("    " + chordSectionMap.get(v).toString());
+//        }
     }
 
-    private String chordBlock(Section.Version version, int row, int col, String raw) {
-        if (raw.length() == 0) {
+    public String generateHtmlChordTable() {
+
+        if (chordSectionMap.isEmpty()) {
             return "";
         }
-        
-        String htmlClass = "";
-        if ( version != null ){
-            htmlClass=" class='section" + version.getSection().getAbreviation() + "Class'";
+
+        String tableStart = "<table id=\"chordTable\" "
+                + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
+        String sectionStart = "<tr><td class='sectionLabel' >";
+        String rowStart = "\t<tr><td></td>";
+        String rowEnd = "</tr>\n";
+        String tableEnd = "</table>\n";
+
+        String chordText = ""; //  table formatted
+
+        for (Section.Version version : chordSectionMap.keySet()) {
+            Grid grid = chordSectionMap.get(version);
+            String start = sectionStart + version.toString() + ":</td>";
+            for (int r = 0; r < grid.getRowCount(); r++) {
+
+                chordText += start;
+                start = rowStart;
+
+                ArrayList<String> row = grid.getRow(r);
+                for (int col = 0; col < row.size(); col++) {
+                    chordText += "<td class='section" + version.getSection().getAbreviation() + "Class'"
+                            //+ " style=''"
+                            + " id='C." + version.toString() + "." + row + "." + (col - 1) + "'"
+                            + " >"
+                            + row.get(col) + "</td>\n\t";
+                }
+                chordText += rowEnd;
+            }
         }
-
-        return "<td"
-                //+ " style=''"
-                + " id='C." + version.toString() + "." + row + "." + (col - 1) + "'"
-                + " >"
-                + raw + "</td>\n\t";
+        return tableStart + chordText + tableEnd;
     }
-
-    private String rawChordTableText;
 
     public static String transpose(String chords, int halfSteps) {
         //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
@@ -178,7 +179,7 @@ public class Song {
                             break;
                         }
                         sout += chordNumberToLetter(chordNumber + halfSteps);
-                        //	fall through
+                    //	fall through
                     default:
                     case 0:
                         if (c == '(') {
@@ -260,6 +261,7 @@ public class Song {
         return chordNumberToLetter[n];
     }
 
+    private Map<Section.Version, Grid> chordSectionMap = new HashMap<>();
     private static final String chordNumberToLetter[] = new String[]{"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
     private static final char js_flat = '\u266D';
     private static final char js_natural = '\u266E';

@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client;
 
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import static java.util.Objects.hash;
 
 /**
  *
@@ -53,10 +54,8 @@ public enum Section {
 
         @Override
         public int hashCode() {
-            int hash = getSection().hashCode();
-            hash = 37 * hash + this.version;
             //  do not include source length
-            return hash;
+            return hash(getSection(),version);
         }
 
         @Override

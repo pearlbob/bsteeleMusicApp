@@ -12,19 +12,24 @@ import java.util.ArrayList;
 public class Grid<T> {
 
     public void add(int x, int y, T t) {
+        if (y > grid.size()) {
+            throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
+        }
         ArrayList<T> row;
-        try {
-            row = grid.get(y);
-            if (row == null) {
-                row = new ArrayList<>();
-                grid.add(y, row);
-            }
-        } catch (IndexOutOfBoundsException ex) {
+        if (y == grid.size()) {
+            //  add a new row to the grid
             row = new ArrayList<>();
             grid.add(y, row);
+        } else {
+            row = grid.get(y);
         }
 
         row.add(x, t);
+    }
+
+    @Override
+    public String toString() {
+        return "Grid{" + "grid=" + grid + '}';
     }
 
     public T get(int x, int y) {
@@ -39,8 +44,20 @@ public class Grid<T> {
         }
     }
 
+    public int getRowCount() {
+        return grid.size();
+    }
+
+    public ArrayList<T> getRow(int y) {
+        try {
+            return grid.get(y);
+        } catch (IndexOutOfBoundsException ex) {
+            return null;
+        }
+    }
+
     public void clear() {
         grid.clear();
     }
-    private ArrayList<ArrayList<T>> grid = new ArrayList<>();
+    private final ArrayList<ArrayList<T>> grid = new ArrayList<>();
 }
