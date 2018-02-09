@@ -22,10 +22,15 @@ public class Song {
 
     }
 
-    public void parseIntoSectionSequence(String rawLyrics) {
+    public ArrayList<Section.Version> parseIntoSectionSequence(String rawLyrics) {
         ArrayList<Section.Version> sequence = Section.matchAll(rawLyrics);
 
-       GWT.log(sequence.toString());
+        if (sequence.isEmpty()) {
+            sequence.add(Section.getDefaultVersion());
+        }
+
+        GWT.log(sequence.toString());
+        return sequence;
     }
 
     public void parseChordTable(String rawChordTableText) {
@@ -121,6 +126,86 @@ public class Song {
 
     public String generateHtmlChordTable() {
         return generateHtmlChordTableFromMap(chordSectionMap);
+    }
+
+    public String parseIntoLyricsTable(String rawText) {
+        String tableStart = "<table id=\"lyricsTable\">\n"
+                + "<colgroup>\n"
+                + "   <col style=\"width:2ch;\">\n"
+                + "  <col>\n"
+                + "</colgroup>\n";
+        String rowStart = "<tr><td class='sectionLabel' >";
+        String rowEnd = "&nbsp;</td></tr>\n";   //  empty cells fill better with nbsp
+        String tableEnd = "</table>\n";
+
+        String lyrics = ""; //  table formatted
+        int state = 0;
+        int sectionIndex = 0;
+        boolean isSection = false;
+        String whiteSpace = "";
+        for (int i = 0; i < rawText.length(); i++) {
+            char c = rawText.charAt(i);
+            switch (state) {
+                default:
+                    state = 0;
+                case 0:
+                    //  absorb leading white space
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                        break;
+                    }
+                    state++;
+                //  fall through
+                case 1:
+                    Section.Version version = Section.match(rawText.substring(i, i + 11));
+                    if (version != null) {
+                        i += version.getSourceLength() - 1; //  skip the end of the section id
+                        isSection = true;
+
+                        if (lyrics.length() > 0) {
+                            lyrics += rowEnd;
+                        }
+                        lyrics += rowStart + version.toString() + ":"
+                                + "</td><td class=\"lyrics" + version.getSection().getAbreviation() + "Class\""
+                                + " id=\"L." + sectionIndex + "\">";
+                        sectionIndex++;
+                        whiteSpace = ""; //  ignore white space
+                        state = 0;
+                    } else {
+                        //  absorb trailing white space
+                        switch (c) {
+                            case ' ':
+                            case '\t':
+                                whiteSpace += c;
+                                break;
+                            case '\n':
+                            case '\r':
+                                lyrics += c;
+                                whiteSpace = ""; //  ignore white space
+                                state = 0;
+                                break;
+                            default:
+                                if (!isSection) {
+                                    //  deal with bad formatting
+                                    lyrics += rowStart
+                                            +Section.getDefaultVersion().toString()+":"
+                                            + "</td><td class=\"lyrics" + Section.getDefaultVersion().toString() + "Class\">";
+                                    isSection = true;
+                                }
+                                lyrics += whiteSpace + c;
+                                whiteSpace = "";
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        lyrics = tableStart
+                + lyrics
+                + rowEnd
+                + tableEnd;
+        GWT.log(lyrics);
+        return lyrics;
     }
 
     private String generateHtmlChordTableFromMap(HashMap<Section.Version, Grid> map) {

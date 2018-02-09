@@ -146,7 +146,16 @@ Beat vs measure resolution on a section basis
                 overflow-wrap: break-word;
                 white-space: pre-wrap;            
             }
-            .lyrics {
+            .lyrics,
+            .lyricsCClass,
+            .lyricsVClass,
+            .lyricsBrClass,
+            .lyricsPCClass,
+            .lyricsIClass,
+            .lyricsOutClass,
+            .lyricsCoClass,
+            .lyricsTClass
+            {
                 float: left;
                 /*font-size: 24px;*/
                 overflow-wrap: break-word;
@@ -221,14 +230,14 @@ Beat vs measure resolution on a section basis
                 visibility: visible;
             }
 
-            .sectionCClass{ background-color: var(--c-color);}
-            .sectionVClass{ background-color: var(--v-color); }
-            .sectionBrClass{ background-color: var(--br-color);}
-            .sectionPCClass{ background-color: var(--pc-color);}
-            .sectionIClass{ background-color: var(--in-color);}
-            .sectionOutClass{ background-color: var(--out-color);}
-            .sectionCoClass{ background-color: var(--coda-color);}
-            .sectionTClass{ background-color: var(--t-color);}
+            .sectionCClass, .lyricsCClass   { background-color: var(--c-color);}
+            .sectionVClass,.lyricsVClass    { background-color: var(--v-color); }
+            .sectionBrClass,.lyricsBrClass  { background-color: var(--br-color);}
+            .sectionPCClass,.lyricsPCClass  { background-color: var(--pc-color);}
+            .sectionIClass,.lyricsIClass    { background-color: var(--in-color);}
+            .sectionOutClass,.lyricsOutClass{ background-color: var(--out-color);}
+            .sectionCoClass,.lyricsCoClass  { background-color: var(--coda-color);}
+            .sectionTClass,.lyricsTClass    { background-color: var(--t-color);}
 
 
         </style>
@@ -371,206 +380,11 @@ Beat vs measure resolution on a section basis
             function parseIntoChordTable(rawText) {
                 if (mySong !== undefined) {
                     mySong.parseChordTable(rawText);
-                      return mySong.generateHtmlChordTable();
+                    return mySong.generateHtmlChordTable();
                 }
-
-                chordSectionMap = new Map();
-                let grid = [];
-                let row = 0;
-                let col = 0;
-
-                let lastSectionC;
-                let tableStart = "<table id=\"chordTable\" "
-                        + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
-                let rowStart = "<tr><td class='sectionLabel' >";
-                let rowEnd = "</tr>\n";
-                let tableEnd = "</table>\n";
-                function chordBlock(raw) {
-                    if (raw.length === 0)
-                        return "";
-                    return "<td class='" + tdClass + "'"
-                            + " style=''"
-                            + " id='C." + lastSectionC + "." + row + "." + (col - 1) + "'"
-                            + " >"
-                            + raw + "</td>\n\t";
-                }
-                let chordText = ""; //  table formatted
-                let state = 0;
-                let sectionC = "";
-                let lastC = "";
-                let tdClass = "sectionCClass";  //  default
-                let block = "";
-                for (let i = 0; i < rawText.length; i++) {
-                    let c = rawText[i];
-                    switch (state) {
-                        default:
-                            state = 0;
-                        case 0:
-                            //  absorb leading white space
-                            if (c === ' ' || c === '\t' || c === '\n' || c === '\r') {
-                                break;
-                            }
-                            block = "";
-                            state++;
-
-                            //  fall through
-                        case 1:
-                            let token = rawText.substr(i);
-                            let token2 = token.substr(0, 2 + 1);    //  2, :
-                            let token1 = token2.substr(0, 1 + 1);     //  1, :
-                            let lastW = lastC === undefined || lastC.length === 0 || /\W/.test(lastC);
-                            if (lastW && /^v:/i.test(token1)) {
-                                sectionC = 'V';
-                                state++;
-                            } else if (lastW && /^c:/i.test(token1)) {
-                                sectionC = 'C';
-                                state++;
-                            } else if (lastW && /^ch:/i.test(token2)) {
-                                sectionC = 'C';
-                                i++;
-                                state++;
-                            } else if (lastW && /^p:/i.test(token1)) {
-                                sectionC = 'PC';
-                                state++;
-                            } else if (lastW && /^pc:/i.test(token2)) {
-                                sectionC = 'PC';
-                                i++;
-                                state++;
-                            } else if (lastW && /^b:/i.test(token1)) {
-                                sectionC = 'Br';
-                                state++;
-                            } else if (lastW && /^br:/i.test(token2)) {
-                                sectionC = 'Br';
-                                i++;
-                                state++;
-                            } else if (lastW && /^in:/i.test(token2)) {
-                                sectionC = 'In';
-                                i++;
-                                state++;
-                            } else if (lastW && /^i:/i.test(token2)) {
-                                sectionC = 'In';
-                                state++;
-                            } else if (lastW && /^out:/i.test(token)) {
-                                sectionC = 'Out';
-                                i += 2;
-                                state++;
-                            } else if (lastW && /^o:/i.test(token)) {
-                                sectionC = 'Out';
-                                state++;
-                            } else if (lastW && /^co:/i.test(token2)) {
-                                sectionC = 'Coda';
-                                i++;
-                                state++;
-                            } else if (lastW && /^coda:/i.test(token)) {
-                                sectionC = 'Coda';
-                                i += 3;
-                                state++;
-                            } else if (lastW && /^t:/i.test(token1)) {
-                                sectionC = 'T';
-                                state++;
-                            } else {
-                                //  absorb trailing white space
-                                if (c === ' ' || c === '\t') {
-                                    if (block.length > 0 && sectionC.length === 0 && chordText.length === 0) {
-                                        //  deal with songs without sections
-                                        chordText += "<tr><td></td>";   //  empty finish for non-existent section
-                                    }
-                                    if (block.length > 0) {
-                                        if (grid[row] === undefined)
-                                            grid[row] = [];
-                                        grid[row][col++] = block;
-                                    }
-                                    chordText += chordBlock(block);
-                                    block = "";
-                                } else if (c === '\n' || c === '\r') {
-                                    if (block.length > 0) {
-                                        if (grid[row] === undefined)
-                                            grid[row] = [];
-                                        grid[row][col++] = block;
-                                    }
-                                    chordText += chordBlock(block);
-                                    row++;
-                                    col = 0;
-                                    block = "";
-                                    chordText += rowEnd
-                                            + "<tr><td></td>";   //  empty section label col
-                                    state = 0;
-                                } else {
-                                    block += c;
-                                }
-                            }
-                            break;
-                        case 2:
-                            if (c === ':') {
-                                tdClass = "sectionCClass";  //  default
-
-                                sectionC = sectionIn2(sectionC);
-                                switch (sectionC) {
-                                    default:
-                                    case 'Ch':
-                                        break;
-                                    case 'V':
-                                        tdClass = "sectionVClass";
-                                        break;
-                                    case 'Br':
-                                        tdClass = "sectionBrClass";
-                                        break;
-                                    case 'Pc':
-                                        tdClass = "sectionPCClass";
-                                        break;
-                                    case 'In':
-                                        tdClass = "sectionIClass";
-                                        break;
-                                    case 'O':
-                                        tdClass = "sectionOutClass";
-                                        break;
-                                    case 'Co':
-                                        tdClass = "sectionCoClass";
-                                        break;
-                                    case 'T':
-                                        tdClass = "sectionTClass";
-                                        break;
-                                }
-                                if (block.length > 0)
-                                {
-                                    chordText += chordBlock(block) + rowEnd;
-                                    block = "";
-                                }
-                                chordText += rowStart + sectionC + ":"
-                                        + "</td>\n\t";
-                                if (lastSectionC !== undefined)
-                                    chordSectionMap.set(lastSectionC, grid);
-                                lastSectionC = sectionC;
-                                grid = [];
-                                row = 0;
-                                col = 0;
-                                block = "";
-                                state = 0;
-                            } else {
-                                chordText += lastC + c;
-                                state = 1;
-                            }
-                            break;
-                    }
-
-                    lastC = c;
-                }
-                if (lastSectionC !== undefined)
-                    chordSectionMap.set(lastSectionC, grid);
-
-                //  deal with unformatted songs
-                if (chordSectionMap.size === 0) {
-                    chordSectionMap.set(sectionIn2('v'), grid);
-                }
-
-                //log(chordText);
-                //log(chordSectionMap);
-
-                return tableStart
-                        + chordText
-                        + rowEnd
-                        + tableEnd;
+                return undefined;
             }
+
 
             function setTableWidths(id, ratio, maxFontSize)
             {
@@ -631,187 +445,17 @@ Beat vs measure resolution on a section basis
 
 
             function parseIntoLyricsTable(rawText, klass) {
-                let tableStart = "<table id=\"lyricsTable\">\n"
-                        + "<colgroup>\n"
-                        + "   <col style=\"width:2ch;\">\n"
-                        + "  <col>\n"
-                        + "</colgroup>\n";
-                let rowStart = "<tr><td class='sectionLabel' >";
-                let rowDiv = "</td><td  class='" + klass + "'>";
-                let rowEnd = "&nbsp;</td></tr>\n";
-                let tableEnd = "</table>\n";
+                if (mySong !== undefined)
+                    return mySong.parseIntoLyricsTable(rawText);
+                return undefined;
 
-                let lyrics = rowStart + rowDiv; //  table formatted
-                let state = 0;
-                let sectionIndex = 0;
-                let sectionC = "";
-                let lastC = "";
-                let whiteSpace = "";
-                for (let i = 0; i < rawText.length; i++) {
-                    let c = rawText[i];
-                    switch (state) {
-                        default:
-                            state = 0;
-                        case 0:
-                            //  absorb leading white space
-                            if (c === ' ' || c === '\t' || c === '\n' || c === '\r') {
-                                break;
-                            }
-                            state++;
-                            //  fall through
-                        case 1:
-                            let token = rawText.substr(i);
-                            let token2 = token.substr(0, 2 + 1);    //  2, :
-                            let token1 = token2.substr(0, 1 + 1);     //  1, :
-                            let lastW = lastC === undefined || lastC.length === 0 || /\W/.test(lastC);
-                            if (lastW && /^v:/i.test(token1)) {
-                                sectionC = 'V';
-                                state++;
-                            } else if (lastW && /^c:/i.test(token1)) {
-                                sectionC = 'C';
-                                state++;
-                            } else if (lastW && /^ch:/i.test(token2)) {
-                                sectionC = 'C';
-                                i++;
-                                state++;
-                            } else if (lastW && /^p:/i.test(token1)) {
-                                sectionC = 'PC';
-                                state++;
-                            } else if (lastW && /^pc:/i.test(token2)) {
-                                sectionC = 'PC';
-                                i++;
-                                state++;
-                            } else if (lastW && /^b:/i.test(token1)) {
-                                sectionC = 'Br';
-                                state++;
-                            } else if (lastW && /^br:/i.test(token2)) {
-                                sectionC = 'Br';
-                                i++;
-                                state++;
-                            } else if (lastW && /^in:/i.test(token2)) {
-                                sectionC = 'In';
-                                i++;
-                                state++;
-                            } else if (lastW && /^i:/i.test(token2)) {
-                                sectionC = 'In';
-                                state++;
-                            } else if (lastW && /^out:/i.test(token)) {
-                                sectionC = 'Out';
-                                i += 2;
-                                state++;
-                            } else if (lastW && /^o:/i.test(token)) {
-                                sectionC = 'Out';
-                                state++;
-                            } else if (lastW && /^co:/i.test(token2)) {
-                                sectionC = 'Coda';
-                                i++;
-                                state++;
-                            } else if (lastW && /^coda:/i.test(token)) {
-                                sectionC = 'Coda';
-                                i += 3;
-                                state++;
-                            } else if (lastW && /^t:/i.test(token1)) {
-                                sectionC = 'T';
-                                state++;
-                            } else {
-                                //  absorb trailing white space
-                                if (c === ' ' || c === '\t') {
-                                    whiteSpace += c;
-                                } else if (c === '\n' || c === '\r') {
-                                    lyrics += c;
-                                    whiteSpace = ""; //  ignore white space
-                                    state = 0;
-                                } else {
-                                    lyrics += whiteSpace + c;
-                                    whiteSpace = "";
-                                }
-                            }
-                            break;
-                        case 2:
-                            if (c === ':') {
-                                let style = ""; //  fixme  should be css class as above
-                                switch (sectionC) {
-                                    case 'C':
-                                        style = "style=\"background-color: var(--c-color);\"";
-                                        break;
-                                    case 'V':
-                                        style = "style=\"background-color: var(--v-color);\"";
-                                        break;
-                                    case 'Br':
-                                        style = "style=\"background-color: var(--br-color);\"";
-                                        break;
-                                    case 'PC':
-                                        style = "style=\"background-color: var(--pc-color);\"";
-                                        break;
-                                    case 'In':
-                                        style = "style=\"background-color: var(--in-color);\"";
-                                        break;
-                                    case 'Out':
-                                        style = "style=\"background-color: var(--out-color);\"";
-                                        break;
-                                    case 'Coda':
-                                        style = "style=\"background-color: var(--coda-color);\"";
-                                        break;
-                                    case 'T':
-                                        style = "style=\"background-color: var(--t-color);\"";
-                                        break;
-                                }
-                                lyrics += rowEnd + rowStart + sectionC + ":"
-                                        + "</td><td  class='" + klass + "' id='L." + sectionIndex + "' " + style + ">";
-                                sectionIndex++;
-                                whiteSpace = ""; //  ignore white space
-                                state = 0;
-                            } else {
-                                lyrics += whiteSpace + lastC + c;
-                                whiteSpace = "";
-                                state = 1;
-                            }
-                            break;
-                    }
-
-                    lastC = c;
-                }
-
-                return tableStart
-                        + rowStart
-                        + rowDiv
-                        + lyrics
-                        + rowEnd
-                        + tableEnd;
             }
 
             function parseIntoSectionSequence(rawText) {
-                mySong.parseIntoSectionSequence(rawText);
-                let seq = rawText.match(/\b(i|in|v|p|pc|c|ch|b|br|co|coda|t|o|out):/gi);
-                if (seq !== null) {
-                    for (let i = 0; i < seq.length; i++) {
-                        seq[i] = sectionIn2(seq[i]);
-                        //log("seq " + i + ": " + seq[i]);
-                    }
-                } else {
-                    seq = [];
-                    seq[0] = 'V';
-                }
-                return seq;
+                if (mySong !== undefined)
+                    return mySong.parseIntoSectionSequence(rawText);
+                return undefined;
             }
-
-            function sectionIn2(section) {
-                if (section === undefined || section.length < 1)
-                    return undefined;
-                section = section.replace(/:/, "");
-                section = section.replace(/^b$/i, "Br");
-                section = section.replace(/^coda$/i, "Co");
-                section = section.replace(/^c$/i, "Ch");
-                section = section.replace(/^i$/i, "In");
-                section = section.replace(/^out$/i, "O");
-                section = section.replace(/^p$/i, "Pc");
-
-                if (section.length >= 2)
-                    return section.charAt(0).toUpperCase() + section.charAt(1).toLowerCase();
-                return section.charAt(0).toUpperCase();
-            }
-
-
 
 
             class MeasureSequencer {
