@@ -25,7 +25,7 @@ public class Song {
     public void parseChordTable(String rawChordTableText) {
 
         chordSectionMap.clear();
-        Grid grid = new Grid<>();
+        Grid<String> grid = new Grid<String>();
         int row = 0;
         int col = 0;
 
@@ -60,7 +60,7 @@ public class Song {
                         }
                         lastVersion = version;
 
-                        grid = new Grid<>();
+                        grid = new Grid<String>();
                         row = 0;
                         col = 0;
                         block = "";
@@ -114,8 +114,12 @@ public class Song {
     }
 
     public String generateHtmlChordTable() {
+        return generateHtmlChordTableFromMap(chordSectionMap);
+    }
 
-        if (chordSectionMap.isEmpty()) {
+    private String generateHtmlChordTableFromMap(HashMap<Section.Version, Grid> map) {
+
+        if (map.isEmpty()) {
             return "";
         }
 
@@ -128,8 +132,8 @@ public class Song {
 
         String chordText = ""; //  table formatted
 
-        for (Section.Version version : chordSectionMap.keySet()) {
-            Grid grid = chordSectionMap.get(version);
+        for (Section.Version version : map.keySet()) {
+            Grid grid = map.get(version);
             String start = sectionStart + version.toString() + ":</td>";
             for (int r = 0; r < grid.getRowCount(); r++) {
 
@@ -138,106 +142,147 @@ public class Song {
 
                 ArrayList<String> row = grid.getRow(r);
                 for (int col = 0; col < row.size(); col++) {
-                    chordText += "<td class='section" + version.getSection().getAbreviation() + "Class'"
-                            //+ " style=''"
-                            + " id='C." + version.toString() + "." + row + "." + (col - 1) + "'"
+                    chordText += "<td class=\"section" + version.getSection().getAbreviation() + "Class\""
+                            //+ " style=\"\""
+                            + " id=\"C." + version.toString() + "." + r + "." + col + "\""
                             + " >"
                             + row.get(col) + "</td>\n\t";
                 }
                 chordText += rowEnd;
             }
         }
-        return tableStart + chordText + tableEnd;
+        String ret = tableStart + chordText + tableEnd;
+        return ret;
     }
 
-    public static String transpose(String chords, int halfSteps) {
+    /**
+     *
+     * @param halfSteps
+     * @return
+     */
+    public String transpose(int halfSteps) {
+        if (halfSteps == 0) {
+            return generateHtmlChordTable();
+        }
+
         //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
+        HashMap<Section.Version, Grid> tranMap = deepCopy(chordSectionMap);
+
+        for (Section.Version version : tranMap.keySet()) {
+            Grid grid = tranMap.get(version);
+
+            int rLimit = grid.getRowCount();
+            for (int r = 0; r < rLimit; r++) {
+                ArrayList<String> row = grid.getRow(r);
+                int colLimit = row.size();
+                for (int col = 0; col < colLimit; col++) {
+                    grid.set(col, r, transposeMeasure(row.get(col), halfSteps));
+                }
+            }
+        }
+
+        //GWT.log(tranMap.toString());
+
+        return generateHtmlChordTableFromMap(tranMap);
+    }
+
+    private String transposeMeasure(String m, int halfSteps) {
 
         int chordNumber = 0;
         String sout = "";
-        String chordLines[] = chords.split("\n");
-        for (String chordLine : chordLines) {
-            int state = 0;
 
-            for (int ci = 0; ci < chordLine.length(); ci++) {
-                char c = chordLine.charAt(ci);
-                switch (state) {
-                    case 1:	//  chord symbol modifier, one character only
-                        state = 0;
-                        if (c == 'b' || c == js_flat) {
-                            chordNumber -= 1;
-                            sout += chordNumberToLetter(chordNumber + halfSteps);
-                            break;
-                        }
-                        if (c == '#' || c == js_sharp) {
-                            chordNumber += 1;
-                            sout += chordNumberToLetter(chordNumber + halfSteps);
-                            break;
-                        }
-                        if (c == js_natural) {
-                            sout += chordNumberToLetter(chordNumber + halfSteps);
-                            break;
-                        }
+        int state = 0;
+
+        for (int ci = 0; ci < m.length(); ci++) {
+            char c = m.charAt(ci);
+            switch (state) {
+                case 1:	//  chord symbol modifier, one character only
+                    state = 0;
+                    if (c == 'b' || c == js_flat) {
+                        chordNumber -= 1;
                         sout += chordNumberToLetter(chordNumber + halfSteps);
-                    //	fall through
-                    default:
-                    case 0:
-                        if (c == '(') {
-                            sout += c;
-                            state = 11;
-                            break;
-                        }
-
-                        //  don't transpose the section identifiers that happen to look like notes
-                        String toMatch = chordLine.substring(ci, Math.min(chordLine.length() - ci, Section.maxLength));
-                        int matchLength = Section.matchLength(toMatch);
-                        if (matchLength > 0 && chordLine.charAt(ci + matchLength) == ':') {
-                            String sub = chordLine.substring(ci, matchLength);
-                            sout += sub;
-                            ci += matchLength - 1; //  skip the end of the section id
-                            break;
-                        }
-
-                        if (c >= 'A' && c <= 'G') {
-                            chordNumber = chordLetterToNumber(c);
-                            state = 1;
-                            break;
-                        }
-                        if (toMatch.startsWith("maj")) {
-                            sout += "maj";
-                            ci += 2;
-                        } else if (toMatch.startsWith("sus")) {
-                            sout += "sus";
-                            ci += 2;
-                        } else if ((c >= '0' && c <= '9')
-                                || c == 'm'
-                                || c == ' ' || c == '-' || c == '|' || c == '/'
-                                || c == '\n'
-                                || c == js_delta) {
-                            sout += c;
-                        } else {	//  don't parse the rest
-                            sout += c;
-                            state = 10;
-                        }
                         break;
-
-                    case 10: //	wait for newline
+                    }
+                    if (c == '#' || c == js_sharp) {
+                        chordNumber += 1;
+                        sout += chordNumberToLetter(chordNumber + halfSteps);
+                        break;
+                    }
+                    if (c == js_natural) {
+                        sout += chordNumberToLetter(chordNumber + halfSteps);
+                        break;
+                    }
+                    sout += chordNumberToLetter(chordNumber + halfSteps);
+                //	fall through
+                default:
+                case 0:
+                    if (c == '(') {
                         sout += c;
+                        state = 11;
                         break;
+                    }
 
-                    case 11: //	wait for newline or closing paren
-                        sout += c;
-                        if (c == ')') {
-                            state = 0;
-                        }
+                    //  don't transpose the section identifiers that happen to look like notes
+                    String toMatch = m.substring(ci, Math.min(m.length() - ci, Section.maxLength));
+                    Section.Version version = Section.match(toMatch);
+                    if (version != null ) {
+                        sout += version.toString();
+                        ci += version.getSourceLength()-1; //  skip the end of the section id
                         break;
-                }
+                    }
+
+                    if (c >= 'A' && c <= 'G') {
+                        chordNumber = chordLetterToNumber(c);
+                        state = 1;
+                        break;
+                    }
+                    if (toMatch.startsWith("maj")) {
+                        sout += "maj";
+                        ci += 2;
+                    } else if (toMatch.startsWith("sus")) {
+                        sout += "sus";
+                        ci += 2;
+                    } else if ((c >= '0' && c <= '9')
+                            || c == 'm'
+                            || c == ' ' || c == '-' || c == '|' || c == '/'
+                            || c == '\n'
+                            || c == js_delta) {
+                        sout += c;
+                    } else {	//  don't parse the rest
+                        sout += c;
+                        state = 10;
+                    }
+                    break;
+
+                case 10: //	wait for newline
+                    sout += c;
+                    break;
+
+                case 11: //	wait for newline or closing paren
+                    sout += c;
+                    if (c == ')') {
+                        state = 0;
+                    }
+                    break;
             }
-            sout += '\n';
         }
+        //  do the last chord
+        if ( state == 1 ){
+            sout += chordNumberToLetter(chordNumber + halfSteps);  
+        }
+        //sout += '\n';
 
         //GWT.log(sout);
         return sout;
+    }
+    
+    private static HashMap<Section.Version, Grid> deepCopy(HashMap<Section.Version, Grid> map ){
+        HashMap<Section.Version, Grid> ret = new HashMap<>();
+        for (Section.Version version : map.keySet()) {
+            ret.put(version, new Grid(map.get(version)));
+            //  fixme: worry about version alteration!
+        }
+        return ret;
     }
 
     private static int chordLetterToNumber(char letter) {
@@ -261,7 +306,7 @@ public class Song {
         return chordNumberToLetter[n];
     }
 
-    private Map<Section.Version, Grid> chordSectionMap = new HashMap<>();
+    private HashMap<Section.Version, Grid> chordSectionMap = new HashMap<>();
     private static final String chordNumberToLetter[] = new String[]{"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
     private static final char js_flat = '\u266D';
     private static final char js_natural = '\u266E';

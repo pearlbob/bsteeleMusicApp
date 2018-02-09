@@ -995,7 +995,7 @@ Beat vs measure resolution on a section basis
             function onChordSelection(selection) {
                 var selected = selection.selectedOptions[0].value;
                 let halfsteps = parseInt(selected);
-                chordDiv.innerHTML = parseIntoChordTable(transpose(chordSet[0].innerHTML, halfsteps));
+                chordDiv.innerHTML = mySong.transpose(halfsteps);
                 setTableWidths("chordTable", 1.4, 48);
             }
 
@@ -1176,9 +1176,6 @@ Beat vs measure resolution on a section basis
                 songs.push(song);
             }
 
-            function transpose(chords, halfsteps) {
-                return mySong.transpose(chords, halfsteps);
-            }
 
             //  make the table of contents
             function makeTOC(type)
