@@ -4,11 +4,8 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
-import com.google.gwt.core.client.GWT;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import jsinterop.annotations.JsPackage;
 import jsinterop.annotations.JsType;
 
 /**
@@ -22,26 +19,32 @@ public class Song {
 
     }
 
-    public ArrayList<Section.Version> parseIntoSectionSequence(String rawLyrics) {
+    public String[] parseIntoSectionSequence(String rawLyrics) {
         ArrayList<Section.Version> sequence = Section.matchAll(rawLyrics);
 
         if (sequence.isEmpty()) {
             sequence.add(Section.getDefaultVersion());
         }
 
-        GWT.log(sequence.toString());
-        return sequence;
+        //GWT.log(sequence.toString());
+        
+        //  dumb down the section sequence list for javascript
+        String ret[] = new String[sequence.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = sequence.get(i).toString();
+        }
+        return ret;
     }
 
     public void parseChordTable(String rawChordTableText) {
 
         chordSectionMap.clear();
-        Grid<String> grid = new Grid<String>();
+        Grid<String> grid = new Grid<>();
         int row = 0;
         int col = 0;
 
         int state = 0;
-        Section.Version version = null;
+        Section.Version version;
         Section.Version lastVersion = null;
         String block = "";
         for (int i = 0; i < rawChordTableText.length(); i++) {
@@ -71,7 +74,7 @@ public class Song {
                         }
                         lastVersion = version;
 
-                        grid = new Grid<String>();
+                        grid = new Grid<>();
                         row = 0;
                         col = 0;
                         block = "";
@@ -123,6 +126,7 @@ public class Song {
 //            GWT.log("    " + chordSectionMap.get(v).toString());
 //        }
     }
+  
 
     public String generateHtmlChordTable() {
         return generateHtmlChordTableFromMap(chordSectionMap);
@@ -187,7 +191,7 @@ public class Song {
                                 if (!isSection) {
                                     //  deal with bad formatting
                                     lyrics += rowStart
-                                            +Section.getDefaultVersion().toString()+":"
+                                            + Section.getDefaultVersion().toString() + ":"
                                             + "</td><td class=\"lyrics" + Section.getDefaultVersion().toString() + "Class\">";
                                     isSection = true;
                                 }
@@ -204,7 +208,7 @@ public class Song {
                 + lyrics
                 + rowEnd
                 + tableEnd;
-        GWT.log(lyrics);
+        //GWT.log(lyrics);
         return lyrics;
     }
 
@@ -396,7 +400,7 @@ public class Song {
         return chordNumberToLetter[n];
     }
 
-    private HashMap<Section.Version, Grid> chordSectionMap = new HashMap<>();
+    private final HashMap<Section.Version, Grid> chordSectionMap = new HashMap<>();
     private static final String chordNumberToLetter[] = new String[]{"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
     private static final char js_flat = '\u266D';
     private static final char js_natural = '\u266E';
