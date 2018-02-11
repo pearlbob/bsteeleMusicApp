@@ -439,11 +439,11 @@ Beat vs measure resolution on a section basis
                 }
                 totalChars += maxCellWidths.length;  //  fudge for col borders
                 let maxFontPx = (t.parentElement || t.offsetParent).clientWidth / totalChars;
-                log(id + "  maxFontPx: " + maxFontPx);
+                //log(id + "  maxFontPx: " + maxFontPx);
                 let fontSize = Math.max(Math.min(ratio * Math.trunc(maxFontPx), maxFontSize), 20);
                 t.style.fontSize = fontSize + "px";
-                var fs = window.getComputedStyle(t, null).getPropertyValue('font-size');
-                log("font-size: " + fs);
+                //let fs = window.getComputedStyle(t, null).getPropertyValue('font-size');
+                //log("font-size: " + fs);
 
 
                 for (let r = 0; r < rows.length; r++) {
