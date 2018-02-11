@@ -1,14 +1,12 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.client;
+package com.bsteele.bsteeleMusicApp.shared;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import java.util.ArrayList;
 import static java.util.Objects.hash;
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
 
 /**
  *

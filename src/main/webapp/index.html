@@ -262,7 +262,6 @@ Beat vs measure resolution on a section basis
             let addSongButton;
             let editButton;
             let chordSelection;
-            let chordSet;
             let lastType;
             const js_flat = '\u266D';
             const js_natural = '\u266E';
@@ -272,6 +271,7 @@ Beat vs measure resolution on a section basis
             var textFile = null;
             var downloadlink = null;
             var isEdit = false;
+            let songListElement;
             let songEntryElement;
             let titleElement;
             let artistElement;
@@ -288,7 +288,6 @@ Beat vs measure resolution on a section basis
             let inputFile;
             let audioCtx;
             let songSectionSequence;
-            let chordSectionMap;
             let measureSequencer;
             let lastCellHighlighted;
             let lastLyricsHighlighted;
@@ -327,11 +326,14 @@ Beat vs measure resolution on a section basis
             }
 
             function selectSongByHash(hash) {
+                if (mySong === undefined)
+                    return;     //  too early
 
                 //  put the chords into the chord section
                 let a = document.getElementById(hash.substring(1));
                 if (a === null)
                     return;
+                let title = a.firstElementChild.textContent;
                 copyrightOwner.innerHTML = a.getElementsByClassName("copyright")[0].innerHTML;
 
                 //  deal with possible missing bpm's
@@ -351,24 +353,27 @@ Beat vs measure resolution on a section basis
                     ts = ts[0].innerHTML;
                 setCurrentTimeSignature(ts);
 
+                let songLyrics = a.getElementsByClassName("lyrics")[0].innerHTML;
+                mySong.loadSong(title, songLyrics, a.getElementsByClassName('chords')[0].innerHTML, beatsPerBar, bpm);
+
                 songId = a.id;
-                chordSet = a.getElementsByClassName('chords');
+
                 setSongSelectOptionsHidden(false);
                 chordSelection.value = 0;
                 halfstepChange = 0;
-                chordDiv.innerHTML = parseIntoChordTable(chordSet[0].innerHTML);
+                chordDiv.innerHTML = mySong.generateHtmlChordTable();
 
                 setTableWidths("chordTable", 1.4, 48);
 
-                let songLyrics = a.getElementsByClassName("lyrics")[0].innerHTML;
-                measureSequencer = new MeasureSequencer(songLyrics, chordSectionMap);
 
-                songSectionSequence = parseIntoSectionSequence(songLyrics);
+                measureSequencer = new MeasureSequencer();
+
+                songSectionSequence = mySong.getSectionSequenceAsStrings();
                 lyricsDisplayElement.innerHTML =
-                        "<h1>" + a.firstElementChild.textContent + "</h1>\n"
+                        "<h1>" + title + "</h1>\n"
                         + a.artist
                         + "\n"
-                        + parseIntoLyricsTable(songLyrics, "lyrics");
+                        + mySong.generateHtmlLyricsTable();
                 setTableWidths("lyricsTable", 1.7, 36);
                 //chordDiv.offsetWidth;
                 setTocHidden(true);
@@ -421,9 +426,9 @@ Beat vs measure resolution on a section basis
                     totalChars = Math.max(totalChars, rowChars);
                 }
                 totalChars += maxCellWidths.length;  //  fudge for col borders
-                let maxFontPx = t.offsetParent.clientWidth / totalChars;
+                let maxFontPx = (t.offsetParent || t.parentElement).clientWidth / totalChars;
                 //log(id + "  maxFontPx: " + maxFontPx);
-                let fontSize = Math.min(ratio * Math.trunc(maxFontPx), maxFontSize);
+                let fontSize = Math.max(Math.min(ratio * Math.trunc(maxFontPx), maxFontSize), 15);
                 t.style.fontSize = fontSize + "px";
                 var fs = window.getComputedStyle(t, null).getPropertyValue('font-size');
                 //log("font-size: " + fs);
@@ -443,26 +448,10 @@ Beat vs measure resolution on a section basis
                 //log("max :" + maxCellWidths);
             }
 
-
-            function parseIntoLyricsTable(rawText, klass) {
-                if (mySong !== undefined)
-                    return mySong.parseIntoLyricsTable(rawText);
-                return undefined;
-
-            }
-
-            function parseIntoSectionSequence(rawText) {
-                if (mySong !== undefined)
-                    return mySong.parseIntoSectionSequence(rawText);
-                return undefined;
-            }
-
-
             class MeasureSequencer {
-                constructor(rawLyrics, chordSectionMap) {
+                constructor() {
                     this.restart();
-                    this.songSectionSequence = parseIntoSectionSequence(rawLyrics);
-                    this.chordSectionMap = chordSectionMap;
+                    this.songSectionSequence = mySong.getSectionSequenceAsStrings();
                 }
 
                 restart() {
@@ -481,7 +470,7 @@ Beat vs measure resolution on a section basis
                 getMeasure() {
                     if (this.section < this.songSectionSequence.length) {
                         let sectionId = this.songSectionSequence[this.section];
-                        let chordSection = this.chordSectionMap.get(sectionId);
+                        let chordSection = mySong.getChordSection(sectionId);
                         if (chordSection !== undefined) {
                             let chordCols = chordSection[this.chordRow];
                             this.measure = chordCols[this.chordCol];
@@ -518,7 +507,7 @@ Beat vs measure resolution on a section basis
 
                     //  increment to next the next measure slot
                     let sectionId = this.songSectionSequence[this.section];
-                    let chordSection = this.chordSectionMap.get(sectionId);
+                    let chordSection = mySong.getChordSection(sectionId);
                     let chordCols = chordSection[this.chordRow];
                     this.chordCol++;
                     if (this.chordCol >= chordCols.length) {
@@ -552,7 +541,7 @@ Beat vs measure resolution on a section basis
                     if (this.section >= this.songSectionSequence.length)
                         return false;
                     sectionId = this.songSectionSequence[this.section];
-                    chordSection = this.chordSectionMap.get(sectionId);
+                    chordSection = mySong.getChordSection(sectionId);
                     chordCols = chordSection[this.chordRow];
 
                     this.measure = chordCols[this.chordCol];
@@ -654,6 +643,7 @@ Beat vs measure resolution on a section basis
                 chordSelection = document.getElementById("chordSelection");
                 addSongButton = document.getElementById("addSongButton");
                 editButton = document.getElementById("editSong");
+                songListElement = document.getElementById("songList");
                 songEntryElement = document.getElementById("songEntry");
                 titleElement = document.getElementById("titleEntry");
                 artistElement = document.getElementById("artistEntry");
@@ -742,7 +732,8 @@ Beat vs measure resolution on a section basis
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
                 audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay();
                 audioBeatDisplay.initialize(audioCtx, document.getElementById("audioBeatDisplayCanvas"));
-                mySong = new com.bsteele.bsteeleMusicApp.client.Song();
+                mySong = new com.bsteele.bsteeleMusicApp.shared.Song();
+                songListElement.hidden = false;
             }
 
             function listenToKeyDown(event) {
@@ -1329,7 +1320,7 @@ Beat vs measure resolution on a section basis
             <h1><a name="toc">Lyrics</a></h1>
             <p>Search: <input type="search" id="searchEntry" placeholder="title or artist..." class="mediumTextEntry" >
             </p>
-            <table border="0" id="songList" >
+            <table border="0" id="songList" hidden>
             </table>
 
             <br/>&nbsp;<br/>
@@ -1455,7 +1446,7 @@ Beat vs measure resolution on a section basis
                 <button type="button" onclick="playFromStart();" >Play</button>
                 <button type="button" onclick="stop();" >Stop</button>
             </span>
-            <div class="songSelectedOptions" >
+            <div class="songSelectedOptions" hidden >
                 <select id="chordSelection" onchange="onChordSelection(this);"  >
                     <option value="-6">-6 halfsteps</option>
                     <option value="-5">-5 halfsteps</option>

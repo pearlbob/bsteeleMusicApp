@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.shared.Section;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 /**
