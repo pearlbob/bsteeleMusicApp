@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 
 <!--
-song mapping now moved to title based, not used on start
+_____song mapping now moved to title based, not used on start
 
-multiple section id's on one definition
+multiple section id's on one definition:  improve display
 
 fix chord box not finding it's parent size
 
@@ -438,12 +438,12 @@ Beat vs measure resolution on a section basis
                     totalChars = Math.max(totalChars, rowChars);
                 }
                 totalChars += maxCellWidths.length;  //  fudge for col borders
-                let maxFontPx = (t.offsetParent || t.parentElement).clientWidth / totalChars;
-                //log(id + "  maxFontPx: " + maxFontPx);
-                let fontSize = Math.max(Math.min(ratio * Math.trunc(maxFontPx), maxFontSize), 15);
+                let maxFontPx = (t.parentElement || t.offsetParent).clientWidth / totalChars;
+                log(id + "  maxFontPx: " + maxFontPx);
+                let fontSize = Math.max(Math.min(ratio * Math.trunc(maxFontPx), maxFontSize), 20);
                 t.style.fontSize = fontSize + "px";
                 var fs = window.getComputedStyle(t, null).getPropertyValue('font-size');
-                //log("font-size: " + fs);
+                log("font-size: " + fs);
 
 
                 for (let r = 0; r < rows.length; r++) {
@@ -737,17 +737,7 @@ Beat vs measure resolution on a section basis
                     makeTOC(lastType);
                 });
 
-                //  see if a song is pre-specified in the location
-                {
-                    let hash = window.location.hash;
-                    let m = hash.match(/^#(Song\d+)$/);
-                    if (m !== null && m.length > 1)
-                        selectSongByHash(hash);
-                }
-
                 window.addEventListener("keydown", listenToKeyDown, true);
-
-                focusOnSearchEntry();
 
             }
 
@@ -757,6 +747,16 @@ Beat vs measure resolution on a section basis
                 audioBeatDisplay.initialize(audioCtx, document.getElementById("audioBeatDisplayCanvas"));
                 mySong = new com.bsteele.bsteeleMusicApp.shared.Song();
                 songListElement.hidden = false;
+
+                //  see if a song is pre-specified in the location
+                {
+                    let hash = window.location.hash;
+                    let m = hash.match(/^#(Song\w+)$/);
+                    if (m !== null && m.length > 1)
+                        selectSongByHash(hash);
+                    else
+                        focusOnSearchEntry();
+                }
             }
 
             function listenToKeyDown(event) {
