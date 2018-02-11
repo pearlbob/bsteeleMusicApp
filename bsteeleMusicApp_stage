@@ -1,17 +1,44 @@
 #!/bin/tcsh
 set debug=0
+set isBeta=0
+
+while ( $#argv > 0 )
+	switch ( $1 )
+	case '-beta':
+		set isBeta=1
+		shift
+		continue;
+	case '-d':		#	debug
+	case '-debug':
+		set debug=1
+		shift
+		continue;
+	default:
+		echo unknown argument: $1
+		exit -1;
+		breaksw;
+	endsw
+
+	break;
+end
+
 
 if ( $debug != 0 ) then
 	set echo; set verbose
 endif
 
 set dst=/var/www/html/public_html
+if ( $isBeta != 0 ) then
+	set dst=$dst/beta
+endif
 set git=~/GitHub/bsteeleMusicApp
 set target=$git/target
 
 set app=$git:t:r
 set finalWar=$target/$app.war
-echo $app\: $finalWar
+echo deploy $app\: $finalWar to $dst
+
+sleep 3
 
 #	get the songlyrics from the cloud
 gsutil cat gs://songlyrics.bsteele.com > $git/src/main/webapp/allSongs.songlyrics
@@ -44,7 +71,7 @@ rm -rf $tmp
 #	generate app on localhost web
 #	note: with github, it really doesn't need to be in google_drive
 rm -rf $dst/$app	#	wow!
-mkdir $dst/$app
+mkdir -p $dst/$app
 cd $dst/$app
 jar -xf $finalWar
 cd $cwd
@@ -53,9 +80,15 @@ cd $cwd
 cp $finalWar /opt/tomcat/webapps
 
 
-echo test local version of $app at:
-echo	http://localhost/public_html/$app
-echo	http://localhost:8080/bsteeleMusicApp
-echo ... and deploy with bsteele_upload
+if ( $isBeta != 0 ) then
+	echo test local version of $app at:
+	echo	http://localhost/public_html/beta/$app
+	echo	http://bsteele.com/beta/bsteeleMusicApp
+else
+	echo test local version of $app at:
+	echo	http://localhost/public_html/$app
+	echo	http://localhost:8080/bsteeleMusicApp
+	echo ... and deploy with bsteele_upload
+endif
 
 exit 0
