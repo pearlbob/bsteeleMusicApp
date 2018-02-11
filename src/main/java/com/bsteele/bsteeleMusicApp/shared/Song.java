@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.shared;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import jsinterop.annotations.JsType;
 
 /**
@@ -19,7 +21,7 @@ public class Song {
   }
 
   public void loadSong(String title, String lyrics, String chords, int beatsPerBar, int beatsPerMinute) {
-    songId = title.replaceAll("\\W+", "");
+    songId = "Song" + title.replaceAll("\\W+", "");
     rawLyrics = lyrics;
     parseLyricsToSectionSequence(lyrics);
     parseChordTable(chords);
@@ -52,7 +54,18 @@ public class Song {
   }
 
   public String[][] getChordSection(String sectionId) {
-      return jsChordSectionMap.get(sectionId);
+    return jsChordSectionMap.get(sectionId);
+  }
+
+  public String getChordSectionId(String sectionId) {
+    //  map the section to it's reduced, common section
+    for (Section.Version v : displaySectionMap.keySet()) {
+      if (v.toString().equals(sectionId)) {
+        sectionId = displaySectionMap.get(v).toString();
+        break;
+      }
+    }
+    return sectionId;
   }
 
   public ArrayList<Section.Version> getSectionSequence() {
@@ -62,85 +75,133 @@ public class Song {
   public void parseChordTable(String rawChordTableText) {
 
     chordSectionMap.clear();
-    Grid<String> grid = new Grid<>();
-    int row = 0;
-    int col = 0;
 
-    int state = 0;
-    Section.Version version;
-    Section.Version lastVersion = null;
-    String block = "";
-    for (int i = 0; i < rawChordTableText.length(); i++) {
-      char c = rawChordTableText.charAt(i);
-      switch (state) {
-        default:
-          state = 0;
-        case 0:
-          //  absorb leading white space
-          if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
-            break;
-          }
-          block = "";
-          state++;
+    {
+      //  build the initial chord section map
+      Grid<String> grid = new Grid<>();
+      int row = 0;
+      int col = 0;
 
-        //  fall through
-        case 1:
-          String token = rawChordTableText.substring(i);
-          Section.Version v = Section.match(token.substring(0, 11));
-          if (v != null) {
-            version = v;
-            i += version.getSourceLength() - 1;//   consume the section label
-
-            if (lastVersion != null) {
-              chordSectionMap.put(lastVersion, grid);
-              //  fixme: worry about chords before a section is declared
-            }
-            lastVersion = version;
-
-            grid = new Grid<>();
-            row = 0;
-            col = 0;
-            block = "";
+      int state = 0;
+      Section.Version version;
+      TreeSet<Section.Version> versionsDeclared = new TreeSet<>();
+      String block = "";
+      for (int i = 0; i < rawChordTableText.length(); i++) {
+        char c = rawChordTableText.charAt(i);
+        switch (state) {
+          default:
             state = 0;
-
-          } else {
-            //  absorb trailing white space
-            switch (c) {
-              case ' ':
-              case '\t':
-                if (block.length() > 0) {
-                  grid.add(col, row, block);
-                  col++;
-                }
-                block = "";
-                break;
-              case '\n':
-              case '\r':
-                if (block.length() > 0) {
-                  grid.add(col, row, block);
-                  col++;
-                }
-                row++;
-                col = 0;
-                block = "";
-                state = 0;
-                break;
-              default:
-                block += c;
-                break;
+          case 0:
+            //  absorb leading white space
+            if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+              break;
             }
-          }
-          break;
+            block = "";
+            state++;
+
+          //  fall through
+          case 1:
+            String token = rawChordTableText.substring(i);
+            Section.Version v = Section.match(token.substring(0, 11));
+            if (v != null) {
+              version = v;
+              i += version.getSourceLength() - 1;//   consume the section label
+
+              if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
+                for (Section.Version vd : versionsDeclared) {
+                  chordSectionMap.put(vd, grid);
+                }
+                //  fixme: worry about chords before a section is declared
+                versionsDeclared.clear();
+                grid = new Grid<>();
+              }
+              versionsDeclared.add(version);
+
+              row = 0;
+              col = 0;
+              block = "";
+              state = 0;
+
+            } else {
+              //  absorb trailing white space
+              switch (c) {
+                case ' ':
+                case '\t':
+                  if (block.length() > 0) {
+                    grid.add(col, row, block);
+                    col++;
+                  }
+                  block = "";
+                  break;
+                case '\n':
+                case '\r':
+                  if (block.length() > 0) {
+                    grid.add(col, row, block);
+                    col++;
+                  }
+                  row++;
+                  col = 0;
+                  block = "";
+                  state = 0;
+                  break;
+                default:
+                  block += c;
+                  break;
+              }
+            }
+            break;
+        }
+      }
+
+      //  put the last grid on the end
+      if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
+        for (Section.Version vd : versionsDeclared) {
+          chordSectionMap.put(vd, grid);
+        }
+      }
+
+      //  deal with unformatted songs
+      if (chordSectionMap.isEmpty()) {
+        chordSectionMap.put(Section.getDefaultVersion(), grid);
       }
     }
-    //  put the last grid on the end
-    if (lastVersion != null) {
-      chordSectionMap.put(lastVersion, grid);
-    }
 
-    //  deal with unformatted songs
-    if (chordSectionMap.isEmpty()) {
-      chordSectionMap.put(Section.getDefaultVersion(), grid);
+    //  collect remap sections with identical declarations
+    {
+      //  build a reverse lookup map
+      HashMap<Grid<String>, TreeSet<Section.Version>> reverseMap = new HashMap<>();
+      for (Section.Version version : chordSectionMap.keySet()) {
+        Grid<String> grid = chordSectionMap.get(version);
+        TreeSet<Section.Version> lookup = reverseMap.get(grid);
+        if (lookup == null) {
+          TreeSet<Section.Version> ts = new TreeSet<>();
+          ts.add(version);
+          reverseMap.put(grid, ts);
+        } else {
+          lookup.add(version);
+        }
+      }
+      //  build version mapping to version displayed map
+      displaySectionMap.clear();
+      for (Grid<String> g : reverseMap.keySet()) {
+        TreeSet<Section.Version> mappedVersions = reverseMap.get(g);
+        Section.Version first = mappedVersions.first();
+        for (Section.Version dv : mappedVersions) {
+          //  more convenient to put idenity mapping in for first
+          displaySectionMap.put(dv, first);
+        }
+      }
+
+      //GWT.log(displayMap.toString());
+      HashMap<Section.Version, Grid<String>> reducedChordSectionMap = new HashMap<>();
+      for (Section.Version version : chordSectionMap.keySet()) {
+        reducedChordSectionMap.put(version, chordSectionMap.get(displaySectionMap.get(version)));
+      }
+
+      //  install the reduced map
+      chordSectionMap.clear();
+      chordSectionMap.putAll(reducedChordSectionMap);
+      //GWT.log(chordSectionMap.toString());
     }
 
     //  build map for js
@@ -254,19 +315,37 @@ public class Song {
 
     String chordText = ""; //  table formatted
 
-    for (Section.Version version : map.keySet()) {
+    SortedSet<Section.Version> sortedKeys = new TreeSet<>(map.keySet());
+    SortedSet<Section.Version> displayed = new TreeSet<>();
+    for (Section.Version version : sortedKeys) {
+      if (displayed.contains(version)) {
+        continue;
+      }
+
       Grid<String> grid = map.get(version);
-      String start = sectionStart + version.toString() + ":</td>";
+      Section.Version displayVersion = displaySectionMap.get(version);
+
+      //  section label
+      String start = sectionStart;
+      for (Section.Version v : displaySectionMap.keySet()) {
+        if (displaySectionMap.get(v) == version) {
+          start += v.toString() + ":<br/>";
+          displayed.add(v);
+        }
+      }
+      start += "</td>\n";
+
+      //  section data
       for (int r = 0; r < grid.getRowCount(); r++) {
 
         chordText += start;
-        start = rowStart;
+        start = rowStart;   //  default to empty row start on subsequent rows
 
         ArrayList<String> row = grid.getRow(r);
         for (int col = 0; col < row.size(); col++) {
           chordText += "<td class=\"section" + version.getSection().getAbreviation() + "Class\""
                   //+ " style=\"\""
-                  + " id=\"C." + version.toString() + "." + r + "." + col + "\""
+                  + " id=\"C." + displayVersion.toString() + "." + r + "." + col + "\""
                   + " >"
                   + row.get(col) + "</td>\n\t";
         }
@@ -366,6 +445,9 @@ public class Song {
           } else if ((c >= '0' && c <= '9')
                   || c == 'm'
                   || c == ' ' || c == '-' || c == '|' || c == '/'
+                  || c == '[' || c == ']'
+                  || c == '{' || c == '}'
+                  || c == '.'
                   || c == '\n'
                   || c == js_delta) {
             sout += c;
@@ -468,6 +550,7 @@ public class Song {
   private int beatsPerBar;  //  beats per bar
   private ArrayList<Section.Version> sequence;
   private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();
+  private final HashMap<Section.Version, Section.Version> displaySectionMap = new HashMap<>();
   private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
   private static final String chordNumberToLetter[] = new String[]{"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
   private static final char js_flat = '\u266D';

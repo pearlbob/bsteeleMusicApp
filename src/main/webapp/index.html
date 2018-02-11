@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 
 <!--
-alternate versions
+song mapping now moved to title based, not used on start
+
 multiple section id's on one definition
+
+fix chord box not finding it's parent size
+
+
+validate all verse sections have match in chords
 
 log operations
 
@@ -11,8 +17,9 @@ log operations
 add html to type sharps, naturals and flats
 song title in tab
 
+change file format to json
 
-pop the colors on beat transitions
+fade color out after beat 1 the colors on beat transitions
 return to the search after s
 
 ong play
@@ -136,7 +143,7 @@ Beat vs measure resolution on a section basis
             .sectionBrClass,
             .sectionPCClass,
             .sectionIClass,
-            .sectionOutClass,
+            .sectionOClass,
             .sectionCoClass,
             .sectionTClass
             {    
@@ -152,7 +159,7 @@ Beat vs measure resolution on a section basis
             .lyricsBrClass,
             .lyricsPCClass,
             .lyricsIClass,
-            .lyricsOutClass,
+            .lyricsOClass,
             .lyricsCoClass,
             .lyricsTClass
             {
@@ -230,12 +237,14 @@ Beat vs measure resolution on a section basis
                 visibility: visible;
             }
 
+            .stopped{}
+
             .sectionCClass, .lyricsCClass   { background-color: var(--c-color);}
             .sectionVClass,.lyricsVClass    { background-color: var(--v-color); }
             .sectionBrClass,.lyricsBrClass  { background-color: var(--br-color);}
             .sectionPCClass,.lyricsPCClass  { background-color: var(--pc-color);}
             .sectionIClass,.lyricsIClass    { background-color: var(--in-color);}
-            .sectionOutClass,.lyricsOutClass{ background-color: var(--out-color);}
+            .sectionOClass,.lyricsOClass{ background-color: var(--out-color);}
             .sectionCoClass,.lyricsCoClass  { background-color: var(--coda-color);}
             .sectionTClass,.lyricsTClass    { background-color: var(--t-color);}
 
@@ -337,12 +346,15 @@ Beat vs measure resolution on a section basis
                 copyrightOwner.innerHTML = a.getElementsByClassName("copyright")[0].innerHTML;
 
                 //  deal with possible missing bpm's
-                bpm = a.getElementsByClassName("bpm");
-                if (bpm === undefined || bpm.length < 1)
-                    bpm = (106);
-                else {
-                    bpm = parseInt(bpm[0].innerHTML);   //  assume it's a number
-                    bpm = (bpm < minBpm ? minBpm : (bpm > maxBpm ? maxBpm : bpm));
+                {
+                    let songBpm = a.getElementsByClassName("bpm");
+
+                    if (songBpm === undefined || songBpm.length < 1)
+                        bpm = (106);
+                    else {
+                        bpm = parseInt(songBpm[0].innerHTML);   //  assume it's a number
+                        bpm = (bpm < minBpm ? minBpm : (bpm > maxBpm ? maxBpm : bpm));
+                    }
                 }
                 onCurrentBpmEntry(bpm);
 
@@ -477,7 +489,8 @@ Beat vs measure resolution on a section basis
                             return {
                                 sectionIndex: this.section,
                                 measureCount: this.measureCount,
-                                sectionId: sectionId,
+                                //  for chord section reduction:
+                                sectionId: mySong.getChordSectionId(sectionId),
                                 chordSection: chordSection,
                                 chordRow: this.chordRow,
                                 chordCol: this.chordCol,
@@ -542,12 +555,22 @@ Beat vs measure resolution on a section basis
                         return false;
                     sectionId = this.songSectionSequence[this.section];
                     chordSection = mySong.getChordSection(sectionId);
+
                     chordCols = chordSection[this.chordRow];
+                    if (chordCols === undefined) {
+                        stop();
+                        return false;
+                    }
 
                     this.measure = chordCols[this.chordCol];
+                    if (this.measure === undefined) {
+                        stop();
+                        return false;
+                    }
+
 
                     //  look for the repeat extender
-                    let repeatExtender = this.measure.match(/\|/);
+                    let repeatExtender = this.measure.match(/^\|$/);
                     if (repeatExtender !== null) {
                         if (this.repeatTotal === 0) {
                             //  not currently repeating
@@ -794,7 +817,9 @@ Beat vs measure resolution on a section basis
                 } else
                     song.artist = 'unknown artist';
 
-                song.id = "Song" + songIdCount++;
+                //  has to match the java Song.getSongId()
+
+                song.id = "Song" + title.replace(/\W+/g, "");
                 song.hidden = true;
 
                 //  remove song with same title and artist if it exists
@@ -1438,9 +1463,11 @@ Beat vs measure resolution on a section basis
 
         <div class='upperLeft'>
 
-            <a href="#toc" onClick='onTopClick("name"); return false;' >Song List</a>
+            <a href="#toc" onClick='onTopClick("name");
+                    return false;' >Song List</a>
             &nbsp;
-            <a href="#toc" onClick='onTopClick("artist"); return false;' >by artist</a>
+            <a href="#toc" onClick='onTopClick("artist");
+                    return false;' >by artist</a>
             <span class="songSelectedOptions" >
                 &nbsp;&nbsp;
                 <button type="button" onclick="playFromStart();" >Play</button>

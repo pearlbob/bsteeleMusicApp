@@ -4,6 +4,7 @@
 package com.bsteele.bsteeleMusicApp.shared;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import jsinterop.annotations.JsType;
 
 /**
@@ -45,6 +46,10 @@ public class Grid<T> {
       ret[i] = grid.get(i).toArray(emptyStringArray);
     }
     return ret;
+  }
+  
+  public boolean isEmpty(){
+    return grid.isEmpty();
   }
 
   public final void add(int x, int y, T t) {
@@ -103,6 +108,28 @@ public class Grid<T> {
 
   public void clear() {
     grid.clear();
+  }
+  
+    @Override
+  public int hashCode() {
+    int hash = 3;
+    hash = 79 * hash + Objects.hashCode(this.grid);
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Grid<?> other = (Grid<?>) obj;
+    return Objects.equals(this.grid, other.grid);
   }
 
   private final ArrayList<ArrayList<T>> grid = new ArrayList<>();
