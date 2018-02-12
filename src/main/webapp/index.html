@@ -1171,7 +1171,7 @@ Beat vs measure resolution on a section basis
                 if (songText[0] === '{')
                 {
                     //  song is in json
-                    songText = songObjectToHtml(songObject);
+                    songText = songObjectToHtml(JSON.parse(songText));
                 }
                 addSongFromHtml(songText);
             }
