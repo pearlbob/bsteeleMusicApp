@@ -253,7 +253,6 @@ Beat vs measure resolution on a section basis
 
         <script src="https://www.w3schools.com/lib/w3.js"></script>
 
-
         <script>
             'use strict';
 
@@ -739,6 +738,42 @@ Beat vs measure resolution on a section basis
 
                 window.addEventListener("keydown", listenToKeyDown, true);
 
+                songListToJson();
+            }
+
+            function songListToJson() {
+                let songlist = document.getElementById("internalSongList");
+                let songs = songlist.getElementsByClassName('song');
+                let json = '[\n';
+                for (let i = 0; i < songs.length; i++) {
+                    let  htmlSong = songs[i];
+                    json += '\n{\n';
+                    json += divSubclassToJson(htmlSong, 'title', true);
+                    json += divSubclassToJson(htmlSong, 'artist', true);
+                    json += divSubclassToJson(htmlSong, 'copyright', true);
+                    json += divSubclassToJson(htmlSong, 'bpm', true);
+                    json += divSubclassToJson(htmlSong, 'timeSignature', true);
+                    json += divSubclassToJson(htmlSong, 'chords', true);
+                    json += divSubclassToJson(htmlSong, 'lyrics', false);
+                    json += '},\n';
+                }
+                json += '\n]\n';
+                log(json);
+            }
+
+            function divSubclassToJson(parentDiv, klass, isMore) {
+                let ret = '\t"' + klass + "\": \""
+                let a = parentDiv.getElementsByClassName(klass);
+                if (a && a.length > 0) {
+                    let content = a[0].innerText;
+                    content = content.replace(/\n/g, "\\\\n\n")
+                            .replace(/\r/g, "")
+                            .replace(/\t/g, "\\\\t")
+                            .replace(/"/g, "\\\\\"");
+                    ret += content;
+                }
+                ret += "\"" + (isMore ? "," : "") + '\n';
+                return ret;
             }
 
             function onModuleLoadJS() {
@@ -1566,54 +1601,55 @@ Beat vs measure resolution on a section basis
                     </div>
     
         -->
+        <div id="internalSongList">
 
-        <div class="song">
-            <div class="title">Lady Madonna</div>
-            <div class="artist">The Beatles</div>
-            <div class="copyright">Sony/ATV Music Publishing LLC</div>
-            <div class='bpm'>106</div>
-            <div class='chords'>
-                v:
-                A  D  A  D  |
-                A  D  FG A  | x2
-                c:
-                Dm -  G  -
-                C  -  Am -
-                Dm -  G  -
-                C  Bm E4 E
-                o:
-                A  D  A    D
-                A  D  FG   
-                A  Bm CmBm A
+            <div class="song">
+                <div class="title">Lady Madonna</div>
+                <div class="artist">The Beatles</div>
+                <div class="copyright">Sony/ATV Music Publishing LLC</div>
+                <div class='bpm'>106</div>
+                <div class='chords'>
+                    v:
+                    A  D  A  D  |
+                    A  D  FG A  | x2
+                    c:
+                    Dm -  G  -
+                    C  -  Am -
+                    Dm -  G  -
+                    C  Bm E4 E
+                    o:
+                    A  D  A    D
+                    A  D  FG   
+                    A  Bm CmBm A
+                </div>
+                <div class="lyrics">
+                    v:
+                    Lady Madonna, children at your feet
+                    Wonder how you manage to make ends meet 
+                    Who finds the money when you pay the rent 
+                    Did you think that money was heaven sent? 
+                    c:
+                    Friday night arrives without a suitcase 
+                    Sunday morning creeping like a nun 
+                    Monday's child has learned to tie his bootlace.  
+                    See how they'll run. 
+                    v:
+                    Lady Madonna, baby at your breast 
+                    Wonder how you manage to feet the rest 
+                    Lady Madonna, lying in your bed  
+                    Listen to the music playing in your head
+                    c:
+                    Tuesday afternoon is never ending,  
+                    Wednesday morning papers didn't come 
+                    Thursday night your stockings needed mending 
+                    See how they run
+                    o:
+                    Lady Madonna, children at your feet
+                    Wonder how you manage to make ends meet 
+                </div>
             </div>
-            <div class="lyrics">
-                v:
-                Lady Madonna, children at your feet
-                Wonder how you manage to make ends meet 
-                Who finds the money when you pay the rent 
-                Did you think that money was heaven sent? 
-                c:
-                Friday night arrives without a suitcase 
-                Sunday morning creeping like a nun 
-                Monday's child has learned to tie his bootlace.  
-                See how they'll run. 
-                v:
-                Lady Madonna, baby at your breast 
-                Wonder how you manage to feet the rest 
-                Lady Madonna, lying in your bed  
-                Listen to the music playing in your head
-                c:
-                Tuesday afternoon is never ending,  
-                Wednesday morning papers didn't come 
-                Thursday night your stockings needed mending 
-                See how they run
-                o:
-                Lady Madonna, children at your feet
-                Wonder how you manage to make ends meet 
-            </div>
-        </div>
 
-
+    
         <div class="song">
             <div class="title">Rock Me Baby</div>
             <div class="artist">B.B. King</div>
@@ -1689,7 +1725,7 @@ Beat vs measure resolution on a section basis
                 Ooh, you got me cryin' baby
                 Ohh, you got me cryin'
             </div></div>
-
+    </div>
         <div class="song">
             <div class="title">Sunshine Of Your Love</div>
             <div class="artist">Cream</div>
