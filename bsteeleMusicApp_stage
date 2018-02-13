@@ -38,10 +38,10 @@ set app=$git:t:r
 set finalWar=$target/$app.war
 echo deploy $app\: $finalWar to $dst
 
-sleep 3
-
 #	get the songlyrics from the cloud
-gsutil cat gs://songlyrics.bsteele.com > $git/src/main/webapp/allSongs.songlyrics
+echo "<div>" >  $git/src/main/webapp/allSongs.songlyrics
+gsutil cat gs://songlyrics.bsteele.com >> $git/src/main/webapp/allSongs.songlyrics
+echo "</div>" >>  $git/src/main/webapp/allSongs.songlyrics
 
 
 #	compile for deployment
