@@ -199,14 +199,14 @@
         <script>
             'use strict';
 
-            /*
+            /*  todo:
              _____song mapping now moved to title based, not used on start
              linux chrome won't always get a audiocontext
              firefox, mac & linux, messes the page on play
              safari won't play
              
              multiple section id's on one definition:  improve display
-             
+             transposition for Bb instruments
              fix chord box not finding it's parent size
              
              
@@ -1127,33 +1127,51 @@
                     }
                 }
 
+                if (chordsElement.value.length <= 0) {
+                    window.alert("no chords given!");
+                    return;
+                }
+
                 if (lyricsElement.value.length <= 0) {
                     window.alert("no lyrics given!");
                     return;
                 }
 
-                let songHtml = "<div class=\"song\">\n"
-                        + "<div class=\"title\">" + titleElement.value + "</div>\n"
-                        + "\t<div class=\"artist\">" + artistElement.value + "</div>\n"
-                        + "\t<div class=\"copyright\">" + copyrightElement.value + "</div>\n"
-                        + "\t<div class=\"bpm\">" + bpmElement.value + "</div>\n"
-                        + "\t<div class=\"timeSignature\">" + timeSignatureElement.value + "</div>\n"
-                        + "\t<div class=\"chords\">\n"
-                        + chordsElement.value
-                        + "\n\t</div>\n"
-                        + "\t<div class=\"lyrics\">\n"
-                        + lyricsElement.value
-                        + "\n\t</div>\n</div>\n";
+//                let songHtml = "<div class=\"song\">\n"
+//                        + "<div class=\"title\">" + titleElement.value + "</div>\n"
+//                        + "\t<div class=\"artist\">" + artistElement.value + "</div>\n"
+//                        + "\t<div class=\"copyright\">" + copyrightElement.value + "</div>\n"
+//                        + "\t<div class=\"bpm\">" + bpmElement.value + "</div>\n"
+//                        + "\t<div class=\"timeSignature\">" + timeSignatureElement.value + "</div>\n"
+//                        + "\t<div class=\"chords\">\n"
+//                        + chordsElement.value
+//                        + "\n\t</div>\n"
+//                        + "\t<div class=\"lyrics\">\n"
+//                        + lyricsElement.value
+//                        + "\n\t</div>\n</div>\n";
 
-                saveSongAs(titleElement.value + ".songlyrics", songHtml);
-                addSongFromHtml(songHtml);
+                let songObect = {
+                    title: titleElement.value,
+                    artist: artistElement.value,
+                    copyright: copyrightElement.value,
+                    bpm: bpmElement.value,
+                    timeSignature: timeSignatureElement.value,
+                    chords: chordsElement.value.split('\n'),
+                    lyrics: lyricsElement.value.split('\n')
+                };
+
+                let s = JSON.stringify(songObect, null, '  ');
+                saveSongAs(titleElement.value + ".songlyrics", s);
+                addSongFromHtml(songObjectToHtml(songObect));
                 songEntryClear();
                 songEntryElement.hidden = true;
                 addSongButton.hidden = false;
                 optionChoicesDiv.hidden = false;
-                let s = document.getElementById("Song" + (songIdCount - 1) + "Toc");
-                if (s !== null)
-                    s.scrollIntoView();
+
+                s = "Song" + songObect.title.replace(/\W+/g, "") + "Toc";
+                let e = document.getElementById(s);
+                if (e !== null)
+                    e.scrollIntoView();
             }
 
             function songEntryClear() {
