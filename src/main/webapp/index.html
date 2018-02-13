@@ -1213,8 +1213,17 @@
                     return;
                 if (songText[0] === '{')
                 {
-                    //  song is in json
+                    //  single song is in json
                     songText = songObjectToHtml(JSON.parse(songText));
+                } else if (songText[0] === '[')
+                {
+                    //  multiple songs in json array
+                    let songObjects= JSON.parse(songText);
+                    for (let i = 0; i < songObjects.length; i++) {
+                        let s = songObjects[i];
+                        addSongFromHtml(songObjectToHtml(s));
+                    }
+                    return;
                 }
                 addSongFromHtml(songText);
             }
