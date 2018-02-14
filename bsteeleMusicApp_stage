@@ -1,13 +1,13 @@
 #!/bin/tcsh
 set debug=0
-set isBeta=0
+set isBeta=1
 
 while ( $#argv > 0 )
 	switch ( $1 )
-	case '-beta':
-		set isBeta=1
-		shift
-		continue;
+#	case '-beta':
+#		set isBeta=1
+#		shift
+#		continue;
 	case '-d':		#	debug
 	case '-debug':
 		set debug=1
@@ -47,10 +47,8 @@ echo "</div>" >>  $git/src/main/webapp/allSongs.songlyrics
 #	compile for deployment
 set cwd=`pwd`
 cd $git
-if ( $debug == 0 ) then
-	mvn clean install -Ddeploy=true -Dgwt.logLevel=WARN \
-		-Dgwt.style=OBF -DrunTarget=index.html -Dgwt.compiler.compileReport=false
-endif
+mvn clean install -Ddeploy=true -Dgwt.logLevel=WARN \
+	-Dgwt.style=OBF -DrunTarget=index.html -Dgwt.compiler.compileReport=false
 rm -f $finalWar
 #	expecting only one war file
 set war=`find $git -iname "*.war" -print | tail -1 `
@@ -79,6 +77,11 @@ cd $cwd
 #	deploy on tomcat
 cp $finalWar /opt/tomcat/webapps
 
+#	deploy on web
+set gs=gs://www.bsteele.com/beta/$app
+gsutil -m rsync -d -R $dst/$app/ $gs 	#	source needs the /
+gsutil -m -q acl -r ch -u AllUsers:R $gs
+
 
 if ( $isBeta != 0 ) then
 	echo test local version of $app at:
@@ -87,7 +90,7 @@ if ( $isBeta != 0 ) then
 else
 	echo test local version of $app at:
 	echo	http://localhost/public_html/$app
-	echo	http://localhost:8080/bsteeleMusicApp
+	echo	http://localhost:8082/bsteeleMusicApp
 	echo ... and deploy with bsteele_upload
 endif
 
