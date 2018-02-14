@@ -3,29 +3,26 @@
 
 <html>
     <head>
-        <link rel="shortcut icon" href="images/runningsmall.ico" />
-        <title>Lyrics</title>
         <meta charset="UTF-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="images/runningsmall.ico" />
+
+        <title>Lyrics</title>
+        <meta name="description" content="bsteele.com Music App Lyrics">
+        <meta name="keywords" content="bass,guitar,sheet music,audio">
+        <meta name="author" content="Robert Steele, bsteele.com">
 
         <!-- If you add any GWT meta tags, they must   -->
         <!-- be added before this line.                -->
-        <!--                                           -->
         <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+
+        <link rel="stylesheet" href="./css/bsteeleMusicApp.css" type="text/css"/>
+
         <script type="text/javascript" src="./legacySongs.songlyrics" ></script>
 
         <style>
-            :root {
-                --bg-color: #FFFDF6;
-                --c-color: #ffffff;
-                --v-color: #f5f2e9;
-                --br-color: #f6edff;
-                --pc-color: #f7f0ff;
-                --in-color: #ECFFF9;
-                --out-color: #ECFFF9;
-                --coda-color: #ECFFF9;
-                --t-color: #edf6ff;
-            }
+
             table {
                 vertical-align: top;
                 border-width: 2px;
@@ -45,8 +42,6 @@
             body {
                 margin-left: 35%;
                 text-align: left;
-                /* max-width: 1920px;*/
-                background-color: var(--bg-color);
             }
             a {
                 font-weight: bold;
@@ -64,11 +59,6 @@
             #copyrightLabel {
             }
             #chordSelection {
-            }
-            .audioBeatDisplayCanvasStyle {
-                border-style: solid;
-                border-width: 4px;
-                border-color: var(--bg-color);
             }
 
 
@@ -162,35 +152,8 @@
                 width: 80%;
                 height: 80ch;
             }
-            .tooltip .tooltiptext {
-                visibility: hidden;
-                width: 500px;
-                background-color: white;
-                color: black;
-                text-align: center;
-                border-radius: 6px;
-                padding: 5px 0;
-
-                /* Position the tooltip */
-                position: absolute;
-                z-index: 1;
-            }
-
-            .tooltip:hover .tooltiptext {
-                visibility: visible;
-            }
 
             .stopped{}
-
-            .sectionCClass, .lyricsCClass   { background-color: var(--c-color);}
-            .sectionVClass,.lyricsVClass    { background-color: var(--v-color); }
-            .sectionBrClass,.lyricsBrClass  { background-color: var(--br-color);}
-            .sectionPCClass,.lyricsPCClass  { background-color: var(--pc-color);}
-            .sectionIClass,.lyricsIClass    { background-color: var(--in-color);}
-            .sectionOClass,.lyricsOClass{ background-color: var(--out-color);}
-            .sectionCoClass,.lyricsCoClass  { background-color: var(--coda-color);}
-            .sectionTClass,.lyricsTClass    { background-color: var(--t-color);}
-
 
         </style>
 
@@ -1221,7 +1184,7 @@
                 } else if (songText[0] === '[')
                 {
                     //  multiple songs in json array
-                    let songObjects= JSON.parse(songText);
+                    let songObjects = JSON.parse(songText);
                     for (let i = 0; i < songObjects.length; i++) {
                         let s = songObjects[i];
                         addSongFromHtml(songObjectToHtml(s));

@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.shared;
+package com.bsteele.bsteeleMusicApp.client;
 
 import com.google.gwt.core.client.GWT;
 import jsinterop.annotations.JsOverlay;
@@ -15,7 +15,7 @@ import jsinterop.annotations.JsType;
  * @author bob
  */
 @JsType(namespace = JsPackage.GLOBAL, isNative = true)
-public class Lyrics {
+public class BSteeleMusicAppClientUtil {
 
     @JsMethod(namespace = GLOBAL)
     public static native void onModuleLoadJS();

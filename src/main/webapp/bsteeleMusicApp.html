@@ -1,37 +1,38 @@
 <!doctype html>
-<!-- The DOCTYPE declaration above will set the     -->
-<!-- browser's rendering engine into                -->
-<!-- "Standards Mode". Replacing this declaration   -->
-<!-- with a "Quirks Mode" doctype is not supported. -->
 
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="images/runningsmall.ico" />
 
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-
-        <!--                                                               -->
-        <!-- Consider inlining CSS to reduce the number of requested files -->
-        <link type="text/css" rel="stylesheet" href="bsteeleMusicApp.css">
-
         <title>bsteele music</title>
+        <meta name="description" content="bsteele.com Music App selection page">
+        <meta name="keywords" content="bass,guitar,sheet music,audio">
+        <meta name="author" content="Robert Steele, bsteele.com">
 
-        <!--                                           -->
-        <!-- This script loads your compiled module.   -->
         <!-- If you add any GWT meta tags, they must   -->
         <!-- be added before this line.                -->
-        <!--                                           -->
         <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
 
+        <link type="text/css" rel="stylesheet" href="./css/bsteeleMusicApp.css" />
+
         <script>
+            'use strict';
+            
+            //  fix loading issues
+            let  isModuleLoad = false;
+            let  isLoad = false;
+
+            let bpmTally;
+
             let bpmTap;
 
             function onNativeTap(event) {
 
                 let t = event.timeStamp / 1000; //  in units of seconds
                 //window.console.log("tap timestamp: " + t);
-                if (bpmTap === undefined)
-                    bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
                 bpmTap.tap(t);
             }
 
@@ -43,8 +44,7 @@
             {
                 function update() {
 
-                    if (bpmTap !== undefined)
-                        bpmTally.innerHTML = bpmTap.getBPM();
+                    bpmTally.innerHTML = bpmTap.getBPM();
 
                     window.requestAnimationFrame(update);
                 }
@@ -52,10 +52,27 @@
             }
 
             function onLoad() {
-                log("onLoad()");
-                bpmTally = inputFile = document.getElementById("bpmTally");
+                //log("onLoad()");
+                bpmTally = document.getElementById("bpmTally");
 
-                animationFrameUpdate();
+                isLoad = true;
+                lastOfLoad();
+            }
+
+            function onModuleLoadJS() {
+                //   populate java objects
+                bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
+
+                isModuleLoad = true;
+                lastOfLoad();
+            }
+
+            function lastOfLoad() {
+                if (isModuleLoad && isLoad)
+                {
+                    //  finish page initization now that we're all here
+                    animationFrameUpdate();
+                }
             }
         </script>
     </head>
@@ -64,7 +81,7 @@
 
         <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
         <noscript>
-        <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        <div>
             Your web browser must have JavaScript enabled
             in order for this application to display correctly.
         </div>
@@ -82,16 +99,6 @@
         </table>
         <p></p>
         <table>
-            <tr>
-                <td colspan="2" style="font-weight:bold;">RPC test:</td>        
-            </tr>
-            <tr>
-                <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
-            </tr>
-            <tr>
-                <td id="nameFieldContainer"></td>
-                <td id="sendButtonContainer"></td>
-            </tr>
             <tr>
                 <td><button type="button" onclick="onNativeTap(event);" >Tap for BPM</button></td>
                 <td id="bpmTally">106</td>

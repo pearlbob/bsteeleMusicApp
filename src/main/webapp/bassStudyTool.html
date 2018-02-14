@@ -3,6 +3,9 @@
 Copyright 2016 Robert Steele, bsteele.com
 All rights reserved.
 
+start on a rest
+lyrics on a rest
+add "1 e and a 2 e and a 3.." to the extra number options
 space bar should do the last type of play/loop
 loopN from end starts at first bar in song
 should loop starting and/or ending on a rest
@@ -11,14 +14,24 @@ longer file name text area
 
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="bassWebpageStyleSheet.css" type="text/css"/>
-        <link rel="shortcut icon" href="images/runningsmall.ico" />
-        <title>Bass</title>
         <meta charset="UTF-8">
-        <meta name="description" content="Bass Guitar Study Tool">
-        <meta name="keywords" content="bass,guitar,sheet music,audio">
-        <meta name="author" content="Robert Steele">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="images/runningsmall.ico" />
+
+        <title>Bass</title>
+        <meta name="description" content="bsteele.com Music App Bass Guitar Study Tool">
+        <meta name="keywords" content="bass,guitar,sheet music,audio">
+        <meta name="author" content="Robert Steele, bsteele.com">
+
+        <!-- If you add any GWT meta tags, they must   -->
+        <!-- be added before this line.                -->
+        <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+
+
+        <link rel="stylesheet" href="./css/bsteeleMusicApp.css" type="text/css"/>
+        <link rel="stylesheet" href="./css/bassWebpageStyleSheet.css" type="text/css"/>
+
         <script src="./js/keyTone.js"></script>
         <script src="./js/uploadDate.js">
             /* global uploadDate */
@@ -31,6 +44,12 @@ longer file name text area
         </script>
 
         <script>
+            'use strict';
+            
+            //  fix loading issues
+            let  isModuleLoad = false;
+            let  isLoad = false;
+
             var bass = myBass();
 
             function toggleHintDisplay() {
@@ -55,13 +74,31 @@ longer file name text area
                 bass.onLoad();
                 nashville.onLoad();
 
-                drawBackground();
+               isLoad = true;
+                lastOfLoad();
             }
 
             function drawBackground() {
                 requestAnimationFrame(drawBackground);
                 bass.frameUpdate();
                 nashville.frameUpdate();
+            }
+            
+            function onModuleLoadJS() {
+                //   populate java objects
+                //bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
+
+
+                isModuleLoad = true;
+                lastOfLoad();
+            }
+            
+             function lastOfLoad() {
+                if (isModuleLoad && isLoad)
+                {
+                    //  finish page initization now that we're all here
+                    drawBackground();
+                }
             }
 
         </script>

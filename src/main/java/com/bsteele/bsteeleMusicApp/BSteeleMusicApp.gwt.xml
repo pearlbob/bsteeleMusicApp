@@ -7,7 +7,7 @@
   "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module rename-to='bsteelemusicapp'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
-    <!--<inherits name='com.google.gwt.user.User'/>-->
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.google.gwt.core.Core"/>
 
     <!-- Inherit the default GWT style sheet.  You can change       -->
