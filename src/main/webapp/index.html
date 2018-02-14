@@ -251,6 +251,7 @@
             let textFile = null;
             let downloadlink = null;
             let isEdit = false;
+            let  pageTitleElement;
             let songListElement;
             let internalSongListElement;
             let songEntryElement;
@@ -307,8 +308,6 @@
             //
             function onSongClick(anchor) {
                 selectSongByHash(anchor.hash);
-
-
             }
 
             function selectSongByHash(hash) {
@@ -611,9 +610,10 @@
             }
 
             function focusOnSearchEntry() {
-                window.location.href = '#toc';
+                //window.location.href = '#toc';
                 searchEntry.hidden = false;
                 searchEntry.focus();
+                pageTitleElement.scrollIntoView(true);
             }
 
 
@@ -660,6 +660,7 @@
                 inputFile = document.getElementById("inputFile");
                 searchEntry = document.getElementById("searchEntry");
                 internalSongListElement = document.getElementById("internalSongList");
+                pageTitleElement = document.getElementById("title");
 
                 defaultBackgroundColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
 
@@ -1206,7 +1207,7 @@
             }
 
             function saveSongAs(filename, data) {
-                var data = new Blob([data], {type: 'text/plain'});
+                var blob = new Blob([data], {type: 'text/plain'});
                 // If we are replacing a previously generated file we need to
                 // manually revoke the object URL to avoid memory leaks.
                 if (textFile !== null) {
@@ -1214,7 +1215,7 @@
                 }
 
                 //  fixme: control the filename!!!!!
-                textFile = window.URL.createObjectURL(data);
+                textFile = window.URL.createObjectURL(blob);
                 if (downloadlink === null) {
                     downloadlink = document.createElement("a");
                     downloadlink.style = "display:none";
@@ -1243,7 +1244,7 @@
                 reader.onload = (e) => {
                     addSongHtmlOrJson(reader.result); //  fixme: dangerous!
                 };
-                reader.readAsBinaryString(file);
+                reader.readAsText(file);
             }
 
             function processRawSeverFile(path, processFunction) {
@@ -1514,7 +1515,7 @@
     <body onload="onLoad();">
 
         <div class="toc" >
-            <h1><a name="toc">Lyrics</a></h1>
+            <h1><a id="title" name="toc">Lyrics</a></h1>
             <p>Search: <input type="search" id="searchEntry" placeholder="title or artist..." class="mediumTextEntry" >
                 &nbsp;
                 <span class="tooltip"><span style="font-weight: bold;">Read Song Files:</span> 
@@ -1728,29 +1729,11 @@
 
         <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
         <noscript>
-        <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        <div>
             Your web browser must have JavaScript enabled
             in order for this application to display correctly.
         </div>
         </noscript>
-
-        <table hidden>
-            <tr>
-                <td colspan="2" style="font-weight:bold;">Please enter your name:</td>        
-            </tr>
-            <tr>
-                <td id="nameFieldContainer"></td>
-                <td id="sendButtonContainer"></td>
-            </tr>
-            <tr>
-                <td><button type="button" onclick="onNativeTap(event);" >Tap for BPM</button></td>
-                <td id="bpmTally">106</td>
-            </tr>
-            <tr>
-                <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-            </tr>
-        </table>
-
 
         <div id="internalSongList" hidden >
             <div w3-include-html="allSongs.songlyrics"></div> 
