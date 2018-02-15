@@ -2,190 +2,79 @@ package com.bsteele.bsteeleMusicApp.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.typedarrays.shared.ArrayBuffer;
+import com.google.gwt.user.client.Window;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.realityforge.gwt.websockets.client.WebSocket;
+import org.realityforge.gwt.websockets.client.WebSocketListener;
 
 /**
- * Entry point classes define <code>onModuleLoad()</code>.
+ * App Entry point
  */
-public class BSteeleMusicApp implements EntryPoint //, WebSocketListener
-{
+public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
 
-    /**
-     * The message displayed to the user when the server cannot be reached or
-     * returns an error.
-     */
-    private static final String SERVER_ERROR = "An error occurred while "
-            + "attempting to contact the server. Please check your network "
-            + "connection and try again.";
+  public void send(final String message) {
+    webSocket.send(message);
+  }
 
-    /**
-     * Create a remote service proxy to talk to the server-side Greeting
-     * service.
-     */
-    private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
-
-    /**
-     * This is the entry point method.
-     */
-    @Override
-    public void onModuleLoad() {
-        //        GWT.log("onModuleLoad()");
-
-        BSteeleMusicAppClientUtil.onModuleLoad();
-
-//        final Button sendButton = new Button("Send");
-//
-//        final TextBox nameField = new TextBox();
-//
-//        nameField.setText("GWT User");
-//        final Label errorLabel = new Label();
-//
-//        // We can add style names to widgets
-//        sendButton.addStyleName("sendButton");
-//
-//        // Add the nameField and sendButton to the RootPanel
-//        // Use RootPanel.get() to get the entire body element
-//        RootPanel.get("nameFieldContainer").add(nameField);
-//        RootPanel.get("sendButtonContainer").add(sendButton);
-//        RootPanel.get("errorLabelContainer").add(errorLabel);
-//
-//        // Focus the cursor on the name field when the app loads
-//        nameField.setFocus(true);
-//        nameField.selectAll();
-//
-//        // Create the popup dialog box
-//        final DialogBox dialogBox = new DialogBox();
-//        dialogBox.setText("Remote Procedure Call");
-//        dialogBox.setAnimationEnabled(true);
-//        final Button closeButton = new Button("Close");
-//        // We can set the id of a widget by accessing its Element
-//        closeButton.getElement().setId("closeButton");
-//        final Label textToServerLabel = new Label();
-//        final HTML serverResponseLabel = new HTML();
-//        VerticalPanel dialogVPanel = new VerticalPanel();
-//        dialogVPanel.addStyleName("dialogVPanel");
-//        dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-//        dialogVPanel.add(textToServerLabel);
-//        dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-//        dialogVPanel.add(serverResponseLabel);
-//        dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-//        dialogVPanel.add(closeButton);
-//        dialogBox.setWidget(dialogVPanel);
-//
-//        // Add a handler to close the DialogBox
-//        closeButton.addClickHandler((ClickEvent event) -> {
-//            dialogBox.hide();
-//            sendButton.setEnabled(true);
-//            sendButton.setFocus(true);
-//        });
-//
-//        // Create a handler for the sendButton and nameField
-//        class MyHandler implements ClickHandler, KeyUpHandler {
-//
-//            /**
-//             * Fired when the user clicks on the sendButton.
-//             */
-//            @Override
-//            public void onClick(ClickEvent event) {
-//                sendNameToServer();
-//            }
-//
-//            /**
-//             * Fired when the user types in the nameField.
-//             */
-//            @Override
-//            public void onKeyUp(KeyUpEvent event) {
-//                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-//                    sendNameToServer();
-//                }
-//            }
-//
-//            /**
-//             * Send the name from the nameField to the server and wait for a
-//             * response.
-//             */
-//            private void sendNameToServer() {
-//                // First, we validate the input.
-//                errorLabel.setText("");
-//                String textToServer = nameField.getText();
-//                if (!FieldVerifier.isValidName(textToServer)) {
-//                    errorLabel.setText("Please enter at least four characters");
-//                    return;
-//                }
-//
-//                // Then, we send the input to the server.
-//                sendButton.setEnabled(false);
-//                textToServerLabel.setText(textToServer);
-//                serverResponseLabel.setText("");
-//                greetingService.greetServer(textToServer, new AsyncCallback<String>() {
-//                    @Override
-//                    public void onFailure(Throwable caught) {
-//                        // Show the RPC error message to the user
-//                        dialogBox.setText("Remote Procedure Call - Failure");
-//                        serverResponseLabel.addStyleName("serverResponseLabelError");
-//                        serverResponseLabel.setHTML(SERVER_ERROR);
-//                        dialogBox.center();
-//                        closeButton.setFocus(true);
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(String result) {
-//                        dialogBox.setText("Remote Procedure Call");
-//                        serverResponseLabel.removeStyleName("serverResponseLabelError");
-//                        serverResponseLabel.setHTML(result);
-//                        dialogBox.center();
-//                        closeButton.setFocus(true);
-//                    }
-//                });
-//            }
-//        }
-//
-//        // Add a handler to send the name to the server
-//        MyHandler handler = new MyHandler();
-//        sendButton.addClickHandler(handler);
-//        nameField.addKeyUpHandler(handler);
-
-//        //  WS test
-//        final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
-//        if (null == webSocket) {
-//            Window.alert("WebSocket not available!");
-//        } else {
-//            webSocket.setListener(this);
-//            webSocket.connect( getWebSocketURL() );
-//            
-//        }
+  @Override
+  public void onModuleLoad() {
+    webSocket = WebSocket.newWebSocketIfSupported();
+    if (null == webSocket) {
+      Window.alert("WebSocket not available!");
+    } else {
+      webSocket.setListener(this);
+      webSocket.connect( getWebSocketURL() );
+      Window.alert("WebSocket ready? "+webSocket.getURL());
     }
+  }
 
-//    //   webSocket.send( message );
-//    private String getWebSocketURL() {
-//        final String moduleBaseURL = GWT.getHostPageBaseURL();
-//        return moduleBaseURL.replaceFirst("^http\\:", "ws:") + "chat";
-//    }
-//
-//    @Override
-//    public void onOpen(WebSocket webSocket) {
-//        GWT.log("ws opened");
-//        if ( msgCount++ == 0)
-//            webSocket.send("first message sent from client");
-//    }
-//
-//    @Override
-//    public void onClose(WebSocket webSocket, boolean wasClean, int code, String reason) {
-//        GWT.log("ws closed");
-//    }
-//
-//    @Override
-//    public void onMessage(WebSocket webSocket, String data) {
-//        GWT.log("ws string msg: " + data);
-//    }
-//
-//    @Override
-//    public void onMessage(WebSocket webSocket, ArrayBuffer data) {
-//        GWT.log("ws array msg: " + data);
-//    }
-//
-//    @Override
-//    public void onError(WebSocket webSocket) {
-//        GWT.log("ws error from: " + webSocket.getURL());
-//    }
-//    private int msgCount = 0;
+  @Override
+  public void onOpen(@Nonnull final WebSocket webSocket) {
+    logStatus("Open", webSocket);
+  }
+
+  @Override
+  public void onClose(@Nonnull final WebSocket webSocket,
+          final boolean wasClean,
+          final int code,
+          @Nullable final String reason) {
+    logStatus("Close", webSocket);
+  }
+
+  @Override
+  public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final ArrayBuffer data) {
+    logStatus("DataMessage", webSocket);
+  }
+
+  @Override
+  public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String textData) {
+    logStatus("Message", webSocket);
+  }
+
+  @Override
+  public void onError(WebSocket webSocket) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+  
+  private String getWebSocketURL()
+  {
+    final String moduleBaseURL = GWT.getHostPageBaseURL();
+    return moduleBaseURL.replaceFirst( "^http\\:", "ws:" ) + "bsteeleMusic";
+  }
+
+  private void logStatus(@Nonnull final String section,
+          @Nonnull final WebSocket webSocket) {
+    final String suffix = !webSocket.isConnected()
+            ? ""
+            : "URL:" + webSocket.getURL() + "\n"
+            + "BinaryType:" + webSocket.getBinaryType() + "\n"
+            + "BufferedAmount:" + webSocket.getBufferedAmount() + "\n"
+            + "Extensions:" + webSocket.getExtensions() + "\n"
+            + "Protocol:" + webSocket.getProtocol();
+    GWT.log("WebSocket @ " + section + "\n" + "ReadyState:" + webSocket.getReadyState() + "\n" + suffix);
+  }
+
+  private WebSocket webSocket;
 }

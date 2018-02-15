@@ -7,8 +7,10 @@
   "http://gwtproject.org/doctype/2.8.2/gwt-module.dtd">
 <module rename-to='bsteelemusicapp'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
-    <!--<inherits name='com.google.gwt.user.User'/>-->
+    <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.google.gwt.core.Core"/>
+    <!--<inherits name="javax.websocket"/>-->
+     <!--<inherits name="org.apache.tomcat.tomcat-websocket"/>-->
 
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
@@ -21,6 +23,8 @@
     <!-- Other module inherits                                      -->
     <inherits name="com.google.gwt.logging.Logging"/>
 
+      <!-- Compile a single permutation for all platforms -->
+  <collapse-all-properties/>
    
     <!-- Specify the app entry point class.                         -->
     <entry-point class='com.bsteele.bsteeleMusicApp.client.BSteeleMusicApp'/>
@@ -39,7 +43,7 @@
     </set-property>
          
     <!-- Enable the websocket library -->
-    <!--<inherits name="org.realityforge.gwt.websockets.WebSockets"/>-->
+    <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
   
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />

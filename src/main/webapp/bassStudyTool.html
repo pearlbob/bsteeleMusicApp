@@ -3,8 +3,11 @@
 Copyright 2016 Robert Steele, bsteele.com
 All rights reserved.
 
+song sections, song lyrics markup conventions
 start on a rest
 lyrics on a rest
+loop back off a rest
+options should remain live during a play or loop, switch on next bar
 add "1 e and a 2 e and a 3.." to the extra number options
 space bar should do the last type of play/loop
 loopN from end starts at first bar in song
@@ -26,6 +29,7 @@ longer file name text area
 
         <!-- If you add any GWT meta tags, they must   -->
         <!-- be added before this line.                -->
+        <!--    <meta name="gwt:property" content="locale=ja_JP">   -->
         <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
 
 
@@ -194,21 +198,21 @@ longer file name text area
                             <tr>  
                                 <td>key:<select id="key" class="musicalSelect" onchange="bass.onKey()"
                                                 title="Change the key of the score">
-                                        <option value="-7"></option>
-                                        <option value="-6"></option>
-                                        <option value="-5"></option>
-                                        <option value="-4"></option>
-                                        <option value="-3"></option>
-                                        <option value="-2"></option>
-                                        <option value="-1"></option>
+                                        <option value="-7">-7</option>
+                                        <option value="-6">-6</option>
+                                        <option value="-5">-5</option>
+                                        <option value="-4">-4</option>
+                                        <option value="-3">-3</option>
+                                        <option value="-2">-2</option>
+                                        <option value="-1">-1</option>
                                         <option value="0" selected="selected">C</option>
-                                        <option value="1"></option>
-                                        <option value="2"></option>
-                                        <option value="3"></option>
-                                        <option value="4"></option>
-                                        <option value="5"></option>
-                                        <option value="6"></option>
-                                        <option value="7"></option>
+                                        <option value="1">+1</option>
+                                        <option value="2">+2</option>
+                                        <option value="3">+3</option>
+                                        <option value="4">+4</option>
+                                        <option value="5">+5</option>
+                                        <option value="6">+6</option>
+                                        <option value="7">+7</option>
                                     </select>
                                     <span id="keyScaleNotes" title="The notes in the scale of the key">scale here</span>
                                 </td>

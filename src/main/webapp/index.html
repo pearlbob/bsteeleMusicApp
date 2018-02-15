@@ -164,7 +164,13 @@
 
             /*  todo:
              * 
-             special characters
+             use GWT SplitLayoutPanel
+             DockLayoutPanel p = new DockLayoutPanel(Unit.EM);
+             p.addNorth(new HTML("header"), 2);
+             p.addSouth(new HTML("footer"), 2);
+             p.addWest(new HTML("navigation"), 10);
+             p.add(new HTML(content));
+             
              start play in the middle, loop one row, 2
              _____song mapping now moved to title based, not used on start
              linux chrome won't always get a audiocontext
@@ -1563,7 +1569,7 @@
                 For chords and lyrics, mark the sections with the following:
             </p>
 
-            <table style="border: 1;">
+            <table style="border: 1px;">
                 <tr><th>Id</th><th>Alt</th><th>Section</th></tr>
                 <tr><td>V:</td><td></td><td>Verse</td></tr>
                 <tr><td>P:</td><td>Pc:</td><td>Pre-chorus</td></tr>
