@@ -22,7 +22,7 @@ import javax.websocket.server.ServerEndpoint;
  *
  * @author bob
  */
-@ServerEndpoint(value = "/bsteeleMusic")//, subprotocols={ "bsteeleMusic" })
+@ServerEndpoint(value = "/bsteeleMusic" )
 public class BSteeleMusicAppServer
 {
 

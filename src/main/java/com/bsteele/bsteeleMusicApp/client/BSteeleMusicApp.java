@@ -26,7 +26,9 @@ public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
     } else {
       webSocket.setListener(this);
       webSocket.connect( getWebSocketURL() );
+      logStatus("onModuleLoad", webSocket);
       Window.alert("WebSocket ready? "+webSocket.getURL());
+      send("final String message");
     }
   }
 
@@ -51,6 +53,7 @@ public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
   @Override
   public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String textData) {
     logStatus("Message", webSocket);
+          Window.alert("message back: "+textData);
   }
 
   @Override

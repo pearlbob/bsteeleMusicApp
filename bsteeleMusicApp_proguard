@@ -1,7 +1,9 @@
 
 -libraryjars /usr/lib/jvm/jdk1.8.0_161/jre/lib/rt.jar
 -libraryjars /home/bob/m2/repository/javax/servlet/javax.servlet-api/4.0.0/javax.servlet-api-4.0.0.jar
--libraryjars /home/bob/GitHub/bsteeleMusicApp/target/bsteeleMusicApp-1.0-SNAPSHOT/WEB-INF/lib
+-libraryjars target/bsteeleMusicApp-1.0-SNAPSHOT/WEB-INF/lib
+-libraryjars /home/bob/m2/repository/org/realityforge/gwt/websockets/gwt-websockets/1.2/gwt-websockets-1.2.jar
+-libraryjars /home/bob/m2/repository/com/google/code/findbugs/jsr305/3.0.1/jsr305-3.0.1.jar
 
 -target 1.8
 

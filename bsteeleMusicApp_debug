@@ -1,0 +1,17 @@
+#!/bin/tcsh
+#set echo; set verbose
+
+
+mvn -X \
+	-DgenerateJsInteropExports=true \
+	-Dgwt.logLevel=INFO \
+	-Dgwt.style=DETAILED  \
+	clean package
+
+	#-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=8002 \
+#	-DrunTarget=bsteeleMusicApp.html \
+#	-Djpda.listen=maven \
+#	-Djpda.address=8002 \
+#	gwt:debug
+
+cp target/bsteeleMusicApp-1.0-SNAPSHOT.war /opt/tomcat/webapps/bsteeleMusicApp.war
