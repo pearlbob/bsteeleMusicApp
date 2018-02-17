@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
         <action>
-            <actionName>CUSTOM-GWT Debug</actionName>
-            <displayName>GWT Debug</displayName>
+            <actionName>CUSTOM-GWT Devmode</actionName>
+            <displayName>Devmode</displayName>
             <goals>
-                <goal>gwt:debug</goal>
+                <goal>gwt:devmode</goal>
             </goals>
             <properties>
                 <gwt.logLevel>INFO</gwt.logLevel>

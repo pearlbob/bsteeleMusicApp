@@ -1,0 +1,1722 @@
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="images/runningsmall.ico" />
+
+        <title>Lyrics</title>
+        <meta name="description" content="bsteele.com Music App Lyrics">
+        <meta name="keywords" content="bass,guitar,sheet music,audio">
+        <meta name="author" content="Robert Steele, bsteele.com">
+
+        <!-- If you add any GWT meta tags, they must   -->
+        <!-- be added before this line.                -->
+        <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+
+        <link rel="stylesheet" href="./css/bsteeleMusicApp.css" type="text/css"/>
+
+        <script type="text/javascript" src="./legacySongs.songlyrics" ></script>
+
+        <style>
+
+            table {
+                vertical-align: top;
+                border-width: 2px;
+                border-style: solid;
+                border-color: var(--bg-color);
+                border-collapse: separate;
+                border-spacing: 3px;     
+            }
+            td { 
+                vertical-align: top;
+                padding: 5px;
+                border-style: solid; 
+                border-color: var(--bg-color);
+            }
+
+
+            body {
+                margin-left: 35%;
+                text-align: left;
+            }
+            a {
+                font-weight: bold;
+            }
+            button {
+                font-weight: bold;
+            }
+            .upperLeft {
+                width: 28%;
+                position:fixed; top: 20px; left: 10px;
+            }
+            .copyright {
+                display: none;
+            }
+            #copyrightLabel {
+            }
+            #chordSelection {
+            }
+
+
+            .song{}
+            .artist{}
+            .title{}
+
+            .toc {}
+            .songSelectedOptions {}
+
+
+            .chords,
+            .sectionCClass,
+            .sectionVClass,
+            .sectionBrClass,
+            .sectionPCClass,
+            .sectionIClass,
+            .sectionOClass,
+            .sectionCoClass,
+            .sectionTClass
+            {    
+                /*float: left;*/
+                font-family: "Andale Mono", monospace;
+                font-weight: bold;
+                overflow-wrap: break-word;
+                white-space: pre-wrap;            
+            }
+            .lyrics,
+            .lyricsCClass,
+            .lyricsVClass,
+            .lyricsBrClass,
+            .lyricsPCClass,
+            .lyricsIClass,
+            .lyricsOClass,
+            .lyricsCoClass,
+            .lyricsTClass
+            {
+                float: left;
+                /*font-size: 24px;*/
+                overflow-wrap: break-word;
+                white-space: pre-line;
+                padding-left: 10px;
+                font-family: monospace;
+            }
+            .vLyrics {
+                float: left;
+                /*font-size: 24px;*/
+                overflow-wrap: break-word;
+                white-space: pre-line;
+                padding-left: 10px;
+                font-family: monospace;
+                background-color: var(--v-color);
+            }
+            .sectionLabel {
+                font-family: "Andale Mono", monospace;
+                /*font-size: 24px;*/
+            }
+            .vSectionLabel {
+                font-family: "Andale Mono", monospace;
+                /*font-size: 24px;*/
+                /*background-color: var(--bg-color);*/
+            }
+            div.fill {
+                height:100vh;
+            }
+            .songNo {
+                font-weight: bold;
+                /*font-size: 24px;*/
+                vertical-align: bottom;
+            }
+            #chordDiv {
+                /*font-size: 24px;*/
+            }
+
+            .oneLineTextEntry {
+                width: 80%;
+            }
+            .mediumTextEntry {
+                font-size: 20px;
+                width: 30ch;
+            }
+            .smallTextEntry {
+                width: 10ch;
+            }
+            .chordsTextEntry{
+                width: 30ch;
+                height: 40ch;
+                font-family: "Andale Mono", monospace;
+            }
+            .lyricsTextEntry {
+                width: 80%;
+                height: 80ch;
+            }
+
+            .stopped{}
+
+        </style>
+
+        <script src="https://www.w3schools.com/lib/w3.js"></script>
+
+        <script>
+            'use strict';
+
+            /*  todo:
+             * 
+             use GWT SplitLayoutPanel
+             DockLayoutPanel p = new DockLayoutPanel(Unit.EM);
+             p.addNorth(new HTML("header"), 2);
+             p.addSouth(new HTML("footer"), 2);
+             p.addWest(new HTML("navigation"), 10);
+             p.add(new HTML(content));
+             
+             start play in the middle, loop one row, 2
+             _____song mapping now moved to title based, not used on start
+             linux chrome won't always get a audiocontext
+             firefox, mac & linux, messes the page on play
+             safari won't play
+             
+             multiple section id's on one definition:  improve display
+             transposition for Bb instruments
+             fix chord box not finding it's parent size
+             
+             
+             validate all verse sections have match in chords
+             
+             log operations
+             
+             # vs b
+             
+             add html to type sharps, naturals and flats
+             song title in tab
+             
+             change file format to json
+             
+             fade color out after beat 1 the colors on beat transitions
+             return to the search after s
+             
+             ong play
+             remove list during edit
+             put edited song in view after edit
+             fix ctl-key on mac
+             
+             control s to save when editing a song
+             
+             multiple section id's on a single chord section
+             
+             scroll to newly edited song
+             
+             add lastModified to song metadata on file read, add size?
+             file location as well
+             
+             search for text
+             
+             select start by sections
+             loop by section
+             to dynamically change font size for chords to fit
+             set an indicator for added songs, font color change? 
+             
+             improve leadin count down
+             
+             comments in chords?
+             
+             fix: optionChoicesDiv with a css class
+             
+             
+             accelerated sub-beat indicator
+             hash by song name not list index
+             
+             
+             
+             section alterations imply: ch1 ch2 etc
+             Beat vs measure resolution on a section basis 
+             */
+
+
+            const red = '#ff0000';
+            const orange = '#ffA500';
+            const green = '#00ff00';
+
+            let songs = [];
+            let songIdCount = 0;
+            let audioBeatDisplayCanvas;
+            let chordDiv = undefined;
+            let songId = "Song0";
+            let copyrightLabel;
+            let copyrightOwner;
+            let addSongButton;
+            let editButton;
+            let chordSelection;
+            let lastType;
+            const js_flat = '\u266D';
+            const js_natural = '\u266E';
+            const js_sharp = '\u266F';
+            const js_delta = '\u0394';
+            let halfstepChange = -2;
+            let textFile = null;
+            let downloadlink = null;
+            let isEdit = false;
+            let  pageTitleElement;
+            let songListElement;
+//            let internalSongListElement;
+            let songEntryElement;
+            let titleElement;
+            let artistElement;
+            let copyrightElement;
+            let bpmElement;
+            let timeSignatureElement;
+            let chordsElement;
+            let lyricsElement;
+            let lyricsDisplayElement;
+            let searchEntry;
+            let currentBpmEntry;
+            let currentTimeSignature;
+            let optionChoicesDiv;
+            let inputFile;
+            let audioCtx;
+            let songSectionSequence;
+            let measureSequencer;
+            let lastCellHighlighted;
+            let lastLyricsHighlighted;
+            let lastRepeatCell;
+            let lastSectionIndex;
+            let defaultBackgroundColor;
+            let beatsPerBar = 4;
+            let lastBarCount = 0;
+            let minBarCount = 0;        //  used to delay song start
+            let isPlaying = false;
+            const minBpm = 50;
+            const maxBpm = 400;         //  temp
+            let bpm = 104;
+            let tapBpm;
+            let tapBpmTimeout;
+            let bpmSelect;
+            let lastSpaceBarT = 0;
+
+            let doSubBeat = true;
+            let doBeat = true;
+            let doHighlight = true;
+
+            let isTocHidden = false;
+            let isSongSelectOptionsHidden = false;
+            let isStoppedHidden = false;
+
+            let  isModuleLoad = false;
+            let  isLoad = false;
+
+            //  java objects
+            let bpmTap;
+            let audioBeatDisplay;
+            let mySong;
+
+
+            //
+            function onSongClick(anchor) {
+                selectSongByHash(anchor.hash);
+            }
+
+            function selectSongByHash(hash) {
+                if (mySong === undefined)
+                    return;     //  too early
+
+                //  put the chords into the chord section
+                let a = document.getElementById(hash.substring(1));
+                if (a === null)
+                    return;
+                let title = a.firstElementChild.textContent;
+                copyrightOwner.innerHTML = a.getElementsByClassName("copyright")[0].innerHTML;
+
+                //  deal with possible missing bpm's
+                {
+                    let songBpm = a.getElementsByClassName("bpm");
+
+                    if (songBpm === undefined || songBpm.length < 1)
+                        bpm = (106);
+                    else {
+                        bpm = parseInt(songBpm[0].innerHTML);   //  assume it's a number
+                        bpm = (bpm < minBpm ? minBpm : (bpm > maxBpm ? maxBpm : bpm));
+                    }
+                }
+                onCurrentBpmEntry(bpm);
+
+                let ts = a.getElementsByClassName("timeSignature");
+                if (ts === undefined || ts === null || ts.length < 1)
+                    ts = '4/4';
+                else
+                    ts = ts[0].innerHTML;
+                setCurrentTimeSignature(ts);
+
+                let songLyrics = a.getElementsByClassName("lyrics")[0].innerHTML;
+                mySong.loadSong(title, songLyrics, a.getElementsByClassName('chords')[0].innerHTML, beatsPerBar, bpm);
+
+                songId = a.id;
+
+                setSongSelectOptionsHidden(false);
+                chordSelection.value = 0;
+                halfstepChange = 0;
+                chordDiv.innerHTML = mySong.generateHtmlChordTable();
+
+                setTableWidths("chordTable", 1.4, 48);
+
+
+                measureSequencer = new MeasureSequencer();
+
+                songSectionSequence = mySong.getSectionSequenceAsStrings();
+                lyricsDisplayElement.innerHTML =
+                        "<h1>" + title + "</h1>\n"
+                        + a.artist
+                        + "\n"
+                        + mySong.generateHtmlLyricsTable();
+                setTableWidths("lyricsTable", 1.7, 36);
+                //chordDiv.offsetWidth;
+                setTocHidden(true);
+                copyrightLabel.hidden = false;
+                editButton.hidden = false;
+            }
+
+
+            function parseIntoChordTable(rawText) {
+                if (mySong !== undefined) {
+                    mySong.parseChordTable(rawText);
+                    return mySong.generateHtmlChordTable();
+                }
+                return undefined;
+            }
+
+
+            function setTableWidths(id, ratio, maxFontSize)
+            {
+                let t = document.getElementById(id);
+                if (t === null)
+                    return;
+                let rows = t.rows;
+                let maxCellWidths = []; //  in char
+                for (let r = 0; r < rows.length; r++) {
+                    let row = rows[r];
+                    for (let c = 0; c < row.cells.length; c++) {
+                        let td = row.cells[c];
+                        let lines = td.innerText.split("\n");
+                        let maxLineLength = 0;
+                        for (let i = 0; i < lines.length; i++)
+                        {
+                            maxLineLength = Math.max(maxLineLength, lines[i].length);
+                        }
+                        if (maxCellWidths[c] === undefined
+                                || maxCellWidths[c] < maxLineLength) {
+                            maxCellWidths[c] = maxLineLength;
+                        }
+                    }
+                }
+
+
+                let totalChars = 1;
+                for (let r = 0; r < rows.length; r++) {
+                    let row = rows[r];
+                    let rowChars = 0;
+                    for (let c = 0; c < row.cells.length; c++) {
+                        rowChars += maxCellWidths[c];
+                    }
+                    totalChars = Math.max(totalChars, rowChars);
+                }
+                totalChars += maxCellWidths.length;  //  fudge for col borders
+                let maxFontPx = (t.parentElement || t.offsetParent).clientWidth / totalChars;
+                //log(id + "  maxFontPx: " + maxFontPx);
+                let fontSize = Math.max(Math.min(ratio * Math.trunc(maxFontPx), maxFontSize), 20);
+                t.style.fontSize = fontSize + "px";
+                //let fs = window.getComputedStyle(t, null).getPropertyValue('font-size');
+                //log("font-size: " + fs);
+
+
+                for (let r = 0; r < rows.length; r++) {
+                    let row = rows[r];
+                    for (let c = 0; c < row.cells.length; c++) {
+                        let td = row.cells[c];
+                        let w = maxCellWidths[c] + 'ch';
+                        td.style.width = w;
+                        //td.style.minWidth = w;
+                        //td.style.maxWidth = w;
+                    }
+                }
+
+                //log("max :" + maxCellWidths);
+            }
+
+            class MeasureSequencer {
+                constructor() {
+                    this.restart();
+                    this.songSectionSequence = mySong.getSectionSequenceAsStrings();
+                }
+
+                restart() {
+                    this.section = 0;
+                    this.chordRow = 0;
+                    this.chordCol = 0;
+                    this.repeatFirstRow = undefined;
+                    this.repeatLastRow = 0;
+                    this.repeatLastCol = 0;
+                    this.repeatTotal = 0;
+                    this.repeatCurrent = 0;
+                    this.measure = 0;
+                    this.measureCount = 0;
+                }
+
+                getMeasure() {
+                    if (this.section < this.songSectionSequence.length) {
+                        let sectionId = this.songSectionSequence[this.section];
+                        let chordSection = mySong.getChordSection(sectionId);
+                        if (chordSection !== undefined) {
+                            let chordCols = chordSection[this.chordRow];
+                            this.measure = chordCols[this.chordCol];
+                            return {
+                                sectionIndex: this.section,
+                                measureCount: this.measureCount,
+                                //  for chord section reduction:
+                                sectionId: mySong.getChordSectionId(sectionId),
+                                chordSection: chordSection,
+                                chordRow: this.chordRow,
+                                chordCol: this.chordCol,
+                                measureContent: this.measure,
+                                repeatId: (this.repeatTotal > 0 ? "x" + (this.repeatCurrent + 1) + "/" + this.repeatTotal : undefined),
+                                repeatLastRow: this.repeatLastRow,
+                                repeatLastCol: this.repeatLastCol
+                            };
+                        }
+                    }
+                    return {
+                        sectionIndex: undefined,
+                        sectionId: undefined,
+                        chordSection: undefined,
+                        chordRow: undefined,
+                        chordCol: undefined,
+                        measure: undefined,
+                        repeatId: undefined,
+                        repeatLastRow: undefined
+                    };
+
+                }
+
+                nextMeasure() {
+                    if (this.section > this.songSectionSequence.length)
+                        return false;
+
+                    //  increment to next the next measure slot
+                    let sectionId = this.songSectionSequence[this.section];
+                    let chordSection = mySong.getChordSection(sectionId);
+                    let chordCols = chordSection[this.chordRow];
+                    this.chordCol++;
+                    if (this.chordCol >= chordCols.length) {
+                        //  go to the next row
+                        this.chordCol = 0;
+                        this.chordRow++;
+
+                        //  repeat if required
+                        if (this.repeatTotal > 0
+                                && this.chordRow > this.repeatLastRow
+                                && this.repeatCurrent < this.repeatTotal
+                                ) {
+                            this.repeatCurrent++;
+                            if (this.repeatCurrent < this.repeatTotal)
+                                this.chordRow = this.repeatFirstRow;
+                            else {
+                                this.repeatTotal = 0;  //  repeat done
+                                this.repeatFirstRow = undefined;
+                            }
+                        }
+                        //  go to the next section
+                        if (this.chordRow >= chordSection.length) {
+                            this.repeatTotal = 0;
+                            this.chordRow = 0;
+                            this.section++;
+                        }
+                    }
+
+
+                    //  validate where we've landed after the increment
+                    if (this.section >= this.songSectionSequence.length)
+                        return false;
+                    sectionId = this.songSectionSequence[this.section];
+                    chordSection = mySong.getChordSection(sectionId);
+
+                    chordCols = chordSection[this.chordRow];
+                    if (chordCols === undefined) {
+                        stop();
+                        return false;
+                    }
+
+                    this.measure = chordCols[this.chordCol];
+                    if (this.measure === undefined) {
+                        stop();
+                        return false;
+                    }
+
+
+                    //  look for the repeat extender
+                    let repeatExtender = this.measure.match(/^\|$/);
+                    if (repeatExtender !== null) {
+                        if (this.repeatTotal === 0) {
+                            //  not currently repeating
+                            //  mark the first vertical bar row
+                            if (this.repeatFirstRow === undefined)
+                                this.repeatFirstRow = this.chordRow;
+                        }
+                        return this.nextMeasure();   //  go find the next real measure
+                    }
+
+                    //  look for repeat
+                    let repeat = this.measure.match(/x *(?:\d*\/)?(\d*)/);
+                    if (repeat !== null) {
+                        if (this.repeatTotal === 0) {
+                            //  not currently repeating
+                            this.repeatTotal = parseInt(repeat[1]);
+                            this.repeatCurrent = 0;
+                            this.repeatFirstRow = (this.repeatFirstRow !== undefined ? this.repeatFirstRow : this.chordRow);
+                            this.repeatLastRow = this.chordRow;
+                            this.repeatLastCol = this.chordCol;
+                        }
+                        return this.nextMeasure();   //  go find the next real measure
+                    }
+
+                    this.measureCount++;
+                    return true;
+                }
+
+            }
+
+            function onTopClick(type) {
+                stop();
+
+                if (lastType !== type) {
+                    makeTOC(type);
+                    lastType = type;
+                }
+
+                setTocHidden(false);
+                addSongButton.hidden = false;
+                copyrightLabel.hidden = true;
+                setSongSelectOptionsHidden(true);
+                editButton.hidden = true;
+
+                //  clear the chords when going to the TOC
+                chordDiv.innerHTML = null;
+                audioBeatDisplayCanvas.hidden = true;
+
+                //  hide all lyrics
+                lyricsDisplayElement.innerHTML = null;
+                let e = document.getElementById(songId + "Toc");
+                if (e !== null)
+                {
+                    let top = 0;
+                    do {
+                        top += e.offsetTop;
+                    } while ((e = e.offsetParent) !== null);
+                    window.scrollTo(0, top - window.innerHeight / 2);
+                }
+                focusOnSearchEntry();
+            }
+
+            function focusOnSearchEntry() {
+                //window.location.href = '#toc';
+                searchEntry.hidden = false;
+                searchEntry.focus();
+                pageTitleElement.scrollIntoView(true);
+            }
+
+
+            function hideAllLyrics() {
+                let songCollection = document.getElementsByClassName('song');
+                for (let i = 0; i < songCollection.length; i++)
+                {
+                    songCollection[i].hidden = true;
+                }
+            }
+
+
+            function onChordSelection(selection) {
+                let selected = selection.selectedOptions[0].value;
+                let halfsteps = parseInt(selected);
+                chordDiv.innerHTML = mySong.transpose(halfsteps);
+                setTableWidths("chordTable", 1.4, 48);
+            }
+
+            function onLoad() {
+                //log("onLoad()");
+
+                audioBeatDisplayCanvas = document.getElementById("audioBeatDisplayCanvas");
+                chordDiv = document.getElementById("chordDiv");
+                copyrightLabel = document.getElementById("copyrightLabel");
+                copyrightOwner = document.getElementById("copyrightOwner");
+                chordSelection = document.getElementById("chordSelection");
+                addSongButton = document.getElementById("addSongButton");
+                editButton = document.getElementById("editSong");
+                songListElement = document.getElementById("songList");
+                songEntryElement = document.getElementById("songEntry");
+                titleElement = document.getElementById("titleEntry");
+                artistElement = document.getElementById("artistEntry");
+                copyrightElement = document.getElementById("copyrightEntry");
+                bpmElement = document.getElementById("bpmEntry");
+                timeSignatureElement = document.getElementById("timeSignatureEntry");
+                chordsElement = document.getElementById("chordsEntry");
+                lyricsElement = document.getElementById("lyricsEntry");
+                lyricsDisplayElement = document.getElementById("lyricsDisplay");
+                optionChoicesDiv = document.getElementById("optionChoices");
+                bpmSelect = document.getElementById("bpm");
+                currentBpmEntry = document.getElementById("currentBpmEntry");
+                currentTimeSignature = document.getElementById("currentTimeSignature");
+                inputFile = document.getElementById("inputFile");
+                searchEntry = document.getElementById("searchEntry");
+//                internalSongListElement = document.getElementById("internalSongList");
+                pageTitleElement = document.getElementById("title");
+
+                defaultBackgroundColor = window.getComputedStyle(document.body, null).getPropertyValue('background-color');
+
+                copyrightLabel.hidden = true;
+                setSongSelectOptionsHidden(true);
+                hideAllLyrics();
+                editButton.hidden = true;
+
+
+                onCurrentBpmEntry(currentBpmEntry.value);    //  read in the default bpm
+
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                animationFrameUpdate();
+
+                //  read the really old songs piled into one file
+                for (let i = 0; i < legacySongs.length; i++) {
+                    let songObject = legacySongs[i];
+                    addSongObject(songObject);
+                }
+
+                //  compiled in at deployment
+                processRawServerFile("allSongs.songlyrics", addSongHtmlOrJson);
+
+                searchEntry.addEventListener('input', function (e) {
+                    makeTOC(lastType);
+                });
+
+                window.addEventListener("keydown", listenToKeyDown, true);
+
+
+                isLoad = true;
+                lastOfLoad();
+            }
+
+//            function songListToBash() {
+//                let songlist = internalSongListElement;
+//                let songs = songlist.getElementsByClassName('song');
+//                let json = '';
+//                for (let i = 0; i < songs.length; i++) {
+//                    if (i > 0)
+//                        json += '\n';
+//                    let  htmlSong = songs[i];
+//                    let a = htmlSong.getElementsByClassName('title');
+//                    if (a && a.length > 0) {
+//                        let filename = a[0].innerText.trim();
+//                        filename = filename.replace(/\W+/g, '');
+//                        filename += '.songlyrics';
+//                        json += 'cat << EOF > ' + filename;
+//                        let  htmlSong = songs[i];
+//                        json += songToJson(htmlSong);
+//                        json += 'EOF\n';
+//                    }
+//                }
+//                json += '\n';
+//                return json;
+//            }
+//            function songListToJson() {
+//                let songlist = internalSongListElement;
+//                let songs = songlist.getElementsByClassName('song');
+//                let json = '\[';
+//                for (let i = 0; i < songs.length; i++) {
+//                    if (i > 0)
+//                        json += ',\n';
+//                    let  htmlSong = songs[i];
+//                    json += songToJson(htmlSong);
+//                }
+//                json += '\n]\n';
+//                return json;
+//            }
+
+            function songToJson(htmlSong) {
+                let json = '\n{\n';
+                json += divSubclassToJson(htmlSong, 'title', false, true);
+                json += divSubclassToJson(htmlSong, 'artist', false, true);
+                json += divSubclassToJson(htmlSong, 'copyright', false, true);
+                json += divSubclassToJson(htmlSong, 'bpm', false, true);
+                json += divSubclassToJson(htmlSong, 'timeSignature', false, true);
+                json += divSubclassToJson(htmlSong, 'chords', true, true);
+                json += divSubclassToJson(htmlSong, 'lyrics', true, false);
+                json += '}\n';
+                return json;
+            }
+
+            function divSubclassToJson(parentDiv, klass, isArray, isMore) {
+                let ret = '"' + klass + '": '
+                let a = parentDiv.getElementsByClassName(klass);
+                if (a && a.length > 0) {
+                    if (isArray)
+                        ret += '\n\t[\n\t"';
+                    else
+                        ret += '"';
+                    let content = a[0].innerText.trim();
+                    content = content
+                            .replace(/\r/g, "")
+                            .replace(/\t/g, "\\t")
+                            .replace(/"/g, "\\\"")
+                            .replace(/\n\s+/g, (isArray ? '",\n\t"' : '\\n'))
+                            ;
+                    if (isArray)
+                        content.replace(/,\\n$/, '\\n');
+                    ret += content;
+                    ret += '"';
+                    if (isArray)
+                        ret += '\n\t]';
+                } else
+                    ret += '""';
+                ret += (isMore ? "," : "") + '\n';
+                return ret;
+            }
+
+            function onModuleLoadJS() {
+                bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
+                audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay();
+                audioBeatDisplay.initialize(audioCtx, document.getElementById("audioBeatDisplayCanvas"));
+                mySong = new com.bsteele.bsteeleMusicApp.shared.Song();
+
+                isModuleLoad = true;
+                lastOfLoad();
+            }
+
+            function lastOfLoad() {
+                if (isModuleLoad && isLoad)
+                {
+
+                    makeTOC('name');
+                    //test();
+
+                    songListElement.hidden = false;
+
+                    //  see if a song is pre-specified in the location
+                    {
+                        let hash = window.location.hash;
+                        let m = hash.match(/^#(Song\w+)$/);
+                        if (m !== null && m.length > 1)
+                            selectSongByHash(hash);
+                        else
+                            focusOnSearchEntry();
+                    }
+
+                    //                   internalSongListElement.hidden = true;
+                }
+            }
+
+            function listenToKeyDown(event) {
+                if (event.defaultPrevented) {
+                    return; // Do nothing if the event was already processed
+                }
+
+                if (isTocHidden)
+                {
+                    switch (event.key) {
+
+                        case "p":
+                            playFromStart();
+                            break;
+                        case "s":
+                            stop();
+                            break;
+                        case " ":
+                            if (event.ctrlKey)
+                            {
+                                let b = bpmTap.tap(event.timeStamp / 1000); //  input in units of seconds
+                                if (b > 0)
+                                    onCurrentBpmEntry(b);
+                            } else
+                            {
+                                if (isPlaying)
+                                    stop();
+                                else
+                                    playFromStart();
+                            }
+                            break;
+                        default:
+                            return; // Quit when this doesn't handle the key event.
+                    }
+
+                    // Cancel the default action to avoid it being handled twice
+                    event.preventDefault();
+                }
+            }
+
+            function onNativeTap(event) {
+                bpmTap.tap(event.timeStamp / 1000);//  in units of seconds
+            }
+
+            function songAdd(song) {
+                let titles = song.getElementsByClassName('title');
+                let title = (titles === undefined || titles.length < 1)
+                        ? song.firstElementChild.textContent
+                        : titles[0].textContent;
+                song.name = title;
+
+
+                //log(song.name);
+                if (song.name.match(/^the */i))
+                    song.name = song.name.replace(/^the */i, '').concat(", The");
+                let artists = song.getElementsByClassName('artist');
+                if (artists !== undefined && artists.length > 0) {
+                    song.artist = artists[0].innerHTML;
+                    if (song.artist.match(/^the */i))
+                        song.artist = song.artist.replace(/^the */i, '').concat(", The");
+                } else
+                    song.artist = 'unknown artist';
+
+                //  has to match the java Song.getSongId()
+
+                song.id = "Song" + title.replace(/\W+/g, "");
+                song.hidden = true;
+
+                //  remove song with same title and artist if it exists
+                for (let i = 0; i < songs.length; i++)
+                {
+                    let listSong = songs[i];
+                    if (song.name === listSong.name && song.artist === listSong.artist)
+                    {
+                        songs = songs.slice(0, i).concat(songs.slice(i + 1));
+                        listSong.parentElement.removeChild(listSong);
+                        listSong.remove();
+                        break;
+                    }
+                }
+
+                //  add the song
+                songs.push(song);
+            }
+
+
+            //  make the table of contents
+            function makeTOC(type)
+            {
+                if (!type)
+                    type = 'name';
+
+                if (songListElement === null)
+                    return;
+                let innerHTML = "<tr><th></th><th>Song</th><th>Artist</th></tr>";
+
+                let sortedSongs = sortByKey(songs, type);
+                for (let i = 0; i < sortedSongs.length; i++)
+                {
+                    let song = sortedSongs[i];
+                    let name = song.name;
+
+                    let li = "<tr><td class=\"songNo\">" + (i + 1) + " </td><td class=\"songName\"><a id=\""
+                            + song.id + "Toc\" href=\"#" + song.id + "\" onclick=\"onSongClick(this);\">"
+                            + name + "</a></td><td><span style=\"color:Gray;\">" + song.artist + "</span></td></tr>";
+                    innerHTML = innerHTML + li;
+                }
+                songListElement.innerHTML = innerHTML;
+            }
+
+            function sortByKey(array, key) {
+                let sorted = array.sort(function (a, b) {
+                    let x = a[key];
+                    let y = b[key];
+
+                    if (typeof x === "string")
+                    {
+                        x = x.toLowerCase();
+                    }
+                    if (typeof y === "string")
+                    {
+                        y = y.toLowerCase();
+                    }
+
+                    if (x !== y)
+                        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+
+                    x = a.name.toLowerCase();
+                    y = b.name.toLowerCase();
+
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
+                let search = searchEntry.valueOf().value;
+                if (search && search.length > 0) {
+                    let regex = new RegExp(search, 'i');
+
+                    let filtered = [];
+                    for (let i = 0; i < sorted.length; i++) {
+                        let item = sorted[i];
+                        if (item.name.match(regex) !== null || item.artist.match(regex) !== null)
+                            filtered.push(item);
+                    }
+                    return filtered;
+                }
+
+                return sorted;
+            }
+
+
+            function onSongAdd() {
+                songEntryElement.hidden = false;
+                addSongButton.hidden = true;
+                optionChoicesDiv.hidden = true;
+                songEntryElement.scrollIntoView(true);
+            }
+
+            function onClearList() {
+                songs = [];
+                let elements = document.getElementsByClassName('song');
+                for (let i = 0; i < elements.length; i++) {
+                    let song = elements[i];
+                    song.parentElement.removeChild(song);
+                    song.remove();
+                }
+
+                makeTOC('name');
+            }
+
+            function onSongCancel() {
+                songEntryElement.hidden = true;
+                addSongButton.hidden = false;
+                optionChoicesDiv.hidden = false;
+                focusOnSearchEntry();
+            }
+
+            function onSongEdit()
+            {
+                onTopClick(lastType);
+                let a = document.getElementById(songId);
+                if (a === null)
+                    return;
+                titleElement.value = a.name;
+                artistElement.value = a.artist;
+                copyrightElement.value = a.getElementsByClassName("copyright")[0].innerHTML.replace(/^\s+/g, "");
+                bpmElement.value = a.getElementsByClassName("bpm")[0].innerHTML.replace(/^\s+/g, "");
+                {
+                    let list = a.getElementsByClassName("timeSignature");
+                    timeSignatureElement.value = (list.length > 0 ? list[0].innerHTML.replace(/^\s+/g, "") : '4/4');
+                }
+                chordsElement.value = a.getElementsByClassName("chords")[0].innerHTML.replace(/^\s+/gm, "");
+                lyricsElement.value = a.getElementsByClassName("lyrics")[0].innerHTML.replace(/^\s+/gm, "");
+                songEntryElement.hidden = false;
+                addSongButton.hidden = true;
+                optionChoicesDiv.hidden = true;
+                isEdit = true;
+                songEntryElement.scrollIntoView(true);
+            }
+
+            function onSongEnter() {
+                if (titleElement.value.length <= 0) {
+                    window.alert("no song title given!");
+                    return;
+                }
+                if (!isEdit)
+                    for (let i = 0; i < songs.length; i++)
+                    {
+                        let song = songs[i];
+                        if (titleElement.value === song.name) {
+                            window.alert("song with that title already exists!");
+                            return;
+                        }
+                    }
+
+                if (artistElement.value.length <= 0) {
+                    window.alert("no artist given!");
+                    return;
+                }
+
+                if (copyrightElement.value.length <= 0) {
+                    window.alert("no copyright given!");
+                    return;
+                }
+
+                if (copyrightElement.value.length <= 0) {
+                    window.alert("no copyright given!");
+                    return;
+                }
+
+                if (bpmElement.value.length <= 0) {
+                    window.alert("no BPM given!");
+                    return;
+                }
+
+                if (bpmElement.value.match(/^\d{2,3}$/) === null) {
+                    window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
+                    return;
+                }
+                {
+                    let b = parseInt(bpmElement.value);
+                    if (b < minBpm || b > maxBpm) {
+                        window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
+                        return;
+                    }
+                }
+
+                if (chordsElement.value.length <= 0) {
+                    window.alert("no chords given!");
+                    return;
+                }
+
+                if (lyricsElement.value.length <= 0) {
+                    window.alert("no lyrics given!");
+                    return;
+                }
+
+//                let songHtml = "<div class=\"song\">\n"
+//                        + "<div class=\"title\">" + titleElement.value + "</div>\n"
+//                        + "\t<div class=\"artist\">" + artistElement.value + "</div>\n"
+//                        + "\t<div class=\"copyright\">" + copyrightElement.value + "</div>\n"
+//                        + "\t<div class=\"bpm\">" + bpmElement.value + "</div>\n"
+//                        + "\t<div class=\"timeSignature\">" + timeSignatureElement.value + "</div>\n"
+//                        + "\t<div class=\"chords\">\n"
+//                        + chordsElement.value
+//                        + "\n\t</div>\n"
+//                        + "\t<div class=\"lyrics\">\n"
+//                        + lyricsElement.value
+//                        + "\n\t</div>\n</div>\n";
+
+                let songObect = {
+                    title: titleElement.value,
+                    artist: artistElement.value,
+                    copyright: copyrightElement.value,
+                    bpm: bpmElement.value,
+                    timeSignature: timeSignatureElement.value,
+                    chords: chordsElement.value.split('\n'),
+                    lyrics: lyricsElement.value.split('\n')
+                };
+
+                let s = JSON.stringify(songObect, null, '  ');
+                saveSongAs(titleElement.value + ".songlyrics", s);
+                addSongFromHtml(songObjectToHtml(songObect));
+                songEntryClear();
+                songEntryElement.hidden = true;
+                addSongButton.hidden = false;
+                optionChoicesDiv.hidden = false;
+
+                s = "Song" + songObect.title.replace(/\W+/g, "") + "Toc";
+                let e = document.getElementById(s);
+                if (e !== null)
+                    e.scrollIntoView();
+            }
+
+            function songEntryClear() {
+                titleElement.value = "";
+                artistElement.value = "";
+                copyrightElement.value = "";
+                chordsElement.value = "";
+                lyricsElement.value = "";
+                isEdit = false;
+            }
+
+            function addSongObject(songObject) {
+                addSongFromHtml(songObjectToHtml(songObject));
+            }
+
+            function songObjectToHtml(songObject) {
+                let songText = "<div class=\"song\" hidden>\n"
+                        + "<div class=\"title\">" + songObject.title + "</div>\n"
+                        + "\t<div class=\"artist\">" + songObject.artist + "</div>\n"
+                        + "\t<div class=\"copyright\">" + songObject.copyright + "</div>\n"
+                        + "\t<div class=\"bpm\">" + songObject.bpm + "</div>\n"
+                        + "\t<div class=\"timeSignature\">" + songObject.timeSignature + "</div>\n"
+                        + "\t<div class=\"chords\">\n";
+                for (let i = 0; i < songObject.chords.length; i++)
+                    songText += songObject.chords[i] + '\n';
+                songText += "\n\t</div>\n"
+                        + "\t<div class=\"lyrics\">\n"
+                for (let i = 0; i < songObject.lyrics.length; i++)
+                    songText += songObject.lyrics[i] + '\n';
+                songText += "\n\t</div>\n</div>\n";
+                return songText;
+            }
+
+            function addSongHtmlOrJson(songText) {
+                if (!songText)
+                    return;
+                songText = songText.trim();
+                if (songText.length < 1)
+                    return;
+                if (songText[0] === '{')
+                {
+                    //  single song is in json
+                    songText = songObjectToHtml(JSON.parse(songText));
+                } else if (songText[0].match(/\[/) !== null)
+                {
+                    //  multiple songs in json array
+                    //log('songText'); log(songText);
+                    let songObjects = JSON.parse(songText);
+                    for (let i = 0; i < songObjects.length; i++) {
+                        let s = songObjects[i];
+                        addSongFromHtml(songObjectToHtml(s));
+                    }
+                    return;
+                }
+
+                //  workaround song skipping
+                if (songText.match(/<br\/>$/) !== null) {
+                    let addList = songText.split(/<br\/>$/g);
+                    for (let i = 0; i < addList.length; i++)
+                        addSongFromHtml(addList[i]);
+                } else
+                    addSongFromHtml(songText);
+            }
+
+            function addSongFromHtml(songText)
+            {
+
+                let newSongListElement = document.createElement("div");
+                newSongListElement.hidden = true;
+                newSongListElement.innerHTML = songText;
+                let body = document.getElementsByTagName("BODY")[0];
+                //log(newSongListElement.innerHTML);
+                let elements = newSongListElement.getElementsByClassName('song');
+                for (let i = 0; i < elements.length; i++) {
+                    let song = elements[i];
+                    //log("song " + i + ":");                    log(song.innerHTML);
+                    song.hidden = true;
+                    body.appendChild(song);
+                    songAdd(song);
+                }
+
+                makeTOC('name');
+            }
+
+            function saveSongAs(filename, data) {
+                let blob = new Blob([data], {type: 'text/plain'});
+                // If we are replacing a previously generated file we need to
+                // manually revoke the object URL to avoid memory leaks.
+                if (textFile !== null) {
+                    window.URL.revokeObjectURL(textFile);
+                }
+
+                //  fixme: control the filename!!!!!
+                textFile = window.URL.createObjectURL(blob);
+                if (downloadlink === null) {
+                    downloadlink = document.createElement("a");
+                    downloadlink.style = "display:none";
+                }
+                downloadlink.download = filename;
+                downloadlink.href = textFile;
+                downloadlink.click();
+            }
+
+
+            function readmultifiles(e) {
+                if (e === undefined || e.files.length === 0)
+                    return;
+                const files = e.files;
+                Object.keys(files).forEach(i => {
+                    const file = files[i];
+                    readFile(file);
+
+                    inputFile.value = "";   //  work around for not entering same song twice
+                    //  i.e. when there is no "change" in the file name
+                });
+            }
+
+            function readFile(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    addSongHtmlOrJson(reader.result); //  fixme: dangerous!
+                };
+                reader.readAsText(file);
+            }
+
+            function processRawServerFile(path, processFunction) {
+                try {
+                    let rawFile = new XMLHttpRequest();
+
+                    rawFile.onreadystatechange = function ()
+                    {
+                        if (rawFile.readyState === 4)
+                        {
+                            if (rawFile.status === 200 || rawFile.status === 0)
+                            {
+                                processFunction(rawFile.responseText);
+                            }
+                        }
+                    };
+                    rawFile.open("GET", path, false);
+                    rawFile.send();
+                } catch (error) {
+                    log("processRawServerFile(" + path + "): " + error);
+                }
+            }
+
+            function  playFromStart() {
+                stop();
+
+                {
+                    let firstSection = document.getElementById('L.0');
+                    if (firstSection !== null)
+                        firstSection.scrollIntoView();
+                }
+
+
+                if (measureSequencer !== undefined) {
+                    measureSequencer.restart();
+                    minBarCount = getBarCount(audioCtx.currentTime) + 3;
+                    start();
+                }
+            }
+
+            function start() {
+                if (measureSequencer !== undefined && measureSequencer.getMeasure().sectionId === undefined)
+                {
+                    //  restart the song
+                    measureSequencer.restart();
+                }
+                lastBarCount = 0;
+                optionChoicesDiv.hidden = true;
+                setStoppedHidden(true);
+                isPlaying = true;
+            }
+
+            function stop() {
+                isPlaying = false;
+                optionChoicesDiv.hidden = false;
+                audioBeatDisplayCanvas.hidden = true;
+                lastSectionIndex = undefined;
+                turnOffHighlight(lastCellHighlighted);
+                turnOffHighlight(lastLyricsHighlighted);
+
+                let chordComment = document.getElementById('chordComment');
+                if (chordComment !== null) {
+                    chordComment.style.backgroundColor = defaultBackgroundColor;
+                }
+                setStoppedHidden(false);
+            }
+
+            function onCurrentBpmEntry(v) {
+                //   verify the entry is a integer between the limits
+                v = v.toString();  //  in case it's already a number
+                if (v.match(/^\d{2,3}$/) === null) {
+                    window.alert("BPM has to be an integer from " + minBpm + " to " + maxBpm + " inclusive.");
+                    return;
+                }
+                let newBpm = parseInt(v);
+                if (newBpm < minBpm || newBpm > maxBpm) {
+                    window.alert("BPM has to be an integer from " + minBpm + " to " + maxBpm + " inclusive.");
+                    return;
+                }
+                currentBpmEntry.value = v;
+
+                //   act on the entry
+                let wasPlaying = isPlaying;
+                if (isPlaying)
+                    stop();
+                bpm = newBpm;
+                if (wasPlaying)
+                    start();
+            }
+
+            function onCurrentBpmSelect() {
+                let v = bpmSelect.item(bpmSelect.selectedIndex).valueOf().value;
+                if (v.length > 0) {
+                    onCurrentBpmEntry(v);//    always expect a number
+                    bpmSelect.selectedIndex = 0;
+                }
+            }
+
+            function setCurrentTimeSignature(ts) {
+                for (let i = 0; i < currentTimeSignature.options.length; i++) {
+                    let option = currentTimeSignature.options[i];
+                    if (option.innerHTML === ts) {
+                        //
+                        option.selected = true;
+
+                        let textMatch = ts.match(/^(\d)\//);
+                        if (textMatch !== null) {
+                            beatsPerBar = parseInt(textMatch[1]);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            function setHiddenByCssClass(klass, isHidden) {
+                let elements = document.getElementsByClassName(klass);
+                for (let i = 0; i < elements.length; i++) {
+                    let e = elements[i];
+                    e.hidden = isHidden;
+                }
+            }
+
+            function setTocHidden(isHidden) {
+                isTocHidden = isHidden;
+                setHiddenByCssClass('toc', isHidden);
+                if (!isHidden)
+                    focusOnSearchEntry();
+            }
+
+            function setSongSelectOptionsHidden(isHidden) {
+                isSongSelectOptionsHidden = isHidden;
+                setHiddenByCssClass('songSelectedOptions', isHidden);
+            }
+
+            function setStoppedHidden(isHidden) {
+                isStoppedHidden = isHidden;
+                setHiddenByCssClass('stopped', isHidden);
+            }
+
+
+            function  log(s) {
+                window.console.log(s);
+            }
+
+            function turnOffHighlight(last) {
+                if (last !== undefined && last !== null) {
+                    last.style.borderColor = defaultBackgroundColor;
+                    last = undefined;
+                }
+            }
+            function turnOnHighlight(last) {
+                if (last !== undefined && last !== null) {
+                    last.style.borderColor = (doHighlight ? '#ff0000' : '#e8e8e8');
+                }
+            }
+
+
+            function getBarCount(t) {
+                const sPerBar = beatsPerBar * 60 / bpm;
+                return Math.trunc(t / sPerBar);
+            }
+
+            function cleanRepeatCell(cell) {
+                if (cell === undefined)
+                    return;
+                cell.innerHTML = cell.innerHTML.replace(/x\d+\//, 'x');
+                cell = undefined;
+            }
+
+            function animationFrameUpdate()
+            {
+                function update() {
+
+                    if (isPlaying) {
+                        let currentTime = audioCtx.currentTime; //  only once per vertical
+                        let barCount = getBarCount(currentTime);
+                        let leadin = barCount - minBarCount;
+
+                        if (doBeat || leadin < 1) {
+                            audioBeatDisplayCanvas.hidden = false;
+                            audioBeatDisplay.update(currentTime, bpm, doSubBeat, beatsPerBar);
+                        } else {
+                            audioBeatDisplayCanvas.hidden = true;
+                        }
+
+                        //  hightlight current measure
+
+                        if (barCount > lastBarCount) {
+                            //log( barCount+" at "+audioCtx.currentTime);
+                            lastBarCount = barCount;
+
+                            turnOffHighlight(lastCellHighlighted);
+
+                            if (measureSequencer !== undefined) {
+                                if (barCount >= minBarCount) {
+                                    let m = measureSequencer.getMeasure();
+                                    if (m.sectionId !== undefined)
+                                    {
+                                        if (doHighlight) {
+                                            //  highlight the current measure
+                                            lastCellHighlighted = document.getElementById('C.' + m.sectionId + '.' + m.chordRow + '.' + m.chordCol);
+                                            turnOnHighlight(lastCellHighlighted);
+                                        }
+
+
+                                        //  highlight the current lyrics
+                                        if (lastSectionIndex !== m.sectionIndex) {
+                                            turnOffHighlight(lastLyricsHighlighted);
+                                            lastLyricsHighlighted = document.getElementById('L.' + m.sectionIndex);
+                                            if (lastLyricsHighlighted !== null)
+                                                lastLyricsHighlighted.scrollIntoView();
+                                            turnOnHighlight(lastLyricsHighlighted);
+                                            lastSectionIndex = m.sectionIndex;
+                                        }
+
+                                        //  indicate repetitions
+                                        if (m.repeatId !== undefined) {
+                                            cleanRepeatCell(lastRepeatCell);
+                                            lastRepeatCell = document.getElementById('C.' + m.sectionId + '.' + m.repeatLastRow + '.' + m.repeatLastCol);
+                                            if (lastRepeatCell !== undefined)
+                                                lastRepeatCell.innerHTML = m.repeatId;
+                                        } else
+                                            cleanRepeatCell(lastRepeatCell);
+
+
+                                        //  step forward for next time
+                                        measureSequencer.nextMeasure();
+                                    } else {
+                                        stop();
+                                    }
+                                }
+                            }
+
+                            //  count in
+                            if (leadin < 2)
+                            {
+                                let chordComment = document.getElementById('chordComment');
+                                if (chordComment !== null) {
+                                    let c = defaultBackgroundColor;
+                                    switch (leadin) {
+                                        case - 2:
+                                            c = orange;
+                                            break;
+                                        case - 1:
+                                            c = red;
+                                            break;
+                                        case 0:
+                                            c = green;
+                                            break;
+                                    }
+                                    chordComment.style.backgroundColor = c;
+                                    //chordComment.innerHTML = (doBeat && leadin < 0 ? leadin : "");
+                                }
+                            }
+                        }
+
+                    }
+
+                    window.requestAnimationFrame(update);
+                }
+                update();
+
+            }
+
+        </script>
+
+    </head>
+    <body onload="onLoad();">
+
+        <div class="toc" >
+            <h1><a id="title" name="toc">Lyrics</a></h1>
+            <p>Search: <input type="search" id="searchEntry" placeholder="title or artist..." class="mediumTextEntry" >
+                &nbsp;
+                <span class="tooltip"><span style="font-weight: bold;">Read Song Files:</span> 
+                    <input type="file" id="inputFile" onChange="readmultifiles(this);" multiple accept=".songlyrics" />
+                    <span class="tooltiptext">&nbsp;Hint: Read many songs at once with select multiple (Shift-click), add to selection (Control-Click),
+                        or select all (Control-A).  This will work well if all songs are in one directory/folder.
+                        On a Mac, substitute Command for Control.</span>
+                </span>
+            </p>
+            <table border="0" id="songList" hidden>
+            </table>
+
+            <br/>&nbsp;<br/>
+            <button type="button" onclick="onSongAdd();" id="addSongButton">Add New Song</button>
+
+        </div>
+
+
+        <div id="songEntry" hidden>
+            <p>
+                <button type="button" onclick="onSongEnter();">Enter Song</button>
+                <button type="button" onclick="onSongCancel();">Cancel</button>
+            </p>
+            <p>
+                Title:<br/> <input type="text" id="titleEntry" class="oneLineTextEntry">
+            </p>
+            <p>
+                Artist:<br/> <input type="text" id="artistEntry" class="oneLineTextEntry">
+            </p>
+            <p>
+                Copyright:<br/> <input type="text" id="copyrightEntry" class="oneLineTextEntry">
+            </p>
+            <p>
+                Beats per minute:<br/> <input type="text" id="bpmEntry" class="smallTextEntry">
+            </p>
+            <p>
+                Time Signature: <select id="timeSignatureEntry"  >
+                    <option value="2/4" >2/4</option>
+                    <option value="3/4" >3/4</option>
+                    <option value="4/4" selected>4/4</option>
+                    <option value="6/8" >6/8</option>
+                </select>
+            </p>
+            <p>
+                For chords and lyrics, mark the sections with the following:
+            </p>
+
+            <table style="border: 1px;">
+                <tr><th>Id</th><th>Alt</th><th>Section</th></tr>
+                <tr><td>V:</td><td></td><td>Verse</td></tr>
+                <tr><td>P:</td><td>Pc:</td><td>Pre-chorus</td></tr>
+                <tr><td>C:</td><td>Ch:</td><td>Chorus</td></tr>
+                <tr><td>B:</td><td>Br:</td><td>Bridge</td></tr>
+                <tr><td>I:</td><td>In:</td><td>Intro.  Is also used for interludes, riffs, theme, or hooks that don't quite fit other categories.</td></tr>
+                <tr><td>O:</td><td>Out:</td><td>Outro</td></tr>
+                <tr><td>Co:</td><td>Coda:</td><td>Coda</td></tr>
+                <tr><td>T:</td><td>Tag:</td><td>Tag</td></tr>
+            </table>
+
+            <table><tr><td>
+                        Chords:<br/>
+                        <textarea rows="20" cols="30" id="chordsEntry" class='chordsTextEntry'></textarea>
+                    </td><td style="vertical-align: top;">
+                        <ul>
+                            <li>Chords must be in upper case for transcription to work!</li>
+                            <li>Using a lower case b for a flat will work.</li>
+                            <li>A sharp sign (#) works as a sharp.</li>
+                            <li>(the transcription parser is turned off inside parenthesis but will continue afterwards).
+                                For example:  A (pause) E D F</li>
+                            <li>Limited set of case sensitive chord modifiers:  # b (m | maj | sus) [0-9]</li>
+                            <li>Vertical bars (|) can be used to separate measures.
+                            <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
+                            <li>Spaces between chords are not required.</li>
+                            <li>Sample chords to use:
+                                A B C G
+                                A# C# Bb Db
+                                C7 D7 Dbm Dm Em Dm7 F#m7 A#maj7 Gsus9
+                                DC D#Bb G#m7Gm7 Am/G
+                            </li>
+                            <li>Anything else not recognized is considered a comment to the end of the line.</li>
+                            <li>Use chorus or (Chorus) instead of Chorus, 
+                                otherwise it will be considered a C chord followed by the comment "horus".  
+                                Bridge and Coda have the same problem.</li>
+                        </ul>
+                    </td></tr>
+            </table>
+
+            <p>
+                Lyrics:<br/>
+                <textarea rows="60" cols="80" id="lyricsEntry"></textarea>
+            </p>
+        </div>
+
+
+        <div id="lyricsDisplay"></div>
+
+        <div id="optionChoices">
+
+            <p class="toc">
+                <span class="tooltip"><button type="button" onclick="onClearList();" >Clear List</button>
+                    <span class="tooltiptext">&nbsp;Hint: Reload the web page if you want the original list back.</span>
+                </span>
+
+            </p>
+
+            <button type="button" onclick="onSongEdit();" id="editSong">Edit Song</button>
+            <p id="copyrightLabel">Copyright &#169; <span id="copyrightOwner"></span></p>
+
+            Options:
+            <ul style="list-style-type: none;">
+                <li><input type="checkbox" onclick="doBeat = checked;"  checked >Show beats bar</li>
+                <li><input type="checkbox" onclick="doSubBeat = checked;"  checked >Show sub-beat in beat bar</li>
+                <li><input type="checkbox" onclick="doHighlight = checked;"  checked >Highlight measures</li>
+            </ul>
+        </div>
+
+        <p class="stopped">Lyrics provided for educational purposes and personal use only.</p>
+        <p class="stopped">Sponsored by <a href="http://www.bsteele.com">bsteele.com</a></p>
+
+
+        <div class='upperLeft'>
+
+            <a href="#toc" onClick='onTopClick("name");
+                    return false;' >Song List</a>
+            &nbsp;
+            <a href="#toc" onClick='onTopClick("artist");
+                    return false;' >by artist</a>
+            <span class="songSelectedOptions" >
+                &nbsp;&nbsp;
+                <button type="button" onclick="playFromStart();" >Play</button>
+                <button type="button" onclick="stop();" >Stop</button>
+            </span>
+            <div class="songSelectedOptions" hidden >
+                <select id="chordSelection" onchange="onChordSelection(this);"  >
+                    <option value="-6">-6 halfsteps</option>
+                    <option value="-5">-5 halfsteps</option>
+                    <option value="-4">-4 halfsteps</option>
+                    <option value="-3">-3 halfsteps</option>
+                    <option value="-2">-2 halfsteps</option>
+                    <option value="-1">-1 halfstep</option>
+                    <option value="0" selected>Original Key</option>
+                    <option value="1">+1 halfstep</option>
+                    <option value="2">+2 halfsteps</option>
+                    <option value="3">+3 halfsteps</option>
+                    <option value="4">+4 halfsteps</option>
+                    <option value="5">+5 halfsteps</option>
+                    <option value="6">+6 halfsteps</option>
+                </select>
+                &nbsp;BPM:
+                <input type="text" name="bpmText" id="currentBpmEntry" 
+                       onchange="onCurrentBpmEntry(this.value);" size="5"
+                       value="106"
+                       title="Enter or edit the beats per minute.  Can also hold control down and tap the space bar in time.">
+                <select id="bpm" onchange="onCurrentBpmSelect()" title="Select the beats per minute to be used in playing">
+                    <option value="" selected>chose</option>
+                    <!--    content should always be a number   -->
+                    <option value="60" >60</option>
+                    <option value="65" >65</option>
+                    <option value="70" >70</option>
+                    <option value="75" >75</option>
+                    <option value="80" >80</option>
+                    <option value="85" >85</option>
+                    <option value="90" >90</option>
+                    <option value="95" >95</option>
+                    <option value="100" >100</option>
+                    <option value="102" >102</option>
+                    <option value="104" >104</option>
+                    <option value="106" >106</option>
+                    <option value="108" >108</option>
+                    <option value="110" >110</option>
+                    <option value="112" >112</option>
+                    <option value="114" >114</option>
+                    <option value="116" >116</option>
+                    <option value="118" >118</option>
+                    <option value="120" >120</option>
+                    <option value="122" >122</option>
+                    <option value="124" >124</option>
+                    <option value="126" >126</option>
+                    <option value="128" >128</option>
+                    <option value="130" >130</option>
+                    <option value="140" >140</option>
+                    <option value="160" >160</option>
+                    <option value="180" >180</option>
+                    <option value="200" >200</option>
+                </select>
+                Time: <select id="currentTimeSignature" onchange="setCurrentTimeSignature(this.value);" >
+                    <option value="2/4" >2/4</option>
+                    <option value="3/4" >3/4</option>
+                    <option value="4/4" selected>4/4</option>
+                    <option value="6/8" >6/8</option>
+                </select>
+            </div>
+
+            <canvas id="audioBeatDisplayCanvas" class="audioBeatDisplayCanvasStyle" width="300" height="45" hidden
+                    title="Diagnostic plot of audio data found.">
+                Your browser does not support the HTML5 canvas tag.</canvas>
+
+            <div id="chordDiv"></div>
+        </div>
+
+
+        <!--
+         <p>Useful trivia:</p>
+         <ul>
+             <li>a flat sign: &#9837;</li>
+             <li>a natural sign: &#9838;</li>
+             <li>a sharp sign: &#9839;</li>
+         </ul>
+        -->
+
+
+        <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+        <noscript>
+        <div>
+            Your web browser must have JavaScript enabled
+            in order for this application to display correctly.
+        </div>
+        </noscript>
+
+        <!--        <div id="internalSongList" hidden >
+                    <div w3-include-html="allSongs.songlyrics"></div> 
+        
+                    <script>
+                        w3.includeHTML();
+                    </script>
+                </div>-->
+    </body>
+</html>

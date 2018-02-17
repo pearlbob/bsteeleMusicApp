@@ -3,7 +3,6 @@ package com.bsteele.bsteeleMusicApp.client;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.typedarrays.shared.ArrayBuffer;
-import com.google.gwt.user.client.Window;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.realityforge.gwt.websockets.client.WebSocket;
@@ -20,16 +19,18 @@ public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
 
   @Override
   public void onModuleLoad() {
-    webSocket = WebSocket.newWebSocketIfSupported();
-    if (null == webSocket) {
-      Window.alert("WebSocket not available!");
-    } else {
-      webSocket.setListener(this);
-      webSocket.connect( getWebSocketURL() );
-      logStatus("onModuleLoad", webSocket);
-      Window.alert("WebSocket ready? "+webSocket.getURL());
-      send("final String message");
-    }
+    
+    BSteeleMusicAppClientUtil.onModuleLoadJS();
+    
+    //  not now:
+//    webSocket = WebSocket.newWebSocketIfSupported();
+//    if (null == webSocket) {
+//      //Window.alert("WebSocket not available!");
+//    } else {
+//      webSocket.setListener(this);
+//      webSocket.connect( getWebSocketURL() );
+//      logStatus("onModuleLoad", webSocket);
+//    }
   }
 
   @Override
@@ -53,7 +54,7 @@ public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
   @Override
   public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String textData) {
     logStatus("Message", webSocket);
-          Window.alert("message back: "+textData);
+        //  Window.alert("message back: "+textData);
   }
 
   @Override

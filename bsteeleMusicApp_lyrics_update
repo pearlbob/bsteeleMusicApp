@@ -1,0 +1,39 @@
+#!/bin/bash
+
+cd ~/GitHub/bsteeleMusicApp
+src=gs://songlyrics.bsteele.com
+dst=songlyrics
+json=$PWD/src/main/webapp/allSongs.songlyrics
+
+rm -rf $dst
+mkdir -p $dst
+gsutil rsync -c -d $src/ $dst
+
+cd $dst
+
+rm -f $json
+firstJson=1
+
+for f in *.songlyrics
+do
+	echo $f
+	c=`head -1 "$f" `
+	if [ ${c:0:1} == '<' ]; then
+		#	convert an old style file to new
+		lyricsToJson -i "$f"
+	fi
+
+	if [ "$firstJson" -eq 1 ]; then
+		firstJson=0
+		#echo "let newSongs = [" > $json
+		echo "[" > $json
+	else
+		echo "," >> $json
+	fi
+
+	cat "$f" >> $json
+
+done
+echo "]" >> $json
+
+rm -rf $dst
