@@ -10,6 +10,6 @@
   <inherits name='com.bsteele.bsteeleMusicApp.BSteeleMusicApp'/>
 
   <!-- Specify the path to any remote services.                   -->
-  <servlet path="/bsteeleMusicApp/greet" class="com.bsteele.bsteeleMusicApp.server.GreetingServiceImpl" />
+  <!--<servlet path="/bsteeleMusicApp/greet" class="com.bsteele.bsteeleMusicApp.server.GreetingServiceImpl" />-->
 
 </module>

@@ -3,16 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.bsteele</groupId>
+    <groupId>com.bsteele.bsteeleMusicApp</groupId>
     <artifactId>bsteeleMusicApp</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>bsteeleMusicApp</name>
+    <version>1.0-SNAPSHOT</version>
+    <name>com.bsteele.bsteeleMusicApp</name>
 
     <properties>
-
-        <!--<netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>-->
-
 
         <!-- Setting maven.compiler.source to something different to 1.8
         needs that you configure the sourceLevel in gwt-maven-plugin since
@@ -41,12 +38,11 @@
     </dependencyManagement>
   
     <dependencies>
-            <dependency>
+        <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
-            <!--<version>2.8.2</version>-->
             <scope>runtime</scope>
-            </dependency>
+        </dependency>
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
@@ -58,19 +54,12 @@
             <scope>provided</scope>
         </dependency>
         
-            <!-- https://mvnrepository.com/artifact/com.google.jsinterop/jsinterop-annotations -->
-            <dependency>
-                <groupId>com.google.jsinterop</groupId>
-                <artifactId>jsinterop-annotations</artifactId>
-                <!--<version>1.0.2</version>-->
-            </dependency>
-
-            <dependency>
-                <groupId>org.realityforge.gwt.websockets</groupId>
-                <artifactId>gwt-websockets</artifactId>
-                <version>1.2</version>
-                <scope>provided</scope>
-            </dependency>
+        <dependency>
+            <groupId>org.realityforge.gwt.websockets</groupId>
+            <artifactId>gwt-websockets</artifactId>
+            <version>1.2</version>
+            <scope>provided</scope>
+        </dependency>
        
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-websocket-api -->
         <dependency>
@@ -79,41 +68,32 @@
             <version>9.0.4</version>
         </dependency>
 
-            <!-- https://mvnrepository.com/artifact/javax.websocket/javax.websocket-client-api -->
-<!--            <dependency>
-                <groupId>javax.websocket</groupId>
-                <artifactId>javax.websocket-client-api</artifactId>
-                <version>1.1</version>
-            </dependency>-->
-
-       
-        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-war-plugin -->
-            <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <version>3.2.0</version>
+        <dependency>
+            <groupId>com.vaadin.polymer</groupId>
+            <artifactId>vaadin-gwt-polymer-elements</artifactId>
+            <version>1.9.3.1</version>
+            <scope>provided</scope>
         </dependency>
 
-
         <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.11</version>
-                <scope>test</scope>
-            </dependency>
-
-        </dependencies>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" update them in DevMode -->
         <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
+        <finalName>${project.artifactId}</finalName>
 
         <plugins>
             <!-- GWT Maven Plugin-->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>net.ltgt.gwt.maven</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.8.2</version>
+                <version>1.0-rc-9</version>
                 <executions>
                     <execution>
                         <goals>
@@ -123,15 +103,15 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <launcherDir>${project.build.directory}/gwt/launcherDir</launcherDir>
+                    <appEngineHome>/home/bob/my/installs/google/appengine-java-sdk/latest</appEngineHome>
                     <moduleName>com.bsteele.bsteeleMusicApp.BSteeleMusicApp</moduleName>
-                    <moduleShortName>BSteeleMusicApp</moduleShortName>
-                    <runTarget>index.html</runTarget>
+                    <moduleShortName>bsteeleMusicApp</moduleShortName>
                     <generateJsInteropExports>true</generateJsInteropExports>
                     <failOnError>true</failOnError>
                     <!-- GWT compiler 2.8 requires 1.8, hence define sourceLevel here if you use
                     a different source language for java compilation -->
                     <sourceLevel>1.8</sourceLevel>
+                    <jsInteropMode>JS</jsInteropMode>
                     <!-- Compiler configuration -->
                     <compilerArgs>
                         <!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
@@ -143,97 +123,35 @@
                     <classpathScope>compile+runtime</classpathScope>
                     <!-- URL(s) that should be opened by DevMode (gwt:devmode). -->
                     <startupUrls>
-                        <startupUrl>index.html</startupUrl>
+                        <startupUrl>${project.artifactId}/${project.artifactId}.html</startupUrl>
                     </startupUrls>
-                    <codeserverArgs>
-                        <arg>-logLevel</arg>
-                        <arg>INFO</arg><!--    ERROR WARN INFO TRACE DEBUG SPAM  ALL    -->
-                    </codeserverArgs>
                 </configuration>
             </plugin>
             
-                           
             <!-- Skip normal test execution, we use gwt:test instead -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>2.17</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
             </plugin>
         
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0</version>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <!--    works for tomcat 8 as well  http://www.baeldung.com/tomcat-deploy-war -->
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
                 <configuration>
+                    <url>http://localhost:8082/manager/text</url>
+                    <server>Tomcat8Server</server>
+                    <port>8082</port>
+                    <path>/${project.artifactId}</path>
+                    <username>admin</username>
+                    <password>adminadmin</password>
                 </configuration>
             </plugin>
-            
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>appengine-maven-plugin</artifactId>
-                <version>1.3.2</version>
-                <configuration>
-                    <deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
-                    <devserver.host>0.0.0.0</devserver.host>
-                    <devserver.port>8181</devserver.port>
-                </configuration>
-            </plugin>
-        </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <!-- Do not upgrade past 3.1 to avoid triggering https://issues.apache.org/jira/browse/MSOURCES-95 -->
-                    <!-- Unless you use annotation processors, then upgrade to 3.5.1 at a minimum -->
-                    <version>3.7.0</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <compilerArgs>
-                            <!--<arg>-verbose</arg>-->
-                            <arg>-Xlint:all,-options,-path</arg>
-                        </compilerArgs>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-maven-plugin</artifactId>
-                    <version>9.4.8.v20171121</version>
-                </plugin>
-                <plugin>
-                    <groupId>net.ltgt.gwt.maven</groupId>
-                    <artifactId>gwt-maven-plugin</artifactId>
-                    <version>1.0-rc-9</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <sourceLevel>1.8</sourceLevel>
-                        <failOnError>true</failOnError>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                </plugin>
                 
- 
-            </plugins>
-        </pluginManagement>
-            
+        </plugins>
     </build>
 </project>

@@ -2,83 +2,69 @@ package com.bsteele.bsteeleMusicApp.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.typedarrays.shared.ArrayBuffer;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import org.realityforge.gwt.websockets.client.WebSocket;
-import org.realityforge.gwt.websockets.client.WebSocketListener;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.vaadin.polymer.paper.widget.PaperButton;
+import static jsinterop.annotations.JsPackage.GLOBAL;
+import jsinterop.annotations.JsType;
 
 /**
- * App Entry point
+ * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class BSteeleMusicApp implements EntryPoint, WebSocketListener {
+public class BSteeleMusicApp implements EntryPoint {
 
-  public void send(final String message) {
-    webSocket.send(message);
-  }
-
+  /**
+   *
+   */
   @Override
   public void onModuleLoad() {
-    
+
     BSteeleMusicAppClientUtil.onModuleLoadJS();
-    
-    //  not now:
-//    webSocket = WebSocket.newWebSocketIfSupported();
-//    if (null == webSocket) {
-//      //Window.alert("WebSocket not available!");
-//    } else {
-//      webSocket.setListener(this);
-//      webSocket.connect( getWebSocketURL() );
-//      logStatus("onModuleLoad", webSocket);
-//    }
+
+    socket = new WebSocket(getWebSocketURL());
+
+    socket.onmessage = new SocketReceiveFunction();
+
+    // Use Widget API to Create a <paper-button>
+    PaperButton button = new PaperButton("Press me!");
+    button.setRaised(true);
+
+    {
+      ClickHandler handler = (ClickEvent event) -> {
+        String msg = "hello bob";
+        socket.send("hello bob");
+        GWT.log("message sent:" + msg);
+      };
+      button.addClickHandler(handler);
+    }
+
+    RootPanel.get().add(button);
   }
 
-  @Override
-  public void onOpen(@Nonnull final WebSocket webSocket) {
-    logStatus("Open", webSocket);
-  }
-
-  @Override
-  public void onClose(@Nonnull final WebSocket webSocket,
-          final boolean wasClean,
-          final int code,
-          @Nullable final String reason) {
-    logStatus("Close", webSocket);
-  }
-
-  @Override
-  public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final ArrayBuffer data) {
-    logStatus("DataMessage", webSocket);
-  }
-
-  @Override
-  public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String textData) {
-    logStatus("Message", webSocket);
-        //  Window.alert("message back: "+textData);
-  }
-
-  @Override
-  public void onError(WebSocket webSocket) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-  
-  private String getWebSocketURL()
-  {
+  private String getWebSocketURL() {
     final String moduleBaseURL = GWT.getHostPageBaseURL();
-    return moduleBaseURL.replaceFirst( "^http\\:", "ws:" ) + "bsteeleMusic";
+    return moduleBaseURL.replaceFirst("^http\\:", "ws:") + "bsteeleMusic";
   }
 
-  private void logStatus(@Nonnull final String section,
-          @Nonnull final WebSocket webSocket) {
-    final String suffix = !webSocket.isConnected()
-            ? ""
-            : "URL:" + webSocket.getURL() + "\n"
-            + "BinaryType:" + webSocket.getBinaryType() + "\n"
-            + "BufferedAmount:" + webSocket.getBufferedAmount() + "\n"
-            + "Extensions:" + webSocket.getExtensions() + "\n"
-            + "Protocol:" + webSocket.getProtocol();
-    GWT.log("WebSocket @ " + section + "\n" + "ReadyState:" + webSocket.getReadyState() + "\n" + suffix);
+  private final class SocketReceiveFunction implements Function {
+
+    @Override
+    public Object call(Object event) {
+
+      OnMessageEevent me = (OnMessageEevent) event;
+      GWT.log("message recv:");
+      Window.alert("message me:" + me.data);
+      return event;
+    }
   }
 
-  private WebSocket webSocket;
+  @JsType(isNative = true, name = "Object", namespace = GLOBAL)
+  static class OnMessageEevent {
+
+    public String data;
+  }
+
+  WebSocket socket;
 }

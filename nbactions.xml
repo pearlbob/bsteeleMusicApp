@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
-        <action>
-            <actionName>CUSTOM-GWT Devmode</actionName>
-            <displayName>Devmode</displayName>
+       <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
             <goals>
+                <goal>compile</goal>
+                <goal>war:exploded</goal>
                 <goal>gwt:devmode</goal>
             </goals>
             <properties>
                 <gwt.logLevel>INFO</gwt.logLevel>
                 <gwt.style>DETAILED</gwt.style>
-                <runTarget>index.html</runTarget>
                 <jpda.listen>maven</jpda.listen>
-                
             </properties>
         </action>
         <action>
@@ -21,11 +25,13 @@
             </packagings>
             <goals>
                 <goal>clean</goal>
-                <goal>install</goal>
+                <goal>package</goal>
+                
             </goals>
             <properties>
                 <gwt.logLevel>INFO</gwt.logLevel>
                 <gwt.style>DETAILED</gwt.style>
+                <jpda.listen>maven</jpda.listen>
             </properties>
         </action>
         <action>
@@ -34,28 +40,13 @@
                 <packaging>*</packaging>
             </packagings>
             <goals>
-                <goal>install</goal>
+                <goal>compile</goal>
+                <goal>war:exploded</goal>
             </goals>
             <properties>
                 <gwt.logLevel>INFO</gwt.logLevel>
                 <gwt.style>DETAILED</gwt.style>
+                <jpda.listen>maven</jpda.listen>
             </properties>
         </action>
-        <action>
-            <actionName>run</actionName>
-            <packagings>
-                <packaging>war</packaging>
-                <packaging>ear</packaging>
-                <packaging>ejb</packaging>
-            </packagings>
-            <goals>
-                <goal>package</goal>
-            </goals>
-            <properties>
-                <gwt.logLevel>INFO</gwt.logLevel>
-                <gwt.style>DETAILED</gwt.style>
-            </properties>
-        </action>
-        
-        
     </actions>

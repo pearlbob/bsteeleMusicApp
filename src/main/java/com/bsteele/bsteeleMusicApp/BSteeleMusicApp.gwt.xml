@@ -8,23 +8,26 @@
 <module rename-to='bsteelemusicapp'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
-    <inherits name="com.google.gwt.core.Core"/>
+<!--    <inherits name="com.google.gwt.core.Core"/>-->
+    <!-- Enable the websocket library -->
+    <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
     <!--<inherits name="javax.websocket"/>-->
-     <!--<inherits name="org.apache.tomcat.tomcat-websocket"/>-->
+    <!--<inherits name="org.apache.tomcat.tomcat-websocket"/>-->
+    <inherits name="com.google.gwt.logging.Logging"/>
 
     <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
     <!-- any one of the following lines.                            -->
-    <!--<inherits name='com.google.gwt.user.theme.clean.Clean'/>-->
+    <inherits name='com.google.gwt.user.theme.clean.Clean'/>
     <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
     <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
     <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
     <!-- Other module inherits                                      -->
-    <inherits name="com.google.gwt.logging.Logging"/>
 
-      <!-- Compile a single permutation for all platforms -->
-  <collapse-all-properties/>
+
+    <!-- Compile a single permutation for all platforms -->
+    <!--<collapse-all-properties/>-->
    
     <!-- Specify the app entry point class.                         -->
     <entry-point class='com.bsteele.bsteeleMusicApp.client.BSteeleMusicApp'/>
@@ -41,10 +44,9 @@
     <set-property name="gwt.logging.enabled" value="TRUE">
         <when-property-is name="jre.debugMode" value="ENABLED"/>
     </set-property>
-         
-    <!-- Enable the websocket library -->
-    <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
-  
+       
+    <inherits name="com.vaadin.polymer.Elements"/>
+
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />
 </module>

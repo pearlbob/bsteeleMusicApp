@@ -28,6 +28,7 @@ public class BSteeleMusicAppServer
 
  public BSteeleMusicAppServer(){
     logger.log(Level.INFO, "BSteeleMusicAppServer()");
+    System.out.println("BSteeleMusicAppServer()");
     GWT.log( "GWT.log(BSteeleMusicAppServer())");
   }
  
@@ -61,6 +62,6 @@ public class BSteeleMusicAppServer
     logger.log(Level.INFO, "onError({0})", session.getId());
   }
 
-  private static final Logger logger = Logger.getLogger(ChatServer.class.getName());
+  private static final Logger logger = Logger.getLogger(BSteeleMusicAppServer.class.getName());
   private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 }
