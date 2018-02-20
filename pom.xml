@@ -123,8 +123,14 @@
                     <classpathScope>compile+runtime</classpathScope>
                     <!-- URL(s) that should be opened by DevMode (gwt:devmode). -->
                     <startupUrls>
-                        <startupUrl>${project.artifactId}/${project.artifactId}.html</startupUrl>
+                        <startupUrl>${project.artifactId}/index.html</startupUrl>
                     </startupUrls>
+                    <codeserverArgs>
+                        <arg>-logLevel</arg>
+                        <arg>INFO</arg><!--    ERROR WARN INFO TRACE DEBUG SPAM  ALL    -->
+                        <arg>-style</arg>
+                        <arg>DETAILED</arg>
+                    </codeserverArgs>
                 </configuration>
             </plugin>
             

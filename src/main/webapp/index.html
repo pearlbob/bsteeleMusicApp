@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html>
     <head>
@@ -17,73 +17,34 @@
         <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
 
         <link type="text/css" rel="stylesheet" href="./css/bsteeleMusicApp.css" />
-<!--
-    todo: 
-
-    screen control screen
-    logging screen
-    
--->
+        <!--
+            todo: 
+        
+            screen control screen
+            logging screen
+            
+        -->
         <script>
             'use strict';
-            
-            //  fix loading issues
-            let  isModuleLoad = false;
-            let  isLoad = false;
-
-            let bpmTally;
-
-            let bpmTap;
 
             function onNativeTap(event) {
 
                 let t = event.timeStamp / 1000; //  in units of seconds
-                //window.console.log("tap timestamp: " + t);
-                bpmTap.tap(t);
+                window.console.log("native tap timestamp: " + t);
             }
 
             function log(arg) {
                 window.console.log(arg);
             }
-
-            function animationFrameUpdate()
-            {
-                function update() {
-
-                    bpmTally.innerHTML = bpmTap.getBPM();
-
-                    window.requestAnimationFrame(update);
-                }
-                update();
+            
+            function onLoad(){
+               // log( "socket: "+window.WebSocket);
             }
 
-            function onLoad() {
-                //log("onLoad()");
-                bpmTally = document.getElementById("bpmTally");
-
-                isLoad = true;
-                lastOfLoad();
-            }
-
-            function onModuleLoadJS() {
-                //   populate java objects
-                bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
-
-                isModuleLoad = true;
-                lastOfLoad();
-            }
-
-            function lastOfLoad() {
-                if (isModuleLoad && isLoad)
-                {
-                    //  finish page initization now that we're all here
-                    animationFrameUpdate();
-                }
-            }
         </script>
     </head>
 
-    <body onload="onLoad();">
+    <body onload="onLoad();" style="background-color: lightgray;">
 
         <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
         <noscript>
@@ -92,30 +53,7 @@
             in order for this application to display correctly.
         </div>
         </noscript>
-
-        <h1>bsteele Music App</h1>
-
-        <table>
-            <tr>
-                <td><a href="./lyrics.html">Lyrics</a> </td>        
-            </tr>
-            <tr>
-                <td><a href="./bassStudyTool.html">Bob's Bass Study Tool</a></td>        
-            </tr>
-        </table>
-        <p></p>
-        <table>
-            <tr>
-                <td><button type="button" onclick="onNativeTap(event);" >Tap for BPM</button></td>
-                <td id="bpmTally">106</td>
-            </tr>
-            
-             <tr>
-                <td><button type="button" onclick="onWebsocketTest(event);" >test websocket</button>
-                websocket response:</td>
-                <td id="websocketResponse"></td>
-            </tr>
-        </table>
+     
 
     </body>
 </html>

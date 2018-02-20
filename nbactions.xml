@@ -8,9 +8,9 @@
                 <packaging>ejb</packaging>
             </packagings>
             <goals>
-                <goal>compile</goal>
-                <goal>war:exploded</goal>
                 <goal>gwt:devmode</goal>
+                
+                
             </goals>
             <properties>
                 <gwt.logLevel>INFO</gwt.logLevel>
@@ -40,8 +40,8 @@
                 <packaging>*</packaging>
             </packagings>
             <goals>
-                <goal>compile</goal>
-                <goal>war:exploded</goal>
+                <goal>package</goal>
+                
             </goals>
             <properties>
                 <gwt.logLevel>INFO</gwt.logLevel>

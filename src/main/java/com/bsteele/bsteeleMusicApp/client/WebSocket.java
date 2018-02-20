@@ -10,7 +10,7 @@ import jsinterop.annotations.JsProperty;
 import jsinterop.annotations.JsType;
 
 @JsType(isNative=true, namespace=JsPackage.GLOBAL)
-public class WebSocket //extends EventTarget
+public class WebSocket
 {
 	
 	@JsProperty

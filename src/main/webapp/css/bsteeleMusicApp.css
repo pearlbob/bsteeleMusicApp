@@ -86,3 +86,8 @@ body {
 .sectionOClass,.lyricsOClass{ background-color: var(--out-color);}
 .sectionCoClass,.lyricsCoClass  { background-color: var(--coda-color);}
 .sectionTClass,.lyricsTClass    { background-color: var(--t-color);}
+
+.gwt-SplitLayoutPanel { background-color: var(--bg-color); }
+/*.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger { horizontal dragger }
+//.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-VDragger { vertical dragger }
+*/

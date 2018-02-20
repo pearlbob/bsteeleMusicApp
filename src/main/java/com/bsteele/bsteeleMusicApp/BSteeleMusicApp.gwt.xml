@@ -8,7 +8,7 @@
 <module rename-to='bsteelemusicapp'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
-<!--    <inherits name="com.google.gwt.core.Core"/>-->
+    <inherits name="com.google.gwt.core.Core"/>
     <!-- Enable the websocket library -->
     <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
     <!--<inherits name="javax.websocket"/>-->
