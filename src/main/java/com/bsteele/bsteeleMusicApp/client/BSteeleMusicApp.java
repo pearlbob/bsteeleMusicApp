@@ -30,9 +30,12 @@ public class BSteeleMusicApp implements EntryPoint {
 
     RootLayoutPanel rootLayoutPanel = RootLayoutPanel.get();
 
-    DockLayoutPanel outerdockLayoutPanel = new DockLayoutPanel(Unit.PX );
+    DockLayoutPanel dockLayoutPanel = new DockLayoutPanel(Unit.PX);
 
-    outerdockLayoutPanel.addNorth(new HTML("bsteele Music App"), 50);
+    dockLayoutPanel.addNorth(new HTML("<h1>\n" 
+            +"<img src=\"images/runningsmall.ico\" alt=\"Bob Steele jpg\" border=\"0\"\n" 
+            +"height=\"28\" width=\"28\"/>\n" 
+            +"bsteele Music App</h1>"), 35);
     {
 
       // Create a tab panel
@@ -51,7 +54,7 @@ public class BSteeleMusicApp implements EntryPoint {
       {
         SplitLayoutPanel p = new SplitLayoutPanel();
         p.addNorth(new HTML("header"), 100);
-        p.addSouth(new HTML("footer fsdfg"), 50);
+        //p.addSouth(new HTML("footer fsdfg"), 50);
         p.addWest(new HTML("chords"), 400);
         p.add(new HTML("lyrics"));
         tabPanel.add(p, "Chords and lyrics");
@@ -60,7 +63,7 @@ public class BSteeleMusicApp implements EntryPoint {
       {
         FlowPanel fp = new FlowPanel();
         fp.add(new HTML("<p><a href=\"./lyrics.html\">Lyrics</a></p>"));
-      fp.add(new HTML("<p><a href=\"./bassStudyTool.html\">Bob's Bass Study Tool</a></p>"));
+        fp.add(new HTML("<p><a href=\"./bassStudyTool.html\">Bob's Bass Study Tool</a></p>"));
         fp.add(new HTML("<table>\n"
                 + "<tr> <td><button type=\"button\" id=\"tapButton\" onclick=\"onNativeTap(event);\" >Tap for BPM</button></td> <td id=\"bpmTally\">106</td> </tr>\n"
                 + "<tr> <td>websocket response:</td> <td id=\"websocketResponse\"></td>  </tr>\n"
@@ -81,23 +84,23 @@ public class BSteeleMusicApp implements EntryPoint {
             });
           }
           fp.add(button);
-          tabPanel.add(fp, "Options");
+
         } else {
           //  no websocket!
           //websocketMessagePanel.clear();
           // websocketMessagePanel.add(new HTMLPanel("no websocket on jetty that i know of"));
         }
-
+        tabPanel.add(fp, "Options");
       }
 
       // Return the content
       tabPanel.selectTab(0);
       tabPanel.ensureDebugId("mainTabPanel");
 
-      outerdockLayoutPanel.add(tabPanel);
-     // dockLayoutPanel.setHeight("0%");
+      dockLayoutPanel.add(tabPanel);
+      // dockLayoutPanel.setHeight("0%");
 
-      rootLayoutPanel.add(outerdockLayoutPanel);
+      rootLayoutPanel.add(dockLayoutPanel);
       rootLayoutPanel.forceLayout();
 
     }

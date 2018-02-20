@@ -1,10 +1,9 @@
 #!/bin/tcsh
 #set echo; set verbose
 
-bsteeleMusicApp_local_deploy
 
 mvn \
 	-DgenerateJsInteropExports=true \
 	-Dgwt.logLevel=INFO \
 	-Dgwt.style=DETAILED  \
-	gwt:devmode
+	clean tomcat7:redeploy		#	assumes it's already there, otherwise: deploy

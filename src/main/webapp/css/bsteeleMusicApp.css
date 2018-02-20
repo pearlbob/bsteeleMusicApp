@@ -3,12 +3,13 @@
 
 
 /** Example rules used by the template application (remove for your app) */
-h1 {
-    font-size: 2em;
+h1, .gwt-H1 {
+    font-size: 28px;
     font-weight: bold;
     color: #777777;
-    margin: 40px 0px 70px;
-    text-align: center;
+    margin: 0px;
+    text-align: left;
+    vertical-align: text-bottom;
 }
 
 .sendButton {
@@ -49,7 +50,7 @@ h1 {
 
 body {
     /* max-width: 1920px;*/
-    background-color: var(--bg-color);
+    background: var(--bg-color);
 }
 
 .audioBeatDisplayCanvasStyle {
@@ -88,6 +89,7 @@ body {
 .sectionTClass,.lyricsTClass    { background-color: var(--t-color);}
 
 .gwt-SplitLayoutPanel { background-color: var(--bg-color); }
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs { background: var(--bg-color);}
 /*.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger { horizontal dragger }
 //.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-VDragger { vertical dragger }
 */

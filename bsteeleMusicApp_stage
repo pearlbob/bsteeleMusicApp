@@ -44,8 +44,15 @@ $git/bsteeleMusicApp_lyrics_update
 #	compile for deployment
 set cwd=`pwd`
 cd $git
-mvn clean install -Ddeploy=true -Dgwt.logLevel=WARN \
-	-Dgwt.style=OBF -DrunTarget=index.html -Dgwt.compiler.compileReport=false
+
+mvn \ 
+	-DgenerateJsInteropExports=false \
+	-Dgwt.logLevel=SEVERE \
+	-Dgwt.style=OBF  \
+	-Dgwt.compiler.compileReport=false \
+	-Ddeploy=true \
+	clean install
+
 rm -f $finalWar
 #	expecting only one war file
 set war=`find $git -iname "*.war" -print | tail -1 `
