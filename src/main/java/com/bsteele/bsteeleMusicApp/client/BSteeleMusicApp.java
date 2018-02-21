@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
@@ -27,6 +28,8 @@ public class BSteeleMusicApp implements EntryPoint {
    */
   @Override
   public void onModuleLoad() {
+    
+    AppResources.INSTANCE.style().ensureInjected();
 
     RootLayoutPanel rootLayoutPanel = RootLayoutPanel.get();
 

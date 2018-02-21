@@ -35,28 +35,15 @@ h1, .gwt-H1 {
     margin: 15px 6px 6px;
 }
 
-
-:root {
-    --bg-color: #FFFDF6;
-    --c-color: #ffffff;
-    --v-color: #f5f2e9;
-    --br-color: #f6edff;
-    --pc-color: #f7f0ff;
-    --in-color: #ECFFF9;
-    --out-color: #ECFFF9;
-    --coda-color: #ECFFF9;
-    --t-color: #edf6ff;
-}
-
 body {
     /* max-width: 1920px;*/
-    background: var(--bg-color);
+    background: #FFFDF6;
 }
 
 .audioBeatDisplayCanvasStyle {
     border-style: solid;
     border-width: 4px;
-    border-color: var(--bg-color);
+    border-color: #FFFDF6;
 }
 
 
@@ -79,17 +66,17 @@ body {
     visibility: visible;
 }
 
-.sectionCClass, .lyricsCClass   { background-color: var(--c-color);}
-.sectionVClass,.lyricsVClass    { background-color: var(--v-color); }
-.sectionBrClass,.lyricsBrClass  { background-color: var(--br-color);}
-.sectionPCClass,.lyricsPCClass  { background-color: var(--pc-color);}
-.sectionIClass,.lyricsIClass    { background-color: var(--in-color);}
-.sectionOClass,.lyricsOClass{ background-color: var(--out-color);}
-.sectionCoClass,.lyricsCoClass  { background-color: var(--coda-color);}
-.sectionTClass,.lyricsTClass    { background-color: var(--t-color);}
+.sectionCClass, .lyricsCClass   { background-color: #ffffff;}
+.sectionVClass,.lyricsVClass    { background-color: #f5f2e9; }
+.sectionBrClass,.lyricsBrClass  { background-color: #f6edff;}
+.sectionPCClass,.lyricsPCClass  { background-color: #f7f0ff;}
+.sectionIClass,.lyricsIClass    { background-color: #ECFFF9;}
+.sectionOClass,.lyricsOClass{ background-color: #ECFFF9;}
+.sectionCoClass,.lyricsCoClass  { background-color: #ECFFF9;}
+.sectionTClass,.lyricsTClass    { background-color: #edf6ff;}
 
-.gwt-SplitLayoutPanel { background-color: var(--bg-color); }
-.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs { background: var(--bg-color);}
+.gwt-SplitLayoutPanel { background-color: #FFFDF6; }
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs { background: #FFFDF6;}
 /*.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger { horizontal dragger }
 //.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-VDragger { vertical dragger }
 */

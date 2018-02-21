@@ -8,7 +8,7 @@
 <module rename-to='bsteelemusicapp'>
     <!-- Inherit the core Web Toolkit stuff.                        -->
     <inherits name='com.google.gwt.user.User'/>
-    <inherits name="com.google.gwt.core.Core"/>
+    <!--<inherits name="com.google.gwt.core.Core"/>-->
     <!-- Enable the websocket library -->
     <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
     <!--<inherits name="javax.websocket"/>-->
@@ -26,13 +26,19 @@
     <!--    fixme:  CssResource and UiBinder is recommended.
     -->
     <!-- Other module inherits                                      -->
-
+    <!-- Inherit the i18n module for the messages used in this example. -->
+    <inherits name="com.google.gwt.i18n.I18N"/>
 
     <!-- Compile a single permutation for all platforms -->
     <!--<collapse-all-properties/>-->
    
     <!-- Specify the app entry point class.                         -->
     <entry-point class='com.bsteele.bsteeleMusicApp.client.BSteeleMusicApp'/>
+    
+    <!--    gwtp    -->
+    <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
+    <extend-configuration-property name="gin.ginjector.modules"
+            value="com.bsteele.bsteeleMusicApp.client.gin.ClientModule"/>
 
     <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
@@ -51,4 +57,16 @@
 
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />
+       
+    <resource path="css/bsteeleMusicApp.gss" />
+    
+    <!--    gss -->
+    <set-configuration-property name="CssResource.enableGss" value="true" />
+    <!--<set-configuration-property name="CssResource.conversionMode" value="strict" />-->
+    <!--<set-configuration-property name="CssResource.conversionMode" value="off" />-->
+    
+    <inherits name='com.google.gwt.inject.Inject' />
+    <inherits name="com.google.gwt.resources.Resources" />
+ 
+    
 </module>

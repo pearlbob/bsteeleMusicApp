@@ -1,0 +1,92 @@
+.buttonTable {
+  border-spacing: 10px 1px;
+  vertical-align: top;
+  margin: 2px;
+}
+
+.musicalNote {
+  cursor: default;
+  margin: 2px;
+}
+
+.musicalSelect {
+  font-family: "FreeSerif";
+  font-size: medium;
+}
+
+.musicalButton {
+  cursor: pointer;
+  padding: 0 8px;
+  background: #f0f0f0;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.75);
+  font-family: "FreeSerif";
+  font-size: 16px;
+}
+
+input[type="radio"] {
+  display: none;
+  margin: 10px;
+}
+
+input[type="radio"]+label {
+  font-size: 40px;
+  display: inline-block;
+  margin: -2px;
+  padding: 4px 8px;
+  background-color: #fff;
+  border-color: #ddd;
+}
+
+input[type="radio"]:checked+label {
+  background-image: none;
+  background-color: #e0e0e0;
+}
+
+#hints {
+  width: 1000px;
+  margin: 10px;
+}
+
+canvas#nashvilleEdit {
+  display: inline-block;
+}
+
+.nashville {
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px;
+  padding: 2px;
+}
+
+div#customBeat {
+  display: none;
+  padding: 10px;
+}
+
+largeUtf {
+}
+
+#myScoreLayers {
+  position: relative;
+  width: 1100px;
+  height: 1300px;
+}
+
+#myScore {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+}
+
+#myScoreBackground {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+}

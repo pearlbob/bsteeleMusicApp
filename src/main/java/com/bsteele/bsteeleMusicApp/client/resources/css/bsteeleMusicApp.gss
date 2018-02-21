@@ -1,0 +1,107 @@
+/* Don't obfuscate the classes starting with gwt- */
+@external 'gwt-*';
+
+h1,
+.gwt-H1 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #777;
+  margin: 0;
+  text-align: left;
+  vertical-align: text-bottom;
+}
+
+.sendButton {
+  display: block;
+  font-size: 16pt;
+}
+
+.gwt-DialogBox {
+  width: 400px;
+}
+
+.dialogVPanel {
+  margin: 5px;
+}
+
+.serverResponseLabelError {
+  color: red;
+}
+
+#closeButton {
+  margin: 15px 6px 6px;
+}
+
+body {
+  background: #fffdf6;
+}
+
+.audioBeatDisplayCanvasStyle {
+  border-style: solid;
+  border-width: 4px;
+  border-color: #fffdf6;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 500px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.sectionCClass,
+.lyricsCClass {
+  background-color: #fff;
+}
+
+.sectionVClass,
+.lyricsVClass {
+  background-color: #f5f2e9;
+}
+
+.sectionBrClass,
+.lyricsBrClass {
+  background-color: #f6edff;
+}
+
+.sectionPCClass,
+.lyricsPCClass {
+  background-color: #f7f0ff;
+}
+
+.sectionIClass,
+.lyricsIClass {
+  background-color: #ecfff9;
+}
+
+.sectionOClass,
+.lyricsOClass {
+  background-color: #ecfff9;
+}
+
+.sectionCoClass,
+.lyricsCoClass {
+  background-color: #ecfff9;
+}
+
+.sectionTClass,
+.lyricsTClass {
+  background-color: #edf6ff;
+}
+
+.gwt-SplitLayoutPanel {
+  background-color: #fffdf6;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs {
+  background: #fffdf6;
+}
