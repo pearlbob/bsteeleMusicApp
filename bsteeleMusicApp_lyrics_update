@@ -1,9 +1,10 @@
-#!/bin/bash
+#!/bin/bash 
 
-cd ~/GitHub/bsteeleMusicApp
+appRoot=~/GitHub/bsteeleMusicApp
+cd $appRoot
 src=gs://songlyrics.bsteele.com
 dst=songlyrics
-json=$PWD/src/main/webapp/allSongs.songlyrics
+json=$appRoot/src/main/webapp/allSongs.songlyrics
 
 rm -rf $dst
 mkdir -p $dst
@@ -36,4 +37,4 @@ do
 done
 echo "]" >> $json
 
-rm -rf $dst
+rm -rf $appRoot/$dst

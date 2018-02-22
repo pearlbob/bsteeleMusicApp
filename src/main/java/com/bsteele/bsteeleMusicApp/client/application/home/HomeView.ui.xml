@@ -17,7 +17,11 @@
                     <g:TabLayoutPanel barUnit='EM' barHeight='2.5' >
                         <g:tab>
                             <g:header size='7'>Songs</g:header>
-                            <g:Label>songs</g:Label>
+                            <g:ResizeLayoutPanel>
+                                <g:HTMLPanel>   
+                                    <iframe src="http://www.bsteele.com/bsteeleMusicApp/lyrics.html"></iframe>
+                                </g:HTMLPanel>
+                            </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
                             <g:header size='7'>Chords</g:header>
@@ -26,11 +30,33 @@
                         <g:tab>
                             <g:header size='7'>Options</g:header>
                             <g:FlowPanel>   
-                                <g:HTML>
-                                    <!-- fixme!!!!!!!!!!!!!!!!!!!!!         -->
-                                    <p><a href="./lyrics.html">Lyrics</a></p>
-                                </g:HTML>
+                                <g:HTMLPanel>
+                                    <paper-icon-item ui:field="menuClearAll">
+                                        <iron-icon icon="delete" item-icon=""/>
+                                        <div>Clear All</div>
+                                    </paper-icon-item>
+                                    <paper-icon-item ui:field="menuClearDone">
+                                        <iron-icon icon="clear" item-icon=""/>
+                                        <div>Clear Done</div>
+                                    </paper-icon-item>
+                                    <paper-icon-item ui:field="menuSettings">
+                                        <iron-icon icon="settings" item-icon=""/>
+                                        <div>Settings</div>
+                                    </paper-icon-item>
+                                    <paper-icon-item ui:field="menuAbout">
+                                        <iron-icon icon="help" item-icon=""/>
+                                        <div>About</div>
+                                    </paper-icon-item>
+                                </g:HTMLPanel>
                             </g:FlowPanel>
+                        </g:tab>
+                        <g:tab>
+                            <g:header size='7'>Bass Study</g:header>
+                            <g:ResizeLayoutPanel>
+                                <g:HTMLPanel>   
+                                    <iframe src="http://www.bsteele.com/bsteeleMusicApp/bassStudyTool.html"></iframe>
+                                </g:HTMLPanel>
+                            </g:ResizeLayoutPanel>
                         </g:tab>
                     </g:TabLayoutPanel>
                 </g:center>
