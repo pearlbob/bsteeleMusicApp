@@ -3,7 +3,6 @@
  */
 package com.bsteele.bsteeleMusicApp.client.application;
 
-
 import com.gwtplatform.mvp.client.annotations.DefaultGatekeeper;
 import com.gwtplatform.mvp.client.proxy.Gatekeeper;
 import javax.inject.Inject;

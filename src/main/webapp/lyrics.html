@@ -15,7 +15,7 @@
 
         <!-- If you add any GWT meta tags, they must   -->
         <!-- be added before this line.                -->
-        <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+        <!--<script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>-->
 
         <link rel="stylesheet" href="./css/bsteeleMusicApp.css" type="text/css"/>
 
@@ -698,42 +698,6 @@
                 isLoad = true;
                 lastOfLoad();
             }
-
-//            function songListToBash() {
-//                let songlist = internalSongListElement;
-//                let songs = songlist.getElementsByClassName('song');
-//                let json = '';
-//                for (let i = 0; i < songs.length; i++) {
-//                    if (i > 0)
-//                        json += '\n';
-//                    let  htmlSong = songs[i];
-//                    let a = htmlSong.getElementsByClassName('title');
-//                    if (a && a.length > 0) {
-//                        let filename = a[0].innerText.trim();
-//                        filename = filename.replace(/\W+/g, '');
-//                        filename += '.songlyrics';
-//                        json += 'cat << EOF > ' + filename;
-//                        let  htmlSong = songs[i];
-//                        json += songToJson(htmlSong);
-//                        json += 'EOF\n';
-//                    }
-//                }
-//                json += '\n';
-//                return json;
-//            }
-//            function songListToJson() {
-//                let songlist = internalSongListElement;
-//                let songs = songlist.getElementsByClassName('song');
-//                let json = '\[';
-//                for (let i = 0; i < songs.length; i++) {
-//                    if (i > 0)
-//                        json += ',\n';
-//                    let  htmlSong = songs[i];
-//                    json += songToJson(htmlSong);
-//                }
-//                json += '\n]\n';
-//                return json;
-//            }
 
             function songToJson(htmlSong) {
                 let json = '\n{\n';
@@ -1489,7 +1453,7 @@
     <body onload="onLoad();">
 
         <div class="toc" >
-            <!--<h1><a id="title" name="toc">Lyrics</a></h1>-->
+            <a id="title" name="toc"></a>
             <p>Search: <input type="search" id="searchEntry" placeholder="title or artist..." class="mediumTextEntry" >
                 &nbsp;
                 <span class="tooltip"><span style="font-weight: bold;">Read Song Files:</span> 
@@ -1506,7 +1470,6 @@
             <button type="button" onclick="onSongAdd();" id="addSongButton">Add New Song</button>
 
         </div>
-
 
         <div id="songEntry" hidden>
             <p>
@@ -1645,7 +1608,7 @@
                        title="Enter or edit the beats per minute.  Can also hold control down and tap the space bar in time.">
                 <select id="bpm" onchange="onCurrentBpmSelect()" title="Select the beats per minute to be used in playing">
                     <option value="" selected>chose</option>
-                    <!--    content should always be a number   -->
+                        <!--content should always be a number-->   
                     <option value="60" >60</option>
                     <option value="65" >65</option>
                     <option value="70" >70</option>

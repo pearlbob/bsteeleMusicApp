@@ -18,9 +18,7 @@
                         <g:tab>
                             <g:header size='7'>Songs</g:header>
                             <g:ResizeLayoutPanel>
-                                <g:HTMLPanel> 
-                                    <iframe src="./lyrics.html"></iframe>
-                                </g:HTMLPanel>
+                                <g:Frame url="lyrics.html"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
