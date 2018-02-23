@@ -13,49 +13,62 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import javax.inject.Inject;
 
 public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresenter.MyProxy>
         implements LoginUiHandlers {
-    @ProxyStandard
-    @NameToken(NameTokens.LOGIN)
-    @NoGatekeeper
-    interface MyProxy extends ProxyPlace<LoginPresenter> {
+
+  @ProxyStandard
+  @NameToken(NameTokens.LOGIN)
+  @NoGatekeeper
+  interface MyProxy extends ProxyPlace<LoginPresenter> {
+  }
+
+  interface MyView extends View, HasUiHandlers<LoginUiHandlers> {
+  }
+
+  // Credentials are stored here for demo purpose only.
+  private static final String USERNAME = "bob";
+  private static final String PASSWORD = "bob";
+
+  private final CurrentUser currentUser;
+  private final PlaceManager placeManager;
+
+  @Inject
+  LoginPresenter(
+          EventBus eventBus,
+          MyView view,
+          MyProxy proxy,
+          PlaceManager placeManager,
+          CurrentUser currentUser) {
+    super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
+
+    this.currentUser = currentUser;
+    if (!currentUser.isLoggedIn()) {
+      placeManager.revealDefaultPlace();
     }
+    this.placeManager = placeManager;
 
-    interface MyView extends View, HasUiHandlers<LoginUiHandlers> {
+    getView().setUiHandlers(this);
+  }
+
+  @Override
+  public void confirm(String username, String password) {
+    if (validateCredentials(username, password)) {
+      currentUser.setLoggedIn(true);
+
+      PlaceRequest placeRequest = new PlaceRequest.Builder()
+              .nameToken(NameTokens.HOME)
+              .build();
+
+      placeManager.revealPlace(placeRequest);
     }
+  }
 
-    // Credentials are stored here for demo purpose only.
-    private static final String USERNAME = "bob";
-    private static final String PASSWORD = "bob";
-
-    private CurrentUser currentUser;
-
-    @Inject
-    LoginPresenter(
-            EventBus eventBus,
-            MyView view,
-            MyProxy proxy,
-            CurrentUser currentUser) {
-        super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
-
-        this.currentUser = currentUser;
-
-        getView().setUiHandlers(this);
-    }
-
-    @Override
-    public void confirm(String username, String password) {
-        if (validateCredentials(username, password)) {
-            currentUser.setLoggedIn(true);
-            
-            // TODO: Navigate to the home page
-        }
-    }
-
-    private boolean validateCredentials(String username, String password) {
-        return username.equals(USERNAME) && password.equals(PASSWORD);
-    }
+  private boolean validateCredentials(String username, String password) {
+    return true;  //  fixme!   username.equals(USERNAME) && password.equals(PASSWORD);
+  }
 }
