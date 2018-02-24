@@ -6,15 +6,16 @@ src=gs://songlyrics.bsteele.com
 dst=songlyrics
 json=$appRoot/src/main/webapp/allSongs.songlyrics
 
-rm -rf $dst
+#rm -rf $dst
 mkdir -p $dst
-gsutil rsync -c -d $src/ $dst
+gsutil -m rsync -d $src/ $dst
 
 cd $dst
 
 rm -f $json
 firstJson=1
 
+IFS=$(echo -en "\n\b")
 for f in *.songlyrics
 do
 	echo $f
@@ -22,6 +23,7 @@ do
 	if [ ${c:0:1} == '<' ]; then
 		#	convert an old style file to new
 		lyricsToJson -i "$f"
+		echo "	conversion"
 	fi
 
 	if [ "$firstJson" -eq 1 ]; then
@@ -37,4 +39,6 @@ do
 done
 echo "]" >> $json
 
-rm -rf $appRoot/$dst
+#rm -rf $appRoot/$dst
+
+exit 0

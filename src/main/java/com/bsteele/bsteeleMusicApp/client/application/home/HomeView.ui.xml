@@ -1,5 +1,8 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+        xmlns:my='urn:import:com.bsteele.bsteeleMusicApp.client.widgets'
+        xmlns:songs='urn:import:com.bsteele.bsteeleMusicApp.client.application.songs'
+>
 
     <g:RootLayoutPanel>
         <g:layer>
@@ -15,10 +18,16 @@
                 </g:north>
                 <g:center size='350' height='200'>
                     <g:TabLayoutPanel barUnit='EM' barHeight='2.5' >
+<!--                        <g:tab>
+                            <g:header size='7'>TESTING ONLY</g:header>
+                            <g:ResizeLayoutPanel>
+                                <g:Frame url="./"/>
+                            </g:ResizeLayoutPanel>
+                        </g:tab>-->
                         <g:tab>
                             <g:header size='7'>Songs</g:header>
                             <g:ResizeLayoutPanel>
-                                <g:Frame url="lyrics.html"/>
+                                <songs:SongsView  />
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
