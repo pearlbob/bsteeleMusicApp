@@ -3,8 +3,12 @@
 
 bsteeleMusicApp_local_deploy
 
+if ( $status != 0 ) exit $status;
+
 mvn \
 	-DgenerateJsInteropExports=true \
 	-Dgwt.logLevel=INFO \
 	-Dgwt.style=DETAILED  \
 	gwt:devmode
+
+exit $status;

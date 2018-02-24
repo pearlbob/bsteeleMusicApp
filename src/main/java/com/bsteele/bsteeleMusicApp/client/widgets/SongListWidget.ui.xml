@@ -1,0 +1,13 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+    
+    <g:ScrollPanel>
+        <g:HTMLPanel>
+            <br/>
+            Search:  <g:TextBox ui:field="songSearch"/>
+            <br/>
+            <g:Grid ui:field="songGrid">
+            </g:Grid> 
+        </g:HTMLPanel>
+    </g:ScrollPanel>    
+</ui:UiBinder>

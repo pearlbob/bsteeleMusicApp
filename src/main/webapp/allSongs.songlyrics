@@ -4145,8 +4145,11 @@
 }
 ,
 {
-"Here for a Good Time (not a long time)""artist": "Trooper",
+"title":"Here for a Good Time (not a long time)",
+"artist": "Trooper",
 "copyright": "Trooper",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -4305,8 +4308,11 @@
   ]
 },
 {
-"Hungry Like the Wolf""artist": "Duran Duran",
+"title":"Hungry Like the Wolf",
+"artist": "Duran Duran",
 "copyright": "Duran Duran",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -4373,8 +4379,11 @@
 }
 ,
 {
-"I Can't Help falling in Love With You""artist": "Elvis Presley",
+"title": "I Can't Help falling in Love With You",
+"artist": "Elvis Presley",
 "copyright": "Elvis Presley",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -4489,8 +4498,11 @@
 }
 ,
 {
-"Just Like Heaven""artist": "The Cure",
+"title":"Just Like Heaven",
+"artist": "The Cure",
 "copyright": "The Cure",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -4556,8 +4568,11 @@
 }
 ,
 {
-"Karma Police""artist": "Radiohead",
+"title":"Karma Police",
+"artist": "Radiohead",
 "copyright": "Radiohead",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -4857,8 +4872,11 @@
 }
 ,
 {
-"Learn to Fly""artist": "Foo Fighters",
+"title": "Learn to Fly",
+"artist": "Foo Fighters",
 "copyright": "Foo Fighters",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -5060,8 +5078,11 @@
 }
 ,
 {
-"Love Fool""artist": "Cardigans",
+"title": "Love Fool",
+"artist": "Cardigans",
 "copyright": "Cardigans",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -5240,8 +5261,11 @@
 }
 ,
 {
-"Mr. Blue Sky""artist": "Electric Light Orchestra",
+"title": "Mr. Blue Sky",
+"artist": "Electric Light Orchestra",
 "copyright": "Jeff Lynne",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -5470,8 +5494,11 @@
 }
 ,
 {
-"Rebel Yell""artist": "Billy Idol",
+"title": "Rebel Yell",
+"artist": "Billy Idol",
 "copyright": "Billy Idol",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -5766,8 +5793,11 @@
 }
 ,
 {
-"Solsbury Hill""artist": "Peter Gabriel",
+"title": "Solsbury Hill",
+"artist": "Peter Gabriel",
 "copyright": "Peter Gabriel",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -6279,8 +6309,11 @@
   ]
 },
 {
-"Under the Milky Way""artist": "The Church",
+"title": "Under the Milky Way",
+"artist": "The Church",
 "copyright": "The Church",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -6319,8 +6352,11 @@
 }
 ,
 {
-"Uprising""artist": "Muse",
+"title":"Uprising",
+"artist": "Muse",
 "copyright": "Muse",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -6390,8 +6426,11 @@
 }
 ,
 {
-"Wanted Dead or Alive""artist": "Bon Jovi",
+"title": "Wanted Dead or Alive",
+"artist": "Bon Jovi",
 "copyright": "Bon Jovi",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",
@@ -6499,8 +6538,11 @@
 }
 ,
 {
-"We Will become Silhouettes""artist": "Postal Service",
+"title": "We Will become Silhouettes",
+"artist": "Postal Service",
 "copyright": "Postal Service",
+"bpm": "106",
+"timeSignature": "4/4",
 "chords": 
     [
     "",

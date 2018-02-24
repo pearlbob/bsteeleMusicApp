@@ -14,19 +14,25 @@ import jsinterop.annotations.JsType;
  * @author bob
  */
 @JsType
-public class Song {
+public class Song implements Comparable<Song> {
 
   public Song() {
 
   }
 
-  public void loadSong(String title, String lyrics, String chords, int beatsPerBar, int beatsPerMinute) {
-    songId = "Song" + title.replaceAll("\\W+", "");
-    rawLyrics = lyrics;
-    parseLyricsToSectionSequence(lyrics);
-    parseChordTable(chords);
-    setBeatsPerBar(beatsPerBar);
-    setBeatsPerMinute(bpm);
+  public static final Song createSong(String title, String artist,
+          String lyrics, String chords, int beatsPerBar, int beatsPerMinute) {
+    Song song = new Song();
+    song.title = title;
+    song.songId = "Song" + title.replaceAll("\\W+", "");
+    song.artist = artist;
+    song.rawLyrics = lyrics;
+    song.chords = chords;
+    song.parseLyricsToSectionSequence(lyrics);
+    song.parseChordTable(chords);
+    song.setBeatsPerBar(beatsPerBar);
+    song.setBeatsPerMinute(beatsPerMinute);
+    return song;
   }
 
   public void parseLyricsToSectionSequence(String rawLyrics) {
@@ -544,8 +550,97 @@ public class Song {
     return songId;
   }
 
+  /**
+   * @return the chordLetterToNumber
+   */
+  public static int[] getChordLetterToNumber() {
+    return chordLetterToNumber;
+  }
+
+  /**
+   * @return the title
+   */
+  public String getTitle() {
+    return title;
+  }
+
+  /**
+   * @return the artist
+   */
+  public String getArtist() {
+    return artist;
+  }
+
+  /**
+   * @return the rawLyrics
+   */
+  public String getRawLyrics() {
+    return rawLyrics;
+  }
+
+  /**
+   * @return the chords
+   */
+  public String getChords() {
+    return chords;
+  }
+
+  /**
+   * @return the bpm
+   */
+  public int getBpm() {
+    return bpm;
+  }
+
+  /**
+   * @return the sequence
+   */
+  public ArrayList<Section.Version> getSequence() {
+    return sequence;
+  }
+
+  /**
+   * @return the chordSectionMap
+   */
+  public HashMap<Section.Version, Grid<String>> getChordSectionMap() {
+    return chordSectionMap;
+  }
+
+  /**
+   * @return the displaySectionMap
+   */
+  public HashMap<Section.Version, Section.Version> getDisplaySectionMap() {
+    return displaySectionMap;
+  }
+
+  @Override
+  public int compareTo(Song o) {
+    int ret = getTitle().compareTo(o.getTitle());
+    if (ret != 0) {
+      return ret;
+    }
+    ret = getArtist().compareTo(o.getArtist());
+    if (ret != 0) {
+      return ret;
+    }
+
+    //  more?
+    ret = getRawLyrics().compareTo(o.getRawLyrics());
+    if (ret != 0) {
+      return ret;
+    }
+    ret = getChords().compareTo(o.getChords());
+    if (ret != 0) {
+      return ret;
+    }
+    return 0;
+  }
+
+  private String title;
   private String songId;
+  private String artist;
   private String rawLyrics;
+  private String chords;
   private int bpm;  //  beats per minute
   private int beatsPerBar;  //  beats per bar
   private ArrayList<Section.Version> sequence;

@@ -12,11 +12,11 @@ import com.google.gwt.user.client.ui.Widget;
  *
  * @author bob
  */
-public class TestWidget extends Composite {
-  interface MyUiBinder extends UiBinder<Widget, TestWidget> {}
+public class AppTitleWidget extends Composite {
+  interface MyUiBinder extends UiBinder<Widget, AppTitleWidget> {}
   private static final MyUiBinder uiBinder = GWT.create(MyUiBinder.class);
 
-  public TestWidget() {
+  public AppTitleWidget() {
     initWidget(uiBinder.createAndBindUi(this));
   }
   

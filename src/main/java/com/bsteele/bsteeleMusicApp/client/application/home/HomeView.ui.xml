@@ -1,24 +1,18 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
-        xmlns:my='urn:import:com.bsteele.bsteeleMusicApp.client.widgets'
-        xmlns:songs='urn:import:com.bsteele.bsteeleMusicApp.client.application.songs'
+             xmlns:my='urn:import:com.bsteele.bsteeleMusicApp.client.widgets'
+             xmlns:songs='urn:import:com.bsteele.bsteeleMusicApp.client.application.songs'
 >
 
-    <g:RootLayoutPanel>
+    <g:RootLayoutPanel >
         <g:layer>
             <g:DockLayoutPanel unit='PX'>
-                <g:north size='35'>
-                    <g:HTMLPanel>
-                        <h1> 
-                            <img src="images/runningsmall.ico" alt="Bob Steele jpg" border="0"
-                                 height="28" width="28"/> 
-                            bsteele Music App
-                        </h1>
-                    </g:HTMLPanel>
+                <g:north size='35' >
+                    <my:AppTitleWidget />
                 </g:north>
                 <g:center size='350' height='200'>
                     <g:TabLayoutPanel barUnit='EM' barHeight='2.5' >
-<!--                        <g:tab>
+                        <!--                        <g:tab>
                             <g:header size='7'>TESTING ONLY</g:header>
                             <g:ResizeLayoutPanel>
                                 <g:Frame url="./"/>
@@ -27,7 +21,7 @@
                         <g:tab>
                             <g:header size='7'>Songs</g:header>
                             <g:ResizeLayoutPanel>
-                                <songs:SongsView  />
+                                <my:SongListWidget  />
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>

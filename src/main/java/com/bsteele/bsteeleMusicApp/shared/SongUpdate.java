@@ -12,8 +12,9 @@ import jsinterop.annotations.JsType;
  */
 @JsType
 public class SongUpdate {
-  
-  SongUpdate(){}
+
+  SongUpdate() {
+  }
 
   SongUpdate(SongUpdate other) {
     this.eventTime = other.eventTime;
@@ -61,8 +62,8 @@ public class SongUpdate {
   public void setSection(String section) {
     this.section = section;
   }
-  
-    /**
+
+  /**
    * Id of the current section to be used by the chords display.
    *
    * @return
@@ -141,70 +142,70 @@ public class SongUpdate {
   /**
    * @param eventTime the eventTime to set
    */
-  public void setEventTime(double eventTime) {
+  void setEventTime(double eventTime) {
     this.eventTime = eventTime;
   }
 
   /**
    * @param title the title to set
    */
-  public void setTitle(String title) {
+  void setTitle(String title) {
     this.title = title;
   }
 
   /**
    * @param sectionCount the sectionCount to set
    */
-  public void setSectionCount(int sectionCount) {
+  void setSectionCount(int sectionCount) {
     this.sectionCount = sectionCount;
   }
 
   /**
    * @param chordSectionRow the chordSectionRow to set
    */
-  public void setChordSectionRow(int chordSectionRow) {
+  void setChordSectionRow(int chordSectionRow) {
     this.chordSectionRow = chordSectionRow;
   }
 
   /**
    * @param chordSectionCurrentRepeat the chordSectionCurrentRepeat to set
    */
-  public void setChordSectionCurrentRepeat(int chordSectionCurrentRepeat) {
+  void setChordSectionCurrentRepeat(int chordSectionCurrentRepeat) {
     this.chordSectionCurrentRepeat = chordSectionCurrentRepeat;
   }
 
   /**
    * @param chordSectionRepeat the chordSectionRepeat to set
    */
-  public void setChordSectionRepeat(int chordSectionRepeat) {
+  void setChordSectionRepeat(int chordSectionRepeat) {
     this.chordSectionRepeat = chordSectionRepeat;
   }
 
   /**
    * @param measure the measure to set
    */
-  public void setMeasure(int measure) {
+  void setMeasure(int measure) {
     this.measure = measure;
   }
 
   /**
    * @param beat the beat to set
    */
-  public void setBeat(int beat) {
+  void setBeat(int beat) {
     this.beat = beat;
   }
 
   /**
    * @param beatsPerMeasure the beatsPerMeasure to set
    */
-  public void setBeatsPerBar(int beatsPerMeasure) {
+  void setBeatsPerBar(int beatsPerMeasure) {
     this.beatsPerMeasure = beatsPerMeasure;
   }
 
   /**
    * @param beatsPerMinute the beatsPerMinute to set
    */
-  public void setBeatsPerMinute(int beatsPerMinute) {
+  void setBeatsPerMinute(int beatsPerMinute) {
     this.beatsPerMinute = beatsPerMinute;
   }
 
