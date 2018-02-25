@@ -6,8 +6,7 @@
             <br/>
             Search:  <g:TextBox ui:field="songSearch"/>
             <br/>
-            <g:Grid ui:field="songGrid">
-            </g:Grid> 
+            <g:Grid ui:field="songGrid"/>
         </g:HTMLPanel>
     </g:ScrollPanel>    
 </ui:UiBinder>

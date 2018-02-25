@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.resources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.TextResource;
 
 public interface AppResources extends ClientBundle {
 
@@ -60,6 +61,9 @@ public interface AppResources extends ClientBundle {
 
   @Source("css/bsteeleMusicApp.gss")
   Style style();
+  
+  @Source("allSongs.songlyrics")
+  TextResource allSongsAsJsonString();
 
   //  @Source("config.xml")
   //  public TextResource initialConfiguration();

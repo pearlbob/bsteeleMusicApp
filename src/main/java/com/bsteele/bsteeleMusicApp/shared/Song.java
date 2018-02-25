@@ -3,6 +3,11 @@
  */
 package com.bsteele.bsteeleMusicApp.shared;
 
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -33,6 +38,97 @@ public class Song implements Comparable<Song> {
     song.setBeatsPerBar(beatsPerBar);
     song.setBeatsPerMinute(beatsPerMinute);
     return song;
+  }
+
+  public static final Song songFromJson(String jsonString) {
+    if (jsonString == null || jsonString.length() <= 0) {
+      return null;
+    }
+    JSONObject jo;
+    {
+      JSONValue jv = JSONParser.parseStrict(jsonString);
+      if (jv == null) {
+        return null;
+      }
+      jo = jv.isObject();
+    }
+    return songFromJsonObject(jo);
+  }
+
+  public static final Song songFromJsonObject(JSONObject jo) {
+    if (jo == null) {
+      return null;
+    }
+    Song song = new Song();
+    JSONNumber jn;
+    JSONArray ja;
+    StringBuilder sb = new StringBuilder();
+    for (String name : jo.keySet()) {
+      JSONValue jv = jo.get(name);
+      switch (name) {
+        case "title":
+          song.title = jv.isString().stringValue();
+          break;
+        case "artist":
+          song.artist = jv.isString().stringValue();
+          break;
+        case "copyright":
+          song.copyright = jv.isString().stringValue();
+          break;
+        case "bpm":
+          jn = jv.isNumber();
+          if (jn != null) {
+            song.bpm = (int) jn.doubleValue();
+          } else {
+            song.bpm = Integer.parseInt(jv.isString().stringValue());
+          }
+          break;
+        case "timeSignature":
+          jn = jv.isNumber();
+          if (jn != null) {
+            song.beatsPerBar = (int) jn.doubleValue();
+          } else {
+            String s = jv.isString().stringValue();
+            s = s.replaceAll("/.*", "");    //  fixme: info lost
+            if (s.length() > 0) {
+              song.beatsPerBar = Integer.parseInt(s);
+            }
+          }
+          break;
+        case "chords":
+          ja = jv.isArray();
+          if (ja != null) {
+            int jaLimit = ja.size();
+            for (int i = 0; i < jaLimit; i++) {
+              sb.append(ja.get(i).isString().stringValue());
+              sb.append("\n");
+            }
+            song.chords = sb.toString();
+          } else {
+            song.chords = jv.isString().stringValue();
+          }
+          break;
+        case "lyrics":
+          ja = jv.isArray();
+          if (ja != null) {
+            int jaLimit = ja.size();
+            for (int i = 0; i < jaLimit; i++) {
+              sb.append(ja.get(i).isString().stringValue());
+              sb.append("\n");
+            }
+            song.rawLyrics = sb.toString();
+          } else {
+            song.rawLyrics = jv.isString().stringValue();
+          }
+          break;
+      }
+
+    }
+    return song;
+  }
+
+  public String songToJson() {
+    return null;
   }
 
   public void parseLyricsToSectionSequence(String rawLyrics) {
@@ -544,6 +640,13 @@ public class Song implements Comparable<Song> {
   }
 
   /**
+   * @return the copyright
+   */
+  public String getCopyright() {
+    return copyright;
+  }
+
+  /**
    * @return the songId
    */
   public String getSongId() {
@@ -636,13 +739,15 @@ public class Song implements Comparable<Song> {
     return 0;
   }
 
-  private String title;
-  private String songId;
-  private String artist;
-  private String rawLyrics;
-  private String chords;
-  private int bpm;  //  beats per minute
-  private int beatsPerBar;  //  beats per bar
+  private String title = "Unknown";
+  private String songId = "Unknown";
+  private String artist = "Unknown";
+  private String copyright = "Unknown";
+  private int bpm = 106;  //  beats per minute
+  private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
+  private String rawLyrics = "";
+  private String chords = "";
+
   private ArrayList<Section.Version> sequence;
   private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();
   private final HashMap<Section.Version, Section.Version> displaySectionMap = new HashMap<>();
@@ -652,5 +757,4 @@ public class Song implements Comparable<Song> {
   private static final char js_natural = '\u266E';
   private static final char js_sharp = '\u266F';
   private static final char js_delta = '\u0394';
-
 }
