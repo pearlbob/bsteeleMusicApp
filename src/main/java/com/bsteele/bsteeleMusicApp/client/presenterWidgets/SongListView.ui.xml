@@ -1,8 +1,13 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    
-    <g:HTMLPanel>
-        Current user's name: <span ui:field="username"></span>
-    </g:HTMLPanel>
+    <g:ScrollPanel>
+        <g:HTMLPanel>
+            Current user's name: <span ui:field="username"></span>
+                   <br/>
+                Search:  <g:TextBox ui:field="songSearch"/>
+                <br/>
+                <g:Grid ui:field="songGrid"/>
+        </g:HTMLPanel>
+    </g:ScrollPanel> 
    
 </ui:UiBinder>
