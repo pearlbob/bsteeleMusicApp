@@ -4,7 +4,7 @@ appRoot=~/GitHub/bsteeleMusicApp
 cd $appRoot
 src=gs://songlyrics.bsteele.com
 dst=songlyrics
-json=$appRoot/src/main/webapp/allSongs.songlyrics
+json=$appRoot/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/allSongs.songlyrics
 
 #rm -rf $dst
 mkdir -p $dst

@@ -19,17 +19,18 @@
                             </g:ResizeLayoutPanel>
                         </g:tab>-->
                         <g:tab>
-                            <g:header size='7'>Songs</g:header>
-                            <g:ResizeLayoutPanel>
+                            <g:header size='3'>Songs</g:header>
+                            <g:SimplePanel ui:field="songList" />
+<!--                            <g:ResizeLayoutPanel>
                                 <my:SongListWidget  />
-                            </g:ResizeLayoutPanel>
+                            </g:ResizeLayoutPanel>-->
                         </g:tab>
                         <g:tab>
-                            <g:header size='7'>Chords</g:header>
+                            <g:header size='3'>Chords</g:header>
                             <g:Label>chords</g:Label>
                         </g:tab>
                         <g:tab>
-                            <g:header size='7'>Options</g:header>
+                            <g:header size='3'>Options</g:header>
                             <g:FlowPanel>   
                                 <g:HTMLPanel>
                                     <paper-icon-item ui:field="menuClearAll">
@@ -52,7 +53,7 @@
                             </g:FlowPanel>
                         </g:tab>
                         <g:tab>
-                            <g:header size='7'>Bass Study</g:header>
+                            <g:header size='3'>Bass Study</g:header>
                             <g:ResizeLayoutPanel>
                                 <g:HTMLPanel>   
                                     <iframe src="http://www.bsteele.com/bsteeleMusicApp/bassStudyTool.html"></iframe>
