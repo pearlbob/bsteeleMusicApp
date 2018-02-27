@@ -1,9 +1,16 @@
 
 -libraryjars /usr/lib/jvm/jdk1.8.0_161/jre/lib/rt.jar
 -libraryjars /home/bob/m2/repository/javax/servlet/javax.servlet-api/4.0.0/javax.servlet-api-4.0.0.jar
--libraryjars target/bsteeleMusicApp-1.0-SNAPSHOT/WEB-INF/lib
+-libraryjars target/bsteeleMusicApp/WEB-INF/lib/gwt-material-2.0.1.jar
+-libraryjars target/bsteeleMusicApp/WEB-INF/lib/gwt-material-jquery-2.0.1.jar
+-libraryjars target/bsteeleMusicApp/WEB-INF/lib/gwt-servlet-2.8.2.jar
+-libraryjars target/bsteeleMusicApp/WEB-INF/lib/tomcat-websocket-api-9.0.4.jar
 -libraryjars /home/bob/m2/repository/org/realityforge/gwt/websockets/gwt-websockets/1.2/gwt-websockets-1.2.jar
 -libraryjars /home/bob/m2/repository/com/google/code/findbugs/jsr305/3.0.1/jsr305-3.0.1.jar
+-libraryjars /home/bob/m2/repository/com/gwtplatform/gwtp-mvp-client/1.5.3/gwtp-mvp-client-1.5.3.jar
+-libraryjars /home/bob/m2/repository/com/google/jsinterop/jsinterop-annotations/1.0.2/jsinterop-annotations-1.0.2.jar
+-libraryjars /home/bob/m2/repository/com/vaadin/polymer/vaadin-gwt-polymer-elements/1.9.3.1/vaadin-gwt-polymer-elements-1.9.3.1.jar
+-libraryjars /home/bob/m2/repository/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar
 
 -target 1.8
 

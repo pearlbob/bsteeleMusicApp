@@ -67,6 +67,12 @@ public class SongListView
     songSearch.addKeyUpHandler((event) -> {
       searchSongs(songSearch.getValue());
     });
+    
+    clearSearch.addClickHandler((event)->{
+      songSearch.setText("");
+      searchSongs(songSearch.getValue());
+      songSearch.setFocus(true);
+    });
 
     songSearch.setFocus(true);
   }

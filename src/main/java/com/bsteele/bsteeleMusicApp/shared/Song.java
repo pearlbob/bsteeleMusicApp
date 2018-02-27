@@ -29,16 +29,15 @@ public class Song implements Comparable<Song> {
           String copyright, int bpm, int beatsPerBar,
           String chords, String lyrics) {
     Song song = new Song();
-    song.title = title;
-    song.songId = "Song" + title.replaceAll("\\W+", "");
+    song.setTitle( title );
     song.artist = artist;
     song.copyright = copyright;
     song.setBeatsPerMinute(bpm);
     song.setBeatsPerBar(beatsPerBar);
     song.rawLyrics = lyrics;
     song.chords = chords;
-    song.parseLyricsToSectionSequence(lyrics);
     song.parseChordTable(chords);
+    song.parseLyricsToSectionSequence(lyrics);
 
     return song;
   }
@@ -65,12 +64,11 @@ public class Song implements Comparable<Song> {
     Song song = new Song();
     JSONNumber jn;
     JSONArray ja;
-    StringBuilder sb = new StringBuilder();
     for (String name : jo.keySet()) {
       JSONValue jv = jo.get(name);
       switch (name) {
         case "title":
-          song.title = jv.isString().stringValue();
+          song.setTitle(jv.isString().stringValue());
           break;
         case "artist":
           song.artist = jv.isString().stringValue();
@@ -102,6 +100,7 @@ public class Song implements Comparable<Song> {
           ja = jv.isArray();
           if (ja != null) {
             int jaLimit = ja.size();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < jaLimit; i++) {
               sb.append(ja.get(i).isString().stringValue());
               sb.append("\n");
@@ -110,11 +109,13 @@ public class Song implements Comparable<Song> {
           } else {
             song.chords = jv.isString().stringValue();
           }
+          song.parseChordTable(song.chords);
           break;
         case "lyrics":
           ja = jv.isArray();
           if (ja != null) {
             int jaLimit = ja.size();
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < jaLimit; i++) {
               sb.append(ja.get(i).isString().stringValue());
               sb.append("\n");
@@ -123,6 +124,7 @@ public class Song implements Comparable<Song> {
           } else {
             song.rawLyrics = jv.isString().stringValue();
           }
+          song.parseLyricsToSectionSequence(song.rawLyrics);
           break;
       }
 
@@ -134,7 +136,7 @@ public class Song implements Comparable<Song> {
     return null;
   }
 
-  public void parseLyricsToSectionSequence(String rawLyrics) {
+  private void parseLyricsToSectionSequence(String rawLyrics) {
     sequence = Section.matchAll(rawLyrics);
 
     if (sequence.isEmpty()) {
@@ -177,7 +179,7 @@ public class Song implements Comparable<Song> {
     return sequence;
   }
 
-  public void parseChordTable(String rawChordTableText) {
+  private void parseChordTable(String rawChordTableText) {
 
     chordSectionMap.clear();
 
@@ -612,6 +614,12 @@ public class Song implements Comparable<Song> {
     //                            0     1     2    3    4     5    6     7    8    9     10   11
 
     return chordNumberToLetter[n];
+  }
+  
+  private void setTitle( String title ){
+    //  fixme: to the "The " thing to the end
+    this.title = title;
+    songId = "Song" + title.replaceAll("\\W+", "");
   }
 
   /**

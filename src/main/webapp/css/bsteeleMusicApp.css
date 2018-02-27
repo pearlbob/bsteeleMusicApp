@@ -75,6 +75,17 @@ body {
 .sectionCoClass,.lyricsCoClass  { background-color: #ECFFF9;}
 .sectionTClass,.lyricsTClass    { background-color: #edf6ff;}
 
+.lyricsCClass,
+.lyricsVClass,
+.lyricsBrClass,
+.lyricsPCClass,
+.lyricsIClass,
+.lyricsOClass,
+.lyricsCoClass,
+.lyricsTClass {
+  white-space: pre-wrap;
+}
+
 .gwt-SplitLayoutPanel { background-color: #FFFDF6; }
 .gwt-TabLayoutPanel .gwt-TabLayoutPanelTabs { background: #FFFDF6;}
 /*.gwt-SplitLayoutPanel .gwt-SplitLayoutPanel-HDragger { horizontal dragger }

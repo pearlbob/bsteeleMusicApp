@@ -8,14 +8,12 @@
             </g:FlowPanel>
         </g:north>
         <g:west size='500' > 
-            <g:FlowPanel >
-                <g:Label>This is the WEST panel</g:Label>
-            </g:FlowPanel>
+            <g:HTMLPanel ui:field="chords"/>
         </g:west>
         <g:center>
-            <g:FlowPanel >
-                <g:Label>g:center</g:Label>
-            </g:FlowPanel>
+            <g:ScrollPanel>
+                <g:HTMLPanel ui:field="lyrics"/>
+            </g:ScrollPanel>
         </g:center>
     </g:SplitLayoutPanel>
 

@@ -153,7 +153,7 @@
                         <arg>-XcompilerMetrics</arg>
                     </compilerArgs>
                     <!-- DevMode configuration -->
-                    <warDir>${project.build.directory}/${project.build.finalName}</warDir>
+                    <!--<warDir>${project.build.directory}/${project.build.finalName}</warDir>-->
                     <classpathScope>compile+runtime</classpathScope>
                     <!-- URL(s) that should be opened by DevMode (gwt:devmode). -->
                     <startupUrls>

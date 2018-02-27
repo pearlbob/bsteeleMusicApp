@@ -11,14 +11,14 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author bob
  */
 public class SongSelectionEvent extends GwtEvent<SongSelectionEventHandler> {
-
+  
     public static Type<SongSelectionEventHandler> TYPE = new Type<SongSelectionEventHandler>();
 
     private final Song song;
 
     public SongSelectionEvent(Song song) {
         this.song = song;
-    }
+}
 
     @Override
     public Type<SongSelectionEventHandler> getAssociatedType() {
