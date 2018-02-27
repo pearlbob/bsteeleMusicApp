@@ -26,17 +26,20 @@ public class Song implements Comparable<Song> {
   }
 
   public static final Song createSong(String title, String artist,
-          String lyrics, String chords, int beatsPerBar, int beatsPerMinute) {
+          String copyright, int bpm, int beatsPerBar,
+          String chords, String lyrics) {
     Song song = new Song();
     song.title = title;
     song.songId = "Song" + title.replaceAll("\\W+", "");
     song.artist = artist;
+    song.copyright = copyright;
+    song.setBeatsPerMinute(bpm);
+    song.setBeatsPerBar(beatsPerBar);
     song.rawLyrics = lyrics;
     song.chords = chords;
     song.parseLyricsToSectionSequence(lyrics);
     song.parseChordTable(chords);
-    song.setBeatsPerBar(beatsPerBar);
-    song.setBeatsPerMinute(beatsPerMinute);
+
     return song;
   }
 
@@ -727,16 +730,27 @@ public class Song implements Comparable<Song> {
       return ret;
     }
 
-    //  more?
-    ret = getRawLyrics().compareTo(o.getRawLyrics());
-    if (ret != 0) {
-      return ret;
-    }
-    ret = getChords().compareTo(o.getChords());
-    if (ret != 0) {
-      return ret;
-    }
+//    //  more?  if so, changes in lyrics will be a new "song"
+//    ret = getRawLyrics().compareTo(o.getRawLyrics());
+//    if (ret != 0) {
+//      return ret;
+//    }
+//    ret = getChords().compareTo(o.getChords());
+//    if (ret != 0) {
+//      return ret;
+//    }
     return 0;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
+    if (obj instanceof Song) {
+      return compareTo((Song) obj) == 0;
+    }
+    return false;
   }
 
   private String title = "Unknown";

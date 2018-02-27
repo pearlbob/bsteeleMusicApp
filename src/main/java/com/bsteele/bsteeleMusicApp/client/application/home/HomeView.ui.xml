@@ -20,10 +20,11 @@
                         </g:tab>-->
                         <g:tab>
                             <g:header size='3'>Songs</g:header>
-                            <g:SimplePanel ui:field="songList" />
-<!--                            <g:ResizeLayoutPanel>
-                                <my:SongListWidget  />
-                            </g:ResizeLayoutPanel>-->
+                            <g:ResizeLayoutPanel>
+                                <g:ScrollPanel>
+                                    <g:SimplePanel ui:field="songList" />
+                                </g:ScrollPanel>
+                            </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
                             <g:header size='3'>Chords</g:header>
