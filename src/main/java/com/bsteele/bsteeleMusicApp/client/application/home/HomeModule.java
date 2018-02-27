@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsPresenterWidget;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsView;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongListPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongListView;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
@@ -13,5 +15,8 @@ public class HomeModule extends AbstractPresenterModule {
 
     bindPresenterWidget(SongListPresenterWidget.class,
             SongListPresenterWidget.MyView.class, SongListView.class);
+    
+    bindPresenterWidget(LyricsAndChordsPresenterWidget.class,
+            LyricsAndChordsPresenterWidget.MyView.class, LyricsAndChordsView.class);
   }
 }

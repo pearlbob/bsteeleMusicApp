@@ -7,7 +7,6 @@ import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.shared.Song;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -62,7 +61,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
   @Override
   public void onSongSelection(SongSelectionEvent event) {
-    GWT.log("onSongSelection(): " + event.getSong().getTitle());
+    eventBus.fireEvent(event);
   }
 
   private void addSonglist(String jsonString) {

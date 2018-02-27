@@ -11,7 +11,7 @@
                     <my:AppTitleWidget />
                 </g:north>
                 <g:center size='350' height='200'>
-                    <g:TabLayoutPanel barUnit='EM' barHeight='2.5' >
+                    <g:TabLayoutPanel ui:field="homeTabs" barUnit='EM' barHeight='2.5' >
                         <!--                        <g:tab>
                             <g:header size='7'>TESTING ONLY</g:header>
                             <g:ResizeLayoutPanel>
@@ -26,9 +26,11 @@
                                 </g:ScrollPanel>
                             </g:ResizeLayoutPanel>
                         </g:tab>
-                        <g:tab>
-                            <g:header size='3'>Chords</g:header>
-                            <g:Label>chords</g:Label>
+                        <g:tab ui:field="lyricsAndChordsTab">
+                            <g:header size='3'>Lyrics &amp; Chords</g:header>
+                            <g:ResizeLayoutPanel>
+                                <g:SplitLayoutPanel ui:field="lyricsAndChords" />
+                            </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
                             <g:header size='3'>Options</g:header>

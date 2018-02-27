@@ -6,7 +6,6 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.shared.Song;
-import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -59,8 +58,7 @@ public class SongListView
 
     songGrid.addClickHandler(event -> {
       if (filteredSongs != null) {
-       Song selectedSong = filteredSongs.get(songGrid.getCellForEvent(event).getRowIndex());
-        GWT.log("grid click: "  + selectedSong.getTitle() );
+        Song selectedSong = filteredSongs.get(songGrid.getCellForEvent(event).getRowIndex());
         SongSelectionEvent songSelectionEvent = new SongSelectionEvent(selectedSong);
         fireEvent(songSelectionEvent);
       }
@@ -104,8 +102,8 @@ public class SongListView
     }
     displaySongList(filteredSongs);
   }
-  
-    /**
+
+  /**
    *
    * @param filteredSongs
    */
@@ -126,6 +124,6 @@ public class SongListView
   private HandlerManager handlerManager;
 
   private static final int columns = 2;
-  private ArrayList<Song> filteredSongs= new ArrayList<>();
+  private ArrayList<Song> filteredSongs = new ArrayList<>();
   private final TreeSet<Song> allSongs = new TreeSet<>();
 }
