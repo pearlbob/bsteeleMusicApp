@@ -8,6 +8,7 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.regexp.shared.RegExp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -29,8 +30,8 @@ public class Song implements Comparable<Song> {
           String copyright, int bpm, int beatsPerBar,
           String chords, String lyrics) {
     Song song = new Song();
-    song.setTitle( title );
-    song.artist = artist;
+    song.setTitle(title);
+    song.setArtist(artist);
     song.copyright = copyright;
     song.setBeatsPerMinute(bpm);
     song.setBeatsPerBar(beatsPerBar);
@@ -71,7 +72,7 @@ public class Song implements Comparable<Song> {
           song.setTitle(jv.isString().stringValue());
           break;
         case "artist":
-          song.artist = jv.isString().stringValue();
+          song.setArtist(jv.isString().stringValue());
           break;
         case "copyright":
           song.copyright = jv.isString().stringValue();
@@ -615,11 +616,22 @@ public class Song implements Comparable<Song> {
 
     return chordNumberToLetter[n];
   }
-  
-  private void setTitle( String title ){
-    //  fixme: to the "The " thing to the end
+
+  private void setTitle(String title) {
+    //  move the leading "The " to the end
+    if (theRegExp.test(title)) {
+      title = theRegExp.replace(title, "") + ", The";
+    }
     this.title = title;
     songId = "Song" + title.replaceAll("\\W+", "");
+  }
+  
+  private void setArtist(String artist) {
+    //  move the leading "The " to the end
+    if (theRegExp.test(artist)) {
+      artist = theRegExp.replace(artist, "") + ", The";
+    }
+    this.artist = artist;
   }
 
   /**
@@ -779,4 +791,6 @@ public class Song implements Comparable<Song> {
   private static final char js_natural = '\u266E';
   private static final char js_sharp = '\u266F';
   private static final char js_delta = '\u0394';
+
+  private static final RegExp theRegExp = RegExp.compile("^the *", "i");
 }
