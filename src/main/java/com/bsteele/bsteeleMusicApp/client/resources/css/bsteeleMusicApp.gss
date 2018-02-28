@@ -115,7 +115,6 @@ iframe {
 .lyricsCoClass,
 .lyricsTClass {
   white-space: pre-wrap;
-background-color: #0000ff;
 }
 
 .gwt-SplitLayoutPanel {

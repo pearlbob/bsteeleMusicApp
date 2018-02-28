@@ -329,12 +329,13 @@ public class Song implements Comparable<Song> {
   }
 
   public String generateHtmlLyricsTable() {
+    final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
     String tableStart = "<table id=\"lyricsTable\">\n"
             + "<colgroup>\n"
             + "   <col style=\"width:2ch;\">\n"
             + "  <col>\n"
             + "</colgroup>\n";
-    String rowStart = "<tr><td class='sectionLabel' >";
+    String rowStart = "<tr><td class='" + style + "sectionLabel' >";
     String rowEnd = "&nbsp;</td></tr>\n";   //  empty cells fill better with nbsp
     String tableEnd = "</table>\n";
 
@@ -365,7 +366,7 @@ public class Song implements Comparable<Song> {
               lyrics += rowEnd;
             }
             lyrics += rowStart + version.toString() + ":"
-                    + "</td><td class=\"lyrics" + version.getSection().getAbreviation() + "Class\""
+                    + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbreviation() + "Class\""
                     + " id=\"L." + sectionIndex + "\">";
             sectionIndex++;
             whiteSpace = ""; //  ignore white space
@@ -414,9 +415,10 @@ public class Song implements Comparable<Song> {
       return "";
     }
 
+    final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
     String tableStart = "<table id=\"chordTable\" "
             + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
-    String sectionStart = "<tr><td class='sectionLabel' >";
+    String sectionStart = "<tr><td class=\"" + style + "sectionLabel\" >";
     String rowStart = "\t<tr><td></td>";
     String rowEnd = "</tr>\n";
     String tableEnd = "</table>\n";
@@ -451,7 +453,8 @@ public class Song implements Comparable<Song> {
 
         ArrayList<String> row = grid.getRow(r);
         for (int col = 0; col < row.size(); col++) {
-          chordText += "<td class=\"section" + version.getSection().getAbreviation() + "Class\""
+          chordText += "<td class=\"" + style + "section"
+                  + version.getSection().getAbreviation() + "Class\""
                   //+ " style=\"\""
                   + " id=\"C." + displayVersion.toString() + "." + r + "." + col + "\""
                   + " >"
@@ -625,7 +628,7 @@ public class Song implements Comparable<Song> {
     this.title = title;
     songId = "Song" + title.replaceAll("\\W+", "");
   }
-  
+
   private void setArtist(String artist) {
     //  move the leading "The " to the end
     if (theRegExp.test(artist)) {
