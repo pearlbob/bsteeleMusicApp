@@ -57,13 +57,13 @@
 
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />
-       
-    <resource path="css/bsteeleMusicApp.gss" />
+
     
     <!--    gss -->
+    <set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true" />
     <set-configuration-property name="CssResource.enableGss" value="true" />
-    <!--<set-configuration-property name="CssResource.conversionMode" value="strict" />-->
-    <!--<set-configuration-property name="CssResource.conversionMode" value="off" />-->
+    <set-configuration-property name="CssResource.conversionMode" value="off" />
+    <resource path="css/bsteeleMusicApp.gss" />
     
     <inherits name='com.google.gwt.inject.Inject' />
     <inherits name="com.google.gwt.resources.Resources" />

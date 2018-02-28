@@ -57,6 +57,8 @@ public interface AppResources extends ClientBundle {
     String audioBeatDisplayCanvasStyle();
 
     String sendButton();
+    
+    String songTitle();
   }
 
   @Source("css/bsteeleMusicApp.gss")

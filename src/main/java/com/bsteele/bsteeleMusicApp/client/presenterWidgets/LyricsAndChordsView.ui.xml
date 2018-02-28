@@ -1,19 +1,27 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    
+    <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
     <g:SplitLayoutPanel >
         <g:north size='50' > 
-            <g:FlowPanel >
-                <g:Label ui:field="title"></g:Label>
-            </g:FlowPanel>
+            <g:HTMLPanel>
+                <span ui:field="title" class="{resources.style.songTitle}" /> by <span ui:field="artist"/>
+            </g:HTMLPanel>
         </g:north>
         <g:west size='500' > 
             <g:HTMLPanel ui:field="chords"/>
         </g:west>
         <g:center>
             <g:ScrollPanel>
-                <g:HTMLPanel ui:field="lyrics"/>
+                <g:HTMLPanel>
+                    <g:HTMLPanel ui:field="lyrics"/>
+                    <p>
+                    Copyright <span ui:field="copyright"/>
+                    </p>
+                </g:HTMLPanel>
             </g:ScrollPanel>
+            
         </g:center>
     </g:SplitLayoutPanel>
 

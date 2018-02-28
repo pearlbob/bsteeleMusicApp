@@ -4,12 +4,11 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.shared.Song;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import javax.inject.Inject;
@@ -22,7 +21,10 @@ public class LyricsAndChordsView extends ViewImpl
         implements LyricsAndChordsPresenterWidget.MyView {
 
   @UiField
-  Label title;
+  SpanElement title;
+  
+  @UiField
+  SpanElement artist;
 
   @UiField
   HTMLPanel chords;
@@ -30,11 +32,15 @@ public class LyricsAndChordsView extends ViewImpl
   @UiField
   HTMLPanel lyrics;
 
+  @UiField
+  SpanElement copyright;
+
   @Override
   public void setSong(Song song) {
-    title.setText(song.getTitle());
-    GWT.log(song.generateHtmlChordTable());
-    
+    title.setInnerHTML(song.getTitle());
+    artist.setInnerHTML(song.getArtist());
+    copyright.setInnerHTML(song.getCopyright());
+
     chords.clear();
     chords.add(new HTML(song.generateHtmlChordTable()));
     lyrics.clear();
