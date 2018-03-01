@@ -416,7 +416,8 @@ public class Song implements Comparable<Song> {
     }
 
     final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
-    String tableStart = "<table id=\"chordTable\" "
+    String tableStart = "<table id=\"chordTable\" " 
+            + "class=\""+style + "chordTable\" "
             + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
     String sectionStart = "<tr><td class=\"" + style + "sectionLabel\" >";
     String rowStart = "\t<tr><td></td>";

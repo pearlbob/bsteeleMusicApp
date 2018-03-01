@@ -123,7 +123,6 @@ public class LyricsAndChordsView extends ViewImpl
         GWT.log("current bpm select: " + currentTimeSignatureSelect.getValue());
       }
     });
-
   }
 
   private void transpose(int tran) {

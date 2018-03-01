@@ -61,6 +61,8 @@ public interface AppResources extends ClientBundle {
     String songTitle();
     
     String songListItem();
+    
+    String chordTable();
   }
 
   @Source("css/bsteeleMusicApp.gss")

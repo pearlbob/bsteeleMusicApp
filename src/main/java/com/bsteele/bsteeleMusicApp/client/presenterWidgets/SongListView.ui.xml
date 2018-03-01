@@ -1,14 +1,14 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <g:ScrollPanel>
-        <g:HTMLPanel>
+    <g:HTMLPanel>
+        <div  style="margin: 10px;">
             <br/>
             Search:  <g:TextBox ui:field="songSearch"/>
             <g:Button text="X" ui:field="clearSearch" />
             <br/>
             <g:Grid ui:field="songGrid"/>
-        </g:HTMLPanel>
-    </g:ScrollPanel> 
+        </div>
+    </g:HTMLPanel>
 
 </ui:UiBinder>

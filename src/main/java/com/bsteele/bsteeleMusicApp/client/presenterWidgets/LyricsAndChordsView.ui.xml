@@ -1,17 +1,21 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder
-            xmlns:ui="urn:ui:com.google.gwt.uibinder"
-            xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    xmlns:ui="urn:ui:com.google.gwt.uibinder"
+    xmlns:g="urn:import:com.google.gwt.user.client.ui">
     
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
     
     <ui:style>
         .currentBpmEntry { width: 4em; }
+        .chords { 
+            font-size: large; 
+        }
     </ui:style>
 
-    <g:SplitLayoutPanel >
-        <g:north size='50' > 
+    <g:SplitLayoutPanel ui:field="splitLayoutPanel" >
+        <g:north size='60' > 
             <g:HTMLPanel>
+                <p></p>
                 <button type="button" ui:field="playButton" >Play</button>
                 <button type="button" ui:field="stopButton" >Stop</button>
                 <select ui:field="keySelect"   >
@@ -81,7 +85,7 @@
                 <g:HTMLPanel>
                     <g:HTMLPanel ui:field="lyrics"/>
                     <p>
-                    Copyright <span ui:field="copyright"/>
+                        Copyright <span ui:field="copyright"/>
                     </p>
                 </g:HTMLPanel>
             </g:ScrollPanel>

@@ -7,7 +7,7 @@
     <g:RootLayoutPanel >
         <g:layer>
             <g:DockLayoutPanel unit='PX'>
-                <g:north size='35' >
+                <g:north size='30' >
                     <my:AppTitleWidget />
                 </g:north>
                 <g:center size='350' height='200'>

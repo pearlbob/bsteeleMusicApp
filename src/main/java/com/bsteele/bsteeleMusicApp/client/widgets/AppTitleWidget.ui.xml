@@ -4,7 +4,8 @@
     <g:HTMLPanel>
         <a href="http://bsteele.com">
             <img src="images/runningsmall.ico" alt="Bob Steele jpg" border="0"
-                     height="28" width="28"/></a>
+                     height="28" width="28"/>
+        </a>
         <span style='font-size: 28px; font-weight: bold;'>bsteele Music App</span>
         <span style='text-align: right;'> 
             provided by <a href="http://bsteele.com">bsteele.com</a>

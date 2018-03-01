@@ -67,19 +67,13 @@ public class SongListView
     songSearch.addKeyUpHandler((event) -> {
       searchSongs(songSearch.getValue());
     });
-    
-    clearSearch.addClickHandler((event)->{
+
+    clearSearch.addClickHandler((event) -> {
       songSearch.setText("");
       searchSongs(songSearch.getValue());
       songSearch.setFocus(true);
     });
 
-    songSearch.setFocus(true);
-  }
-
-  @Override
-  protected void onAttach() {
-    super.onAttach();
     songSearch.setFocus(true);
   }
 
@@ -127,7 +121,7 @@ public class SongListView
       int r = 0;
       for (Song song : filteredSongs) {
         songGrid.setHTML(r, 0, "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItem\">"
-                +song.getTitle()+"</div>");
+                + song.getTitle() + "</div>");
         songGrid.setHTML(r, 1, song.getArtist());
         r++;
       }

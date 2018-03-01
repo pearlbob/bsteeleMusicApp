@@ -42,6 +42,7 @@ h1,
 
 body {
   background: #fffdf6;
+    margin: 3px;
 }
 
 iframe {
@@ -145,4 +146,10 @@ table, th, td {
 .songTitle
 {
     font-weight: bold;
+}
+
+.chordTable
+{
+    font-weight: bold;
+    font-size: 36px;
 }

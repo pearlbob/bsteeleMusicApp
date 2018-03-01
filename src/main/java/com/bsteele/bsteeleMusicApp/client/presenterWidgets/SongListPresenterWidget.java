@@ -27,7 +27,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
   public interface MyView extends View
   {
-
     HandlerRegistration addSongSelectionEventHandler(
             SongSelectionEventHandler handler);
 

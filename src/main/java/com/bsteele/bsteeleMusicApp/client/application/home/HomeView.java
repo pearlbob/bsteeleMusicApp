@@ -22,10 +22,9 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 
   @UiField
   SplitLayoutPanel lyricsAndChords;
-  
+
   @UiField
   SimplePanel songEdit;
-
 
   @Inject
   HomeView(Binder uiBinder) {
@@ -35,8 +34,6 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     bindSlot(HomePresenter.SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChords);
     bindSlot(HomePresenter.SLOT_SONGEDIT_CONTENT, songEdit);
   }
-  
-  
 
   @Override
   public void selectTab(String tabName) {

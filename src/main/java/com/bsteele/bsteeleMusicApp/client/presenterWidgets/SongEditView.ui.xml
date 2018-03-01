@@ -7,28 +7,29 @@
         .intEntry { width: 4em; }
     </ui:style>
 
-    <g:HTMLPanel>
-          <p>
+    <g:HTMLPanel >
+        <div  style="margin: 10px;">
+        <p>
             <button type="button" ui:field="songEnter">Enter Song</button>
             <button type="button" ui:field="songCancel">Cancel</button>
         </p>
 
-       <p>
+        <p>
             Title:<br/>
-                <g:TextBox ui:field="titleEntry" styleName="{style.entryLine}" />
+            <g:TextBox ui:field="titleEntry" styleName="{style.entryLine}" />
         </p>
 
         <p>
             Artist:<br/>
-                <g:TextBox ui:field="artistEntry" styleName="{style.entryLine}" />
+            <g:TextBox ui:field="artistEntry" styleName="{style.entryLine}" />
         </p>
         <p>
             Copyright:<br/>
-                <g:TextBox ui:field="copyrightEntry" styleName="{style.entryLine}" />
+            <g:TextBox ui:field="copyrightEntry" styleName="{style.entryLine}" />
         </p>
         <p>
             Beats per minute:<br/>
-                <g:TextBox ui:field="bpmEntry" styleName="{style.intEntry}" />
+            <g:TextBox ui:field="bpmEntry" styleName="{style.intEntry}" />
         </p>
         <p>
             Time Signature: 
@@ -44,21 +45,59 @@
         </p>
 
         <table>
-            <tr><th>Id</th><th>Alt</th><th>Section</th></tr>
-            <tr><td>V:</td><td></td><td>Verse</td></tr>
-            <tr><td>P:</td><td>Pc:</td><td>Pre-chorus</td></tr>
-            <tr><td>C:</td><td>Ch:</td><td>Chorus</td></tr>
-            <tr><td>B:</td><td>Br:</td><td>Bridge</td></tr>
-            <tr><td>I:</td><td>In:</td><td>Intro.  Is also used for interludes, riffs, theme, or hooks that don't quite fit other categories.</td></tr>
-            <tr><td>O:</td><td>Out:</td><td>Outro</td></tr>
-            <tr><td>Co:</td><td>Coda:</td><td>Coda</td></tr>
-            <tr><td>T:</td><td>Tag:</td><td>Tag</td></tr>
-        </table>
-
-        <table><tr><td>
+            <tr>
+                <td>
                     Chords:<br/>
-                    <textarea rows="30" cols="30" ui:field="chordsEntry" ></textarea>
-                </td><td>
+                    <textarea rows="45" cols="30" ui:field="chordsEntry" ></textarea>
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <th>Id</th>
+                            <th>Alt</th>
+                            <th>Section</th>
+                        </tr>
+                        <tr>
+                            <td>V:</td>
+                            <td></td>
+                            <td>Verse</td>
+                        </tr>
+                        <tr>
+                            <td>P:</td>
+                            <td>Pc:</td>
+                            <td>Pre-chorus</td>
+                        </tr>
+                        <tr>
+                            <td>C:</td>
+                            <td>Ch:</td>
+                            <td>Chorus</td>
+                        </tr>
+                        <tr>
+                            <td>B:</td>
+                            <td>Br:</td>
+                            <td>Bridge</td>
+                        </tr>
+                        <tr>
+                            <td>I:</td>
+                            <td>In:</td>
+                            <td>Intro.  Is also used for interludes, riffs, theme, or hooks that don't quite fit other categories.</td>
+                        </tr>
+                        <tr>
+                            <td>O:</td>
+                            <td>Out:</td>
+                            <td>Outro</td>
+                        </tr>
+                        <tr>
+                            <td>Co:</td>
+                            <td>Coda:</td>
+                            <td>Coda</td>
+                        </tr>
+                        <tr>
+                            <td>T:</td>
+                            <td>Tag:</td>
+                            <td>Tag</td>
+                        </tr>
+                    </table>
                     <ul>
                         <li>Chords must be in upper case for transcription to work!</li>
                         <li>Using a lower case b for a flat will work.</li>
@@ -80,13 +119,15 @@
                             otherwise it will be considered a C chord followed by the comment "horus".  
                             Bridge and Coda have the same problem.</li>
                     </ul>
-                </td></tr>
+                </td>
+            </tr>
         </table>
 
         <p>
             Lyrics:<br/>
             <textarea rows="60" cols="80" ui:field="lyricsEntry"></textarea>
         </p>
+        </div>
     </g:HTMLPanel>
 
 </ui:UiBinder>
