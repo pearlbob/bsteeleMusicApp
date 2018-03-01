@@ -65,6 +65,8 @@ public class LyricsAndChordsView extends ViewImpl
     title.setInnerHTML(song.getTitle());
     artist.setInnerHTML(song.getArtist());
     copyright.setInnerHTML(song.getCopyright());
+    
+    currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
     transpose(0);
 
@@ -110,6 +112,7 @@ public class LyricsAndChordsView extends ViewImpl
     Event.setEventListener(bpmSelect, (Event event) -> {
       if (Event.ONCHANGE == event.getTypeInt()) {
         int bpm = Integer.parseInt(bpmSelect.getValue());
+        currentBpmEntry.setValue(Integer.toString(bpm));
         GWT.log("bpm select: " + bpm);
       }
     });

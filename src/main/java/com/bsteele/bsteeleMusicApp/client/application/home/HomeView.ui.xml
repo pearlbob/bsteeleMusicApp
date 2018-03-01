@@ -32,6 +32,14 @@
                                 <g:SplitLayoutPanel ui:field="lyricsAndChords" />
                             </g:ResizeLayoutPanel>
                         </g:tab>
+                        <g:tab ui:field="EditTab">
+                            <g:header size='3'>Edit</g:header>
+                            <g:ResizeLayoutPanel>
+                                <g:ScrollPanel>
+                                    <g:SimplePanel ui:field="songEdit" />
+                                </g:ScrollPanel>
+                            </g:ResizeLayoutPanel>
+                        </g:tab>
                         <g:tab>
                             <g:header size='3'>Options</g:header>
                             <g:FlowPanel>   

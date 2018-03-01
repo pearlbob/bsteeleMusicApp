@@ -25,7 +25,7 @@ import java.util.TreeSet;
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
         implements SongSelectionEventHandler {
 
-  public interface MyView extends View //implements DisplayMessageEvent.DisplayMessageHandler
+  public interface MyView extends View
   {
 
     HandlerRegistration addSongSelectionEventHandler(
@@ -34,26 +34,19 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     void setSongList(Set<Song> songs);
   }
 
-  //private final CurrentUserService currentUserService;
   @Inject
   SongListPresenterWidget(final EventBus eventBus,
           final MyView view
-  //, CurrentUserService currentUserService
   ) {
     super(eventBus, view);
 
     this.eventBus = eventBus;
     this.view = view;
 
-    //this.currentUserService = currentUserService;
     addSonglist(AppResources.INSTANCE.legacySongsAsJsonString().getText());
     addSonglist(AppResources.INSTANCE.allSongsAsJsonString().getText());
   }
 
-//    @Override
-//    public void onDisplayMessage(DisplayMessageEvent event) {
-//        getView().addMessage(event.getMessage());
-//    }
   @Override
   public void onBind() {
     view.addSongSelectionEventHandler(this);

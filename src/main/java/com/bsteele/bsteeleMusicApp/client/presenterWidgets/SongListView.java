@@ -78,6 +78,12 @@ public class SongListView
   }
 
   @Override
+  protected void onAttach() {
+    super.onAttach();
+    songSearch.setFocus(true);
+  }
+
+  @Override
   public void fireEvent(GwtEvent<?> event) {
     handlerManager.fireEvent(event);
   }
