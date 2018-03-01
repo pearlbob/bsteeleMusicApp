@@ -17,6 +17,16 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.presenter.slots.SingleSlot;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
+/*  todo
+datagrid for songs
+
+*/
+
+/**
+ * 
+ * @author bob
+ */
+
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
         implements SongSelectionEventHandler {
 

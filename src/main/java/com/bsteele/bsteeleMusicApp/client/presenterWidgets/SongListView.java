@@ -120,7 +120,8 @@ public class SongListView
     {
       int r = 0;
       for (Song song : filteredSongs) {
-        songGrid.setHTML(r, 0, song.getTitle());
+        songGrid.setHTML(r, 0, "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItem\">"
+                +song.getTitle()+"</div>");
         songGrid.setHTML(r, 1, song.getArtist());
         r++;
       }

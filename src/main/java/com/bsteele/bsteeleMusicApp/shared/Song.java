@@ -381,7 +381,7 @@ public class Song implements Comparable<Song> {
               case '\n':
               case '\r':
                 lyrics += c;
-                whiteSpace = ""; //  ignore white space
+                whiteSpace = ""; //  ignore trailing white space
                 state = 0;
                 break;
               default:

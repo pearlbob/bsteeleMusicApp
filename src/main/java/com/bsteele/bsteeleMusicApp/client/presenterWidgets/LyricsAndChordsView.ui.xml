@@ -1,11 +1,75 @@
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+            xmlns:ui="urn:ui:com.google.gwt.uibinder"
+            xmlns:g="urn:import:com.google.gwt.user.client.ui">
     
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
+    
+    <ui:style>
+        .currentBpmEntry { width: 4em; }
+    </ui:style>
 
     <g:SplitLayoutPanel >
         <g:north size='50' > 
             <g:HTMLPanel>
+                <button type="button" ui:field="playButton" >Play</button>
+                <button type="button" ui:field="stopButton" >Stop</button>
+                <select ui:field="keySelect"   >
+                    <option value="-6">-6 halfsteps</option>
+                    <option value="-5">-5 halfsteps</option>
+                    <option value="-4">-4 halfsteps</option>
+                    <option value="-3">-3 halfsteps</option>
+                    <option value="-2">-2 halfsteps</option>
+                    <option value="-1">-1 halfstep</option>
+                    <option value="0" selected="true">Original Key</option>
+                    <option value="1">+1 halfstep</option>
+                    <option value="2">+2 halfsteps</option>
+                    <option value="3">+3 halfsteps</option>
+                    <option value="4">+4 halfsteps</option>
+                    <option value="5">+5 halfsteps</option>
+                    <option value="6">+6 halfsteps</option>
+                </select>
+                BPM:
+                <g:TextBox ui:field="currentBpmEntry" styleName="{style.currentBpmEntry}" />
+                <select ui:field="bpmSelect" title="Select the beats per minute to be used in playing">
+                    <option value="  " selected="true">chose</option>
+                    <!--    content should always be a number   -->
+                    <option value="60" >60</option>
+                    <option value="65" >65</option>
+                    <option value="70" >70</option>
+                    <option value="75" >75</option>
+                    <option value="80" >80</option>
+                    <option value="85" >85</option>
+                    <option value="90" >90</option>
+                    <option value="95" >95</option>
+                    <option value="100" >100</option>
+                    <option value="102" >102</option>
+                    <option value="104" >104</option>
+                    <option value="106" >106</option>
+                    <option value="108" >108</option>
+                    <option value="110" >110</option>
+                    <option value="112" >112</option>
+                    <option value="114" >114</option>
+                    <option value="116" >116</option>
+                    <option value="118" >118</option>
+                    <option value="120" >120</option>
+                    <option value="122" >122</option>
+                    <option value="124" >124</option>
+                    <option value="126" >126</option>
+                    <option value="128" >128</option>
+                    <option value="130" >130</option>
+                    <option value="140" >140</option>
+                    <option value="160" >160</option>
+                    <option value="180" >180</option>
+                    <option value="200" >200</option>
+                </select>
+                Time: <select ui:field="currentTimeSignatureSelect" >
+                    <option value="2/4" >2/4</option>
+                    <option value="3/4" >3/4</option>
+                    <option value="4/4" selected="true">4/4</option>
+                    <option value="6/8" >6/8</option>
+                </select>
+                &nbsp;&nbsp;
                 <span ui:field="title" class="{resources.style.songTitle}" /> by <span ui:field="artist"/>
             </g:HTMLPanel>
         </g:north>
