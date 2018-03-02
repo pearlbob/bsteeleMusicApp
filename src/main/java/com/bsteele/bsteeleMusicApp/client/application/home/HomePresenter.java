@@ -57,7 +57,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
           SongListPresenterWidget songListPresenterWidget,
           LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget,
           SongEditPresenterWidget songEditPresenterWidget
-          ) {
+  ) {
     super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
 
     this.eventBus = eventBus;

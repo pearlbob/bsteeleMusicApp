@@ -3,12 +3,17 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.shared.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,7 +31,8 @@ import javax.inject.Inject;
  */
 public class SongEditView
         extends ViewImpl
-        implements SongEditPresenterWidget.MyView {
+        implements SongEditPresenterWidget.MyView,
+        HasHandlers {
 
   @UiField
   ButtonElement songEnter;
@@ -114,7 +120,6 @@ public class SongEditView
     timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
     chordsEntry.setValue(song.getChords());
     lyricsEntry.setValue(song.getRawLyrics());
-    isEdit = true;
   }
 
   public void enterSong() {
@@ -122,15 +127,6 @@ public class SongEditView
       Window.alert("no song title given!");
       return;
     }
-//    if (!isEdit) {
-//      for (var i = 0; i < songs.length; i++) {
-//        var song = songs[i];
-//        if (titleEntry.value == = song.name) {
-//          Window.alert("song with that title already exists!");
-//          return;
-//        }
-//      }
-//    }
 
     if (artistEntry.getText().length() <= 0) {
       Window.alert("no artist given!");
@@ -182,6 +178,8 @@ public class SongEditView
             chordsEntry.getValue(), lyricsEntry.getValue());
     GWT.log(song.toJson());
 
+    fireSongSubmission(song);
+
 //    saveSongAs(titleEntry.getText() + ".songlyrics", songHtml);
 //    addSongHtml(song);
 //    songEntryClear();
@@ -194,7 +192,22 @@ public class SongEditView
 //    }
   }
 
-  private boolean isEdit = false;
+  private void fireSongSubmission(Song song) {
+    fireEvent(new SongSubmissionEvent(song));
+  }
+
+  @Override
+  public void fireEvent(GwtEvent<?> event) {
+    handlerManager.fireEvent(event);
+  }
+  
+  
+  @Override
+  public HandlerRegistration SongSubmissionEventHandler(
+          SongSubmissionEventHandler handler) {
+    return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
+  }
+
   private final HandlerManager handlerManager;
   private static final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
   private static final int minBpm = 50;

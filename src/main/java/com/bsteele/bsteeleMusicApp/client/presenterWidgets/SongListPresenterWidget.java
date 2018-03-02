@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.shared.Song;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -23,10 +25,11 @@ import java.util.TreeSet;
  * @author bob
  */
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
-        implements SongSelectionEventHandler {
+        implements SongSelectionEventHandler,
+        SongSubmissionEventHandler {
 
-  public interface MyView extends View
-  {
+  public interface MyView extends View {
+
     HandlerRegistration addSongSelectionEventHandler(
             SongSelectionEventHandler handler);
 
@@ -42,13 +45,15 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     this.eventBus = eventBus;
     this.view = view;
 
-    addSonglist(AppResources.INSTANCE.legacySongsAsJsonString().getText());
-    addSonglist(AppResources.INSTANCE.allSongsAsJsonString().getText());
+    addJsonToSonglist(AppResources.INSTANCE.legacySongsAsJsonString().getText());
+    addJsonToSonglist(AppResources.INSTANCE.allSongsAsJsonString().getText());
   }
 
   @Override
   public void onBind() {
     view.addSongSelectionEventHandler(this);
+
+    eventBus.addHandler(SongSubmissionEvent.TYPE, this);
   }
 
   @Override
@@ -56,7 +61,13 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     eventBus.fireEvent(event);
   }
 
-  private void addSonglist(String jsonString) {
+  @Override
+  public void onSongSubmission(SongSubmissionEvent event) {
+    addToSonglist(event.getSong());
+    view.setSongList(allSongs);
+  }
+
+  private void addJsonToSonglist(String jsonString) {
     if (jsonString != null && jsonString.length() > 0) {
       JSONValue jv = JSONParser.parseStrict(jsonString);
       if (jv != null) {
@@ -64,16 +75,19 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         if (ja != null) {
           int jaLimit = ja.size();
           for (int i = 0; i < jaLimit; i++) {
-            Song song = Song.songFromJsonObject(ja.get(i).isObject());
-            if (song != null) {
-              allSongs.remove(song);  //  remove prior versions
-              allSongs.add(song);
-            }
+            addToSonglist(Song.songFromJsonObject(ja.get(i).isObject()));
           }
         }
       }
     }
-    getView().setSongList(allSongs);
+    view.setSongList(allSongs);
+  }
+
+  private void addToSonglist(Song song) {
+    if (song != null) {
+      allSongs.remove(song);  //  remove prior versions
+      allSongs.add(song);
+    }
   }
 
   private final TreeSet<Song> allSongs = new TreeSet<>();
