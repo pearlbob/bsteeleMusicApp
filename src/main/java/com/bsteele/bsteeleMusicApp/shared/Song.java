@@ -149,13 +149,26 @@ public class Song implements Comparable<Song> {
   public String toJson() {
     StringBuilder sb = new StringBuilder();
     sb.append("{\n")
-            .append("\"title\": \"" + getTitle() + "\",\n")
-            .append("\"artist\": \"" + getArtist() + "\",\n")
-            .append("\"copyright\": \"" + getCopyright() + "\",\n")
-            .append("\"bpm\": " + getBpm() + ",\n")
-            .append("\"timeSignature\": \"" + getBeatsPerBar() + "/" + getUnitsPerMeasure() + "\",\n")
+            .append("\"title\": \"")
+            .append(getTitle())
+            .append("\",\n")
+            .append("\"artist\": \"")
+            .append(getArtist())
+            .append("\",\n")
+            .append("\"copyright\": \"")
+            .append(getCopyright())
+            .append("\",\n")
+            .append("\"bpm\": ")
+            .append(getBpm())
+            .append(",\n")
+            .append("\"timeSignature\": \"")
+            .append(getBeatsPerBar())
+            .append("/")
+            .append(getUnitsPerMeasure())
+            .append("\",\n")
             .append("\"chords\": \n")
             .append("    [\n");
+    //  chord content
     boolean first = true;
     for (String s : getChords().split("\n")) {
       if (first) {
@@ -167,10 +180,10 @@ public class Song implements Comparable<Song> {
       sb.append(jsonEncode(s));
       sb.append("\"");
     }
-    sb
-            .append("\n    ],\n")
+    sb.append("\n    ],\n")
             .append("\"lyrics\": \n")
             .append("    [\n");
+    //  lyrics content
     first = true;
     for (String s : getRawLyrics().split("\n")) {
       if (first) {
@@ -182,15 +195,17 @@ public class Song implements Comparable<Song> {
       sb.append(jsonEncode(s));
       sb.append("\"");
     }
-    sb
-            .append("\n    ]\n")
+    sb.append("\n    ]\n")
             .append("}\n");
 
     return sb.toString();
   }
-  
-  private String jsonEncode( String s ){
-    return s; //  fixme!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  private String jsonEncode(String s) {
+    return s.replaceAll("\\\\", "\\\\\\\\")
+            .replaceAll("\\\r", "")
+            .replaceAll("\\\t", "\\\\t")
+            .replaceAll("\\\"", "\\\\\"");
   }
 
   private void parseLyricsToSectionSequence(String rawLyrics) {
