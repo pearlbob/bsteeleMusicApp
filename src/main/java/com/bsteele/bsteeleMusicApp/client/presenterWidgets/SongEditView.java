@@ -9,9 +9,12 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -65,10 +68,7 @@ public class SongEditView
     Event.setEventListener(songEnter, (Event event) -> {
       if (Event.ONCLICK == event.getTypeInt()) {
         GWT.log("songEnter()");
-        GWT.log("chords: ");
-        GWT.log(chordsEntry.getValue());
-        GWT.log("lyricsEntry: ");
-        GWT.log(lyricsEntry.getValue());
+        enterSong();
       }
     });
 
@@ -111,10 +111,93 @@ public class SongEditView
     artistEntry.setText(song.getArtist());
     copyrightEntry.setText(song.getCopyright());
     bpmEntry.setText(Integer.toString(song.getBpm()));
-    timeSignatureEntry.setValue(song.getBeatsPerBar() + "/4");
+    timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
     chordsEntry.setValue(song.getChords());
     lyricsEntry.setValue(song.getRawLyrics());
+    isEdit = true;
   }
 
-  private HandlerManager handlerManager;
+  public void enterSong() {
+    if (titleEntry.getText().length() <= 0) {
+      Window.alert("no song title given!");
+      return;
+    }
+//    if (!isEdit) {
+//      for (var i = 0; i < songs.length; i++) {
+//        var song = songs[i];
+//        if (titleEntry.value == = song.name) {
+//          Window.alert("song with that title already exists!");
+//          return;
+//        }
+//      }
+//    }
+
+    if (artistEntry.getText().length() <= 0) {
+      Window.alert("no artist given!");
+      return;
+    }
+
+    if (copyrightEntry.getText().length() <= 0) {
+      Window.alert("no copyright given!");
+      return;
+    }
+
+    if (bpmEntry.getText().length() <= 0) {
+      Window.alert("no BPM given!");
+      return;
+    }
+
+    String bpmText = bpmEntry.getText();
+    if (!twoOrThreeDigitsRegexp.test(bpmText)) {
+      Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
+      return;
+    }
+
+    int bpm = Integer.parseInt(bpmText);
+    if (bpm < minBpm || bpm > maxBpm) {
+      Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
+      return;
+    }
+
+    if (chordsEntry.getValue().length() <= 0) {
+      Window.alert("no chords given!");
+      return;
+    }
+    if (lyricsEntry.getValue().length() <= 0) {
+      Window.alert("no lyrics given!");
+      return;
+    }
+
+    int beatsPerBar = 4;
+    int unitsPerMeasure = 4;
+    MatchResult mr = timeSignatureExp.exec(timeSignatureEntry.getValue());
+    if (mr != null) {
+      // match
+      beatsPerBar = Integer.parseInt(mr.getGroup(1));
+      unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
+    }
+
+    Song song = Song.createSong(titleEntry.getText(), artistEntry.getText(),
+            copyrightEntry.getText(), bpm, beatsPerBar, unitsPerMeasure,
+            chordsEntry.getValue(), lyricsEntry.getValue());
+    GWT.log(song.toJson());
+
+//    saveSongAs(titleEntry.getText() + ".songlyrics", songHtml);
+//    addSongHtml(song);
+//    songEntryClear();
+//    songEntryElement.hidden = true;
+//    addSongButton.hidden = false;
+//    optionChoicesDiv.hidden = false;
+//    let s = document.getElementById("Song" + (songIdCount - 1) + "Toc");
+//    if (s != null) {
+//      s.scrollIntoView();
+//    }
+  }
+
+  private boolean isEdit = false;
+  private final HandlerManager handlerManager;
+  private static final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
+  private static final int minBpm = 50;
+  private static final int maxBpm = 400;
+  private static final RegExp timeSignatureExp = RegExp.compile("^(\\d{1,2})\\/(\\d)$");
 }

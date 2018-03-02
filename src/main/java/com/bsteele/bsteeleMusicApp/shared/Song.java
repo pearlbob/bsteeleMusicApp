@@ -8,6 +8,7 @@ import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class Song implements Comparable<Song> {
   }
 
   public static final Song createSong(String title, String artist,
-          String copyright, int bpm, int beatsPerBar,
+          String copyright, int bpm, int beatsPerBar, int unitsPerMeasure,
           String chords, String lyrics) {
     Song song = new Song();
     song.setTitle(title);
@@ -35,6 +36,7 @@ public class Song implements Comparable<Song> {
     song.copyright = copyright;
     song.setBeatsPerMinute(bpm);
     song.setBeatsPerBar(beatsPerBar);
+    song.unitsPerMeasure = unitsPerMeasure;
     song.rawLyrics = lyrics;
     song.chords = chords;
     song.parseChordTable(chords);
@@ -86,14 +88,25 @@ public class Song implements Comparable<Song> {
           }
           break;
         case "timeSignature":
+          //  most of this is coping with real old songs with poor formatting
           jn = jv.isNumber();
           if (jn != null) {
             song.beatsPerBar = (int) jn.doubleValue();
+            song.unitsPerMeasure = 4; //  safe default
           } else {
             String s = jv.isString().stringValue();
-            s = s.replaceAll("/.*", "");    //  fixme: info lost
-            if (s.length() > 0) {
-              song.beatsPerBar = Integer.parseInt(s);
+
+            MatchResult mr = timeSignatureExp.exec(s);
+            if (mr != null) {
+              // match
+              song.beatsPerBar = Integer.parseInt(mr.getGroup(1));
+              song.unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
+            } else {
+              s = s.replaceAll("/.*", "");    //  fixme: info lost
+              if (s.length() > 0) {
+                song.beatsPerBar = Integer.parseInt(s);
+              }
+              song.unitsPerMeasure = 4; //  safe default
             }
           }
           break;
@@ -133,8 +146,51 @@ public class Song implements Comparable<Song> {
     return song;
   }
 
-  public String songToJson() {
-    return null;
+  public String toJson() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("{\n")
+            .append("\"title\": \"" + getTitle() + "\",\n")
+            .append("\"artist\": \"" + getArtist() + "\",\n")
+            .append("\"copyright\": \"" + getCopyright() + "\",\n")
+            .append("\"bpm\": " + getBpm() + ",\n")
+            .append("\"timeSignature\": \"" + getBeatsPerBar() + "/" + getUnitsPerMeasure() + "\",\n")
+            .append("\"chords\": \n")
+            .append("    [\n");
+    boolean first = true;
+    for (String s : getChords().split("\n")) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(",\n");
+      }
+      sb.append("\t\"");
+      sb.append(jsonEncode(s));
+      sb.append("\"");
+    }
+    sb
+            .append("\n    ],\n")
+            .append("\"lyrics\": \n")
+            .append("    [\n");
+    first = true;
+    for (String s : getRawLyrics().split("\n")) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(",\n");
+      }
+      sb.append("\t\"");
+      sb.append(jsonEncode(s));
+      sb.append("\"");
+    }
+    sb
+            .append("\n    ]\n")
+            .append("}\n");
+
+    return sb.toString();
+  }
+  
+  private String jsonEncode( String s ){
+    return s; //  fixme!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   }
 
   private void parseLyricsToSectionSequence(String rawLyrics) {
@@ -458,7 +514,7 @@ public class Song implements Comparable<Song> {
                   .append("Class\" ");
           String content = row.get(col);
           if (endOfChordLineExp.test(content)) {
-            chordText.append(" style=\"border-right: 0px solid black;\n" );
+            chordText.append(" style=\"border-right: 0px solid black;\n");
           }
           chordText.append(" id=\"C.")
                   .append(displayVersion.toString())
@@ -675,6 +731,13 @@ public class Song implements Comparable<Song> {
   }
 
   /**
+   * @return the unitsPerMeasure
+   */
+  public int getUnitsPerMeasure() {
+    return unitsPerMeasure;
+  }
+
+  /**
    * @return the copyright
    */
   public String getCopyright() {
@@ -791,6 +854,7 @@ public class Song implements Comparable<Song> {
   private String copyright = "Unknown";
   private int bpm = 106;  //  beats per minute
   private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
+  private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
   private String rawLyrics = "";
   private String chords = "";
 
@@ -806,4 +870,6 @@ public class Song implements Comparable<Song> {
 
   private static final RegExp theRegExp = RegExp.compile("^the *", "i");
   private static final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
+  private static final RegExp timeSignatureExp = RegExp.compile("^\\w*(\\d{1,2})\\w*\\/\\w*(\\d)\\w*$");
+
 }
