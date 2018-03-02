@@ -8,7 +8,7 @@
     <ui:style>
         .currentBpmEntry { width: 4em; }
         .chords { 
-            font-size: large; 
+            font-size: 44px;
         }
     </ui:style>
 
@@ -78,7 +78,7 @@
             </g:HTMLPanel>
         </g:north>
         <g:west size='500' > 
-            <g:HTMLPanel ui:field="chords"/>
+            <g:HTMLPanel ui:field="chords" styleName="{style.chords}"/>
         </g:west>
         <g:center>
             <g:ScrollPanel>

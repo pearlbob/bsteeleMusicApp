@@ -416,15 +416,15 @@ public class Song implements Comparable<Song> {
     }
 
     final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
-    String tableStart = "<table id=\"chordTable\" " 
-            + "class=\""+style + "chordTable\" "
-            + "><tr><td colspan=\"5\" id=\"chordComment\"> </td></tr>\n";
+    String tableStart = "<table id=\"chordTable\" "
+            + "class=\"" + style + "chordTable\" "
+            + ">\n";
     String sectionStart = "<tr><td class=\"" + style + "sectionLabel\" >";
     String rowStart = "\t<tr><td></td>";
     String rowEnd = "</tr>\n";
     String tableEnd = "</table>\n";
 
-    String chordText = ""; //  table formatted
+    StringBuilder chordText = new StringBuilder(); //  table formatted
 
     SortedSet<Section.Version> sortedKeys = new TreeSet<>(map.keySet());
     SortedSet<Section.Version> displayed = new TreeSet<>();
@@ -449,19 +449,27 @@ public class Song implements Comparable<Song> {
       //  section data
       for (int r = 0; r < grid.getRowCount(); r++) {
 
-        chordText += start;
+        chordText.append(start);
         start = rowStart;   //  default to empty row start on subsequent rows
 
         ArrayList<String> row = grid.getRow(r);
         for (int col = 0; col < row.size(); col++) {
-          chordText += "<td class=\"" + style + "section"
-                  + version.getSection().getAbreviation() + "Class\""
-                  //+ " style=\"\""
-                  + " id=\"C." + displayVersion.toString() + "." + r + "." + col + "\""
-                  + " >"
-                  + row.get(col) + "</td>\n\t";
+          chordText.append("<td class=\"" + style + "section").append(version.getSection().getAbreviation())
+                  .append("Class\" ");
+          String content = row.get(col);
+          if (endOfChordLineExp.test(content)) {
+            chordText.append(" style=\"border-right: 0px solid black;\n" );
+          }
+          chordText.append(" id=\"C.")
+                  .append(displayVersion.toString())
+                  .append(".")
+                  .append(r)
+                  .append(".")
+                  .append(col)
+                  .append("\" >")
+                  .append(content).append("</td>\n\t");
         }
-        chordText += rowEnd;
+        chordText.append(rowEnd);
       }
     }
     String ret = tableStart + chordText + tableEnd;
@@ -797,4 +805,5 @@ public class Song implements Comparable<Song> {
   private static final char js_delta = '\u0394';
 
   private static final RegExp theRegExp = RegExp.compile("^the *", "i");
+  private static final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
 }

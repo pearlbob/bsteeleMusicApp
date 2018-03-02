@@ -14,6 +14,10 @@ public interface AppResources extends ClientBundle {
 
   interface Style extends CssResource {
 
+    String sectionAClass();
+
+    String sectionBClass();
+
     String sectionCClass();
 
     String lyricsCClass();
@@ -57,20 +61,23 @@ public interface AppResources extends ClientBundle {
     String audioBeatDisplayCanvasStyle();
 
     String sendButton();
-    
+
     String songTitle();
-    
+
     String songListItem();
-    
+
     String chordTable();
+
+    String sectionLabel();
+
   }
 
   @Source("css/bsteeleMusicApp.gss")
   Style style();
-  
+
   @Source("allSongs.songlyrics")
   TextResource allSongsAsJsonString();
-  
+
   @Source("legacySongs.songlyrics")
   TextResource legacySongsAsJsonString();
 

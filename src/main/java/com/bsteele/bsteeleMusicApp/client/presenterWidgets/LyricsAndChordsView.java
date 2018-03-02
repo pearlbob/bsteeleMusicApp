@@ -128,6 +128,7 @@ public class LyricsAndChordsView extends ViewImpl
   private void transpose(int tran) {
     chords.clear();
     chords.add(new HTML(song.transpose(tran)));
+  GWT.log("  chords.getStyleName(): "+chords.getStyleName());
   }
 
   private Song song;

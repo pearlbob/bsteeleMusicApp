@@ -15,16 +15,7 @@
     <!--<inherits name="org.apache.tomcat.tomcat-websocket"/>-->
     <inherits name="com.google.gwt.logging.Logging"/>
 
-    <!-- Inherit the default GWT style sheet.  You can change       -->
-    <!-- the theme of your GWT application by uncommenting          -->
-    <!-- any one of the following lines.                            -->
-    <inherits name='com.google.gwt.user.theme.clean.Clean'/>
-    <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
-    <!--<inherits name='com.google.gwt.user.theme.chrome.Chrome'/>--> 
-    <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
-    <!--<inherits name="gwt.material.design.GwtMaterialDesign" />-->
-    <!--    fixme:  CssResource and UiBinder is recommended.
-    -->
+
     <!-- Other module inherits                                      -->
     <!-- Inherit the i18n module for the messages used in this example. -->
     <inherits name="com.google.gwt.i18n.I18N"/>
@@ -68,5 +59,14 @@
     <inherits name='com.google.gwt.inject.Inject' />
     <inherits name="com.google.gwt.resources.Resources" />
  
-    
+        <!-- Inherit the default GWT style sheet.  You can change       -->
+    <!-- the theme of your GWT application by uncommenting          -->
+    <!-- any one of the following lines.                            -->
+    <inherits name='com.google.gwt.user.theme.clean.Clean'/>
+    <!-- <inherits name='com.google.gwt.user.theme.standard.Standard'/> -->
+    <!--<inherits name='com.google.gwt.user.theme.chrome.Chrome'/>--> 
+    <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
+    <!--<inherits name="gwt.material.design.GwtMaterialDesign" />-->
+    <!--    fixme:  CssResource and UiBinder is recommended.
+    -->
 </module>
