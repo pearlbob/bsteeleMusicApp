@@ -63,7 +63,12 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
   @Override
   public void onSongSubmission(SongSubmissionEvent event) {
-    addToSonglist(event.getSong());
+    Song song = event.getSong();
+    String filename = song.getTitle() + ".songlyrics";
+
+    saveSongAs(filename, song.toJson());
+
+    addToSonglist(song);
     view.setSongList(allSongs);
   }
 
@@ -89,6 +94,31 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
       allSongs.add(song);
     }
   }
+
+  /**
+   * Native function to write the song as JSON.
+   * @param filename
+   * @param data 
+   */
+  private native void saveSongAs(String filename, String data) /*-{
+    var data = new Blob([data], {type: 'text/plain'});
+    // If we are replacing a previously generated file we need to
+    // manually revoke the object URL to avoid memory leaks.
+    //if (textFile !== null) {
+    //    window.URL.revokeObjectURL(textFile);
+    //}
+
+    var textFile = window.URL.createObjectURL(data);
+//    if (downloadlink === null) {
+//        downloadlink = document.createElement("a");
+//        downloadlink.style = "display:none";
+//    }
+    var downloadlink = document.createElement("a");
+    downloadlink.style = "display:none";
+    downloadlink.download = filename;
+    downloadlink.href = textFile;
+    downloadlink.click();
+}-*/;
 
   private final TreeSet<Song> allSongs = new TreeSet<>();
   private final EventBus eventBus;

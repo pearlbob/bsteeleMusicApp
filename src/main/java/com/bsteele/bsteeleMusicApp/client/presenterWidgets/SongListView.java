@@ -6,13 +6,17 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -48,6 +52,10 @@ public class SongListView
   Button clearSearch;
 
   @UiField
+  FileUpload readSongFiles;
+  // multiple accept=".songlyrics" 
+
+  @UiField
   Grid songGrid;
 
   @Inject
@@ -72,6 +80,18 @@ public class SongListView
       songSearch.setText("");
       searchSongs(songSearch.getValue());
       songSearch.setFocus(true);
+    });
+
+    readSongFiles.addChangeHandler((event) -> {
+      JSONArray files = getFiles(event.getNativeEvent());
+      {
+        int jaLimit = files.size();
+        for (int i = 0; i < jaLimit; i++) {
+          test(files.get(i));
+        }
+      }
+
+      GWT.log("readSongFiles: " + files.size());
     });
 
     songSearch.setFocus(true);
@@ -128,7 +148,26 @@ public class SongListView
     }
   }
 
-  private HandlerManager handlerManager;
+  private native JSONArray getFiles(NativeEvent event)/*-{
+    var ret = event.target.files;
+          if ( ret.length <= 0 )
+          return null;
+          
+    return ret;
+  }-*/;
+
+  private void test(Object entry) {
+
+//    File file = (File) entry;
+//
+//    FileReader reader = new FileReader();
+//    reader.addLoadEndHandler((event) -> {
+//      GWT.log(reader.getStringResult());
+//    });
+//    reader.readAsText(file);
+  }
+
+  private final HandlerManager handlerManager;
 
   private static final int columns = 2;
   private ArrayList<Song> filteredSongs = new ArrayList<>();

@@ -29,7 +29,7 @@
     <!--    gwtp    -->
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
     <extend-configuration-property name="gin.ginjector.modules"
-            value="com.bsteele.bsteeleMusicApp.client.gin.ClientModule"/>
+                                   value="com.bsteele.bsteeleMusicApp.client.gin.ClientModule"/>
 
     <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
@@ -58,8 +58,8 @@
     
     <inherits name='com.google.gwt.inject.Inject' />
     <inherits name="com.google.gwt.resources.Resources" />
- 
-        <!-- Inherit the default GWT style sheet.  You can change       -->
+     
+    <!-- Inherit the default GWT style sheet.  You can change       -->
     <!-- the theme of your GWT application by uncommenting          -->
     <!-- any one of the following lines.                            -->
     <inherits name='com.google.gwt.user.theme.clean.Clean'/>
@@ -69,4 +69,5 @@
     <!--<inherits name="gwt.material.design.GwtMaterialDesign" />-->
     <!--    fixme:  CssResource and UiBinder is recommended.
     -->
+    
 </module>
