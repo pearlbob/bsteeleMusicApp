@@ -3,16 +3,16 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEvent;
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.shared.Song;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -25,6 +25,11 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.inject.Inject;
+import org.vectomatic.file.File;
+import org.vectomatic.file.FileList;
+import org.vectomatic.file.FileReader;
+import org.vectomatic.file.events.LoadEndEvent;
+import org.vectomatic.file.impl.FileListImpl;
 
 /**
  *
@@ -67,8 +72,7 @@ public class SongListView
     songGrid.addClickHandler(event -> {
       if (filteredSongs != null) {
         Song selectedSong = filteredSongs.get(songGrid.getCellForEvent(event).getRowIndex());
-        SongSelectionEvent songSelectionEvent = new SongSelectionEvent(selectedSong);
-        fireEvent(songSelectionEvent);
+        fireEvent(new SongSelectionEvent(selectedSong));
       }
     });
 
@@ -76,22 +80,26 @@ public class SongListView
       searchSongs(songSearch.getValue());
     });
 
+    /**
+     * The X button
+     */
     clearSearch.addClickHandler((event) -> {
       songSearch.setText("");
       searchSongs(songSearch.getValue());
       songSearch.setFocus(true);
     });
 
+    /**
+     * Song file read
+     */
     readSongFiles.addChangeHandler((event) -> {
-      JSONArray files = getFiles(event.getNativeEvent());
+      FileList files = new FileList(getFiles(event.getNativeEvent()));
       {
-        int jaLimit = files.size();
-        for (int i = 0; i < jaLimit; i++) {
-          test(files.get(i));
+        int limit = files.getLength();
+        for (int i = 0; i < limit; i++) {
+          asyncReadSongFile(files.getItem(i));
         }
       }
-
-      GWT.log("readSongFiles: " + files.size());
     });
 
     songSearch.setFocus(true);
@@ -106,6 +114,11 @@ public class SongListView
   public HandlerRegistration addSongSelectionEventHandler(
           SongSelectionEventHandler handler) {
     return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
+  }
+  
+  @Override
+  public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler) {
+    return handlerManager.addHandler(SongReadEvent.TYPE, handler);
   }
 
   private void searchSongs(String search) {
@@ -148,7 +161,7 @@ public class SongListView
     }
   }
 
-  private native JSONArray getFiles(NativeEvent event)/*-{
+  private native FileListImpl getFiles(NativeEvent event)/*-{
     var ret = event.target.files;
           if ( ret.length <= 0 )
           return null;
@@ -156,15 +169,16 @@ public class SongListView
     return ret;
   }-*/;
 
-  private void test(Object entry) {
+  private void asyncReadSongFile(Object entry) {
 
-//    File file = (File) entry;
-//
-//    FileReader reader = new FileReader();
-//    reader.addLoadEndHandler((event) -> {
-//      GWT.log(reader.getStringResult());
-//    });
-//    reader.readAsText(file);
+    File file = (File) entry;
+
+    FileReader reader = new FileReader();
+    reader.addLoadEndHandler((LoadEndEvent event) -> {
+      Song song = Song.songFromJson(reader.getStringResult());
+      fireEvent(new SongReadEvent(song));
+    });
+    reader.readAsText(file);
   }
 
   private final HandlerManager handlerManager;

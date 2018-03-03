@@ -92,11 +92,11 @@
         </dependency>
         
         <!-- https://mvnrepository.com/artifact/org.vectomatic/lib-gwt-file -->
-<!--        <dependency>
+        <dependency>
             <groupId>org.vectomatic</groupId>
             <artifactId>lib-gwt-file</artifactId>
             <version>0.3.9</version>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

@@ -3,6 +3,8 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEvent;
+import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEvent;
@@ -26,12 +28,16 @@ import java.util.TreeSet;
  */
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
         implements SongSelectionEventHandler,
-        SongSubmissionEventHandler {
+        SongSubmissionEventHandler,
+        SongReadEventHandler {
 
   public interface MyView extends View {
 
     HandlerRegistration addSongSelectionEventHandler(
             SongSelectionEventHandler handler);
+
+    HandlerRegistration addSongReadEventHandler(
+            SongReadEventHandler handler);
 
     void setSongList(Set<Song> songs);
   }
@@ -52,6 +58,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
   @Override
   public void onBind() {
     view.addSongSelectionEventHandler(this);
+    view.addSongReadEventHandler(this);
 
     eventBus.addHandler(SongSubmissionEvent.TYPE, this);
   }
@@ -70,6 +77,15 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     addToSonglist(song);
     view.setSongList(allSongs);
+    fireEvent(new SongSelectionEvent(song));
+  }
+
+  @Override
+  public void onSongRead(SongReadEvent event) {
+    Song song = event.getSong();
+    addToSonglist(song);
+    view.setSongList(allSongs);
+    fireEvent(new SongSelectionEvent(song));
   }
 
   private void addJsonToSonglist(String jsonString) {
@@ -90,15 +106,16 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
   private void addToSonglist(Song song) {
     if (song != null) {
-      allSongs.remove(song);  //  remove prior versions
+      allSongs.remove(song);  //  remove any prior version
       allSongs.add(song);
     }
   }
 
   /**
    * Native function to write the song as JSON.
+   *
    * @param filename
-   * @param data 
+   * @param data
    */
   private native void saveSongAs(String filename, String data) /*-{
     var data = new Blob([data], {type: 'text/plain'});
