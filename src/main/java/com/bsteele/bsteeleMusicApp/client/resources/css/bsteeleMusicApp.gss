@@ -83,12 +83,15 @@ iframe {
 }
 
 .sectionCClass,
-.lyricsCClass {
+.lyricsCClass,
+.lyricsBClass {
   background-color: #fff;
 }
 
 .sectionVClass,
-.lyricsVClass {
+.lyricsVClass,
+.lyricsAClass
+ {
   background-color: #f5f2e9;
 }
 
@@ -140,6 +143,8 @@ iframe {
 .lyricsCClass,
 .lyricsVClass,
 .lyricsBrClass,
+.lyricsAClass,
+.lyricsBClass,
 .lyricsPCClass,
 .lyricsIClass,
 .lyricsOClass,

@@ -79,6 +79,10 @@ public interface AppResources extends ClientBundle {
     String entryLine();
 
     String smallIntEntry();
+
+    String lyricsAClass();
+
+    String lyricsBClass();
   }
 
   @Source("css/bsteeleMusicApp.gss")
