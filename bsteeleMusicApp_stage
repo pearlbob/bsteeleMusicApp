@@ -78,6 +78,7 @@ jar -xf $finalWar
 cd $cwd
 
 #	deploy on tomcat
+rm /opt/tomcat/webapps/$finalWar:t	#	avoid permission issues on the war file
 cp $finalWar /opt/tomcat/webapps
 
 #	deploy on web

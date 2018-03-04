@@ -17,6 +17,16 @@ h1,
     color: -webkit-link;
     cursor: pointer;
     text-decoration: underline;
+    border-bottom: 1px solid black;
+}
+.songListItem:hover {
+    background-color: #f5f2e9;
+}
+.songListItemData {
+    border-bottom: 1px solid black;
+}
+.songListItemData:hover {
+    background-color: #f5f2e9;
 }
 
 .sendButton {
@@ -153,7 +163,6 @@ table {
 }
 
 th, td {
-    border-bottom: 1px solid black;
     padding: 4px;
 }
 
@@ -162,17 +171,38 @@ th, td {
     font-weight: bold;
 }
 
-.chordTable table,
-.chordTable th, 
-.chordTable td {
-    border-bottom: 0px solid black;
+table.songList  {
+    border-bottom: 1px solid black;
+}
+
+table.chordTable  {
+    border-spacing: 10px;
+}
+table th.chordTable, 
+table td.chordTable {
     border-right: 1.5px solid black;
     border-collapse: separate;
-    border-spacing: 40px;
+    border-spacing: 4px;
     padding: 12px;
+    font-size: 44px;
 }
 .sectionLabel
 {
-    border-bottom: 0px solid black;
-    border-right: 1px solid black;
+    border-right: 1.5px solid black;
+    font-size: 32px;
 }
+.chords { 
+}
+/*  chords  */
+[id^="C."]{
+    border-right: 1.5px solid black;
+    border-collapse: separate;
+    
+    padding: 12px;
+}
+/*  lyrics  */
+[id^="L."]{
+    border-bottom: 1px solid black;
+}
+.entryLine { width: 60em; font-size: 24px; }
+.smallIntEntry { width: 4em; font-size: medium; }

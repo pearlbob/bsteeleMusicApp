@@ -4,13 +4,6 @@
     xmlns:g="urn:import:com.google.gwt.user.client.ui">
     
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
-    
-    <ui:style>
-        .currentBpmEntry { width: 4em; }
-        .chords { 
-            font-size: 44px;
-        }
-    </ui:style>
 
     <g:SplitLayoutPanel ui:field="splitLayoutPanel" >
         <g:north size='60' > 
@@ -34,7 +27,7 @@
                     <option value="6">+6 halfsteps</option>
                 </select>
                 BPM:
-                <g:TextBox ui:field="currentBpmEntry" styleName="{style.currentBpmEntry}" />
+                <g:TextBox ui:field="currentBpmEntry" styleName="{resources.style.smallIntEntry}" />
                 <select ui:field="bpmSelect" title="Select the beats per minute to be used in playing">
                     <option value="  " selected="true">chose</option>
                     <!--    content should always be a number   -->
@@ -78,7 +71,7 @@
             </g:HTMLPanel>
         </g:north>
         <g:west size='500' > 
-            <g:HTMLPanel ui:field="chords" styleName="{style.chords}"/>
+            <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
         </g:west>
         <g:center>
             <g:ScrollPanel>

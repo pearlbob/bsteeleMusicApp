@@ -20,7 +20,9 @@
                     On a Mac, substitute Command for Control.</span>
             </span>
             <br/>
-            <g:Grid ui:field="songGrid"/>
+            <div class="{resources.style.songList}" >
+                <g:Grid ui:field="songGrid" />
+            </div>
         </div>
     </g:HTMLPanel>
 

@@ -407,7 +407,7 @@ public class Song implements Comparable<Song> {
             + "  <col>\n"
             + "</colgroup>\n";
     String rowStart = "<tr><td class='" + style + "sectionLabel' >";
-    String rowEnd = "&nbsp;</td></tr>\n";   //  empty cells fill better with nbsp
+    String rowEnd = "</td></tr>\n";
     String tableEnd = "</table>\n";
 
     String lyrics = ""; //  table formatted
@@ -460,7 +460,8 @@ public class Song implements Comparable<Song> {
                   //  deal with bad formatting
                   lyrics += rowStart
                           + Section.getDefaultVersion().toString() + ":"
-                          + "</td><td class=\"lyrics" + Section.getDefaultVersion().toString() + "Class\">";
+                          + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
+                          + " id=\"L." + sectionIndex + "\">";
                   isSection = true;
                 }
                 lyrics += whiteSpace + c;
@@ -491,7 +492,7 @@ public class Song implements Comparable<Song> {
             + "class=\"" + style + "chordTable\" "
             + ">\n";
     String sectionStart = "<tr><td class=\"" + style + "sectionLabel\" >";
-    String rowStart = "\t<tr><td></td>";
+    String rowStart = "\t<tr><td class=\"" + style + "sectionLabel\" ></td>";
     String rowEnd = "</tr>\n";
     String tableEnd = "</table>\n";
 

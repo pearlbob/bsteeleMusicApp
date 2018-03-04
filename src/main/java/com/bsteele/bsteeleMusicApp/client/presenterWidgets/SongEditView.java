@@ -38,9 +38,6 @@ public class SongEditView
   ButtonElement songEnter;
 
   @UiField
-  ButtonElement songCancel;
-
-  @UiField
   TextBox titleEntry;
 
   @UiField
@@ -73,37 +70,29 @@ public class SongEditView
     Event.sinkEvents(songEnter, Event.ONCLICK);
     Event.setEventListener(songEnter, (Event event) -> {
       if (Event.ONCLICK == event.getTypeInt()) {
-        GWT.log("songEnter()");
         enterSong();
       }
     });
 
-    Event.sinkEvents(songCancel, Event.ONCLICK);
-    Event.setEventListener(songCancel, (Event event) -> {
-      if (Event.ONCLICK == event.getTypeInt()) {
-        GWT.log("songCancel()");
-      }
-    });
-
-    titleEntry.addChangeHandler((event) -> {
-      GWT.log("titleEntry: " + titleEntry.getValue());
-    });
-    artistEntry.addChangeHandler((event) -> {
-      GWT.log("artistEntry: " + artistEntry.getValue());
-    });
-    copyrightEntry.addChangeHandler((event) -> {
-      GWT.log("copyrightEntry: " + copyrightEntry.getValue());
-    });
-    bpmEntry.addChangeHandler((event) -> {
-      GWT.log("bpmEntry: " + bpmEntry.getValue());
-    });
-
-    Event.sinkEvents(timeSignatureEntry, Event.ONCHANGE);
-    Event.setEventListener(timeSignatureEntry, (Event event) -> {
-      if (Event.ONCHANGE == event.getTypeInt()) {
-        GWT.log("timeSignatureEntry(): " + timeSignatureEntry.getValue());
-      }
-    });
+//    titleEntry.addChangeHandler((event) -> {
+//      GWT.log("titleEntry: " + titleEntry.getValue());
+//    });
+//    artistEntry.addChangeHandler((event) -> {
+//      GWT.log("artistEntry: " + artistEntry.getValue());
+//    });
+//    copyrightEntry.addChangeHandler((event) -> {
+//      GWT.log("copyrightEntry: " + copyrightEntry.getValue());
+//    });
+//    bpmEntry.addChangeHandler((event) -> {
+//      GWT.log("bpmEntry: " + bpmEntry.getValue());
+//    });
+//
+//    Event.sinkEvents(timeSignatureEntry, Event.ONCHANGE);
+//    Event.setEventListener(timeSignatureEntry, (Event event) -> {
+//      if (Event.ONCHANGE == event.getTypeInt()) {
+//        GWT.log("timeSignatureEntry(): " + timeSignatureEntry.getValue());
+//      }
+//    });
 
   }
 
@@ -179,17 +168,6 @@ public class SongEditView
     GWT.log(song.toJson());
 
     fireSongSubmission(song);
-
-//    saveSongAs(titleEntry.getText() + ".songlyrics", songHtml);
-//    addSongHtml(song);
-//    songEntryClear();
-//    songEntryElement.hidden = true;
-//    addSongButton.hidden = false;
-//    optionChoicesDiv.hidden = false;
-//    let s = document.getElementById("Song" + (songIdCount - 1) + "Toc");
-//    if (s != null) {
-//      s.scrollIntoView();
-//    }
   }
 
   private void fireSongSubmission(Song song) {

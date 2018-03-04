@@ -2,34 +2,30 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <ui:style>
-        .entryLine { width: 80em; }
-        .intEntry { width: 4em; }
-    </ui:style>
+    <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
     <g:HTMLPanel >
         <div  style="margin: 10px;">
         <p>
             <button type="button" ui:field="songEnter">Enter Song</button>
-            <button type="button" ui:field="songCancel">Cancel</button>
         </p>
 
         <p>
             Title:<br/>
-            <g:TextBox ui:field="titleEntry" styleName="{style.entryLine}" />
+            <g:TextBox ui:field="titleEntry" styleName="{resources.style.entryLine}" />
         </p>
 
         <p>
             Artist:<br/>
-            <g:TextBox ui:field="artistEntry" styleName="{style.entryLine}" />
+            <g:TextBox ui:field="artistEntry" styleName="{resources.style.entryLine}" />
         </p>
         <p>
             Copyright:<br/>
-            <g:TextBox ui:field="copyrightEntry" styleName="{style.entryLine}" />
+            <g:TextBox ui:field="copyrightEntry" styleName="{resources.style.entryLine}" />
         </p>
         <p>
             Beats per minute:<br/>
-            <g:TextBox ui:field="bpmEntry" styleName="{style.intEntry}" />
+            <g:TextBox ui:field="bpmEntry" styleName="{resources.style.smallIntEntry}" />
         </p>
         <p>
             Time Signature: 
@@ -48,7 +44,7 @@
             <tr>
                 <td>
                     Chords:<br/>
-                    <textarea rows="45" cols="30" ui:field="chordsEntry" ></textarea>
+                    <textarea rows="20" cols="30" ui:field="chordsEntry" style="font-size: large;" ></textarea>
                 </td>
                 <td>
                     <table>
@@ -105,9 +101,9 @@
                         <li>(the transcription parser is turned off inside parenthesis but will continue afterwards).
                             For example:  A (pause) E D F</li>
                         <li>Limited set of case sensitive chord modifiers:  # b (m | maj | sus) [0-9]</li>
-                        <li>Vertical bars (|) can be used to separate measures.</li>
+                        <li>Vertical bars (|) can be used to group repeats across multiple lines.</li>
                         <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.</li>
-                        <li>Spaces between chords are not required.</li>
+                        <li>Spaces between chords indicate a new measure.  Chords without spaces are within on measure.</li>
                         <li>Sample chords to use:
                             A B C G
                             A# C# Bb Db
@@ -125,7 +121,7 @@
 
         <p>
             Lyrics:<br/>
-            <textarea rows="60" cols="80" ui:field="lyricsEntry"></textarea>
+            <textarea rows="60" cols="80" ui:field="lyricsEntry" style="font-size: medium;" ></textarea>
         </p>
         </div>
     </g:HTMLPanel>
