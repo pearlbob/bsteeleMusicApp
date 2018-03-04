@@ -12,6 +12,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import jsinterop.annotations.JsType;
@@ -564,23 +565,26 @@ public class Song implements Comparable<Song> {
     for (Section.Version version : tranMap.keySet()) {
       Grid<String> grid = tranMap.get(version);
 
+      TreeSet<String> transChords = new TreeSet<>();
       int rLimit = grid.getRowCount();
       for (int r = 0; r < rLimit; r++) {
         ArrayList<String> row = grid.getRow(r);
         int colLimit = row.size();
         for (int col = 0; col < colLimit; col++) {
-          grid.set(col, r, transposeMeasure(row.get(col), halfSteps));
+          grid.set(col, r, transposeMeasure(transChords, row.get(col), halfSteps));
         }
       }
+      //GWT.log(transChords.toString());
     }
 
     //GWT.log(tranMap.toString());
     return generateHtmlChordTableFromMap(tranMap);
   }
 
-  private String transposeMeasure(String m, int halfSteps) {
+  private String transposeMeasure(TreeSet<String> chords, String m, int halfSteps) {
 
     int chordNumber = 0;
+    String chordLetter;
     String sout = "";
 
     int state = 0;
@@ -592,19 +596,27 @@ public class Song implements Comparable<Song> {
           state = 0;
           if (c == 'b' || c == js_flat) {
             chordNumber -= 1;
-            sout += chordNumberToLetter(chordNumber + halfSteps);
+            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+            sout += chordLetter;
+            chords.add(chordLetter);
             break;
           }
           if (c == '#' || c == js_sharp) {
             chordNumber += 1;
-            sout += chordNumberToLetter(chordNumber + halfSteps);
+            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+            sout += chordLetter;
+            chords.add(chordLetter);
             break;
           }
           if (c == js_natural) {
-            sout += chordNumberToLetter(chordNumber + halfSteps);
+            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+            sout += chordLetter;
+            chords.add(chordLetter);
             break;
           }
-          sout += chordNumberToLetter(chordNumber + halfSteps);
+          chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+          sout += chordLetter;
+          chords.add(chordLetter);
         //	fall through
         default:
         case 0:
@@ -663,7 +675,9 @@ public class Song implements Comparable<Song> {
     }
     //  do the last chord
     if (state == 1) {
-      sout += chordNumberToLetter(chordNumber + halfSteps);
+      chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+      sout += chordLetter;
+      chords.add(chordLetter);
     }
     //sout += '\n';
 
@@ -689,16 +703,14 @@ public class Song implements Comparable<Song> {
   }
   private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
 
-  private static String chordNumberToLetter(int n) {
+  private static String chordNumberToLetter(int n, int halfSteps) {
 
-    n = n % 12;
+    n = (n + halfSteps) % 12;
     if (n < 0) {
       n += 12;
     }
-    //                            a     a#    b    c    c#    d    d#    e    f    f#    g    g#
-    //                            0     1     2    3    4     5    6     7    8    9     10   11
 
-    return chordNumberToLetter[n];
+    return (halfSteps >= 0 ? chordNumberToLetterSharps[n] : chordNumberToLetterFlats[n]);
   }
 
   private void setTitle(String title) {
@@ -864,6 +876,14 @@ public class Song implements Comparable<Song> {
     return false;
   }
 
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 79 * hash + Objects.hashCode(this.title);
+    hash = 79 * hash + Objects.hashCode(this.artist);
+    return hash;
+  }
+
   private String title = "Unknown";
   private String songId = "Unknown";
   private String artist = "Unknown";
@@ -878,7 +898,10 @@ public class Song implements Comparable<Song> {
   private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();
   private final HashMap<Section.Version, Section.Version> displaySectionMap = new HashMap<>();
   private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
-  private static final String chordNumberToLetter[] = new String[]{"A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
+  private static final char b = (char) 9837;
+  private static final char s = (char) 9839;
+  private static final String chordNumberToLetterSharps[] = new String[]{"A", "A"+s, "B", "C", "C"+s, "D", "D"+s, "E", "F", "F"+s, "G", "G"+s};
+  private static final String chordNumberToLetterFlats[] = new String[]{"A", "B"+b, "B", "C", "D"+b, "D", "E"+b, "E", "F", "G"+b, "G", "A"+b};
   private static final char js_flat = '\u266D';
   private static final char js_natural = '\u266E';
   private static final char js_sharp = '\u266F';

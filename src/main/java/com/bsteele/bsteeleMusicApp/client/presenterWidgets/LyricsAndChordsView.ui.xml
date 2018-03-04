@@ -70,7 +70,7 @@
                 <span ui:field="title" class="{resources.style.songTitle}" /> by <span ui:field="artist"/>
             </g:HTMLPanel>
         </g:north>
-        <g:west size='500' > 
+        <g:west size='600' > 
             <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
         </g:west>
         <g:center>

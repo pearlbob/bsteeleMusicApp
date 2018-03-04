@@ -30,3 +30,43 @@ public class ApplicationPresenter
     super(eventBus, view, proxy, RevealType.Root);
   }
 }
+
+/*  todo
+____sharps vs flats on transcription
+____force transcription to original on song change
+
+pop the colors on beat transitions
+fix ctl-key on mac
+
+control s to save when editing a song
+
+multiple section id's on a single chord section
+
+scroll to newly edited song
+
+add lastModified to song metadata on file read, add size?
+    file location as well
+
+search for text
+
+select start by sections
+loop by section
+to dynamically change font size for chords to fit
+set an indicator for added songs, font color change? 
+
+improve leadin count down
+
+comments in chords?
+
+fix: optionChoicesDiv with a css class
+
+
+accelerated sub-beat indicator
+hash by song name not list index
+
+
+
+section alterations imply: ch1 ch2 etc
+Beat vs measure resolution on a section basis 
+
+*/

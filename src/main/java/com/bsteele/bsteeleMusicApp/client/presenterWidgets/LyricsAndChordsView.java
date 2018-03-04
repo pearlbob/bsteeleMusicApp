@@ -6,6 +6,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.shared.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -65,10 +67,20 @@ public class LyricsAndChordsView extends ViewImpl
     title.setInnerHTML(song.getTitle());
     artist.setInnerHTML(song.getArtist());
     copyright.setInnerHTML(song.getCopyright());
-    
+
     currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
     transpose(0);
+    
+    { //  set the transposition selection to original key
+      NodeList<OptionElement> options = keySelect.getOptions();
+      for (int i = 0; i < options.getLength(); i++) {
+        OptionElement e = options.getItem(i);
+        if (e.getValue().equals("0")) {
+          keySelect.setSelectedIndex(i);
+        }
+      }
+    }
 
     lyrics.clear();
     lyrics.add(new HTML(song.generateHtmlLyricsTable()));
@@ -128,7 +140,7 @@ public class LyricsAndChordsView extends ViewImpl
   private void transpose(int tran) {
     chords.clear();
     chords.add(new HTML(song.transpose(tran)));
-  GWT.log("  chords.getStyleName(): "+chords.getStyleName());
+    //GWT.log("  chords.getStyleName(): " + chords.getStyleName());
   }
 
   private Song song;
