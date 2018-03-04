@@ -45,6 +45,7 @@ $git/bsteeleMusicApp_lyrics_update
 set cwd=`pwd`
 cd $git
 
+bsteeleMusicApp_buildId
 mvn \
 	-DgenerateJsInteropExports=false \
 	-Dgwt.logLevel=ERROR \

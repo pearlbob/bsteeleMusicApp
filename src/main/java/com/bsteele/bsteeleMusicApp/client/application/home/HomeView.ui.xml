@@ -60,6 +60,8 @@
                                         <iron-icon icon="help" item-icon=""/>
                                         <div>About</div>
                                     </paper-icon-item>
+                                    <br/>
+                                    buildId: <g:Label ui:field="buildId"/>
                                 </g:HTMLPanel>
                             </g:FlowPanel>
                         </g:tab>

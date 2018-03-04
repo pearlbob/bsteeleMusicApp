@@ -1,0 +1,8 @@
+#!/bin/tcsh
+#set echo; set verbose
+
+set dst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt
+
+date -Iseconds > $dst
+hostname >> $dst
+git show --name-status | head -1 >> $dst

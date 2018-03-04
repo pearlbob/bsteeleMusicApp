@@ -93,6 +93,9 @@ public interface AppResources extends ClientBundle {
 
   @Source("legacySongs.songlyrics")
   TextResource legacySongsAsJsonString();
+  
+  @Source("buildId.txt")
+  TextResource buildId();
 
   //  @Source("config.xml")
   //  public TextResource initialConfiguration();

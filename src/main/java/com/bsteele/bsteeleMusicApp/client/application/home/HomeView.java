@@ -1,7 +1,9 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
+import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -25,6 +27,9 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 
   @UiField
   SimplePanel songEdit;
+  
+  @UiField
+  Label buildId;
 
   @Inject
   HomeView(Binder uiBinder) {
@@ -33,6 +38,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
     bindSlot(HomePresenter.SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChords);
     bindSlot(HomePresenter.SLOT_SONGEDIT_CONTENT, songEdit);
+    
+    buildId.setText( AppResources.INSTANCE.buildId().getText());
   }
 
   @Override
