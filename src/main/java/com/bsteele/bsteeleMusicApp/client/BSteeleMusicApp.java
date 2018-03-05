@@ -116,7 +116,7 @@ public class BSteeleMusicApp implements EntryPoint {
     public Object call(Object event) {
 
       OnMessageEevent me = (OnMessageEevent) event;
-      GWT.log("message recv: " + me.data);
+      GWT.log("message recv: " + me.getData());
 //      websocketMessagePanel.clear();
 //      websocketMessagePanel.add(new HTMLPanel(me.data));
       return event;
@@ -125,8 +125,10 @@ public class BSteeleMusicApp implements EntryPoint {
 
   @JsType(isNative = true, name = "Object", namespace = GLOBAL)
   static class OnMessageEevent {
-
-    public String data;
+    
+    public native final String getData(); 
+	
+	public native final String getOrigin();
   }
 
   public static boolean sendMessage(String message) {

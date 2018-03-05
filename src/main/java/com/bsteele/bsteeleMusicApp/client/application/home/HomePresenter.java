@@ -35,9 +35,9 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     void selectTab(String tabName);
   }
 
-  public static final SingleSlot SLOT_SONGLIST_CONTENT = new SingleSlot();
-  public static final SingleSlot SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot();
-  public static final SingleSlot SLOT_SONGEDIT_CONTENT = new SingleSlot();
+  public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
+  public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot<>();
+  public static final SingleSlot<SongEditPresenterWidget> SLOT_SONGEDIT_CONTENT = new SingleSlot<>();
 
   private final SongListPresenterWidget songListPresenterWidget;
   private final LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget;

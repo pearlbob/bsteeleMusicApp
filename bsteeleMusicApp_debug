@@ -9,6 +9,6 @@ mvn \
 	-DgenerateJsInteropExports=true \
 	-Dgwt.logLevel=INFO \
 	-Dgwt.style=DETAILED  \
-	gwt:devmode
+	clean gwt:devmode
 
 exit $status;
