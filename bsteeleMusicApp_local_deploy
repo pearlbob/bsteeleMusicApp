@@ -3,8 +3,10 @@
 
 bsteeleMusicApp_buildId
 
-mvn \
+mvn -e \
 	-DgenerateJsInteropExports=true \
 	-Dgwt.logLevel=INFO \
 	-Dgwt.style=DETAILED  \
+	-Dgwt.compiler.compileReport=false \
+	-Ddeploy=true \
 	clean tomcat7:redeploy		#	assumes it's already there, otherwise: deploy

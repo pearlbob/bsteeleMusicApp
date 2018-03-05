@@ -59,12 +59,12 @@ mvn \
 set tmp=`mktemp -d /tmp/bsteeleMusicApp_tmp.XXXXXXXXXX`
 cd $tmp
 jar -xf $finalWar
-if ( 0 ) then 
-	#	obfuscate the java classes
-	java -jar /home/bob/my/installs/proguard/proguard/lib/proguard.jar @$git/bsteeleMusicApp_proguard \
-		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
-	if ( $status != 0 ) exit -1;
-endif
+#if ( 0 ) then 
+#	#	obfuscate the java classes
+#	java -jar /home/bob/my/installs/proguard/proguard/lib/proguard.jar @$git/bsteeleMusicApp_proguard \
+#		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
+#	if ( $status != 0 ) exit -1;
+#endif
 rm -rf WEB-INF/classes
 jar -cfm $finalWar META-INF/MANIFEST.MF *
 cd $cwd

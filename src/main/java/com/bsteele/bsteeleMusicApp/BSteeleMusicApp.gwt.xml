@@ -44,7 +44,7 @@
         <when-property-is name="jre.debugMode" value="ENABLED"/>
     </set-property>
        
-    <inherits name="com.vaadin.polymer.Elements"/>
+    <!--<inherits name="com.vaadin.polymer.Elements"/>-->
 
     <!-- enable source maps -->
     <set-property name="compiler.useSourceMaps" value="true" />

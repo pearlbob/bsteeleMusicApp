@@ -108,7 +108,7 @@ public class LyricsAndChordsView extends ViewImpl
     Event.sinkEvents(playButton, Event.ONCLICK);
     Event.setEventListener(playButton, (Event event) -> {
       if (Event.ONCLICK == event.getTypeInt()) {
-        //Window.log("play()");
+        GWT.log("play()");
         BSteeleMusicApp.sendMessage("hello bob");
       }
     });

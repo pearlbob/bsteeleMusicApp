@@ -1,6 +1,5 @@
 package com.bsteele.bsteeleMusicApp.server;
 
-import com.google.gwt.core.client.GWT;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,7 +28,7 @@ public class BSteeleMusicAppServer
  public BSteeleMusicAppServer(){
     logger.log(Level.INFO, "BSteeleMusicAppServer()");
     System.out.println("BSteeleMusicAppServer()");
-    GWT.log( "GWT.log(BSteeleMusicAppServer())");
+    //GWT.log( "GWT.log(BSteeleMusicAppServer())");
   }
  
   @OnOpen

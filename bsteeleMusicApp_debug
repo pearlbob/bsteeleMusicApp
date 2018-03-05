@@ -1,11 +1,15 @@
 #!/bin/tcsh
 #set echo; set verbose
 
+mvn clean package gwt:devmode
+
+exit 0
+
 bsteeleMusicApp_local_deploy
 
 if ( $status != 0 ) exit $status;
 
-mvn \
+mvn -X \
 	-DgenerateJsInteropExports=true \
 	-Dgwt.logLevel=INFO \
 	-Dgwt.style=DETAILED  \

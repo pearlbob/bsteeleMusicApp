@@ -69,12 +69,12 @@
             <version>9.0.5</version>
         </dependency>
 
-        <dependency>
+        <!--        <dependency>
             <groupId>com.vaadin.polymer</groupId>
             <artifactId>vaadin-gwt-polymer-elements</artifactId>
             <version>1.9.3.1</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
         
         <!-- GWTP -->
         <!-- https://mvnrepository.com/artifact/com.gwtplatform/gwtp-mvp-client -->
@@ -85,7 +85,7 @@
             <scope>provided</scope>
         </dependency>
         
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>com.github.gwtmaterialdesign</groupId>
             <artifactId>gwt-material</artifactId>
             <version>2.0.1</version>
@@ -157,11 +157,11 @@
                     <sourceLevel>1.8</sourceLevel>
                     <jsInteropMode>JS</jsInteropMode>
                     <!-- Compiler configuration -->
-                    <compilerArgs>
-                        <!-- Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) -->
+                    <!--                    <compilerArgs>
+                         Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) 
                         <arg>-compileReport</arg>
                         <arg>-XcompilerMetrics</arg>
-                    </compilerArgs>
+                    </compilerArgs>-->
                     <!-- DevMode configuration -->
                     <warDir>${project.build.directory}/${project.build.finalName}</warDir>
                     <classpathScope>compile+runtime</classpathScope>
@@ -201,7 +201,7 @@
                     <password>adminadmin</password>
                 </configuration>
             </plugin>
-                
+            
         </plugins>
     </build>
 </project>
