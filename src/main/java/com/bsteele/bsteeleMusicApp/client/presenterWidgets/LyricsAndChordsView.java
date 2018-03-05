@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.BSteeleMusicApp;
 import com.bsteele.bsteeleMusicApp.shared.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
@@ -62,21 +63,32 @@ public class LyricsAndChordsView extends ViewImpl
 
   @Override
   public void setSong(Song song) {
+    boolean keepKey = (this.song != null
+            && this.song.equals(song));  //  identiry only
+
     this.song = song;
 
+    //  load new data even if the identity has not changed
     title.setInnerHTML(song.getTitle());
     artist.setInnerHTML(song.getArtist());
     copyright.setInnerHTML(song.getCopyright());
 
     currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
-    transpose(0);
-    
+    String keyAsString = "0";
+    int keyAsInt = 0;
+    if ( keepKey )
+    {
+      keyAsString = keySelect.getValue();
+      keyAsInt = Integer.parseInt(keyAsString);
+    }
+    transpose(keyAsInt);
+
     { //  set the transposition selection to original key
       NodeList<OptionElement> options = keySelect.getOptions();
       for (int i = 0; i < options.getLength(); i++) {
         OptionElement e = options.getItem(i);
-        if (e.getValue().equals("0")) {
+        if (e.getValue().equals(keyAsString)) {
           keySelect.setSelectedIndex(i);
         }
       }
@@ -96,7 +108,8 @@ public class LyricsAndChordsView extends ViewImpl
     Event.sinkEvents(playButton, Event.ONCLICK);
     Event.setEventListener(playButton, (Event event) -> {
       if (Event.ONCLICK == event.getTypeInt()) {
-        GWT.log("play()");
+        //Window.log("play()");
+        BSteeleMusicApp.sendMessage("hello bob");
       }
     });
 

@@ -32,22 +32,28 @@ public class ApplicationPresenter
 }
 
 /*  todo
-____sharps vs flats on transcription
-____force transcription to original on song change
+activate websockets
+
+event plot
+audio call out of chord changes
+audio call out of section changes
+audio count in, missing last beat or two
+mp3 recording and playback (including start offsets, non-integer bpm)
+align tabs to enum
+tooltips, many tooltips
+metronome clicks
 
 pop the colors on beat transitions
 fix ctl-key on mac
 
 control s to save when editing a song
 
-multiple section id's on a single chord section
-
-scroll to newly edited song
+fix multiple section id's on a single chord section with vertical span
 
 add lastModified to song metadata on file read, add size?
     file location as well
-
-search for text
+markup language aids (buttons)
+search for text in song
 
 select start by sections
 loop by section

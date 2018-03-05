@@ -710,7 +710,7 @@ public class Song implements Comparable<Song> {
       n += 12;
     }
 
-    return (halfSteps >= 0 ? chordNumberToLetterSharps[n] : chordNumberToLetterFlats[n]);
+    return (halfSteps < 0 ? chordNumberToLetterSharps[n] : chordNumberToLetterFlats[n]);
   }
 
   private void setTitle(String title) {

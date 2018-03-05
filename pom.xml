@@ -55,18 +55,18 @@
             <scope>provided</scope>
         </dependency>
         
-        <dependency>
+<!--        <dependency>
             <groupId>org.realityforge.gwt.websockets</groupId>
             <artifactId>gwt-websockets</artifactId>
             <version>1.2</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
        
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-websocket-api -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-websocket-api</artifactId>
-            <version>9.0.4</version>
+            <version>9.0.5</version>
         </dependency>
 
         <dependency>
