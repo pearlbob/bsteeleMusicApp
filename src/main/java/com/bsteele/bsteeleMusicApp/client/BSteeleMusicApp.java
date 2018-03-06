@@ -21,6 +21,7 @@ public class BSteeleMusicApp implements EntryPoint {
     AppResources.INSTANCE.style().ensureInjected();
 
     String url = getWebSocketURL();
+    GWT.log("url: "+url);
     socket = new WebSocket(url);
     socket.onmessage = new SocketReceiveFunction();
 
@@ -28,7 +29,8 @@ public class BSteeleMusicApp implements EntryPoint {
 
   private String getWebSocketURL() {
     String url = GWT.getHostPageBaseURL();
-    url = url.replaceFirst("^http\\:", "ws:") + "bsteeleMusic";
+    url = url.replaceFirst("bsteeleMusicApp", "");  //  due to jetty startup
+    url = url.replaceFirst("^http\\:", "ws:") + "bsteeleMusicApp/bsteeleMusic";
     url = url.replaceFirst("8888", "8082");//  fixme
     return url;
 

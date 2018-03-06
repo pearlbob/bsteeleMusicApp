@@ -40,7 +40,7 @@ public class BSteeleMusicAppServer
 
   @OnMessage
   public void onMessage(final String message, final Session session) {
-    logger.log(Level.INFO, "onMessage({0},{1})", new Object[]{message, session.getId()});
+    logger.log(Level.INFO, "onMessage({0},{1}, {2})", new Object[]{message, session.getId(), session.getRequestURI()});
     final String id = session.getId();
     for (final Session peer : peers) {
       if (peer.getId().equals(session.getId())) {
