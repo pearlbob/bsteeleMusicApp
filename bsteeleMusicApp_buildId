@@ -1,8 +1,31 @@
 #!/bin/tcsh
 #set echo; set verbose
 
+set doGit=1
+
+while ( $#argv > 0 )
+	switch ( $1 )
+	case '-d':		#	debug
+	case '-debug':
+	case '-l':
+	case '-local':
+		set doGit=0
+		shift
+		continue;
+	default:
+		echo unknown argument: $1
+		exit -1;
+		breaksw;
+	endsw
+end
+
 set dst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt
 
-date -Iseconds > $dst
+set date=`date -Iseconds`
+echo $date > $dst
 hostname >> $dst
-git show --name-status | head -1 >> $dst
+if ( $doGit > 0 ) then
+	git commit -a -m "commit for deplay at $date"
+	git push
+	git show --name-status | head -1 >> $dst
+endif
