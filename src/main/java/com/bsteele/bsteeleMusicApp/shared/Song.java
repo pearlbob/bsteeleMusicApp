@@ -900,8 +900,8 @@ public class Song implements Comparable<Song> {
   private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
   private static final char b = (char) 9837;
   private static final char s = (char) 9839;
-  private static final String chordNumberToLetterSharps[] = new String[]{"A", "A"+s, "B", "C", "C"+s, "D", "D"+s, "E", "F", "F"+s, "G", "G"+s};
-  private static final String chordNumberToLetterFlats[] = new String[]{"A", "B"+b, "B", "C", "D"+b, "D", "E"+b, "E", "F", "G"+b, "G", "A"+b};
+  private static final String chordNumberToLetterSharps[] = new String[]{"A", "A" + s, "B", "C", "C" + s, "D", "D" + s, "E", "F", "F" + s, "G", "G" + s};
+  private static final String chordNumberToLetterFlats[] = new String[]{"A", "B" + b, "B", "C", "D" + b, "D", "E" + b, "E", "F", "G" + b, "G", "A" + b};
   private static final char js_flat = '\u266D';
   private static final char js_natural = '\u266E';
   private static final char js_sharp = '\u266F';
