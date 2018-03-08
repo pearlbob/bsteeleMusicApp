@@ -46,7 +46,7 @@ public class Song implements Comparable<Song> {
     return song;
   }
 
-  public static final Song songFromJson(String jsonString) {
+  public static final Song fromJson(String jsonString) {
     if (jsonString == null || jsonString.length() <= 0) {
       return null;
     }
@@ -58,10 +58,10 @@ public class Song implements Comparable<Song> {
       }
       jo = jv.isObject();
     }
-    return songFromJsonObject(jo);
+    return fromJsonObject(jo);
   }
 
-  public static final Song songFromJsonObject(JSONObject jo) {
+  public static final Song fromJsonObject(JSONObject jo) {
     if (jo == null) {
       return null;
     }
@@ -151,13 +151,13 @@ public class Song implements Comparable<Song> {
     StringBuilder sb = new StringBuilder();
     sb.append("{\n")
             .append("\"title\": \"")
-            .append(getTitle())
+            .append(JsonUtil.encode(getTitle()))
             .append("\",\n")
             .append("\"artist\": \"")
-            .append(getArtist())
+            .append(JsonUtil.encode(getArtist()))
             .append("\",\n")
             .append("\"copyright\": \"")
-            .append(getCopyright())
+            .append(JsonUtil.encode(getCopyright()))
             .append("\",\n")
             .append("\"bpm\": ")
             .append(getBpm())
@@ -169,6 +169,7 @@ public class Song implements Comparable<Song> {
             .append("\",\n")
             .append("\"chords\": \n")
             .append("    [\n");
+
     //  chord content
     boolean first = true;
     for (String s : getChords().split("\n")) {
@@ -178,7 +179,7 @@ public class Song implements Comparable<Song> {
         sb.append(",\n");
       }
       sb.append("\t\"");
-      sb.append(jsonEncode(s));
+      sb.append(JsonUtil.encode(s));
       sb.append("\"");
     }
     sb.append("\n    ],\n")
@@ -193,20 +194,13 @@ public class Song implements Comparable<Song> {
         sb.append(",\n");
       }
       sb.append("\t\"");
-      sb.append(jsonEncode(s));
+      sb.append(JsonUtil.encode(s));
       sb.append("\"");
     }
     sb.append("\n    ]\n")
             .append("}\n");
 
     return sb.toString();
-  }
-
-  private String jsonEncode(String s) {
-    return s.replaceAll("\\\\", "\\\\\\\\")
-            .replaceAll("\\\r", "")
-            .replaceAll("\\\t", "\\\\t")
-            .replaceAll("\\\"", "\\\\\"");
   }
 
   private void parseLyricsToSectionSequence(String rawLyrics) {
@@ -898,10 +892,12 @@ public class Song implements Comparable<Song> {
   private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();
   private final HashMap<Section.Version, Section.Version> displaySectionMap = new HashMap<>();
   private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
-  private static final char b = (char) 9837;
-  private static final char s = (char) 9839;
-  private static final String chordNumberToLetterSharps[] = new String[]{"A", "A" + s, "B", "C", "C" + s, "D", "D" + s, "E", "F", "F" + s, "G", "G" + s};
-  private static final String chordNumberToLetterFlats[] = new String[]{"A", "B" + b, "B", "C", "D" + b, "D", "E" + b, "E", "F", "G" + b, "G", "A" + b};
+  private static final char flat = (char) 9837;
+  private static final char sharp = (char) 9839;
+  private static final String chordNumberToLetterSharps[] = new String[]{
+    "A", "A" + sharp, "B", "C", "C" + sharp, "D", "D" + sharp, "E", "F", "F" + sharp, "G", "G" + sharp};
+  private static final String chordNumberToLetterFlats[] = new String[]{
+    "A", "B" + flat, "B", "C", "D" + flat, "D", "E" + flat, "E", "F", "G" + flat, "G", "A" + flat};
   private static final char js_flat = '\u266D';
   private static final char js_natural = '\u266E';
   private static final char js_sharp = '\u266F';

@@ -3,6 +3,10 @@
  */
 package com.bsteele.bsteeleMusicApp.shared;
 
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
+import java.util.Objects;
 import jsinterop.annotations.JsType;
 
 /**
@@ -207,6 +211,183 @@ public class SongUpdate {
    */
   void setBeatsPerMinute(int beatsPerMinute) {
     this.beatsPerMinute = beatsPerMinute;
+  }
+
+  public static final SongUpdate fromJson(String jsonString) {
+    if (jsonString == null || jsonString.length() <= 0) {
+      return null;
+    }
+    JSONObject jo;
+    {
+      JSONValue jv = JSONParser.parseStrict(jsonString);
+      if (jv == null) {
+        return null;
+      }
+      jo = jv.isObject();
+    }
+    return fromJsonObject(jo);
+  }
+
+  public static final SongUpdate fromJsonObject(JSONObject jo) {
+    if (jo == null) {
+      return null;
+    }
+    SongUpdate songUpdate = new SongUpdate();
+    for (String name : jo.keySet()) {
+      JSONValue jv = jo.get(name);
+      switch (name) {
+        case "eventTime":
+          songUpdate.setEventTime(JsonUtil.toDouble(jv));
+          break;
+        case "title":
+          songUpdate.setTitle(jv.isString().stringValue());
+          break;
+        case "sectionCount":
+          songUpdate.sectionCount = JsonUtil.toInt(jv);
+          break;
+        case "section":
+          songUpdate.section = jv.isString().stringValue();
+          break;
+        case "sectionVersion":
+          songUpdate.sectionVersion = JsonUtil.toInt(jv);
+          break;
+        case "chordSectionRow":
+          songUpdate.chordSectionRow = JsonUtil.toInt(jv);
+          break;
+        case "chordSectionCurrentRepeat":
+          songUpdate.chordSectionCurrentRepeat = JsonUtil.toInt(jv);
+          break;
+        case "chordSectionRepeat":
+          songUpdate.chordSectionRepeat = JsonUtil.toInt(jv);
+          break;
+        case "measure":
+          songUpdate.measure = JsonUtil.toInt(jv);
+          break;
+        case "beat":
+          songUpdate.beat = JsonUtil.toInt(jv);
+          break;
+        case "beatsPerMeasure":
+          songUpdate.beatsPerMeasure = JsonUtil.toInt(jv);
+          break;
+        case "beatsPerMinute":
+          songUpdate.beatsPerMinute = JsonUtil.toInt(jv);
+          break;
+      }
+
+    }
+    return songUpdate;
+  }
+
+  public String toJson() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("{\n")
+            .append("\"eventTime\": \"")
+            .append(getEventTime())
+            .append("\",\n")
+            .append("\"title\": \"")
+            .append(JsonUtil.encode(getTitle()))
+            .append("\",\n")
+            .append("\"sectionCount\": \"")
+            .append(getSectionCount())
+            .append("\",\n")
+            .append("\"section\": ")
+            .append(JsonUtil.encode(getSection()))
+            .append(",\n")
+            .append("\"sectionVersion\": \"")
+            .append(getSectionVersion())
+            .append(",\n")
+            .append("\"chordSectionRow\": \"")
+            .append(getChordSectionRow())
+            .append(",\n")
+            .append("\"chordSectionCurrentRepeat\": \"")
+            .append(getChordSectionCurrentRepeat())
+            .append(",\n")
+            .append("\"chordSectionRepeat\": \"")
+            .append(getChordSectionRepeat())
+            .append(",\n")
+            .append("\"measure\": \"")
+            .append(getMeasure())
+            .append(",\n")
+            .append("\"beat\": \"")
+            .append(getBeat())
+            .append(",\n")
+            .append("\"beatsPerMeasure\": \"")
+            .append(getBeatsPerMeasure())
+            .append(",\n")
+            .append("\"beatsPerMinute\": \"")
+            .append(getBeatsPerMinute())
+            .append("\"\n}\n");
+
+    return sb.toString();
+  }
+
+  @Override
+  public int hashCode() {
+    int hash = 5;
+    hash = 83 * hash + (int) (Double.doubleToLongBits(this.eventTime) ^ (Double.doubleToLongBits(this.eventTime) >>> 32));
+    hash = 83 * hash + Objects.hashCode(this.title);
+    hash = 83 * hash + this.sectionCount;
+    hash = 83 * hash + Objects.hashCode(this.section);
+    hash = 83 * hash + this.sectionVersion;
+    hash = 83 * hash + this.chordSectionRow;
+    hash = 83 * hash + this.chordSectionCurrentRepeat;
+    hash = 83 * hash + this.chordSectionRepeat;
+    hash = 83 * hash + this.measure;
+    hash = 83 * hash + this.beat;
+    hash = 83 * hash + this.beatsPerMeasure;
+    hash = 83 * hash + this.beatsPerMinute;
+    return hash;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final SongUpdate other = (SongUpdate) obj;
+    if (Double.doubleToLongBits(this.eventTime) != Double.doubleToLongBits(other.eventTime)) {
+      return false;
+    }
+    if (this.sectionCount != other.sectionCount) {
+      return false;
+    }
+    if (this.sectionVersion != other.sectionVersion) {
+      return false;
+    }
+    if (this.chordSectionRow != other.chordSectionRow) {
+      return false;
+    }
+    if (this.chordSectionCurrentRepeat != other.chordSectionCurrentRepeat) {
+      return false;
+    }
+    if (this.chordSectionRepeat != other.chordSectionRepeat) {
+      return false;
+    }
+    if (this.measure != other.measure) {
+      return false;
+    }
+    if (this.beat != other.beat) {
+      return false;
+    }
+    if (this.beatsPerMeasure != other.beatsPerMeasure) {
+      return false;
+    }
+    if (this.beatsPerMinute != other.beatsPerMinute) {
+      return false;
+    }
+    if (!Objects.equals(this.title, other.title)) {
+      return false;
+    }
+    if (!Objects.equals(this.section, other.section)) {
+      return false;
+    }
+    return true;
   }
 
   private double eventTime;

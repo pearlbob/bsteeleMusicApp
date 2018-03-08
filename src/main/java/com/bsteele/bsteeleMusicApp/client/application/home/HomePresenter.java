@@ -21,6 +21,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 /*  todo
 datagrid for songs
 get focus on songlist search, keep it there
+todo: visual screen-warning that we're about to change sections
 
  */
 /**

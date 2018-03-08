@@ -178,7 +178,7 @@ public class SongListView
 
     FileReader reader = new FileReader();
     reader.addLoadEndHandler((LoadEndEvent event) -> {
-      Song song = Song.songFromJson(reader.getStringResult());
+      Song song = Song.fromJson(reader.getStringResult());
       fireEvent(new SongReadEvent(song));
     });
     reader.readAsText(file);

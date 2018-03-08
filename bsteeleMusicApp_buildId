@@ -25,7 +25,7 @@ set date=`date -Iseconds`
 echo $date > $dst
 hostname >> $dst
 if ( $doGit > 0 ) then
-	git commit -a -m "commit for deplay at $date"
+	git commit -a -m "commit for deploy at $date"
 	#	git push 	# requires a password
 	git show --name-status | head -1 >> $dst
 endif

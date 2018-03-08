@@ -96,7 +96,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         if (ja != null) {
           int jaLimit = ja.size();
           for (int i = 0; i < jaLimit; i++) {
-            addToSonglist(Song.songFromJsonObject(ja.get(i).isObject()));
+            addToSonglist(Song.fromJsonObject(ja.get(i).isObject()));
           }
         }
       }
