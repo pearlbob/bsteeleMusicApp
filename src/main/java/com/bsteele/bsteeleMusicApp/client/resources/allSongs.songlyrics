@@ -620,6 +620,40 @@
 }
 ,
 {
+"title": "All of me",
+"artist": "John Legend",
+"copyright": "Sony/ATV Music Publishing LLC, Round Hill Music Big Loud Songs, Marlong Music Corp.",
+"bpm": 100,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"V:",
+	"C E A7 Dm",
+	"E7 Am D7 G7",
+	"C E A7 Dm",
+	"FFm CA7 Dm7G7 C"
+    ],
+"lyrics": 
+    [
+	"v:",
+	"All of me",
+	"Why not take all of me",
+	"Can't you see",
+	"I'm no good without you",
+	"Take my lips",
+	"I wanna lose them",
+	"Take my arms",
+	"I'll never use them",
+	"Your goodbye left me with eyes that cry",
+	"How can I go on dear without you",
+	"You took the part that once was my heart",
+	"So why not",
+	"Why not take all of me",
+	"Why not take all of me"
+    ]
+}
+,
+{
 "title": "Already Gone",
 "artist": "Eagles",
 "copyright": "Warner/Chappell Music, Inc",
@@ -4508,6 +4542,57 @@
 }
 ,
 {
+"title": "In My Life ",
+"artist": "Beatles, The",
+"copyright": "Sony/ATV Music Publishing",
+"bpm": 104,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"v:",
+	"Bm G",
+	"C D",
+	"Bm E7",
+	"Gm D",
+	"c:",
+	"D Bm",
+	"GGm D x2",
+	"t:",
+	"Gm D"
+    ],
+"lyrics": 
+    [
+	"V:",
+	"There are places I'll remember",
+	"All my life though some have changed",
+	"Some forever not for better",
+	"Some have gone and some remain",
+	"All these places had their moments",
+	"With lovers and friends I still can recall",
+	"Some are dead and some are living",
+	"In my life I've loved them all",
+	"v:",
+	"But of all these friends and lovers",
+	"There is no one compares with you",
+	"And these memories lose their meaning",
+	"When I think of love as something new",
+	"Though I know I'll never lose affection",
+	"For people and things that went before",
+	"I know I'll often stop and think about them",
+	"In my life I love you more",
+	"c:",
+	"(Piano Solo)",
+	"v:",
+	"Though I know I'll never lose affection",
+	"For people and things that went before",
+	"I know I'll often stop and think about them",
+	"In my life I love you more",
+	"t:",
+	"In my life I love you more"
+    ]
+}
+,
+{
 "title": "Jolene",
 "artist": "Dolly Parton",
 "copyright": "Velvet Apple Music",
@@ -6682,6 +6767,70 @@
     "wave",
     "",
     ""
+    ]
+}
+,
+{
+"title": "Weight, The",
+"artist": "Band, The",
+"copyright": "Bob Dylan Music Obo Dwarf Music",
+"bpm": 100,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"I:O:",
+	"A C#m F#m E",
+	"D - - -",
+	"v:",
+	"A C#m D A x4",
+	"c:",
+	"A D A D",
+	"A D D"
+    ],
+"lyrics": 
+    [
+	"i:",
+	"v:",
+	"I pulled into Nazareth, was feeling 'bout half past dead",
+	"I just need some place where I can lay my head",
+	"Hey, mister, can you tell me, where a man might find a bed?",
+	"He just grinned and shook my hand, \"No\" was all he said.",
+	"c:",
+	"Take a load off Fanny, take a load for free",
+	"Take a load off Fanny, and you put the load right on me",
+	"v:",
+	"I picked up my bags, I went looking for a place to hide",
+	"When I saw old Carmen and the Devil, walking side by side",
+	"I said, \"Hey, Carmen, c'mon, let's go downtown\"",
+	"She said, \"I gotta go, but my friend can stick around\"",
+	":c",
+	"Take a load off Fanny, take a load for free",
+	"Take a load off Fanny, and you put the load right on me",
+	"V:",
+	"Go down, Miss Moses, ain't nothin' you can say",
+	"It's just old Luke, and Luke's waiting on the judgment day",
+	"Well, Luke, my friend, what about young Annalee",
+	"He said, \"Do me a favor, son, won't you stay and keep Annalee company\"",
+	"c:",
+	"Take a load off Fanny, take a load for free",
+	"Take a load off Fanny, and you put the load right on me",
+	"v:",
+	"Crazy Chester followed me, and he caught me in the fog",
+	"Said, \"I will fix your rag, if you'll take Jack, my dog\"",
+	"I said, \"Wait a minute Chester, you know, I'm a peaceful man\"",
+	"He said, \"That's okay, boy, won't you feed him when you can\"",
+	"c:",
+	"Take a load off Fanny, take a load for free",
+	"Take a load off Fanny, and you put the load right on me",
+	"v:",
+	"Catch the cannonball, now to take me down the line",
+	"My bag is sinking low, and I do believe it's time",
+	"To get back to Miss Fanny, you know she's the only one",
+	"Who sent me here, with her regards for everyone",
+	"c:",
+	"Take a load off Fanny, take a load for free",
+	"Take a load off Fanny, and you put the load right on me",
+	"o:"
     ]
 }
 ,
