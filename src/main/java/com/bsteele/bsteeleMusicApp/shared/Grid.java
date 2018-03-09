@@ -112,9 +112,7 @@ public class Grid<T> {
   
     @Override
   public int hashCode() {
-    int hash = 3;
-    hash = 79 * hash + Objects.hashCode(this.grid);
-    return hash;
+    return Objects.hashCode(this.grid);
   }
 
   @Override

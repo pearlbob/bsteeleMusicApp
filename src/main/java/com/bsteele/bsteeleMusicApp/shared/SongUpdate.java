@@ -281,42 +281,42 @@ public class SongUpdate {
   public String toJson() {
     StringBuilder sb = new StringBuilder();
     sb.append("{\n")
-            .append("\"eventTime\": \"")
+            .append("\"eventTime\": ")
             .append(getEventTime())
-            .append("\",\n")
+            .append(",\n")
             .append("\"title\": \"")
             .append(JsonUtil.encode(getTitle()))
             .append("\",\n")
-            .append("\"sectionCount\": \"")
+            .append("\"sectionCount\": ")
             .append(getSectionCount())
-            .append("\",\n")
-            .append("\"section\": ")
-            .append(JsonUtil.encode(getSection()))
             .append(",\n")
-            .append("\"sectionVersion\": \"")
+            .append("\"section\": \"")
+            .append(JsonUtil.encode(getSection()))
+            .append("\",\n")
+            .append("\"sectionVersion\": ")
             .append(getSectionVersion())
             .append(",\n")
-            .append("\"chordSectionRow\": \"")
+            .append("\"chordSectionRow\": ")
             .append(getChordSectionRow())
             .append(",\n")
-            .append("\"chordSectionCurrentRepeat\": \"")
+            .append("\"chordSectionCurrentRepeat\": ")
             .append(getChordSectionCurrentRepeat())
             .append(",\n")
-            .append("\"chordSectionRepeat\": \"")
+            .append("\"chordSectionRepeat\": ")
             .append(getChordSectionRepeat())
             .append(",\n")
-            .append("\"measure\": \"")
+            .append("\"measure\": ")
             .append(getMeasure())
             .append(",\n")
-            .append("\"beat\": \"")
+            .append("\"beat\": ")
             .append(getBeat())
             .append(",\n")
-            .append("\"beatsPerMeasure\": \"")
+            .append("\"beatsPerMeasure\": ")
             .append(getBeatsPerMeasure())
             .append(",\n")
-            .append("\"beatsPerMinute\": \"")
+            .append("\"beatsPerMinute\": ")
             .append(getBeatsPerMinute())
-            .append("\"\n}\n");
+            .append("\n}\n");
 
     return sb.toString();
   }
@@ -324,18 +324,18 @@ public class SongUpdate {
   @Override
   public int hashCode() {
     int hash = 5;
-    hash = 83 * hash + (int) (Double.doubleToLongBits(this.eventTime) ^ (Double.doubleToLongBits(this.eventTime) >>> 32));
-    hash = 83 * hash + Objects.hashCode(this.title);
-    hash = 83 * hash + this.sectionCount;
-    hash = 83 * hash + Objects.hashCode(this.section);
-    hash = 83 * hash + this.sectionVersion;
-    hash = 83 * hash + this.chordSectionRow;
-    hash = 83 * hash + this.chordSectionCurrentRepeat;
-    hash = 83 * hash + this.chordSectionRepeat;
-    hash = 83 * hash + this.measure;
-    hash = 83 * hash + this.beat;
-    hash = 83 * hash + this.beatsPerMeasure;
-    hash = 83 * hash + this.beatsPerMinute;
+    hash = (83 * hash + (int) (Double.doubleToLongBits(this.eventTime) ^ (Double.doubleToLongBits(this.eventTime) >>> 32))) % (1 << 31);
+    hash = (83 * hash + Objects.hashCode(this.title)) % (1 << 31);
+    hash = (83 * hash + this.sectionCount) % (1 << 31);
+    hash = (83 * hash + Objects.hashCode(this.section)) % (1 << 31);
+    hash = (83 * hash + this.sectionVersion) % (1 << 31);
+    hash = (83 * hash + this.chordSectionRow) % (1 << 31);
+    hash = (83 * hash + this.chordSectionCurrentRepeat) % (1 << 31);
+    hash = (83 * hash + this.chordSectionRepeat) % (1 << 31);
+    hash = (83 * hash + this.measure) % (1 << 31);
+    hash = (83 * hash + this.beat) % (1 << 31);
+    hash = (83 * hash + this.beatsPerMeasure) % (1 << 31);
+    hash = (83 * hash + this.beatsPerMinute) % (1 << 31);
     return hash;
   }
 

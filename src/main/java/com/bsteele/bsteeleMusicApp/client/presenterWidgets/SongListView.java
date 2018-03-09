@@ -94,15 +94,18 @@ public class SongListView
      */
     readSongFiles.addChangeHandler((event) -> {
       FileList files = new FileList(getFiles(event.getNativeEvent()));
-      {
-        int limit = files.getLength();
-        for (int i = 0; i < limit; i++) {
-          asyncReadSongFile(files.getItem(i));
-        }
+
+      int limit = files.getLength();
+      for (int i = 0; i < limit; i++) {
+        asyncReadSongFile(files.getItem(i));
       }
+      clearFiles(event.getNativeEvent()); //  clear files for a new "change"
     });
 
     songSearch.setFocus(true);
+
+    //  work around GWT to allow multiple files in a selection
+    readSongFiles.getElement().setPropertyString("multiple", "multiple");
   }
 
   @Override
@@ -115,7 +118,7 @@ public class SongListView
           SongSelectionEventHandler handler) {
     return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
   }
-  
+
   @Override
   public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler) {
     return handlerManager.addHandler(SongReadEvent.TYPE, handler);
@@ -153,12 +156,12 @@ public class SongListView
     {
       int r = 0;
       for (Song song : filteredSongs) {
-        songGrid.setHTML(r, 0, 
+        songGrid.setHTML(r, 0,
                 "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItem\">"
                 + song.getTitle() + "</div>");
-        songGrid.setHTML(r, 1, 
+        songGrid.setHTML(r, 1,
                 "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItemData\">"
-                +song.getArtist()+ "</div>");
+                + song.getArtist() + "</div>");
         r++;
       }
     }
@@ -170,6 +173,15 @@ public class SongListView
           return null;
           
     return ret;
+  }-*/;
+  
+  /**
+   * JS hack to allow the same file or files to be reloaded
+   * if selected again.  Otherwise there is no change event.
+   * @param event 
+   */
+  private native void clearFiles(NativeEvent event)/*-{
+    event.srcElement.value = null;
   }-*/;
 
   private void asyncReadSongFile(Object entry) {

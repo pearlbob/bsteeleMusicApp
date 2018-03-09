@@ -1,9 +1,9 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
+import com.bsteele.bsteeleMusicApp.shared.SongPlayMaster;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import static jsinterop.annotations.JsPackage.GLOBAL;
 import jsinterop.annotations.JsType;
 
@@ -21,10 +21,11 @@ public class BSteeleMusicApp implements EntryPoint {
     AppResources.INSTANCE.style().ensureInjected();
 
     String url = getWebSocketURL();
-    GWT.log("url: "+url);
+    //GWT.log("url: " + url);
     socket = new WebSocket(url);
     socket.onmessage = new SocketReceiveFunction();
 
+    songPlayMaster = new SongPlayMaster();
   }
 
   private String getWebSocketURL() {
@@ -33,7 +34,6 @@ public class BSteeleMusicApp implements EntryPoint {
     url = url.replaceFirst("^http\\:", "ws:") + "bsteeleMusicApp/bsteeleMusic";
     url = url.replaceFirst("8888", "8082");//  fixme
     return url;
-
   }
 
   private final class SocketReceiveFunction implements Function {
@@ -43,8 +43,7 @@ public class BSteeleMusicApp implements EntryPoint {
 
       OnMessageEevent me = (OnMessageEevent) event;
       GWT.log("message recv: " + me.data);
-      Window.alert("message recv: " + me.data);
-      System.out.println("sout: message recv: " + me.data);
+      //Window.alert("message recv: " + me.data);
       return event;
     }
   }
@@ -68,5 +67,6 @@ public class BSteeleMusicApp implements EntryPoint {
     return true;
   }
 
+  private SongPlayMaster songPlayMaster;
   private static WebSocket socket;
 }

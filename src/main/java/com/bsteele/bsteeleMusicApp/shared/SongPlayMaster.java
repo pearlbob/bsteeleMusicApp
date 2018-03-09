@@ -75,6 +75,8 @@ public class SongPlayMaster {
         songUpdate.setSection(sectionSequence.get(currentSection).getSection().getAbreviation());
         songUpdate.setSectionVersion(sectionSequence.get(currentSection).getVersion());
         songUpdate.setTitle(song.getSongId());
+        
+        
         break;
     }
 

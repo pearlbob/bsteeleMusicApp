@@ -873,8 +873,8 @@ public class Song implements Comparable<Song> {
   @Override
   public int hashCode() {
     int hash = 7;
-    hash = 79 * hash + Objects.hashCode(this.title);
-    hash = 79 * hash + Objects.hashCode(this.artist);
+    hash = (79 * hash + Objects.hashCode(this.title)) % (1<<31);
+    hash = (79 * hash + Objects.hashCode(this.artist)) % (1<<31);
     return hash;
   }
 
