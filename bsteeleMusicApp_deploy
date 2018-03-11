@@ -1,0 +1,19 @@
+#!/bin/tcsh
+#set echo; set verbose
+
+set www=/var/www/html/public_html
+set app=bsteeleMusicApp
+set beta=beta/$app
+set dst=gs://www.bsteele.com/$app
+
+set localdst=$www/$app
+set localbeta=$www/$beta
+
+rm -rf $localdst
+mkdir $localdst
+cp -r $localbeta/* $localdst
+
+gsutil -m rsync -d -R $localdst/ $dst 	#	source needs the /
+gsutil -m -q acl -r ch -u AllUsers:R $dst
+
+echo try:  http://bsteele.com/$app

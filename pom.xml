@@ -126,16 +126,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <strict>true</strict>
-                    <appEngineHome>/home/bob/my/installs/google/appengine-java-sdk/latest</appEngineHome>
                     <moduleName>com.bsteele.bsteeleMusicApp.BSteeleMusicApp</moduleName>
                     <moduleShortName>bsteeleMusicApp</moduleShortName>
-                    <generateJsInteropExports>true</generateJsInteropExports>
                     <failOnError>true</failOnError>
                     <!-- GWT compiler 2.8 requires 1.8, hence define sourceLevel here if you use
                     a different source language for java compilation -->
                     <sourceLevel>1.8</sourceLevel>
-                    <jsInteropMode>JS</jsInteropMode>
                     <!-- Compiler configuration -->
                     <!--                    <compilerArgs>
                          Ask GWT to create the Story of Your Compile (SOYC) (gwt:compile) 

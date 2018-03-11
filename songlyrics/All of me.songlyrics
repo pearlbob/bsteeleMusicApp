@@ -1,0 +1,33 @@
+{
+"title": "All of me",
+"artist": "John Legend",
+"copyright": "Sony/ATV Music Publishing LLC, Round Hill Music Big Loud Songs, Marlong Music Corp.",
+"bpm": 100,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"V:",
+	"C E A7 Dm",
+	"E7 Am D7 G7",
+	"C E A7 Dm",
+	"FFm CA7 Dm7G7 C"
+    ],
+"lyrics": 
+    [
+	"v:",
+	"All of me",
+	"Why not take all of me",
+	"Can't you see",
+	"I'm no good without you",
+	"Take my lips",
+	"I wanna lose them",
+	"Take my arms",
+	"I'll never use them",
+	"Your goodbye left me with eyes that cry",
+	"How can I go on dear without you",
+	"You took the part that once was my heart",
+	"So why not",
+	"Why not take all of me",
+	"Why not take all of me"
+    ]
+}

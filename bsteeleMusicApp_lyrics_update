@@ -1,19 +1,26 @@
 #!/bin/bash 
 
+#	asure we are in the correct place
 appRoot=~/GitHub/bsteeleMusicApp
 cd $appRoot
+
+echo
+date
+pwd
+
 src=gs://songlyrics.bsteele.com
 dst=songlyrics
 json=$appRoot/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/allSongs.songlyrics
 
-#rm -rf $dst
+#	copy the google store images to local
 mkdir -p $dst
-gsutil -m rsync -d $src/ $dst
+gsutil -m rsync -p -d $src/ $dst
 
 cd $dst
 
 rm -f $json
 firstJson=1
+conversions=0
 
 IFS=$(echo -en "\n\b")
 for f in *.songlyrics
@@ -24,6 +31,7 @@ do
 		#	convert an old style file to new
 		lyricsToJson -i "$f"
 		echo "	conversion"
+		conversions=1
 	fi
 
 	if [ "$firstJson" -eq 1 ]; then
@@ -39,6 +47,10 @@ do
 done
 echo "]" >> $json
 
-#rm -rf $appRoot/$dst
+if [ "$conversions" -eq 1 ]; then
+	#	put any modified files back to source
+	cd $appRoot
+	gsutil -m rsync -p $dst/ $src
+fi
 
-exit 0
+exit $status
