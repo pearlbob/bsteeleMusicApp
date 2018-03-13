@@ -5,10 +5,9 @@
 
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
-    <g:DockLayoutPanel unit="EM">
-        <g:north size='3'>
+    <g:DockLayoutPanel unit="PX">
+        <g:north size='45'>
             <g:HTMLPanel>
-                <p></p>
                 <button type="button" ui:field="playButton">Play</button>
                 <button type="button" ui:field="stopButton">Stop</button>
                 <select ui:field="keySelect">

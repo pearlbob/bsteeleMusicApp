@@ -31,21 +31,23 @@ public class BSteeleMusicAppServer {
 
     @OnOpen
     public void onOpen(final Session session) throws IOException {
-        session.getBasicRemote().sendText("onOpen");
         logger.log(Level.INFO, "onOpen({0})", session.getId());
         peers.add(session);
     }
 
     @OnMessage
     public void onMessage(final String message, final Session session) {
-        final String id = session.getId();
-        long t = System.currentTimeMillis();
+        if ( message == null || message.length() <= 0 )
+            return;
+
+        //     flip any message back to all registered peers
         for (final Session peer : peers)
-            if (peer.getId().equals(session.getId()))
-                peer.getAsyncRemote().sendText("You said " + message + " at " + t);
-            else
-                peer.getAsyncRemote().sendText(id + " says " + message);
-        logger.log(Level.INFO, "onMessage({0},{1}, {2}) at {3}", new Object[]{message, session.getId(), session.getRequestURI(), t});
+            peer.getAsyncRemote().sendText(message);
+
+        logger.log(Level.INFO, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
+                message.substring(0,Math.min(message.length(),30)).replaceAll("\n"," "),
+                peers.size(),
+                System.currentTimeMillis()});
     }
 
     @OnClose
@@ -57,7 +59,7 @@ public class BSteeleMusicAppServer {
     @OnError
     public void onError(final Session session, Throwable t) {
         logger.log(Level.INFO, "onError({0})", session.getId());
-        t.printStackTrace();
+        //t.printStackTrace();
     }
 
     private static final Logger logger = Logger.getLogger(BSteeleMusicAppServer.class.getName());

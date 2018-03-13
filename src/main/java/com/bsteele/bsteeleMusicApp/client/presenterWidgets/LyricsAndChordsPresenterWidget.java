@@ -5,7 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
-import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.bsteele.bsteeleMusicApp.client.Song;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;

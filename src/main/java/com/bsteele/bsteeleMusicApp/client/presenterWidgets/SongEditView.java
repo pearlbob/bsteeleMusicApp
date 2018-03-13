@@ -5,7 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEventHandler;
-import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.bsteele.bsteeleMusicApp.client.Song;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.TextAreaElement;

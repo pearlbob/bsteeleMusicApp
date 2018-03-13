@@ -1,10 +1,8 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
-import com.bsteele.bsteeleMusicApp.shared.SongPlayMaster;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import jsinterop.annotations.JsType;
 
 import java.util.logging.Logger;
@@ -28,8 +26,6 @@ public class BSteeleMusicApp implements EntryPoint {
         //GWT.log("url: " + url);
         socket = new WebSocket(url);
         socket.onmessage = new SocketReceiveFunction();
-
-        songPlayMaster = new SongPlayMaster();
     }
 
     private String getWebSocketURL() {
@@ -47,16 +43,17 @@ public class BSteeleMusicApp implements EntryPoint {
         @Override
         public Object call(Object event) {
 
-            OnMessageEevent me = (OnMessageEevent) event;
+            OnMessageEvent me = (OnMessageEvent) event;
             long t = System.currentTimeMillis(); //  don't wait for string work to mark time
-            GWT.log("message recv: " + me.data + " at my " + t);
+            //GWT.log("message recv: " + me.data + " at my " + t);
             //Window.alert("message recv: " + me.data+ " at my " + t);
+            songPlayMaster.onMessage( me.data );
             return event;
         }
     }
 
     @JsType(isNative = true, name = "Object", namespace = GLOBAL)
-    static class OnMessageEevent {
+    static class OnMessageEvent {
 
         public String data;
 
@@ -64,17 +61,21 @@ public class BSteeleMusicApp implements EntryPoint {
     }
 
     public static boolean sendMessage(String message) {
+        if ( message == null || message.length() <= 0 )
+            return false;
+
         if (socket == null) {
             GWT.log("socket is null");
             return false;
         }
 
-        GWT.log("socket send: " + message + " at my " + System.currentTimeMillis());
+        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
+                + " at my " + System.currentTimeMillis());
         socket.send(message);
         return true;
     }
 
-    private SongPlayMaster songPlayMaster;
+    private SongPlayMaster songPlayMaster = SongPlayMaster.getSongPlayMaster();
     private static WebSocket socket;
     private static final Logger logger = Logger.getLogger(BSteeleMusicApp.class.getName());
 }

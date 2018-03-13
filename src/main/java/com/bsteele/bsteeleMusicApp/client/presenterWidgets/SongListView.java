@@ -7,7 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
-import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.bsteele.bsteeleMusicApp.client.Song;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;

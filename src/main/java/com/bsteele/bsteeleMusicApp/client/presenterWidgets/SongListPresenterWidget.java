@@ -10,7 +10,7 @@ import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHa
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
-import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.bsteele.bsteeleMusicApp.client.Song;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;

@@ -3,7 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.application.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.bsteele.bsteeleMusicApp.client.Song;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**

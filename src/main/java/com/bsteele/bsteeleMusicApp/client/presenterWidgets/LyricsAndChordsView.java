@@ -3,14 +3,10 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.BSteeleMusicApp;
-import com.bsteele.bsteeleMusicApp.shared.Song;
+import com.bsteele.bsteeleMusicApp.client.Song;
+import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.NodeList;
-import com.google.gwt.dom.client.OptionElement;
-import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
@@ -19,142 +15,143 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+
 import javax.inject.Inject;
 
 /**
- *
  * @author bob
  */
 public class LyricsAndChordsView extends ViewImpl
         implements LyricsAndChordsPresenterWidget.MyView {
 
-  @UiField
-  ButtonElement playButton;
+    @UiField
+    ButtonElement playButton;
 
-  @UiField
-  ButtonElement stopButton;
+    @UiField
+    ButtonElement stopButton;
 
-  @UiField
-  SelectElement keySelect;
+    @UiField
+    SelectElement keySelect;
 
-  @UiField
-  TextBox currentBpmEntry;
+    @UiField
+    TextBox currentBpmEntry;
 
-  @UiField
-  SelectElement bpmSelect;
+    @UiField
+    SelectElement bpmSelect;
 
-  @UiField
-  SelectElement currentTimeSignatureSelect;
+    @UiField
+    SelectElement currentTimeSignatureSelect;
 
-  @UiField
-  SpanElement title;
+    @UiField
+    SpanElement title;
 
-  @UiField
-  SpanElement artist;
+    @UiField
+    SpanElement artist;
 
-  @UiField
-  HTMLPanel chords;
+    @UiField
+    HTMLPanel chords;
 
-  @UiField
-  HTMLPanel lyrics;
+    @UiField
+    HTMLPanel lyrics;
 
-  @UiField
-  SpanElement copyright;
+    @UiField
+    SpanElement copyright;
 
-  @Override
-  public void setSong(Song song) {
-    boolean keepKey = (this.song != null
-            && this.song.equals(song));  //  identiry only
+    @Override
+    public void setSong(Song song) {
+        boolean keepKey = (this.song != null
+                && this.song.equals(song));  //  identiry only
 
-    this.song = song;
+        this.song = song;
 
-    //  load new data even if the identity has not changed
-    title.setInnerHTML(song.getTitle());
-    artist.setInnerHTML(song.getArtist());
-    copyright.setInnerHTML(song.getCopyright());
+        //  load new data even if the identity has not changed
+        title.setInnerHTML(song.getTitle());
+        artist.setInnerHTML(song.getArtist());
+        copyright.setInnerHTML(song.getCopyright());
 
-    currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
+        currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
-    String keyAsString = "0";
-    int keyAsInt = 0;
-    if ( keepKey )
-    {
-      keyAsString = keySelect.getValue();
-      keyAsInt = Integer.parseInt(keyAsString);
-    }
-    transpose(keyAsInt);
-
-    { //  set the transposition selection to original key
-      NodeList<OptionElement> options = keySelect.getOptions();
-      for (int i = 0; i < options.getLength(); i++) {
-        OptionElement e = options.getItem(i);
-        if (e.getValue().equals(keyAsString)) {
-          keySelect.setSelectedIndex(i);
+        String keyAsString = "0";
+        int keyAsInt = 0;
+        if (keepKey) {
+            keyAsString = keySelect.getValue();
+            keyAsInt = Integer.parseInt(keyAsString);
         }
-      }
+        transpose(keyAsInt);
+
+        { //  set the transposition selection to original key
+            NodeList<OptionElement> options = keySelect.getOptions();
+            for (int i = 0; i < options.getLength(); i++) {
+                OptionElement e = options.getItem(i);
+                if (e.getValue().equals(keyAsString)) {
+                    keySelect.setSelectedIndex(i);
+                }
+            }
+        }
+
+        lyrics.clear();
+        lyrics.add(new HTML(song.generateHtmlLyricsTable()));
     }
 
-    lyrics.clear();
-    lyrics.add(new HTML(song.generateHtmlLyricsTable()));
-  }
+    interface Binder extends UiBinder<Widget, LyricsAndChordsView> {
+    }
 
-  interface Binder extends UiBinder<Widget, LyricsAndChordsView> {
-  }
+    @Inject
+    LyricsAndChordsView(Binder binder) {
+        initWidget(binder.createAndBindUi(this));
 
-  @Inject
-  LyricsAndChordsView(Binder binder) {
-    initWidget(binder.createAndBindUi(this));
+        Event.sinkEvents(playButton, Event.ONCLICK);
+        Event.setEventListener(playButton, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                GWT.log("play()");
+                if (song != null)
+                    SongPlayMaster.getSongPlayMaster().playSong(song );
+            }
+        });
 
-    Event.sinkEvents(playButton, Event.ONCLICK);
-    Event.setEventListener(playButton, (Event event) -> {
-      if (Event.ONCLICK == event.getTypeInt()) {
-        GWT.log("play()");
-        BSteeleMusicApp.sendMessage("hello bob");
-      }
-    });
+        Event.sinkEvents(stopButton, Event.ONCLICK);
+        Event.setEventListener(stopButton, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                GWT.log("stop()");
+                SongPlayMaster.getSongPlayMaster().stopSong();
+            }
+        });
 
-    Event.sinkEvents(stopButton, Event.ONCLICK);
-    Event.setEventListener(stopButton, (Event event) -> {
-      if (Event.ONCLICK == event.getTypeInt()) {
-        GWT.log("stop()");
-      }
-    });
+        Event.sinkEvents(keySelect, Event.ONCHANGE);
+        Event.setEventListener(keySelect, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                transpose(Integer.parseInt(keySelect.getValue()));
+            }
+        });
 
-    Event.sinkEvents(keySelect, Event.ONCHANGE);
-    Event.setEventListener(keySelect, (Event event) -> {
-      if (Event.ONCHANGE == event.getTypeInt()) {
-        transpose(Integer.parseInt(keySelect.getValue()));
-      }
-    });
+        currentBpmEntry.addChangeHandler((event) -> {
+            GWT.log("currentBpmEntry change: "
+                    + currentBpmEntry.getText()
+            );
+        });
 
-    currentBpmEntry.addChangeHandler((event) -> {
-      GWT.log("currentBpmEntry change: "
-              + currentBpmEntry.getText()
-      );
-    });
+        Event.sinkEvents(bpmSelect, Event.ONCHANGE);
+        Event.setEventListener(bpmSelect, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                int bpm = Integer.parseInt(bpmSelect.getValue());
+                currentBpmEntry.setValue(Integer.toString(bpm));
+                GWT.log("bpm select: " + bpm);
+            }
+        });
 
-    Event.sinkEvents(bpmSelect, Event.ONCHANGE);
-    Event.setEventListener(bpmSelect, (Event event) -> {
-      if (Event.ONCHANGE == event.getTypeInt()) {
-        int bpm = Integer.parseInt(bpmSelect.getValue());
-        currentBpmEntry.setValue(Integer.toString(bpm));
-        GWT.log("bpm select: " + bpm);
-      }
-    });
+        Event.sinkEvents(currentTimeSignatureSelect, Event.ONCHANGE);
+        Event.setEventListener(currentTimeSignatureSelect, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                GWT.log("current bpm select: " + currentTimeSignatureSelect.getValue());
+            }
+        });
+    }
 
-    Event.sinkEvents(currentTimeSignatureSelect, Event.ONCHANGE);
-    Event.setEventListener(currentTimeSignatureSelect, (Event event) -> {
-      if (Event.ONCHANGE == event.getTypeInt()) {
-        GWT.log("current bpm select: " + currentTimeSignatureSelect.getValue());
-      }
-    });
-  }
+    private void transpose(int tran) {
+        chords.clear();
+        chords.add(new HTML(song.transpose(tran)));
+        //GWT.log("  chords.getStyleName(): " + chords.getStyleName());
+    }
 
-  private void transpose(int tran) {
-    chords.clear();
-    chords.add(new HTML(song.transpose(tran)));
-    //GWT.log("  chords.getStyleName(): " + chords.getStyleName());
-  }
-
-  private Song song;
+    private Song song;
 }

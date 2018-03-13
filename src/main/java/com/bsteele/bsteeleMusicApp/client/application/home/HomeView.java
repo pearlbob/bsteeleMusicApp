@@ -14,19 +14,19 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     }
 
     @UiField
-    private TabLayoutPanel homeTabs;
+    TabLayoutPanel homeTabs;
 
     @UiField
-    private SimpleLayoutPanel songList;
+    SimpleLayoutPanel songList;
 
     @UiField
-    private SplitLayoutPanel lyricsAndChords;
+    SplitLayoutPanel lyricsAndChords;
 
     @UiField
-    private SimplePanel songEdit;
+    SimplePanel songEdit;
 
     @UiField
-    private Label buildId;
+    Label buildId;
 
 
     @Inject

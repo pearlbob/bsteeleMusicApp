@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp;
 
-import com.bsteele.bsteeleMusicApp.shared.SongUpdateTest;
+import com.bsteele.bsteeleMusicApp.client.SongUpdateTest;
 import com.google.gwt.junit.tools.GWTTestSuite;
 import junit.framework.Test;
 import junit.framework.TestSuite;
