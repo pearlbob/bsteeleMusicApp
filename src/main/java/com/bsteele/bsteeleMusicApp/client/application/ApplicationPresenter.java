@@ -31,48 +31,46 @@ public class ApplicationPresenter
   }
 }
 
-/*  todo
-activate websockets
+/*
+todo: activate websockets
 
-event plot
-audio call out of chord changes
-audio call out of section changes
-audio count in, missing last beat or two
-mp3 recording and playback (including start offsets, non-integer bpm)
-align tabs to enum
-tooltips, many tooltips
-metronome clicks
+todo: event plot
+todo: audio call out of chord changes
+todo: audio call out of section changes
+todo: audio count in, missing last beat or two
+todo: mp3 recording and playback (including start offsets, non-integer bpm)
+todo: align tabs to enum
+todo: tooltips, many tooltips
+todo: metronome clicks
 
-pop the colors on beat transitions
-fix ctl-key on mac
+todo: pop the colors on beat transitions
+todo: fix ctl-key on mac
 
-control s to save when editing a song
+todo: control s to save when editing a song
 
-fix multiple section id's on a single chord section with vertical span
+todo: fix multiple section id's on a single chord section with vertical span
 
-add lastModified to song metadata on file read, add size?
+todo: add lastModified to song metadata on file read, add size?
     file location as well
-markup language aids (buttons)
-search for text in song
+todo: markup language aids (buttons)
+todo: search for text in song
 
-select start by sections
-loop by section
-to dynamically change font size for chords to fit
-set an indicator for added songs, font color change? 
+todo: select start by sections
+todo: loop by section
+todo: to dynamically change font size for chords to fit
+todo: set an indicator for added songs, font color change?
 
-improve leadin count down
+todo: improve leadin count down
 
-comments in chords?
+todo: comments in chords?
 
-fix: optionChoicesDiv with a css class
-
-
-accelerated sub-beat indicator
-hash by song name not list index
+todo: optionChoicesDiv with a css class
 
 
+todo: accelerated sub-beat indicator
+todo: hash by song name not list index
 
-section alterations imply: ch1 ch2 etc
-Beat vs measure resolution on a section basis 
+todo: section alterations imply: ch1 ch2 etc
+todo: Beat vs measure resolution on a section basis
 
 */

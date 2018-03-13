@@ -1,28 +1,40 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
-    
+
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
-    <g:HTMLPanel>
-        <div  style="margin: 10px;">
-            <br/>
-            Search:  <g:TextBox ui:field="songSearch"/>
-            <g:Button text="X" ui:field="clearSearch" />
-            <span class="{resources.style.tooltip}">
-                <span style="font-weight: bold;">Read Song Files:</span> 
-                <g:FileUpload ui:field="readSongFiles" />
-                <span class="{resources.style.tooltiptext}">&nbsp;
-                    Hint: Read many songs at once with select multiple (Shift-click),
-                    add to selection (Control-Click),
-                    or select all (Control-A).  
-                    This will work well if all songs are in one directory/folder.
-                    On a Mac, substitute Command for Control.</span>
-            </span>
-            <br/>
-            <div class="{resources.style.songList}" >
-                <g:Grid ui:field="songGrid" />
-            </div>
-        </div>
-    </g:HTMLPanel>
+    <g:DockLayoutPanel unit="EM">
+        <g:north size="3">
+            <g:HTMLPanel>
+                <div style="margin: 10px;">
+                    <span class="{resources.style.label}">Search:</span>
+                    <g:TextBox ui:field="songSearch"/>
+                    <g:Button text="X" ui:field="clearSearch"/>
+                    <span class="{resources.style.tooltip}">
+                        <span style="font-weight: bold;">Read Song Files:</span>
+                        <g:FileUpload ui:field="readSongFiles"/>
+                        <span class="{resources.style.tooltiptext}">&nbsp;
+                            Hint: Read many songs at once with select multiple (Shift-click),
+                            add to selection (Control-Click),
+                            or select all (Control-A).
+                            This will work well if all songs are in one directory/folder.
+                            On a Mac, substitute Command for Control.
+                        </span>
+                    </span>
+                </div>
+            </g:HTMLPanel>
+        </g:north>
+        <g:center>
+            <g:ScrollPanel>
+                <g:HTMLPanel>
+                    <div style="margin: 10px;">
+                        <div class="{resources.style.songList}">
+                            <g:Grid ui:field="songGrid"/>
+                        </div>
+                    </div>
+                </g:HTMLPanel>
+            </g:ScrollPanel>
+        </g:center>
+    </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -10,96 +10,98 @@ import com.google.gwt.resources.client.TextResource;
 
 public interface AppResources extends ClientBundle {
 
-  public static final AppResources INSTANCE = GWT.create(AppResources.class);
+    public static final AppResources INSTANCE = GWT.create(AppResources.class);
 
-  interface Style extends CssResource {
+    interface Style extends CssResource {
 
-    String sectionAClass();
+        String sectionAClass();
 
-    String sectionBClass();
+        String sectionBClass();
 
-    String sectionCClass();
+        String sectionCClass();
 
-    String lyricsCClass();
+        String lyricsCClass();
 
-    String sectionVClass();
+        String sectionVClass();
 
-    String lyricsVClass();
+        String lyricsVClass();
 
-    String sectionBrClass();
+        String sectionBrClass();
 
-    String lyricsBrClass();
+        String lyricsBrClass();
 
-    String sectionPCClass();
+        String sectionPCClass();
 
-    String lyricsPCClass();
+        String lyricsPCClass();
 
-    String sectionIClass();
+        String sectionIClass();
 
-    String lyricsIClass();
+        String lyricsIClass();
 
-    String sectionOClass();
+        String sectionOClass();
 
-    String lyricsOClass();
+        String lyricsOClass();
 
-    String sectionCoClass();
+        String sectionCoClass();
 
-    String lyricsCoClass();
+        String lyricsCoClass();
 
-    String sectionTClass();
+        String sectionTClass();
 
-    String lyricsTClass();
+        String lyricsTClass();
 
-    String tooltiptext();
+        String tooltiptext();
 
-    String dialogVPanel();
+        String dialogVPanel();
 
-    String serverResponseLabelError();
+        String serverResponseLabelError();
 
-    String tooltip();
+        String tooltip();
 
-    String audioBeatDisplayCanvasStyle();
+        String audioBeatDisplayCanvasStyle();
 
-    String sendButton();
+        String sendButton();
 
-    String songTitle();
+        String songTitle();
 
-    String songListItem();
+        String songListItem();
 
-    String songListItemData();
+        String songListItemData();
 
-    String chordTable();
+        String chordTable();
 
-    String sectionLabel();
+        String sectionLabel();
 
-    String chords();
+        String chords();
 
-    String songList();
+        String songList();
 
-    String entryLine();
+        String entryLine();
 
-    String smallIntEntry();
+        String smallIntEntry();
 
-    String lyricsAClass();
+        String lyricsAClass();
 
-    String lyricsBClass();
-  }
+        String lyricsBClass();
 
-  @Source("css/bsteeleMusicApp.gss")
-  Style style();
+        String label();
+    }
 
-  @Source("allSongs.songlyrics")
-  TextResource allSongsAsJsonString();
+    @Source("css/bsteeleMusicApp.gss")
+    Style style();
 
-  @Source("legacySongs.songlyrics")
-  TextResource legacySongsAsJsonString();
-  
-  @Source("buildId.txt")
-  TextResource buildId();
+    @Source("allSongs.songlyrics")
+    TextResource allSongsAsJsonString();
 
-  //  @Source("config.xml")
-  //  public TextResource initialConfiguration();
-  //
-  //  @Source("manual.pdf")
-  //  public DataResource ownersManual();
+    @Source("legacySongs.songlyrics")
+    TextResource legacySongsAsJsonString();
+
+    @Source("buildId.txt")
+    TextResource buildId();
+
+    //  @Source("config.xml")
+    //  public TextResource initialConfiguration();
+    //
+    //  @Source("manual.pdf")
+    //  public DataResource ownersManual();
 }

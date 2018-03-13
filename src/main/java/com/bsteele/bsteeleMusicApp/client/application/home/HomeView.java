@@ -3,11 +3,7 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
@@ -18,19 +14,19 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     }
 
     @UiField
-    TabLayoutPanel homeTabs;
+    private TabLayoutPanel homeTabs;
 
     @UiField
-    SimplePanel songList;
+    private SimpleLayoutPanel songList;
 
     @UiField
-    SplitLayoutPanel lyricsAndChords;
+    private SplitLayoutPanel lyricsAndChords;
 
     @UiField
-    SimplePanel songEdit;
+    private SimplePanel songEdit;
 
     @UiField
-    Label buildId;
+    private Label buildId;
 
 
     @Inject

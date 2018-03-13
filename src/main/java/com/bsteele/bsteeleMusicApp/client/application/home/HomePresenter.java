@@ -19,8 +19,8 @@ import com.gwtplatform.mvp.client.presenter.slots.SingleSlot;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /*  todo
-datagrid for songs
-get focus on songlist search, keep it there
+todo: datagrid for songs
+todo: get focus on songlist search, keep it there
 todo: visual screen-warning that we're about to change sections
 
  */
