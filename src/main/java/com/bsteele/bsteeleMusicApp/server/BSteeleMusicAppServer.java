@@ -18,51 +18,48 @@ import javax.websocket.server.ServerEndpoint;
  */
 
 /**
- *
  * @author bob
  */
-@ServerEndpoint(value = "/bsteeleMusic" )
-public class BSteeleMusicAppServer
-{
+@ServerEndpoint(value = "/bsteeleMusic")
+public class BSteeleMusicAppServer {
 
- public BSteeleMusicAppServer(){
-    logger.log(Level.INFO, "BSteeleMusicAppServer()");
-    System.out.println("BSteeleMusicAppServer()");
-    //GWT.log( "GWT.log(BSteeleMusicAppServer())");
-  }
- 
-  @OnOpen
-  public void onOpen(final Session session) throws IOException  {
-    session.getBasicRemote().sendText("onOpen");
-    logger.log(Level.INFO, "onOpen({0})", session.getId());
-    peers.add(session);
-  }
-
-  @OnMessage
-  public void onMessage(final String message, final Session session) {
-    logger.log(Level.INFO, "onMessage({0},{1}, {2})", new Object[]{message, session.getId(), session.getRequestURI()});
-    final String id = session.getId();
-    for (final Session peer : peers) {
-      if (peer.getId().equals(session.getId())) {
-        peer.getAsyncRemote().sendText("You said " + message);
-      } else {
-        peer.getAsyncRemote().sendText(id + " says " + message);
-      }
+    public BSteeleMusicAppServer() {
+        logger.log(Level.INFO, "BSteeleMusicAppServer()");
+        System.out.println("BSteeleMusicAppServer()");
+        //GWT.log( "GWT.log(BSteeleMusicAppServer())");
     }
-  }
 
-  @OnClose
-  public void onClose(final Session session) {
-    logger.log(Level.INFO, "onClose(" + session.getId() + "): ");
-    peers.remove(session);
-  }
+    @OnOpen
+    public void onOpen(final Session session) throws IOException {
+        session.getBasicRemote().sendText("onOpen");
+        logger.log(Level.INFO, "onOpen({0})", session.getId());
+        peers.add(session);
+    }
 
-  @OnError
-  public void onError(final Session session, Throwable t) {
-    logger.log(Level.INFO, "onError({0})", session.getId());
-    t.printStackTrace();
-  }
+    @OnMessage
+    public void onMessage(final String message, final Session session) {
+        final String id = session.getId();
+        long t = System.currentTimeMillis();
+        for (final Session peer : peers)
+            if (peer.getId().equals(session.getId()))
+                peer.getAsyncRemote().sendText("You said " + message + " at " + t);
+            else
+                peer.getAsyncRemote().sendText(id + " says " + message);
+        logger.log(Level.INFO, "onMessage({0},{1}, {2}) at {3}", new Object[]{message, session.getId(), session.getRequestURI(), t});
+    }
 
-  private static final Logger logger = Logger.getLogger(BSteeleMusicAppServer.class.getName());
-  private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
+    @OnClose
+    public void onClose(final Session session) {
+        logger.log(Level.INFO, "onClose(" + session.getId() + "): ");
+        peers.remove(session);
+    }
+
+    @OnError
+    public void onError(final Session session, Throwable t) {
+        logger.log(Level.INFO, "onError({0})", session.getId());
+        t.printStackTrace();
+    }
+
+    private static final Logger logger = Logger.getLogger(BSteeleMusicAppServer.class.getName());
+    private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 }
