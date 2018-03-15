@@ -56,7 +56,7 @@ public class SongUpdate {
      *
      * @return
      */
-    public double getEventTime() {
+    public long getEventTime() {
         return eventTime;
     }
 
@@ -168,7 +168,7 @@ public class SongUpdate {
     /**
      * @param eventTime the eventTime to set
      */
-    void setEventTime(double eventTime) {
+    void setEventTime(long eventTime) {
         this.eventTime = eventTime;
     }
 
@@ -273,7 +273,7 @@ public class SongUpdate {
                     songUpdate.setState(State.valueOf(jv.isString().stringValue()));
                     break;
                 case "eventTime":
-                    songUpdate.setEventTime(JsonUtil.toDouble(jv));
+                    songUpdate.setEventTime(JsonUtil.toLong(jv));
                     break;
                 case "song":
                     songUpdate.setSong(Song.fromJsonObject(jv.isObject()));
@@ -364,7 +364,7 @@ public class SongUpdate {
     public int hashCode() {
         int hash = 5;
         hash = (83 * hash + state.hashCode()) % (1 << 31);
-        hash = (83 * hash + (int) (Double.doubleToLongBits(this.eventTime) ^ (Double.doubleToLongBits(this.eventTime) >>> 32))) % (1 << 31);
+        hash = (83 * hash + (int) this.eventTime) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.section)) % (1 << 31);
@@ -400,7 +400,7 @@ public class SongUpdate {
         if (!this.state.equals(other.state)) {
             return false;
         }
-        if (Double.doubleToLongBits(this.eventTime) != Double.doubleToLongBits(other.eventTime)) {
+        if (this.eventTime != other.eventTime) {
             return false;
         }
         if (this.sectionCount != other.sectionCount) {
@@ -437,7 +437,7 @@ public class SongUpdate {
     }
 
     private State state = State.idle;
-    private double eventTime;
+    private long eventTime;
     private Song song;
     private int sectionCount;
     private String section;

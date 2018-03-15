@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client;
 
 import java.util.ArrayList;
 
+import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioContext;
 import com.bsteele.bsteeleMusicApp.shared.Section;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONException;
@@ -20,18 +21,26 @@ public class SongPlayMaster {
      * Hide the default constructor to force use of the singleton
      */
     private SongPlayMaster() {
+        audioContext = new AudioContext();
+        //audioContext.start();
+
+        GWT.log( Integer.toString(audioContext.getCurrentTime()));
+
+//        double off = System.currentTimeMillis() / 1000.0 - audioContext.getCurrentTime();
+//        GWT.log(Double.toString(off));
     }
 
     public static final SongPlayMaster getSongPlayMaster() {
         return songPlayMaster;
     }
 
-    public void onMessage( String data ){
+    public void onMessage(String data) {
         try {
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
-            GWT.log(songInUpdate.diff(songOutUpdate));
-        }
-        catch (JSONException jsonException){
+            GWT.log("update diff: " + songInUpdate.diff(songOutUpdate));
+//            double t = audioContext.getCurrentTime();
+//            GWT.log("diff: " + (System.currentTimeMillis() / 1000.0 - t) + ", t: " + t);
+        } catch (JSONException jsonException) {
             GWT.log(jsonException.getMessage());
         }
     }
@@ -122,6 +131,7 @@ public class SongPlayMaster {
     private int firstSection;
     private int lastSection;
 
+    private AudioContext audioContext;
     private Song song;
     private ArrayList<Section.Version> sectionSequence;
     private final SongUpdate songOutUpdate = new SongUpdate();

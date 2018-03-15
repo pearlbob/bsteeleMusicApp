@@ -25,7 +25,7 @@ public class BSteeleMusicAppServer {
 
     public BSteeleMusicAppServer() {
         logger.log(Level.INFO, "BSteeleMusicAppServer()");
-        System.out.println("BSteeleMusicAppServer()");
+        //System.out.println("BSteeleMusicAppServer()");
         //GWT.log( "GWT.log(BSteeleMusicAppServer())");
     }
 
@@ -41,8 +41,14 @@ public class BSteeleMusicAppServer {
             return;
 
         //     flip any message back to all registered peers
-        for (final Session peer : peers)
-            peer.getAsyncRemote().sendText(message);
+        for (final Session peer : peers) {
+//            try {
+                peer.getAsyncRemote().sendText(message);
+//            } catch (Exception e){
+//                logger.log(Level.WARNING, "peer "+peer.getId()+" closed early");
+//                peers.remove(peer);
+//            }
+        }
 
         logger.log(Level.INFO, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
                 message.substring(0,Math.min(message.length(),40)).replaceAll("\n"," "),

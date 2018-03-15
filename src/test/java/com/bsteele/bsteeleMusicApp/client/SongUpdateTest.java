@@ -33,7 +33,7 @@ public class SongUpdateTest extends GWTTestCase {
     public void testGetEventTime() {
         System.out.println("getEventTime");
         SongUpdate instance = new SongUpdate();
-        double expResult = System.currentTimeMillis() / 10.0e3;
+        long expResult = System.currentTimeMillis();
         instance.setEventTime(expResult);
         double result = instance.getEventTime();
         assertEquals(expResult, result, 0.0);
@@ -179,7 +179,7 @@ public class SongUpdateTest extends GWTTestCase {
     @Test
     public void testSetEventTime() {
         System.out.println("setEventTime");
-        double eventTime = 0.0;
+        long eventTime = 0;
         SongUpdate instance = new SongUpdate();
         instance.setEventTime(eventTime);
     }

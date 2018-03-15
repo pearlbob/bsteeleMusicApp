@@ -20,6 +20,12 @@ public class JsonUtil {
     return Integer.parseInt(jv.isString().stringValue());
   }
 
+  public static long toLong(JSONValue jv) {
+    if ( jv == null )
+      return 0;
+    return Long.parseLong(jv.toString());
+  }
+
   public static double toDouble(JSONValue jv) {
     JSONNumber jn = jv.isNumber();
     if (jn != null) {
