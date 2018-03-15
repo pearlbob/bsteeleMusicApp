@@ -365,8 +365,7 @@ public class SongUpdate {
         int hash = 5;
         hash = (83 * hash + state.hashCode()) % (1 << 31);
         hash = (83 * hash + (int) (Double.doubleToLongBits(this.eventTime) ^ (Double.doubleToLongBits(this.eventTime) >>> 32))) % (1 << 31);
-        if (song != null)
-            hash = (83 * hash + this.song.hashCode()) % (1 << 31);
+        hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.section)) % (1 << 31);
         hash = (83 * hash + this.sectionVersion) % (1 << 31);
@@ -396,8 +395,7 @@ public class SongUpdate {
             if (!this.song.equals(other.song)) {
                 return false;
             }
-        }
-        else if ( other.song != null )
+        } else if (other.song != null)
             return false;
         if (!this.state.equals(other.state)) {
             return false;

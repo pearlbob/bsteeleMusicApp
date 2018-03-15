@@ -22,65 +22,66 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 todo: datagrid for songs
 todo: get focus on songlist search, keep it there
 todo: visual screen-warning that we're about to change sections
+todo: think about fullscreen use, particularly when playing
 
  */
+
 /**
- *
  * @author bob
  */
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
         implements SongSelectionEventHandler {
 
-  interface MyView extends View {
+    interface MyView extends View {
 
-    void selectTab(String tabName);
-  }
+        void selectTab(String tabName);
+    }
 
-  public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
-  public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot<>();
-  public static final SingleSlot<SongEditPresenterWidget> SLOT_SONGEDIT_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<SongEditPresenterWidget> SLOT_SONGEDIT_CONTENT = new SingleSlot<>();
 
-  private final SongListPresenterWidget songListPresenterWidget;
-  private final LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget;
-  private final SongEditPresenterWidget songEditPresenterWidget;
+    private final SongListPresenterWidget songListPresenterWidget;
+    private final LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget;
+    private final SongEditPresenterWidget songEditPresenterWidget;
 
-  @ProxyStandard
-  @NameToken(NameTokens.HOME)
-  @UseGatekeeper(LoggedInGatekeeper.class)
-  interface MyProxy extends ProxyPlace<HomePresenter> {
-  }
+    @ProxyStandard
+    @NameToken(NameTokens.HOME)
+    @UseGatekeeper(LoggedInGatekeeper.class)
+    interface MyProxy extends ProxyPlace<HomePresenter> {
+    }
 
-  @Inject
-  HomePresenter(
-          EventBus eventBus,
-          MyView view,
-          MyProxy proxy,
-          SongListPresenterWidget songListPresenterWidget,
-          LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget,
-          SongEditPresenterWidget songEditPresenterWidget
-  ) {
-    super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
+    @Inject
+    HomePresenter(
+            EventBus eventBus,
+            MyView view,
+            MyProxy proxy,
+            SongListPresenterWidget songListPresenterWidget,
+            LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget,
+            SongEditPresenterWidget songEditPresenterWidget
+    ) {
+        super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
 
-    this.eventBus = eventBus;
-    this.songListPresenterWidget = songListPresenterWidget;
-    this.lyricsAndChordsPresenterWidget = lyricsAndChordsPresenterWidget;
-    this.songEditPresenterWidget = songEditPresenterWidget;
-  }
+        this.eventBus = eventBus;
+        this.songListPresenterWidget = songListPresenterWidget;
+        this.lyricsAndChordsPresenterWidget = lyricsAndChordsPresenterWidget;
+        this.songEditPresenterWidget = songEditPresenterWidget;
+    }
 
-  @Override
-  protected void onBind() {
-    setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
-    setInSlot(SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChordsPresenterWidget);
-    setInSlot(SLOT_SONGEDIT_CONTENT, songEditPresenterWidget);
+    @Override
+    protected void onBind() {
+        setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
+        setInSlot(SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChordsPresenterWidget);
+        setInSlot(SLOT_SONGEDIT_CONTENT, songEditPresenterWidget);
 
-    eventBus.addHandler(SongSelectionEvent.TYPE, this);
-  }
+        eventBus.addHandler(SongSelectionEvent.TYPE, this);
+    }
 
-  @Override
-  public void onSongSelection(SongSelectionEvent event) {
-    getView().selectTab("lyricsAndChordsTab");
-  }
+    @Override
+    public void onSongSelection(SongSelectionEvent event) {
+        getView().selectTab("lyricsAndChordsTab");
+    }
 
-  private final EventBus eventBus;
+    private final EventBus eventBus;
 
 }

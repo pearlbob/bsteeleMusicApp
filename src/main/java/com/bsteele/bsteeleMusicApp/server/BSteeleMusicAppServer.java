@@ -45,7 +45,7 @@ public class BSteeleMusicAppServer {
             peer.getAsyncRemote().sendText(message);
 
         logger.log(Level.INFO, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
-                message.substring(0,Math.min(message.length(),30)).replaceAll("\n"," "),
+                message.substring(0,Math.min(message.length(),40)).replaceAll("\n"," "),
                 peers.size(),
                 System.currentTimeMillis()});
     }
