@@ -4,13 +4,10 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
-
 import java.util.Objects;
-
 import jsinterop.annotations.JsType;
 
 /**
@@ -246,7 +243,7 @@ public class SongUpdate {
     }
 
     public static final SongUpdate fromJson(String jsonString) {
-        GWT.log(jsonString);
+        //GWT.log(jsonString);
         if (jsonString == null || jsonString.length() <= 0) {
             return null;
         }

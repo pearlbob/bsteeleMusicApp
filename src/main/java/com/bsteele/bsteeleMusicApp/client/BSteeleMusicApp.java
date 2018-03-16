@@ -4,11 +4,9 @@ import com.bsteele.bsteeleMusicApp.client.jsTypes.WebSocket;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import jsinterop.annotations.JsType;
-
 import java.util.logging.Logger;
-
 import static jsinterop.annotations.JsPackage.GLOBAL;
+import jsinterop.annotations.JsType;
 
 /**
  *
@@ -46,12 +44,13 @@ public class BSteeleMusicApp implements EntryPoint {
 
         @Override
         public Object call(Object event) {
+            long t = System.currentTimeMillis(); //  mark time immediately
 
             OnMessageEvent me = (OnMessageEvent) event;
-            long t = System.currentTimeMillis(); //  don't wait for string work to mark time
+
             //GWT.log("message recv: " + me.data + " at my " + t);
             //Window.alert("message recv: " + me.data+ " at my " + t);
-            songPlayMaster.onMessage( me.data );
+            songPlayMaster.onMessage( t/1000.0, me.data );
             return event;
         }
     }
@@ -73,8 +72,8 @@ public class BSteeleMusicApp implements EntryPoint {
             return false;
         }
 
-        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
-                + " at my " + System.currentTimeMillis());
+//        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
+//                + " at my " + System.currentTimeMillis());
         socket.send(message);
         return true;
     }
