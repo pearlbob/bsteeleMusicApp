@@ -26,6 +26,9 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     SimplePanel songEdit;
 
     @UiField
+    SimplePanel drumOptions;
+
+    @UiField
     Label buildId;
 
 
@@ -36,6 +39,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
         bindSlot(HomePresenter.SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChords);
         bindSlot(HomePresenter.SLOT_SONGEDIT_CONTENT, songEdit);
+        bindSlot(HomePresenter.SLOT_DRUMOPTIONS_CONTENT, drumOptions);
 
         buildId.setText(AppResources.INSTANCE.buildId().getText());
     }

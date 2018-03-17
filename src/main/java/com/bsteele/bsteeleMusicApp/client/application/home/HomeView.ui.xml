@@ -57,13 +57,17 @@
                             </g:FlowPanel>
                         </g:tab>
                         <g:tab>
-                            <g:header size='3'>Bass Study</g:header>
-                            <g:ResizeLayoutPanel>
-                                <g:HTMLPanel>
-                                    <iframe src="http://www.bsteele.com/bsteeleMusicApp/bassStudyTool.html"></iframe>
-                                </g:HTMLPanel>
-                            </g:ResizeLayoutPanel>
+                            <g:header size='3'>Drums</g:header>
+                            <g:SimplePanel ui:field="drumOptions"/>
                         </g:tab>
+                        <!--<g:tab>-->
+                        <!--<g:header size='3'>Bass Study</g:header>-->
+                        <!--<g:ResizeLayoutPanel>-->
+                        <!--<g:HTMLPanel>-->
+                        <!--stuff goes here-->
+                        <!--</g:HTMLPanel>-->
+                        <!--</g:ResizeLayoutPanel>-->
+                        <!--</g:tab>-->
                     </g:TabLayoutPanel>
                 </g:center>
             </g:DockLayoutPanel>

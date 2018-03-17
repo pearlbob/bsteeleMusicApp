@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -233,6 +234,8 @@ public class SongUpdate {
     }
 
     public String diff(SongUpdate other) {
+        if ( other == null || other.song == null )
+              return "no old song";
         if (!song.equals(other.song))
             return "new song: " + other.song.getTitle() + ", " + other.song.getArtist();
         if (!section.equals(other.section))

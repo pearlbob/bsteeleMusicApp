@@ -3,7 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
@@ -21,7 +21,8 @@ import javax.inject.Inject;
 /**
  * @author bob
  */
-public class LyricsAndChordsView extends ViewImpl
+public class LyricsAndChordsView
+        extends ViewImpl
         implements LyricsAndChordsPresenterWidget.MyView {
 
     @UiField
@@ -97,15 +98,17 @@ public class LyricsAndChordsView extends ViewImpl
     }
 
     @Inject
-    LyricsAndChordsView(Binder binder) {
+    LyricsAndChordsView(Binder binder, SongPlayMaster songPlayMaster) {
         initWidget(binder.createAndBindUi(this));
+
+        this.songPlayMaster = songPlayMaster;
 
         Event.sinkEvents(playButton, Event.ONCLICK);
         Event.setEventListener(playButton, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
                 GWT.log("play()");
                 if (song != null)
-                    SongPlayMaster.getSongPlayMaster().playSong(song );
+                    songPlayMaster.playSong(song );
             }
         });
 
@@ -113,7 +116,7 @@ public class LyricsAndChordsView extends ViewImpl
         Event.setEventListener(stopButton, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
                 GWT.log("stop()");
-                SongPlayMaster.getSongPlayMaster().stopSong();
+                songPlayMaster.stopSong();
             }
         });
 
@@ -150,8 +153,8 @@ public class LyricsAndChordsView extends ViewImpl
     private void transpose(int tran) {
         chords.clear();
         chords.add(new HTML(song.transpose(tran)));
-        //GWT.log("  chords.getStyleName(): " + chords.getStyleName());
     }
 
     private Song song;
+   private SongPlayMaster songPlayMaster;
 }

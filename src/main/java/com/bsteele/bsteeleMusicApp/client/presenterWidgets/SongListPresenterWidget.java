@@ -3,14 +3,9 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSubmissionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.songs.*;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
-import com.bsteele.bsteeleMusicApp.client.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -19,6 +14,7 @@ import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
+
 import java.util.Set;
 import java.util.TreeSet;
 

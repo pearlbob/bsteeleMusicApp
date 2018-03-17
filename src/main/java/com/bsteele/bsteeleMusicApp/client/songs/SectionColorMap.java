@@ -1,9 +1,8 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.client;
+package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.Section;
 import com.google.gwt.canvas.dom.client.CssColor;
 
 /**

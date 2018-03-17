@@ -1,10 +1,12 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
 import com.bsteele.bsteeleMusicApp.client.application.ApplicationPresenter;
+import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.LoggedInGatekeeper;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.place.NameTokens;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.DrumOptionsPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongEditPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongListPresenterWidget;
@@ -40,10 +42,13 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
     public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot<>();
     public static final SingleSlot<SongEditPresenterWidget> SLOT_SONGEDIT_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<DrumOptionsPresenterWidget> SLOT_DRUMOPTIONS_CONTENT = new SingleSlot<>();
+
 
     private final SongListPresenterWidget songListPresenterWidget;
     private final LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget;
     private final SongEditPresenterWidget songEditPresenterWidget;
+    private final DrumOptionsPresenterWidget drumOptionsPresenterWidget;
 
     @ProxyStandard
     @NameToken(NameTokens.HOME)
@@ -58,7 +63,9 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             MyProxy proxy,
             SongListPresenterWidget songListPresenterWidget,
             LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget,
-            SongEditPresenterWidget songEditPresenterWidget
+            SongEditPresenterWidget songEditPresenterWidget,
+            DrumOptionsPresenterWidget drumOptionsPresenterWidget,
+            BSteeleMusicIO bSteeleMusicIO
     ) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
 
@@ -66,6 +73,9 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         this.songListPresenterWidget = songListPresenterWidget;
         this.lyricsAndChordsPresenterWidget = lyricsAndChordsPresenterWidget;
         this.songEditPresenterWidget = songEditPresenterWidget;
+        this.drumOptionsPresenterWidget = drumOptionsPresenterWidget;
+
+        this.bSteeleMusicIO = bSteeleMusicIO;
     }
 
     @Override
@@ -73,6 +83,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
         setInSlot(SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChordsPresenterWidget);
         setInSlot(SLOT_SONGEDIT_CONTENT, songEditPresenterWidget);
+        setInSlot(SLOT_DRUMOPTIONS_CONTENT, drumOptionsPresenterWidget);
 
         eventBus.addHandler(SongSelectionEvent.TYPE, this);
     }
@@ -83,5 +94,5 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     }
 
     private final EventBus eventBus;
-
+    private final BSteeleMusicIO bSteeleMusicIO;
 }

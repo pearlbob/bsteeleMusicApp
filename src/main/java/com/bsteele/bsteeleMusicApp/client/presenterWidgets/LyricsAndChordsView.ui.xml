@@ -87,7 +87,6 @@
                             </p>
                         </g:HTMLPanel>
                     </g:ScrollPanel>
-
                 </g:center>
             </g:SplitLayoutPanel>
         </g:center>

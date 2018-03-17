@@ -1,11 +1,10 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.client;
+package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
-import com.bsteele.bsteeleMusicApp.shared.Section;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;

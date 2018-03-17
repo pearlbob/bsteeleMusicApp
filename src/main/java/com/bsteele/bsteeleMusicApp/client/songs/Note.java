@@ -2,7 +2,7 @@
  * Copyright 2018 Robert Steele, bsteele.com
  * All rights reserved.
  */
-package com.bsteele.bsteeleMusicApp.shared;
+package com.bsteele.bsteeleMusicApp.client.songs;
 
 /**
  *
