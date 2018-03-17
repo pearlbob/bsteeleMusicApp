@@ -4,20 +4,14 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
-import com.bsteele.bsteeleMusicApp.client.application.songs.DefaultDrumSelectEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.DefaultDrumSelectEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.json.client.JSONException;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -56,6 +50,7 @@ public class SongPlayMasterImpl
         audioFilePlayer.bufferFile(highHat1);
         audioFilePlayer.bufferFile(highHat3);
         audioFilePlayer.bufferFile(kick);
+        audioFilePlayer.bufferFile(snare);
 
         //  fixme: should wait for end of audio buffer loading
 
@@ -106,42 +101,70 @@ public class SongPlayMasterImpl
     }
 
     private void beatTheDrums(DrumMeasure drumSelection) {
+
+        double beatDuration = measureDuration / beatsPerBar;
         {
             String drum = drumSelection.getHighHat();
-            double drumbeatDuration = measureDuration / drum.length();
-            String highHat = highHat1;
+            if (drum != null && drum.length() > 0) {
+                int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
+                int limit = divisionsPerBeat * beatsPerBar;
+                double drumbeatDuration = measureDuration / limit;
+                String highHat = highHat1;
 
-            for (int b = 0; b < drum.length(); b++) {
-                switch (drum.charAt(b)) {
-                    case 'x':
-                        audioFilePlayer.play(highHat, nextMeasureStart + b * drumbeatDuration,
-                                drumbeatDuration - 0.002);
-                        highHat = highHat3;
-                        break;
-                    case 'X':
-                        audioFilePlayer.play(highHat1, nextMeasureStart + b * drumbeatDuration,
-                                swing * drumbeatDuration - 0.002);
-                        highHat = highHat3;
-                        break;
-                    case 's':
-                        audioFilePlayer.play(highHat, nextMeasureStart + (b + (swing - 1)) * drumbeatDuration,
-                                (swing - 1) * drumbeatDuration - 0.002);
-                        highHat = highHat3;
-                        break;
+                for (int b = 0; b < limit; b++) {
+                    switch (drum.charAt(b)) {
+                        case 'x':
+                            audioFilePlayer.play(highHat, nextMeasureStart + b * drumbeatDuration,
+                                    drumbeatDuration - 0.002);
+                            highHat = highHat3;
+                            break;
+                        case 'X':
+                            audioFilePlayer.play(highHat1, nextMeasureStart + b * drumbeatDuration,
+                                    swing * drumbeatDuration - 0.002);
+                            highHat = highHat3;
+                            break;
+                        case 's':
+                            audioFilePlayer.play(highHat, nextMeasureStart + (b + (swing - 1)) * drumbeatDuration,
+                                    (swing - 1) * drumbeatDuration - 0.002);
+                            highHat = highHat3;
+                            break;
+                    }
+                }
+            }
+        }
+        {
+            String drum = drumSelection.getSnare();
+            if (drum != null && drum.length() > 0) {
+                int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
+                int limit = divisionsPerBeat * beatsPerBar;
+                double drumbeatDuration = measureDuration / limit;
+
+                for (int b = 0; b < limit; b++) {
+                    switch (drum.charAt(b)) {
+                        case 'X':
+                        case 'x':
+                            audioFilePlayer.play(snare, nextMeasureStart + b * drumbeatDuration,
+                                    drumbeatDuration - 0.002);
+                            break;
+                    }
                 }
             }
         }
         {
             String drum = drumSelection.getKick();
-            double drumbeatDuration = measureDuration / drum.length();
+            if (drum != null && drum.length() > 0) {
+                int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
+                int limit = divisionsPerBeat * beatsPerBar;
+                double drumbeatDuration = measureDuration / limit;
 
-            for (int b = 0; b < drum.length(); b++) {
-                switch (drum.charAt(b)) {
-                    case 'X':
-                    case 'x':
-                        audioFilePlayer.play(kick, nextMeasureStart + b * drumbeatDuration,
-                                drumbeatDuration - 0.002);
-                        break;
+                for (int b = 0; b < limit; b++) {
+                    switch (drum.charAt(b)) {
+                        case 'X':
+                        case 'x':
+                            audioFilePlayer.play(kick, nextMeasureStart + b * drumbeatDuration,
+                                    drumbeatDuration - 0.002);
+                            break;
+                    }
                 }
             }
         }
@@ -167,17 +190,21 @@ public class SongPlayMasterImpl
             dOff = lastOffset - audioOffset;
         lastOffset = audioOffset;
 
-        GWT.log("t: " + t
-                        + ", off: " + audioOffset
-                        + ", dOff: " + dOff
+//        GWT.log("t: " + t
+//                        + ", off: " + audioOffset
+//                        + ", dOff: " + dOff
 //                +", "+audioFilePlayer.getBaseLatency()
 //                +", "+audioFilePlayer.getOutputLatency()
-        );
+//        );
     }
 
     @Override
     public void onDefaultDrumSelection(DefaultDrumSelectEvent event) {
         defaultDrumSelection = event.getDrumSelection();
+    }
+
+    public void setbSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO) {
+        this.bSteeleMusicIO = bSteeleMusicIO;
     }
 
     public enum Action {
@@ -253,7 +280,7 @@ public class SongPlayMasterImpl
                 songOutUpdate.setSectionVersion(sectionSequence.get(currentSection).getVersion());
                 songOutUpdate.setSong(song);
 
-                BSteeleMusicIO.sendMessage(songOutUpdate.toJson());
+                bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
                 action = Action.playing;
                 break;
             case playing:
@@ -281,7 +308,9 @@ public class SongPlayMasterImpl
     private static final String highHat1 = "images/hihat3.mp3";
     private static final String highHat3 = "images/hihat1.mp3";
     private static final String kick = "images/kick_4513.mp3";
+    private static final String snare = "images/snare_4405.mp3";
     private static final double swing = 1.5;
     private double lastOffset;
     private final EventBus eventBus;
+    private BSteeleMusicIO bSteeleMusicIO;
 }

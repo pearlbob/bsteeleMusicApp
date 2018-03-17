@@ -8,12 +8,24 @@
         <p>
             HighHat:
             <select ui:field="highHatSelect" >
-                <option value="________" selected="true">Off</option>
+                <option value="____" selected="true">Off</option>
+                <option value="x___" >1</option>
                 <option value="x___x___" >1 3</option>
                 <option value="__x___x_" >2 4</option>
                 <option value="x_x_x_x_" >All 4's</option>
                 <option value="xxxxxxxx" >All 8's</option>
                 <option value="XsXsXsXs" >Swing 8's</option>
+            </select>
+        </p>
+        <p>
+            Snare:
+            <select ui:field="snareSelect" >
+                <option value="____" selected="true">Off</option>
+                <option value="x___" >1</option>
+                <option value="__x_" >3</option>
+                <option value="x_x_" >1 3</option>
+                <option value="_x_x" >2 4</option>
+                <option value="xxxx" >All 4's</option>
             </select>
         </p>
         <p>

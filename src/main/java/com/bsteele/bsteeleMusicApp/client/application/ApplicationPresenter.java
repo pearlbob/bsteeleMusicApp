@@ -58,7 +58,7 @@ todo: search for text in song
 todo: select start by sections
 todo: loop by section
 todo: to dynamically change font size for chords to fit
-todo: set an indicator for added songs, font color change?
+todo: set an indicator for added events, font color change?
 
 todo: improve leadin count down
 

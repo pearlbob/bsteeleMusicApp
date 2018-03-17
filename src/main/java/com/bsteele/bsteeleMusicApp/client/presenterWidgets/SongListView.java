@@ -3,10 +3,10 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongReadEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.shared.GwtEvent;

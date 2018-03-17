@@ -1,7 +1,7 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.client.application.songs;
+package com.bsteele.bsteeleMusicApp.client.application.events;
 
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.GwtEvent;

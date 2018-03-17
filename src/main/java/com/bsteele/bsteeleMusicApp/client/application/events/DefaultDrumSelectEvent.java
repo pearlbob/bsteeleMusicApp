@@ -1,4 +1,4 @@
-package com.bsteele.bsteeleMusicApp.client.application.songs;
+package com.bsteele.bsteeleMusicApp.client.application.events;
 
 import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
 import com.google.gwt.event.shared.GwtEvent;

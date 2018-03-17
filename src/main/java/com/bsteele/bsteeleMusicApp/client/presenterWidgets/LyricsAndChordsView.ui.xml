@@ -59,13 +59,6 @@
                     <option value="180">180</option>
                     <option value="200">200</option>
                 </select>
-                Time:
-                <select ui:field="currentTimeSignatureSelect">
-                    <option value="2/4">2/4</option>
-                    <option value="3/4">3/4</option>
-                    <option value="4/4" selected="true">4/4</option>
-                    <option value="6/8">6/8</option>
-                </select>
                 &nbsp;&nbsp;
                 <span ui:field="title" class="{resources.style.songTitle}"/>
                 by

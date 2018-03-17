@@ -4,11 +4,7 @@
 package com.bsteele.bsteeleMusicApp.client.jsTypes;
 
 import com.bsteele.bsteeleMusicApp.client.Function;
-import jsinterop.annotations.JsConstructor;
-import jsinterop.annotations.JsMethod;
-import jsinterop.annotations.JsPackage;
-import jsinterop.annotations.JsProperty;
-import jsinterop.annotations.JsType;
+import jsinterop.annotations.*;
 
 @JsType(isNative = true, namespace = JsPackage.GLOBAL)
 public class WebSocket {
@@ -37,4 +33,7 @@ public class WebSocket {
 
     @JsMethod
     public native void close();
+
+    @JsProperty
+    public int readyState;
 }

@@ -91,7 +91,7 @@ public class Song implements Comparable<Song> {
           }
           break;
         case "timeSignature":
-          //  most of this is coping with real old songs with poor formatting
+          //  most of this is coping with real old events with poor formatting
           jn = jv.isNumber();
           if (jn != null) {
             song.beatsPerBar = (int) jn.doubleValue();
@@ -336,7 +336,7 @@ public class Song implements Comparable<Song> {
         }
       }
 
-      //  deal with unformatted songs
+      //  deal with unformatted events
       if (chordSectionMap.isEmpty()) {
         chordSectionMap.put(Section.getDefaultVersion(), grid);
       }

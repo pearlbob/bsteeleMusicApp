@@ -3,10 +3,10 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.songs.DefaultDrumSelectEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.DefaultDrumSelectEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -37,6 +37,9 @@ public class DrumOptionsView
     SelectElement highHatSelect;
 
     @UiField
+    SelectElement snareSelect;
+
+    @UiField
     SelectElement kickSelect;
 
     @Inject
@@ -54,6 +57,16 @@ public class DrumOptionsView
             }
         });
 
+        Event.sinkEvents(snareSelect, Event.ONCHANGE);
+        Event.setEventListener(snareSelect, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                drumMeasure.setSnare(snareSelect.getValue());
+                fireEvent(new DefaultDrumSelectEvent(drumMeasure));
+                logger.fine("snareSelect: " + snareSelect.getValue());
+            }
+        });
+
+
         Event.sinkEvents(kickSelect, Event.ONCHANGE);
         Event.setEventListener(kickSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
@@ -64,6 +77,7 @@ public class DrumOptionsView
         });
 
         drumMeasure.setHighHat(highHatSelect.getValue());
+        drumMeasure.setSnare(snareSelect.getValue());
         drumMeasure.setKick(kickSelect.getValue());
         fireEvent(new DefaultDrumSelectEvent(drumMeasure));
     }

@@ -41,9 +41,6 @@ public class LyricsAndChordsView
     SelectElement bpmSelect;
 
     @UiField
-    SelectElement currentTimeSignatureSelect;
-
-    @UiField
     SpanElement title;
 
     @UiField
@@ -106,7 +103,6 @@ public class LyricsAndChordsView
         Event.sinkEvents(playButton, Event.ONCLICK);
         Event.setEventListener(playButton, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                GWT.log("play()");
                 if (song != null)
                     songPlayMaster.playSong(song );
             }
@@ -115,7 +111,6 @@ public class LyricsAndChordsView
         Event.sinkEvents(stopButton, Event.ONCLICK);
         Event.setEventListener(stopButton, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                GWT.log("stop()");
                 songPlayMaster.stopSong();
             }
         });
@@ -139,13 +134,6 @@ public class LyricsAndChordsView
                 int bpm = Integer.parseInt(bpmSelect.getValue());
                 currentBpmEntry.setValue(Integer.toString(bpm));
                 GWT.log("bpm select: " + bpm);
-            }
-        });
-
-        Event.sinkEvents(currentTimeSignatureSelect, Event.ONCHANGE);
-        Event.setEventListener(currentTimeSignatureSelect, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
-                GWT.log("current bpm select: " + currentTimeSignatureSelect.getValue());
             }
         });
     }

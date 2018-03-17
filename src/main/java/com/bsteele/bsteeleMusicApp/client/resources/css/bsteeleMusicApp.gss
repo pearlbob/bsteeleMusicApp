@@ -51,7 +51,7 @@ h1,
 }
 
 body {
-  background: #fffdf6;
+  background: #f5f0e1;
     margin: 3px;
 }
 
@@ -92,37 +92,31 @@ iframe {
 .lyricsVClass,
 .lyricsAClass
  {
-  background-color: #f5f2e9;
+  background-color: #f5ebcd;
 }
 
 .sectionBrClass,
 .lyricsBrClass {
-  background-color: #f6edff;
+  background-color: #e1cdf5;
 }
 
 .sectionPCClass,
 .lyricsPCClass {
-  background-color: #f7f0ff;
+  background-color: #dfcdf5;
 }
 
 .sectionIClass,
-.lyricsIClass {
-  background-color: #ecfff9;
-}
-
+.lyricsIClass,
 .sectionOClass,
-.lyricsOClass {
-  background-color: #ecfff9;
-}
-
+.lyricsOClass,
 .sectionCoClass,
 .lyricsCoClass {
-  background-color: #ecfff9;
+  background-color: #cdf5e9;
 }
 
 .sectionTClass,
 .lyricsTClass {
-  background-color: #edf6ff;
+  background-color: #cee1f5;
 }
 
 .sectionAClass,

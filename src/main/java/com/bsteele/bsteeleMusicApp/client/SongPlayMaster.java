@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 
 /**
@@ -21,4 +22,6 @@ public interface SongPlayMaster {
     public void continueSong();
 
     public void setSelection(int first, int last);
+
+    public void setbSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

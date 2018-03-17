@@ -2,8 +2,6 @@ package com.bsteele.bsteeleMusicApp.client.application;
 
 import com.bsteele.bsteeleMusicApp.client.Function;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.application.songs.DefaultDrumSelectEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.DefaultDrumSelectEventHandler;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.WebSocket;
 import com.google.gwt.core.client.GWT;
 import jsinterop.annotations.JsType;
@@ -27,7 +25,11 @@ public class BSteeleMusicIO {
         this.songPlayMaster = songPlayMaster;
         String url = getWebSocketURL();
         //GWT.log("url: " + url);
+
+        songPlayMaster.setbSteeleMusicIO(this); //  fixme: this can't be correct
+
         socket = new WebSocket(url);
+        socket.onerror = new SocketErrorFunction();
         socket.onmessage = new SocketReceiveFunction();
     }
 
@@ -57,6 +59,16 @@ public class BSteeleMusicIO {
         }
     }
 
+    private final class SocketErrorFunction implements Function {
+
+        @Override
+        public Object call(Object event) {
+            GWT.log("error: socket readyState: " + socket.readyState);
+            isSocketOpen = ( socket.readyState == 1 );
+            return event;
+        }
+    }
+
     @JsType(isNative = true, name = "Object", namespace = GLOBAL)
     static class OnMessageEvent {
 
@@ -65,13 +77,19 @@ public class BSteeleMusicIO {
         public native final String getOrigin();
     }
 
-    public static boolean sendMessage(String message) {
+    public boolean sendMessage(String message) {
         if (message == null || message.length() <= 0)
             return false;
 
         if (socket == null) {
             logger.info("socket is null");
             return false;
+        }
+        if ( !isSocketOpen) {
+            //  socket down, run locally only
+            GWT.log("socket readyState: " + socket.readyState);
+            songPlayMaster.onMessage(System.currentTimeMillis() / 1000.0, message);
+            return true;
         }
 
 //        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
@@ -82,5 +100,6 @@ public class BSteeleMusicIO {
 
     private final SongPlayMaster songPlayMaster;
     private static WebSocket socket;
+    private static boolean  isSocketOpen = true;
     private static final Logger logger = Logger.getLogger(BSteeleMusicIO.class.getName());
 }

@@ -3,8 +3,8 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.songs.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
