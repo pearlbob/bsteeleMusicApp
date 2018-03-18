@@ -3,13 +3,21 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Logger;
+
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import jsinterop.annotations.JsType;
+import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
  * Immutable song update data
@@ -36,7 +44,7 @@ public class SongUpdate {
 //        this.sectionCount = other.sectionCount;
 //        this.sectionVersion = other.sectionVersion;
 //        this.chordSectionRow = other.chordSectionRow;
-//        this.chordSectionCurrentRepeat = other.chordSectionCurrentRepeat;
+//        this.repeatCurrent = other.repeatCurrent;
 //        this.chordSectionRepeat = other.chordSectionRepeat;
 //        this.measure = other.measure;
 //        this.beat = other.beat;
@@ -48,13 +56,146 @@ public class SongUpdate {
         return state;
     }
 
+    public void measureReset() {
+        measureSet(0);
+    }
+
+    /**
+     * Move the update indicators to the given measure.
+     *
+     * @param m the measure to move to
+     */
+    private void measureSet(int m) {
+        if (m < 0)
+            m = 0;
+
+        section = 0;
+        sectionId = "";
+        sectionVersion = 0;
+        chordSectionRow = 0;
+        chordSectionCol = 0;
+        repeatCurrent = 0;
+        repeatTotal = 0;
+        repeatFirstRow = -1;
+        repeatLastRow = -1;
+        repeatLastCol = -1;
+        measure = 0;
+        measureContent = "";
+        beat = 0;
+
+//        {
+//            int sn = 0;
+//
+//        for (Section.Version sv : song.getSectionSequence()) {
+//            String sid = sv.getSection().getAbreviation();
+//            int svn = sv.getVersion();
+//            Grid<String> chordSection = song.getChordSection(sv);
+//            for (int r = 0; r < chordSection.getRowCount(); r++) {
+//                ArrayList<String> row = chordSection.getRow(r);
+//                for (int c  = 0; c  < row.size(); c ++) {
+//                    logger.info(measure + ": " + sn + ":" + sid + "." + svn
+//                            + ": (" + r + "," + c  + "): " + row.get(c ));
+//                }
+//            }
+//            sn++;
+//        }
+//        }
+
+        while (measure < m)
+            if (!nextMeasure())
+                break;
+    }
+
+    public boolean nextMeasure() {
+        ArrayList<Section.Version> songSectionSequence = song.getSectionSequence();
+        if (section >= songSectionSequence.size())
+            return false;
+
+        //  increment to next the next measure slot
+        Section.Version sectionVersion = songSectionSequence.get(section);
+        Grid<String> chordSection = song.getChordSection(sectionVersion);
+        ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
+        chordSectionCol++;
+        if (this.chordSectionCol >= chordCols.size()) {
+            //  go to the next row
+            this.chordSectionCol = 0;
+            this.chordSectionRow++;
+
+            //  repeat if required
+            if (repeatTotal > 0
+                    && chordSectionRow > repeatLastRow
+                    && repeatCurrent < repeatTotal
+                    ) {
+                repeatCurrent++;
+                if (repeatCurrent < repeatTotal)
+                    chordSectionRow = repeatFirstRow;
+                else {
+                    repeatTotal = 0;  //  repeat done
+                    repeatFirstRow = -1;
+                    repeatLastCol = -1;
+                }
+            }
+            //  go to the next section
+            if (chordSectionRow >= chordSection.getRowCount()) {
+                repeatTotal = 0;
+                chordSectionRow = 0;
+                section++;
+            }
+        }
+
+
+        //  validate where we've landed after the increment
+        if (this.section >= songSectionSequence.size())
+            return false;
+        sectionVersion = songSectionSequence.get(this.section);
+        chordSection = song.getChordSection(sectionVersion);
+
+        chordCols = chordSection.getRow(chordSectionRow);
+        if (chordCols == null) {
+            return false;
+        }
+
+        measureContent = chordCols.get(chordSectionCol);
+        if (measureContent == null) {
+            return false;
+        }
+
+
+        //  look for the repeat extender
+        //  note: doesn't have to be at the end of the row due to comments
+        if (extenderRegExp.test(measureContent)) {
+            //  not currently repeating
+            //  mark the first vertical bar row
+            if (this.repeatFirstRow >= 0)
+                this.repeatFirstRow = chordSectionRow;
+            return this.nextMeasure();   //  go find the next real measure
+        }
+
+        //  look for repeat
+        MatchResult mr = repeatRegExp.exec(measureContent);
+        if (mr != null) {
+            if (repeatTotal == 0) {
+                //  not currently repeating
+                repeatTotal = Integer.parseInt(mr.getGroup(1));
+                repeatCurrent = 0;
+                repeatFirstRow = (repeatFirstRow >= 0 ? repeatFirstRow : chordSectionRow);
+                repeatLastRow = chordSectionRow;
+                repeatLastCol = chordSectionCol;
+            }
+            return this.nextMeasure();   //  go find the next real measure
+        }
+
+        sectionId = sectionVersion.toString();
+        measure++;
+        return true;
+    }
 
     /**
      * return event time in seconds
      *
      * @return
      */
-    public long getEventTime() {
+    public double getEventTime() {
         return eventTime;
     }
 
@@ -72,14 +213,14 @@ public class SongUpdate {
      * @return
      */
     public String getSection() {
-        return section;
+        return sectionId;
     }
 
     /**
      * @param section
      */
     public void setSection(String section) {
-        this.section = section;
+        this.sectionId = section;
     }
 
     /**
@@ -112,17 +253,8 @@ public class SongUpdate {
      *
      * @return
      */
-    public int getChordSectionCurrentRepeat() {
-        return chordSectionCurrentRepeat;
-    }
-
-    /**
-     * Total number of repeats in the current repeat row(s).
-     *
-     * @return
-     */
-    public int getChordSectionRepeat() {
-        return chordSectionRepeat;
+    public int getRepeatCurrent() {
+        return repeatCurrent;
     }
 
     /**
@@ -166,7 +298,7 @@ public class SongUpdate {
     /**
      * @param eventTime the eventTime to set
      */
-    void setEventTime(long eventTime) {
+    void setEventTime(double eventTime) {
         this.eventTime = eventTime;
     }
 
@@ -192,18 +324,12 @@ public class SongUpdate {
     }
 
     /**
-     * @param chordSectionCurrentRepeat the chordSectionCurrentRepeat to set
+     * @param repeatCurrent the repeatCurrent to set
      */
-    void setChordSectionCurrentRepeat(int chordSectionCurrentRepeat) {
-        this.chordSectionCurrentRepeat = chordSectionCurrentRepeat;
+    void setRepeatCurrent(int repeatCurrent) {
+        this.repeatCurrent = repeatCurrent;
     }
 
-    /**
-     * @param chordSectionRepeat the chordSectionRepeat to set
-     */
-    void setChordSectionRepeat(int chordSectionRepeat) {
-        this.chordSectionRepeat = chordSectionRepeat;
-    }
 
     /**
      * @param measure the measure to set
@@ -234,15 +360,46 @@ public class SongUpdate {
     }
 
     public String diff(SongUpdate other) {
-        if ( other == null || other.song == null )
-              return "no old song";
+        if (other == null || other.song == null)
+            return "no old song";
         if (!song.equals(other.song))
             return "new song: " + other.song.getTitle() + ", " + other.song.getArtist();
-        if (!section.equals(other.section))
+        if ( sectionId!=null && other.sectionId!=null && !sectionId.equals(other.sectionId))
             return "new section: " + other.getSection().toString();
         if (measure != other.measure)
             return "new measure: " + other.measure;
         return "no change";
+    }
+
+    /**
+     * Returns a string representation of the object. In general, the
+     * {@code toString} method returns a string that
+     * "textually represents" this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * <p>
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}', and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * <blockquote>
+     * <pre>
+     * getClass().getName() + '@' + Integer.toHexString(hashCode())
+     * </pre></blockquote>
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("SongUpdate: ");
+        sb.append(getMeasure());
+        sb.append(" ").append(getSection());
+        sb.append(" ").append(section);
+        sb.append(" (").append(chordSectionRow).append(",").append(chordSectionCol).append(")");
+        return sb.toString();
     }
 
     public static final SongUpdate fromJson(String jsonString) {
@@ -273,29 +430,12 @@ public class SongUpdate {
                     songUpdate.setState(State.valueOf(jv.isString().stringValue()));
                     break;
                 case "eventTime":
-                    songUpdate.setEventTime(JsonUtil.toLong(jv));
+                    songUpdate.setEventTime(JsonUtil.toDouble(jv));
                     break;
                 case "song":
                     songUpdate.setSong(Song.fromJsonObject(jv.isObject()));
                     break;
-                case "sectionCount":
-                    songUpdate.sectionCount = JsonUtil.toInt(jv);
-                    break;
-                case "section":
-                    songUpdate.section = jv.isString().stringValue();
-                    break;
-                case "sectionVersion":
-                    songUpdate.sectionVersion = JsonUtil.toInt(jv);
-                    break;
-                case "chordSectionRow":
-                    songUpdate.chordSectionRow = JsonUtil.toInt(jv);
-                    break;
-                case "chordSectionCurrentRepeat":
-                    songUpdate.chordSectionCurrentRepeat = JsonUtil.toInt(jv);
-                    break;
-                case "chordSectionRepeat":
-                    songUpdate.chordSectionRepeat = JsonUtil.toInt(jv);
-                    break;
+                //  section sequencing details should be found by local processing
                 case "measure":
                     songUpdate.measure = JsonUtil.toInt(jv);
                     break;
@@ -309,7 +449,6 @@ public class SongUpdate {
                     songUpdate.beatsPerMinute = JsonUtil.toInt(jv);
                     break;
             }
-
         }
         return songUpdate;
     }
@@ -326,24 +465,7 @@ public class SongUpdate {
                 .append("\"song\": ")
                 .append(song.toJson())
                 .append(",\n")
-                .append("\"sectionCount\": ")
-                .append(getSectionCount())
-                .append(",\n")
-                .append("\"section\": \"")
-                .append(JsonUtil.encode(getSection()))
-                .append("\",\n")
-                .append("\"sectionVersion\": ")
-                .append(getSectionVersion())
-                .append(",\n")
-                .append("\"chordSectionRow\": ")
-                .append(getChordSectionRow())
-                .append(",\n")
-                .append("\"chordSectionCurrentRepeat\": ")
-                .append(getChordSectionCurrentRepeat())
-                .append(",\n")
-                .append("\"chordSectionRepeat\": ")
-                .append(getChordSectionRepeat())
-                .append(",\n")
+                //  section sequencing details should be found by local processing
                 .append("\"measure\": ")
                 .append(getMeasure())
                 .append(",\n")
@@ -367,11 +489,15 @@ public class SongUpdate {
         hash = (83 * hash + (int) this.eventTime) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
-        hash = (83 * hash + Objects.hashCode(this.section)) % (1 << 31);
+        hash = (83 * hash + Objects.hashCode(this.sectionId)) % (1 << 31);
         hash = (83 * hash + this.sectionVersion) % (1 << 31);
         hash = (83 * hash + this.chordSectionRow) % (1 << 31);
-        hash = (83 * hash + this.chordSectionCurrentRepeat) % (1 << 31);
-        hash = (83 * hash + this.chordSectionRepeat) % (1 << 31);
+        hash = (83 * hash + this.chordSectionCol) % (1 << 31);
+        hash = (83 * hash + this.repeatCurrent) % (1 << 31);
+        hash = (83 * hash + this.repeatTotal) % (1 << 31);
+        hash = (83 * hash + this.repeatFirstRow) % (1 << 31);
+        hash = (83 * hash + this.repeatLastRow) % (1 << 31);
+        hash = (83 * hash + this.repeatLastCol) % (1 << 31);
         hash = (83 * hash + this.measure) % (1 << 31);
         hash = (83 * hash + this.beat) % (1 << 31);
         hash = (83 * hash + this.beatsPerMeasure) % (1 << 31);
@@ -412,10 +538,22 @@ public class SongUpdate {
         if (this.chordSectionRow != other.chordSectionRow) {
             return false;
         }
-        if (this.chordSectionCurrentRepeat != other.chordSectionCurrentRepeat) {
+        if (this.chordSectionCol != other.chordSectionCol) {
             return false;
         }
-        if (this.chordSectionRepeat != other.chordSectionRepeat) {
+        if (this.repeatCurrent != other.repeatCurrent) {
+            return false;
+        }
+        if (this.repeatTotal != other.repeatTotal) {
+            return false;
+        }
+        if (this.repeatFirstRow != other.repeatFirstRow) {
+            return false;
+        }
+        if (this.repeatLastRow != other.repeatLastRow) {
+            return false;
+        }
+        if (this.repeatLastCol != other.repeatLastCol) {
             return false;
         }
         if (this.measure != other.measure) {
@@ -430,25 +568,36 @@ public class SongUpdate {
         if (this.beatsPerMinute != other.beatsPerMinute) {
             return false;
         }
-        if (!Objects.equals(this.section, other.section)) {
+        if (this.section != other.section) {
             return false;
         }
         return true;
     }
 
     private State state = State.idle;
-    private long eventTime;
+    private double eventTime;
     private Song song;
+    private int section;
     private int sectionCount;
-    private String section;
+    private String sectionId;
     private int sectionVersion;
     private int chordSectionRow;
-    private int chordSectionCurrentRepeat;
-    private int chordSectionRepeat;
+    private int chordSectionCol;
+    private int repeatCurrent;
+    private int repeatTotal;
+    private int repeatFirstRow = -1;
+    private int repeatLastRow;
+    private int repeatLastCol;
+
+    private static final RegExp extenderRegExp = RegExp.compile("^\\|$");
+    private static final RegExp repeatRegExp = RegExp.compile("x *(?:\\d+\\/)?(\\d+)", "i");
+
+
     private int measure;
+    private String measureContent;
 
     private int beat;
     private int beatsPerMeasure;
     private int beatsPerMinute;
-
+    private static final Logger logger = Logger.getLogger(SongUpdate.class.getName());
 }

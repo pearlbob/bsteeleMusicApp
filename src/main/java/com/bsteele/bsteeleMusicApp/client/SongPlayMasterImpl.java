@@ -6,6 +6,8 @@ package com.bsteele.bsteeleMusicApp.client;
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
@@ -26,9 +28,7 @@ import java.util.ArrayList;
 @JsType
 public class SongPlayMasterImpl
         extends HandlerContainerImpl
-        implements
-        SongPlayMaster,
-
+        implements SongPlayMaster,
         DefaultDrumSelectEventHandler {
 
     @Inject
@@ -80,7 +80,12 @@ public class SongPlayMasterImpl
 
         switch (action) {
             case playing:
+
                 double t = audioFilePlayer.getCurrentTime();
+
+                songUpdate(System.currentTimeMillis()/1000.0);
+
+                //  schedule the audio one measure early
                 if (t > nextMeasureStart - measureDuration) {
                     //   time to load the next measure
                     if (nextMeasureStart < t - measureDuration)
@@ -97,6 +102,24 @@ public class SongPlayMasterImpl
                 break;
             case idle:
                 break;
+        }
+    }
+
+    /**
+     * @param t audio time
+     */
+    private void songUpdate(double t) {
+        double songT = songOutUpdate.getEventTime() + measureDuration * songOutUpdate.getMeasure();
+        if (t >= songT) {
+            while (t >= songT) {
+                if ( !songOutUpdate.nextMeasure()) {
+                    stopSong();
+                    break;
+                }
+                songT = songOutUpdate.getEventTime() + measureDuration * songOutUpdate.getMeasure();
+            }
+            GWT.log(songOutUpdate.toString());
+            eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
         }
     }
 
@@ -178,24 +201,27 @@ public class SongPlayMasterImpl
         try {
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
             GWT.log("update diff: " + songInUpdate.diff(songOutUpdate));
-//            double t = audioContext.getCurrentTime();
-//            GWT.log("diff: " + (System.currentTimeMillis() / 1000.0 - t) + ", t: " + t);
+
+
+            double audioOffset = systemT - t;
+            double dOff = 0;
+            if (lastOffset > 0)
+                dOff = lastOffset - audioOffset;
+            lastOffset = audioOffset;
+
+            GWT.log("t: " + t
+                    + ", off: " + audioOffset
+                    + ", dOff: " + dOff
+                    + ", " + audioFilePlayer.getBaseLatency()
+                    + ", " + audioFilePlayer.getOutputLatency()
+            );
+
+            eventBus.fireEvent(new SongSelectionEvent(songInUpdate.getSong()));
+            eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
         } catch (JSONException jsonException) {
             GWT.log(jsonException.getMessage());
         }
 
-        double audioOffset = systemT - t;
-        double dOff = 0;
-        if (lastOffset > 0)
-            dOff = lastOffset - audioOffset;
-        lastOffset = audioOffset;
-
-//        GWT.log("t: " + t
-//                        + ", off: " + audioOffset
-//                        + ", dOff: " + dOff
-//                +", "+audioFilePlayer.getBaseLatency()
-//                +", "+audioFilePlayer.getOutputLatency()
-//        );
     }
 
     @Override
@@ -270,15 +296,9 @@ public class SongPlayMasterImpl
                 songOutUpdate.setBeat(currentBeat);
                 songOutUpdate.setBeatsPerBar(song.getBeatsPerBar());
                 songOutUpdate.setBeatsPerMinute(song.getBeatsPerMinute());
-                songOutUpdate.setChordSectionCurrentRepeat(0);
-                songOutUpdate.setChordSectionRepeat(0);
-                songOutUpdate.setChordSectionRow(0);
-                songOutUpdate.setEventTime(System.currentTimeMillis());
-                songOutUpdate.setMeasure(currentMeasure);
-                songOutUpdate.setSectionCount(currentSection);
-                songOutUpdate.setSection(sectionSequence.get(currentSection).getSection().getAbreviation());
-                songOutUpdate.setSectionVersion(sectionSequence.get(currentSection).getVersion());
+                songOutUpdate.setEventTime(System.currentTimeMillis()/1000.0); //   fixme: adjust for runnup
                 songOutUpdate.setSong(song);
+                songOutUpdate.measureReset();
 
                 bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
                 action = Action.playing;

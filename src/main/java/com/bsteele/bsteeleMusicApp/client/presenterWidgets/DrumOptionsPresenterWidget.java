@@ -52,7 +52,7 @@ public class DrumOptionsPresenterWidget extends PresenterWidget<DrumOptionsPrese
 
     @Override
     public void onSongSelection(SongSelectionEvent event) {
-
+            //  adjust drum to song drum description
     }
     
     @Override

@@ -24,13 +24,13 @@ public class BSteeleMusicIO {
 
         this.songPlayMaster = songPlayMaster;
         String url = getWebSocketURL();
-        //GWT.log("url: " + url);
-
-        songPlayMaster.setbSteeleMusicIO(this); //  fixme: this can't be correct
+        GWT.log("url: " + url);
 
         socket = new WebSocket(url);
         socket.onerror = new SocketErrorFunction();
         socket.onmessage = new SocketReceiveFunction();
+
+        songPlayMaster.setbSteeleMusicIO(this); //  fixme: this can't be correct
     }
 
     private String getWebSocketURL() {
@@ -39,7 +39,6 @@ public class BSteeleMusicIO {
         url = url.replaceFirst("bsteeleMusicApp", "");  //  due to jetty startup
         url = url.replaceFirst("^http\\:", "ws:") + "bsteeleMusicApp/bsteeleMusic";
         url = url.replaceFirst("8888", "8082");//  fixme
-        url = url.replaceFirst("//", "/");
         logger.fine("url: " + url);
         return url;
     }
@@ -85,12 +84,12 @@ public class BSteeleMusicIO {
             logger.info("socket is null");
             return false;
         }
-        if ( !isSocketOpen) {
-            //  socket down, run locally only
-            GWT.log("socket readyState: " + socket.readyState);
-            songPlayMaster.onMessage(System.currentTimeMillis() / 1000.0, message);
-            return true;
-        }
+//        if ( !isSocketOpen) {
+//            //  socket down, run locally only
+//            GWT.log("socket readyState: " + socket.readyState);
+//            songPlayMaster.onMessage(System.currentTimeMillis() / 1000.0, message);
+//            return true;
+//        }
 
 //        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
 //                + " at my " + System.currentTimeMillis());

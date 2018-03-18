@@ -3,7 +3,6 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
-import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.AfterClass;
@@ -102,14 +101,14 @@ public class SongUpdateTest extends GWTTestCase {
     }
 
     /**
-     * Test of getChordSectionCurrentRepeat method, of class SongUpdate.
+     * Test of getRepeatCurrent method, of class SongUpdate.
      */
     @Test
     public void testGetChordSectionCurrentRepeat() {
-        System.out.println("getChordSectionCurrentRepeat");
+        System.out.println("getRepeatCurrent");
         SongUpdate instance = new SongUpdate();
         int expResult = 0;
-        int result = instance.getChordSectionCurrentRepeat();
+        int result = instance.getRepeatCurrent();
         assertEquals(expResult, result);
     }
 
@@ -211,14 +210,14 @@ public class SongUpdateTest extends GWTTestCase {
     }
 
     /**
-     * Test of setChordSectionCurrentRepeat method, of class SongUpdate.
+     * Test of setRepeatCurrent method, of class SongUpdate.
      */
     @Test
     public void testSetChordSectionCurrentRepeat() {
-        System.out.println("setChordSectionCurrentRepeat");
+        System.out.println("setRepeatCurrent");
         int chordSectionCurrentRepeat = 0;
         SongUpdate instance = new SongUpdate();
-        instance.setChordSectionCurrentRepeat(chordSectionCurrentRepeat);
+        instance.setRepeatCurrent(chordSectionCurrentRepeat);
     }
 
     /**

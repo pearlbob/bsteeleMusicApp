@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.application.events;
 
+import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -14,10 +15,10 @@ public class SongUpdateEvent extends GwtEvent<SongUpdateEventHandler> {
   
     public static Type<SongUpdateEventHandler> TYPE = new Type<SongUpdateEventHandler>();
 
-    private final Song song;
+    private final SongUpdate songUpdate;
 
-    public SongUpdateEvent(Song song) {
-        this.song = song;
+    public SongUpdateEvent(SongUpdate songUpdate) {
+        this.songUpdate = songUpdate;
 }
 
     @Override
@@ -30,7 +31,7 @@ public class SongUpdateEvent extends GwtEvent<SongUpdateEventHandler> {
         handler.onSongUpdate(this);
     }
 
-    public Song getSong() {
-        return song;
+    public SongUpdate getSongUpdate() {
+        return songUpdate;
     }
 }

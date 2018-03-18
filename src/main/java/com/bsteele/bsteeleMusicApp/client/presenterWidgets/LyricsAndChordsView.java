@@ -103,8 +103,11 @@ public class LyricsAndChordsView
         Event.sinkEvents(playButton, Event.ONCLICK);
         Event.setEventListener(playButton, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                if (song != null)
-                    songPlayMaster.playSong(song );
+                if (song != null) {
+                    Song songToPlay = song.copySong();
+                    songToPlay.setBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                    songPlayMaster.playSong(songToPlay);
+                }
             }
         });
 
