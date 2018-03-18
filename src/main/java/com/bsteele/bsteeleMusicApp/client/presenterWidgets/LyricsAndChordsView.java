@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.google.gwt.core.client.GWT;
@@ -91,6 +92,42 @@ public class LyricsAndChordsView
         lyrics.add(new HTML(song.generateHtmlLyricsTable()));
     }
 
+    @Override
+    public void onSongUpdate(SongUpdate songUpdate) {
+        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
+                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+
+        //  turn off all highlights
+        if (lastChordElement != null) {
+            lastChordElement.getStyle().clearBackgroundColor();
+            lastChordElement = null;
+        }
+        if (lastLyricsElement != null) {
+            lastLyricsElement.getStyle().clearBackgroundColor();
+            lastLyricsElement = null;
+        }
+
+
+        //  turn on highlights if required
+        switch (songUpdate.getState()) {
+            case idle:
+                break;
+            case playing:
+                Element ce = chords.getElementById(chordCellId);
+                if (ce != null) {
+                    ce.getStyle().setBackgroundColor(highlightColor);
+                    lastChordElement = ce;
+                }
+                String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
+                Element le = lyrics.getElementById(lyricsCellId);
+                if (le != null) {
+                    le.getStyle().setBackgroundColor(highlightColor);
+                    lastLyricsElement = le;
+                }
+                break;
+        }
+    }
+
     interface Binder extends UiBinder<Widget, LyricsAndChordsView> {
     }
 
@@ -147,5 +184,8 @@ public class LyricsAndChordsView
     }
 
     private Song song;
-   private SongPlayMaster songPlayMaster;
+    private SongPlayMaster songPlayMaster;
+    private Element lastChordElement;
+    private Element lastLyricsElement;
+    public static final  String highlightColor = "#e4c9ff";
 }

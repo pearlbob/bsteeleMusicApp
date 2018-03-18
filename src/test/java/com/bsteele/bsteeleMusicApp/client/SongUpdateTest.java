@@ -52,43 +52,6 @@ public class SongUpdateTest extends GWTTestCase {
     }
 
     /**
-     * Test of getSection method, of class SongUpdate.
-     */
-    @Test
-    public void testGetSection() {
-        System.out.println("getSection");
-        SongUpdate instance = new SongUpdate();
-        String expResult = "";
-        String result = instance.getSection();
-        //   assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of setSection method, of class SongUpdate.
-     */
-    @Test
-    public void testSetSection() {
-        System.out.println("setSection");
-        String section = "V:";
-        SongUpdate instance = new SongUpdate();
-        instance.setSection(section);
-        assertEquals(section, instance.getSection());
-    }
-
-    /**
-     * Test of getSectionVersion method, of class SongUpdate.
-     */
-    @Test
-    public void testGetSectionVersion() {
-        System.out.println("getSectionVersion");
-        SongUpdate instance = new SongUpdate();
-        int expResult = 13;
-        instance.setSectionVersion(expResult);
-        int result = instance.getSectionVersion();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getChordSectionRow method, of class SongUpdate.
      */
     @Test
@@ -109,18 +72,6 @@ public class SongUpdateTest extends GWTTestCase {
         SongUpdate instance = new SongUpdate();
         int expResult = 0;
         int result = instance.getRepeatCurrent();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getChordSectionRepeat method, of class SongUpdate.
-     */
-    @Test
-    public void testGetChordSectionRepeat() {
-        System.out.println("getChordSectionRepeat");
-        SongUpdate instance = new SongUpdate();
-        int expResult = 0;
-        int result = instance.getChordSectionRepeat();
         assertEquals(expResult, result);
     }
 
@@ -218,17 +169,6 @@ public class SongUpdateTest extends GWTTestCase {
         int chordSectionCurrentRepeat = 0;
         SongUpdate instance = new SongUpdate();
         instance.setRepeatCurrent(chordSectionCurrentRepeat);
-    }
-
-    /**
-     * Test of setChordSectionRepeat method, of class SongUpdate.
-     */
-    @Test
-    public void testSetChordSectionRepeat() {
-        System.out.println("setChordSectionRepeat");
-        int chordSectionRepeat = 0;
-        SongUpdate instance = new SongUpdate();
-        instance.setChordSectionRepeat(chordSectionRepeat);
     }
 
     /**

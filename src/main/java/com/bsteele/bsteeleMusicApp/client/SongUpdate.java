@@ -17,7 +17,6 @@ import java.util.logging.Logger;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import jsinterop.annotations.JsType;
-import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
  * Immutable song update data
@@ -69,11 +68,13 @@ public class SongUpdate {
         if (m < 0)
             m = 0;
 
-        section = 0;
+        sectionNumber = 0;
         sectionId = "";
-        sectionVersion = 0;
+        sectionVersion = (song != null && song.getSectionSequence() != null && song.getSectionSequence().size() > 0)
+                ? song.getSectionSequence().get(0)
+                : Section.getDefaultVersion();
         chordSectionRow = 0;
-        chordSectionCol = 0;
+        chordSectionColumn = 0;
         repeatCurrent = 0;
         repeatTotal = 0;
         repeatFirstRow = -1;
@@ -87,7 +88,7 @@ public class SongUpdate {
 //            int sn = 0;
 //
 //        for (Section.Version sv : song.getSectionSequence()) {
-//            String sid = sv.getSection().getAbreviation();
+//            String sid = sv.getSectionNumber().getAbreviation();
 //            int svn = sv.getVersion();
 //            Grid<String> chordSection = song.getChordSection(sv);
 //            for (int r = 0; r < chordSection.getRowCount(); r++) {
@@ -101,6 +102,8 @@ public class SongUpdate {
 //        }
 //        }
 
+
+        //  fixme: performance improvements?
         while (measure < m)
             if (!nextMeasure())
                 break;
@@ -108,17 +111,17 @@ public class SongUpdate {
 
     public boolean nextMeasure() {
         ArrayList<Section.Version> songSectionSequence = song.getSectionSequence();
-        if (section >= songSectionSequence.size())
+        if (sectionNumber >= songSectionSequence.size())
             return false;
 
         //  increment to next the next measure slot
-        Section.Version sectionVersion = songSectionSequence.get(section);
+        sectionVersion = songSectionSequence.get(sectionNumber);
         Grid<String> chordSection = song.getChordSection(sectionVersion);
         ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
-        chordSectionCol++;
-        if (this.chordSectionCol >= chordCols.size()) {
+        chordSectionColumn++;
+        if (this.chordSectionColumn >= chordCols.size()) {
             //  go to the next row
-            this.chordSectionCol = 0;
+            this.chordSectionColumn = 0;
             this.chordSectionRow++;
 
             //  repeat if required
@@ -135,19 +138,19 @@ public class SongUpdate {
                     repeatLastCol = -1;
                 }
             }
-            //  go to the next section
+            //  go to the next sectionNumber
             if (chordSectionRow >= chordSection.getRowCount()) {
                 repeatTotal = 0;
                 chordSectionRow = 0;
-                section++;
+                sectionNumber++;
             }
         }
 
 
         //  validate where we've landed after the increment
-        if (this.section >= songSectionSequence.size())
+        if (sectionNumber >= songSectionSequence.size())
             return false;
-        sectionVersion = songSectionSequence.get(this.section);
+        sectionVersion = songSectionSequence.get(sectionNumber);
         chordSection = song.getChordSection(sectionVersion);
 
         chordCols = chordSection.getRow(chordSectionRow);
@@ -155,7 +158,7 @@ public class SongUpdate {
             return false;
         }
 
-        measureContent = chordCols.get(chordSectionCol);
+        measureContent = chordCols.get(chordSectionColumn);
         if (measureContent == null) {
             return false;
         }
@@ -180,7 +183,7 @@ public class SongUpdate {
                 repeatCurrent = 0;
                 repeatFirstRow = (repeatFirstRow >= 0 ? repeatFirstRow : chordSectionRow);
                 repeatLastRow = chordSectionRow;
-                repeatLastCol = chordSectionCol;
+                repeatLastCol = chordSectionColumn;
             }
             return this.nextMeasure();   //  go find the next real measure
         }
@@ -207,45 +210,30 @@ public class SongUpdate {
         return sectionCount;
     }
 
-    /**
-     * Id of the current section to be used by the chords display.
-     *
-     * @return
-     */
-    public String getSection() {
-        return sectionId;
+    public int getSectionNumber() {
+        return sectionNumber;
     }
 
     /**
-     * @param section
-     */
-    public void setSection(String section) {
-        this.sectionId = section;
-    }
-
-    /**
-     * Id of the current section to be used by the chords display.
+     * Id of the current sectionNumber to be used by the chords display.
      *
      * @return
      */
-    public int getSectionVersion() {
+    public Section.Version getSectionVersion() {
         return sectionVersion;
     }
 
     /**
-     * @param sectionVersion the sectionVersion to set
-     */
-    public void setSectionVersion(int sectionVersion) {
-        this.sectionVersion = sectionVersion;
-    }
-
-    /**
-     * Current row number in the section
+     * Current row number in the sectionNumber
      *
      * @return
      */
     public int getChordSectionRow() {
         return chordSectionRow;
+    }
+
+    public int getChordSectionColumn() {
+        return chordSectionColumn;
     }
 
     /**
@@ -364,8 +352,8 @@ public class SongUpdate {
             return "no old song";
         if (!song.equals(other.song))
             return "new song: " + other.song.getTitle() + ", " + other.song.getArtist();
-        if ( sectionId!=null && other.sectionId!=null && !sectionId.equals(other.sectionId))
-            return "new section: " + other.getSection().toString();
+        if (sectionId != null && other.sectionId != null && !sectionId.equals(other.sectionId))
+            return "new sectionNumber: " + other.getSectionNumber();
         if (measure != other.measure)
             return "new measure: " + other.measure;
         return "no change";
@@ -396,9 +384,9 @@ public class SongUpdate {
     public String toString() {
         StringBuilder sb = new StringBuilder("SongUpdate: ");
         sb.append(getMeasure());
-        sb.append(" ").append(getSection());
-        sb.append(" ").append(section);
-        sb.append(" (").append(chordSectionRow).append(",").append(chordSectionCol).append(")");
+        sb.append(" ").append(getSectionNumber());
+        sb.append(" ").append(sectionNumber);
+        sb.append(" (").append(chordSectionRow).append(",").append(chordSectionColumn).append(")");
         return sb.toString();
     }
 
@@ -435,7 +423,7 @@ public class SongUpdate {
                 case "song":
                     songUpdate.setSong(Song.fromJsonObject(jv.isObject()));
                     break;
-                //  section sequencing details should be found by local processing
+                //  sectionNumber sequencing details should be found by local processing
                 case "measure":
                     songUpdate.measure = JsonUtil.toInt(jv);
                     break;
@@ -450,6 +438,7 @@ public class SongUpdate {
                     break;
             }
         }
+        songUpdate.measureSet(songUpdate.measure);
         return songUpdate;
     }
 
@@ -465,7 +454,7 @@ public class SongUpdate {
                 .append("\"song\": ")
                 .append(song.toJson())
                 .append(",\n")
-                //  section sequencing details should be found by local processing
+                //  sectionNumber sequencing details should be found by local processing
                 .append("\"measure\": ")
                 .append(getMeasure())
                 .append(",\n")
@@ -490,9 +479,9 @@ public class SongUpdate {
         hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.sectionId)) % (1 << 31);
-        hash = (83 * hash + this.sectionVersion) % (1 << 31);
+        hash = (83 * hash + sectionVersion.hashCode()) % (1 << 31);
         hash = (83 * hash + this.chordSectionRow) % (1 << 31);
-        hash = (83 * hash + this.chordSectionCol) % (1 << 31);
+        hash = (83 * hash + this.chordSectionColumn) % (1 << 31);
         hash = (83 * hash + this.repeatCurrent) % (1 << 31);
         hash = (83 * hash + this.repeatTotal) % (1 << 31);
         hash = (83 * hash + this.repeatFirstRow) % (1 << 31);
@@ -538,7 +527,7 @@ public class SongUpdate {
         if (this.chordSectionRow != other.chordSectionRow) {
             return false;
         }
-        if (this.chordSectionCol != other.chordSectionCol) {
+        if (this.chordSectionColumn != other.chordSectionColumn) {
             return false;
         }
         if (this.repeatCurrent != other.repeatCurrent) {
@@ -568,7 +557,7 @@ public class SongUpdate {
         if (this.beatsPerMinute != other.beatsPerMinute) {
             return false;
         }
-        if (this.section != other.section) {
+        if (this.sectionNumber != other.sectionNumber) {
             return false;
         }
         return true;
@@ -577,12 +566,12 @@ public class SongUpdate {
     private State state = State.idle;
     private double eventTime;
     private Song song;
-    private int section;
+    private int sectionNumber;
     private int sectionCount;
     private String sectionId;
-    private int sectionVersion;
+    private Section.Version sectionVersion;
     private int chordSectionRow;
-    private int chordSectionCol;
+    private int chordSectionColumn;
     private int repeatCurrent;
     private int repeatTotal;
     private int repeatFirstRow = -1;

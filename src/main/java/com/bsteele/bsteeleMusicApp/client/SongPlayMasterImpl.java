@@ -83,7 +83,7 @@ public class SongPlayMasterImpl
 
                 double t = audioFilePlayer.getCurrentTime();
 
-                songUpdate(System.currentTimeMillis()/1000.0);
+                songUpdate(System.currentTimeMillis() / 1000.0);
 
                 //  schedule the audio one measure early
                 if (t > nextMeasureStart - measureDuration) {
@@ -98,6 +98,8 @@ public class SongPlayMasterImpl
                 break;
             case stopSong:
                 audioFilePlayer.stop();
+                songOutUpdate.setState(SongUpdate.State.idle);
+                eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
                 action = Action.idle;
                 break;
             case idle:
@@ -112,13 +114,13 @@ public class SongPlayMasterImpl
         double songT = songOutUpdate.getEventTime() + measureDuration * songOutUpdate.getMeasure();
         if (t >= songT) {
             while (t >= songT) {
-                if ( !songOutUpdate.nextMeasure()) {
+                if (!songOutUpdate.nextMeasure()) {
                     stopSong();
                     break;
                 }
                 songT = songOutUpdate.getEventTime() + measureDuration * songOutUpdate.getMeasure();
             }
-            GWT.log(songOutUpdate.toString());
+            //GWT.log(songOutUpdate.toString());
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
         }
     }
@@ -296,9 +298,11 @@ public class SongPlayMasterImpl
                 songOutUpdate.setBeat(currentBeat);
                 songOutUpdate.setBeatsPerBar(song.getBeatsPerBar());
                 songOutUpdate.setBeatsPerMinute(song.getBeatsPerMinute());
-                songOutUpdate.setEventTime(System.currentTimeMillis()/1000.0); //   fixme: adjust for runnup
+                songOutUpdate.setEventTime(System.currentTimeMillis() / 1000.0
+                        + measureDuration); //   fixme: adjust for adjustable runnup
                 songOutUpdate.setSong(song);
                 songOutUpdate.measureReset();
+                songOutUpdate.setState(SongUpdate.State.playing);
 
                 bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
                 action = Action.playing;

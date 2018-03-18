@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -19,7 +20,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- *
  * @author bob
  */
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
@@ -27,93 +27,94 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongSubmissionEventHandler,
         SongReadEventHandler {
 
-  public interface MyView extends View {
 
-    HandlerRegistration addSongSelectionEventHandler(
-            SongSelectionEventHandler handler);
+    public interface MyView extends View {
 
-    HandlerRegistration addSongReadEventHandler(
-            SongReadEventHandler handler);
+        HandlerRegistration addSongSelectionEventHandler(
+                SongSelectionEventHandler handler);
 
-    void setSongList(Set<Song> songs);
-  }
+        HandlerRegistration addSongReadEventHandler(
+                SongReadEventHandler handler);
 
-  @Inject
-  SongListPresenterWidget(final EventBus eventBus,
-          final MyView view
-  ) {
-    super(eventBus, view);
+        void setSongList(Set<Song> songs);
+    }
 
-    this.eventBus = eventBus;
-    this.view = view;
+    @Inject
+    SongListPresenterWidget(final EventBus eventBus,
+                            final MyView view
+    ) {
+        super(eventBus, view);
 
-    addJsonToSonglist(AppResources.INSTANCE.legacySongsAsJsonString().getText());
-    addJsonToSonglist(AppResources.INSTANCE.allSongsAsJsonString().getText());
-  }
+        this.eventBus = eventBus;
+        this.view = view;
 
-  @Override
-  public void onBind() {
-    view.addSongSelectionEventHandler(this);
-    view.addSongReadEventHandler(this);
+        addJsonToSonglist(AppResources.INSTANCE.legacySongsAsJsonString().getText());
+        addJsonToSonglist(AppResources.INSTANCE.allSongsAsJsonString().getText());
+    }
 
-    eventBus.addHandler(SongSubmissionEvent.TYPE, this);
-  }
+    @Override
+    public void onBind() {
+        view.addSongSelectionEventHandler(this);
+        view.addSongReadEventHandler(this);
 
-  @Override
-  public void onSongSelection(SongSelectionEvent event) {
-    eventBus.fireEvent(event);
-  }
+        eventBus.addHandler(SongSubmissionEvent.TYPE, this);
+    }
 
-  @Override
-  public void onSongSubmission(SongSubmissionEvent event) {
-    Song song = event.getSong();
-    String filename = song.getTitle() + ".songlyrics";
+    @Override
+    public void onSongSelection(SongSelectionEvent event) {
+        eventBus.fireEvent(event);
+    }
 
-    saveSongAs(filename, song.toJson());
+    @Override
+    public void onSongSubmission(SongSubmissionEvent event) {
+        Song song = event.getSong();
+        String filename = song.getTitle() + ".songlyrics";
 
-    addToSonglist(song);
-    view.setSongList(allSongs);
-    fireEvent(new SongSelectionEvent(song));
-  }
+        saveSongAs(filename, song.toJson());
 
-  @Override
-  public void onSongRead(SongReadEvent event) {
-    Song song = event.getSong();
-    addToSonglist(song);
-    view.setSongList(allSongs);
-    fireEvent(new SongSelectionEvent(song));
-  }
+        addToSonglist(song);
+        view.setSongList(allSongs);
+        fireEvent(new SongSelectionEvent(song));
+    }
 
-  private void addJsonToSonglist(String jsonString) {
-    if (jsonString != null && jsonString.length() > 0) {
-      JSONValue jv = JSONParser.parseStrict(jsonString);
-      if (jv != null) {
-        JSONArray ja = jv.isArray();
-        if (ja != null) {
-          int jaLimit = ja.size();
-          for (int i = 0; i < jaLimit; i++) {
-            addToSonglist(Song.fromJsonObject(ja.get(i).isObject()));
-          }
+    @Override
+    public void onSongRead(SongReadEvent event) {
+        Song song = event.getSong();
+        addToSonglist(song);
+        view.setSongList(allSongs);
+        fireEvent(new SongSelectionEvent(song));
+    }
+
+    private void addJsonToSonglist(String jsonString) {
+        if (jsonString != null && jsonString.length() > 0) {
+            JSONValue jv = JSONParser.parseStrict(jsonString);
+            if (jv != null) {
+                JSONArray ja = jv.isArray();
+                if (ja != null) {
+                    int jaLimit = ja.size();
+                    for (int i = 0; i < jaLimit; i++) {
+                        addToSonglist(Song.fromJsonObject(ja.get(i).isObject()));
+                    }
+                }
+            }
         }
-      }
+        view.setSongList(allSongs);
     }
-    view.setSongList(allSongs);
-  }
 
-  private void addToSonglist(Song song) {
-    if (song != null) {
-      allSongs.remove(song);  //  remove any prior version
-      allSongs.add(song);
+    private void addToSonglist(Song song) {
+        if (song != null) {
+            allSongs.remove(song);  //  remove any prior version
+            allSongs.add(song);
+        }
     }
-  }
 
-  /**
-   * Native function to write the song as JSON.
-   *
-   * @param filename
-   * @param data
-   */
-  private native void saveSongAs(String filename, String data) /*-{
+    /**
+     * Native function to write the song as JSON.
+     *
+     * @param filename
+     * @param data
+     */
+    private native void saveSongAs(String filename, String data) /*-{
     var data = new Blob([data], {type: 'text/plain'});
     // If we are replacing a previously generated file we need to
     // manually revoke the object URL to avoid memory leaks.
@@ -133,7 +134,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     downloadlink.click();
 }-*/;
 
-  private final TreeSet<Song> allSongs = new TreeSet<>();
-  private final EventBus eventBus;
-  private final MyView view;
+    private final TreeSet<Song> allSongs = new TreeSet<>();
+    private final EventBus eventBus;
+    private final MyView view;
 }

@@ -9,7 +9,7 @@ import com.google.gwt.event.shared.EventHandler;
  *
  * @author bob
  */
-interface SongUpdateEventHandler extends EventHandler {
+public interface SongUpdateEventHandler extends EventHandler {
 
   void onSongUpdate(SongUpdateEvent event);
 }

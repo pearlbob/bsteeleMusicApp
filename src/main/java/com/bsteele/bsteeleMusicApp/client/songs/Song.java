@@ -446,7 +446,7 @@ public class Song implements Comparable<Song> {
                         }
                         lyrics += rowStart + version.toString() + ":"
                                 + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbreviation() + "Class\""
-                                + " id=\"L." + sectionIndex + "\">";
+                                + " id=\"" + genLyicsId(sectionIndex) + "\">";
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
                         state = 0;
@@ -469,7 +469,7 @@ public class Song implements Comparable<Song> {
                                     lyrics += rowStart
                                             + Section.getDefaultVersion().toString() + ":"
                                             + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
-                                            + " id=\"L." + sectionIndex + "\">";
+                                            + " id=\"" + genLyicsId(sectionIndex) + "\">";
                                     isSection = true;
                                 }
                                 lyrics += whiteSpace + c;
@@ -487,6 +487,10 @@ public class Song implements Comparable<Song> {
                 + tableEnd;
         //GWT.log(lyrics);
         return lyrics;
+    }
+
+    public static final String genLyicsId(int sectionIndex) {
+        return "L." + sectionIndex;
     }
 
     private String generateHtmlChordTableFromMap(HashMap<Section.Version, Grid<String>> map) {
@@ -540,12 +544,8 @@ public class Song implements Comparable<Song> {
                     if (endOfChordLineExp.test(content)) {
                         chordText.append(" style=\"border-right: 0px solid black;\n");
                     }
-                    chordText.append(" id=\"C.")
-                            .append(displayVersion.toString())
-                            .append(".")
-                            .append(r)
-                            .append(".")
-                            .append(col)
+                    chordText.append(" id=\"")
+                            .append(genChordId(displayVersion, r, col))
                             .append("\" >")
                             .append(content).append("</td>\n\t");
                 }
@@ -554,6 +554,10 @@ public class Song implements Comparable<Song> {
         }
         String ret = tableStart + chordText + tableEnd;
         return ret;
+    }
+
+    public static final String genChordId(Section.Version displaySectionVersion, int row, int col) {
+        return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
     }
 
     /**
