@@ -479,7 +479,7 @@ public class SongUpdate {
         hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.sectionId)) % (1 << 31);
-        hash = (83 * hash + sectionVersion.hashCode()) % (1 << 31);
+        hash = (83 * hash + Objects.hashCode(this.sectionVersion)) % (1 << 31);
         hash = (83 * hash + this.chordSectionRow) % (1 << 31);
         hash = (83 * hash + this.chordSectionColumn) % (1 << 31);
         hash = (83 * hash + this.repeatCurrent) % (1 << 31);
