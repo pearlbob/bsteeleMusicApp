@@ -20,14 +20,6 @@ import com.gwtplatform.mvp.client.annotations.UseGatekeeper;
 import com.gwtplatform.mvp.client.presenter.slots.SingleSlot;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
-/*  todo
-todo: datagrid for events
-todo: get focus on songlist search, keep it there
-todo: visual screen-warning that we're about to change sections
-todo: think about fullscreen use, particularly when playing
-
- */
-
 /**
  * @author bob
  */

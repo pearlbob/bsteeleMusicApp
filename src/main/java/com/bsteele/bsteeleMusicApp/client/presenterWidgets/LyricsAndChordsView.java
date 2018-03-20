@@ -42,6 +42,9 @@ public class LyricsAndChordsView
     SelectElement bpmSelect;
 
     @UiField
+    SpanElement timeSignature;
+
+    @UiField
     SpanElement title;
 
     @UiField
@@ -67,6 +70,8 @@ public class LyricsAndChordsView
         title.setInnerHTML(song.getTitle());
         artist.setInnerHTML(song.getArtist());
         copyright.setInnerHTML(song.getCopyright());
+
+        timeSignature.setInnerHTML(song.getBeatsPerBar()+"/"+song.getUnitsPerMeasure());
 
         currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
@@ -113,16 +118,18 @@ public class LyricsAndChordsView
             case idle:
                 break;
             case playing:
-                Element ce = chords.getElementById(chordCellId);
-                if (ce != null) {
-                    ce.getStyle().setBackgroundColor(highlightColor);
-                    lastChordElement = ce;
-                }
-                String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
-                Element le = lyrics.getElementById(lyricsCellId);
-                if (le != null) {
-                    le.getStyle().setBackgroundColor(highlightColor);
-                    lastLyricsElement = le;
+                if ( songUpdate.getMeasure() >= 0 ) {
+                    Element ce = chords.getElementById(chordCellId);
+                    if (ce != null) {
+                        ce.getStyle().setBackgroundColor(highlightColor);
+                        lastChordElement = ce;
+                    }
+                    String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
+                    Element le = lyrics.getElementById(lyricsCellId);
+                    if (le != null) {
+                        le.getStyle().setBackgroundColor(highlightColor);
+                        lastLyricsElement = le;
+                    }
                 }
                 break;
         }
@@ -187,5 +194,5 @@ public class LyricsAndChordsView
     private SongPlayMaster songPlayMaster;
     private Element lastChordElement;
     private Element lastLyricsElement;
-    public static final  String highlightColor = "#e4c9ff";
+    public static final String highlightColor = "#e4c9ff";
 }

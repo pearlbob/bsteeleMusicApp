@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -55,8 +56,11 @@ public class SongUpdate {
         return state;
     }
 
-    public void measureReset() {
-        measureSet(0);
+    /**
+     * @param measure the measure to set
+     */
+    void setMeasure(int measure) {
+        measureSet(measure);
     }
 
     /**
@@ -65,14 +69,25 @@ public class SongUpdate {
      * @param m the measure to move to
      */
     private void measureSet(int m) {
-        if (m < 0)
-            m = 0;
-
         sectionNumber = 0;
-        sectionId = "";
-        sectionVersion = (song != null && song.getSectionSequence() != null && song.getSectionSequence().size() > 0)
-                ? song.getSectionSequence().get(0)
-                : Section.getDefaultVersion();
+        sectionVersion = Section.getDefaultVersion();
+        measureContent = "";
+        //  special for first measure
+        if (m >= 0
+                && song != null
+                && song.getSectionSequence() != null
+                && song.getSectionSequence().size() > 0) {
+            ArrayList<Section.Version> songSectionSequence = song.getSectionSequence();
+            sectionVersion = songSectionSequence.get(sectionNumber);
+            Grid<String> chordSection = song.getChordSection(sectionVersion);
+            if (chordSection != null && !chordSection.isEmpty()) {
+                ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
+                if (chordCols != null && chordCols.size() > 0)
+                    measureContent = chordCols.get(0);
+            }
+        }
+        sectionId = sectionVersion.toString();
+        GWT.log("measureSet() from "+measure+" to "+m);
         chordSectionRow = 0;
         chordSectionColumn = 0;
         repeatCurrent = 0;
@@ -81,35 +96,33 @@ public class SongUpdate {
         repeatLastRow = -1;
         repeatLastCol = -1;
         measure = 0;
-        measureContent = "";
+
         beat = 0;
 
-//        {
-//            int sn = 0;
-//
-//        for (Section.Version sv : song.getSectionSequence()) {
-//            String sid = sv.getSectionNumber().getAbreviation();
-//            int svn = sv.getVersion();
-//            Grid<String> chordSection = song.getChordSection(sv);
-//            for (int r = 0; r < chordSection.getRowCount(); r++) {
-//                ArrayList<String> row = chordSection.getRow(r);
-//                for (int c  = 0; c  < row.size(); c ++) {
-//                    logger.info(measure + ": " + sn + ":" + sid + "." + svn
-//                            + ": (" + r + "," + c  + "): " + row.get(c ));
-//                }
-//            }
-//            sn++;
-//        }
-//        }
-
-
         //  fixme: performance improvements?
-        while (measure < m)
-            if (!nextMeasure())
-                break;
+        if (m == 0) {
+            measure = 0;  //    we're done from the above
+        } else if (m > 0) {
+            //  walk forward to correct measure
+            while (measure < m)
+                if (!nextMeasure())
+                    break;
+        } else
+        {
+            //  leave negative measures as they are
+            measure = m;
+        }
     }
 
     public boolean nextMeasure() {
+        GWT.log("nextMeasure() from "+measure);
+        if (measure < 0) {
+            measure++;
+            if ( measure==0)
+                measureSet(0);
+            return true;
+        }
+
         ArrayList<Section.Version> songSectionSequence = song.getSectionSequence();
         if (sectionNumber >= songSectionSequence.size())
             return false;
@@ -318,13 +331,6 @@ public class SongUpdate {
         this.repeatCurrent = repeatCurrent;
     }
 
-
-    /**
-     * @param measure the measure to set
-     */
-    void setMeasure(int measure) {
-        this.measure = measure;
-    }
 
     /**
      * @param beat the beat to set

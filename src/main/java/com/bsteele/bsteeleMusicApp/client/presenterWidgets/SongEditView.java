@@ -37,6 +37,9 @@ public class SongEditView
   ButtonElement songEnter;
 
   @UiField
+  ButtonElement songEntryClear;
+
+  @UiField
   TextBox titleEntry;
 
   @UiField
@@ -70,6 +73,19 @@ public class SongEditView
     Event.setEventListener(songEnter, (Event event) -> {
       if (Event.ONCLICK == event.getTypeInt()) {
         enterSong();
+      }
+    });
+
+    Event.sinkEvents(songEntryClear, Event.ONCLICK);
+    Event.setEventListener(songEntryClear, (Event event) -> {
+      if (Event.ONCLICK == event.getTypeInt()) {
+        titleEntry.setText("");
+        artistEntry.setText("");
+        copyrightEntry.setText("");
+        bpmEntry.setText("106");
+        timeSignatureEntry.setValue("4/4" );
+        chordsEntry.setValue("");
+        lyricsEntry.setValue("");
       }
     });
 

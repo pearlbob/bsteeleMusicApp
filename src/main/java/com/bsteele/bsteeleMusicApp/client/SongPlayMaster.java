@@ -23,5 +23,5 @@ public interface SongPlayMaster {
 
     public void setSelection(int first, int last);
 
-    public void setbSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
+    public void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

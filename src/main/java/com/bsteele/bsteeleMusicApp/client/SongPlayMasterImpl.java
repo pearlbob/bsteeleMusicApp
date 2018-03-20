@@ -4,10 +4,7 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
-import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
@@ -21,6 +18,7 @@ import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * @author bob
@@ -111,23 +109,33 @@ public class SongPlayMasterImpl
      * @param t audio time
      */
     private void songUpdate(double t) {
-        double songT = songOutUpdate.getEventTime() + measureDuration * songOutUpdate.getMeasure();
-        if (t >= songT) {
-            while (t >= songT) {
+        double songT = songOutUpdate.getEventTime()
+                //  rounding error margin
+                - measureDuration / 2;
+
+        int m = (int) Math.floor((t - songT) / measureDuration);
+        if (m == songOutUpdate.getMeasure())
+            return;
+
+        logger.fine("t: " + t + ", m: " + m + " != " + songOutUpdate.getMeasure());
+
+        //  preroll
+        if (m <= 0) {
+            songOutUpdate.setMeasure(m);
+        } else {
+            while (m > songOutUpdate.getMeasure()) {
                 if (!songOutUpdate.nextMeasure()) {
                     stopSong();
                     break;
                 }
-                songT = songOutUpdate.getEventTime() + measureDuration * songOutUpdate.getMeasure();
             }
-            //GWT.log(songOutUpdate.toString());
-            eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
         }
+        eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+
+        logger.fine("update done: m: " + m + ", " + songOutUpdate.getMeasure());
     }
 
     private void beatTheDrums(DrumMeasure drumSelection) {
-
-        double beatDuration = measureDuration / beatsPerBar;
         {
             String drum = drumSelection.getHighHat();
             if (drum != null && drum.length() > 0) {
@@ -218,8 +226,10 @@ public class SongPlayMasterImpl
                     + ", " + audioFilePlayer.getOutputLatency()
             );
 
-            eventBus.fireEvent(new SongSelectionEvent(songInUpdate.getSong()));
-            eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
+            if ( !songInUpdate.getSong().equals(songOutUpdate.getSong())) {
+                eventBus.fireEvent(new SongSelectionEvent(songInUpdate.getSong()));
+                eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
+            }
         } catch (JSONException jsonException) {
             GWT.log(jsonException.getMessage());
         }
@@ -231,19 +241,20 @@ public class SongPlayMasterImpl
         defaultDrumSelection = event.getDrumSelection();
     }
 
-    public void setbSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO) {
+    public void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO) {
         this.bSteeleMusicIO = bSteeleMusicIO;
     }
+
 
     public enum Action {
         stopSong,
         playSong,
-        continueSong,
-        loopSong,
-        loop1,
-        loop2,
-        loop4,
-        loopSelected,
+        //        continueSong,
+//        loopSong,
+//        loop1,
+//        loop2,
+//        loop4,
+//        loopSelected,
         playing,
         idle;
     }
@@ -281,8 +292,6 @@ public class SongPlayMasterImpl
 
     public void setSong(Song song) {
         this.song = song;
-        sectionSequence = song.getSectionSequence();
-        currentSection = 0;
         firstSection = 0;
         lastSection = -1;
         beatsPerBar = song.getBeatsPerBar();
@@ -295,13 +304,15 @@ public class SongPlayMasterImpl
             case idle:
                 break;
             case playSong:
-                songOutUpdate.setBeat(currentBeat);
                 songOutUpdate.setBeatsPerBar(song.getBeatsPerBar());
                 songOutUpdate.setBeatsPerMinute(song.getBeatsPerMinute());
-                songOutUpdate.setEventTime(System.currentTimeMillis() / 1000.0
-                        + measureDuration); //   fixme: adjust for adjustable runnup
+
+                songOutUpdate.setEventTime(
+                        Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
+                                //  add margin into the future
+                                + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
                 songOutUpdate.setSong(song);
-                songOutUpdate.measureReset();
+                songOutUpdate.setMeasure(-preRoll);
                 songOutUpdate.setState(SongUpdate.State.playing);
 
                 bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
@@ -312,9 +323,6 @@ public class SongPlayMasterImpl
         }
     }
 
-    private int currentSection;
-    private int currentMeasure;
-    private int currentBeat;
     private int firstSection;
     private int lastSection;
 
@@ -324,7 +332,6 @@ public class SongPlayMasterImpl
     private double measureDuration = 120.0 / 60;
     private double nextMeasureStart;
     private Song song;
-    private ArrayList<Section.Version> sectionSequence;
     private final SongUpdate songOutUpdate = new SongUpdate();
     private final SongUpdate.State state = SongUpdate.State.idle;
     private Action action = Action.stopSong;
@@ -335,6 +342,8 @@ public class SongPlayMasterImpl
     private static final String snare = "images/snare_4405.mp3";
     private static final double swing = 1.5;
     private double lastOffset;
+    private static final int preRoll = 3;
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;
+    private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 }
