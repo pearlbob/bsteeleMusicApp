@@ -31,6 +31,8 @@ public class BSteeleMusicIO {
         socket.onmessage = new SocketReceiveFunction();
 
         songPlayMaster.setBSteeleMusicIO(this); //  fixme: this can't be correct
+
+        songPlayMaster.initialize();
     }
 
     private String getWebSocketURL() {

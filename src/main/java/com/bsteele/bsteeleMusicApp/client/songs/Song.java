@@ -557,6 +557,8 @@ public class Song implements Comparable<Song> {
     }
 
     public static final String genChordId(Section.Version displaySectionVersion, int row, int col) {
+        if (displaySectionVersion==null )
+            return "";
         return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
     }
 

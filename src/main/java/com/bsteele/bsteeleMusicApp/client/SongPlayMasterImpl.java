@@ -33,23 +33,6 @@ public class SongPlayMasterImpl
     public SongPlayMasterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
 
-        audioFilePlayer = new AudioFilePlayer();
-
-        //  prep the canned sounds
-        for (int i = 0; i <= 27; i++) {
-            audioFilePlayer.bufferFile("images/bass_" + i + ".mp3");
-        }
-        for (int i = 0; i <= 30; i++) {
-            audioFilePlayer.bufferFile("images/guitar_" + i + ".mp3");
-        }
-        for (int i = 1; i <= 4; i++) {
-            audioFilePlayer.bufferFile("images/count" + i + ".mp3");
-        }
-        audioFilePlayer.bufferFile(highHat1);
-        audioFilePlayer.bufferFile(highHat3);
-        audioFilePlayer.bufferFile(kick);
-        audioFilePlayer.bufferFile(snare);
-
         //  fixme: should wait for end of audio buffer loading
 
         //  setup a rough timer to pump commands to the audio
@@ -75,6 +58,9 @@ public class SongPlayMasterImpl
      * load the audio properly.
      */
     private void oncePrettyOften() {
+
+        if ( audioFilePlayer==null)
+            return;
 
         switch (action) {
             case playing:
@@ -109,9 +95,7 @@ public class SongPlayMasterImpl
      * @param t audio time
      */
     private void songUpdate(double t) {
-        double songT = songOutUpdate.getEventTime()
-                //  rounding error margin
-                - measureDuration / 2;
+        double songT = songOutUpdate.getEventTime();
 
         int m = (int) Math.floor((t - songT) / measureDuration);
         if (m == songOutUpdate.getMeasure())
@@ -206,7 +190,8 @@ public class SongPlayMasterImpl
     @Override
     public void onMessage(double systemT, String data) {
         //  collect timing data as soon as possible
-        double t = audioFilePlayer.getCurrentTime();
+        double t = ( audioFilePlayer==null) ?systemT : audioFilePlayer.getCurrentTime();
+
 
         try {
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
@@ -222,8 +207,6 @@ public class SongPlayMasterImpl
             GWT.log("t: " + t
                     + ", off: " + audioOffset
                     + ", dOff: " + dOff
-                    + ", " + audioFilePlayer.getBaseLatency()
-                    + ", " + audioFilePlayer.getOutputLatency()
             );
 
             if ( !songInUpdate.getSong().equals(songOutUpdate.getSong())) {
@@ -323,10 +306,35 @@ public class SongPlayMasterImpl
         }
     }
 
+    @Override
+    public void initialize() {
+        audioFilePlayer = new AudioFilePlayer();
+
+        //  prep the canned sounds
+        for (int i = 0; i <= 27; i++) {
+            audioFilePlayer.bufferFile("images/bass_" + i + ".mp3");
+        }
+        for (int i = 0; i <= 30; i++) {
+            audioFilePlayer.bufferFile("images/guitar_" + i + ".mp3");
+        }
+        for (int i = 1; i <= 4; i++) {
+            audioFilePlayer.bufferFile("images/count" + i + ".mp3");
+        }
+        audioFilePlayer.bufferFile(highHat1);
+        audioFilePlayer.bufferFile(highHat3);
+        audioFilePlayer.bufferFile(kick);
+        audioFilePlayer.bufferFile(snare);
+
+
+        GWT.log("Latency: "+ audioFilePlayer.getBaseLatency()
+                + ", " + audioFilePlayer.getOutputLatency()
+        );
+    }
+
     private int firstSection;
     private int lastSection;
 
-    private final AudioFilePlayer audioFilePlayer;
+    private AudioFilePlayer audioFilePlayer;
     private final Timer timer;
     private int beatsPerBar = 4;
     private double measureDuration = 120.0 / 60;

@@ -11,6 +11,8 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
  */
 public interface SongPlayMaster {
 
+    public void initialize();
+
     public void onMessage(double systemT, String data);
 
     public void stopSong();

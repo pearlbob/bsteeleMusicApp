@@ -5,7 +5,7 @@ set www=/var/www/html/public_html
 set app=bsteeleMusicApp
 set beta=beta/$app
 set dst=gs://www.bsteele.com/$app
-set lyricsDst=gs://songlyrics.bsteele.com
+set lyricsDst=gs://songlyrics.bsteele.com/wars
 set lyricsWar=${app}_`date +%Y%m%d`.war
 
 set localdst=$www/$app

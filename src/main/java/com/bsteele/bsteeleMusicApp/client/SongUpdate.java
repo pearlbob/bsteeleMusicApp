@@ -6,18 +6,16 @@ package com.bsteele.bsteeleMusicApp.client;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
+import jsinterop.annotations.JsType;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
-
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import jsinterop.annotations.JsType;
 
 /**
  * Immutable song update data
@@ -87,7 +85,7 @@ public class SongUpdate {
             }
         }
         sectionId = sectionVersion.toString();
-        GWT.log("measureSet() from "+measure+" to "+m);
+        logger.fine("measureSet() from "+measure+" to "+m);
         chordSectionRow = 0;
         chordSectionColumn = 0;
         repeatCurrent = 0;
@@ -115,7 +113,7 @@ public class SongUpdate {
     }
 
     public boolean nextMeasure() {
-        GWT.log("nextMeasure() from "+measure);
+        logger.fine("nextMeasure() from "+measure);
         if (measure < 0) {
             measure++;
             if ( measure==0)
@@ -397,7 +395,7 @@ public class SongUpdate {
     }
 
     public static final SongUpdate fromJson(String jsonString) {
-        //GWT.log(jsonString);
+        logger.fine(jsonString);
         if (jsonString == null || jsonString.length() <= 0) {
             return null;
         }

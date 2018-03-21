@@ -4,8 +4,17 @@
 >
     <g:HTMLPanel>
         <my:AppTitleWidget />
-        <!--                <g:TextBox ui:field="username"/><br/>
-        <g:PasswordTextBox ui:field="password"/><br/>-->
+        <p>
+        <!--                <g:TextBox ui:field="username"/> -->
+        </p><p>
+        <!--<g:PasswordTextBox ui:field="password"/> -->
+        </p>
+        <p>By logging in, you are giving app permission to play
+            audio output on your device.
+        </p>
+        <p>
         <g:Button ui:field="confirm" text="Login"/>
+        </p>
+
     </g:HTMLPanel>
 </ui:UiBinder>

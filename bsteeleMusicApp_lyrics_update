@@ -14,6 +14,7 @@ json=$appRoot/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/allSong
 
 #	copy the google store images to local
 mkdir -p $dst
+#	note: without the -r option, gsutil rsync will not recurse into sub-directories, e.g. wars
 gsutil -m rsync -p -d $src/ $dst
 
 cd $dst
