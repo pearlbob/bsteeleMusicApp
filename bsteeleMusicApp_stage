@@ -36,6 +36,8 @@ set target=$git/target
 
 set app=$git:t:r
 set finalWar=$target/$app.war
+set lyricsDst=gs://songlyrics.bsteele.com
+set lyricsWar=${app}_`date +%Y%m%d`.war
 echo deploy $app\: $finalWar to $dst
 
 #	get the songlyrics from the cloud
@@ -78,6 +80,9 @@ cd $dst/$app
 jar -xf $finalWar
 cd $cwd
 
+#	leave the war on local dst for distribution to archive
+cp $finalWar $dst
+
 #	deploy on tomcat
 rm -f /opt/tomcat/webapps/$finalWar:t	#	avoid permission issues on the war file
 cp $finalWar /opt/tomcat/webapps
@@ -86,7 +91,6 @@ cp $finalWar /opt/tomcat/webapps
 set gs=gs://www.bsteele.com/beta/$app
 gsutil -m rsync -d -R $dst/$app/ $gs 	#	source needs the /
 gsutil -m -q acl -r ch -u AllUsers:R $gs
-
 
 if ( $isBeta != 0 ) then
 	echo test local version of $app at:
