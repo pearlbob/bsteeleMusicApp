@@ -4,8 +4,7 @@ import jsinterop.annotations.*;
 
 @JsType(isNative = true, namespace = JsPackage.GLOBAL)
 public class AudioFilePlayer {
-
-    @JsConstructor
+    
     public AudioFilePlayer() {
     }
 

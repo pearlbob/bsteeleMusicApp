@@ -13,23 +13,28 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-  todo: activate websockets
+
+todo: improve leadin count down
+todo: write song.comparatorByTitleAndArtist()
+todo: write song.equals (hashcode, etc) for all fields
+todo: broadcast song selection: conflicts?
+
+todo: metronome clicks
+todo: pop the colors on beat transitions
+todo: fix ctl-key on mac
 
 todo: event plot
 todo: audio call out of chord changes
-todo: audio call out of section changes
+todo: audio call out of upcoming section changes
 todo: audio count in, missing last beat or two
 todo: mp3 recording and playback (including start offsets, non-integer bpm)
 todo: align tabs to enum
 todo: tooltips, many tooltips
-todo: metronome clicks
-
-todo: pop the colors on beat transitions
-todo: fix ctl-key on mac
 
 todo: control s to save when editing a song
 
 todo: fix multiple section id's on a single chord section with vertical span
+todo: fix multiple section id's on a single chord section with color selection
 
 todo: add lastModified to song metadata on file read, add size?
     file location as well
@@ -41,7 +46,6 @@ todo: loop by section
 todo: to dynamically change font size for chords to fit
 todo: set an indicator for added events, font color change?
 
-todo: improve leadin count down
 
 todo: comments in chords?
 

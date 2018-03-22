@@ -32,10 +32,14 @@
                 window.console.log(arg);
             }
 
+            function onLoad() {
+                window.AudioFilePlayer = AudioFilePlayer;
+            }
+
         </script>
     </head >
 
-    <body>
+    <body onload="onLoad();">
 
         <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
         <noscript>

@@ -8,13 +8,13 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.event.logical.shared.HasResizeHandlers;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
@@ -71,7 +71,7 @@ public class LyricsAndChordsView
         artist.setInnerHTML(song.getArtist());
         copyright.setInnerHTML(song.getCopyright());
 
-        timeSignature.setInnerHTML(song.getBeatsPerBar()+"/"+song.getUnitsPerMeasure());
+        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
 
         currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
@@ -118,7 +118,7 @@ public class LyricsAndChordsView
             case idle:
                 break;
             case playing:
-                if ( songUpdate.getMeasure() >= 0 ) {
+                if (songUpdate.getMeasure() >= 0) {
                     Element ce = chords.getElementById(chordCellId);
                     if (ce != null) {
                         ce.getStyle().setBackgroundColor(highlightColor);
@@ -183,11 +183,19 @@ public class LyricsAndChordsView
                 GWT.log("bpm select: " + bpm);
             }
         });
+
+
     }
 
     private void transpose(int tran) {
         chords.clear();
         chords.add(new HTML(song.transpose(tran)));
+
+        Element e = chords.getElement();    //  div class="gwt-HTML"
+        e = e.getFirstChildElement();       //  div.gwt-HTML
+        e = e.getFirstChildElement();       //  html table
+        int tableWidth = e.getClientWidth();
+        GWT.log("chords panel: " + chords.getOffsetWidth() + " for " + tableWidth );
     }
 
     private Song song;
