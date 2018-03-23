@@ -11,6 +11,8 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.gargoylesoftware.htmlunit.javascript.host.event.AnimationEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
@@ -19,6 +21,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
+import java.util.logging.Logger;
 
 /**
  * @author bob
@@ -153,6 +156,14 @@ public class LyricsAndChordsView
 
     @Override
     public void onMusicAnimationEvent(double t) {
+        if (chords.getOffsetWidth() != chordsWidth) {
+            chordsWidth = chords.getOffsetWidth();
+            chordsDirty = true;
+        }
+        if (chords.getOffsetHeight() != chordsHeight) {
+            chordsHeight = chords.getOffsetHeight();
+            chordsDirty = true;
+        }
         if (chordsDirty) {
             resizeChords();
         }
@@ -207,17 +218,43 @@ public class LyricsAndChordsView
     }
 
     private void resizeChords() {
-        if (chords != null && chords.getOffsetWidth() > 0&& chords.getOffsetHeight() > 0) {
-            Element e = chords.getElement();    //  div class="gwt-HTML"
-            e = e.getFirstChildElement();       //  div.gwt-HTML
-            if (e != null) {
-                e = e.getFirstChildElement();       //  html table
-                int tableWidth = e.getClientWidth();
-                int tableHeight = e.getClientHeight();
-                GWT.log("chords panel: (" + chords.getOffsetWidth() + ","
-                        +chords.getOffsetHeight()+ " for (" + tableWidth+ ","
-                        +tableHeight+")");
-                chordsDirty = false;
+        //  adjust fontsize so the table fits but is still minimally, if possible
+        if (chords != null && chords.getOffsetWidth() > 0 && chords.getOffsetHeight() > 0) {
+            NodeList<Element> list = chords.getElement().getElementsByTagName("table");
+            for (int i = 0; i < list.getLength(); i++) {
+                //  html table
+                Element e = list.getItem(i);
+                if (e.getId().equals("chordTable")) {
+                    int tableWidth = e.getClientWidth();
+                    int tableHeight = e.getClientHeight();
+
+                    logger.fine("chords panel: (" + chords.getOffsetWidth() + ","
+                            + chords.getOffsetHeight() + " for (" + tableWidth + ","
+                            + tableHeight + ")");
+
+                    double maxFontSizeUsed = 0;
+                    if (chords.getOffsetWidth() < tableWidth
+                            || chords.getOffsetWidth() > 1.1 * tableWidth) {
+                        double ratio = (double) chords.getOffsetWidth() / tableWidth;
+                        NodeList<Element> cells = e.getElementsByTagName("td");
+                        for (int c = 0; c < cells.getLength(); c++) {
+                            Style cellStyle = cells.getItem(c).getStyle();
+
+                            double currentSize = chordsMaxFontsize;     //  fixme: demands all chord fonts be the same size
+                            MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
+                            if (mr != null)
+                                currentSize = Double.parseDouble(mr.getGroup(1));
+                            double size = Math.min(Math.max(chordsMinFontsize, ratio * currentSize), chordsMaxFontsize);
+                            maxFontSizeUsed = Math.max(maxFontSizeUsed, size);
+                            if (currentSize != size)
+                                cellStyle.setFontSize(size, Style.Unit.PX);
+                        }
+                    }
+                    chordsDirty = !(chords.getOffsetWidth() >= tableWidth
+                            || maxFontSizeUsed == chordsMinFontsize);
+
+                    break;
+                }
             }
         }
     }
@@ -227,6 +264,14 @@ public class LyricsAndChordsView
     private Element lastChordElement;
     private Element lastLyricsElement;
     private boolean chordsDirty = true;
+    private int chordsWidth;
+    private int chordsHeight;
+
     public static final String highlightColor = "#e4c9ff";
+    private static final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
+    private static final int chordsMinFontsize = 10;
+    private static final int chordsMaxFontsize = 48;
     private final EventBus eventBus;
+    private static final Logger logger = Logger.getLogger(LyricsAndChordsView.class.getName());
+
 }
