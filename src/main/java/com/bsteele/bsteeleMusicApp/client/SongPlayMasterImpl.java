@@ -7,17 +7,15 @@ import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
-import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONException;
-import com.google.gwt.user.client.Timer;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -27,29 +25,14 @@ import java.util.logging.Logger;
 public class SongPlayMasterImpl
         extends HandlerContainerImpl
         implements SongPlayMaster,
-        DefaultDrumSelectEventHandler {
+        DefaultDrumSelectEventHandler,
+        AnimationScheduler.AnimationCallback
+{
 
     @Inject
     public SongPlayMasterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
-
-        //  fixme: should wait for end of audio buffer loading
-
-        //  setup a rough timer to pump commands to the audio
-        timer = new Timer() {
-            @Override
-            public void run() {
-                oncePrettyOften();
-            }
-        };
-        timer.scheduleRepeating(1000 / 60);
     }
-
-    @Override
-    protected void onBind() {
-        eventBus.addHandler(DefaultDrumSelectEvent.TYPE, this);
-    }
-
 
     /**
      * A rough timer handler designed to pump commands to the audio
@@ -57,38 +40,49 @@ public class SongPlayMasterImpl
      * The intent is to run on measure ahed to assure time to
      * load the audio properly.
      */
-    private void oncePrettyOften() {
+    @Override
+    public void execute(double systemT ) {
 
-        if ( audioFilePlayer==null)
-            return;
+        if ( audioFilePlayer!=null) {
+            switch (action) {
+                case playing:
 
-        switch (action) {
-            case playing:
+                    double t = audioFilePlayer.getCurrentTime();
 
-                double t = audioFilePlayer.getCurrentTime();
+                    songUpdate(systemT / 1000);
 
-                songUpdate(System.currentTimeMillis() / 1000.0);
+                    //  schedule the audio one measure early
+                    if (t > nextMeasureStart - measureDuration) {
+                        //   time to load the next measure
+                        if (nextMeasureStart < t - measureDuration)
+                            nextMeasureStart = t;// fixme: modulo measureDuration?
 
-                //  schedule the audio one measure early
-                if (t > nextMeasureStart - measureDuration) {
-                    //   time to load the next measure
-                    if (nextMeasureStart < t - measureDuration)
-                        nextMeasureStart = t;// fixme: modulo measureDuration?
+                        beatTheDrums(defaultDrumSelection);
 
-                    beatTheDrums(defaultDrumSelection);
-
-                    nextMeasureStart += measureDuration;
-                }
-                break;
-            case stopSong:
-                audioFilePlayer.stop();
-                songOutUpdate.setState(SongUpdate.State.idle);
-                eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
-                action = Action.idle;
-                break;
-            case idle:
-                break;
+                        nextMeasureStart += measureDuration;
+                    }
+                    break;
+                case stopSong:
+                    audioFilePlayer.stop();
+                    songOutUpdate.setState(SongUpdate.State.idle);
+                    eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+                    action = Action.idle;
+                    break;
+                case idle:
+                    break;
+            }
         }
+
+        //  tell everyone else it's animation time
+        eventBus.fireEvent(new MusicAnimationEvent(systemT));
+
+        //  get ready for next time
+        timer.requestAnimationFrame(this);
+    }
+
+    @Override
+    protected void onBind() {
+        eventBus.addHandler(DefaultDrumSelectEvent.TYPE, this);
     }
 
     /**
@@ -228,7 +222,6 @@ public class SongPlayMasterImpl
         this.bSteeleMusicIO = bSteeleMusicIO;
     }
 
-
     public enum Action {
         stopSong,
         playSong,
@@ -329,13 +322,20 @@ public class SongPlayMasterImpl
         GWT.log("Latency: "+ audioFilePlayer.getBaseLatency()
                 + ", " + audioFilePlayer.getOutputLatency()
         );
+
+
+        //  fixme: should wait for end of audio buffer loading
+
+        //  use the animation timer to pump commands to the audio
+        timer = AnimationScheduler.get();
+        timer.requestAnimationFrame(this);
     }
 
     private int firstSection;
     private int lastSection;
 
     private AudioFilePlayer audioFilePlayer;
-    private final Timer timer;
+    private AnimationScheduler timer;
     private int beatsPerBar = 4;
     private double measureDuration = 120.0 / 60;
     private double nextMeasureStart;

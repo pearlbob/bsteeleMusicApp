@@ -17,7 +17,7 @@
                     <option value="-3">-3 halfsteps</option>
                     <option value="-2">-2 halfsteps</option>
                     <option value="-1">-1 halfstep</option>
-                    <option value="0" selected="selected" >Original Key</option>
+                    <option value="0" selected="selected">Original Key</option>
                     <option value="1">+1 halfstep</option>
                     <option value="2">+2 halfsteps</option>
                     <option value="3">+3 halfsteps</option>
@@ -59,8 +59,9 @@
                     <option value="180">180</option>
                     <option value="200">200</option>
                 </select>
-                Time: <span     ui:field="timeSignature" />
-                    &nbsp;&nbsp;
+                Time:
+                <span ui:field="timeSignature"/>
+                &nbsp;&nbsp;
                 <span ui:field="title" class="{resources.style.songTitle}"/>
                 by
                 <span ui:field="artist"/>

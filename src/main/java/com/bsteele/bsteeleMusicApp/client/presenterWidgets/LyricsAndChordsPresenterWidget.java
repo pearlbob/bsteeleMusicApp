@@ -4,10 +4,7 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -19,7 +16,9 @@ import com.gwtplatform.mvp.client.View;
  */
 public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndChordsPresenterWidget.MyView>
         implements SongSelectionEventHandler,
-        SongUpdateEventHandler {
+        SongUpdateEventHandler,
+        MusicAnimationEventHandler
+{
 
 
     public interface MyView extends View {
@@ -27,6 +26,8 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
         void setSong(Song song);
 
         void onSongUpdate(SongUpdate songUpdate);
+        
+        void onMusicAnimationEvent(double t);
     }
 
     @Inject
@@ -42,6 +43,7 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
     protected void onBind() {
         eventBus.addHandler(SongSelectionEvent.TYPE, this);
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
+        eventBus.addHandler(MusicAnimationEvent.TYPE, this);
     }
 
     @Override
@@ -52,6 +54,13 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
     @Override
     public void onSongUpdate(SongUpdateEvent event) {
         view.onSongUpdate(event.getSongUpdate());
+    }
+
+
+
+    @Override
+    public void onMusicAnimationEvent(MusicAnimationEvent event) {
+        view.onMusicAnimationEvent(event.getT());
     }
 
     private final EventBus eventBus;

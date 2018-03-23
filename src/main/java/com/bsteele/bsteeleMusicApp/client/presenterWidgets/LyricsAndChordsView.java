@@ -4,17 +4,18 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
+import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
+import com.gargoylesoftware.htmlunit.javascript.host.event.AnimationEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.event.logical.shared.HasResizeHandlers;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
@@ -59,87 +60,13 @@ public class LyricsAndChordsView
     @UiField
     SpanElement copyright;
 
-    @Override
-    public void setSong(Song song) {
-        boolean keepKey = (this.song != null
-                && this.song.equals(song));  //  identiry only
-
-        this.song = song;
-
-        //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        artist.setInnerHTML(song.getArtist());
-        copyright.setInnerHTML(song.getCopyright());
-
-        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-
-        currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
-
-        String keyAsString = "0";
-        int keyAsInt = 0;
-        if (keepKey) {
-            keyAsString = keySelect.getValue();
-            keyAsInt = Integer.parseInt(keyAsString);
-        }
-        transpose(keyAsInt);
-
-        { //  set the transposition selection to original key
-            NodeList<OptionElement> options = keySelect.getOptions();
-            for (int i = 0; i < options.getLength(); i++) {
-                OptionElement e = options.getItem(i);
-                if (e.getValue().equals(keyAsString)) {
-                    keySelect.setSelectedIndex(i);
-                }
-            }
-        }
-
-        lyrics.clear();
-        lyrics.add(new HTML(song.generateHtmlLyricsTable()));
-    }
-
-    @Override
-    public void onSongUpdate(SongUpdate songUpdate) {
-        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
-                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-
-        //  turn off all highlights
-        if (lastChordElement != null) {
-            lastChordElement.getStyle().clearBackgroundColor();
-            lastChordElement = null;
-        }
-        if (lastLyricsElement != null) {
-            lastLyricsElement.getStyle().clearBackgroundColor();
-            lastLyricsElement = null;
-        }
-
-
-        //  turn on highlights if required
-        switch (songUpdate.getState()) {
-            case idle:
-                break;
-            case playing:
-                if (songUpdate.getMeasure() >= 0) {
-                    Element ce = chords.getElementById(chordCellId);
-                    if (ce != null) {
-                        ce.getStyle().setBackgroundColor(highlightColor);
-                        lastChordElement = ce;
-                    }
-                    String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
-                    Element le = lyrics.getElementById(lyricsCellId);
-                    if (le != null) {
-                        le.getStyle().setBackgroundColor(highlightColor);
-                        lastLyricsElement = le;
-                    }
-                }
-                break;
-        }
-    }
 
     interface Binder extends UiBinder<Widget, LyricsAndChordsView> {
     }
 
     @Inject
-    LyricsAndChordsView(Binder binder, SongPlayMaster songPlayMaster) {
+    LyricsAndChordsView(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
+        this.eventBus = eventBus;
         initWidget(binder.createAndBindUi(this));
 
         this.songPlayMaster = songPlayMaster;
@@ -183,24 +110,123 @@ public class LyricsAndChordsView
                 GWT.log("bpm select: " + bpm);
             }
         });
+    }
+
+    @Override
+    public void onSongUpdate(SongUpdate songUpdate) {
+        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
+                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+
+        //  turn off all highlights
+        if (lastChordElement != null) {
+            lastChordElement.getStyle().clearBackgroundColor();
+            lastChordElement = null;
+        }
+        if (lastLyricsElement != null) {
+            lastLyricsElement.getStyle().clearBackgroundColor();
+            lastLyricsElement = null;
+        }
 
 
+        //  turn on highlights if required
+        switch (songUpdate.getState()) {
+            case idle:
+                break;
+            case playing:
+                if (songUpdate.getMeasure() >= 0) {
+                    Element ce = chords.getElementById(chordCellId);
+                    if (ce != null) {
+                        ce.getStyle().setBackgroundColor(highlightColor);
+                        lastChordElement = ce;
+                    }
+                    String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
+                    Element le = lyrics.getElementById(lyricsCellId);
+                    if (le != null) {
+                        le.getStyle().setBackgroundColor(highlightColor);
+                        lastLyricsElement = le;
+                    }
+                }
+                break;
+        }
+        chordsDirty = true;
+    }
+
+    @Override
+    public void onMusicAnimationEvent(double t) {
+        if (chordsDirty) {
+            resizeChords();
+        }
+    }
+
+
+    @Override
+    public void setSong(Song song) {
+        boolean keepKey = (this.song != null
+                && this.song.equals(song));  //  identiry only
+
+        this.song = song;
+
+        //  load new data even if the identity has not changed
+        title.setInnerHTML(song.getTitle());
+        artist.setInnerHTML(song.getArtist());
+        copyright.setInnerHTML(song.getCopyright());
+
+        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+
+        currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
+
+        String keyAsString = "0";
+        int keyAsInt = 0;
+        if (keepKey) {
+            keyAsString = keySelect.getValue();
+            keyAsInt = Integer.parseInt(keyAsString);
+        }
+        transpose(keyAsInt);
+
+        { //  set the transposition selection to original key
+            NodeList<OptionElement> options = keySelect.getOptions();
+            for (int i = 0; i < options.getLength(); i++) {
+                OptionElement e = options.getItem(i);
+                if (e.getValue().equals(keyAsString)) {
+                    keySelect.setSelectedIndex(i);
+                }
+            }
+        }
+
+        lyrics.clear();
+        lyrics.add(new HTML(song.generateHtmlLyricsTable()));
+
+        chordsDirty = true;
     }
 
     private void transpose(int tran) {
         chords.clear();
         chords.add(new HTML(song.transpose(tran)));
 
-        Element e = chords.getElement();    //  div class="gwt-HTML"
-        e = e.getFirstChildElement();       //  div.gwt-HTML
-        e = e.getFirstChildElement();       //  html table
-        int tableWidth = e.getClientWidth();
-        GWT.log("chords panel: " + chords.getOffsetWidth() + " for " + tableWidth );
+        resizeChords();
+    }
+
+    private void resizeChords() {
+        if (chords != null && chords.getOffsetWidth() > 0&& chords.getOffsetHeight() > 0) {
+            Element e = chords.getElement();    //  div class="gwt-HTML"
+            e = e.getFirstChildElement();       //  div.gwt-HTML
+            if (e != null) {
+                e = e.getFirstChildElement();       //  html table
+                int tableWidth = e.getClientWidth();
+                int tableHeight = e.getClientHeight();
+                GWT.log("chords panel: (" + chords.getOffsetWidth() + ","
+                        +chords.getOffsetHeight()+ " for (" + tableWidth+ ","
+                        +tableHeight+")");
+                chordsDirty = false;
+            }
+        }
     }
 
     private Song song;
     private SongPlayMaster songPlayMaster;
     private Element lastChordElement;
     private Element lastLyricsElement;
+    private boolean chordsDirty = true;
     public static final String highlightColor = "#e4c9ff";
+    private final EventBus eventBus;
 }
