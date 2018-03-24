@@ -126,47 +126,16 @@ public class LyricsAndChordsView
 
         this.songUpdate = songUpdate;
 
-        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
-                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-
-        //  turn off all highlights
-        if (lastChordElement != null) {
-            lastChordElement.getStyle().clearBackgroundColor();
-            lastChordElement = null;
-        }
-        if (lastLyricsElement != null) {
-            lastLyricsElement.getStyle().clearBackgroundColor();
-            lastLyricsElement = null;
-        }
-
-
-        //  turn on highlights if required
-        switch (songUpdate.getState()) {
-            case idle:
-                break;
-            case playing:
-                if (songUpdate.getMeasure() >= 0) {
-                    Element ce = chords.getElementById(chordCellId);
-                    if (ce != null) {
-                        ce.getStyle().setBackgroundColor(highlightColor);
-                        lastChordElement = ce;
-                    }
-                    String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
-                    Element le = lyrics.getElementById(lyricsCellId);
-                    if (le != null) {
-                        le.getStyle().setBackgroundColor(highlightColor);
-                        lastLyricsElement = le;
-                    }
-                }
-                break;
-        }
         chordsDirty = true;
     }
 
     @Override
     public void onMusicAnimationEvent(double t) {
-        if (song != null)
-            audioBeatDisplay.update(t, songUpdate.getEventTime(), song.getBpm(), false, song.getBeatsPerBar());
+        if (song != null
+        //&& songUpdate.getState() == SongUpdate.State.playing
+                )
+            audioBeatDisplay.update(t, songUpdate.getEventTime(),
+                    songUpdate.getBeatsPerMinute(), false, song.getBeatsPerBar());
 
         if (chords.getOffsetWidth() != chordsWidth) {
             chordsWidth = chords.getOffsetWidth();
@@ -177,7 +146,47 @@ public class LyricsAndChordsView
             chordsDirty = true;
         }
         if (chordsDirty) {
-            resizeChords();
+
+            //  turn off all highlights
+            if (lastChordElement != null) {
+                lastChordElement.getStyle().clearBackgroundColor();
+                lastChordElement = null;
+            }
+            if (lastLyricsElement != null) {
+                lastLyricsElement.getStyle().clearBackgroundColor();
+                lastLyricsElement = null;
+            }
+
+            //  turn on highlights if required
+            switch (songUpdate.getState()) {
+                case idle:
+                    break;
+                case playing:
+                    if (songUpdate.getMeasure() >= 0) {
+                        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
+                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+
+                        Element ce = chords.getElementById(chordCellId);
+                        if (ce != null) {
+                            ce.getStyle().setBackgroundColor(highlightColor);
+                            lastChordElement = ce;
+                        }
+                        String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
+                        Element le = lyrics.getElementById(lyricsCellId);
+                        if (le != null) {
+                            le.getStyle().setBackgroundColor(highlightColor);
+                            lastLyricsElement = le;
+                        }
+                    }
+                    break;
+            }
+
+            switch (songUpdate.getState()){
+                case idle:
+                    resizeChords();
+                    break;
+            }
+
         }
     }
 
@@ -230,7 +239,7 @@ public class LyricsAndChordsView
     }
 
     private void resizeChords() {
-        //  adjust fontsize so the table fits but is still minimally, if possible
+        //  adjust fontSize so the table fits but is still minimally, if possible
         if (chords != null && chords.getOffsetWidth() > 0 && chords.getOffsetHeight() > 0) {
             {
                 Widget parent = chords.getParent();
@@ -244,7 +253,7 @@ public class LyricsAndChordsView
                         int tableWidth = e.getClientWidth();
                         int tableHeight = e.getClientHeight();
 
-                        GWT.log//     logger.fine
+                       GWT.log// logger.fine
                                 ("chords panel: (" + parentWidth + ","
                                         + parentHeight + ") for (" + tableWidth + ","
                                         + tableHeight + ")");

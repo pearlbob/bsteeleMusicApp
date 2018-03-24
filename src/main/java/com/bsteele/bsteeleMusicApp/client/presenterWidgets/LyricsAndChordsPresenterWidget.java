@@ -56,8 +56,6 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
         view.onSongUpdate(event.getSongUpdate());
     }
 
-
-
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
         view.onMusicAnimationEvent(event.getT());

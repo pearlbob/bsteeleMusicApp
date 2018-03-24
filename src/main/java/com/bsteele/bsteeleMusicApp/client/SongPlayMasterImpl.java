@@ -26,8 +26,7 @@ public class SongPlayMasterImpl
         extends HandlerContainerImpl
         implements SongPlayMaster,
         DefaultDrumSelectEventHandler,
-        AnimationScheduler.AnimationCallback
-{
+        AnimationScheduler.AnimationCallback {
 
     @Inject
     public SongPlayMasterImpl(final EventBus eventBus) {
@@ -41,24 +40,26 @@ public class SongPlayMasterImpl
      * load the audio properly.
      */
     @Override
-    public void execute(double systemT ) {
+    public void execute(double systemT) {
+        double t = audioFilePlayer.getCurrentTime();
+        systemT /= 1000;      //  use seconds internally
 
-        //  use seconds internally
-        systemT /= 1000;
+        {   //  find offset from system to audio time
+            double dt = systemT - t;
+            systemToAudioOffset = (Math.abs(systemToAudioOffset - dt) > 0.1)
+                    ? dt : systemToAudioOffset * pass + (1 - pass) * dt;
+        }
 
-        if ( audioFilePlayer!=null) {
+        if (audioFilePlayer != null) {
             switch (action) {
                 case playing:
-
-                    double t = audioFilePlayer.getCurrentTime()/1000;
-
-                    songUpdate(systemT );
+                    songUpdate(systemT);
 
                     //  schedule the audio one measure early
                     if (t > nextMeasureStart - measureDuration) {
                         //   time to load the next measure
                         if (nextMeasureStart < t - measureDuration)
-                            nextMeasureStart = t;// fixme: modulo measureDuration?
+                            nextMeasureStart = t;// fixme: immediately: start on beat, with song!
 
                         beatTheDrums(defaultDrumSelection);
 
@@ -187,7 +188,7 @@ public class SongPlayMasterImpl
     @Override
     public void onMessage(double systemT, String data) {
         //  collect timing data as soon as possible
-        double t = ( audioFilePlayer==null) ?systemT : audioFilePlayer.getCurrentTime();
+        double t = (audioFilePlayer == null) ? systemT : audioFilePlayer.getCurrentTime();
 
 
         try {
@@ -206,7 +207,7 @@ public class SongPlayMasterImpl
                     + ", dOff: " + dOff
             );
 
-            if ( !songInUpdate.getSong().equals(songOutUpdate.getSong())) {
+            if (!songInUpdate.getSong().equals(songOutUpdate.getSong())) {
                 eventBus.fireEvent(new SongSelectionEvent(songInUpdate.getSong()));
                 eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
             }
@@ -322,7 +323,7 @@ public class SongPlayMasterImpl
         audioFilePlayer.bufferFile(snare);
 
 
-        GWT.log("Latency: "+ audioFilePlayer.getBaseLatency()
+        GWT.log("Latency: " + audioFilePlayer.getBaseLatency()
                 + ", " + audioFilePlayer.getOutputLatency()
         );
 
@@ -353,8 +354,11 @@ public class SongPlayMasterImpl
     private static final String snare = "images/snare_4405.mp3";
     private static final double swing = 1.5;
     private double lastOffset;
-    private static final int preRoll = 3;
+    private static final int preRoll = 2;
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;
+    private double systemToAudioOffset;
+    private double pass = 0.95;
+    private int count;
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 }
