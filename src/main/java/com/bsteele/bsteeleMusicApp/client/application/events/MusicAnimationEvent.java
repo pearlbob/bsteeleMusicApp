@@ -10,7 +10,7 @@ public class MusicAnimationEvent extends GwtEvent<MusicAnimationEventHandler> {
 
     public static Type<MusicAnimationEventHandler> TYPE = new Type<MusicAnimationEventHandler>();
 
-    private final double t;
+    private final double t; //  units: seconds
 
     public MusicAnimationEvent(double t) {
         this.t = t;

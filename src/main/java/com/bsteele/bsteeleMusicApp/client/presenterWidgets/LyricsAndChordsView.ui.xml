@@ -70,7 +70,12 @@
         <g:center>
             <g:SplitLayoutPanel  ui:field="split">
                 <g:west size='300'>     <!--    small for phones!   -->
+                    <g:HTMLPanel>
+                    <canvas ui:field="audioBeatDisplayCanvas" height="45"
+                            title="Diagnostic plot of audio data found.">
+                        Your browser does not support the HTML5 canvas tag.</canvas>
                     <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
+                    </g:HTMLPanel>
                 </g:west>
                 <g:center>
                     <g:ScrollPanel>

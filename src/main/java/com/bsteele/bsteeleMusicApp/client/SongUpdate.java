@@ -32,7 +32,7 @@ public class SongUpdate {
         idle;
     }
 
-    SongUpdate() {
+    public SongUpdate() {
     }
 
 //    void copySongUpdate(SongUpdate other) {

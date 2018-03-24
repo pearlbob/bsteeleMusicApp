@@ -6,7 +6,6 @@ package com.bsteele.bsteeleMusicApp.client;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
-import com.google.gwt.dom.client.AudioElement;
 import com.google.gwt.dom.client.CanvasElement;
 import jsinterop.annotations.JsType;
 
@@ -14,17 +13,19 @@ import jsinterop.annotations.JsType;
  *
  * @author bob
  */
-public class AudioBeatDisplay {
+//  fixme: move  AudioBeatDisplay fully to java when lyrics.html disappears
+@JsType
+public class JsAudioBeatDisplay {
 
-    private AudioBeatDisplay() {
+    public JsAudioBeatDisplay() {
     }
 
-    public AudioBeatDisplay(CanvasElement canvasElement) {
-        initialize( canvasElement);
-    }
+//    public AudioBeatDisplay(CanvasElement canvasElement) {
+//        initialize( canvasElement);
+//    }
 
-    private void initialize(CanvasElement canvasElement) {
-        canvas = canvasElement;
+    public void initialize(CanvasElement canvasElement) {
+        canvas = Canvas.wrap(canvasElement);
         ctx = canvas.getContext2d();
 
         backgroundColor = "#FFFDF6";
@@ -41,8 +42,10 @@ public class AudioBeatDisplay {
         ctx.fillRect(0, 0, canvasElement.getWidth(), canvasElement.getHeight());
     }
 
-    public void update(final double currentTime, final double startTime,
-                       final int bpm, final boolean doSubBeat, final int reqestedBeatsPerBar) {
+    public void update(final double currentTime, final int bpm, final boolean doSubBeat, final int reqestedBeatsPerBar) {
+
+        if ( canvas == null )
+            return;
 
         int beatsPerBar = (reqestedBeatsPerBar == 0 ? 4 : reqestedBeatsPerBar);
         double sPerBar = beatsPerBar * 60.0 / bpm;
@@ -52,8 +55,8 @@ public class AudioBeatDisplay {
 
         //  fixme: optimize audioBeatDisplay to update canvas on beat changes only
 
-        int w = canvas.getWidth();
-        int h = canvas.getHeight();
+        int w = canvas.getCanvasElement().getWidth();
+        int h = canvas.getCanvasElement().getHeight();
 
         //GWT.log("beat: " + beat + ", barT: " + barT + ", beatT: " + beatT);
         switch (1) {
@@ -106,9 +109,9 @@ public class AudioBeatDisplay {
         }
     }
 
-    private CanvasElement canvas;
+    private Canvas canvas;
     private Context2d ctx;
     private int lastBeat = -1;
     private String backgroundColor;
-    private static final double flashDurationS = 0.08;
+    private static final double flashDurationS = 0.05;
 }

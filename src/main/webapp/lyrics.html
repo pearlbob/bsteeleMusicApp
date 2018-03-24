@@ -741,7 +741,7 @@
 
             function onModuleLoadJS() {
                 bpmTap = new com.bsteele.bsteeleMusicApp.client.BpmTap();
-                audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay();
+                audioBeatDisplay = new com.bsteele.bsteeleMusicApp.client.JsAudioBeatDisplay();
                 audioBeatDisplay.initialize(audioCtx, document.getElementById("audioBeatDisplayCanvas"));
                 mySong = new com.bsteele.bsteeleMusicApp.shared.Song();
 

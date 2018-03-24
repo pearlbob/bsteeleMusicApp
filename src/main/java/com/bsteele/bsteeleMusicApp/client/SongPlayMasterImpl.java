@@ -43,13 +43,16 @@ public class SongPlayMasterImpl
     @Override
     public void execute(double systemT ) {
 
+        //  use seconds internally
+        systemT /= 1000;
+
         if ( audioFilePlayer!=null) {
             switch (action) {
                 case playing:
 
-                    double t = audioFilePlayer.getCurrentTime();
+                    double t = audioFilePlayer.getCurrentTime()/1000;
 
-                    songUpdate(systemT / 1000);
+                    songUpdate(systemT );
 
                     //  schedule the audio one measure early
                     if (t > nextMeasureStart - measureDuration) {
