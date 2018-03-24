@@ -162,7 +162,7 @@ table {
 }
 
 th, td {
-    padding: 4px;
+    padding: 2px;
 }
 
 .songTitle
@@ -183,7 +183,6 @@ table td.chordTable {
     border-right: 1.5px solid black;
     border-collapse: separate;
     border-spacing: 4px;
-    padding: 12px;
     font-size: 44px;
 }
 .sectionLabel
@@ -197,8 +196,6 @@ table td.chordTable {
 [id^="C."]{
     border-right: 1.5px solid black;
     border-collapse: separate;
-    
-    padding: 12px;
 }
 /*  lyrics  */
 [id^="L."]{

@@ -10,7 +10,12 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" line="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="" />
+    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" />
+    </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,11 +29,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="525">
-      <file leaf-file-name="LyricsAndChordsView.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="LyricsAndChordsView.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="640">
-              <caret line="232" column="32" lean-forward="false" selection-start-line="232" selection-start-column="32" selection-end-line="232" selection-end-column="32" />
+            <state relative-caret-position="480">
+              <caret line="287" column="31" lean-forward="false" selection-start-line="287" selection-start-column="31" selection-end-line="287" selection-end-column="31" />
               <folding />
             </state>
           </provider>
@@ -40,18 +45,6 @@
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LyricsAndChordsView.ui.xml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.ui.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="71" column="71" lean-forward="false" selection-start-line="71" selection-start-column="71" selection-end-line="71" selection-end-column="71" />
-              <folding>
-                <element signature="n#g:HTMLPanel#0;n#g:north#0;n#g:DockLayoutPanel#0;n#ui:UiBinder#0;n#!!top" expanded="false" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -69,7 +62,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sectionId</find>
       <find>measureContent</find>
       <find>nbsp</find>
       <find>chordCols</find>
@@ -90,7 +82,6 @@
       <find>addhan</find>
       <find>audiofileplayer</find>
       <find>AudioFilePlayer</find>
-      <find>chords</find>
       <find>animation</find>
       <find>timer</find>
       <find>eventbus</find>
@@ -99,6 +90,8 @@
       <find>SongUpdateEvent</find>
       <find>regexp</find>
       <find>logger</find>
+      <find>chords</find>
+      <find>padding</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client</dir>
@@ -135,7 +128,6 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/DrumOptionsView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/BSteeleMusicApp.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/jsTypes/WebSocket.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/server/BSteeleMusicAppServer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/SongUpdateEvent.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/DrumOptionsPresenterWidget.java" />
@@ -165,8 +157,9 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/MusicAnimationEvent.java" />
         <option value="$PROJECT_DIR$/logging.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.ui.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" />
       </list>
     </option>
   </component>
@@ -325,8 +318,10 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="AndroidView" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -379,12 +374,80 @@
               <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="presenterWidgets" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="AppResources" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="AppResources" type="1a9f42e2:ClassTreeNode" />
+              <item name="Style" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="ResourceLoader" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="com.bsteele.bsteeleMusicApp.client.resources.css" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -593,6 +656,8 @@
       <workItem from="1521821627020" duration="3557000" />
       <workItem from="1521825379387" duration="6319000" />
       <workItem from="1521848138690" duration="8671000" />
+      <workItem from="1521868336110" duration="777000" />
+      <workItem from="1521869261799" duration="315000" />
     </task>
     <task id="LOCAL-00001" summary="move to idea">
       <created>1520747617322</created>
@@ -703,7 +768,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="60744000" />
+    <option name="totallyTimeSpent" value="61836000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -716,6 +781,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="560" y="203" width="2856" height="1896" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.32949728" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -730,7 +796,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32949728" sideWeight="0.49855804" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31254506" sideWeight="0.4966687" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32119682" sideWeight="0.4966687" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24549387" sideWeight="0.5033313" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -816,27 +882,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/webapp/js/nashville.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMaster.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="13" column="29" lean-forward="false" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomePresenter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1312">
-          <caret line="59" column="21" lean-forward="false" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/BSteeleMusicIO.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
@@ -1039,10 +1084,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1664">
           <caret line="92" column="31" lean-forward="false" selection-start-line="92" selection-start-column="31" selection-end-line="92" selection-end-column="31" />
-          <folding>
-            <marker date="1521405784219" expanded="true" signature="4724:4846" ph="{...}" />
-            <marker date="1521405784219" expanded="true" signature="5060:5100" ph="{...}" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1141,36 +1182,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2208">
           <caret line="82" column="22" lean-forward="false" selection-start-line="82" selection-start-column="11" selection-end-line="82" selection-end-column="22" />
-          <folding>
-            <marker date="1516889357437" expanded="false" signature="0:104" ph="/.../" />
-            <marker date="1516889357437" expanded="false" signature="152:334" ph="..." />
-            <marker date="1516889357437" expanded="false" signature="1179:1190" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="1218:1224" ph=" }" />
-            <marker date="1516889357437" expanded="true" signature="1289:2049" ph="{...}" />
-            <marker date="1516889357437" expanded="false" signature="2095:2106" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="2134:2140" ph=" }" />
-            <marker date="1516889357437" expanded="true" signature="2201:2586" ph="{...}" />
-            <marker date="1516889357437" expanded="true" signature="2659:2794" ph="{...}" />
-            <marker date="1516889357437" expanded="true" signature="2838:3815" ph="{...}" />
-            <marker date="1516889357437" expanded="false" signature="3847:3858" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="3881:3887" ph=" }" />
-            <marker date="1516889357437" expanded="false" signature="3923:3934" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="3973:3979" ph=" }" />
-            <marker date="1516889357437" expanded="false" signature="4010:4021" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="4043:4049" ph=" }" />
-            <marker date="1516889357437" expanded="false" signature="4084:4095" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="4134:4140" ph=" }" />
-            <marker date="1516889357437" expanded="false" signature="4171:4182" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="4201:4207" ph=" }" />
-            <marker date="1516889357437" expanded="true" signature="4269:4898" ph="{...}" />
-            <marker date="1516889357437" expanded="false" signature="4943:4954" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="4981:4987" ph=" }" />
-            <marker date="1516889357437" expanded="false" signature="5031:5042" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="5071:5077" ph=" }" />
-            <marker date="1516889357437" expanded="true" signature="5133:5959" ph="{...}" />
-            <marker date="1516889357437" expanded="false" signature="5998:6009" ph=" { " />
-            <marker date="1516889357437" expanded="false" signature="6041:6047" ph=" }" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1178,9 +1189,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17088">
           <caret line="594" column="40" lean-forward="false" selection-start-line="594" selection-start-column="0" selection-end-line="595" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1192,11 +1200,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/com.bsteele.bsteeleMusicApp.client.resources.css/bassWebpageStyleSheet.gss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="232" column="32" lean-forward="false" selection-start-line="232" selection-start-column="32" selection-end-line="232" selection-end-column="32" />
+        <state relative-caret-position="1408">
+          <caret line="44" column="22" lean-forward="false" selection-start-line="44" selection-start-column="22" selection-end-line="44" selection-end-column="22" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="633">
+          <caret line="75" column="9" lean-forward="false" selection-start-line="75" selection-start-column="2" selection-end-line="75" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/AppResources.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="660">
+          <caret line="74" column="15" lean-forward="false" selection-start-line="74" selection-start-column="15" selection-end-line="74" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.ui.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="71" column="71" lean-forward="false" selection-start-line="71" selection-start-column="71" selection-end-line="71" selection-end-column="71" />
+          <folding>
+            <element signature="n#g:HTMLPanel#0;n#g:north#0;n#g:DockLayoutPanel#0;n#ui:UiBinder#0;n#!!top" expanded="false" />
+            <element signature="e#3354#3360#0" expanded="true" />
+            <element signature="e#3360#3366#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1208,13 +1244,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.ui.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="71" column="71" lean-forward="false" selection-start-line="71" selection-start-column="71" selection-end-line="71" selection-end-column="71" />
-          <folding>
-            <element signature="n#g:HTMLPanel#0;n#g:north#0;n#g:DockLayoutPanel#0;n#ui:UiBinder#0;n#!!top" expanded="false" />
-          </folding>
+        <state relative-caret-position="480">
+          <caret line="287" column="31" lean-forward="false" selection-start-line="287" selection-start-column="31" selection-end-line="287" selection-end-column="31" />
+          <folding />
         </state>
       </provider>
     </entry>

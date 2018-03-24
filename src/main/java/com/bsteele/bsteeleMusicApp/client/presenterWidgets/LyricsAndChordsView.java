@@ -229,8 +229,7 @@ public class LyricsAndChordsView
                         int tableWidth = e.getClientWidth();
                         int tableHeight = e.getClientHeight();
 
-                        GWT.log    //logger.fine
-                                ("chords panel: (" + chords.getOffsetWidth() + ","
+                        logger.fine("chords panel: (" + chords.getOffsetWidth() + ","
                                 + chords.getOffsetHeight() + ") for (" + tableWidth + ","
                                 + tableHeight + ")");
 
@@ -252,8 +251,13 @@ public class LyricsAndChordsView
                                     currentSize = Double.parseDouble(mr.getGroup(1));
                                 double size = Math.min(Math.max(chordsMinFontSize, ratio * currentSize), chordsMaxFontSize);
                                 maxFontSizeUsed = Math.max(maxFontSizeUsed, size);
-                                if (currentSize != size)
+                                if (currentSize != size) {
                                     cellStyle.setFontSize(size, Style.Unit.PX);
+                                    cellStyle.setPaddingTop(size/5, Style.Unit.PX);
+                                    cellStyle.setPaddingBottom(size/5, Style.Unit.PX);
+                                    cellStyle.setPaddingLeft(size/6, Style.Unit.PX);
+                                    cellStyle.setPaddingRight(size/3, Style.Unit.PX);
+                                }
                             }
                             chordsDirty = !((ratio >= 1 && ratio <= 1.1)
                                     || maxFontSizeUsed == chordsMinFontSize
@@ -281,7 +285,7 @@ public class LyricsAndChordsView
                     int tableWidth = e.getClientWidth();
                     int tableHeight = e.getClientHeight();
 
-                    GWT.log("lyrics panel: (" + lyrics.getOffsetWidth() + ","
+                    logger.fine("lyrics panel: (" + lyrics.getOffsetWidth() + ","
                             + lyrics.getOffsetHeight() + ") for (" + tableWidth + ","
                             + tableHeight + ")  = "+((double) lyrics.getOffsetWidth() /tableWidth));
 
