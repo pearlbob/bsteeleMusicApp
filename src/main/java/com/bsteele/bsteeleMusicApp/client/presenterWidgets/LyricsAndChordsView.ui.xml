@@ -68,8 +68,8 @@
             </g:HTMLPanel>
         </g:north>
         <g:center>
-            <g:SplitLayoutPanel>
-                <g:west size='600'>
+            <g:SplitLayoutPanel  ui:field="split">
+                <g:west size='300'>     <!--    small for phones!   -->
                     <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
                 </g:west>
                 <g:center>

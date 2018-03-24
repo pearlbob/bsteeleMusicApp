@@ -4,11 +4,8 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
-import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.gargoylesoftware.htmlunit.javascript.host.event.AnimationEvent;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -53,6 +50,9 @@ public class LyricsAndChordsView
 
     @UiField
     SpanElement artist;
+
+    @UiField
+    SplitLayoutPanel split;
 
     @UiField
     HTMLPanel chords;
@@ -220,44 +220,94 @@ public class LyricsAndChordsView
     private void resizeChords() {
         //  adjust fontsize so the table fits but is still minimally, if possible
         if (chords != null && chords.getOffsetWidth() > 0 && chords.getOffsetHeight() > 0) {
-            NodeList<Element> list = chords.getElement().getElementsByTagName("table");
-            for (int i = 0; i < list.getLength(); i++) {
-                //  html table
-                Element e = list.getItem(i);
-                if (e.getId().equals("chordTable")) {
+            {
+                NodeList<Element> list = chords.getElement().getElementsByTagName("table");
+                for (int i = 0; i < list.getLength(); i++) {
+                    //  html table
+                    Element e = list.getItem(i);
+                    if (e.getId().equals("chordTable")) {
+                        int tableWidth = e.getClientWidth();
+                        int tableHeight = e.getClientHeight();
+
+                        GWT.log    //logger.fine
+                                ("chords panel: (" + chords.getOffsetWidth() + ","
+                                + chords.getOffsetHeight() + ") for (" + tableWidth + ","
+                                + tableHeight + ")");
+
+                        double maxFontSizeUsed = 0;
+                        if (chords.getOffsetWidth() < tableWidth
+                                || chords.getOffsetHeight() < tableHeight
+                                || chords.getOffsetWidth() > 1.1 * tableWidth) {
+                            double ratio = Math.min((double) chords.getOffsetWidth() / tableWidth,
+                                    (double) chords.getOffsetHeight() / tableHeight);
+                            logger.fine("wratio: " + ((double) chords.getOffsetWidth() / tableWidth)
+                                    + ", hratio: " + ((double) chords.getOffsetHeight() / tableHeight));
+                            NodeList<Element> cells = e.getElementsByTagName("td");
+                            for (int c = 0; c < cells.getLength(); c++) {
+                                Style cellStyle = cells.getItem(c).getStyle();
+
+                                double currentSize = chordsMaxFontSize;     //  fixme: demands all chord fonts be the same size
+                                MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
+                                if (mr != null)
+                                    currentSize = Double.parseDouble(mr.getGroup(1));
+                                double size = Math.min(Math.max(chordsMinFontSize, ratio * currentSize), chordsMaxFontSize);
+                                maxFontSizeUsed = Math.max(maxFontSizeUsed, size);
+                                if (currentSize != size)
+                                    cellStyle.setFontSize(size, Style.Unit.PX);
+                            }
+                            chordsDirty = !((ratio >= 1 && ratio <= 1.1)
+                                    || maxFontSizeUsed == chordsMinFontSize
+                                    || maxFontSizeUsed == chordsMaxFontSize);
+                        } else
+                            chordsDirty = false;
+
+                        //  move the splitter closer
+//                    if (!chordsDirty && chords.getOffsetWidth() - tableWidth > 5) {
+////                        fixme:      move the splitter closer to the chords
+// split.getLayoutData();
+//                    }
+
+                        break;
+                    }
+                }
+            }
+
+            //  optimize the lyrics fontsize
+            if (!chordsDirty) {
+                //  last pass
+                NodeList<Element> list = lyrics.getElement().getElementsByTagName("table");
+                if (list.getLength() > 0) {
+                    Element e = list.getItem(0);
                     int tableWidth = e.getClientWidth();
                     int tableHeight = e.getClientHeight();
 
-                    logger.fine("chords panel: (" + chords.getOffsetWidth() + ","
-                            + chords.getOffsetHeight() + " for (" + tableWidth + ","
-                            + tableHeight + ")");
+                    GWT.log("lyrics panel: (" + lyrics.getOffsetWidth() + ","
+                            + lyrics.getOffsetHeight() + ") for (" + tableWidth + ","
+                            + tableHeight + ")  = "+((double) lyrics.getOffsetWidth() /tableWidth));
 
-                    double maxFontSizeUsed = 0;
-                    if (chords.getOffsetWidth() < tableWidth
-                            || chords.getOffsetWidth() > 1.1 * tableWidth) {
-                        double ratio = (double) chords.getOffsetWidth() / tableWidth;
+                    if (lyrics.getOffsetWidth() < 1.05 * tableWidth
+                            || lyrics.getOffsetWidth() > 1.1 * tableWidth)          //  try to use the extra width
+                    {
+                        double ratio = 0.95 * (double) lyrics.getOffsetWidth() / tableWidth;
+                        logger.fine("lyrics ratio: " + ((double) lyrics.getOffsetWidth() / tableWidth) );
                         NodeList<Element> cells = e.getElementsByTagName("td");
                         for (int c = 0; c < cells.getLength(); c++) {
                             Style cellStyle = cells.getItem(c).getStyle();
 
-                            double currentSize = chordsMaxFontsize;     //  fixme: demands all chord fonts be the same size
+                            double currentSize = lyricsMaxFontSize;     //  fixme: demands all lyrics fonts be the same size
                             MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
                             if (mr != null)
                                 currentSize = Double.parseDouble(mr.getGroup(1));
-                            double size = Math.min(Math.max(chordsMinFontsize, ratio * currentSize), chordsMaxFontsize);
-                            maxFontSizeUsed = Math.max(maxFontSizeUsed, size);
+                            double size = Math.min(Math.max(lyricsMinFontSize, ratio * currentSize), lyricsMaxFontSize);
                             if (currentSize != size)
                                 cellStyle.setFontSize(size, Style.Unit.PX);
                         }
                     }
-                    chordsDirty = !(chords.getOffsetWidth() >= tableWidth
-                            || maxFontSizeUsed == chordsMinFontsize);
-
-                    break;
                 }
             }
         }
     }
+
 
     private Song song;
     private SongPlayMaster songPlayMaster;
@@ -269,8 +319,10 @@ public class LyricsAndChordsView
 
     public static final String highlightColor = "#e4c9ff";
     private static final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
-    private static final int chordsMinFontsize = 10;
-    private static final int chordsMaxFontsize = 48;
+    private static final int chordsMinFontSize = 8;
+    private static final int chordsMaxFontSize = 52;
+    private static final int lyricsMinFontSize = 8;
+    private static final int lyricsMaxFontSize = 28;
     private final EventBus eventBus;
     private static final Logger logger = Logger.getLogger(LyricsAndChordsView.class.getName());
 
