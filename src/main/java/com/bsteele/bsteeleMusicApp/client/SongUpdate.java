@@ -27,12 +27,14 @@ import java.util.logging.Logger;
 @JsType
 public class SongUpdate {
 
+
     public enum State {
         playing,
         idle;
     }
 
     public SongUpdate() {
+        song = Song.createEmptySong();
     }
 
 //    void copySongUpdate(SongUpdate other) {
@@ -85,7 +87,7 @@ public class SongUpdate {
             }
         }
         sectionId = sectionVersion.toString();
-        logger.fine("measureSet() from "+measure+" to "+m);
+        logger.fine("measureSet() from " + measure + " to " + m);
         chordSectionRow = 0;
         chordSectionColumn = 0;
         repeatCurrent = 0;
@@ -105,18 +107,17 @@ public class SongUpdate {
             while (measure < m)
                 if (!nextMeasure())
                     break;
-        } else
-        {
+        } else {
             //  leave negative measures as they are
             measure = m;
         }
     }
 
     public boolean nextMeasure() {
-        logger.fine("nextMeasure() from "+measure);
+        logger.fine("nextMeasure() from " + measure);
         if (measure < 0) {
             measure++;
-            if ( measure==0)
+            if (measure == 0)
                 measureSet(0);
             return true;
         }
@@ -180,7 +181,7 @@ public class SongUpdate {
         if (extenderRegExp.test(measureContent)) {
             //  not currently repeating
             //  mark the first vertical bar row
-            if (this.repeatFirstRow >= 0)
+            if (this.repeatFirstRow < 0)
                 this.repeatFirstRow = chordSectionRow;
             return this.nextMeasure();   //  go find the next real measure
         }
@@ -351,6 +352,23 @@ public class SongUpdate {
         this.beatsPerMinute = beatsPerMinute;
     }
 
+    public int getRepeatTotal() {
+        return repeatTotal;
+    }
+
+    public int getRepeatFirstRow() {
+        return repeatFirstRow;
+    }
+
+    public int getRepeatLastRow() {
+        return repeatLastRow;
+    }
+
+    public int getRepeatLastCol() {
+        return repeatLastCol;
+    }
+
+
     public String diff(SongUpdate other) {
         if (other == null || other.song == null)
             return "no old song";
@@ -454,12 +472,13 @@ public class SongUpdate {
                 .append("\",\n")
                 .append("\"eventTime\": ")
                 .append(getEventTime())
-                .append(",\n")
-                .append("\"song\": ")
-                .append(song.toJson())
-                .append(",\n")
-                //  sectionNumber sequencing details should be found by local processing
-                .append("\"measure\": ")
+                .append(",\n");
+        if (song != null)
+            sb.append("\"song\": ")
+                    .append(song.toJson())
+                    .append(",\n");
+        //  sectionNumber sequencing details should be found by local processing
+        sb.append("\"measure\": ")
                 .append(getMeasure())
                 .append(",\n")
                 .append("\"beat\": ")
@@ -582,7 +601,7 @@ public class SongUpdate {
     private int repeatLastRow;
     private int repeatLastCol;
 
-    private static final RegExp extenderRegExp = RegExp.compile("^\\|$");
+    private static final RegExp extenderRegExp = RegExp.compile("^\\s*\\|");
     private static final RegExp repeatRegExp = RegExp.compile("x *(?:\\d+\\/)?(\\d+)", "i");
 
 

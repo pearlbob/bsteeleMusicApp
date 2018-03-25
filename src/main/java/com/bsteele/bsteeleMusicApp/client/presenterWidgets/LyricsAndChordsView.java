@@ -7,9 +7,9 @@ import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -30,10 +30,7 @@ public class LyricsAndChordsView
         implements LyricsAndChordsPresenterWidget.MyView {
 
     @UiField
-    ButtonElement playButton;
-
-    @UiField
-    ButtonElement stopButton;
+    Button playStopButton;
 
     @UiField
     SelectElement keySelect;
@@ -79,22 +76,20 @@ public class LyricsAndChordsView
 
         this.songPlayMaster = songPlayMaster;
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
+        labelPlayStop();
 
-        Event.sinkEvents(playButton, Event.ONCLICK);
-        Event.setEventListener(playButton, (Event event) -> {
-            if (Event.ONCLICK == event.getTypeInt()) {
-                if (song != null) {
-                    Song songToPlay = song.copySong();
-                    songToPlay.setBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
-                    songPlayMaster.playSong(songToPlay);
+        playStopButton.addClickHandler((ClickEvent event) -> {
+            if (song != null) {
+                switch (songUpdate.getState()) {
+                    case playing:
+                        songPlayMaster.stopSong();
+                        break;
+                    case idle:
+                        Song songToPlay = song.copySong();
+                        songToPlay.setBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                        songPlayMaster.playSong(songToPlay);
+                        break;
                 }
-            }
-        });
-
-        Event.sinkEvents(stopButton, Event.ONCLICK);
-        Event.setEventListener(stopButton, (Event event) -> {
-            if (Event.ONCLICK == event.getTypeInt()) {
-                songPlayMaster.stopSong();
             }
         });
 
@@ -126,13 +121,51 @@ public class LyricsAndChordsView
 
         this.songUpdate = songUpdate;
 
+        labelPlayStop();
+
+        if ( lastRepeatElement != null ) {
+            lastRepeatElement.setInnerText("x"+lastRepeatTotal);
+            lastRepeatElement = null;
+        }
+
+        //  turn on highlights if required
+        switch (songUpdate.getState()) {
+            case idle:
+                break;
+            case playing:
+                if (songUpdate.getRepeatTotal() > 0) {
+                    final String id = Song.genChordId(songUpdate.getSectionVersion(),
+                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
+                    Element re = lyrics.getElementById(id);
+                    if (re != null) {
+                        re.setInnerText("x" + (songUpdate.getRepeatCurrent()+1) + "/" + songUpdate.getRepeatTotal());
+                        lastRepeatElement = re;
+                        lastRepeatTotal = songUpdate.getRepeatTotal();
+                    }
+                }
+                break;
+        }
+
         chordsDirty = true;
+    }
+
+    private void labelPlayStop() {
+        switch (songUpdate.getState()) {
+            case playing:
+                playStopButton.setText("Stop");
+                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
+                break;
+            case idle:
+                playStopButton.setText("Play");
+                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
+                break;
+        }
     }
 
     @Override
     public void onMusicAnimationEvent(double t) {
         if (song != null
-        //&& songUpdate.getState() == SongUpdate.State.playing
+            //&& songUpdate.getState() == SongUpdate.State.playing
                 )
             audioBeatDisplay.update(t, songUpdate.getEventTime(),
                     songUpdate.getBeatsPerMinute(), false, song.getBeatsPerBar());
@@ -157,36 +190,29 @@ public class LyricsAndChordsView
                 lastLyricsElement = null;
             }
 
-            //  turn on highlights if required
-            switch (songUpdate.getState()) {
-                case idle:
-                    break;
-                case playing:
-                    if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
-                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+            //  add highlights
+            if (songUpdate.getMeasure() >= 0) {
+                String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
+                        songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
 
-                        Element ce = chords.getElementById(chordCellId);
-                        if (ce != null) {
-                            ce.getStyle().setBackgroundColor(highlightColor);
-                            lastChordElement = ce;
-                        }
-                        String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
-                        Element le = lyrics.getElementById(lyricsCellId);
-                        if (le != null) {
-                            le.getStyle().setBackgroundColor(highlightColor);
-                            lastLyricsElement = le;
-                        }
-                    }
-                    break;
+                Element ce = chords.getElementById(chordCellId);
+                if (ce != null) {
+                    ce.getStyle().setBackgroundColor(highlightColor);
+                    lastChordElement = ce;
+                }
+                String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
+                Element le = lyrics.getElementById(lyricsCellId);
+                if (le != null) {
+                    le.getStyle().setBackgroundColor(highlightColor);
+                    lastLyricsElement = le;
+                }
             }
 
-            switch (songUpdate.getState()){
+            switch (songUpdate.getState()) {
                 case idle:
                     resizeChords();
                     break;
             }
-
         }
     }
 
@@ -253,15 +279,15 @@ public class LyricsAndChordsView
                         int tableWidth = e.getClientWidth();
                         int tableHeight = e.getClientHeight();
 
-                       GWT.log// logger.fine
-                                ("chords panel: (" + parentWidth + ","
-                                        + parentHeight + ") for (" + tableWidth + ","
-                                        + tableHeight + ")");
+                        //GWT.log//
+                        logger.fine("chords panel: (" + parentWidth + ","
+                                + parentHeight + ") for (" + tableWidth + ","
+                                + tableHeight + ")");
 
                         double maxFontSizeUsed = 0;
                         if (parentWidth < tableWidth
                                 || parentHeight < tableHeight
-                                || parentWidth > 1.1 * tableWidth) {
+                                || parentWidth > 1.2 * tableWidth) {
                             double ratio = Math.min(parentWidth / tableWidth,
                                     parentHeight / tableHeight);
                             logger.fine("wratio: " + (parentWidth / tableWidth)
@@ -349,6 +375,8 @@ public class LyricsAndChordsView
     private boolean chordsDirty = true;
     private int chordsWidth;
     private int chordsHeight;
+    private Element lastRepeatElement;
+    private int lastRepeatTotal;
 
     public static final String highlightColor = "#e4c9ff";
     private static final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");

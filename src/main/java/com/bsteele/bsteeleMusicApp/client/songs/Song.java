@@ -30,6 +30,12 @@ public class Song implements Comparable<Song> {
     public Song() {
     }
 
+    public static final Song createEmptySong(){
+        return   createSong("", "",
+                "", 100, 4, 4,
+        "", "");
+    }
+    
     public static final Song createSong(String title, String artist,
                                         String copyright, int bpm, int beatsPerBar, int unitsPerMeasure,
                                         String chords, String lyrics) {
@@ -542,7 +548,7 @@ public class Song implements Comparable<Song> {
                             .append("Class\" ");
                     String content = row.get(col);
                     if (endOfChordLineExp.test(content)) {
-                        chordText.append(" style=\"border-right: 0px solid black;\n");
+                        chordText.append(" style=\"border-right: 0px solid black;\"");
                     }
                     chordText.append(" id=\"")
                             .append(genChordId(displayVersion, r, col))
