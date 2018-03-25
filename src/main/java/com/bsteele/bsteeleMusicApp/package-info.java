@@ -13,7 +13,9 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-
+          fixme: map sections from multiple sections to a single findable section id for play indicators
+          fixme: change colors for  multiple sections during play
+        fixme: drum   sound from remotely started song
 todo: improve leadin count down
 todo: write song.comparatorByTitleAndArtist()
 todo: write song.equals (hashcode, etc) for all fields
