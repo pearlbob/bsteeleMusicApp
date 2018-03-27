@@ -30,19 +30,21 @@ public class Song implements Comparable<Song> {
     public Song() {
     }
 
-    public static final Song createEmptySong(){
-        return   createSong("", "",
-                "", 100, 4, 4,
-        "", "");
+    public static final Song createEmptySong() {
+        return createSong("", "",
+                "", ScaleNote.C, 100, 4, 4,
+                "", "");
     }
-    
+
     public static final Song createSong(String title, String artist,
-                                        String copyright, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                        String copyright,
+                                        ScaleNote scaleNote, int bpm, int beatsPerBar, int unitsPerMeasure,
                                         String chords, String lyrics) {
         Song song = new Song();
         song.setTitle(title);
         song.setArtist(artist);
         song.copyright = copyright;
+        song.setScaleNote(scaleNote);
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
         song.unitsPerMeasure = unitsPerMeasure;
@@ -56,7 +58,7 @@ public class Song implements Comparable<Song> {
 
     public final Song copySong() {
         return createSong(getTitle(), getArtist(),
-                getCopyright(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
+                getCopyright(), getScaleNote(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getChords(), getRawLyrics());
     }
 
@@ -563,7 +565,7 @@ public class Song implements Comparable<Song> {
     }
 
     public static final String genChordId(Section.Version displaySectionVersion, int row, int col) {
-        if (displaySectionVersion==null )
+        if (displaySectionVersion == null)
             return "";
         return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
     }
@@ -749,6 +751,11 @@ public class Song implements Comparable<Song> {
         this.artist = artist;
     }
 
+    public void setScaleNote(ScaleNote scaleNote) {
+        this.scaleNote = scaleNote;
+    }
+
+
     /**
      * @return the bpm
      */
@@ -789,6 +796,11 @@ public class Song implements Comparable<Song> {
      */
     public String getCopyright() {
         return copyright;
+    }
+
+
+    public ScaleNote getScaleNote() {
+        return scaleNote;
     }
 
     /**
@@ -907,6 +919,7 @@ public class Song implements Comparable<Song> {
     private String songId = "Unknown";
     private String artist = "Unknown";
     private String copyright = "Unknown";
+    private ScaleNote scaleNote = ScaleNote.C;  //  default
     private int bpm = 106;  //  beats per minute
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
@@ -931,5 +944,4 @@ public class Song implements Comparable<Song> {
     private static final RegExp theRegExp = RegExp.compile("^the *", "i");
     private static final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
     private static final RegExp timeSignatureExp = RegExp.compile("^\\w*(\\d{1,2})\\w*\\/\\w*(\\d)\\w*$");
-
 }

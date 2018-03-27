@@ -26,6 +26,24 @@
             Copyright:<br/>
             <g:TextBox ui:field="copyrightEntry" styleName="{resources.style.entryLine}" />
         </p>
+            <p>
+                Key:<br/>
+                <select ui:field="keySelection" >
+                    <option value="Gb">G♭ 6♭</option>
+                    <option value="Db">D♭ 5♭</option>
+                    <option value="Ab">A♭ 4♭</option>
+                    <option value="Eb">E♭ 3♭</option>
+                    <option value="Bb">B♭ 2♭</option>
+                    <option value="F">F 1♭</option>
+                    <option value="C" selected="selected">C</option>
+                    <option value="G">G 1♯</option>
+                    <option value="D">D 2♯</option>
+                    <option value="A">A 3♯</option>
+                    <option value="E">E 4♯</option>
+                    <option value="B">B 5♯</option>
+                    <option value="Fs">F♯ 6♯</option>
+                </select>
+            </p>
         <p>
             Beats per minute:<br/>
             <g:TextBox ui:field="bpmEntry" styleName="{resources.style.smallIntEntry}" />

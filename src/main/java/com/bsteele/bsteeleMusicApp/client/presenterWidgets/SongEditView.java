@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.SelectElement;
@@ -22,10 +23,10 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+
 import javax.inject.Inject;
 
 /**
- *
  * @author bob
  */
 public class SongEditView
@@ -33,61 +34,64 @@ public class SongEditView
         implements SongEditPresenterWidget.MyView,
         HasHandlers {
 
-  @UiField
-  ButtonElement songEnter;
+    @UiField
+    ButtonElement songEnter;
 
-  @UiField
-  ButtonElement songEntryClear;
+    @UiField
+    ButtonElement songEntryClear;
 
-  @UiField
-  TextBox titleEntry;
+    @UiField
+    TextBox titleEntry;
 
-  @UiField
-  TextBox artistEntry;
+    @UiField
+    TextBox artistEntry;
 
-  @UiField
-  TextBox copyrightEntry;
+    @UiField
+    TextBox copyrightEntry;
 
-  @UiField
-  TextBox bpmEntry;
+    @UiField
+    SelectElement keySelection;
 
-  @UiField
-  SelectElement timeSignatureEntry;
+    @UiField
+    TextBox bpmEntry;
 
-  @UiField
-  TextAreaElement chordsEntry;
+    @UiField
+    SelectElement timeSignatureEntry;
 
-  @UiField
-  TextAreaElement lyricsEntry;
+    @UiField
+    TextAreaElement chordsEntry;
 
-  interface Binder extends UiBinder<Widget, SongEditView> {
-  }
+    @UiField
+    TextAreaElement lyricsEntry;
 
-  @Inject
-  SongEditView(Binder binder) {
-    initWidget(binder.createAndBindUi(this));
+    interface Binder extends UiBinder<Widget, SongEditView> {
+    }
 
-    handlerManager = new HandlerManager(this);
+    @Inject
+    SongEditView(Binder binder) {
+        initWidget(binder.createAndBindUi(this));
 
-    Event.sinkEvents(songEnter, Event.ONCLICK);
-    Event.setEventListener(songEnter, (Event event) -> {
-      if (Event.ONCLICK == event.getTypeInt()) {
-        enterSong();
-      }
-    });
+        handlerManager = new HandlerManager(this);
 
-    Event.sinkEvents(songEntryClear, Event.ONCLICK);
-    Event.setEventListener(songEntryClear, (Event event) -> {
-      if (Event.ONCLICK == event.getTypeInt()) {
-        titleEntry.setText("");
-        artistEntry.setText("");
-        copyrightEntry.setText("");
-        bpmEntry.setText("106");
-        timeSignatureEntry.setValue("4/4" );
-        chordsEntry.setValue("");
-        lyricsEntry.setValue("");
-      }
-    });
+        Event.sinkEvents(songEnter, Event.ONCLICK);
+        Event.setEventListener(songEnter, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                enterSong();
+            }
+        });
+
+        Event.sinkEvents(songEntryClear, Event.ONCLICK);
+        Event.setEventListener(songEntryClear, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                titleEntry.setText("");
+                artistEntry.setText("");
+                copyrightEntry.setText("");
+                bpmEntry.setText("106");
+                timeSignatureEntry.setValue("4/4");
+                chordsEntry.setValue("");
+                lyricsEntry.setValue("");
+            }
+        });
 
 //    titleEntry.addChangeHandler((event) -> {
 //      GWT.log("titleEntry: " + titleEntry.getValue());
@@ -98,6 +102,7 @@ public class SongEditView
 //    copyrightEntry.addChangeHandler((event) -> {
 //      GWT.log("copyrightEntry: " + copyrightEntry.getValue());
 //    });
+//            keySelection.add();
 //    bpmEntry.addChangeHandler((event) -> {
 //      GWT.log("bpmEntry: " + bpmEntry.getValue());
 //    });
@@ -109,101 +114,105 @@ public class SongEditView
 //      }
 //    });
 
-  }
+    }
 
-//  @Override
+    //  @Override
 //  public void fireEvent(GwtEvent<?> event) {
 //    handlerManager.fireEvent(event);
 //  }
-  @Override
-  public void setSongEdit(Song song) {
-    titleEntry.setText(song.getTitle());
-    artistEntry.setText(song.getArtist());
-    copyrightEntry.setText(song.getCopyright());
-    bpmEntry.setText(Integer.toString(song.getBpm()));
-    timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-    chordsEntry.setValue(song.getChords());
-    lyricsEntry.setValue(song.getRawLyrics());
-  }
-
-  public void enterSong() {
-    if (titleEntry.getText().length() <= 0) {
-      Window.alert("no song title given!");
-      return;
+    @Override
+    public void setSongEdit(Song song) {
+        titleEntry.setText(song.getTitle());
+        artistEntry.setText(song.getArtist());
+        copyrightEntry.setText(song.getCopyright());
+        bpmEntry.setText(Integer.toString(song.getBpm()));
+        timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+        chordsEntry.setValue(song.getChords());
+        lyricsEntry.setValue(song.getRawLyrics());
     }
 
-    if (artistEntry.getText().length() <= 0) {
-      Window.alert("no artist given!");
-      return;
+    public void enterSong() {
+        if (titleEntry.getText().length() <= 0) {
+            Window.alert("no song title given!");
+            return;
+        }
+
+        if (artistEntry.getText().length() <= 0) {
+            Window.alert("no artist given!");
+            return;
+        }
+
+        if (copyrightEntry.getText().length() <= 0) {
+            Window.alert("no copyright given!");
+            return;
+        }
+
+        ScaleNote keyScaleNote = ScaleNote.valueOf(keySelection.getValue());
+        if (keyScaleNote == null)
+            keyScaleNote = ScaleNote.C;  //  punt an error
+
+        if (bpmEntry.getText().length() <= 0) {
+            Window.alert("no BPM given!");
+            return;
+        }
+
+        String bpmText = bpmEntry.getText();
+        if (!twoOrThreeDigitsRegexp.test(bpmText)) {
+            Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
+            return;
+        }
+
+        int bpm = Integer.parseInt(bpmText);
+        if (bpm < minBpm || bpm > maxBpm) {
+            Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
+            return;
+        }
+
+        if (chordsEntry.getValue().length() <= 0) {
+            Window.alert("no chords given!");
+            return;
+        }
+        if (lyricsEntry.getValue().length() <= 0) {
+            Window.alert("no lyrics given!");
+            return;
+        }
+
+        int beatsPerBar = 4;
+        int unitsPerMeasure = 4;
+        MatchResult mr = timeSignatureExp.exec(timeSignatureEntry.getValue());
+        if (mr != null) {
+            // match
+            beatsPerBar = Integer.parseInt(mr.getGroup(1));
+            unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
+        }
+
+        Song song = Song.createSong(titleEntry.getText(), artistEntry.getText(),
+                copyrightEntry.getText(), keyScaleNote, bpm, beatsPerBar, unitsPerMeasure,
+                chordsEntry.getValue(), lyricsEntry.getValue());
+        //GWT.log(song.toJson());
+
+        fireSongSubmission(song);
     }
 
-    if (copyrightEntry.getText().length() <= 0) {
-      Window.alert("no copyright given!");
-      return;
+    private void fireSongSubmission(Song song) {
+        fireEvent(new SongSubmissionEvent(song));
     }
 
-    if (bpmEntry.getText().length() <= 0) {
-      Window.alert("no BPM given!");
-      return;
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        handlerManager.fireEvent(event);
     }
 
-    String bpmText = bpmEntry.getText();
-    if (!twoOrThreeDigitsRegexp.test(bpmText)) {
-      Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
-      return;
+
+    @Override
+    public HandlerRegistration SongSubmissionEventHandler(
+            SongSubmissionEventHandler handler) {
+        return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
     }
 
-    int bpm = Integer.parseInt(bpmText);
-    if (bpm < minBpm || bpm > maxBpm) {
-      Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
-      return;
-    }
-
-    if (chordsEntry.getValue().length() <= 0) {
-      Window.alert("no chords given!");
-      return;
-    }
-    if (lyricsEntry.getValue().length() <= 0) {
-      Window.alert("no lyrics given!");
-      return;
-    }
-
-    int beatsPerBar = 4;
-    int unitsPerMeasure = 4;
-    MatchResult mr = timeSignatureExp.exec(timeSignatureEntry.getValue());
-    if (mr != null) {
-      // match
-      beatsPerBar = Integer.parseInt(mr.getGroup(1));
-      unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
-    }
-
-    Song song = Song.createSong(titleEntry.getText(), artistEntry.getText(),
-            copyrightEntry.getText(), bpm, beatsPerBar, unitsPerMeasure,
-            chordsEntry.getValue(), lyricsEntry.getValue());
-    //GWT.log(song.toJson());
-
-    fireSongSubmission(song);
-  }
-
-  private void fireSongSubmission(Song song) {
-    fireEvent(new SongSubmissionEvent(song));
-  }
-
-  @Override
-  public void fireEvent(GwtEvent<?> event) {
-    handlerManager.fireEvent(event);
-  }
-  
-  
-  @Override
-  public HandlerRegistration SongSubmissionEventHandler(
-          SongSubmissionEventHandler handler) {
-    return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
-  }
-
-  private final HandlerManager handlerManager;
-  private static final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
-  private static final int minBpm = 50;
-  private static final int maxBpm = 400;
-  private static final RegExp timeSignatureExp = RegExp.compile("^(\\d{1,2})\\/(\\d)$");
+    private final HandlerManager handlerManager;
+    private static final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
+    private static final int minBpm = 50;
+    private static final int maxBpm = 400;
+    private static final RegExp timeSignatureExp = RegExp.compile("^(\\d{1,2})\\/(\\d)$");
 }
