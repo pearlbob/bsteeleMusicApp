@@ -43,6 +43,7 @@
                     <option value="B">B 5♯</option>
                     <option value="Fs">F♯ 6♯</option>
                 </select>
+                <button type="button" ui:field="keyGuess">Guess the key</button>
             </p>
         <p>
             Beats per minute:<br/>

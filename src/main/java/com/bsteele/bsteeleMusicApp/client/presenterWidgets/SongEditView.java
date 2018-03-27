@@ -5,11 +5,11 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.*;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -25,6 +25,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 
 /**
  * @author bob
@@ -53,6 +54,9 @@ public class SongEditView
     SelectElement keySelection;
 
     @UiField
+    ButtonElement keyGuess;
+
+    @UiField
     TextBox bpmEntry;
 
     @UiField
@@ -79,6 +83,14 @@ public class SongEditView
                 enterSong();
             }
         });
+
+        Event.sinkEvents(keyGuess, Event.ONCLICK);
+        Event.setEventListener(keyGuess, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                guessTheKey();
+            }
+        });
+
 
         Event.sinkEvents(songEntryClear, Event.ONCLICK);
         Event.setEventListener(songEntryClear, (Event event) -> {
@@ -116,15 +128,13 @@ public class SongEditView
 
     }
 
-    //  @Override
-//  public void fireEvent(GwtEvent<?> event) {
-//    handlerManager.fireEvent(event);
-//  }
+
     @Override
     public void setSongEdit(Song song) {
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
         copyrightEntry.setText(song.getCopyright());
+        setKeySelect(song.getKey());
         bpmEntry.setText(Integer.toString(song.getBpm()));
         timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
         chordsEntry.setValue(song.getChords());
@@ -147,9 +157,9 @@ public class SongEditView
             return;
         }
 
-        ScaleNote keyScaleNote = ScaleNote.valueOf(keySelection.getValue());
-        if (keyScaleNote == null)
-            keyScaleNote = ScaleNote.C;  //  punt an error
+        Key key = Key.valueOf(keySelection.getValue());
+        if (key == null)
+            key = Key.C;  //  punt an error
 
         if (bpmEntry.getText().length() <= 0) {
             Window.alert("no BPM given!");
@@ -187,11 +197,20 @@ public class SongEditView
         }
 
         Song song = Song.createSong(titleEntry.getText(), artistEntry.getText(),
-                copyrightEntry.getText(), keyScaleNote, bpm, beatsPerBar, unitsPerMeasure,
+                copyrightEntry.getText(), key, bpm, beatsPerBar, unitsPerMeasure,
                 chordsEntry.getValue(), lyricsEntry.getValue());
         //GWT.log(song.toJson());
 
         fireSongSubmission(song);
+    }
+
+    private void setKeySelect(Key key) {
+        String keyValue = key.name();
+        NodeList<OptionElement> list = keySelection.getOptions();
+        for (int i = 0; i < list.getLength(); i++) {
+            OptionElement oe = list.getItem(i);
+            oe.setSelected(oe.getValue().equals(keyValue));
+        }
     }
 
     private void fireSongSubmission(Song song) {
@@ -208,6 +227,17 @@ public class SongEditView
     public HandlerRegistration SongSubmissionEventHandler(
             SongSubmissionEventHandler handler) {
         return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
+    }
+
+    private void guessTheKey() {
+        RegExp scaleNoteExp = RegExp.compile("([A-G][b#]?)","g");
+        MatchResult mr;
+        ArrayList<ScaleNote> scaleNotes = new ArrayList<>();
+        while ( ( mr = scaleNoteExp.exec(chordsEntry.getValue())) != null ) {
+            scaleNotes.add(ScaleNote.valueOf(mr.getGroup(1)));
+        }
+
+        setKeySelect( Key.guessKey(scaleNotes));
     }
 
     private final HandlerManager handlerManager;

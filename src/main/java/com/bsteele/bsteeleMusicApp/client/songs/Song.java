@@ -32,19 +32,19 @@ public class Song implements Comparable<Song> {
 
     public static final Song createEmptySong() {
         return createSong("", "",
-                "", ScaleNote.C, 100, 4, 4,
+                "", Key.C, 100, 4, 4,
                 "", "");
     }
 
     public static final Song createSong(String title, String artist,
                                         String copyright,
-                                        ScaleNote scaleNote, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                        Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
                                         String chords, String lyrics) {
         Song song = new Song();
         song.setTitle(title);
         song.setArtist(artist);
         song.copyright = copyright;
-        song.setScaleNote(scaleNote);
+        song.setKey(key);
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
         song.unitsPerMeasure = unitsPerMeasure;
@@ -58,7 +58,7 @@ public class Song implements Comparable<Song> {
 
     public final Song copySong() {
         return createSong(getTitle(), getArtist(),
-                getCopyright(), getScaleNote(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
+                getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getChords(), getRawLyrics());
     }
 
@@ -95,6 +95,9 @@ public class Song implements Comparable<Song> {
                     break;
                 case "copyright":
                     song.copyright = jv.isString().stringValue();
+                    break;
+                case "key":
+                    song.key = Key.valueOf(jv.isString().stringValue());
                     break;
                 case "bpm":
                     jn = jv.isNumber();
@@ -174,6 +177,9 @@ public class Song implements Comparable<Song> {
                 .append("\",\n")
                 .append("\"copyright\": \"")
                 .append(JsonUtil.encode(getCopyright()))
+                .append("\",\n")
+                .append("\"key\": \"")
+                .append(key.name())
                 .append("\",\n")
                 .append("\"bpm\": ")
                 .append(getBpm())
@@ -751,8 +757,8 @@ public class Song implements Comparable<Song> {
         this.artist = artist;
     }
 
-    public void setScaleNote(ScaleNote scaleNote) {
-        this.scaleNote = scaleNote;
+    public void setKey(Key key) {
+        this.key = key;
     }
 
 
@@ -799,8 +805,8 @@ public class Song implements Comparable<Song> {
     }
 
 
-    public ScaleNote getScaleNote() {
-        return scaleNote;
+    public Key getKey() {
+        return key;
     }
 
     /**
@@ -919,7 +925,7 @@ public class Song implements Comparable<Song> {
     private String songId = "Unknown";
     private String artist = "Unknown";
     private String copyright = "Unknown";
-    private ScaleNote scaleNote = ScaleNote.C;  //  default
+    private Key key = Key.C;  //  default
     private int bpm = 106;  //  beats per minute
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
