@@ -13,9 +13,18 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-          fixme: map sections from multiple sections to a single findable section id for play indicators
-          fixme: change colors for  multiple sections during play
-        fixme: drum   sound from remotely started song
+
+todo: finish transposition
+todo: add drums to the edit page, store by song
+todo: move the lyrics highlight color to the section id
+todo: keep current lyrics section in view: i.e. autoscroll
+fixme: map sections from multiple sections to a single findable section id for play indicators
+fixme: change colors for  multiple sections during play
+
+fixme: WebSocket connection to 'wss://fit-union-164517.appspot.com/bsteeleMusicApp/bsteeleMusic' failed: Error during WebSocket handshake: Unexpected response code: 400
+fixme: standard google app engine deployment includes client .class files
+
+fixme: drum   sound from remotely started song
 todo: improve leadin count down
 todo: write song.comparatorByTitleAndArtist()
 todo: write song.equals (hashcode, etc) for all fields

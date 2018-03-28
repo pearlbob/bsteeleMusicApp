@@ -116,6 +116,7 @@ public class Song implements Comparable<Song> {
                     } else {
                         String s = jv.isString().stringValue();
 
+                    final RegExp timeSignatureExp = RegExp.compile("^\\w*(\\d{1,2})\\w*\\/\\w*(\\d)\\w*$");
                         MatchResult mr = timeSignatureExp.exec(s);
                         if (mr != null) {
                             // match
@@ -551,6 +552,7 @@ public class Song implements Comparable<Song> {
                 start = rowStart;   //  default to empty row start on subsequent rows
 
                 ArrayList<String> row = grid.getRow(r);
+                final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
                 for (int col = 0; col < row.size(); col++) {
                     chordText.append("<td class=\"" + style + "section").append(version.getSection().getAbreviation())
                             .append("Class\" ");
@@ -742,6 +744,8 @@ public class Song implements Comparable<Song> {
 
     private void setTitle(String title) {
         //  move the leading "The " to the end
+
+       final RegExp theRegExp = RegExp.compile("^the *", "i");
         if (theRegExp.test(title)) {
             title = theRegExp.replace(title, "") + ", The";
         }
@@ -751,6 +755,7 @@ public class Song implements Comparable<Song> {
 
     private void setArtist(String artist) {
         //  move the leading "The " to the end
+        final RegExp theRegExp = RegExp.compile("^the *", "i");
         if (theRegExp.test(artist)) {
             artist = theRegExp.replace(artist, "") + ", The";
         }
@@ -946,8 +951,4 @@ public class Song implements Comparable<Song> {
     private static final char js_natural = '\u266E';
     private static final char js_sharp = '\u266F';
     private static final char js_delta = '\u0394';
-
-    private static final RegExp theRegExp = RegExp.compile("^the *", "i");
-    private static final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
-    private static final RegExp timeSignatureExp = RegExp.compile("^\\w*(\\d{1,2})\\w*\\/\\w*(\\d)\\w*$");
 }

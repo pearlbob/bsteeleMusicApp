@@ -178,6 +178,7 @@ public class SongUpdate {
 
         //  look for the repeat extender
         //  note: doesn't have to be at the end of the row due to comments
+        final RegExp extenderRegExp = RegExp.compile("^\\s*\\|");
         if (extenderRegExp.test(measureContent)) {
             //  not currently repeating
             //  mark the first vertical bar row
@@ -187,6 +188,7 @@ public class SongUpdate {
         }
 
         //  look for repeat
+        final RegExp repeatRegExp = RegExp.compile("x *(?:\\d+\\/)?(\\d+)", "i");
         MatchResult mr = repeatRegExp.exec(measureContent);
         if (mr != null) {
             if (repeatTotal == 0) {
@@ -600,10 +602,6 @@ public class SongUpdate {
     private int repeatFirstRow = -1;
     private int repeatLastRow;
     private int repeatLastCol;
-
-    private static final RegExp extenderRegExp = RegExp.compile("^\\s*\\|");
-    private static final RegExp repeatRegExp = RegExp.compile("x *(?:\\d+\\/)?(\\d+)", "i");
-
 
     private int measure;
     private String measureContent;

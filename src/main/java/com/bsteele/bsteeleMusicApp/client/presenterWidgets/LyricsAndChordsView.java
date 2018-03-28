@@ -123,8 +123,8 @@ public class LyricsAndChordsView
 
         labelPlayStop();
 
-        if ( lastRepeatElement != null ) {
-            lastRepeatElement.setInnerText("x"+lastRepeatTotal);
+        if (lastRepeatElement != null) {
+            lastRepeatElement.setInnerText("x" + lastRepeatTotal);
             lastRepeatElement = null;
         }
 
@@ -138,7 +138,7 @@ public class LyricsAndChordsView
                             songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
                     Element re = lyrics.getElementById(id);
                     if (re != null) {
-                        re.setInnerText("x" + (songUpdate.getRepeatCurrent()+1) + "/" + songUpdate.getRepeatTotal());
+                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
                         lastRepeatElement = re;
                         lastRepeatTotal = songUpdate.getRepeatTotal();
                     }
@@ -293,6 +293,7 @@ public class LyricsAndChordsView
                             logger.fine("wratio: " + (parentWidth / tableWidth)
                                     + ", hratio: " + (parentHeight / tableHeight));
                             NodeList<Element> cells = e.getElementsByTagName("td");
+                            final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
                             for (int c = 0; c < cells.getLength(); c++) {
                                 Style cellStyle = cells.getItem(c).getStyle();
 
@@ -333,8 +334,8 @@ public class LyricsAndChordsView
                 NodeList<Element> list = lyrics.getElement().getElementsByTagName("table");
                 if (list.getLength() > 0) {
                     Element e = list.getItem(0);
-                    int tableWidth = e.getClientWidth();
-                    int tableHeight = e.getClientHeight();
+                    final int tableWidth = e.getClientWidth();
+                    final int tableHeight = e.getClientHeight();
 
                     logger.fine("lyrics panel: (" + lyrics.getOffsetWidth() + ","
                             + lyrics.getOffsetHeight() + ") for (" + tableWidth + ","
@@ -343,9 +344,10 @@ public class LyricsAndChordsView
                     if (lyrics.getOffsetWidth() < 1.05 * tableWidth
                             || lyrics.getOffsetWidth() > 1.1 * tableWidth)          //  try to use the extra width
                     {
-                        double ratio = 0.95 * (double) lyrics.getOffsetWidth() / tableWidth;
+                        final double ratio = 0.95 * (double) lyrics.getOffsetWidth() / tableWidth;
                         logger.fine("lyrics ratio: " + ((double) lyrics.getOffsetWidth() / tableWidth));
-                        NodeList<Element> cells = e.getElementsByTagName("td");
+                        final NodeList<Element> cells = e.getElementsByTagName("td");
+                        final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
                         for (int c = 0; c < cells.getLength(); c++) {
                             Style cellStyle = cells.getItem(c).getStyle();
 
@@ -379,7 +381,6 @@ public class LyricsAndChordsView
     private int lastRepeatTotal;
 
     public static final String highlightColor = "#e4c9ff";
-    private static final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
     private static final int chordsMinFontSize = 8;
     private static final int chordsMaxFontSize = 52;
     private static final int lyricsMinFontSize = 8;

@@ -39,7 +39,9 @@ public class BSteeleMusicIO {
         String url = GWT.getHostPageBaseURL();
         logger.fine("GWT.getHostPageBaseURL(): " + url);
         url = url.replaceFirst("bsteeleMusicApp", "");  //  due to jetty startup
-        url = url.replaceFirst("^http\\:", "ws:") + "bsteeleMusicApp/bsteeleMusic";
+        url = url.replaceFirst("^http\\:", "ws:");
+        url = url.replaceFirst("^https\\:", "wss:");
+        url += "bsteeleMusicApp/bsteeleMusic";
         url = url.replaceFirst("8888", "8082");//  fixme
         logger.fine("url: " + url);
         return url;
@@ -65,7 +67,7 @@ public class BSteeleMusicIO {
         @Override
         public Object call(Object event) {
             GWT.log("error: socket readyState: " + socket.readyState);
-            isSocketOpen = ( socket.readyState == 1 );
+            isSocketOpen = (socket.readyState == 1);
             return event;
         }
     }
@@ -101,6 +103,6 @@ public class BSteeleMusicIO {
 
     private final SongPlayMaster songPlayMaster;
     private static WebSocket socket;
-    private static boolean  isSocketOpen = true;
+    private static boolean isSocketOpen = true;
     private static final Logger logger = Logger.getLogger(BSteeleMusicIO.class.getName());
 }

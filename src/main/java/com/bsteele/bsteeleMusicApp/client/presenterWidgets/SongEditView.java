@@ -167,6 +167,7 @@ public class SongEditView
         }
 
         String bpmText = bpmEntry.getText();
+        final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
         if (!twoOrThreeDigitsRegexp.test(bpmText)) {
             Window.alert("BPM has to be a number from " + minBpm + " to " + maxBpm);
             return;
@@ -189,6 +190,7 @@ public class SongEditView
 
         int beatsPerBar = 4;
         int unitsPerMeasure = 4;
+        final RegExp timeSignatureExp = RegExp.compile("^(\\d{1,2})\\/(\\d)$");
         MatchResult mr = timeSignatureExp.exec(timeSignatureEntry.getValue());
         if (mr != null) {
             // match
@@ -230,7 +232,7 @@ public class SongEditView
     }
 
     private void guessTheKey() {
-        RegExp scaleNoteExp = RegExp.compile("([A-G][b#]?)","g");
+        final RegExp scaleNoteExp = RegExp.compile("([A-G][b#]?)","g");
         MatchResult mr;
         ArrayList<ScaleNote> scaleNotes = new ArrayList<>();
         while ( ( mr = scaleNoteExp.exec(chordsEntry.getValue())) != null ) {
@@ -241,8 +243,7 @@ public class SongEditView
     }
 
     private final HandlerManager handlerManager;
-    private static final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
-    private static final int minBpm = 50;
+     private static final int minBpm = 50;
     private static final int maxBpm = 400;
-    private static final RegExp timeSignatureExp = RegExp.compile("^(\\d{1,2})\\/(\\d)$");
+
 }

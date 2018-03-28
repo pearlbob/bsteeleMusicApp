@@ -37,7 +37,7 @@ public enum ScaleNote {
     Es;     //  used for Fs (+6) key
 
     ScaleNote() {
-        RegExp keyRegexp = RegExp.compile("^([A-G])([sb]?)$");  //  workaround for RegExp is not serializable.
+        final RegExp keyRegexp = RegExp.compile("^([A-G])([sb]?)$");  //  workaround for RegExp is not serializable.
         MatchResult mr = keyRegexp.exec(name());
         if (mr != null) {
             String mod = "";
