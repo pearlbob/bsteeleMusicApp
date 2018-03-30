@@ -24,7 +24,6 @@ import jsinterop.annotations.JsType;
 /**
  * @author bob
  */
-@JsType
 public class Song implements Comparable<Song> {
 
     public Song() {

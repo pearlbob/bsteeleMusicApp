@@ -10,9 +10,13 @@ import com.google.gwt.regexp.shared.RegExp;
 
 /**
  * A note in a scale has no duration or pitch but represents
- * the relative scale position within the key.
+ * the relative scale position within the given key.
  * <p>
- * Small note: not all scale notes are used as key values.
+ * Small note: Not all scale notes are used as key values.
+ * </p>
+ * <p>
+ * Small note: The musical flat character is not allowed as a java enum name so a 'b' is used here.
+ * The musical sharp character is not allowed as a java enum name so an 's' is used here.
  * </p>
  */
 public enum ScaleNote {
@@ -70,21 +74,28 @@ public enum ScaleNote {
         }
     }
 
-    public static ScaleNote getSharpByHalfStep(int halfStep) {
+     static ScaleNote getSharpByHalfStep(int halfStep) {
         halfStep %= 12;
         if (halfStep < 0)
             halfStep += 12;
         return sharps[halfStep];
     }
 
-    public static ScaleNote getFlatByHalfStep(int halfStep) {
+     static ScaleNote getFlatByHalfStep(int halfStep) {
         halfStep %= 12;
         if (halfStep < 0)
             halfStep += 12;
         return flats[halfStep];
     }
 
-    public static ScaleNote parseMarkupString(String s) {
+    /**
+     * Return the ScaleNote represented by the given string.
+     * Is case sensitive.
+     * <p>Ultimately, the markup language will disappear.</p>
+     * @param s  string to be parsed
+     * @return ScaleNote represented by the string.  Can be null.
+     */
+    public static ScaleNote parse(String s) {
         if (s == null || s.length() < 1)
             return null;
         char c = s.charAt(0);
@@ -99,9 +110,12 @@ public enum ScaleNote {
             c = s.charAt(1);
             switch (c) {
                 case 'b':
-                    sb.append(c);
+                case MusicConstant.flatChar:
+                    sb.append('b');
                     break;
+
                 case '#':
+                case MusicConstant.sharpChar:
                     sb.append('s');
                     break;
             }
@@ -111,7 +125,7 @@ public enum ScaleNote {
     }
 
     /**
-     * Returns the name of this enum constant in a user friendly format,
+     * Returns the name of this key in a user friendly text format,
      * i.e. as UTF-8
      *
      * @return the name of this enum constant
@@ -121,10 +135,20 @@ public enum ScaleNote {
         return keyString;
     }
 
+    /**
+     * Returns the name of this key in an HTML format.
+     * @return
+     */
     public String toHtml() {
         return keyHtml;
     }
 
+    /**
+     * Return the key as markup.
+     * <p>Ultimately, the markup language will disappear.</p>
+     * @return
+     */
+    @Deprecated
     public String toMarkup() {
         return keyMarkup;
     }

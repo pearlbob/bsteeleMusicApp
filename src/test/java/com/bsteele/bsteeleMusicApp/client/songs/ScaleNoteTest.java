@@ -12,14 +12,14 @@ public class ScaleNoteTest {
 
     @Test
     public void parseMarkupString() {
-        assertEquals(ScaleNote.Fs, ScaleNote.parseMarkupString("F#sus7"));
-        assertEquals(ScaleNote.As, ScaleNote.parseMarkupString("A#"));
-        assertFalse(ScaleNote.A.equals(ScaleNote.parseMarkupString("a")));
-        assertEquals(ScaleNote.A, ScaleNote.parseMarkupString("A"));
-        assertEquals(ScaleNote.A, ScaleNote.parseMarkupString("A7"));
-        assertEquals(ScaleNote.Bb, ScaleNote.parseMarkupString("Bb"));
-        assertEquals(ScaleNote.Es, ScaleNote.parseMarkupString("E#sus7"));
-        assertEquals(ScaleNote.Ab, ScaleNote.parseMarkupString("Ab"));
-        assertEquals(ScaleNote.Gb, ScaleNote.parseMarkupString("Gb"));
+        assertEquals(ScaleNote.Fs, ScaleNote.parse("F#sus7"));
+        assertEquals(ScaleNote.As, ScaleNote.parse("A#"));
+        assertFalse(ScaleNote.A.equals(ScaleNote.parse("a")));
+        assertEquals(ScaleNote.A, ScaleNote.parse("A"));
+        assertEquals(ScaleNote.A, ScaleNote.parse("A7"));
+        assertEquals(ScaleNote.Bb, ScaleNote.parse("Bb"));
+        assertEquals(ScaleNote.Es, ScaleNote.parse("E#sus7"));
+        assertEquals(ScaleNote.Ab, ScaleNote.parse("Ab"));
+        assertEquals(ScaleNote.Gb, ScaleNote.parse("Gb"));
     }
 }

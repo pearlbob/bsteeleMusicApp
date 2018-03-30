@@ -21,8 +21,19 @@ todo: keep current lyrics section in view: i.e. autoscroll
 fixme: map sections from multiple sections to a single findable section id for play indicators
 fixme: change colors for  multiple sections during play
 
+todo: edit should offer BPM & Key from lyrics & chords
+todo: chord colors should always match lyrics in play
+todo: delta shape == major7
+todo: play youtube video
 fixme: WebSocket connection to 'wss://fit-union-164517.appspot.com/bsteeleMusicApp/bsteeleMusic' failed: Error during WebSocket handshake: Unexpected response code: 400
 fixme: standard google app engine deployment includes client .class files
+
+• Chord Tone - the pitches in a chord that determine its basic sound quality. Chord tones are the following:
+a. root, 3rd and 5th of a triad (major, minor, augmented or diminished).
+b. root, 4th and 5th of a triad (sus 4 triad).
+c. root, 3rd, 5th and 7th of seventh chords.
+d. root, 4th, 5th and flat 7th of a dominant 7th sus 4 chord.
+e. root, 3rd, 5th and 6th of a sixth chord (major, minor).
 
 fixme: drum   sound from remotely started song
 todo: improve leadin count down
@@ -75,5 +86,80 @@ todo: datagrid for events
 todo: get focus on songlist search, keep it there
 todo: visual screen-warning that we're about to change sections
 todo: think about fullscreen use, particularly when playing
+
+
+
+Lyrics:
+Song
+	title
+	artist
+	copyright
+	key
+	BPM
+	time signature
+	chords
+	lyrics
+	default drums
+	metadata (genre,album,date,album cover, etc)
+chords
+	section definitions
+lyrics
+	lyric sections
+lyric section
+	sectionId: type (i,v,pc,c,br,a,b,o,t), version (1,2,3...)
+	lyric measure
+lyric measure
+	lyrics
+section
+	sectionId
+	repeats
+	measures
+	parts
+measure
+	beat count
+	chords / no chords
+chord
+	scale note
+	beats
+	chord modifier (major/minor/major7/minor7/dominant7/sus/...etc)
+	tensions: 7, b7, 9, b9, #9, 11, #11, 13, b13 (nonharmonic tones)
+	anticipation/delayed attack (push/pull) -8th, -16th, -1/3triplet, +8th, +16th, +1/3triplet
+	slash chord (bass)
+key
+	name
+	number (of sharps/flats, aka wheel of fifth's position)
+scaleNote
+	key
+	offset	(in the key scale)
+	name  ( A, A#, Bb, B, etc)
+
+Scores:
+part
+	type (drum, guitar, bass)
+	bars
+bar
+	measure
+	notes
+note
+	pitch
+	duration (in beats)
+	scaleNote
+	scaleNumber
+	isDotted
+	isTied
+	isBeamed (maintain invisible bar)
+	isSwing 1,2
+	isTriplet 1,2,3
+	isDrum
+	isRest
+	isPreNotationRequired (#,b, natural)
+	trebleClefPosition
+	bassClefPosition
+pitch
+	absolute pitch name (A0->)
+	frequency (hertz)
+
+
+
 
  */
