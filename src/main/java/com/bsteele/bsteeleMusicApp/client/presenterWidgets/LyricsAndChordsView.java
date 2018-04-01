@@ -36,6 +36,8 @@ public class LyricsAndChordsView
     Button playStopButton;
 
     @UiField
+    SpanElement keyLabel;
+    @UiField
     Button originalKeyButton;
     @UiField
     Button keyUpButton;
@@ -163,6 +165,8 @@ public class LyricsAndChordsView
                 break;
         }
 
+        keyLabel.setInnerHTML(songUpdate.getSong().getKey().toString());
+
         chordsDirty = true;
     }
 
@@ -262,10 +266,12 @@ public class LyricsAndChordsView
     }
 
     private void transpose(int tran) {
-        currentKeyTransposition = Util.mod(tran,MusicConstant.halfStepsPerOctave);
+        currentKeyTransposition = Util.mod(tran, MusicConstant.halfStepsPerOctave);
 
-        song.setKey(Key.getKeyByValue(originalKey.getKeyValue()+currentKeyTransposition));
-        GWT.log( "currentKeyTransposition: "+currentKeyTransposition);
+        Key currentKey = Key.getKeyByHalfStep(originalKey.getHalfStep() + currentKeyTransposition);
+        song.setKey(currentKey);
+        keyLabel.setInnerHTML(currentKey.toString());
+        
         chords.clear();
         chords.add(new HTML(song.transpose(currentKeyTransposition)));
 

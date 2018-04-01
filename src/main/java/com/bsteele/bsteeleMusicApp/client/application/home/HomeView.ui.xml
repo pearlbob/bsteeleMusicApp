@@ -50,10 +50,18 @@
                                         <iron-icon icon="help" item-icon=""/>
                                         <div>About</div>
                                     </paper-icon-item>
-                                    <br/>
+                                    <g:Tree ui:field="optionTree" >
+                                        <g:TreeItem text="Display">
+                                            <g:CheckBox ui:field="countIn" text="Count-In" checked="true"/>
+                                            <g:CheckBox ui:field="alwaysCount" text="Always Count"/>
+                                            <g:CheckBox ui:field="flashOn1" text="Flash on beat one"/>
+                                        </g:TreeItem>
+                                    </g:Tree>
+                                      <br/>
                                     buildId:
                                     <g:Label ui:field="buildId"/>
                                 </g:HTMLPanel>
+
                             </g:FlowPanel>
                         </g:tab>
                         <g:tab>

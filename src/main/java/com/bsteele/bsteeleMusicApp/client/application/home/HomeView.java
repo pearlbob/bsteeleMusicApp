@@ -31,7 +31,6 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     @UiField
     Label buildId;
 
-
     @Inject
     HomeView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));

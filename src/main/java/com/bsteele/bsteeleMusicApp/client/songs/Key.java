@@ -61,6 +61,10 @@ public enum Key {
         return keyScaleNote;
     }
 
+    public int getHalfStep(){
+        return keyScaleNote.getHalfStep();
+    }
+
     /**
      * Return the key represented by the given integer value.
      *
@@ -71,6 +75,14 @@ public enum Key {
         keyValue = Util.mod(keyValue,MusicConstant.halfStepsPerOctave);
         for (Key key : Key.values())
             if (key.keyValue == keyValue)
+                return key;
+        return Key.values()[0];     //  default, expected to be C
+    }
+
+    public static final Key getKeyByHalfStep(int halfStep) {
+        halfStep = Util.mod(halfStep,MusicConstant.halfStepsPerOctave);
+        for (Key key : Key.values())
+            if (key.halfStep == halfStep)
                 return key;
         return Key.values()[0];     //  default, expected to be C
     }

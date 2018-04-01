@@ -26,6 +26,10 @@ public enum ChordDescriptor {
 
     public static ChordDescriptor parse(String s) {
         if (s != null && s.length() > 0) {
+            //  special for major7 thanks to John Coltrane
+            if (s.startsWith(MusicConstant.greekCapitalDelta))
+                return ChordDescriptor.major7;
+
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 if (cd.getShortName().length() > 0 && s.startsWith(cd.getShortName())) {
                     return cd;
@@ -47,15 +51,13 @@ public enum ChordDescriptor {
     private static final String regExp;
 
     static {
-        //  build the regexpression to find this class while parsing
+        //  build the regex expression to find this class while parsing
         StringBuilder sb = new StringBuilder();
-        sb.append("(");
-        boolean first = true;
+        sb.append("(")
+                .append(MusicConstant.greekCapitalDelta);   //  special for major7 thanks to John Coltrane
+
         for (ChordDescriptor cd : ChordDescriptor.values()) {
-            if (first)
-                first = false;
-            else
-                sb.append("|");
+            sb.append("|");
             sb.append(cd.getShortName());
         }
         sb.append(")");
