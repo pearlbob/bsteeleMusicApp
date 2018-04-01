@@ -1,11 +1,9 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.TreeSet;
 
 import static org.junit.Assert.*;
 
@@ -17,13 +15,14 @@ public class KeyTest {
 
     @Test
     public void getKeyByValue() {
+
         //  print the table of values
         for (int i = -6; i <= 6; i++) {
             Key key = Key.getKeyByValue(i);
             assertEquals(i, key.getKeyValue());
             System.out.print(
-                    (i>=0? " ":"")
-                    +i + " " + key.name()
+                    (i >= 0 ? " " : "")
+                            + i + " " + key.name()
                             //+ " toString: "
                             + " (" + key.toString() + ")\t"
                     //+ " html: " + key.toHtml()
@@ -40,13 +39,16 @@ public class KeyTest {
             }
             //System.out.println("\t");
 
-            System.out.print("\t5th's: ");
+            System.out.print("\tdiatonics: ");
             for (int j = 0; j < 7; j++) {
-                ScaleNote sn = key.getDiatonicByDegree(j);
-                String s = sn.toString();
+                ScaleChord sc = key.getDiatonicByDegree(j);
+                String s = sc.toString();
                 System.out.print(s);
-                if (s.toString().length() < 2)
+                int len = s.length();
+                while ( len < 4) {
+                    len++;
                     System.out.print(" ");
+                }
                 System.out.print(" ");
             }
             //System.out.println();
@@ -76,18 +78,19 @@ public class KeyTest {
         assertEquals("B  C♯ D♯ E  F♯ G♯ A♯", majorScale(Key.B));
         assertEquals("F♯ G♯ A♯ B  C♯ D♯ E♯", majorScale(Key.Fs));
 
-        assertEquals("G♭ D♭ A♭ E♭ B♭ F  C", diatonicByDegree(Key.Gb));
-        assertEquals("D♭ A♭ E♭ B♭ F  C  G", diatonicByDegree(Key.Db));
-        assertEquals("A♭ E♭ B♭ F  C  G  D", diatonicByDegree(Key.Ab));
-        assertEquals("E♭ B♭ F  C  G  D  A", diatonicByDegree(Key.Eb));
-        assertEquals("B♭ F  C  G  D  A  E", diatonicByDegree(Key.Bb));
-        assertEquals("F  C  G  D  A  E  B", diatonicByDegree(Key.F));
-        assertEquals("C  G  D  A  E  B  F♯", diatonicByDegree(Key.C));
-        assertEquals("G  D  A  E  B  F♯ C♯", diatonicByDegree(Key.G));
-        assertEquals("D  A  E  B  F♯ C♯ G♯", diatonicByDegree(Key.D));
-        assertEquals("E  B  F♯ C♯ G♯ D♯ A♯", diatonicByDegree(Key.E));
-        assertEquals("B  F♯ C♯ G♯ D♯ A♯ F", diatonicByDegree(Key.B));
-        assertEquals("F♯ C♯ G♯ D♯ A♯ E♯ C", diatonicByDegree(Key.Fs));
+        assertEquals("G♭   A♭m  B♭m  C♭   D♭7  E♭m  Fm7b5", diatonicByDegree(Key.Gb));
+        assertEquals("D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5", diatonicByDegree(Key.Db));
+        assertEquals("A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5", diatonicByDegree(Key.Ab));
+        assertEquals("E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5", diatonicByDegree(Key.Eb));
+        assertEquals("B♭   Cm   Dm   E♭   F7   Gm   Am7b5", diatonicByDegree(Key.Bb));
+        assertEquals("F    Gm   Am   B♭   C7   Dm   Em7b5", diatonicByDegree(Key.F));
+        assertEquals("C    Dm   Em   F    G7   Am   Bm7b5", diatonicByDegree(Key.C));
+        assertEquals("G    Am   Bm   C    D7   Em   F♯m7b5", diatonicByDegree(Key.G));
+        assertEquals("D    Em   F♯m  G    A7   Bm   C♯m7b5", diatonicByDegree(Key.D));
+        assertEquals("A    Bm   C♯m  D    E7   F♯m  G♯m7b5", diatonicByDegree(Key.A));
+        assertEquals("E    F♯m  G♯m  A    B7   C♯m  D♯m7b5", diatonicByDegree(Key.E));
+        assertEquals("B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5", diatonicByDegree(Key.B));
+        assertEquals("F♯   G♯m  A♯m  B    C♯7  D♯m  E♯m7b5", diatonicByDegree(Key.Fs));
 
 
 //        -6 Gb toString: G♭ html: G&#9837;
@@ -160,11 +163,14 @@ public class KeyTest {
     private String diatonicByDegree(Key key) {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < 7; j++) {
-            ScaleNote sn = key.getDiatonicByDegree(j);
-            String s = sn.toString();
+            ScaleChord sc = key.getDiatonicByDegree(j);
+            String s = sc.toString();
             sb.append(s);
-            if (s.toString().length() < 2)
+            int i = s.length();
+            while ( i < 4) {
+                i++;
                 sb.append(" ");
+            }
             sb.append(" ");
         }
         return sb.toString().trim();
@@ -174,74 +180,161 @@ public class KeyTest {
     public void guessKey() {
         Key key;
 
-        ArrayList<ScaleNote> scaleNotes = new ArrayList<>();
-        scaleNotes.add(ScaleNote.D);
-        scaleNotes.add(ScaleNote.G);
-        scaleNotes.add(ScaleNote.A);
-        scaleNotes.add(ScaleNote.C);
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.D, key.getKeyScaleNote());
+        ArrayList<ScaleChord> scaleChords = new ArrayList<>();
+        scaleChords.add(new ScaleChord(ScaleNote.Gb));
+        scaleChords.add(new ScaleChord(ScaleNote.Cb));
+        scaleChords.add(new ScaleChord(ScaleNote.Db,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
 
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.Cs);
-        scaleNotes.add(ScaleNote.Fs);
-        scaleNotes.add(ScaleNote.Gs);
+        scaleChords.clear();
+        scaleChords.add( ScaleChord.parse("Gb") );
+        scaleChords.add( ScaleChord.parse("Cb") );
+        scaleChords.add( ScaleChord.parse("Db7") );
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
 
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.Fs, key.getKeyScaleNote());
-        scaleNotes.add(ScaleNote.B);
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.Fs, key.getKeyScaleNote());
-
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.C);
-        scaleNotes.add(ScaleNote.F);
-        scaleNotes.add(ScaleNote.G);
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.C, key.getKeyScaleNote());
-        scaleNotes.add(ScaleNote.As);
-        key = Key.guessKey(scaleNotes);
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.C));
+        scaleChords.add(new ScaleChord(ScaleNote.F));
+        scaleChords.add(new ScaleChord(ScaleNote.G,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
         assertEquals(ScaleNote.C, key.getKeyScaleNote());
 
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.Cs);
-        scaleNotes.add(ScaleNote.Gs);
-        scaleNotes.add(ScaleNote.Fs);
-        scaleNotes.add(ScaleNote.B);
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.Fs, key.getKeyScaleNote());
+        //  1     2   3    4    5    6     7
+        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.Db));
+        scaleChords.add(new ScaleChord(ScaleNote.Gb));
+        scaleChords.add(new ScaleChord(ScaleNote.Ab,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
 
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.C);
-        scaleNotes.add(ScaleNote.G);
-        scaleNotes.add(ScaleNote.F);
-        scaleNotes.add(ScaleNote.As);
-        key = Key.guessKey(scaleNotes);
+        //  1     2   3    4    5    6     7
+        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.Cs));
+        scaleChords.add(ScaleChord.parse("F#"));
+        scaleChords.add(new ScaleChord(ScaleNote.Gs,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+        scaleChords.add(new ScaleChord(ScaleNote.Bb,ChordDescriptor.minor));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+
+
+        //  1     2   3    4    5    6     7
+        //  A    Bm   C♯m  D    E7   F♯m  G♯m7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.A));
+        scaleChords.add(new ScaleChord(ScaleNote.Fs,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.B,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.E,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.A, key.getKeyScaleNote());
+
+        //  1     2   3    4    5    6     7
+        //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.Ab));
+        scaleChords.add(new ScaleChord(ScaleNote.F,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.G,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.Bb,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Eb, key.getKeyScaleNote());
+
+        //  1     2   3    4    5    6     7
+        //  C    Dm   Em   F    G7   Am   Bm7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.A,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.D,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.E,ChordDescriptor.minor));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.C, key.getKeyScaleNote());
+        scaleChords.add(new ScaleChord(ScaleNote.G,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
         assertEquals(ScaleNote.C, key.getKeyScaleNote());
 
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.B);
-        scaleNotes.add(ScaleNote.E);
-        scaleNotes.add(ScaleNote.Fs);
-        scaleNotes.add(ScaleNote.A);
-        key = Key.guessKey(scaleNotes);
+
+        //  1     2   3    4    5    6     7
+        //  B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5
+        //  E    F♯m  G♯m  A    B7   C♯m  D♯m7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.Gs,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.Ds,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.E));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.E, key.getKeyScaleNote());
+        scaleChords.add(new ScaleChord(ScaleNote.Fs,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
         assertEquals(ScaleNote.B, key.getKeyScaleNote());
 
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.As);
-        scaleNotes.add(ScaleNote.Ds);
-        scaleNotes.add(ScaleNote.Gs);
-        scaleNotes.add(ScaleNote.F);
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.C, key.getKeyScaleNote());
 
-        scaleNotes.clear();
-        scaleNotes.add(ScaleNote.Bb);
-        scaleNotes.add(ScaleNote.Eb);
-        scaleNotes.add(ScaleNote.Ab);
-        scaleNotes.add(ScaleNote.F);
-        key = Key.guessKey(scaleNotes);
-        assertEquals(ScaleNote.Bb, key.getKeyScaleNote());
+        //  1     2   3    4    5    6     7
+        //  A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5
+        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.Bb,ChordDescriptor.minor));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
+        scaleChords.add(new ScaleChord(ScaleNote.Ab,ChordDescriptor.dominant7));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+
+        //  1     2   3    4    5    6     7
+        //  A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5
+        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.Bb,ChordDescriptor.minor));
+        scaleChords.add(new ScaleChord(ScaleNote.Db));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+        scaleChords.add(new ScaleChord(ScaleNote.Ab));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
+
+        //  1     2   3    4    5    6     7
+        //  G    Am   Bm   C    D7   Em   F♯m7b5
+        //  D    Em   F♯m  G    A7   Bm   C♯m7b5
+        scaleChords.clear();
+        scaleChords.add(new ScaleChord(ScaleNote.D));
+        scaleChords.add(new ScaleChord(ScaleNote.G));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.D, key.getKeyScaleNote());
+        scaleChords.add(new ScaleChord(ScaleNote.C));
+        key = Key.guessKey(scaleChords);
+        assertEquals(ScaleNote.G, key.getKeyScaleNote());
+    }
+
+    @Test
+    public void transpose() {
+        for (int k = -6; k <= 6; k++) {
+            Key key = Key.getKeyByValue(k);
+//            System.out.println(key.toString() + ":");
+
+            for (int i = 0; i < MusicConstant.halfStepsPerOctave; i++) {
+                ScaleNote fsn = ScaleNote.getFlatByHalfStep(i);
+                ScaleNote ssn = ScaleNote.getSharpByHalfStep(i);
+                assertEquals(fsn.getHalfStep(), ssn.getHalfStep());
+//                System.out.print(" " + i + ":");
+//                if ( i < 10)
+//                    System.out.print(" ");
+                for (int j = 0; j <= MusicConstant.halfStepsPerOctave; j++) {
+                    ScaleNote fTranSn = key.transpose(fsn, j);
+                    ScaleNote sTranSn = key.transpose(ssn, j);
+                    assertEquals(fTranSn.getHalfStep(), sTranSn.getHalfStep());
+//                    System.out.print(" ");
+//                    ScaleNote sn =  key.getScaleNoteByHalfStep(fTranSn.getHalfStep());
+//                    String s = sn.toString();
+//                    System.out.print(s);
+//                    if ( s.length() < 2)
+//                        System.out.print(" ");
+
+                }
+                //System.out.println();
+            }
+
+        }
     }
 
     @Test
@@ -261,6 +354,28 @@ public class KeyTest {
 //        System.out.println(sb);
 
 
+    }
+
+    @Test
+    public void keysByHalfStep() {
+        Key key = Key.A;
+        Key lastKey = key.previousKeyByHalfStep();
+        TreeSet<Key> set = new TreeSet<>();
+        for (int i = 0; i < MusicConstant.halfStepsPerOctave; i++) {
+            Key nextKey = key.nextKeyByHalfStep();
+            assertNotEquals(key, lastKey);
+            assertNotEquals(key, nextKey);
+            assertEquals(key, lastKey.nextKeyByHalfStep());
+            assertEquals(key, nextKey.previousKeyByHalfStep());
+            assertFalse(set.contains(key));
+            set.add(key);
+
+            //  increment
+            lastKey = key;
+            key = nextKey;
+        }
+        assertEquals(key, Key.A);
+        assertEquals(MusicConstant.halfStepsPerOctave, set.size());
     }
 }
 

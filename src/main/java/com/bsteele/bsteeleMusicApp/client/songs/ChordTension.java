@@ -17,8 +17,22 @@ public enum ChordTension {
         this.shortName = shortName;
     }
 
+    public static ChordTension parse(String s) {
+        if (s.length() > 0) {
+            for (ChordTension ct : ChordTension.values()) {
+                if (ct.getShortName().length() > 0 && s.startsWith(ct.getShortName())) {
+                    return ct;
+                }
+            }
+        }
+        return ChordTension.none;
+    }
+
     public String getShortName() {
         return shortName;
+    }
+    public static final String getRegExp() {
+        return "(|9|11|13)";
     }
 
     private String shortName;

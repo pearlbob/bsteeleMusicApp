@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
@@ -18,8 +19,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import jsinterop.annotations.JsType;
 
 /**
  * @author bob
@@ -58,7 +57,7 @@ public class Song implements Comparable<Song> {
     public final Song copySong() {
         return createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
-                getChords(), getRawLyrics());
+                getChordsAsString(), getLyricsAsString());
     }
 
     public static final Song fromJson(String jsonString) {
@@ -98,12 +97,12 @@ public class Song implements Comparable<Song> {
                 case "key":
                     song.key = Key.valueOf(jv.isString().stringValue());
                     break;
-                case "bpm":
+                case "defaultBpm":
                     jn = jv.isNumber();
                     if (jn != null) {
-                        song.bpm = (int) jn.doubleValue();
+                        song.defaultBpm = (int) jn.doubleValue();
                     } else {
-                        song.bpm = Integer.parseInt(jv.isString().stringValue());
+                        song.defaultBpm = Integer.parseInt(jv.isString().stringValue());
                     }
                     break;
                 case "timeSignature":
@@ -181,8 +180,8 @@ public class Song implements Comparable<Song> {
                 .append("\"key\": \"")
                 .append(key.name())
                 .append("\",\n")
-                .append("\"bpm\": ")
-                .append(getBpm())
+                .append("\"defaultBpm\": ")
+                .append(getDefaultBpm())
                 .append(",\n")
                 .append("\"timeSignature\": \"")
                 .append(getBeatsPerBar())
@@ -194,7 +193,7 @@ public class Song implements Comparable<Song> {
 
         //  chord content
         boolean first = true;
-        for (String s : getChords().split("\n")) {
+        for (String s : getChordsAsString().split("\n")) {
             if (first) {
                 first = false;
             } else {
@@ -209,7 +208,7 @@ public class Song implements Comparable<Song> {
                 .append("    [\n");
         //  lyrics content
         first = true;
-        for (String s : getRawLyrics().split("\n")) {
+        for (String s : getLyricsAsString().split("\n")) {
             if (first) {
                 first = false;
             } else {
@@ -733,10 +732,7 @@ public class Song implements Comparable<Song> {
 
     private static String chordNumberToLetter(int n, int halfSteps) {
 
-        n = (n + halfSteps) % 12;
-        if (n < 0) {
-            n += 12;
-        }
+        n = Util.mod(n,MusicConstant.halfStepsPerOctave);
 
         return (halfSteps < 0 ? chordNumberToLetterSharps[n] : chordNumberToLetterFlats[n]);
     }
@@ -767,17 +763,17 @@ public class Song implements Comparable<Song> {
 
 
     /**
-     * @return the bpm
+     * @return the defaultBpm
      */
     public int getBeatsPerMinute() {
-        return bpm;
+        return defaultBpm;
     }
 
     /**
-     * @param bpm the bpm to set
+     * @param bpm the defaultBpm to set
      */
     public void setBeatsPerMinute(int bpm) {
-        this.bpm = bpm;
+        this.defaultBpm = bpm;
     }
 
     /**
@@ -844,22 +840,22 @@ public class Song implements Comparable<Song> {
     /**
      * @return the rawLyrics
      */
-    public String getRawLyrics() {
+    public String getLyricsAsString() {
         return rawLyrics;
     }
 
     /**
      * @return the chords
      */
-    public String getChords() {
+    public String getChordsAsString() {
         return chords;
     }
 
     /**
-     * @return the bpm
+     * @return the defaultBpm
      */
-    public int getBpm() {
-        return bpm;
+    public int getDefaultBpm() {
+        return defaultBpm;
     }
 
     /**
@@ -895,11 +891,11 @@ public class Song implements Comparable<Song> {
         }
 
 //    //  more?  if so, changes in lyrics will be a new "song"
-//    ret = getRawLyrics().compareTo(o.getRawLyrics());
+//    ret = getLyricsAsString().compareTo(o.getLyricsAsString());
 //    if (ret != 0) {
 //      return ret;
 //    }
-//    ret = getChords().compareTo(o.getChords());
+//    ret = getChordsAsString().compareTo(o.getChordsAsString());
 //    if (ret != 0) {
 //      return ret;
 //    }
@@ -930,7 +926,7 @@ public class Song implements Comparable<Song> {
     private String artist = "Unknown";
     private String copyright = "Unknown";
     private Key key = Key.C;  //  default
-    private int bpm = 106;  //  beats per minute
+    private int defaultBpm = 106;  //  beats per minute
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
     private String rawLyrics = "";

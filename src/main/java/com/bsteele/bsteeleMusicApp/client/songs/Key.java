@@ -1,39 +1,46 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
+
 import java.util.AbstractCollection;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
 public enum Key {
-    Gb(-6),
-    Db(-5),
-    Ab(-4),
-    Eb(-3),
-    Bb(-2),
-    F(-1),
-    C(0),
-    G(1),
-    D(2),
-    A(3),
-    E(4),
-    B(5),
-    Fs(6);
+    Gb(-6, 9),
+    Db(-5, 4),
+    Ab(-4, 11),
+    Eb(-3, 6),
+    Bb(-2, 1),
+    F(-1, 8),
+    C(0, 3),
+    G(1, 10),
+    D(2, 5),
+    A(3, 0),
+    E(4, 7),
+    B(5, 2),
+    Fs(6, 9);
 
-    Key(int keyValue) {
+    Key(int keyValue, int halfStep) {
         this.keyValue = keyValue;
+        this.halfStep = halfStep;
         keyScaleNote = ScaleNote.valueOf(name());
+    }
 
-        diatonics = new ArrayList<>();
-        {
-            int degree = 0;
-            for (int i = 0; i < 7; i++) {
-                diatonics.add(getScaleNoteByHalfStep(degree));
-                degree += halfStepsToFifth;
-            }
-        }
+    public Key nextKeyByHalfStep() {
+        return keysByHalfStep[Util.mod(halfStep + 1, keysByHalfStep.length)];
+    }
+
+    public Key previousKeyByHalfStep() {
+        return keysByHalfStep[Util.mod(halfStep - 1, keysByHalfStep.length)];
+    }
+
+    public ScaleNote transpose(ScaleNote scaleNote, int offset) {
+        return getScaleNoteByHalfStep(scaleNote.getHalfStep() + offset);
     }
 
     /**
@@ -79,58 +86,52 @@ public enum Key {
     /**
      * Guess the key from the collection of scale notes in a given song.
      *
-     * @param scaleNotes
+     * @param scaleChords
      * @return the roughly calculated key of the given scale notes.
      */
-    public static Key guessKey(AbstractCollection<ScaleNote> scaleNotes) {
+    public static Key guessKey(AbstractCollection<ScaleChord> scaleChords) {
         Key ret = Key.C;                //  default answer
+
+        //  minimize the chord variations and keep a count of their use
+        HashMap<ScaleChord, Integer> useMap = new HashMap<>();
+        for (ScaleChord scaleChord : scaleChords) {
+            //  minimize the variation
+            switch (scaleChord.getChordDescriptor()) {
+                case major7:
+                    scaleChord = new ScaleChord(scaleChord.getScaleNote(), ChordDescriptor.major, ChordTension.none);
+                    break;
+                case minor7:
+                    scaleChord = new ScaleChord(scaleChord.getScaleNote(), ChordDescriptor.minor, ChordTension.none);
+                    break;
+            }
+
+            //  count the uses
+            //  fixme: account for repeats
+            Integer count = useMap.get(scaleChord);
+            useMap.put(scaleChord, (count == null) ? 1 : count + 1);
+        }
 
         //  find the key with the longest greatest match to the major chord
         int maxScore = 0;
         int minKeyValue = Integer.MAX_VALUE;
-//        for (Key key : Key.values()) {
-//            //  score by weighted uses of the scale chords
-//            int score = 0;
-//            for (int i = 0; i < majorScale.length; i++) {
-//                if (scaleNotes.contains(key.getMajorScaleByNote(i)))
-//                    score += guessWeights[i];
-//            }
-//
-//            //  find the max score with the minimum key value
-//            if (score > maxScore
-//                    || (score == maxScore && Math.abs(key.getKeyValue()) < minKeyValue)) {
-//                ret = key;
-//                maxScore = score;
-//                minKeyValue = Math.abs(key.getKeyValue());
-//            }
-//        }
-//        //  find the key with the longest greatest match to the minor chord
-//        for (Key key : Key.values()) {
-//            //  score by weighted uses of the scale chords
-//            int score = 0;
-//            for (int i = 0; i < majorScale.length; i++) {
-//                if (scaleNotes.contains(key.getMinorScaleByNote(i)))
-//                    score += guessWeights[i];
-//            }
-//
-//            //  find the max score with the minimum key value
-//            if (score > maxScore
-//                    || (score == maxScore && Math.abs(key.getKeyValue()) < minKeyValue)) {
-//                ret = key;
-//                maxScore = score;
-//                minKeyValue = Math.abs(key.getKeyValue());
-//            }
-//        }
 
         //  find the key with the greatest match to it's diatonic chords
+        Integer count;
         for (Key key : Key.values()) {
             //  score by weighted uses of the scale chords
             int score = 0;
             for (int i = 0; i < key.diatonics.size(); i++) {
-                if (scaleNotes.contains(key.getDiatonicByDegree(i)))
-                    score += guessWeights[i];
+                ScaleChord diatonic = key.getDiatonicByDegree(i);
+                if ((count= useMap.get(diatonic)) != null)
+                    score += count * guessWeights[i];
+                else {
+                    diatonic = diatonic.getAlias();
+                    if ( diatonic != null && ( count = useMap.get(diatonic)) != null )
+                        score += count * guessWeights[i];
+                }
             }
 
+            
             //  find the max score with the minimum key value
             if (score > maxScore
                     || (score == maxScore && Math.abs(key.getKeyValue()) < minKeyValue)) {
@@ -149,7 +150,7 @@ public enum Key {
      * @param note
      * @return
      */
-    public ScaleNote getDiatonicByDegree(int note) {
+    public ScaleChord getDiatonicByDegree(int note) {
         note %= diatonics.size();
         if (note < 0)
             note += diatonics.size();
@@ -161,17 +162,15 @@ public enum Key {
     }
 
     public ScaleNote getMajorScaleByNote(int note) {
-        note %= 7;
-        if (note < 0)
-            note += 7;
-        return getScaleNoteByHalfStep(majorScale[note]);
+        note = Util.mod(note, 7);
+        return getKeyScaleNoteByHalfStep(majorScale[note]);
     }
 
     public ScaleNote getMinorScaleByNote(int note) {
         note %= 7;
         if (note < 0)
             note += 7;
-        return getScaleNoteByHalfStep(minorScale[note]);
+        return getKeyScaleNoteByHalfStep(minorScale[note]);
     }
 
 
@@ -181,9 +180,15 @@ public enum Key {
      * @param halfStep
      * @return
      */
-    public ScaleNote getScaleNoteByHalfStep(int halfStep) {
+    private ScaleNote getKeyScaleNoteByHalfStep(int halfStep) {
 
         halfStep += keyValue * halfStepsToFifth + halfStepsFromCtoA;
+        return getScaleNoteByHalfStep(halfStep);
+    }
+
+    public ScaleNote getScaleNoteByHalfStep(int halfStep) {
+
+        halfStep = Util.mod(halfStep, MusicConstant.halfStepsPerOctave);
         ScaleNote ret = (keyValue >= 0)
                 ? ScaleNote.getSharpByHalfStep(halfStep)
                 : ScaleNote.getFlatByHalfStep(halfStep);
@@ -208,9 +213,6 @@ public enum Key {
         return keyScaleNote.toString();
     }
 
-    private final int keyValue;
-    private final ScaleNote keyScaleNote;
-    private final ArrayList<ScaleNote> diatonics;
 
     //                                       1  2  3  4  5  6  7
     private static final int majorScale[] = {0, 2, 4, 5, 7, 9, 11};
@@ -225,19 +227,66 @@ public enum Key {
                     ChordDescriptor.minor7,      //  5 + 1 = 6
                     ChordDescriptor.minor7b5,   //  6 + 1 = 7
             };
-    private static final ChordDescriptor diatonicChordModifiers[] =
-            {
-                    ChordDescriptor.major,      //  0 + 1 = 1
-                    ChordDescriptor.minor,      //  1 + 1 = 2
-                    ChordDescriptor.minor,      //  2 + 1 = 3
-                    ChordDescriptor.major,      //  3 + 1 = 4
-                    ChordDescriptor.dominant7,  //  4 + 1 = 5
-                    ChordDescriptor.minor,      //  5 + 1 = 6
-                    ChordDescriptor.minor7b5,   //  6 + 1 = 7
-            };
+    private static Key keysByHalfStep[] = {
+            Key.A,
+            Key.Bb,
+            Key.B,
+            Key.C,
+            Key.Db,
+            Key.D,
+            Key.Eb,
+            Key.E,
+            Key.F,
+            Key.Gb,
+            Key.G,
+            Key.Ab
+    };
 
     //                                         1  2  3  4  5  6  7
     private static final int guessWeights[] = {6, 1, 1, 4, 4, 1, 3};
     private static final int halfStepsToFifth = 7;
     private static final int halfStepsFromCtoA = 3;
+
+
+    private final int keyValue;
+    private final int halfStep;
+    private final ScaleNote keyScaleNote;
+    private ArrayList<ScaleChord> diatonics;
+
+    static {
+        //  diatonics need majorScale which is initialized after the constructors
+        for (Key key : Key.values()) {
+            key.diatonics = new ArrayList<>();
+            for (int i = 0; i < MusicConstant.notesPerScale; i++) {
+                key.diatonics.add(new ScaleChord(key.getMajorScaleByNote(i), MusicConstant.getDiatonicChordModifier(i),
+                        ChordTension.none));
+            }
+        }
+    }
+
 }
+
+/*                     1  2  3  4  5  6  7                 I    II   III  IV   V    VI   VII               0  1  2  3  4  5  6  7  8  9  10 11
+-6 Gb (G♭)		scale: G♭ A♭ B♭ C♭ D♭ E♭ F  	diatonics: G♭   A♭m  B♭m  C♭   D♭7  E♭m  Fm7b5 	all notes: A  B♭ C♭ C  D♭ D  E♭ E  F  G♭ G  A♭
+-5 Db (D♭)		scale: D♭ E♭ F  G♭ A♭ B♭ C  	diatonics: D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5 	all notes: A  B♭ B  C  D♭ D  E♭ E  F  G♭ G  A♭
+-4 Ab (A♭)		scale: A♭ B♭ C  D♭ E♭ F  G  	diatonics: A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5 	all notes: A  B♭ B  C  D♭ D  E♭ E  F  G♭ G  A♭
+-3 Eb (E♭)		scale: E♭ F  G  A♭ B♭ C  D  	diatonics: E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5 	all notes: A  B♭ B  C  D♭ D  E♭ E  F  G♭ G  A♭
+-2 Bb (B♭)		scale: B♭ C  D  E♭ F  G  A  	diatonics: B♭   Cm   Dm   E♭   F7   Gm   Am7b5 	all notes: A  B♭ B  C  D♭ D  E♭ E  F  G♭ G  A♭
+-1 F (F)		scale: F  G  A  B♭ C  D  E  	diatonics: F    Gm   Am   B♭   C7   Dm   Em7b5 	all notes: A  B♭ B  C  D♭ D  E♭ E  F  G♭ G  A♭
+ 0 C (C)		scale: C  D  E  F  G  A  B  	diatonics: C    Dm   Em   F    G7   Am   Bm7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  F  F♯ G  G♯
+ 1 G (G)		scale: G  A  B  C  D  E  F♯ 	diatonics: G    Am   Bm   C    D7   Em   F♯m7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  F  F♯ G  G♯
+ 2 D (D)		scale: D  E  F♯ G  A  B  C♯ 	diatonics: D    Em   F♯m  G    A7   Bm   C♯m7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  F  F♯ G  G♯
+ 3 A (A)		scale: A  B  C♯ D  E  F♯ G♯ 	diatonics: A    Bm   C♯m  D    E7   F♯m  G♯m7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  F  F♯ G  G♯
+ 4 E (E)		scale: E  F♯ G♯ A  B  C♯ D♯ 	diatonics: E    F♯m  G♯m  A    B7   C♯m  D♯m7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  F  F♯ G  G♯
+ 5 B (B)		scale: B  C♯ D♯ E  F♯ G♯ A♯ 	diatonics: B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  F  F♯ G  G♯
+ 6 Fs (F♯)		scale: F♯ G♯ A♯ B  C♯ D♯ E♯ 	diatonics: F♯   G♯m  A♯m  B    C♯7  D♯m  E♯m7b5 	all notes: A  A♯ B  C  C♯ D  D♯ E  E♯ F♯ G  G♯
+
+
+
+
+
+
+
+
+
+ */

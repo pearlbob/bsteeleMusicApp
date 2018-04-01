@@ -5,8 +5,11 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  * User: bob
  */
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+
+import java.util.TreeSet;
 
 /**
  * A note in a scale has no duration or pitch but represents
@@ -20,27 +23,29 @@ import com.google.gwt.regexp.shared.RegExp;
  * </p>
  */
 public enum ScaleNote {
-    A,
-    As,
-    B,
-    C,
-    Cs,
-    D,
-    Ds,
-    E,
-    F,
-    Fs,
-    G,
-    Gs,
-    Gb,
-    Eb,
-    Db,
-    Bb,
-    Ab,
-    Cb,     //  used for Gb (-6) key
-    Es;     //  used for Fs (+6) key
+    A(0),
+    As(1),
+    B(2),
+    C(3),
+    Cs(4),
+    D(5),
+    Ds(6),
+    E(7),
+    F(8),
+    Fs(9),
+    G(10),
+    Gs(11),
+    Gb(9),
+    Eb(6),
+    Db(4),
+    Bb(1),
+    Ab(11),
+    Cb(2),     //  used for Gb (-6) key
+    Es(8);     //  used for Fs (+6) key
 
-    ScaleNote() {
+    ScaleNote(int halfStep) {
+        this.halfStep = halfStep;
+
         final RegExp keyRegexp = RegExp.compile("^([A-G])([sb]?)$");  //  workaround for RegExp is not serializable.
         MatchResult mr = keyRegexp.exec(name());
         if (mr != null) {
@@ -64,35 +69,30 @@ public enum ScaleNote {
                     break;
             }
             String base = mr.getGroup(1);
-            keyString = base + mod;
-            keyHtml = base + modHtml;
-            keyMarkup = base + markup;
+            scaleNoteString = base + mod;
+            scaleNoteHtml = base + modHtml;
+            scaleNoteMarkup = base + markup;
         } else {
-            keyString = name();//    fixme: should throw error, should never happen
-            keyHtml = name();
-            keyMarkup = name();
+            scaleNoteString = name();//    fixme: should throw error, should never happen
+            scaleNoteHtml = name();
+            scaleNoteMarkup = name();
         }
     }
 
-     static ScaleNote getSharpByHalfStep(int halfStep) {
-        halfStep %= 12;
-        if (halfStep < 0)
-            halfStep += 12;
-        return sharps[halfStep];
+    static ScaleNote getSharpByHalfStep(int halfStep) {
+        return sharps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
 
-     static ScaleNote getFlatByHalfStep(int halfStep) {
-        halfStep %= 12;
-        if (halfStep < 0)
-            halfStep += 12;
-        return flats[halfStep];
+    static ScaleNote getFlatByHalfStep(int halfStep) {
+        return flats[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
 
     /**
      * Return the ScaleNote represented by the given string.
      * Is case sensitive.
      * <p>Ultimately, the markup language will disappear.</p>
-     * @param s  string to be parsed
+     *
+     * @param s string to be parsed
      * @return ScaleNote represented by the string.  Can be null.
      */
     public static ScaleNote parse(String s) {
@@ -125,6 +125,15 @@ public enum ScaleNote {
     }
 
     /**
+     * Return the halfStep offset from A.
+     *
+     * @return
+     */
+    public int getHalfStep() {
+        return halfStep;
+    }
+
+    /**
      * Returns the name of this key in a user friendly text format,
      * i.e. as UTF-8
      *
@@ -132,30 +141,43 @@ public enum ScaleNote {
      */
     @Override
     public String toString() {
-        return keyString;
+        return scaleNoteString;
     }
 
     /**
      * Returns the name of this key in an HTML format.
+     *
      * @return
      */
     public String toHtml() {
-        return keyHtml;
+        return scaleNoteHtml;
     }
 
     /**
      * Return the key as markup.
      * <p>Ultimately, the markup language will disappear.</p>
+     *
      * @return
      */
     @Deprecated
     public String toMarkup() {
-        return keyMarkup;
+        return scaleNoteMarkup;
     }
 
-    private final String keyString;
-    private final String keyHtml;
-    private final String keyMarkup;
+    public static final String getRegExp() {
+        return regExp;
+    }
+
+    public ScaleNote getAlias() {
+        return alias;
+    }
+
+    private final int halfStep;
+    private final String scaleNoteString;
+    private final String scaleNoteHtml;
+    private final String scaleNoteMarkup;
+    private ScaleNote alias;
+    private static final String regExp;
 
     private static final ScaleNote sharps[] = {
             A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs
@@ -165,4 +187,39 @@ public enum ScaleNote {
             A, Bb, B, C, Db, D, Eb, E, F, Gb, G, Ab
             // 1  2  3  4   5   6  7  8   9  10, 11
     };
+
+    static {
+        //  build the regex to find this class while parsing
+        StringBuilder sb = new StringBuilder();
+        TreeSet<String> set = new TreeSet<>((o1, o2) -> {
+            if (o1.length() != o2.length())
+                return o1.length() < o2.length() ? 1 : -1;
+            return o1.compareTo(o2);
+        });
+        for (ScaleNote sn : ScaleNote.values()) {
+            set.add(sn.name());
+            set.add(sn.scaleNoteMarkup);
+        }
+        sb.append("(");
+        boolean first = true;
+        for (String s : set) {
+            if (first)
+                first = false;
+            else
+                sb.append("|");
+            sb.append(s);
+        }
+        sb.append(")");
+        regExp = sb.toString();
+
+        //  find and assign the alias's
+        for (ScaleNote sn : ScaleNote.values()) {
+            for (ScaleNote other : ScaleNote.values()) {
+                if (sn != other && sn.halfStep == other.halfStep)
+                    sn.alias = other;
+            }
+
+        }
+    }
+
 }

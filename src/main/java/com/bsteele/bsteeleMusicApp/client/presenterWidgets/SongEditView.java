@@ -5,10 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
-import com.bsteele.bsteeleMusicApp.client.songs.Key;
-import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.google.gwt.core.client.GWT;
+import com.bsteele.bsteeleMusicApp.client.songs.*;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -135,10 +132,10 @@ public class SongEditView
         artistEntry.setText(song.getArtist());
         copyrightEntry.setText(song.getCopyright());
         setKeySelect(song.getKey());
-        bpmEntry.setText(Integer.toString(song.getBpm()));
+        bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
         timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-        chordsEntry.setValue(song.getChords());
-        lyricsEntry.setValue(song.getRawLyrics());
+        chordsEntry.setValue(song.getChordsAsString());
+        lyricsEntry.setValue(song.getLyricsAsString());
     }
 
     public void enterSong() {
@@ -232,18 +229,23 @@ public class SongEditView
     }
 
     private void guessTheKey() {
-        final RegExp scaleNoteExp = RegExp.compile("([A-G][b#]?)","g");
+        final RegExp scaleNoteExp = RegExp.compile("(" + ScaleChord.getRegExp() + ")", "g");
         MatchResult mr;
-        ArrayList<ScaleNote> scaleNotes = new ArrayList<>();
-        while ( ( mr = scaleNoteExp.exec(chordsEntry.getValue())) != null ) {
-            scaleNotes.add(ScaleNote.valueOf(mr.getGroup(1)));
+        ArrayList<ScaleChord> scaleChords = new ArrayList<>();
+        while ((mr = scaleNoteExp.exec(chordsEntry.getValue())) != null) {
+            if (mr.getGroupCount() >= 1) {
+                String s = mr.getGroup(1);
+                ScaleChord scaleChord = ScaleChord.parse(s);
+                if (scaleChord != null)
+                    scaleChords.add(scaleChord);
+            }
         }
 
-        setKeySelect( Key.guessKey(scaleNotes));
+        setKeySelect(Key.guessKey(scaleChords));
     }
 
     private final HandlerManager handlerManager;
-     private static final int minBpm = 50;
+    private static final int minBpm = 50;
     private static final int maxBpm = 400;
 
 }

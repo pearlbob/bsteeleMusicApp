@@ -21,6 +21,11 @@ todo: keep current lyrics section in view: i.e. autoscroll
 fixme: map sections from multiple sections to a single findable section id for play indicators
 fixme: change colors for  multiple sections during play
 
+todo: arrangement window in song display
+todo: add log on server side
+todo: add "fixit" memo to server side log
+
+
 todo: edit should offer BPM & Key from lyrics & chords
 todo: chord colors should always match lyrics in play
 todo: delta shape == major7
