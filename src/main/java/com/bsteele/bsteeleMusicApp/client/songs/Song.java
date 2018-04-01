@@ -581,6 +581,7 @@ public class Song implements Comparable<Song> {
      * @return
      */
     public String transpose(int halfSteps) {
+        halfSteps = Util.mod(halfSteps,MusicConstant.halfStepsPerOctave);
         if (halfSteps == 0) {
             return generateHtmlChordTable();
         }
@@ -730,11 +731,8 @@ public class Song implements Comparable<Song> {
 
     private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
 
-    private static String chordNumberToLetter(int n, int halfSteps) {
-
-        n = Util.mod(n,MusicConstant.halfStepsPerOctave);
-
-        return (halfSteps < 0 ? chordNumberToLetterSharps[n] : chordNumberToLetterFlats[n]);
+    private String chordNumberToLetter(int n, int halfSteps) {
+        return key.getScaleNoteByHalfStep(n+halfSteps).toString();
     }
 
     private void setTitle(String title) {

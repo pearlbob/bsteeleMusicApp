@@ -68,6 +68,7 @@ public enum Key {
      * @return
      */
     public static final Key getKeyByValue(int keyValue) {
+        keyValue = Util.mod(keyValue,MusicConstant.halfStepsPerOctave);
         for (Key key : Key.values())
             if (key.keyValue == keyValue)
                 return key;

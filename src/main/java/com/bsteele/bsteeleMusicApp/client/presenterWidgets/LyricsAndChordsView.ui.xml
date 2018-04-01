@@ -8,22 +8,11 @@
     <g:DockLayoutPanel unit="PX">
         <g:north size='50'>
             <g:HTMLPanel>
-                <g:Button ui:field="playStopButton" >Play</g:Button>
-                <select ui:field="keySelect">
-                    <option value="-6">-6 halfsteps</option>
-                    <option value="-5">-5 halfsteps</option>
-                    <option value="-4">-4 halfsteps</option>
-                    <option value="-3">-3 halfsteps</option>
-                    <option value="-2">-2 halfsteps</option>
-                    <option value="-1">-1 halfstep</option>
-                    <option value="0" selected="selected">Original Key</option>
-                    <option value="1">+1 halfstep</option>
-                    <option value="2">+2 halfsteps</option>
-                    <option value="3">+3 halfsteps</option>
-                    <option value="4">+4 halfsteps</option>
-                    <option value="5">+5 halfsteps</option>
-                    <option value="6">+6 halfsteps</option>
-                </select>
+                <g:Button ui:field="playStopButton">Play</g:Button>
+                Key:
+                <g:Button ui:field="originalKeyButton">Original</g:Button>
+                <g:Button ui:field="keyUpButton">&#x25b2;</g:Button>
+                <g:Button ui:field="keyDownButton">&#x25bc;</g:Button>
                 BPM:
                 <g:TextBox ui:field="currentBpmEntry" styleName="{resources.style.smallIntEntry}"/>
                 <select ui:field="bpmSelect" title="Select the beats per minute to be used in playing">
@@ -67,13 +56,14 @@
             </g:HTMLPanel>
         </g:north>
         <g:center>
-            <g:SplitLayoutPanel  ui:field="split">
+            <g:SplitLayoutPanel ui:field="split">
                 <g:west size='300'>     <!--    small for phones!   -->
                     <g:HTMLPanel>
-                    <canvas ui:field="audioBeatDisplayCanvas" height="45"
-                            title="Beat display of audio.">
-                        Your browser does not support the HTML5 canvas tag.</canvas>
-                    <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
+                        <canvas ui:field="audioBeatDisplayCanvas" height="45"
+                                title="Beat display of audio.">
+                            Your browser does not support the HTML5 canvas tag.
+                        </canvas>
+                        <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
                     </g:HTMLPanel>
                 </g:west>
                 <g:center>

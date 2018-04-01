@@ -2,6 +2,9 @@
   <dictionary name="bob">
     <words>
       <w>diatonics</w>
+      <w>iframe</w>
+      <w>sout</w>
+      <w>tooltiptext</w>
     </words>
   </dictionary>
 </component>

@@ -5,8 +5,11 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
+import com.bsteele.bsteeleMusicApp.client.songs.Key;
+import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,7 +36,11 @@ public class LyricsAndChordsView
     Button playStopButton;
 
     @UiField
-    SelectElement keySelect;
+    Button originalKeyButton;
+    @UiField
+    Button keyUpButton;
+    @UiField
+    Button keyDownButton;
 
     @UiField
     TextBox currentBpmEntry;
@@ -93,15 +100,25 @@ public class LyricsAndChordsView
             }
         });
 
-        Event.sinkEvents(keySelect, Event.ONCHANGE);
-        Event.setEventListener(keySelect, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
-                transpose(Integer.parseInt(keySelect.getValue()));
+        originalKeyButton.addClickHandler((ClickEvent event) -> {
+            if (song != null) {
+                transpose(0);
+            }
+        });
+
+        keyUpButton.addClickHandler((ClickEvent event) -> {
+            if (song != null) {
+                transpose(currentKeyTransposition + 1);
+            }
+        });
+        keyDownButton.addClickHandler((ClickEvent event) -> {
+            if (song != null) {
+                transpose(currentKeyTransposition - 1);
             }
         });
 
         currentBpmEntry.addChangeHandler((event) -> {
-            GWT.log("currentBpmEntry change: "
+            GWT.log("currentBpmEntry change: "    //fixme
                     + currentBpmEntry.getText()
             );
         });
@@ -219,10 +236,13 @@ public class LyricsAndChordsView
 
     @Override
     public void setSong(Song song) {
-        boolean keepKey = (this.song != null
-                && this.song.equals(song));  //  identiry only
+        boolean keepKey = (this.song != null && song != null
+                && this.song.getSongId().equals(song.getSongId()));  //  identity only
 
         this.song = song;
+        originalKey = song.getKey();
+        if (!keepKey)
+            currentKeyTransposition = 0;
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());
@@ -233,23 +253,7 @@ public class LyricsAndChordsView
 
         currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
 
-        String keyAsString = "0";
-        int keyAsInt = 0;
-        if (keepKey) {
-            keyAsString = keySelect.getValue();
-            keyAsInt = Integer.parseInt(keyAsString);
-        }
-        transpose(keyAsInt);
-
-        { //  set the transposition selection to original key
-            NodeList<OptionElement> options = keySelect.getOptions();
-            for (int i = 0; i < options.getLength(); i++) {
-                OptionElement e = options.getItem(i);
-                if (e.getValue().equals(keyAsString)) {
-                    keySelect.setSelectedIndex(i);
-                }
-            }
-        }
+        transpose(currentKeyTransposition);
 
         lyrics.clear();
         lyrics.add(new HTML(song.generateHtmlLyricsTable()));
@@ -258,8 +262,12 @@ public class LyricsAndChordsView
     }
 
     private void transpose(int tran) {
+        currentKeyTransposition = Util.mod(tran,MusicConstant.halfStepsPerOctave);
+
+        song.setKey(Key.getKeyByValue(originalKey.getKeyValue()+currentKeyTransposition));
+        GWT.log( "currentKeyTransposition: "+currentKeyTransposition);
         chords.clear();
-        chords.add(new HTML(song.transpose(tran)));
+        chords.add(new HTML(song.transpose(currentKeyTransposition)));
 
         resizeChords();
     }
@@ -370,8 +378,10 @@ public class LyricsAndChordsView
 
     private AudioBeatDisplay audioBeatDisplay;
     private Song song;
+    private Key originalKey;
     private SongUpdate songUpdate = new SongUpdate();
     private SongPlayMaster songPlayMaster;
+    private int currentKeyTransposition = 0;
     private Element lastChordElement;
     private Element lastLyricsElement;
     private boolean chordsDirty = true;

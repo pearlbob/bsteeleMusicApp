@@ -202,7 +202,7 @@ table td.chordTable {
     border-bottom: 1px solid black;
 }
 .entryLine { width: 30em; font-size: 24px; }
-.smallIntEntry { width: 4em; font-size: medium; }
+.smallIntEntry { width: 3em; font-size: medium; }
 
 .gwt-FileUpload {
     font-size: 20px;
