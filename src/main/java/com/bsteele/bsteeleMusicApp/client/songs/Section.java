@@ -13,18 +13,68 @@ import static java.util.Objects.hash;
 /**
  * @author bob
  */
+
+/**
+ * Song structure is represented by a sequence of these sections.
+ * The section names have been borrowed from musical practice in the USA
+ * so they will likely be familiar.
+ * <p>Sections do not imply semantics but their proper suggested use
+ * will aid in song structure readability.
+ * </p>
+ */
 public enum Section {
+    /**
+     * A section the introduces the song.  Typically the tempo is
+     * set here.
+     */
     intro("I", "in"),
+    /**
+     * A repeating section of the song that typically has new lyrics
+     * for each instance.
+     */
     verse("V"),
+    /**
+     * A section that precedes the chorus but may not be used
+     * to lead all chorus sections.
+     */
     preChorus("PC"),
+    /**
+     *  A repeating section of the song that typically has repeats lyrics
+     *  to enforce the song's theme.
+     */
     chorus("C", "ch"),
+    /**
+     * A non-repeating section often used once to break the repeated
+     * section patterns prior to the last sections of a song.
+     */
     bridge("Br"),
+    /**
+     * A section used to jump to for an ending or repeat.
+     */
     coda("Co", "coda"),
+    /**
+     * A short section that repeats or closely resembles a number of measures from the end
+     * of a previous section.  Typically used to end a song.
+     */
     tag("T"),
+    /**
+     * A section labeled "A" to be used in contrast the "B" section.
+     * A concept borrowed from jazz.
+     */
     a("A"),
+    /**
+     * A section labeled "B" to be used in contrast the "A" section.
+     * A concept borrowed from jazz.
+     */
     b("B"),
+    /**
+     * The ending section of many songs.
+     */
     outro("O", "out");
 
+    /**
+     * A version identifier for multiple instances of a given section.
+     */
     public class Version implements Comparable<Section.Version> {
 
         Version() {
@@ -36,22 +86,38 @@ public enum Section {
             this.sourceLength = sourceLength;
         }
 
+        /**
+         * Return the generic section for this section version.
+         * @return the generic section
+         */
         public Section getSection() {
             return Section.this;
         }
 
+        /**
+         *  Return the numeric count for this section version.
+         * @return the numeric count
+         */
         public int getVersion() {
             return version;
         }
 
+        /**
+         * The character length used to parse this section version from the original source.
+         * @return the original character length.
+         */
         public int getSourceLength() {
             return sourceLength;
         }
 
+        /**
+         * The external facing string that represents the section version to the user.
+         * @return the string
+         */
         @Override
         public String toString() {
             //  note: designed to go to the user display
-            return getSection().getAbreviation() + (version > 0 ? Integer.toString(version) : "");
+            return getSection().getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
         }
 
         @Override
@@ -92,7 +158,6 @@ public enum Section {
 
         private int version;
         private int sourceLength;
-
     }
 
     private Version makeVersion(int v, int sourceLength) {
@@ -102,7 +167,7 @@ public enum Section {
     /**
      * Return the section from the found id. Match will ignore case. String has to
      * include the : delimiter and it will be considered part of the section id.
-     * Use the returned verion.getSourceLength() to find how many characters were
+     * Use the returned version.getSourceLength() to find how many characters were
      * used in the id.
      *
      * @param s the string to match
@@ -126,8 +191,8 @@ public enum Section {
             }
             for (Section sec : Section.values()) {
                 if (sectionId.equals(sec.lowerCaseName)
-                        || sectionId.equals(sec.abreviation)
-                        || (sec.alternateAbreviation != null && sectionId.equals(sec.alternateAbreviation))) {
+                        || sectionId.equals(sec.abbreviation)
+                        || (sec.alternateAbbreviation != null && sectionId.equals(sec.alternateAbbreviation))) {
                     return sec.makeVersion(version, m.getGroup(0).length());
                 }
             }
@@ -135,6 +200,11 @@ public enum Section {
         return null;
     }
 
+    /**
+     * Parse the given string for section version's and report all matches in order.
+     * @param s the string to parse
+     * @return the section versions found
+     */
     public static ArrayList<Section.Version> matchAll(String s) {
         ArrayList<Section.Version> ret = new ArrayList<>();
 
@@ -159,28 +229,36 @@ public enum Section {
         return ret;
     }
 
-    private Section(String originalAbreviation) {
+    private Section(String originalAbbreviation) {
         lowerCaseName = name().toLowerCase();
-        this.originalAbreviation = originalAbreviation;
-        abreviation = originalAbreviation.toLowerCase();
+        this.originalAbbreviation = originalAbbreviation;
+        abbreviation = originalAbbreviation.toLowerCase();
     }
 
-    private Section(String abreviation, String alternateAbreviation) {
+    private Section(String abreviation, String alternateAbbreviation) {
         this(abreviation);
-        this.alternateAbreviation = alternateAbreviation.toLowerCase();
+        this.alternateAbbreviation = alternateAbbreviation.toLowerCase();
     }
 
-    public String getAbreviation() {
-        return originalAbreviation;
+    /**
+     * Return the abbreviation for the section
+     * @return
+     */
+    public String getAbbreviation() {
+        return originalAbbreviation;
     }
 
+    /**
+     * Utility to return the default section.
+     * @return the default section
+     */
     public static final Section.Version getDefaultVersion() {
         return Section.verse.makeVersion(0, 0);
     }
 
     private String lowerCaseName;
-    private String originalAbreviation;
-    private String abreviation;
-    private String alternateAbreviation;
+    private String originalAbbreviation;
+    private String abbreviation;
+    private String alternateAbbreviation;
     public static final int maxLength = 10;    //  fixme: compute
 }

@@ -10,6 +10,12 @@ import java.util.HashMap;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
+
+/**
+ * Representation of the song key used generate the expression of the proper scales.
+ * <p>Six flats and six sharps are labeled differently but are otherwise the same key.
+ * Seven flats and seven sharps are not included.</p>
+ */
 public enum Key {
     Gb(-6, 9),
     Db(-5, 4),
@@ -31,14 +37,30 @@ public enum Key {
         keyScaleNote = ScaleNote.valueOf(name());
     }
 
+    /**
+     * Return the next key that is one half step higher.
+     * Of course the keys are cyclic in their relationship.
+     * @return  the next key
+     */
     public Key nextKeyByHalfStep() {
         return keysByHalfStep[Util.mod(halfStep + 1, keysByHalfStep.length)];
     }
 
+    /**
+     * Return the next key that is one half step lower.
+     * Of course the keys are cyclic in their relationship.
+     * @return  the next key down
+     */
     public Key previousKeyByHalfStep() {
         return keysByHalfStep[Util.mod(halfStep - 1, keysByHalfStep.length)];
     }
 
+    /**
+     * Transpose the given scale note by the requested offset.
+     * @param scaleNote   the scale note to be transcribed
+     * @param offset  the offset for the transcription, typically between -6 and +6
+     * @return   the scale note the key that matches the transposition requested
+     */
     public ScaleNote transpose(ScaleNote scaleNote, int offset) {
         return getScaleNoteByHalfStep(scaleNote.getHalfStep() + offset);
     }
@@ -61,6 +83,11 @@ public enum Key {
         return keyScaleNote;
     }
 
+    /**
+     * Return an integer value that represents the key's number of half steps from A.
+     *
+     * @return
+     */
     public int getHalfStep() {
         return keyScaleNote.getHalfStep();
     }

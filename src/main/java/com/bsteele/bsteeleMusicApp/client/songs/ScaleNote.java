@@ -13,12 +13,12 @@ import java.util.TreeSet;
 
 /**
  * A note in a scale has no duration or pitch but represents
- * the relative scale position within the given key.
+ * the relative scale position within the given key scale.
  * <p>
- * Small note: Not all scale notes are used as key values.
+ * Not all scale notes are used as key values.
  * </p>
  * <p>
- * Small note: The musical flat character is not allowed as a java enum name so a 'b' is used here.
+ * The musical flat character is not allowed as a java enum name so a 'b' is used here.
  * The musical sharp character is not allowed as a java enum name so an 's' is used here.
  * </p>
  */
@@ -82,10 +82,23 @@ public enum ScaleNote {
         }
     }
 
+    /**
+     * A utility to map the sharp scale notes to their half step offset.
+     * Should use the scale notes from the key under normal situations.
+     * @param halfStep the number of half steps from A
+     * @return the sharp scale note
+     */
+    @Deprecated
     static ScaleNote getSharpByHalfStep(int halfStep) {
         return sharps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
-
+    /**
+     * A utility to map the flat scale notes to their half step offset.
+     * Should use the scale notes from the key under normal situations.
+     * @param halfStep  the number of half steps from A
+     * @return  the sharp scale note
+     */
+    @Deprecated
     static ScaleNote getFlatByHalfStep(int halfStep) {
         return flats[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
@@ -171,6 +184,12 @@ public enum ScaleNote {
         return regExp;
     }
 
+    /**
+     * Return the scale note's flat alias if it is a sharp
+     * or the sharp alias if the scale note is a flat.
+     * White key notes will return null.
+     * @return the scale note's alias or null if there is none
+     */
     public ScaleNote getAlias() {
         return alias;
     }

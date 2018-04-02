@@ -10,26 +10,52 @@ import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 
 /**
  * @author bob
  */
+
+/**
+ * A piece of music to be played according to the structure it contains.
+ */
 public class Song implements Comparable<Song> {
 
+    /**
+     * Not to be used externally but must remain public due to GWT constraints!
+     */
+    @Deprecated
     public Song() {
     }
 
+    /**
+     * Create a minimal song to be used internally as a place holder.
+     * @return a minimal song
+     */
     public static final Song createEmptySong() {
         return createSong("", "",
                 "", Key.C, 100, 4, 4,
                 "", "");
     }
 
-    public static final Song createSong(String title, String artist,
-                                        String copyright,
-                                        Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
-                                        String chords, String lyrics) {
+    /**
+     * A convenience constructor used to enforce the minimum requirements for a song.
+     * @param title
+     * @param artist
+     * @param copyright
+     * @param key
+     * @param bpm
+     * @param beatsPerBar
+     * @param unitsPerMeasure
+     * @param chords
+     * @param lyrics
+     * @return
+     */
+    public static final Song createSong(@NotNull String title, @NotNull String artist,
+                                        @NotNull String copyright,
+                                        @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                        @NotNull String chords, @NotNull String lyrics) {
         Song song = new Song();
         song.setTitle(title);
         song.setArtist(artist);
@@ -46,12 +72,21 @@ public class Song implements Comparable<Song> {
         return song;
     }
 
+    /**
+     * Copy the song to a new instance.
+     * @return the new song
+     */
     public final Song copySong() {
         return createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getChordsAsString(), getLyricsAsString());
     }
 
+    /**
+     * Parse a song from a JSON string.
+     * @param jsonString
+     * @return the song. Can be null.
+     */
     public static final Song fromJson(String jsonString) {
         if (jsonString == null || jsonString.length() <= 0) {
             return null;
@@ -67,15 +102,20 @@ public class Song implements Comparable<Song> {
         return fromJsonObject(jo);
     }
 
-    public static final Song fromJsonObject(JSONObject jo) {
-        if (jo == null) {
+    /**
+     * Parse a song from a JSON object.
+     * @param jsonObject
+     * @return the song. Can be null.
+     */
+    public static final Song fromJsonObject(JSONObject jsonObject) {
+        if (jsonObject == null) {
             return null;
         }
         Song song = new Song();
         JSONNumber jn;
         JSONArray ja;
-        for (String name : jo.keySet()) {
-            JSONValue jv = jo.get(name);
+        for (String name : jsonObject.keySet()) {
+            JSONValue jv = jsonObject.get(name);
             switch (name) {
                 case "title":
                     song.setTitle(jv.isString().stringValue());
@@ -157,6 +197,10 @@ public class Song implements Comparable<Song> {
         return song;
     }
 
+    /**
+     * Generate the JSON expression of this song.
+     * @return the JSON expression of this song
+     */
     public String toJson() {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n")
@@ -230,6 +274,7 @@ public class Song implements Comparable<Song> {
      *
      * @return
      */
+    @Deprecated
     public String[] getSectionSequenceAsStrings() {
 
         //  dumb down the section sequence list for javascript
@@ -240,15 +285,21 @@ public class Song implements Comparable<Song> {
         return ret;
     }
 
+    @Deprecated
     public String[][] getJsChordSection(String sectionId) {
         return jsChordSectionMap.get(sectionId);
     }
 
+    @Deprecated
     public Grid<String> getChordSection(Section.Version sv) {
         return chordSectionMap.get(sv);
     }
 
-
+    /**
+     * map the section id to it's reduced, common section id
+     * @param sectionId
+     * @return common section id
+     */
     public String getChordSectionId(String sectionId) {
         //  map the section to it's reduced, common section
         for (Section.Version v : displaySectionMap.keySet()) {
@@ -260,6 +311,10 @@ public class Song implements Comparable<Song> {
         return sectionId;
     }
 
+    /**
+     * Return the section sequence of this song.
+     * @return the section sequence of this song
+     */
     public ArrayList<Section.Version> getSectionSequence() {
         return sequence;
     }
@@ -408,10 +463,12 @@ public class Song implements Comparable<Song> {
 //        }
     }
 
+    @Deprecated
     public String generateHtmlChordTable() {
         return generateHtmlChordTableFromMap(chordSectionMap);
     }
 
+    @Deprecated
     public String generateHtmlLyricsTable() {
         final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
         String tableStart = "<table id=\"lyricsTable\">\n"
@@ -450,8 +507,8 @@ public class Song implements Comparable<Song> {
                             lyrics += rowEnd;
                         }
                         lyrics += rowStart + version.toString() + ":"
-                                + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbreviation() + "Class\""
-                                + " id=\"" + genLyicsId(sectionIndex) + "\">";
+                                + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbbreviation() + "Class\""
+                                + " id=\"" + genLyricsId(sectionIndex) + "\">";
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
                         state = 0;
@@ -474,7 +531,7 @@ public class Song implements Comparable<Song> {
                                     lyrics += rowStart
                                             + Section.getDefaultVersion().toString() + ":"
                                             + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
-                                            + " id=\"" + genLyicsId(sectionIndex) + "\">";
+                                            + " id=\"" + genLyricsId(sectionIndex) + "\">";
                                     isSection = true;
                                 }
                                 lyrics += whiteSpace + c;
@@ -494,7 +551,12 @@ public class Song implements Comparable<Song> {
         return lyrics;
     }
 
-    public static final String genLyicsId(int sectionIndex) {
+    /**
+     * Utility to generate a lyrics section sequence id
+     * @param sectionIndex
+     * @return a lyrics section sequence id
+     */
+    public static final String genLyricsId(int sectionIndex) {
         return "L." + sectionIndex;
     }
 
@@ -544,7 +606,7 @@ public class Song implements Comparable<Song> {
                 ArrayList<String> row = grid.getRow(r);
                 final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
                 for (int col = 0; col < row.size(); col++) {
-                    chordText.append("<td class=\"" + style + "section").append(version.getSection().getAbreviation())
+                    chordText.append("<td class=\"" + style + "section").append(version.getSection().getAbbreviation())
                             .append("Class\" ");
                     String content = row.get(col);
                     if (endOfChordLineExp.test(content)) {
@@ -562,6 +624,13 @@ public class Song implements Comparable<Song> {
         return ret;
     }
 
+    /**
+     * Utility to generate a chord section id
+     * @param displaySectionVersion chord section version
+     * @param row cell row
+     * @param col cell column
+     * @return the generated chord section id
+     */
     public static final String genChordId(Section.Version displaySectionVersion, int row, int col) {
         if (displaySectionVersion == null)
             return "";
@@ -569,9 +638,12 @@ public class Song implements Comparable<Song> {
     }
 
     /**
-     * @param halfSteps
-     * @return
+     * Transpose the all chords from their original scale notes by the given number of half steps
+     * requested.
+     * @param halfSteps half steps for this transcription
+     * @return an HTML representation for the chord sections
      */
+    @Deprecated
     public String transpose(int halfSteps) {
         halfSteps = Util.mod(halfSteps,MusicConstant.halfStepsPerOctave);
         if (halfSteps == 0) {
@@ -747,19 +819,25 @@ public class Song implements Comparable<Song> {
         this.artist = artist;
     }
 
+    /**
+     * Set the key for this song.
+     * @param key the given key
+     */
     public void setKey(Key key) {
         this.key = key;
     }
 
 
     /**
-     * @return the defaultBpm
+     * Return the song default beats per minute.
+     * @return the default BPM
      */
     public int getBeatsPerMinute() {
         return defaultBpm;
     }
 
     /**
+     * Set the song default beats per minute.
      * @param bpm the defaultBpm to set
      */
     public void setBeatsPerMinute(int bpm) {
@@ -767,13 +845,15 @@ public class Song implements Comparable<Song> {
     }
 
     /**
-     * @return the beatsPerBar
+     * Return the song's number of beats per bar
+     * @return the number of beats per bar
      */
     public int getBeatsPerBar() {
         return beatsPerBar;
     }
 
     /**
+     * Set the song's number of beats per bar
      * @param beatsPerBar the beatsPerBar to set
      */
     private void setBeatsPerBar(int beatsPerBar) {
@@ -781,6 +861,9 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return an integer that represents the number of notes per measure
+     * represented in the sheet music.  Typically this is 4; meaning quarter notes.
+     *
      * @return the unitsPerMeasure
      */
     public int getUnitsPerMeasure() {
@@ -788,18 +871,23 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the song's copyright
      * @return the copyright
      */
     public String getCopyright() {
         return copyright;
     }
 
-
+    /**
+     * Return the song's key
+     * @return the key
+     */
     public Key getKey() {
         return key;
     }
 
     /**
+     * Return the song's identification string.
      * @return the songId
      */
     public String getSongId() {
@@ -814,6 +902,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the song's title
      * @return the title
      */
     public String getTitle() {
@@ -821,6 +910,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the song's artist.
      * @return the artist
      */
     public String getArtist() {
@@ -828,6 +918,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the lyrics.
      * @return the rawLyrics
      */
     public String getLyricsAsString() {
@@ -835,6 +926,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the chords
      * @return the chords
      */
     public String getChordsAsString() {
@@ -842,6 +934,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the default beats per minute.
      * @return the defaultBpm
      */
     public int getDefaultBpm() {
@@ -849,6 +942,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the section version sequence.
      * @return the sequence
      */
     public ArrayList<Section.Version> getSequence() {
@@ -856,6 +950,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the chords in the song's sections as a map.
      * @return the chordSectionMap
      */
     public HashMap<Section.Version, Grid<String>> getChordSectionMap() {
@@ -863,6 +958,7 @@ public class Song implements Comparable<Song> {
     }
 
     /**
+     * Return the lyrics in the song's sections as a map.
      * @return the displaySectionMap
      */
     public HashMap<Section.Version, Section.Version> getDisplaySectionMap() {

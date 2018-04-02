@@ -221,7 +221,7 @@ public class LyricsAndChordsView
                     ce.getStyle().setBackgroundColor(highlightColor);
                     lastChordElement = ce;
                 }
-                String lyricsCellId = Song.genLyicsId(songUpdate.getSectionNumber());
+                String lyricsCellId = Song.genLyricsId(songUpdate.getSectionNumber());
                 Element le = lyrics.getElementById(lyricsCellId);
                 if (le != null) {
                     le.getStyle().setBackgroundColor(highlightColor);

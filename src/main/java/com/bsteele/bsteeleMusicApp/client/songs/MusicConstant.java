@@ -6,6 +6,10 @@ import com.bsteele.bsteeleMusicApp.shared.Util;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
+
+/**
+ * A convenient collection of universal music constants.
+ */
 public class MusicConstant {
     public static final char flatChar = '\u266D';
     public static final char naturalChar = '\u266E';
@@ -33,7 +37,12 @@ public class MusicConstant {
                     ChordDescriptor.minor7b5,   //  6 + 1 = 7
             };
 
-    public static final ChordDescriptor getDiatonicChordModifier(int i) {
-        return diatonicChordModifiers[Util.mod(i, diatonicChordModifiers.length)];
+    /**
+     * Return the major diatonic chord descriptor for the given degree.
+     * @param degree  the given degree
+     * @return  the major diatonic chord descriptor
+     */
+    public static final ChordDescriptor getDiatonicChordModifier(int degree) {
+        return diatonicChordModifiers[Util.mod(degree, diatonicChordModifiers.length)];
     }
 }

@@ -10,6 +10,12 @@ import com.google.gwt.regexp.shared.RegExp;
 
 /**
  * All possible piano pitches and their notational alias's.
+ * <p>
+ * A pitch has a human readable name based on it's piano based location.
+ * A pitch has a frequency but no duration.
+ * </p>
+ * <p>Black key pitches will have an alias at the same frequency.  This
+ * is done to help ease the mapping from keys to pitches.</p>
  */
 public enum Pitch {
     /**
@@ -221,14 +227,26 @@ public enum Pitch {
         frequency = 440 * Math.pow(2, (double)((number+1)-49)/12);
     }
 
+    /**
+     * Get an integer the represents this pitch.
+     * @return  the integer represntation of the pitch
+     */
     public int getNumber() {
         return number;
     }
 
+    /**
+     * Return the frequency of the pitch.
+     * @return the frequency of the pitch in Hertz
+     */
     public double getFrequency() {
         return frequency;
     }
 
+    /**
+     * Return the scale note represented by this pitch.
+     * @return  the pitch's scale note
+     */
     public ScaleNote getScaleNote() {
         return scaleNote;
     }
