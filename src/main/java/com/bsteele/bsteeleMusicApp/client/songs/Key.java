@@ -61,7 +61,7 @@ public enum Key {
         return keyScaleNote;
     }
 
-    public int getHalfStep(){
+    public int getHalfStep() {
         return keyScaleNote.getHalfStep();
     }
 
@@ -72,15 +72,14 @@ public enum Key {
      * @return
      */
     public static final Key getKeyByValue(int keyValue) {
-        keyValue = Util.mod(keyValue,MusicConstant.halfStepsPerOctave);
         for (Key key : Key.values())
             if (key.keyValue == keyValue)
                 return key;
-        return Key.values()[0];     //  default, expected to be C
+        return Key.values()[0];     //  not found, so use the default, expected to be C
     }
 
     public static final Key getKeyByHalfStep(int halfStep) {
-        halfStep = Util.mod(halfStep,MusicConstant.halfStepsPerOctave);
+        halfStep = Util.mod(halfStep, MusicConstant.halfStepsPerOctave);
         for (Key key : Key.values())
             if (key.halfStep == halfStep)
                 return key;
@@ -135,16 +134,16 @@ public enum Key {
             int score = 0;
             for (int i = 0; i < key.diatonics.size(); i++) {
                 ScaleChord diatonic = key.getDiatonicByDegree(i);
-                if ((count= useMap.get(diatonic)) != null)
+                if ((count = useMap.get(diatonic)) != null)
                     score += count * guessWeights[i];
                 else {
                     diatonic = diatonic.getAlias();
-                    if ( diatonic != null && ( count = useMap.get(diatonic)) != null )
+                    if (diatonic != null && (count = useMap.get(diatonic)) != null)
                         score += count * guessWeights[i];
                 }
             }
 
-            
+
             //  find the max score with the minimum key value
             if (score > maxScore
                     || (score == maxScore && Math.abs(key.getKeyValue()) < minKeyValue)) {
@@ -158,20 +157,19 @@ public enum Key {
 
 
     /**
-     * Counts from zero.
+     * Return the requested diatonic chord by degree.
+     * Counts from zero. For example, 0 represents the I chord, 3 represents the IV chord.
      *
      * @param note
      * @return
      */
     public ScaleChord getDiatonicByDegree(int note) {
-        note %= diatonics.size();
-        if (note < 0)
-            note += diatonics.size();
+        note = Util.mod(note, diatonics.size());
         return diatonics.get(note);
     }
 
-    public boolean isDiatonic(ScaleNote scaleNote) {
-        return diatonics.contains(scaleNote);
+    public boolean isDiatonic(ScaleChord scaleChord) {
+        return diatonics.contains(scaleChord);
     }
 
     public ScaleNote getMajorScaleByNote(int note) {

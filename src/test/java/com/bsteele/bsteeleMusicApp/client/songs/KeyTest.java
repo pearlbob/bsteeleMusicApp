@@ -177,6 +177,17 @@ public class KeyTest {
     }
 
     @Test
+    public void isDiatonic(){
+               for ( Key key: Key.values()) {
+                   for (int j = 0; j < MusicConstant.notesPerScale; j++) {
+                       ScaleChord sc = key.getDiatonicByDegree(j);
+                       assertTrue(key.isDiatonic(sc));
+                      // fixme: add more tests
+                   }
+               }
+    }
+
+    @Test
     public void guessKey() {
         Key key;
 

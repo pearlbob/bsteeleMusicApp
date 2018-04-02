@@ -24,6 +24,8 @@ fixme: change colors for  multiple sections during play
 todo: arrangement window in song display
 todo: add log on server side
 todo: add "fixit" memo to server side log
+todo: display: vocal, Bb, melody?, theme riff?
+todo: legal copyright notice of file sharing
 
 
 todo: edit should offer BPM & Key from lyrics & chords
@@ -41,6 +43,7 @@ d. root, 4th, 5th and flat 7th of a dominant 7th sus 4 chord.
 e. root, 3rd, 5th and 6th of a sixth chord (major, minor).
 
 fixme: drum   sound from remotely started song
+todo: drums: open TH, closed TH,  snare, kick
 todo: improve leadin count down
 todo: write song.comparatorByTitleAndArtist()
 todo: write song.equals (hashcode, etc) for all fields

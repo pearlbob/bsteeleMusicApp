@@ -3,9 +3,10 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import jsinterop.annotations.JsType;
+
 import java.util.ArrayList;
 import java.util.Objects;
-import jsinterop.annotations.JsType;
 
 /**
  *

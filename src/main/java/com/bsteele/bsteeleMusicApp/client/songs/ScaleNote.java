@@ -41,7 +41,10 @@ public enum ScaleNote {
     Bb(1),
     Ab(11),
     Cb(2),     //  used for Gb (-6) key
-    Es(8);     //  used for Fs (+6) key
+    Es(8),     //  used for Fs (+6) key
+    Bs(3),     //   for completeness of piano expression
+    Fb(7),     //   for completeness of piano expression
+    ;
 
     ScaleNote(int halfStep) {
         this.halfStep = halfStep;

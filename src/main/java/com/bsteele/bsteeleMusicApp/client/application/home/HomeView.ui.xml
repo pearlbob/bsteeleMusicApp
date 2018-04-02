@@ -1,7 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
              xmlns:g='urn:import:com.google.gwt.user.client.ui'
              xmlns:my='urn:import:com.bsteele.bsteeleMusicApp.client.widgets'
-             xmlns:songs='urn:import:com.bsteele.bsteeleMusicApp.client.application.songs'
 >
 
     <g:RootLayoutPanel>
