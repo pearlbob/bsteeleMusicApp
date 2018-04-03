@@ -11,30 +11,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" line="43" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/legacy/LegacyDrumMeasure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/legacy/LegacyDrumSection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/AnticipationOrDelay.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Arrangement.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Bar.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/DrumType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/LyricSection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Part.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/PartSection.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/PartType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongId.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/DefaultDrumSelectEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/DefaultDrumSelectEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/DrumOptionsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/DrumOptionsView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/DrumMeasure.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Note.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Note.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/lyrics.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/lyrics.html" afterDir="false" />
-    </list>
+    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -1017,7 +994,7 @@
       <workItem from="1522723714434" duration="2171000" />
       <workItem from="1522759012274" duration="10359000" />
       <workItem from="1522781566702" duration="2258000" />
-      <workItem from="1522783852861" duration="6141000" />
+      <workItem from="1522783852861" duration="6311000" />
     </task>
     <task id="LOCAL-00001" summary="move to idea">
       <created>1520747617322</created>
@@ -1215,7 +1192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1522725854944</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="added arrangement class basics, moved current drums to legacy">
+      <created>1522792938336</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1522792938336</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1251,7 +1235,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="251791000" />
+    <option name="totallyTimeSpent" value="251961000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1264,6 +1248,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="3842" height="2166" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="PlantUML" order="9" />
       <window_info anchor="right" id="Palette" order="3" />
@@ -1287,7 +1272,7 @@
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
       <window_info anchor="bottom" auto_hide="true" id="Run" internal_type="SLIDING" order="2" type="SLIDING" weight="0.82859033" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32931122" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.21447508" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.21447508" />
       <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
       <window_info anchor="bottom" id="Find" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4332506" />
@@ -1340,7 +1325,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="adjustments to song updates, working towards play, minimized server role" />
     <MESSAGE value="weak start to audioContext" />
     <MESSAGE value="minimum drums, start &amp; stop more or less properly" />
     <MESSAGE value="almost proper drums... but wrong duration" />
@@ -1365,7 +1349,8 @@
     <MESSAGE value="package imports fooled with by ide, added Pitch" />
     <MESSAGE value="javadoc, small adjustments" />
     <MESSAGE value="released key guess to only use the scale notes of the diatonics" />
-    <option name="LAST_COMMIT_MESSAGE" value="released key guess to only use the scale notes of the diatonics" />
+    <MESSAGE value="added arrangement class basics, moved current drums to legacy" />
+    <option name="LAST_COMMIT_MESSAGE" value="added arrangement class basics, moved current drums to legacy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
