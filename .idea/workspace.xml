@@ -13,17 +13,9 @@
   <component name="ChangeListManager">
     <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordTension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordTension.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Pitch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Pitch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,13 +35,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="416">
               <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
-              <folding>
-                <element signature="e#2687#3691#0" />
-                <element signature="e#3802#3803#0" expanded="true" />
-                <element signature="e#3833#3834#0" expanded="true" />
-                <element signature="e#5144#5145#0" expanded="true" />
-                <element signature="e#5172#5173#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -57,24 +42,8 @@
       <file leaf-file-name="Section.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="704">
+            <state relative-caret-position="1856">
               <caret line="65" column="56" selection-start-line="65" selection-start-column="56" selection-end-line="65" selection-end-column="56" />
-              <folding>
-                <element signature="e#1986#1987#0" expanded="true" />
-                <element signature="e#2020#2021#0" expanded="true" />
-                <element signature="e#2319#2320#0" expanded="true" />
-                <element signature="e#2362#2363#0" expanded="true" />
-                <element signature="e#2504#2505#0" expanded="true" />
-                <element signature="e#2542#2543#0" expanded="true" />
-                <element signature="e#2726#2727#0" expanded="true" />
-                <element signature="e#2769#2770#0" expanded="true" />
-                <element signature="e#4290#4291#0" expanded="true" />
-                <element signature="e#4341#4342#0" expanded="true" />
-                <element signature="e#7300#7301#0" expanded="true" />
-                <element signature="e#7342#7343#0" expanded="true" />
-                <element signature="e#7495#7496#0" expanded="true" />
-                <element signature="e#7549#7550#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -82,66 +51,8 @@
       <file leaf-file-name="Song.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2606">
+            <state relative-caret-position="-594">
               <caret line="960" column="39" selection-start-line="960" selection-start-column="39" selection-end-line="960" selection-end-column="39" />
-              <folding>
-                <element signature="e#3012#6917#0" />
-                <element signature="e#7018#8956#0" />
-                <element signature="e#8962#9217#0" />
-                <element signature="e#8565#8566#0" expanded="true" />
-                <element signature="e#8620#8621#0" expanded="true" />
-                <element signature="e#8683#8684#0" expanded="true" />
-                <element signature="e#8729#8730#0" expanded="true" />
-                <element signature="e#10456#10457#0" expanded="true" />
-                <element signature="e#10487#10488#0" expanded="true" />
-                <element signature="e#10494#16436#0" />
-                <element signature="e#16481#16482#0" expanded="true" />
-                <element signature="e#16550#16551#0" expanded="true" />
-                <element signature="e#16557#20108#0" />
-                <element signature="e#20170#20171#0" expanded="true" />
-                <element signature="e#20212#20213#0" expanded="true" />
-                <element signature="e#20219#22886#0" />
-                <element signature="e#21856#22981#0" />
-                <element signature="e#22987#26935#0" />
-                <element signature="e#26941#27342#0" />
-                <element signature="e#27348#27625#0" />
-                <element signature="e#30667#30668#0" expanded="true" />
-                <element signature="e#30697#30698#0" expanded="true" />
-                <element signature="e#28651#28652#0" expanded="true" />
-                <element signature="e#28684#28685#0" expanded="true" />
-                <element signature="e#28786#28787#0" expanded="true" />
-                <element signature="e#28823#28824#0" expanded="true" />
-                <element signature="e#28905#28906#0" expanded="true" />
-                <element signature="e#28939#28940#0" expanded="true" />
-                <element signature="e#29056#29057#0" expanded="true" />
-                <element signature="e#29102#29103#0" expanded="true" />
-                <element signature="e#29192#29193#0" expanded="true" />
-                <element signature="e#29230#29231#0" expanded="true" />
-                <element signature="e#29311#29312#0" expanded="true" />
-                <element signature="e#29343#29344#0" expanded="true" />
-                <element signature="e#29371#29372#0" expanded="true" />
-                <element signature="e#29397#29398#0" expanded="true" />
-                <element signature="e#29472#29473#0" expanded="true" />
-                <element signature="e#29501#29502#0" expanded="true" />
-                <element signature="e#29608#29609#0" expanded="true" />
-                <element signature="e#29650#29651#0" expanded="true" />
-                <element signature="e#29723#29724#0" expanded="true" />
-                <element signature="e#29751#29752#0" expanded="true" />
-                <element signature="e#29826#29827#0" expanded="true" />
-                <element signature="e#29855#29856#0" expanded="true" />
-                <element signature="e#29941#29942#0" expanded="true" />
-                <element signature="e#29973#29974#0" expanded="true" />
-                <element signature="e#30056#30057#0" expanded="true" />
-                <element signature="e#30085#30086#0" expanded="true" />
-                <element signature="e#30165#30166#0" expanded="true" />
-                <element signature="e#30198#30199#0" expanded="true" />
-                <element signature="e#30297#30298#0" expanded="true" />
-                <element signature="e#30328#30329#0" expanded="true" />
-                <element signature="e#30453#30454#0" expanded="true" />
-                <element signature="e#30491#30492#0" expanded="true" />
-                <element signature="e#30623#30624#0" expanded="true" />
-                <element signature="e#30663#30664#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -155,11 +66,39 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MusicConstant.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MusicConstant.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="320">
               <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Key.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1156">
+              <caret line="287" column="48" selection-start-line="287" selection-start-column="48" selection-end-line="287" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#6304#6305#0" expanded="true" />
+                <element signature="e#6357#6358#0" expanded="true" />
+                <element signature="e#7718#7719#0" expanded="true" />
+                <element signature="e#7764#7765#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeyTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="580">
+              <caret line="228" column="90" lean-forward="true" selection-start-line="228" selection-start-column="90" selection-end-line="228" selection-end-column="90" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -265,19 +204,19 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.ui.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/PitchTest.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordTension.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Pitch.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java" />
       </list>
     </option>
   </component>
@@ -512,6 +451,28 @@
               <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="songs" type="462c0819:PsiDirectoryNode" />
+              <item name="Key" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="songs" type="462c0819:PsiDirectoryNode" />
+              <item name="MusicConstant" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -579,43 +540,6 @@
               <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="songs" type="462c0819:PsiDirectoryNode" />
               <item name="KeyTest" type="1a9f42e2:ClassTreeNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-              <item name="songs" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-              <item name="songs" type="1f31426a:PackageElementNode" />
-              <item name="Key" type="1a9f42e2:ClassTreeNode" />
             </path>
           </expand>
           <select />
@@ -785,6 +709,43 @@
         </subPane>
       </pane>
       <pane id="AndroidView" />
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+              <item name="songs" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+              <item name="songs" type="1f31426a:PackageElementNode" />
+              <item name="Key" type="1a9f42e2:ClassTreeNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1014,7 +975,8 @@
       <workItem from="1522673068771" duration="10423000" />
       <workItem from="1522693055477" duration="408000" />
       <workItem from="1522693570880" duration="2299000" />
-      <workItem from="1522697112727" duration="7305000" />
+      <workItem from="1522697112727" duration="7421000" />
+      <workItem from="1522723714434" duration="2058000" />
     </task>
     <task id="LOCAL-00001" summary="move to idea">
       <created>1520747617322</created>
@@ -1198,43 +1160,50 @@
       <option name="project" value="LOCAL" />
       <updated>1522694329955</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="javadoc, small adjustments">
+      <created>1522704515077</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1522704515077</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="PitchTest_pitchTest - 2018.04.02 at 09h 14m 47s.xml">
-      <configuration name="PitchTest.pitchTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 07m 36s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="PitchTest_pitchTest - 2018.04.02 at 09h 15m 42s.xml">
-      <configuration name="PitchTest.pitchTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 08m 16s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest_isDiatonic - 2018.04.02 at 09h 41m 27s.xml">
-      <configuration name="KeyTest.isDiatonic" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 09m 39s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest_isDiatonic - 2018.04.02 at 09h 42m 46s.xml">
-      <configuration name="KeyTest.isDiatonic" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 11m 34s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest_isDiatonic - 2018.04.02 at 11h 18m 29s.xml">
-      <configuration name="KeyTest.isDiatonic" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 12m 03s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest - 2018.04.02 at 11h 18m 35s.xml">
-      <configuration name="KeyTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 12m 52s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest - 2018.04.02 at 11h 20m 25s.xml">
-      <configuration name="KeyTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 14m 53s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest - 2018.04.02 at 11h 30m 34s.xml">
-      <configuration name="KeyTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 15m 09s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest - 2018.04.02 at 11h 32m 12s.xml">
-      <configuration name="KeyTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 15m 18s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest - 2018.04.02 at 11h 33m 36s.xml">
-      <configuration name="KeyTest" configurationId="JUnit" />
+    <history-entry file="KeyTest_guessKey - 2018.04.02 at 20h 18m 46s.xml">
+      <configuration name="KeyTest.guessKey" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="230746000" />
+    <option name="totallyTimeSpent" value="232920000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1261,20 +1230,19 @@
       <window_info id="UI Designer" order="5" />
       <window_info anchor="bottom" x="34" y="666" width="3772" height="806" id="Debug" internal_type="SLIDING" order="3" weight="0.43424317" />
       <window_info anchor="bottom" id="TODO" internal_type="SLIDING" order="6" type="SLIDING" weight="0.32949728" />
+      <window_info anchor="bottom" id="Messages" internal_type="SLIDING" order="10" type="SLIDING" weight="0.23771712" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="bottom" id="Java Enterprise" order="10" show_stripe_button="false" weight="0.32949728" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
-      <window_info anchor="bottom" auto_hide="true" id="Run" internal_type="SLIDING" order="2" type="SLIDING" weight="0.62134" />
+      <window_info active="true" anchor="bottom" auto_hide="true" id="Run" internal_type="SLIDING" order="2" type="SLIDING" visible="true" weight="0.62134" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32931122" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.15482503" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.15747614" />
       <window_info anchor="right" id="Bean Validation" order="9" />
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
-      <window_info anchor="bottom" id="Find" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4332506" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="7" sideWeight="0.5021199" side_tool="true" weight="0.26712328" />
-      <window_info anchor="bottom" id="Messages" internal_type="SLIDING" order="10" type="SLIDING" weight="0.23771712" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info id="Nl-Palette" order="2" />
@@ -1282,6 +1250,7 @@
       <window_info anchor="right" id="Properties" order="5" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Find" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4332506" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="3" />
@@ -1289,29 +1258,29 @@
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Run" internal_type="SLIDING" order="2" type="SLIDING" weight="0.32949728" />
       <window_info anchor="right" id="Theme Preview" order="8" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info id="Nl-Palette" order="2" />
       <window_info id="Structure" order="1" weight="0.25306416" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" internal_type="SLIDING" order="6" type="SLIDING" weight="0.32949728" />
+      <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
       <window_info id="Image Layers" order="6" />
       <window_info id="Designer" order="4" />
       <window_info anchor="right" id="Properties" order="5" />
       <window_info id="UI Designer" order="5" />
       <window_info anchor="bottom" id="Find" internal_type="SLIDING" order="1" type="SLIDING" weight="0.32949728" />
-      <window_info id="Project" order="0" visible="true" weight="0.36157173" />
       <window_info anchor="bottom" id="Debug" internal_type="SLIDING" order="3" type="SLIDING" weight="0.3997577" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32949728" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50144196" side_tool="true" weight="0.32949728" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info id="Favorites" order="7" side_tool="true" />
       <window_info id="Capture Tool" order="3" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Messages" internal_type="SLIDING" order="10" type="SLIDING" weight="0.32949728" />
       <window_info anchor="right" id="Maven Projects" order="4" />
-      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info id="Project" order="0" visible="true" weight="0.36157173" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1321,7 +1290,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="websocket adjustments" />
     <MESSAGE value="UI adjustments" />
     <MESSAGE value="adjustments to song updates, working towards play, minimized server role" />
     <MESSAGE value="weak start to audioContext" />
@@ -1346,7 +1314,8 @@
     <MESSAGE value="wrote ScaleChords and it's parts, adjusted key guess" />
     <MESSAGE value="adjusted song key change" />
     <MESSAGE value="package imports fooled with by ide, added Pitch" />
-    <option name="LAST_COMMIT_MESSAGE" value="package imports fooled with by ide, added Pitch" />
+    <MESSAGE value="javadoc, small adjustments" />
+    <option name="LAST_COMMIT_MESSAGE" value="javadoc, small adjustments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1753,14 +1722,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="736">
           <caret line="54" column="3" selection-start-line="54" selection-start-column="3" selection-end-line="59" selection-end-column="7" />
-          <folding>
-            <element signature="e#539#540#0" expanded="true" />
-            <element signature="e#581#582#0" expanded="true" />
-            <element signature="e#1633#1634#0" expanded="true" />
-            <element signature="e#1665#1666#0" expanded="true" />
-            <element signature="e#1910#1911#0" expanded="true" />
-            <element signature="e#1939#1940#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1768,40 +1729,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="576">
           <caret line="18" column="24" selection-start-line="18" selection-start-column="24" selection-end-line="18" selection-end-column="24" />
-          <folding>
-            <element signature="e#505#506#0" expanded="true" />
-            <element signature="e#547#548#0" expanded="true" />
-            <element signature="e#735#736#0" expanded="true" />
-            <element signature="e#767#768#0" expanded="true" />
-            <element signature="e#812#813#0" expanded="true" />
-            <element signature="e#847#848#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1472">
-          <caret line="91" column="32" selection-start-line="91" selection-start-column="32" selection-end-line="91" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#917#918#0" expanded="true" />
-            <element signature="e#1001#1002#0" expanded="true" />
-            <element signature="e#1043#1044#0" expanded="true" />
-            <element signature="e#1127#1128#0" expanded="true" />
-            <element signature="e#1138#1139#0" expanded="true" />
-            <element signature="e#1169#1170#0" expanded="true" />
-            <element signature="e#1329#1330#0" expanded="true" />
-            <element signature="e#1364#1365#0" expanded="true" />
-            <element signature="e#1396#1397#0" expanded="true" />
-            <element signature="e#1445#1446#0" expanded="true" />
-            <element signature="e#2261#2262#0" expanded="true" />
-            <element signature="e#2305#2306#0" expanded="true" />
-            <element signature="e#5105#5106#0" expanded="true" />
-            <element signature="e#5158#5159#0" expanded="true" />
-            <element signature="e#6519#6520#0" expanded="true" />
-            <element signature="e#6565#6566#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1809,24 +1736,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="512">
           <caret line="17" column="57" selection-start-line="17" selection-start-column="57" selection-end-line="17" selection-end-column="57" />
-          <folding>
-            <element signature="e#3161#3162#0" expanded="true" />
-            <element signature="e#3190#3191#0" expanded="true" />
-            <element signature="e#3346#3347#0" expanded="true" />
-            <element signature="e#3378#3379#0" expanded="true" />
-            <element signature="e#3526#3527#0" expanded="true" />
-            <element signature="e#3558#3559#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="327" column="42" selection-start-line="327" selection-start-column="42" selection-end-line="327" selection-end-column="42" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1834,101 +1743,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
           <caret line="17" column="3" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
-          <folding>
-            <element signature="e#2687#3691#0" />
-            <element signature="e#3802#3803#0" expanded="true" />
-            <element signature="e#3833#3834#0" expanded="true" />
-            <element signature="e#5144#5145#0" expanded="true" />
-            <element signature="e#5172#5173#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
+        <state relative-caret-position="1856">
           <caret line="65" column="56" selection-start-line="65" selection-start-column="56" selection-end-line="65" selection-end-column="56" />
-          <folding>
-            <element signature="e#1986#1987#0" expanded="true" />
-            <element signature="e#2020#2021#0" expanded="true" />
-            <element signature="e#2319#2320#0" expanded="true" />
-            <element signature="e#2362#2363#0" expanded="true" />
-            <element signature="e#2504#2505#0" expanded="true" />
-            <element signature="e#2542#2543#0" expanded="true" />
-            <element signature="e#2726#2727#0" expanded="true" />
-            <element signature="e#2769#2770#0" expanded="true" />
-            <element signature="e#4290#4291#0" expanded="true" />
-            <element signature="e#4341#4342#0" expanded="true" />
-            <element signature="e#7300#7301#0" expanded="true" />
-            <element signature="e#7342#7343#0" expanded="true" />
-            <element signature="e#7495#7496#0" expanded="true" />
-            <element signature="e#7549#7550#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2606">
-          <caret line="960" column="39" selection-start-line="960" selection-start-column="39" selection-end-line="960" selection-end-column="39" />
-          <folding>
-            <element signature="e#3012#6917#0" />
-            <element signature="e#7018#8956#0" />
-            <element signature="e#8962#9217#0" />
-            <element signature="e#8565#8566#0" expanded="true" />
-            <element signature="e#8620#8621#0" expanded="true" />
-            <element signature="e#8683#8684#0" expanded="true" />
-            <element signature="e#8729#8730#0" expanded="true" />
-            <element signature="e#10456#10457#0" expanded="true" />
-            <element signature="e#10487#10488#0" expanded="true" />
-            <element signature="e#10494#16436#0" />
-            <element signature="e#16481#16482#0" expanded="true" />
-            <element signature="e#16550#16551#0" expanded="true" />
-            <element signature="e#16557#20108#0" />
-            <element signature="e#20170#20171#0" expanded="true" />
-            <element signature="e#20212#20213#0" expanded="true" />
-            <element signature="e#20219#22886#0" />
-            <element signature="e#21856#22981#0" />
-            <element signature="e#22987#26935#0" />
-            <element signature="e#26941#27342#0" />
-            <element signature="e#27348#27625#0" />
-            <element signature="e#30667#30668#0" expanded="true" />
-            <element signature="e#30697#30698#0" expanded="true" />
-            <element signature="e#28651#28652#0" expanded="true" />
-            <element signature="e#28684#28685#0" expanded="true" />
-            <element signature="e#28786#28787#0" expanded="true" />
-            <element signature="e#28823#28824#0" expanded="true" />
-            <element signature="e#28905#28906#0" expanded="true" />
-            <element signature="e#28939#28940#0" expanded="true" />
-            <element signature="e#29056#29057#0" expanded="true" />
-            <element signature="e#29102#29103#0" expanded="true" />
-            <element signature="e#29192#29193#0" expanded="true" />
-            <element signature="e#29230#29231#0" expanded="true" />
-            <element signature="e#29311#29312#0" expanded="true" />
-            <element signature="e#29343#29344#0" expanded="true" />
-            <element signature="e#29371#29372#0" expanded="true" />
-            <element signature="e#29397#29398#0" expanded="true" />
-            <element signature="e#29472#29473#0" expanded="true" />
-            <element signature="e#29501#29502#0" expanded="true" />
-            <element signature="e#29608#29609#0" expanded="true" />
-            <element signature="e#29650#29651#0" expanded="true" />
-            <element signature="e#29723#29724#0" expanded="true" />
-            <element signature="e#29751#29752#0" expanded="true" />
-            <element signature="e#29826#29827#0" expanded="true" />
-            <element signature="e#29855#29856#0" expanded="true" />
-            <element signature="e#29941#29942#0" expanded="true" />
-            <element signature="e#29973#29974#0" expanded="true" />
-            <element signature="e#30056#30057#0" expanded="true" />
-            <element signature="e#30085#30086#0" expanded="true" />
-            <element signature="e#30165#30166#0" expanded="true" />
-            <element signature="e#30198#30199#0" expanded="true" />
-            <element signature="e#30297#30298#0" expanded="true" />
-            <element signature="e#30328#30329#0" expanded="true" />
-            <element signature="e#30453#30454#0" expanded="true" />
-            <element signature="e#30491#30492#0" expanded="true" />
-            <element signature="e#30623#30624#0" expanded="true" />
-            <element signature="e#30663#30664#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1943,6 +1764,37 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
           <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-594">
+          <caret line="960" column="39" selection-start-line="960" selection-start-column="39" selection-end-line="960" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1156">
+          <caret line="287" column="48" selection-start-line="287" selection-start-column="48" selection-end-line="287" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#6304#6305#0" expanded="true" />
+            <element signature="e#6357#6358#0" expanded="true" />
+            <element signature="e#7718#7719#0" expanded="true" />
+            <element signature="e#7764#7765#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="580">
+          <caret line="228" column="90" lean-forward="true" selection-start-line="228" selection-start-column="90" selection-end-line="228" selection-end-column="90" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

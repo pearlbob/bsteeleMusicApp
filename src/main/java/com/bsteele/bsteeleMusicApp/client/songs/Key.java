@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.google.gwt.core.client.GWT;
 
 import java.util.AbstractCollection;
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public enum Key {
     /**
      * Return the next key that is one half step higher.
      * Of course the keys are cyclic in their relationship.
-     * @return  the next key
+     *
+     * @return the next key
      */
     public Key nextKeyByHalfStep() {
         return keysByHalfStep[Util.mod(halfStep + 1, keysByHalfStep.length)];
@@ -49,7 +51,8 @@ public enum Key {
     /**
      * Return the next key that is one half step lower.
      * Of course the keys are cyclic in their relationship.
-     * @return  the next key down
+     *
+     * @return the next key down
      */
     public Key previousKeyByHalfStep() {
         return keysByHalfStep[Util.mod(halfStep - 1, keysByHalfStep.length)];
@@ -57,9 +60,10 @@ public enum Key {
 
     /**
      * Transpose the given scale note by the requested offset.
-     * @param scaleNote   the scale note to be transcribed
-     * @param offset  the offset for the transcription, typically between -6 and +6
-     * @return   the scale note the key that matches the transposition requested
+     *
+     * @param scaleNote the scale note to be transcribed
+     * @param offset    the offset for the transcription, typically between -6 and +6
+     * @return the scale note the key that matches the transposition requested
      */
     public ScaleNote transpose(ScaleNote scaleNote, int offset) {
         return getScaleNoteByHalfStep(scaleNote.getHalfStep() + offset);
@@ -131,23 +135,16 @@ public enum Key {
     public static Key guessKey(AbstractCollection<ScaleChord> scaleChords) {
         Key ret = Key.C;                //  default answer
 
-        //  minimize the chord variations and keep a count of their use
-        HashMap<ScaleChord, Integer> useMap = new HashMap<>();
+        //  minimize the chord variations and keep a count of the scale note use
+        HashMap<ScaleNote, Integer> useMap = new HashMap<>();
         for (ScaleChord scaleChord : scaleChords) {
-            //  minimize the variation
-            switch (scaleChord.getChordDescriptor()) {
-                case major7:
-                    scaleChord = new ScaleChord(scaleChord.getScaleNote(), ChordDescriptor.major, ChordTension.none);
-                    break;
-                case minor7:
-                    scaleChord = new ScaleChord(scaleChord.getScaleNote(), ChordDescriptor.minor, ChordTension.none);
-                    break;
-            }
+            //  minimize the variation by using only the scale note
+            ScaleNote scaleNote = scaleChord.getScaleNote();
 
             //  count the uses
-            //  fixme: account for repeats
-            Integer count = useMap.get(scaleChord);
-            useMap.put(scaleChord, (count == null) ? 1 : count + 1);
+            //  fixme: account for song section repeats
+            Integer count = useMap.get(scaleNote);
+            useMap.put(scaleNote, (count == null) ? 1 : count + 1);
         }
 
         //  find the key with the longest greatest match to the major chord
@@ -155,30 +152,37 @@ public enum Key {
         int minKeyValue = Integer.MAX_VALUE;
 
         //  find the key with the greatest match to it's diatonic chords
-        Integer count;
-        for (Key key : Key.values()) {
-            //  score by weighted uses of the scale chords
-            int score = 0;
-            for (int i = 0; i < key.diatonics.size(); i++) {
-                ScaleChord diatonic = key.getDiatonicByDegree(i);
-                if ((count = useMap.get(diatonic)) != null)
-                    score += count * guessWeights[i];
-                else {
-                    diatonic = diatonic.getAlias();
-                    if (diatonic != null && (count = useMap.get(diatonic)) != null)
+        {
+            Integer count;
+            ScaleChord diatonic;
+            ScaleNote diatonicScaleNote;
+            for (Key key : Key.values()) {
+                //  score by weighted uses of the scale chords
+                int score = 0;
+                for (int i = 0; i < key.diatonics.size(); i++) {
+                    diatonic = key.getDiatonicByDegree(i);
+                    diatonicScaleNote = diatonic.getScaleNote();
+                    if ((count = useMap.get(diatonicScaleNote)) != null)
                         score += count * guessWeights[i];
+                    else {
+                        if ( (diatonic = diatonic.getAlias()) != null ) {
+                            diatonicScaleNote = diatonic.getScaleNote();
+                            if (diatonic != null && (count = useMap.get(diatonicScaleNote)) != null)
+                                score += count * guessWeights[i];
+                        }
+                    }
+                }
+
+                //  find the max score with the minimum key value
+                if (score > maxScore
+                        || (score == maxScore && Math.abs(key.getKeyValue()) < minKeyValue)) {
+                    ret = key;
+                    maxScore = score;
+                    minKeyValue = Math.abs(key.getKeyValue());
                 }
             }
-
-
-            //  find the max score with the minimum key value
-            if (score > maxScore
-                    || (score == maxScore && Math.abs(key.getKeyValue()) < minKeyValue)) {
-                ret = key;
-                maxScore = score;
-                minKeyValue = Math.abs(key.getKeyValue());
-            }
         }
+        GWT.log("guess: " + ret.toString() + ": score: " + maxScore);
         return ret;
     }
 
@@ -281,7 +285,7 @@ public enum Key {
     };
 
     //                                         1  2  3  4  5  6  7
-    private static final int guessWeights[] = {6, 1, 1, 4, 4, 1, 3};
+    private static final int guessWeights[] = {9, 1, 1, 4, 4, 1, 3};
     private static final int halfStepsToFifth = 7;
     private static final int halfStepsFromCtoA = 3;
 
