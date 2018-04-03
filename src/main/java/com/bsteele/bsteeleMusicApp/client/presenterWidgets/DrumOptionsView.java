@@ -7,7 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEv
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
-import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
+import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -98,7 +98,7 @@ public class DrumOptionsView
         handlerManager.fireEvent(event);
     }
 
-    private DrumMeasure drumMeasure = new DrumMeasure();
+    private LegacyDrumMeasure drumMeasure = new LegacyDrumMeasure();
     private final HandlerManager handlerManager;
     private static final Logger logger = Logger.getLogger(DrumOptionsView.class.getName());
 }

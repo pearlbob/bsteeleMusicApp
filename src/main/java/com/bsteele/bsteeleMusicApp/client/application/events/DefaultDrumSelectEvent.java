@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.application.events;
 
-import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
+import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -11,9 +11,9 @@ public class DefaultDrumSelectEvent extends GwtEvent<DefaultDrumSelectEventHandl
 
     public static Type<DefaultDrumSelectEventHandler> TYPE = new Type<DefaultDrumSelectEventHandler>();
 
-    private final DrumMeasure drumSelection;
+    private final LegacyDrumMeasure drumSelection;
 
-    public DefaultDrumSelectEvent(DrumMeasure drumSelection) {
+    public DefaultDrumSelectEvent(LegacyDrumMeasure drumSelection) {
         this.drumSelection = drumSelection;
     }
 
@@ -27,7 +27,7 @@ public class DefaultDrumSelectEvent extends GwtEvent<DefaultDrumSelectEventHandl
         handler.onDefaultDrumSelection(this);
     }
 
-    public DrumMeasure getDrumSelection() {
+    public LegacyDrumMeasure getDrumSelection() {
         return drumSelection;
     }
 }

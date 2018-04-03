@@ -4,6 +4,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
+import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.json.client.*;
@@ -314,7 +315,10 @@ public class Song implements Comparable<Song> {
     /**
      * Return the section sequence of this song.
      * @return the section sequence of this song
+     *
+     * @deprecated use {@link #getLyricSections()} instead.
      */
+    @Deprecated
     public ArrayList<Section.Version> getSectionSequence() {
         return sequence;
     }
@@ -807,7 +811,7 @@ public class Song implements Comparable<Song> {
             title = theRegExp.replace(title, "") + ", The";
         }
         this.title = title;
-        songId = "Song" + title.replaceAll("\\W+", "");
+        songId = new SongId("Song" + title.replaceAll("\\W+", ""));
     }
 
     private void setArtist(String artist) {
@@ -890,7 +894,7 @@ public class Song implements Comparable<Song> {
      * Return the song's identification string.
      * @return the songId
      */
-    public String getSongId() {
+    public SongId getSongId() {
         return songId;
     }
 
@@ -921,6 +925,7 @@ public class Song implements Comparable<Song> {
      * Return the lyrics.
      * @return the rawLyrics
      */
+    @Deprecated
     public String getLyricsAsString() {
         return rawLyrics;
     }
@@ -929,6 +934,7 @@ public class Song implements Comparable<Song> {
      * Return the chords
      * @return the chords
      */
+    @Deprecated
     public String getChordsAsString() {
         return chords;
     }
@@ -941,15 +947,7 @@ public class Song implements Comparable<Song> {
         return defaultBpm;
     }
 
-    /**
-     * Return the section version sequence.
-     * @return the sequence
-     */
-    public ArrayList<Section.Version> getSequence() {
-        return sequence;
-    }
-
-    /**
+     /**
      * Return the chords in the song's sections as a map.
      * @return the chordSectionMap
      */
@@ -963,6 +961,48 @@ public class Song implements Comparable<Song> {
      */
     public HashMap<Section.Version, Section.Version> getDisplaySectionMap() {
         return displaySectionMap;
+    }
+
+    /**
+     * Get the song's default drum section.
+     * The section will be played through all of its measures
+     * and then repeated as required for the song's duration.
+     * @return the drum section
+     */
+    public LegacyDrumSection getDrumSection() {
+        return drumSection;
+    }
+
+    /**
+     * Set the song's default drum section
+     * @param drumSection the drum section
+     */
+    public void setDrumSection(LegacyDrumSection drumSection) {
+        this.drumSection = drumSection;
+    }
+
+    /**
+     *  Get the song's lyric sections.
+     * @return the song's lyric sections
+     */
+    public ArrayList<LyricSection> getLyricSections() {
+        return lyricSections;
+    }
+
+    /**
+     * Set the song's lyric sections.
+     * @param lyricSections the song's lyric sections.
+     */
+    public void setLyricSections(ArrayList<LyricSection> lyricSections) {
+        this.lyricSections = lyricSections;
+    }
+
+    public Arrangement getDrumArrangement() {
+        return drumArrangement;
+    }
+
+    public void setDrumArrangement(Arrangement drumArrangement) {
+        this.drumArrangement = drumArrangement;
     }
 
     @Override
@@ -990,6 +1030,7 @@ public class Song implements Comparable<Song> {
 
     @Override
     public boolean equals(Object obj) {
+        //  fixme: song equals should include all fields
         if (obj == null) {
             return false;
         }
@@ -1001,6 +1042,7 @@ public class Song implements Comparable<Song> {
 
     @Override
     public int hashCode() {
+        //  fixme: song hashCode should include all fields
         int hash = 7;
         hash = (79 * hash + Objects.hashCode(this.title)) % (1 << 31);
         hash = (79 * hash + Objects.hashCode(this.artist)) % (1 << 31);
@@ -1008,15 +1050,18 @@ public class Song implements Comparable<Song> {
     }
 
     private String title = "Unknown";
-    private String songId = "Unknown";
+    private SongId songId = new SongId();
     private String artist = "Unknown";
     private String copyright = "Unknown";
     private Key key = Key.C;  //  default
     private int defaultBpm = 106;  //  beats per minute
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
+    private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private String rawLyrics = "";
     private String chords = "";
+    private LegacyDrumSection drumSection = new LegacyDrumSection();
+    private Arrangement drumArrangement;
 
     private ArrayList<Section.Version> sequence;
     private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();
@@ -1032,4 +1077,7 @@ public class Song implements Comparable<Song> {
     private static final char js_natural = '\u266E';
     private static final char js_sharp = '\u266F';
     private static final char js_delta = '\u0394';
+
+
+
 }

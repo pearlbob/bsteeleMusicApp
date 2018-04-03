@@ -14,6 +14,7 @@ package com.bsteele.bsteeleMusicApp;
 
 /*
 
+todo: a default, catch all, section
 todo: finish transposition
 todo: add drums to the edit page, store by song
 todo: move the lyrics highlight color to the section id
@@ -25,7 +26,7 @@ todo: arrangement window in song display
 todo: add log on server side
 todo: add "fixit" memo to server side log
 todo: display: vocal, Bb, melody?, theme riff?
-todo: legal copyright notice of file sharing
+todo: worry about legal copyright notice of file sharing
 
 
 todo: edit should offer BPM & Key from lyrics & chords
@@ -61,7 +62,7 @@ todo: mp3 recording and playback (including start offsets, non-integer bpm)
 todo: align tabs to enum
 todo: tooltips, many tooltips
 
-todo: control s to save when editing a song
+todo: control s to legacy when editing a song
 
 todo: fix multiple section id's on a single chord section with vertical span
 todo: fix multiple section id's on a single chord section with color selection

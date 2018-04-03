@@ -6,7 +6,7 @@ package com.bsteele.bsteeleMusicApp.client;
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
-import com.bsteele.bsteeleMusicApp.client.songs.DrumMeasure;
+import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.GWT;
@@ -120,7 +120,7 @@ public class SongPlayMasterImpl
         logger.fine("local update done: m: " + m + ", " + songOutUpdate.getMeasure());
     }
 
-    private void beatTheDrums(DrumMeasure drumSelection) {
+    private void beatTheDrums(LegacyDrumMeasure drumSelection) {
         {
             String drum = drumSelection.getHighHat();
             if (drum != null && drum.length() > 0) {
@@ -333,7 +333,7 @@ public class SongPlayMasterImpl
     private final SongUpdate songOutUpdate = new SongUpdate();
     private final SongUpdate.State state = SongUpdate.State.idle;
     private Action action = Action.idle;
-    private DrumMeasure defaultDrumSelection = new DrumMeasure();
+    private LegacyDrumMeasure defaultDrumSelection = new LegacyDrumMeasure();
     private static final String highHat1 = "images/hihat3.mp3";
     private static final String highHat3 = "images/hihat1.mp3";
     private static final String kick = "images/kick_4513.mp3";
