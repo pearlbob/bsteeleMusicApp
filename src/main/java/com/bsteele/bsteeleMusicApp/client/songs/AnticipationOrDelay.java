@@ -13,31 +13,46 @@ public enum AnticipationOrDelay {
     /**
      * Play the chord on time.
      */
-    none,
+    none(""),
     /**
      * Anticipate (push) the chord by an 8th note duration.
      */
-    anticipate8th,
+    anticipate8th("<8"),
     /**
      * Anticipate (push) the chord by a 16th note duration.
      * This is likely the most common form.
      */
-    anticipate16th,
+    anticipate16th("<"),
     /**
      * Anticipate (push) the chord by one triplet's duration.
      */
-    anticipateTriplet,
+    anticipateTriplet("<3"),
     /**
      * Delay (pull) the chord by an 8th note duration.
      */
-    delay8th,
+    delay8th(">8"),
     /**
      * Delay (pull) the chord by a 16th note duration.
      */
-    delay16th,
+    delay16th(">"),
     /**
      * Delay (pull) the chord by one triplet's duration.
      */
-    delayTriplet,
-    ;
+    delayTriplet(">3"),;
+
+    AnticipationOrDelay(String shortName) {
+        this.shortName = shortName;
+    }
+
+    /**
+     * Returns the human name of this enum.
+     *
+     * @return the human name of this enum constant
+     */
+    @Override
+    public String toString() {
+        return shortName;
+    }
+
+    private final String shortName;
 }

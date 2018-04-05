@@ -11,14 +11,16 @@ set lyricsWar=${app}_`date +%Y%m%d`.war
 set localdst=$www/$app
 set localbeta=$www/$beta
 
+
+#	copy local beta to local deploy
 rm -rf $localdst
 mkdir $localdst
 cp -r $localbeta/* $localdst
+gsutil cp $localbeta/${app}.war $lyricsDst/$lyricsWar
 
+#	copy local deploy to the web server
 gsutil -m rsync -d -R $localdst/ $dst 	#	source needs the /
 gsutil -m -q acl -r ch -u AllUsers:R $dst
-
-gsutil cp $localbeta/${app}.war $lyricsDst/$lyricsWar
 
 
 echo try:  http://bsteele.com/$app

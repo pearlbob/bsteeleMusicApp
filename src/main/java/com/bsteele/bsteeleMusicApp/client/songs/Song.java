@@ -1061,7 +1061,8 @@ public class Song implements Comparable<Song> {
     private String rawLyrics = "";
     private String chords = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();
-    private Arrangement drumArrangement;
+    private Arrangement drumArrangement;    //  default
+    private TreeSet<Metadata> metadata = new TreeSet<>();
 
     private ArrayList<Section.Version> sequence;
     private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();

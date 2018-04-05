@@ -14,6 +14,9 @@ package com.bsteele.bsteeleMusicApp;
 
 /*
 
+todo: arrangement display in song display as comment
+todo: arrangements can be part of song, e.g. drums
+todo: option list on/off
 todo: a default, catch all, section
 todo: finish transposition
 todo: add drums to the edit page, store by song

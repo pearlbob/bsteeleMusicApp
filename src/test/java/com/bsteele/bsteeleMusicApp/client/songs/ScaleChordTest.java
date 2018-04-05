@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import org.junit.Test;
 
+import java.util.TreeSet;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -26,12 +28,28 @@ public class ScaleChordTest {
                 for (ChordTension ct : ChordTension.values()) {
                     s = sn.toString() + cd.getShortName() + ct.getShortName();
                     sc = ScaleChord.parse(s);
-                    // System.out.println(s);
+
+                    ScaleChord builtScaleChord = new ScaleChord(sn, cd, ct);
+
+                    assertEquals(sc, builtScaleChord);
                     assertEquals(sn, sc.getScaleNote());
                     assertEquals(cd, sc.getChordDescriptor());
                     assertEquals(ct, sc.getChordTension());
+
+                    System.out.println(builtScaleChord.toString() + ": "
+                            + chordComponentsToString(builtScaleChord.getChordComponents()));
                 }
             }
         }
+    }
+
+    private String chordComponentsToString(TreeSet<ChordComponent> chordComponents) {
+        StringBuilder sb = new StringBuilder();
+        for (ChordComponent chordComponent : chordComponents) {
+            if (!chordComponent.equals(chordComponents.first()))
+                sb.append(" ");
+            sb.append(chordComponent.getShortName());
+        }
+        return sb.toString();
     }
 }
