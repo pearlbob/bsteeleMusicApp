@@ -7,6 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleChord;
+import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.shared.GwtEvent;
@@ -19,6 +20,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -62,7 +64,17 @@ public class SongEditView
     SelectElement timeSignatureEntry;
 
     @UiField
-    TextAreaElement chordsEntry;
+    SelectElement sectionSelection;
+
+    @UiField
+    TextArea chordsTextEntry;
+
+    @UiField
+    ButtonElement chordsMajor;
+    @UiField
+    ButtonElement chordsMinor;
+    @UiField
+    ButtonElement chordsDominant7;
 
     @UiField
     TextAreaElement lyricsEntry;
@@ -75,6 +87,32 @@ public class SongEditView
         initWidget(binder.createAndBindUi(this));
 
         handlerManager = new HandlerManager(this);
+
+        //  sectionSelection
+        SelectElement sectionSelectElement = SelectElement.as(sectionSelection);
+        for (Section section : Section.values()) {
+            OptionElement optionElement = document.createOptionElement();
+            String name = section.name();
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+            optionElement.setLabel(section.getAbbreviation() + ": " + name);
+            optionElement.setValue(section.name());
+            sectionSelectElement.add(optionElement, null);
+        }
+        Event.sinkEvents(sectionSelection, Event.ONCLICK);
+        Event.setEventListener(sectionSelection, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                Section section = Section.valueOf(sectionSelection.getValue());
+                String text = chordsTextEntry.getValue();
+                int position = chordsTextEntry.getCursorPos();
+                String add = "\n" + section.getAbbreviation() + ": ";
+                text = text.substring(0, position) + add + text.substring(position);
+                chordsTextEntry.setText(text);
+                chordsTextEntry.setCursorPos(position + add.length());
+                chordsTextEntry.setFocus(true);
+            }
+        });
+
+        chordsTextEntry.setFocus(true);
 
         Event.sinkEvents(songEnter, Event.ONCLICK);
         Event.setEventListener(songEnter, (Event event) -> {
@@ -99,7 +137,7 @@ public class SongEditView
                 copyrightEntry.setText("");
                 bpmEntry.setText("106");
                 timeSignatureEntry.setValue("4/4");
-                chordsEntry.setValue("");
+                chordsTextEntry.setValue("");
                 lyricsEntry.setValue("");
             }
         });
@@ -125,6 +163,8 @@ public class SongEditView
 //      }
 //    });
 
+        setKey(Key.getDefault());
+
     }
 
 
@@ -133,10 +173,11 @@ public class SongEditView
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
         copyrightEntry.setText(song.getCopyright());
-        setKeySelect(song.getKey());
+        setKey(song.getKey());
         bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
         timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-        chordsEntry.setValue(song.getChordsAsString());
+        chordsTextEntry.setValue(song.getChordsAsString());
+        chordsTextEntry.setCursorPos(0);
         lyricsEntry.setValue(song.getLyricsAsString());
     }
 
@@ -178,7 +219,7 @@ public class SongEditView
             return;
         }
 
-        if (chordsEntry.getValue().length() <= 0) {
+        if (chordsTextEntry.getValue().length() <= 0) {
             Window.alert("no chords given!");
             return;
         }
@@ -199,13 +240,17 @@ public class SongEditView
 
         Song song = Song.createSong(titleEntry.getText(), artistEntry.getText(),
                 copyrightEntry.getText(), key, bpm, beatsPerBar, unitsPerMeasure,
-                chordsEntry.getValue(), lyricsEntry.getValue());
+                chordsTextEntry.getValue(), lyricsEntry.getValue());
         //GWT.log(song.toJson());
 
         fireSongSubmission(song);
     }
 
-    private void setKeySelect(Key key) {
+    private void setKey(Key key) {
+        this.key = key;
+
+        titleChordButtons();
+
         String keyValue = key.name();
         NodeList<OptionElement> list = keySelection.getOptions();
         for (int i = 0; i < list.getLength(); i++) {
@@ -234,7 +279,7 @@ public class SongEditView
         final RegExp scaleNoteExp = RegExp.compile("(" + ScaleChord.getRegExp() + ")", "g");
         MatchResult mr;
         ArrayList<ScaleChord> scaleChords = new ArrayList<>();
-        while ((mr = scaleNoteExp.exec(chordsEntry.getValue())) != null) {
+        while ((mr = scaleNoteExp.exec(chordsTextEntry.getValue())) != null) {
             if (mr.getGroupCount() >= 1) {
                 String s = mr.getGroup(1);
                 ScaleChord scaleChord = ScaleChord.parse(s);
@@ -243,11 +288,20 @@ public class SongEditView
             }
         }
 
-        setKeySelect(Key.guessKey(scaleChords));
+        setKey(Key.guessKey(scaleChords));
     }
 
-    private final HandlerManager handlerManager;
+    private void titleChordButtons() {
+        ScaleChord keyScaleChord =  key.getDiatonicByDegree(0);
+        chordsMajor.setTitle(keyScaleChord.toString());
+        chordsMinor.setTitle(key.getDiatonicByDegree(3).toString());
+        chordsDominant7.setTitle(key.getDiatonicByDegree(4).toString());
+    }
+
+
+    private Key key = Key.getDefault();
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
-
+    private final HandlerManager handlerManager;
+    private static final Document document = Document.get();
 }

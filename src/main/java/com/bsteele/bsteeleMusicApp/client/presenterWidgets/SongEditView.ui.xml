@@ -81,58 +81,26 @@
                     <td>
                         Chords:
                         <br/>
-                        <textarea rows="20" cols="30" ui:field="chordsEntry" style="font-size: large;"></textarea>
+                        <g:TextArea ui:field="chordsTextEntry" styleName='{resources.style.chordsTextEntry}'/>
                     </td>
                     <td>
                         <table>
                             <tr>
-                                <th>Id</th>
-                                <th>Alt</th>
-                                <th>Section</th>
-                            </tr>
-                            <tr>
-                                <td>V:</td>
-                                <td></td>
-                                <td>Verse</td>
-                            </tr>
-                            <tr>
-                                <td>P:</td>
-                                <td>Pc:</td>
-                                <td>Pre-chorus</td>
-                            </tr>
-                            <tr>
-                                <td>C:</td>
-                                <td>Ch:</td>
-                                <td>Chorus</td>
-                            </tr>
-                            <tr>
-                                <td>B:</td>
-                                <td>Br:</td>
-                                <td>Bridge</td>
-                            </tr>
-                            <tr>
-                                <td>I:</td>
-                                <td>In:</td>
-                                <td>Intro. Is also used for interludes, riffs, theme, or hooks that don't quite fit
-                                    other categories.
+                                <td>
+                                    Section: <select ui:field="sectionSelection"/>
+                                    <button type="button" ui:field="chordsMajor">Major</button>
+                                    <button type="button" ui:field="chordsMinor">Minor</button>
+                                    <button type="button" ui:field="chordsDominant7">Dominant7</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>O:</td>
-                                <td>Out:</td>
-                                <td>Outro</td>
-                            </tr>
-                            <tr>
-                                <td>Co:</td>
-                                <td>Coda:</td>
-                                <td>Coda</td>
-                            </tr>
-                            <tr>
-                                <td>T:</td>
-                                <td>Tag:</td>
-                                <td>Tag</td>
+                                <td>
+                                    <button type="button" ui:field="chordsUndo">Undo</button>
+                                    <button type="button" ui:field="chordsRedo">Redo</button>
+                                </td>
                             </tr>
                         </table>
+
                         <ul>
                             <li>Chords must be in upper case for transcription to work! (the transcription parser is
                                 turned off inside parenthesis but will continue afterwards).

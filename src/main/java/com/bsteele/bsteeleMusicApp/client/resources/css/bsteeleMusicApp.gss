@@ -190,7 +190,12 @@ table td.chordTable {
     border-right: 1.5px solid black;
     font-size: 32px;
 }
-.chords { 
+.chords {
+}
+.chordsTextEntry {
+     font-size: large;
+     width: 20em;
+     height: 30em;
 }
 /*  chords  */
 [id^="C."]{

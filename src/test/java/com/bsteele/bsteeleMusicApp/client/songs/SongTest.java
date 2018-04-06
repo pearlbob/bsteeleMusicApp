@@ -27,7 +27,6 @@ public class SongTest extends GWTTestCase {
        String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
         JSONValue jv = JSONParser.parseStrict(jsonString);
         TreeSet<ChordDescriptor> chordDescriptors = new TreeSet<>();
-        TreeSet<ChordTension> chordTensions = new TreeSet<>();
         if (jv != null) {
             JSONArray ja = jv.isArray();
             if (ja != null) {
@@ -44,7 +43,6 @@ public class SongTest extends GWTTestCase {
                             ScaleChord scaleChord = ScaleChord.parse(s);
                             if (scaleChord != null) {
                                 chordDescriptors.add(scaleChord.getChordDescriptor());
-                                chordTensions.add(scaleChord.getChordTension());
                             }
                         }
                     }
@@ -52,7 +50,6 @@ public class SongTest extends GWTTestCase {
             }
         }
         logger.info("chords: "+chordDescriptors.toString());
-        logger.info("tensions: "+chordTensions.toString());
         logger.info("count: "+songCount);
     }
 

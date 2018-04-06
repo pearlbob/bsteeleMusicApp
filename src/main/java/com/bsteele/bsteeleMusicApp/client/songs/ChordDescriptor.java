@@ -13,19 +13,31 @@ import java.util.TreeSet;
  */
 public enum ChordDescriptor {
     //  longest short names first!
-    major7("maj7", "r 3 5 m7"),
-    minor7b5("m7b5", "R m3 b5 m7"),
-    minor7("m7", "R m3 5 m7"),
-    dominant7("7", "R 3 5 m7"),
-    major6("6", "r 3 5 6"),
-    power5("5", "R 5"),  //  3rd omitted typically to avoid distortions
+    major13("13", "R 3 5 7 13"),
+    major11("11", "R 3 4 5 7"),
+    minor7b5("m7b5", "R m3 m5 m7"),
+    add9("add9", "R 2 3 5 7"),
+    jazz7b9("jazz7b9", "R m2 3 5"),
+    sevenSharp5("7#5", "R 3 #5 m7"),
+    sevenFlat5("7b5", "R 3 m5 m7"),
+    sevenSharp9("7#9", "R m3 5 m7"),
+    sevenFlat9("7b9", "R m2 3 5 7"),
+    dominant9("9", "R 3 5 m7 9"),
+    major6("6", "R 3 5 6"),
     diminished7("dim7", "R m3 m5 6"),
     diminished("dim", "R m3 m5"),
     augmented5("aug5", "R 3 #5"),
     augmented7("aug7", "R 3 #5 m7"),
     suspended7("sus7", "R 5 m7"),
-    suspended4("sus4", "r 4 5"),
-    suspended("sus", "r m2 5"),
+    suspended4("sus4", "R 4 5"),
+    suspended2("sus2", "R 2 5"),
+    suspended("sus", "R 5"),
+    minor11("m11", "R m3 5 m7 11"),
+    minor13("m13", "R m3 5 m7 13"),
+    major7("maj7", "R 3 5 7"),
+    power5("5", "R 5"),  //  3rd omitted typically to avoid distortions
+    minor7("m7", "R m3 5 m7"),
+    dominant7("7", "R 3 5 m7"),
     minor("m", "r m3 5"),
     /**
      * Default chord descriptor.
@@ -56,6 +68,14 @@ public enum ChordDescriptor {
             }
         }
         return ChordDescriptor.major; //  chord without modifier short name
+    }
+
+    public static ChordDescriptor[] getOtherChordDescriptorsOrdered() {
+        return otherChordDescriptorsOrdered;
+    }
+
+    public static ChordDescriptor[] getPrimaryChordDescriptorsOrdered() {
+        return primaryChordDescriptorsOrdered;
     }
 
     /**
@@ -112,7 +132,41 @@ public enum ChordDescriptor {
     private String shortName;
     private final TreeSet<ChordComponent> chordComponents;
     private static final String regExp;
+    private static final ChordDescriptor[] primaryChordDescriptorsOrdered={
+            //  most common
+            major,
+            minor,
+            dominant7,
+    };
+    private static final ChordDescriptor[] otherChordDescriptorsOrdered ={
+            //  less pop by shortname
+            add9,
+            augmented5,
+            augmented7,
+            diminished,
+            diminished7,
+            jazz7b9,
+            major7,
+            minor11,
+            minor13,
+            minor7,
+            minor7b5,
+            sevenFlat5,
+            sevenFlat9,
+            sevenSharp5,
+            sevenSharp9,
+            suspended,
+            suspended2,
+            suspended4,
+            suspended7,
 
+            //  numerially named chords
+            power5,
+            major6,
+            dominant9,
+            major11,
+            major13,
+    };
 
     static {
         //  build the regex expression to find this class while parsing

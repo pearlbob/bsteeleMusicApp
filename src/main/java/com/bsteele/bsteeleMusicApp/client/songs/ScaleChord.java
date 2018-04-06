@@ -15,20 +15,14 @@ import java.util.TreeSet;
  */
 public class ScaleChord implements Comparable<ScaleChord> {
     public ScaleChord(@NotNull ScaleNote scaleNote,
-                      @NotNull ChordDescriptor chordDescriptor,
-                      @NotNull ChordTension chordTension) {
+                      @NotNull ChordDescriptor chordDescriptor ) {
         this.scaleNote = scaleNote;
         this.chordDescriptor = chordDescriptor;
-        this.chordTension = chordTension;
         length = toString().length();
     }
 
     public ScaleChord(@NotNull ScaleNote scaleNote) {
-        this(scaleNote, ChordDescriptor.major, ChordTension.none);
-    }
-
-    public ScaleChord(@NotNull ScaleNote scaleNote, @NotNull ChordDescriptor chordDescriptor) {
-        this(scaleNote, chordDescriptor, ChordTension.none);
+        this(scaleNote, ChordDescriptor.major);
     }
 
     public static ScaleChord parse(String s) {
@@ -41,10 +35,9 @@ public class ScaleChord implements Comparable<ScaleChord> {
         s = s.substring(retScaleNote.toString().length());
 
         ChordDescriptor retChordDescriptor = ChordDescriptor.parse(s);
-        s = s.substring(retChordDescriptor.getShortName().length());
+        //s = s.substring(retChordDescriptor.getShortName().length());
 
-        ChordTension retChordTension = ChordTension.parse(s);
-        return new ScaleChord(retScaleNote, retChordDescriptor, retChordTension);
+        return new ScaleChord(retScaleNote, retChordDescriptor);
     }
 
     public ScaleNote getScaleNote() {
@@ -55,23 +48,15 @@ public class ScaleChord implements Comparable<ScaleChord> {
         ScaleNote alias = scaleNote.getAlias();
         if (alias == null)
             return null;
-        return new ScaleChord(alias, chordDescriptor, chordTension);
+        return new ScaleChord(alias, chordDescriptor);
     }
 
     public ChordDescriptor getChordDescriptor() {
         return chordDescriptor;
     }
 
-    public ChordTension getChordTension() {
-        return chordTension;
-    }
-
-
     public TreeSet<ChordComponent> getChordComponents() {
-        TreeSet<ChordComponent> ret = new TreeSet<>();
-        ret.addAll(chordDescriptor.getChordComponents());
-        ret.addAll(chordTension.getChordComponents());
-        return ret;
+        return chordDescriptor.getChordComponents();
     }
 
     public static final String getRegExp() {
@@ -91,8 +76,7 @@ public class ScaleChord implements Comparable<ScaleChord> {
             return false;
         ScaleChord other = (ScaleChord) obj;
         return scaleNote.equals(other.scaleNote)
-                && chordDescriptor.equals(other.chordDescriptor)
-                && chordTension.equals(other.chordTension);
+                && chordDescriptor.equals(other.chordDescriptor) ;
     }
 
     /**
@@ -105,15 +89,13 @@ public class ScaleChord implements Comparable<ScaleChord> {
         int hash = 17;
         hash = (71 * hash + Objects.hashCode(this.scaleNote)) % (1 << 31);
         hash = (71 * hash + Objects.hashCode(this.chordDescriptor)) % (1 << 31);
-        hash = (71 * hash + Objects.hashCode(this.chordTension)) % (1 << 31);
         return hash;
     }
 
     @Override
     public String toString() {
         return scaleNote.toString()
-                + (chordDescriptor != null ? chordDescriptor.getShortName() : "")
-                + (chordTension != null ? chordTension.getShortName() : "");
+                + (chordDescriptor != null ? chordDescriptor.getShortName() : "") ;
     }
 
     /**
@@ -162,22 +144,16 @@ public class ScaleChord implements Comparable<ScaleChord> {
         ret = chordDescriptor.compareTo(o.chordDescriptor);
         if (ret != 0)
             return ret;
-        ret = chordTension.compareTo(o.chordTension);
-        if (ret != 0)
-            return ret;
         return 0;
     }
 
     private ScaleNote scaleNote;
     private ChordDescriptor chordDescriptor;
-    private ChordTension chordTension;
     private int length = 0;
     private static final String regExp;
 
     static {
         //  build the regexpression to find this class while parsing
-        regExp = ScaleNote.getRegExp() + ChordDescriptor.getRegExp() + ChordTension.getRegExp();
+        regExp = ScaleNote.getRegExp() + ChordDescriptor.getRegExp();
     }
-
-
 }

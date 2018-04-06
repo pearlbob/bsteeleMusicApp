@@ -133,7 +133,7 @@ public enum Key {
      * @return the roughly calculated key of the given scale notes.
      */
     public static Key guessKey(AbstractCollection<ScaleChord> scaleChords) {
-        Key ret = Key.C;                //  default answer
+        Key ret = getDefault();                //  default answer
 
         //  minimize the chord variations and keep a count of the scale note use
         HashMap<ScaleNote, Integer> useMap = new HashMap<>();
@@ -243,6 +243,10 @@ public enum Key {
         return ret;
     }
 
+    public static final Key getDefault(){
+        return Key.C;
+    }
+
 
     /**
      * Returns the name of this enum constant in a user friendly format,
@@ -300,8 +304,7 @@ public enum Key {
         for (Key key : Key.values()) {
             key.diatonics = new ArrayList<>();
             for (int i = 0; i < MusicConstant.notesPerScale; i++) {
-                key.diatonics.add(new ScaleChord(key.getMajorScaleByNote(i), MusicConstant.getDiatonicChordModifier(i),
-                        ChordTension.none));
+                key.diatonics.add(new ScaleChord(key.getMajorScaleByNote(i), MusicConstant.getDiatonicChordModifier(i)));
             }
         }
     }

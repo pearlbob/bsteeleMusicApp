@@ -13,7 +13,8 @@ import java.util.TreeSet;
  */
 public enum ChordComponent {
     root("R", 0),
-    minorSecond("m2", 2),
+    minorSecond("m2", 1),
+    second("2", 2),
     minorThird("m3", 3),
     third("3", 4),
     fourth("4", 5),

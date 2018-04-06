@@ -74,6 +74,8 @@ public interface AppResources extends ClientBundle {
 
         String chords();
 
+        String chordsTextEntry();
+
         String songList();
 
         String entryLine();
