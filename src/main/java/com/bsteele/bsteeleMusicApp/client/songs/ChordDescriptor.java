@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  * User: bob
  */
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 /**
@@ -13,6 +14,7 @@ import java.util.TreeSet;
  */
 public enum ChordDescriptor {
     //  longest short names first!
+    //  avoid starting descriptors with b, #, s to avoid confusion with scale notes
     major13("13", "R 3 5 7 13"),
     major11("11", "R 3 4 5 7"),
     minor7b5("m7b5", "R m3 m5 m7"),
@@ -76,6 +78,11 @@ public enum ChordDescriptor {
 
     public static ChordDescriptor[] getPrimaryChordDescriptorsOrdered() {
         return primaryChordDescriptorsOrdered;
+    }
+
+
+    public static ChordDescriptor[] getAllChordDescriptorsOrdered() {
+        return allChordDescriptorsOrdered;
     }
 
     /**
@@ -167,6 +174,7 @@ public enum ChordDescriptor {
             major11,
             major13,
     };
+    private static final ChordDescriptor[] allChordDescriptorsOrdered;
 
     static {
         //  build the regex expression to find this class while parsing
@@ -180,6 +188,16 @@ public enum ChordDescriptor {
         }
         sb.append(")");
         regExp = sb.toString();
+
+        //  compute the ordered list of all chord descriptors
+        ArrayList<ChordDescriptor>  list = new ArrayList<>();
+        for (ChordDescriptor cd: primaryChordDescriptorsOrdered ) {
+            list.add(cd);
+        }
+        for (ChordDescriptor cd: otherChordDescriptorsOrdered ) {
+            list.add(cd);
+        }
+        allChordDescriptorsOrdered =  list.toArray(new ChordDescriptor[0]);
     }
 
 }

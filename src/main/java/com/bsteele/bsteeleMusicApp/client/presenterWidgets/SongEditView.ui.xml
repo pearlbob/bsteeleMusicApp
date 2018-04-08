@@ -87,16 +87,74 @@
                         <table>
                             <tr>
                                 <td>
-                                    Section: <select ui:field="sectionSelection"/>
-                                    <button type="button" ui:field="chordsMajor">Major</button>
-                                    <button type="button" ui:field="chordsMinor">Minor</button>
-                                    <button type="button" ui:field="chordsDominant7">Dominant7</button>
+                                    Section:
+                                </td>
+                                <td>
+                                    <select ui:field="sectionSelection"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <button type="button" ui:field="chordsUndo">Undo</button>
-                                    <button type="button" ui:field="chordsRedo">Redo</button>
+                                    Key chord:
+                                </td>
+                                <td>I:
+                                    <g:Button ui:field="chordsI">I</g:Button>
+                                    IV:
+                                    <g:Button ui:field="chordsIV">IV</g:Button>
+                                    <g:Button ui:field="chordsIV7">IV7</g:Button>
+                                    V:
+                                    <g:Button ui:field="chordsV7">V7</g:Button>
+                                    <g:Button ui:field="chordsV">V</g:Button>
+                                    ii:
+                                    <g:Button ui:field="chordsii">ii</g:Button>
+                                    iii:
+                                    <g:Button ui:field="chordsiii">iii</g:Button>
+                                    vi:
+                                    <g:Button ui:field="chordsvi">vi</g:Button>
+                                    vii:
+                                    <g:Button ui:field="chordsvii">vii</g:Button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Any chord:
+                                </td>
+                                <td>
+                                    <select ui:field="scaleNoteSelection"/>
+                                    <select ui:field="chordSelection"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Recent:&nbsp;
+                                </td>
+                                <td>
+                                    <g:Button ui:field="recent0"/>
+                                    <g:Button ui:field="recent1"/>
+                                    <g:Button ui:field="recent2"/>
+                                    <g:Button ui:field="recent3"/>
+                                    <g:Button ui:field="recent4"/>
+                                    <g:Button ui:field="recent5"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Common:
+                                </td>
+                                <td>
+                                    <g:Button ui:field="common0"/>
+                                    <g:Button ui:field="common1"/>
+                                    <g:Button ui:field="common2"/>
+                                    <g:Button ui:field="common3"/>
+                                    <g:Button ui:field="common4"/>
+                                    <g:Button ui:field="common5"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <g:Button ui:field="chordsUndo">Undo</g:Button>
+                                    <g:Button ui:field="chordsRedo">Redo</g:Button>
                                 </td>
                             </tr>
                         </table>
@@ -108,7 +166,7 @@
                             </li>
                             <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                             <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9]</li>
-                            <li>Spaces between chords indicate a new measure. Chords without spaces are within on
+                            <li>Spaces between chords indicate a new measure. Chords without spaces are within one
                                 measure.
                             </li>
                             <li>Minus signs (-) can be used to indicate a repeated measure.</li>

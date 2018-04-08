@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.core.client.GWT;
+
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
@@ -153,7 +155,8 @@ public class ScaleChord implements Comparable<ScaleChord> {
     private static final String regExp;
 
     static {
-        //  build the regexpression to find this class while parsing
+        //  build the regex expression to find this class while parsing
         regExp = ScaleNote.getRegExp() + ChordDescriptor.getRegExp();
+        //GWT.log("regExp: <"+regExp+">");
     }
 }

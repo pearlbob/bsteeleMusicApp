@@ -16,9 +16,6 @@ import com.gwtplatform.mvp.client.View;
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
- * Date: 3/16/18
- * Time: 7:24 PM
- * To change this template use File | Settings | File Templates.
  */
 public class DrumOptionsPresenterWidget extends PresenterWidget<DrumOptionsPresenterWidget.MyView>
         implements SongSelectionEventHandler,

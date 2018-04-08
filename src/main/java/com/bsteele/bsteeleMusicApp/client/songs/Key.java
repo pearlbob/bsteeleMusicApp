@@ -204,14 +204,12 @@ public enum Key {
     }
 
     public ScaleNote getMajorScaleByNote(int note) {
-        note = Util.mod(note, 7);
+        note = Util.mod(note, MusicConstant.notesPerScale);
         return getKeyScaleNoteByHalfStep(majorScale[note]);
     }
 
     public ScaleNote getMinorScaleByNote(int note) {
-        note %= 7;
-        if (note < 0)
-            note += 7;
+        note = Util.mod(note, MusicConstant.notesPerScale);
         return getKeyScaleNoteByHalfStep(minorScale[note]);
     }
 
@@ -265,12 +263,12 @@ public enum Key {
     private static final int minorScale[] = {0, 2, 3, 5, 7, 8, 10};
     private static final ChordDescriptor diatonic7ChordModifiers[] =
             {
-                    ChordDescriptor.major7,      //  0 + 1 = 1
-                    ChordDescriptor.minor7,      //  1 + 1 = 2
-                    ChordDescriptor.minor7,      //  2 + 1 = 3
-                    ChordDescriptor.major7,      //  3 + 1 = 4
+                    ChordDescriptor.major,      //  0 + 1 = 1
+                    ChordDescriptor.minor,      //  1 + 1 = 2
+                    ChordDescriptor.minor,      //  2 + 1 = 3
+                    ChordDescriptor.major,      //  3 + 1 = 4
                     ChordDescriptor.dominant7,   //  4 + 1 = 5
-                    ChordDescriptor.minor7,      //  5 + 1 = 6
+                    ChordDescriptor.minor,      //  5 + 1 = 6
                     ChordDescriptor.minor7b5,   //  6 + 1 = 7
             };
     private static Key keysByHalfStep[] = {

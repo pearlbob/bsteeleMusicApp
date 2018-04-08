@@ -13,6 +13,9 @@ public class ScaleNoteTest {
 
     @Test
     public void parseMarkupString() {
+        assertEquals(ScaleNote.Fs, ScaleNote.parse("F#"));
+        assertEquals(ScaleNote.F, ScaleNote.parse("F"));
+        assertEquals(ScaleNote.F, ScaleNote.parse("F7"));
         assertEquals(ScaleNote.Fs, ScaleNote.parse("F#sus7"));
         assertEquals(ScaleNote.As, ScaleNote.parse("A#"));
         assertFalse(ScaleNote.A.equals(ScaleNote.parse("a")));

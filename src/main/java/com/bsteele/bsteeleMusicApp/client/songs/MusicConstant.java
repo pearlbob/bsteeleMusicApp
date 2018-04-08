@@ -29,11 +29,11 @@ public class MusicConstant {
     private static final ChordDescriptor diatonicChordModifiers[] =
             {
                     ChordDescriptor.major,      //  0 + 1 = 1
-                    ChordDescriptor.minor,      //  1 + 1 = 2
-                    ChordDescriptor.minor,      //  2 + 1 = 3
+                    ChordDescriptor.minor,     //  1 + 1 = 2
+                    ChordDescriptor.minor,     //  2 + 1 = 3
                     ChordDescriptor.major,      //  3 + 1 = 4
                     ChordDescriptor.dominant7,  //  4 + 1 = 5
-                    ChordDescriptor.minor,      //  5 + 1 = 6
+                    ChordDescriptor.minor,     //  5 + 1 = 6
                     ChordDescriptor.minor7b5,   //  6 + 1 = 7
             };
 

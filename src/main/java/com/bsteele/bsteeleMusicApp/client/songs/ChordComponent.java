@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  * User: bob
  */
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
+
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -65,6 +67,10 @@ public enum ChordComponent {
         return ret;
     }
 
+    public static ChordComponent getByHalfStep(int halfStep) {
+        return chordComponentByHalfSteps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
+    }
+
     public int getHalfSteps() {
         return halfSteps;
     }
@@ -76,6 +82,19 @@ public enum ChordComponent {
     private final String shortName;
     private int halfSteps;
 
-
+    private static final ChordComponent chordComponentByHalfSteps[] = {
+            root,
+            minorSecond,
+            second,
+            minorThird,
+            third,
+            fourth,
+            flatFifth,
+            fifth,
+            sharpFifth,
+            sixth,
+            minorSeventh,
+            seventh
+    };
 }
 

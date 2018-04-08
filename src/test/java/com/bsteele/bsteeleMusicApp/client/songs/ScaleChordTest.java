@@ -54,7 +54,7 @@ public class ScaleChordTest {
                 System.out.println("<tr><td>" + builtScaleChord.toString() + "</td><td>"
                         + chordComponentsToString(builtScaleChord.getChordComponents())
                         + "</td><td>"
-                        +key.getKeyScaleNote().toString()
+                        + key.getKeyScaleNote().toString()
                         + "</td><td>"
                         + chordComponentScaleNotesToString(key, builtScaleChord)
                         + "</td></tr>"
@@ -87,5 +87,14 @@ public class ScaleChordTest {
             sb.append(key.getScaleNoteByHalfStep(key.getHalfStep() + chordComponent.getHalfSteps()));
         }
         return sb.toString();
+    }
+
+    @Test
+    public void testScaleChordParse() {
+        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("F"));
+        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("FGm"));
+        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.parse("Fm"));
+        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#m"));
+        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
     }
 }
