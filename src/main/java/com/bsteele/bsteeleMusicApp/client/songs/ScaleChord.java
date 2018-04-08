@@ -61,12 +61,28 @@ public class ScaleChord implements Comparable<ScaleChord> {
         return chordDescriptor.getChordComponents();
     }
 
-    public static final String getRegExp() {
-        return regExp;
-    }
-
     public int getLength() {
         return length;
+    }
+
+
+    public static final HashMap<ScaleChord, Integer> findScaleChordsUsed(String s) {
+        HashMap<ScaleChord, Integer> scaleChordMap = new HashMap<>();
+
+        int pos = 0;
+        while (pos < s.length()) {
+            ScaleChord scaleChord = ScaleChord.parse(s.substring(pos));
+            if (scaleChord != null) {
+                //GWT.log("parse: " + scaleChord.toString());
+                if (!scaleChordMap.containsKey(scaleChord))
+                    scaleChordMap.put(scaleChord, 1);
+                else
+                    scaleChordMap.put(scaleChord, scaleChordMap.get(scaleChord) + 1);
+                pos += scaleChord.getLength();
+            } else
+                pos++;
+        }
+        return scaleChordMap;
     }
 
     /**
@@ -152,11 +168,4 @@ public class ScaleChord implements Comparable<ScaleChord> {
     private ScaleNote scaleNote;
     private ChordDescriptor chordDescriptor;
     private int length = 0;
-    private static final String regExp;
-
-    static {
-        //  build the regex expression to find this class while parsing
-        regExp = ScaleNote.getRegExp() + ChordDescriptor.getRegExp();
-        //GWT.log("regExp: <"+regExp+">");
-    }
 }

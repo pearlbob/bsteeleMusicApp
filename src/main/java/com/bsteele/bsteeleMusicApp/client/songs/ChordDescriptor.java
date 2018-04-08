@@ -96,16 +96,6 @@ public enum ChordDescriptor {
     }
 
     /**
-     * The RegExp expression to parse all chord descriptors. It's possible there will be an empty match,
-     * i.e. the major chord descriptor.
-     *
-     * @return the RegExp expression
-     */
-    public static final String getRegExp() {
-        return regExp;
-    }
-
-    /**
      * Returns the human name of this enum.
      *
      * @return the human name of this enum constant
@@ -138,7 +128,6 @@ public enum ChordDescriptor {
 
     private String shortName;
     private final TreeSet<ChordComponent> chordComponents;
-    private static final String regExp;
     private static final ChordDescriptor[] primaryChordDescriptorsOrdered={
             //  most common
             major,
@@ -177,18 +166,6 @@ public enum ChordDescriptor {
     private static final ChordDescriptor[] allChordDescriptorsOrdered;
 
     static {
-        //  build the regex expression to find this class while parsing
-        StringBuilder sb = new StringBuilder();
-        sb.append("(")
-                .append(MusicConstant.greekCapitalDelta);   //  special for major7 thanks to John Coltrane
-
-        for (ChordDescriptor cd : ChordDescriptor.values()) {
-            sb.append("|");
-            sb.append(cd.getShortName());
-        }
-        sb.append(")");
-        regExp = sb.toString();
-
         //  compute the ordered list of all chord descriptors
         ArrayList<ChordDescriptor>  list = new ArrayList<>();
         for (ChordDescriptor cd: primaryChordDescriptorsOrdered ) {

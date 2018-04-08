@@ -139,7 +139,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    Common:
+                                    Frequent:
                                 </td>
                                 <td>
                                     <g:Button ui:field="common0"/>

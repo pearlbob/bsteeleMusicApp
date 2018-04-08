@@ -327,6 +327,7 @@ public class SongEditView
         chordsTextEntry.setValue(song.getChordsAsString());
         chordsTextEntry.setCursorPos(0);
         lyricsEntry.setValue(song.getLyricsAsString());
+        findMostCommonScaleChords();
     }
 
     public void enterSong() {
@@ -481,23 +482,7 @@ public class SongEditView
                 common5
         };
 
-        HashMap<ScaleChord, Integer> scaleChordMap = new HashMap<>();
-        {
-            String s = chordsTextEntry.getValue();
-            int pos = 0;
-            while (pos < s.length()) {
-                ScaleChord scaleChord = ScaleChord.parse(s.substring(pos));
-                if (scaleChord != null) {
-                    //GWT.log("parse: " + scaleChord.toString());
-                    if (!scaleChordMap.containsKey(scaleChord))
-                        scaleChordMap.put(scaleChord, 1);
-                    else
-                        scaleChordMap.put(scaleChord, scaleChordMap.get(scaleChord) + 1);
-                    pos += scaleChord.getLength();
-                } else
-                    pos++;
-            }
-        }
+        HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(chordsTextEntry.getValue());
 
         TreeSet<CommonScaleChordItem> commonScaleChordItems = new TreeSet<>();
         for (ScaleChord key : scaleChordMap.keySet()) {
@@ -550,20 +535,13 @@ public class SongEditView
     }
 
     private void guessTheKey() {
-        final RegExp scaleNoteExp = RegExp.compile("(" + ScaleChord.getRegExp() + ")", "g");
-        MatchResult mr;
-        ArrayList<ScaleChord> scaleChords = new ArrayList<>();
-        while ((mr = scaleNoteExp.exec(chordsTextEntry.getValue())) != null) {
-            if (mr.getGroupCount() >= 1) {
-                String s = mr.getGroup(1);
-                ScaleChord scaleChord = ScaleChord.parse(s);
-                if (scaleChord != null)
-                    scaleChords.add(scaleChord);
-            }
-        }
-
-        setKey(Key.guessKey(scaleChords));
+        HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(chordsTextEntry.getValue());
+        TreeSet<ScaleChord> treeSet = new TreeSet<>();
+        treeSet.addAll(scaleChordMap.keySet());
+        setKey(Key.guessKey(treeSet));
     }
+
+
 
     private void titleChordSelections() {
         chordSelection.clear();

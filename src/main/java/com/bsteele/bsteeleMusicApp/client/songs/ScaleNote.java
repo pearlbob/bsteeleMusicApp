@@ -180,10 +180,6 @@ public enum ScaleNote {
         return scaleNoteMarkup;
     }
 
-    public static final String getRegExp() {
-        return regExp;
-    }
-
     /**
      * Return the scale note's flat alias if it is a sharp
      * or the sharp alias if the scale note is a flat.
@@ -199,7 +195,6 @@ public enum ScaleNote {
     private final String scaleNoteHtml;
     private final String scaleNoteMarkup;
     private ScaleNote alias;
-    private static final String regExp;
 
     private static final ScaleNote sharps[] = {
             A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs
@@ -211,36 +206,12 @@ public enum ScaleNote {
     };
 
     static {
-        //  build the regex to find this class while parsing
-        StringBuilder sb = new StringBuilder();
-        TreeSet<String> set = new TreeSet<>((o1, o2) -> {
-            if (o1.length() != o2.length())
-                return o1.length() < o2.length() ? 1 : -1;
-            return o1.compareTo(o2);
-        });
-        for (ScaleNote sn : ScaleNote.values()) {
-            set.add(sn.name());
-            set.add(sn.scaleNoteMarkup);
-        }
-        sb.append("(");
-        boolean first = true;
-        for (String s : set) {
-            if (first)
-                first = false;
-            else
-                sb.append("|");
-            sb.append(s);
-        }
-        sb.append(")");
-        regExp = sb.toString();
-
         //  find and assign the alias's
         for (ScaleNote sn : ScaleNote.values()) {
             for (ScaleNote other : ScaleNote.values()) {
                 if (sn != other && sn.halfStep == other.halfStep)
                     sn.alias = other;
             }
-
         }
     }
 

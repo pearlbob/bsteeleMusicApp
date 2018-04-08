@@ -11,6 +11,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,8 +24,8 @@ public class SongTest extends GWTTestCase {
 
     @Test
     public void testFromJson() {
-        int songCount=0;
-       String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
+        int songCount = 0;
+        String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
         JSONValue jv = JSONParser.parseStrict(jsonString);
         TreeSet<ChordDescriptor> chordDescriptors = new TreeSet<>();
         if (jv != null) {
@@ -34,23 +35,14 @@ public class SongTest extends GWTTestCase {
                 for (int i = 0; i < jaLimit; i++) {
                     songCount++;
                     Song song = Song.fromJsonObject(ja.get(i).isObject());
-                    final RegExp scaleNoteExp = RegExp.compile("(" + ScaleChord.getRegExp() + ")", "g");
-                    MatchResult mr;
-
-                    while ((mr = scaleNoteExp.exec(song.getChordsAsString())) != null) {
-                        if (mr.getGroupCount() >= 1) {
-                            String s = mr.getGroup(1);
-                            ScaleChord scaleChord = ScaleChord.parse(s);
-                            if (scaleChord != null) {
-                                chordDescriptors.add(scaleChord.getChordDescriptor());
-                            }
-                        }
-                    }
+                    HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(song.getChordsAsString());
+                    for (ScaleChord scaleChord : scaleChordMap.keySet())
+                        chordDescriptors.add(scaleChord.getChordDescriptor());
                 }
             }
         }
-        logger.info("chords: "+chordDescriptors.toString());
-        logger.info("count: "+songCount);
+        logger.info("chords: " + chordDescriptors.toString());
+        logger.info("count: " + songCount);
     }
 
     @Override
