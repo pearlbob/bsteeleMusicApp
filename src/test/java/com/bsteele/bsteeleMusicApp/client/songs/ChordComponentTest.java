@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,10 +12,10 @@ import static org.junit.Assert.*;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordComponentTest {
+public class ChordComponentTest  extends GWTTestCase {
 
     @Test
-    public void parse() {
+    public void testParse() {
         ArrayList<ChordComponent> list = new ArrayList<>();
         list.addAll(ChordComponent.parse("r"));
         assertEquals(ChordComponent.root, list.get(0));
@@ -46,5 +47,10 @@ public class ChordComponentTest {
         assertFalse(set.contains(ChordComponent.fourth));
         assertFalse(set.contains(ChordComponent.sixth));
         assertFalse(set.contains(ChordComponent.minorSeventh));
+    }
+
+    @Override
+    public String getModuleName() {
+        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }

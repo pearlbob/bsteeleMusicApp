@@ -1,19 +1,19 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
 import java.util.TreeSet;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordTest {
+public class ChordTest extends GWTTestCase
+{
 
     @Test
-    public void setScaleChord() {
+    public void testSetScaleChord() {
 
         TreeSet<ScaleChord> slashScaleChords = new TreeSet<>();
         //       for (AnticipationOrDelay anticipationOrDelay : AnticipationOrDelay.values()) {
@@ -34,8 +34,8 @@ public class ChordTest {
         // }
     }
 
-    @Test
-    public void parse() {
-
+    @Override
+    public String getModuleName() {
+        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }

@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,10 +9,11 @@ import static org.junit.Assert.*;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordDescriptorTest {
+public class ChordDescriptorTest  extends GWTTestCase
+{
 
     @Test
-    public void parse() {
+    public void testParse() {
         assertEquals(ChordDescriptor.major, ChordDescriptor.parse(""));
         assertEquals(ChordDescriptor.minor, ChordDescriptor.parse("m"));
         assertEquals(ChordDescriptor.dominant7, ChordDescriptor.parse("7"));
@@ -43,7 +45,7 @@ public class ChordDescriptorTest {
     }
 
     @Test
-    public void orderByShortname() {
+    public void testOrderByShortname() {
 
         for (ChordDescriptor cd : ChordDescriptor.getPrimaryChordDescriptorsOrdered()) {
             System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
@@ -55,10 +57,15 @@ public class ChordDescriptorTest {
     }
 
     @Test
-    public void chordComponentsToString() {
+    public void testChordComponentsToString() {
         if (false)
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
             }
+    }
+
+    @Override
+    public String getModuleName() {
+        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }

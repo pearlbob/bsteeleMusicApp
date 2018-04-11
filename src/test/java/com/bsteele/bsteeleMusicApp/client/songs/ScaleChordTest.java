@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,10 +12,11 @@ import static org.junit.Assert.assertEquals;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ScaleChordTest {
+public class ScaleChordTest extends GWTTestCase
+{
 
     @Test
-    public void parseScaleChord() {
+    public void testParse() {
 
         System.out.println("<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -96,5 +98,10 @@ public class ScaleChordTest {
         assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.parse("Fm"));
         assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#m"));
         assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
+    }
+
+    @Override
+    public String getModuleName() {
+        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }

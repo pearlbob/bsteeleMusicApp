@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -8,10 +9,10 @@ import static org.junit.Assert.assertEquals;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class PitchTest {
+public class PitchTest extends GWTTestCase {
 
     @Test
-    public void pitchTest() {
+    public void testPitch() {
         if (false
                 //|| true
                 ) {
@@ -38,6 +39,11 @@ public class PitchTest {
         assertEquals(Pitch.A4.getFrequency(), 440.0, 1e-20);
         assertEquals(Pitch.E4.getFrequency(), Pitch.E1.getFrequency()*8, 1e-12);
         assertEquals(Pitch.A5.getFrequency(), 880.0, 1e-20);
+    }
+
+    @Override
+    public String getModuleName() {
+        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }
 /*
