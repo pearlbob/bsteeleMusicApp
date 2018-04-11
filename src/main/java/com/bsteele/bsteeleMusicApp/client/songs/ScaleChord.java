@@ -1,7 +1,5 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.core.client.GWT;
-
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
@@ -17,10 +15,18 @@ import java.util.TreeSet;
  */
 public class ScaleChord implements Comparable<ScaleChord> {
     public ScaleChord(@NotNull ScaleNote scaleNote,
-                      @NotNull ChordDescriptor chordDescriptor ) {
+                      @NotNull ChordDescriptor chordDescriptor) {
         this.scaleNote = scaleNote;
         this.chordDescriptor = chordDescriptor;
-        length = toString().length();
+        parseLength = toString().length();
+    }
+
+    private ScaleChord(@NotNull ScaleNote scaleNote,
+                       @NotNull ChordDescriptor chordDescriptor,
+                       int parseLength) {
+        this.scaleNote = scaleNote;
+        this.chordDescriptor = chordDescriptor;
+        this.parseLength = parseLength;
     }
 
     public ScaleChord(@NotNull ScaleNote scaleNote) {
@@ -34,12 +40,14 @@ public class ScaleChord implements Comparable<ScaleChord> {
         ScaleNote retScaleNote = ScaleNote.parse(s);
         if (retScaleNote == null)
             return null;
-        s = s.substring(retScaleNote.toString().length());
+        int parseLength = retScaleNote.toString().length();
+        s = s.substring(parseLength);
 
         ChordDescriptor retChordDescriptor = ChordDescriptor.parse(s);
-        //s = s.substring(retChordDescriptor.getShortName().length());
+        parseLength += retChordDescriptor.getParseLength();
+        //s = s.substring(retChordDescriptor.getShortName().parseLength());
 
-        return new ScaleChord(retScaleNote, retChordDescriptor);
+        return new ScaleChord(retScaleNote, retChordDescriptor, parseLength);
     }
 
     public ScaleNote getScaleNote() {
@@ -61,8 +69,8 @@ public class ScaleChord implements Comparable<ScaleChord> {
         return chordDescriptor.getChordComponents();
     }
 
-    public int getLength() {
-        return length;
+    public int getParseLength() {
+        return parseLength;
     }
 
 
@@ -78,7 +86,7 @@ public class ScaleChord implements Comparable<ScaleChord> {
                     scaleChordMap.put(scaleChord, 1);
                 else
                     scaleChordMap.put(scaleChord, scaleChordMap.get(scaleChord) + 1);
-                pos += scaleChord.getLength();
+                pos += scaleChord.getParseLength();
             } else
                 pos++;
         }
@@ -94,7 +102,7 @@ public class ScaleChord implements Comparable<ScaleChord> {
             return false;
         ScaleChord other = (ScaleChord) obj;
         return scaleNote.equals(other.scaleNote)
-                && chordDescriptor.equals(other.chordDescriptor) ;
+                && chordDescriptor.equals(other.chordDescriptor);
     }
 
     /**
@@ -113,7 +121,7 @@ public class ScaleChord implements Comparable<ScaleChord> {
     @Override
     public String toString() {
         return scaleNote.toString()
-                + (chordDescriptor != null ? chordDescriptor.getShortName() : "") ;
+                + (chordDescriptor != null ? chordDescriptor.getShortName() : "");
     }
 
     /**
@@ -167,5 +175,5 @@ public class ScaleChord implements Comparable<ScaleChord> {
 
     private ScaleNote scaleNote;
     private ChordDescriptor chordDescriptor;
-    private int length = 0;
+    private int parseLength = 0;
 }

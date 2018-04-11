@@ -95,6 +95,10 @@ public enum ChordDescriptor {
         return shortName;
     }
 
+    public int getParseLength(){
+        return shortName.length();
+    }
+
     /**
      * Returns the human name of this enum.
      *

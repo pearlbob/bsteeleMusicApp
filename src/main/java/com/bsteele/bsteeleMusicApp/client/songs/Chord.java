@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import java.util.HashMap;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
@@ -11,6 +13,36 @@ public class Chord {
         this.beats = beats;
         this.slashScaleChord = slashScaleChord;
         this.anticipationOrDelay = anticipationOrDelay;
+    }
+
+    public static final Chord parse(String s) {
+        if (s == null || s.length() <= 0)
+            return null;
+
+        int beats = 1;  //  default only
+        ScaleChord scaleChord = ScaleChord.parse(s);
+        int parseLength = scaleChord.getParseLength();
+        s = s.substring(parseLength);
+        ScaleChord slashScaleChord = null;
+        if (s.length() > 0 && s.charAt(0) == '/') {
+            s = s.substring(1);
+            parseLength++;
+            slashScaleChord = ScaleChord.parse(s);
+            if (slashScaleChord != null) {
+                parseLength += slashScaleChord.getParseLength();
+            }
+        }
+        while (s.length() > 0 && s.charAt(0) == '.') {
+            s = s.substring(1);
+            parseLength++;
+            beats++;
+            if (beats >= 8)
+                break;
+        }
+        Chord ret = new Chord(scaleChord, beats, slashScaleChord,
+                AnticipationOrDelay.none);      //  fixme
+        ret.parseLength = parseLength;
+        return ret;
     }
 
     public Chord(ScaleChord scaleChord) {
@@ -95,6 +127,11 @@ public class Chord {
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
+
+    public int getParseLength() {
+        return parseLength;
+    }
+
     /**
      * Returns a string representation of the object. In general, the
      * {@code toString} method returns a string that
@@ -118,11 +155,35 @@ public class Chord {
      */
     @Override
     public String toString() {
-        return scaleChord.toString() + (slashScaleChord == null ? "" : slashScaleChord.toString()) + anticipationOrDelay.toString();
+        String ret = scaleChord.toString()
+                + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
+                + anticipationOrDelay.toString();
+        int b = 1;
+        while (b++ < beats && b < 8)
+            ret += ".";
+        return ret;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Chord))
+            return false;
+        Chord oc = (Chord) o;
+        if (slashScaleChord == null) {
+            if (oc.slashScaleChord != null) return false;
+        } else if (!slashScaleChord.equals(oc.slashScaleChord))
+            return false;
+        return scaleChord.equals(oc.scaleChord)
+                && anticipationOrDelay.equals(oc.anticipationOrDelay)
+                && beats == oc.beats
+                ;
     }
 
     private ScaleChord scaleChord;
     private int beats = 4;    //  default only, a typical full measure
     private ScaleChord slashScaleChord;
     private AnticipationOrDelay anticipationOrDelay = AnticipationOrDelay.none;
+    private transient int parseLength;
+
 }

@@ -33,7 +33,7 @@ todo: worry about legal copyright notice of file sharing
 
 
 todo: edit should offer BPM & Key from lyrics & chords
-todo: chord colors should always match lyrics in play
+todo: chord colors should always parse lyrics in play
 todo: delta shape == major7
 todo: play youtube video
 fixme: WebSocket connection to 'wss://fit-union-164517.appspot.com/bsteeleMusicApp/bsteeleMusic' failed: Error during WebSocket handshake: Unexpected response code: 400

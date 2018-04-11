@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent
 import com.bsteele.bsteeleMusicApp.client.songs.*;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -176,6 +177,9 @@ public class SongEditView
         });
 
         chordsTextEntry.setFocus(true);
+        chordsTextEntry.addValueChangeHandler((ValueChangeEvent) -> {
+            GWT.log("chordsTextEntry ValueChange");
+        });
 
         //  chord entry
         chordsI.addClickHandler((ClickEvent event) -> {
@@ -383,7 +387,7 @@ public class SongEditView
         final RegExp timeSignatureExp = RegExp.compile("^(\\d{1,2})\\/(\\d)$");
         MatchResult mr = timeSignatureExp.exec(timeSignatureEntry.getValue());
         if (mr != null) {
-            // match
+            // parse
             beatsPerBar = Integer.parseInt(mr.getGroup(1));
             unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
         }
@@ -540,7 +544,6 @@ public class SongEditView
         treeSet.addAll(scaleChordMap.keySet());
         setKey(Key.guessKey(treeSet));
     }
-
 
 
     private void titleChordSelections() {

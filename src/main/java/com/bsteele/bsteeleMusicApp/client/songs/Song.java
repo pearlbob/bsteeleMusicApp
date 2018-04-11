@@ -150,7 +150,7 @@ public class Song implements Comparable<Song> {
                     final RegExp timeSignatureExp = RegExp.compile("^\\w*(\\d{1,2})\\w*\\/\\w*(\\d)\\w*$");
                         MatchResult mr = timeSignatureExp.exec(s);
                         if (mr != null) {
-                            // match
+                            // parse
                             song.beatsPerBar = Integer.parseInt(mr.getGroup(1));
                             song.unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
                         } else {
@@ -353,10 +353,10 @@ public class Song implements Comparable<Song> {
                         //  fall through
                     case 1:
                         String token = rawChordTableText.substring(i);
-                        Section.Version v = Section.match(token.substring(0, 11));
+                        Section.Version v = Section.parse(token.substring(0, 11));
                         if (v != null) {
                             version = v;
-                            i += version.getSourceLength() - 1;//   consume the section label
+                            i += version.getParseLength() - 1;//   consume the section label
 
                             if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
                                 for (Section.Version vd : versionsDeclared) {
@@ -502,9 +502,9 @@ public class Song implements Comparable<Song> {
                     state++;
                     //  fall through
                 case 1:
-                    Section.Version version = Section.match(rawLyrics.substring(i, i + 11));
+                    Section.Version version = Section.parse(rawLyrics.substring(i, i + 11));
                     if (version != null) {
-                        i += version.getSourceLength() - 1; //  skip the end of the section id
+                        i += version.getParseLength() - 1; //  skip the end of the section id
                         isSection = true;
 
                         if (lyrics.length() > 0) {
@@ -723,10 +723,10 @@ public class Song implements Comparable<Song> {
 
                     //  don't transpose the section identifiers that happen to look like notes
                     String toMatch = m.substring(ci, Math.min(m.length() - ci, Section.maxLength));
-                    Section.Version version = Section.match(toMatch);
+                    Section.Version version = Section.parse(toMatch);
                     if (version != null) {
                         sout += version.toString();
-                        ci += version.getSourceLength() - 1; //  skip the end of the section id
+                        ci += version.getParseLength() - 1; //  skip the end of the section id
                         break;
                     }
 
@@ -821,6 +821,17 @@ public class Song implements Comparable<Song> {
             artist = theRegExp.replace(artist, "") + ", The";
         }
         this.artist = artist;
+    }
+
+    private void parseChords( String s ){
+        chordSections.clear();
+        for(;;) {
+            ChordSection chordSection = ChordSection.parse(s, beatsPerBar );
+            if (chordSection == null)
+                break;
+            s = s.substring(chordSection.getParseLength());
+            chordSections.add(chordSection);
+        }
     }
 
     /**
@@ -997,6 +1008,15 @@ public class Song implements Comparable<Song> {
         this.lyricSections = lyricSections;
     }
 
+
+    public ArrayList<ChordSection> getChordSections() {
+        return chordSections;
+    }
+
+    public void setChordSections(ArrayList<ChordSection> chordSections) {
+        this.chordSections = chordSections;
+    }
+
     public Arrangement getDrumArrangement() {
         return drumArrangement;
     }
@@ -1058,6 +1078,7 @@ public class Song implements Comparable<Song> {
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
+    private ArrayList<ChordSection> chordSections = new ArrayList<>();
     private String rawLyrics = "";
     private String chords = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();
@@ -1078,7 +1099,6 @@ public class Song implements Comparable<Song> {
     private static final char js_natural = '\u266E';
     private static final char js_sharp = '\u266F';
     private static final char js_delta = '\u0394';
-
 
 
 }

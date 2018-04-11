@@ -106,7 +106,7 @@ public enum Section {
          * The character length used to parse this section version from the original source.
          * @return the original character length.
          */
-        public int getSourceLength() {
+        public int getParseLength() {
             return sourceLength;
         }
 
@@ -167,13 +167,13 @@ public enum Section {
     /**
      * Return the section from the found id. Match will ignore case. String has to
      * include the : delimiter and it will be considered part of the section id.
-     * Use the returned version.getSourceLength() to find how many characters were
+     * Use the returned version.getParseLength() to find how many characters were
      * used in the id.
      *
-     * @param s the string to match
-     * @return the length of the match. Zero if no match
+     * @param s the string to parse
+     * @return the length of the parse. Zero if no parse
      */
-    public static Section.Version match(String s) {
+    public static Section.Version parse(String s) {
         if (s == null) {
             return null;
         }
@@ -219,7 +219,7 @@ public enum Section {
             }
             if (m.getGroupCount() > 1) {
                 //  validate the candidates
-                Section.Version v = match(m.getGroup(1));
+                Section.Version v = parse(m.getGroup(1));
                 if (v != null) {
                     ret.add(v);
                 }

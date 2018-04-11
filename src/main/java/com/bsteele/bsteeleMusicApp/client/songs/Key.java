@@ -147,11 +147,11 @@ public enum Key {
             useMap.put(scaleNote, (count == null) ? 1 : count + 1);
         }
 
-        //  find the key with the longest greatest match to the major chord
+        //  find the key with the longest greatest parse to the major chord
         int maxScore = 0;
         int minKeyValue = Integer.MAX_VALUE;
 
-        //  find the key with the greatest match to it's diatonic chords
+        //  find the key with the greatest parse to it's diatonic chords
         {
             Integer count;
             ScaleChord diatonic;

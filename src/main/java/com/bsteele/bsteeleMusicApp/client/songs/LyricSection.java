@@ -34,54 +34,18 @@ public class LyricSection {
         this.section = section;
     }
 
-    /**
-     * Set the section beats per minute.
-     *
-     * @param bpm the defaultBpm to set
-     */
-    public void setBeatsPerMinute(int bpm) {
-        this.bpm = bpm;
-    }
-
-    /**
-     * Return the section beats per minute
-     * or null to default to the song BPM.
-     *
-     * @return the section BPM or null
-     */
-    public Integer getBeatsPerMinute() {
-        return bpm;
-    }
-
-    /**
-     * Set the sections's number of beats per bar
-     *
-     * @param beatsPerBar the beats per bar to set
-     */
-    private void setBeatsPerBar(int beatsPerBar) {
-        this.beatsPerBar = beatsPerBar;
-    }
-
-    /**
-     * Return the sections's number of beats per bar or null to default to the song's number of beats per bar
-     *
-     * @return the number of beats per bar
-     */
-    public Integer getBeatsPerBar() {
-        return beatsPerBar;
-    }
 
     /**
      * The section's measures.
      *
      * @return the section's measures
      */
-    public ArrayList<Measure> getMeasures() {
-        return measures;
+    public ArrayList<LyricsLine> getLyricsLines() {
+        return lyricsLines;
     }
 
-    public void setMeasures(ArrayList<Measure> measures) {
-        this.measures = measures;
+    public void setLyricsLines(ArrayList<LyricsLine> lyricsLines) {
+        this.lyricsLines = lyricsLines;
     }
 
 
@@ -105,8 +69,6 @@ public class LyricSection {
     }
 
     private Section section;
-    private Integer bpm;
-    private Integer beatsPerBar;
     private LegacyDrumSection drumSection = new LegacyDrumSection();
-    private ArrayList<Measure> measures = new ArrayList<>();
+    private ArrayList<LyricsLine> lyricsLines = new ArrayList<>();
 }
