@@ -3,17 +3,33 @@
              xmlns:my='urn:import:com.bsteele.bsteeleMusicApp.client.widgets'
 >
     <g:HTMLPanel>
-        <my:AppTitleWidget />
+        <my:AppTitleWidget/>
+        <table>
+            <tr>
+                <td>
+                    Login:
+                </td>
+                <td>
+                    <g:TextBox ui:field="username">guest</g:TextBox>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Password:
+                </td>
+                <td>
+                    <g:PasswordTextBox ui:field="password"/>
+                </td>
+            </tr>
+        </table>
         <p>
-        <!--                <g:TextBox ui:field="username"/> -->
-        </p><p>
-        <!--<g:PasswordTextBox ui:field="password"/> -->
+            No password currently required, just click login.
         </p>
         <p>By logging in, you are giving app permission to play
             audio output on your device.
         </p>
         <p>
-        <g:Button ui:field="confirm" text="Login"/>
+            <g:Button ui:field="confirm" text="Login"/>
         </p>
 
     </g:HTMLPanel>

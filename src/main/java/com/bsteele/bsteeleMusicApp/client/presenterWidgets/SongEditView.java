@@ -147,31 +147,31 @@ public class SongEditView
             optionElement.setValue(section.name());
             sectionSelectElement.add(optionElement, null);
         }
-        Event.sinkEvents(sectionSelection, Event.ONCLICK);
+        Event.sinkEvents(sectionSelection, Event.ONCHANGE);
         Event.setEventListener(sectionSelection, (Event event) -> {
-            if (Event.ONCLICK == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt()) {
                 chordsTextAdd("\n" + Section.valueOf(sectionSelection.getValue()).getAbbreviation() + ":");
             }
         });
 
         //  key selection
-        Event.sinkEvents(keySelection, Event.ONCLICK);
+        Event.sinkEvents(keySelection, Event.ONCHANGE);
         Event.setEventListener(keySelection, (Event event) -> {
-            if (Event.ONCLICK == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt()) {
                 setKey(Key.valueOf(keySelection.getValue()));
             }
         });
 
 
-        Event.sinkEvents(scaleNoteSelection, Event.ONCLICK);
+        Event.sinkEvents(scaleNoteSelection, Event.ONCHANGE);
         Event.setEventListener(scaleNoteSelection, (Event event) -> {
-            if (Event.ONCLICK == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt()) {
                 titleChordSelections();
             }
         });
-        Event.sinkEvents(chordSelection, Event.ONCLICK);
+        Event.sinkEvents(chordSelection, Event.ONCHANGE);
         Event.setEventListener(chordSelection, (Event event) -> {
-            if (Event.ONCLICK == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt()) {
                 enterChord(chordSelection.getValue());
             }
         });
