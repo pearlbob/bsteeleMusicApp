@@ -15,8 +15,8 @@ import java.util.TreeSet;
 public enum ChordDescriptor {
     //  longest short names first!
     //  avoid starting descriptors with b, #, s to avoid confusion with scale notes
-    major13("13", "R 3 5 7 13"),
-    major11("11", "R 3 4 5 7"),
+    dominant13("13", "R 3 5 m7 9 11 13"),
+    dominant11("11", "R 3 5 m7 9 11"),
     minor7b5("m7b5", "R m3 m5 m7"),
     add9("add9", "R 2 3 5 7"),
     jazz7b9("jazz7b9", "R m2 3 5"),
@@ -160,12 +160,12 @@ public enum ChordDescriptor {
             suspended4,
             suspended7,
 
-            //  numerially named chords
+            //  numerically named chords
             power5,
             major6,
             dominant9,
-            major11,
-            major13,
+            dominant11,
+            dominant13,
     };
     private static final ChordDescriptor[] allChordDescriptorsOrdered;
 

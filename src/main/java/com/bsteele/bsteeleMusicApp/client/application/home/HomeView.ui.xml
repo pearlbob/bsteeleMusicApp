@@ -31,7 +31,7 @@
                         </g:tab>
                         <g:tab>
                             <g:header size='3'>Options</g:header>
-                            <g:FlowPanel>
+                            <g:ScrollPanel>
                                 <g:HTMLPanel>
                                     <paper-icon-item ui:field="menuClearAll">
                                         <iron-icon icon="delete" item-icon=""/>
@@ -57,11 +57,17 @@
                                         </g:TreeItem>
                                     </g:Tree>
                                       <br/>
+                                    <g:Button ui:field="showAllScales">Show all scales</g:Button>
+                                    <g:HTML ui:field="allScales" />
+                                    <br/>
+                                    <g:Button ui:field="showAllChords">Show all chords</g:Button>
+                                    <g:HTML ui:field="allChords" />
+                                    <br/>
                                     buildId:
                                     <g:Label ui:field="buildId"/>
                                 </g:HTMLPanel>
 
-                            </g:FlowPanel>
+                            </g:ScrollPanel>
                         </g:tab>
                         <g:tab>
                             <g:header size='3'>Drums</g:header>

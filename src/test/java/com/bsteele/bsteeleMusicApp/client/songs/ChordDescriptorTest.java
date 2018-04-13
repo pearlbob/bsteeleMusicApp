@@ -3,8 +3,6 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
@@ -24,8 +22,8 @@ public class ChordDescriptorTest  extends GWTTestCase
         assertEquals(ChordDescriptor.suspended4, ChordDescriptor.parse("sus4"));
         assertEquals(ChordDescriptor.power5, ChordDescriptor.parse("5"));
         assertEquals(ChordDescriptor.dominant9, ChordDescriptor.parse("9"));
-        assertEquals(ChordDescriptor.major13, ChordDescriptor.parse("13"));
-        assertEquals(ChordDescriptor.major11, ChordDescriptor.parse("11"));
+        assertEquals(ChordDescriptor.dominant13, ChordDescriptor.parse("13"));
+        assertEquals(ChordDescriptor.dominant11, ChordDescriptor.parse("11"));
         assertEquals(ChordDescriptor.minor7b5, ChordDescriptor.parse("m7b5"));
         assertEquals(ChordDescriptor.add9, ChordDescriptor.parse("add9"));
         assertEquals(ChordDescriptor.jazz7b9, ChordDescriptor.parse("jazz7b9"));
