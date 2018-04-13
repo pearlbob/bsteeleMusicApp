@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -9,12 +9,15 @@ import static org.junit.Assert.assertEquals;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class PitchTest extends GWTTestCase {
+public class PitchTest
+    extends TestCase
+        //extends GWTTestCase
+{
 
     @Test
     public void testPitch() {
         if (false
-                //|| true
+            //|| true
                 ) {
             //  print table
             for (Pitch p : Pitch.values()) {
@@ -33,18 +36,57 @@ public class PitchTest extends GWTTestCase {
         assertEquals(Pitch.A1.getFrequency(), 55.0, 1e-20);
         assertEquals(Pitch.E1.getFrequency(), 41.2034, 1e-4);
         assertEquals(Pitch.A2.getFrequency(), 110.0, 1e-20);
-        assertEquals(Pitch.E2.getFrequency(), Pitch.E1.getFrequency()*2, 1e-20);
+        assertEquals(Pitch.E2.getFrequency(), Pitch.E1.getFrequency() * 2, 1e-20);
         assertEquals(Pitch.A3.getFrequency(), 220.0, 1e-20);
-        assertEquals(Pitch.E3.getFrequency(), Pitch.E1.getFrequency()*4, 1e-12);
+        assertEquals(Pitch.E3.getFrequency(), Pitch.E1.getFrequency() * 4, 1e-12);
         assertEquals(Pitch.A4.getFrequency(), 440.0, 1e-20);
-        assertEquals(Pitch.E4.getFrequency(), Pitch.E1.getFrequency()*8, 1e-12);
+        assertEquals(Pitch.E4.getFrequency(), Pitch.E1.getFrequency() * 8, 1e-12);
         assertEquals(Pitch.A5.getFrequency(), 880.0, 1e-20);
     }
 
-    @Override
-    public String getModuleName() {
-        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
+    @Test
+    public void testIsSharp() {
+
+        int sharpCount = 0;
+        int naturalCount = 0;
+        int flatCount = 0;
+        for (Pitch p : Pitch.values()) {
+            if (p.isSharp())
+                sharpCount++;
+            if (p.isFlat())
+                flatCount++;
+            if (p.isSharp() && !p.isFlat())
+                naturalCount++;
+        }
+        assertEquals(7 * 7 + 2, sharpCount);
+        assertEquals(7 * 7 + 2, flatCount);
+        assertEquals(7 * 7 + 2, naturalCount);
+
+        Pitch p = Pitch.A0;
+        assertEquals(false,p.isSharp());
+        assertEquals(false,p.isFlat());
+        assertEquals(true,p.isNatural());
+        int sharps = 0;
+        int naturals = 1;
+        int flats = 0;
+        for (int i = 0; i < Pitch.values().length; i++)  //  safety only
+        {
+            p = p.offsetByHalfSteps(1);
+            if (p == null)
+                break;
+            if (p.isSharp()) sharps++;
+            if (p.isNatural()) naturals++;
+            if (p.isFlat()) flats++;
+        }
+        assertEquals(0, sharps);
+        assertEquals(naturalCount, naturals);
+        assertEquals(flatCount, flats);
     }
+
+//    @Override
+//    public String getModuleName() {
+//        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
+//    }
 }
 /*
 A0   0 27.5

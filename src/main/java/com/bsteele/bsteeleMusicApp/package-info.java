@@ -14,6 +14,7 @@ package com.bsteele.bsteeleMusicApp;
 
 /*
 
+todo: prescribed (#b nat) notes affect octaves for the duration of the bar
 todo: arrangement display in song display as comment
 todo: arrangements can be part of song, e.g. drums
 todo: option list on/off

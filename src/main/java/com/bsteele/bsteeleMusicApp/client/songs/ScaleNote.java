@@ -55,20 +55,31 @@ public enum ScaleNote {
             String mod = "";
             String modHtml = "";
             String markup = "";
+
             switch (mr.getGroup(2)) {
                 case "b":
                     mod += MusicConstant.flatChar;
                     modHtml = MusicConstant.flatHtml;
                     markup = "b";
+                    isSharp = false;
+                    isFlat = true;
                     break;
                 case "n":
                     mod += MusicConstant.naturalChar;
                     modHtml = MusicConstant.naturalHtml;
+                    isSharp = false;
+                    isFlat = false;
+                    break;
+                default:
+                    isSharp = false;
+                    isFlat = false;
                     break;
                 case "s":
                     mod += MusicConstant.sharpChar;
                     modHtml = MusicConstant.sharpHtml;
                     markup = "#";
+                    isSharp = true;
+                    isFlat = false;
                     break;
             }
             String base = mr.getGroup(1);
@@ -79,27 +90,32 @@ public enum ScaleNote {
             scaleNoteString = name();//    fixme: should throw error, should never happen
             scaleNoteHtml = name();
             scaleNoteMarkup = name();
+            isSharp = false;
+            isFlat = false;
         }
     }
 
     /**
      * A utility to map the sharp scale notes to their half step offset.
      * Should use the scale notes from the key under normal situations.
+     *
      * @param halfStep the number of half steps from A
      * @return the sharp scale note
      */
     @Deprecated
-    static ScaleNote getSharpByHalfStep(int halfStep) {
+    static final ScaleNote getSharpByHalfStep(int halfStep) {
         return sharps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
+
     /**
      * A utility to map the flat scale notes to their half step offset.
      * Should use the scale notes from the key under normal situations.
-     * @param halfStep  the number of half steps from A
-     * @return  the sharp scale note
+     *
+     * @param halfStep the number of half steps from A
+     * @return the sharp scale note
      */
     @Deprecated
-    static ScaleNote getFlatByHalfStep(int halfStep) {
+    static final ScaleNote getFlatByHalfStep(int halfStep) {
         return flats[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
 
@@ -111,7 +127,7 @@ public enum ScaleNote {
      * @param s string to be parsed
      * @return ScaleNote represented by the string.  Can be null.
      */
-    public static ScaleNote parse(String s) {
+    public final static ScaleNote parse(String s) {
         if (s == null || s.length() < 1)
             return null;
         char c = s.charAt(0);
@@ -145,7 +161,7 @@ public enum ScaleNote {
      *
      * @return
      */
-    public int getHalfStep() {
+    public final int getHalfStep() {
         return halfStep;
     }
 
@@ -156,7 +172,7 @@ public enum ScaleNote {
      * @return the name of this enum constant
      */
     @Override
-    public String toString() {
+    public final String toString() {
         return scaleNoteString;
     }
 
@@ -165,7 +181,7 @@ public enum ScaleNote {
      *
      * @return
      */
-    public String toHtml() {
+    public final String toHtml() {
         return scaleNoteHtml;
     }
 
@@ -176,17 +192,31 @@ public enum ScaleNote {
      * @return
      */
     @Deprecated
-    public String toMarkup() {
+    public final String toMarkup() {
         return scaleNoteMarkup;
+    }
+
+
+    public final boolean isSharp() {
+        return isSharp;
+    }
+
+    public final boolean isNatural() {
+        return !isSharp && !isFlat;
+    }
+
+    public final boolean isFlat() {
+        return isFlat;
     }
 
     /**
      * Return the scale note's flat alias if it is a sharp
      * or the sharp alias if the scale note is a flat.
      * White key notes will return null.
+     *
      * @return the scale note's alias or null if there is none
      */
-    public ScaleNote getAlias() {
+    public final ScaleNote getAlias() {
         return alias;
     }
 
@@ -195,6 +225,8 @@ public enum ScaleNote {
     private final String scaleNoteHtml;
     private final String scaleNoteMarkup;
     private ScaleNote alias;
+    private final boolean isSharp;
+    private final boolean isFlat;
 
     private static final ScaleNote sharps[] = {
             A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs

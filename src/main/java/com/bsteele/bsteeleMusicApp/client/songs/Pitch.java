@@ -8,6 +8,8 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
+import java.util.ArrayList;
+
 /**
  * All possible piano pitches and their notational alias's.
  * <p>
@@ -206,7 +208,7 @@ public enum Pitch {
         MatchResult mr = pitchRegExp.exec(name());
         //   fail early on null!
         scaleNote = ScaleNote.valueOf(mr.getGroup(1));
-        int labelNumber = Integer.parseInt(mr.getGroup(2));
+        labelNumber = Integer.parseInt(mr.getGroup(2));
 
         //  cope with the piano numbers stepping forward on C
         //  and the label numbers not stepping with sharps and flats,
@@ -219,40 +221,96 @@ public enum Pitch {
         } else {
             //  offset from A to C
             int fromC = (n - 3) % MusicConstant.halfStepsPerOctave;
-            //  compute halfsteps from A0
+            //  compute halfSteps from A0
             n += ((fromC >= 0) ? labelNumber - 1 : labelNumber) * MusicConstant.halfStepsPerOctave;
         }
         number = n;
 
-        frequency = 440 * Math.pow(2, (double)((number+1)-49)/12);
+        frequency = 440 * Math.pow(2, (double) ((number + 1) - 49) / 12);
+    }
+
+    public final int getLabelNumber() {
+        return labelNumber;
     }
 
     /**
      * Get an integer the represents this pitch.
-     * @return  the integer represntation of the pitch
+     *
+     * @return the integer representation of the pitch
      */
-    public int getNumber() {
+    public final int getNumber() {
         return number;
     }
 
     /**
      * Return the frequency of the pitch.
+     *
      * @return the frequency of the pitch in Hertz
      */
-    public double getFrequency() {
+    public final double getFrequency() {
         return frequency;
     }
 
     /**
      * Return the scale note represented by this pitch.
-     * @return  the pitch's scale note
+     *
+     * @return the pitch's scale note
      */
-    public ScaleNote getScaleNote() {
+    public final ScaleNote getScaleNote() {
         return scaleNote;
     }
 
+    /**
+     * Return the pitch offset by the given number of half steps.
+     *
+     * @param halfSteps the given number of half steps
+     * @return the pitch offset by the given number of half steps, can be null
+     */
+    public final Pitch offsetByHalfSteps(int halfSteps) {
+        if (halfSteps == 0)
+            return this;
+        ArrayList<Pitch> list = scaleNote.isSharp() ? sharps : flats;
+        int n = number + halfSteps;
+        if (n < 0 || n >= list.size())
+            return null;
+        return list.get(n);
+    }
+
+    public final boolean isSharp() {
+        return scaleNote.isSharp();
+    }
+
+    public final boolean isNatural() {
+        return scaleNote.isNatural();
+    }
+
+    public final boolean isFlat() {
+        return scaleNote.isFlat();
+    }
+
     private final ScaleNote scaleNote;
+    private final int labelNumber;
     private final int number;
     private final double frequency;
+    private static ArrayList<Pitch> sharps = new ArrayList<>();
+    private static ArrayList<Pitch> flats = new ArrayList<>();
 
+    static {
+        for (Pitch pitch : Pitch.values()) {
+            if (pitch.isSharp())
+                sharps.add(pitch);
+            else if (pitch.isFlat())
+                flats.add(pitch);
+            else {
+                //  remove duplicates
+                if ( !sharps.isEmpty()&&sharps.get(sharps.size()-1).getNumber() == pitch.getNumber())
+                    sharps.remove(sharps.size()-1);
+                if ( !flats.isEmpty()&&flats.get(flats.size()-1).getNumber() == pitch.getNumber())
+                    flats.remove(flats.size()-1);
+
+                sharps.add(pitch);
+                flats.add(pitch);
+            }
+        }
+    }
 }
