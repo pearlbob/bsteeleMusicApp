@@ -148,12 +148,14 @@ public class SongEditView
             sectionSelectElement.add(optionElement, null);
         }
         Event.sinkEvents(sectionSelection, Event.ONCHANGE);
+        Event.sinkEvents(sectionSelection, Event.ONCLICK);
         Event.setEventListener(sectionSelection, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt()|| Event.ONCLICK == event.getTypeInt()) {
                 chordsTextAdd("\n" + Section.valueOf(sectionSelection.getValue()).getAbbreviation() + ":");
             }
         });
 
+        
         //  key selection
         Event.sinkEvents(keySelection, Event.ONCHANGE);
         Event.setEventListener(keySelection, (Event event) -> {
@@ -170,8 +172,9 @@ public class SongEditView
             }
         });
         Event.sinkEvents(chordSelection, Event.ONCHANGE);
+        Event.sinkEvents(chordSelection, Event.ONCLICK);
         Event.setEventListener(chordSelection, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt() || Event.ONCLICK == event.getTypeInt()) {
                 enterChord(chordSelection.getValue());
             }
         });
