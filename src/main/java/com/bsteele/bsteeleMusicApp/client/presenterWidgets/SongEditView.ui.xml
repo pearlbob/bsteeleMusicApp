@@ -95,11 +95,14 @@
                                     <g:Button ui:field="sectionPC">PreChorus</g:Button>
                                     <g:Button ui:field="sectionC">Chorus</g:Button>
                                     <g:Button ui:field="sectionBr">Bridge</g:Button>
+                                    <g:Button ui:field="sectionO">Outro</g:Button>
+                                    <select ui:field="sectionOtherSelection"/>
+                                    <!--
                                     <g:Button ui:field="sectionA">Section A</g:Button>
                                     <g:Button ui:field="sectionB">Section B</g:Button>
-                                    <g:Button ui:field="sectionO">Outro</g:Button>
                                     <g:Button ui:field="sectionCo">Coda</g:Button>
                                     <g:Button ui:field="sectionT">Tag</g:Button>
+                                    -->
                                 </td>
                             </tr>
                             <tr>

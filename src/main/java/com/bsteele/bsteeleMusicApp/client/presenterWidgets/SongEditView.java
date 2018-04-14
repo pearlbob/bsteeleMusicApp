@@ -78,15 +78,17 @@ public class SongEditView
     @UiField
     Button sectionBr;
     @UiField
-    Button sectionA;
-    @UiField
-    Button sectionB;
-    @UiField
     Button sectionO;
+    //    @UiField
+//    Button sectionA;
+//    @UiField
+//    Button sectionB;
+//    @UiField
+//    Button sectionCo;
+//    @UiField
+//    Button sectionT;
     @UiField
-    Button sectionCo;
-    @UiField
-    Button sectionT;
+    SelectElement sectionOtherSelection;
 
     @UiField
     TextArea chordsTextEntry;
@@ -214,21 +216,47 @@ public class SongEditView
         sectionBr.addClickHandler((ClickEvent event) -> {
             chordsTextAdd("\n" + Section.bridge.getAbbreviation() + ":");
         });
-        sectionA.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.a.getAbbreviation() + ":");
-        });
-        sectionB.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.b.getAbbreviation() + ":");
-        });
+
         sectionO.addClickHandler((ClickEvent event) -> {
             chordsTextAdd("\n" + Section.outro.getAbbreviation() + ":");
         });
-        sectionCo.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.coda.getAbbreviation() + ":");
-        });
-        sectionT.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.tag.getAbbreviation() + ":");
-        });
+//        sectionA.addClickHandler((ClickEvent event) -> {
+//            chordsTextAdd("\n" + Section.a.getAbbreviation() + ":");
+//        });
+//        sectionB.addClickHandler((ClickEvent event) -> {
+//            chordsTextAdd("\n" + Section.b.getAbbreviation() + ":");
+//        });
+//        sectionCo.addClickHandler((ClickEvent event) -> {
+//            chordsTextAdd("\n" + Section.coda.getAbbreviation() + ":");
+//        });
+//        sectionT.addClickHandler((ClickEvent event) -> {
+//            chordsTextAdd("\n" + Section.tag.getAbbreviation() + ":");
+//        });
+        {
+            // other sections
+            Event.sinkEvents(sectionOtherSelection, Event.ONCHANGE);
+            Event.setEventListener(sectionOtherSelection, (Event event) -> {
+                if (Event.ONCHANGE == event.getTypeInt()) {
+                    if (sectionOtherSelection.getSelectedIndex() > 0)
+                        chordsTextAdd("\n" + sectionOtherSelection.getValue() + ":");
+                    sectionOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
+                }
+            });
+
+            sectionOtherSelection.clear();
+            OptionElement optionElement = document.createOptionElement();
+            optionElement.setLabel("Other section");
+            optionElement.setValue("");
+            sectionOtherSelection.add(optionElement, null);
+
+            Section otherSections[] = new Section[]{Section.a, Section.b, Section.coda, Section.tag};
+            for (Section section : otherSections) {
+                optionElement = document.createOptionElement();
+                optionElement.setLabel(section.toString());
+                optionElement.setValue(section.getAbbreviation());
+                sectionOtherSelection.add(optionElement, null);
+            }
+        }
 
 
         //  chord entry
