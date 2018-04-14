@@ -55,8 +55,10 @@ mvn \
 	-Dgwt.compiler.compileReport=false \
 	-Ddeploy=true \
 	clean install
-if ( $status != 0 ) then
-	exit $status
+set stat=$status
+if ( $stat != 0 ) then
+	echo mvn install failure
+	exit $stat
 endif
 
 echo too far
