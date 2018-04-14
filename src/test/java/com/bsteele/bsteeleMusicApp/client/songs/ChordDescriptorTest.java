@@ -1,13 +1,14 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.google.gwt.junit.client.GWTTestCase;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordDescriptorTest  extends GWTTestCase
+public class ChordDescriptorTest extends TestCase //extends GWTTestCase
 {
 
     @Test
@@ -44,13 +45,22 @@ public class ChordDescriptorTest  extends GWTTestCase
 
     @Test
     public void testOrderByShortname() {
-
-        for (ChordDescriptor cd : ChordDescriptor.getPrimaryChordDescriptorsOrdered()) {
-            System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
-        }
-        System.out.println();
-        for (ChordDescriptor cd : ChordDescriptor.getOtherChordDescriptorsOrdered()) {
-            System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
+        if (false) {
+            for (ChordDescriptor cd : ChordDescriptor.getPrimaryChordDescriptorsOrdered()) {
+                System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
+            }
+            System.out.println();
+            for (ChordDescriptor cd : ChordDescriptor.getOtherChordDescriptorsOrdered()) {
+                System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
+            }
+            System.out.println();
+            for (ChordDescriptor cd : ChordDescriptor.getAllChordDescriptorsOrdered()) {
+                System.out.println("<g:Button ui:field=\"" + cd.name() + "\">" + cd.toString() + "</g:Button>");
+            }
+            System.out.println();
+            for (ChordDescriptor cd : ChordDescriptor.getAllChordDescriptorsOrdered()) {
+                System.out.println("chordDescriptorMap.put(ChordDescriptor." + cd.name() + "," + cd.name() + ");");
+            }
         }
     }
 
@@ -62,8 +72,8 @@ public class ChordDescriptorTest  extends GWTTestCase
             }
     }
 
-    @Override
-    public String getModuleName() {
-        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
-    }
+//    @Override
+//    public String getModuleName() {
+//        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
+//    }
 }
