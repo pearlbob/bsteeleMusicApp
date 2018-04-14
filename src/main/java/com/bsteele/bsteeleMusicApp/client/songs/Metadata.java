@@ -12,17 +12,29 @@ import javax.annotation.Nonnull;
  * in the form of name/value pairs.
  * <p>The name should be unique.  Otherwise the old name/value pair will be over-written in a set.</p>
  */
-public class Metadata implements Comparable<Metadata>
-{
+public class Metadata implements Comparable<Metadata> {
 
-    public Metadata(@Nonnull String name, String value){
+    public enum MetadataType {
+        generic,
+        number,
+        date,
+        url;
+    }
+
+    public Metadata(@Nonnull String name, @Nonnull String value) {
+        this(name, value, MetadataType.generic);
+    }
+
+    public Metadata(@Nonnull String name, @Nonnull String value, @Nonnull MetadataType type) {
         this.name = name;
         this.value = value;
+        this.type = type;
     }
 
     /**
      * Metadata name
-     * @return  metadata name
+     *
+     * @return metadata name
      */
     public String getName() {
         return name;
@@ -30,11 +42,17 @@ public class Metadata implements Comparable<Metadata>
 
     /**
      * Metadata value.  Can be null.
-     * @return  metadata value
+     *
+     * @return metadata value
      */
     public String getValue() {
         return value;
     }
+
+    public MetadataType getType() {
+        return type;
+    }
+
 
     /**
      * Compares this object with the specified object for order.  Returns a
@@ -76,9 +94,19 @@ public class Metadata implements Comparable<Metadata>
      */
     @Override
     public int compareTo(Metadata o) {
-        return name.compareTo(o.name);
+        int ret = name.compareTo(o.name);
+        if (ret != 0)
+            return ret;
+        ret = type.compareTo(o.type);
+        if (ret != 0)
+            return ret;
+        ret = value.compareTo(o.value);
+        if (ret != 0)
+            return ret;
+        return 0;
     }
 
     private String name;
     private String value;
+    private MetadataType type = MetadataType.generic;
 }
