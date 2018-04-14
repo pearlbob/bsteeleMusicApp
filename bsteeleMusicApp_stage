@@ -61,8 +61,6 @@ if ( $stat != 0 ) then
 	exit $stat
 endif
 
-echo too far
-exit -1
 
 #	strip the classes from the war
 #	they should all be in the .js after gwt

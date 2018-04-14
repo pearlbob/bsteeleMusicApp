@@ -81,7 +81,5 @@ public class MeasureTest extends TestCase {
                     new ScaleChord(ScaleNote.Fs), AnticipationOrDelay.none), chord0);
             assertEquals(new Chord(new ScaleChord(ScaleNote.G), beat1), chord1);
         }
-
-        assertEquals(true,false);
     }
 }
