@@ -13,6 +13,8 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: fix staging script: it removes beta on a test failure
+fixme: The minor scale starts with the assumption of the major scale note names, and then flats the third and seventh, keeping those note name positions accordingly.
 
 todo: prescribed (#b nat) notes affect octaves for the duration of the bar
 todo: arrangement display in song display as comment

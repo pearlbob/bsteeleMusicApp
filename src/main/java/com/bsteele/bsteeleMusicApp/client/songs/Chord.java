@@ -21,6 +21,8 @@ public class Chord {
 
         int beats = 1;  //  default only
         ScaleChord scaleChord = ScaleChord.parse(s);
+        if ( scaleChord == null)
+            return null;
         int parseLength = scaleChord.getParseLength();
         s = s.substring(parseLength);
         ScaleChord slashScaleChord = null;
@@ -170,6 +172,7 @@ public class Chord {
         if (!(o instanceof Chord))
             return false;
         Chord oc = (Chord) o;
+
         if (slashScaleChord == null) {
             if (oc.slashScaleChord != null) return false;
         } else if (!slashScaleChord.equals(oc.slashScaleChord))

@@ -16,12 +16,20 @@ public class ChordSection {
         if (s == null || s.length() <= 0)
             return null;
 
-        Section.Version section = Section.parse( s );
+        Section.Version section = Section.parse(s);
+        if (section == null)
+            return null;
+
         int n = section.getParseLength();
         ArrayList<Measure> measures = new ArrayList<>();
-        Measure measure = Measure.parse( s, beatsPerBar );
-        measures.add(measure);
-        ChordSection ret = new ChordSection(section,measures);
+        for (int i = 0; i < 200; i++)          //  safety hard limit
+        {
+            Measure measure = Measure.parse(s, beatsPerBar);
+            if (measure == null)
+                break;
+            measures.add(measure);
+        }
+        ChordSection ret = new ChordSection(section, measures);
         ret.parseLength = n;
         return ret;
     }

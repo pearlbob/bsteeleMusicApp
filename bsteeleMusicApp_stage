@@ -55,6 +55,12 @@ mvn \
 	-Dgwt.compiler.compileReport=false \
 	-Ddeploy=true \
 	clean install
+if ( $status != 0 ) then
+	exit $status
+endif
+
+echo too far
+exit -1
 
 #	strip the classes from the war
 #	they should all be in the .js after gwt

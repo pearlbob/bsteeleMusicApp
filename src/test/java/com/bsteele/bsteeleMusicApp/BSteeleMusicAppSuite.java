@@ -17,6 +17,7 @@ public class BSteeleMusicAppSuite extends GWTTestSuite {
         suite.addTestSuite(PitchTest.class);
         suite.addTestSuite(ScaleChordTest.class);
         suite.addTestSuite(ScaleNoteTest.class);
+        suite.addTestSuite(MeasureTest.class);
         suite.addTestSuite(SongTest.class);
         suite.addTestSuite(SongUpdateTest.class);
 

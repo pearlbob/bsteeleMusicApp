@@ -30,11 +30,71 @@ public class Measure {
     public static final Measure parse(String s, int beatCount) {
         if (s == null || s.length() <= 0)
             return null;
+
         ArrayList<Chord> chords = new ArrayList<>();
-        Chord chord = Chord.parse(s);
-        if (chord != null)
+        int parseLength = 0;
+        for (int i = 0; i < 8; i++)    //  safety
+        {
+            if (s.length() <= 0)
+                break;
+            Chord chord = Chord.parse(s);
+            if (chord == null) {
+                if (i > 0) {
+                    //  look for in-measure beats for the chord
+                    while (s.length() > 0 && s.charAt(0) == '.') {
+                        s = s.substring(1);
+                        parseLength += 1;
+                        if (chords.isEmpty())
+                            return null;
+                        chord = chords.get(chords.size() - 1);
+                        chord.setBeats(chord.getBeats() + 1);
+                    }
+                }
+                break;
+            }
+            s = s.substring(chord.getParseLength());
+
+            //  assure this is not a section in disguise
+            if (s.length() > 0 && s.charAt(0) == ':') {
+                //  oops
+                //  don't use this chord
+                //  don't increment the parse count
+                break;
+            }
+
+            //  look for in-measure beats for the chord
+            while (s.length() > 0 && s.charAt(0) == '.') {
+                s = s.substring(1);
+                parseLength += 1;
+                chord.setBeats(chord.getBeats() + 1);
+            }
+
+            parseLength += chord.getParseLength();
             chords.add(chord);
+        }
+        if (chords.isEmpty())
+            return null;
+
         Measure ret = new Measure(beatCount, chords);
+
+        // allocate the beats
+        if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1) {
+            //  common case: split the beats even across the two chords
+            chords.get(0).setBeats(beatCount / 2);
+            chords.get(1).setBeats(beatCount / 2);
+        }
+        {    // fill the beat count onto the last chord if required
+            //  works for one chord as well
+            int count = 0;
+            for (Chord chord : chords)
+                count += chord.getBeats();
+            if (count < beatCount) {
+                Chord lastChord = chords.get(chords.size() - 1);
+                lastChord.setBeats(lastChord.getBeats() + (beatCount - count));
+            }
+        }
+
+        ret.parseLength = parseLength;
         return ret;
     }
 
@@ -79,4 +139,5 @@ public class Measure {
     private int beatCount = 4;  //  default only
     private ArrayList<Chord> chords = new ArrayList<>();
     private transient int parseLength;
+
 }

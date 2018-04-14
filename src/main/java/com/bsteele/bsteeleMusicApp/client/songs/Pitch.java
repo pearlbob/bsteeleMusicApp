@@ -299,14 +299,16 @@ public enum Pitch {
         for (Pitch pitch : Pitch.values()) {
             if (pitch.isSharp())
                 sharps.add(pitch);
-            else if (pitch.isFlat())
-                flats.add(pitch);
-            else {
+            else if (pitch.isFlat()) {
+                if (!flats.isEmpty() && flats.get(flats.size() - 1).getNumber() != pitch.getNumber())
+                    flats.add(pitch);     //    the natural didn't get there first
+            } else {
+                //  natural
                 //  remove duplicates
-                if ( !sharps.isEmpty()&&sharps.get(sharps.size()-1).getNumber() == pitch.getNumber())
-                    sharps.remove(sharps.size()-1);
-                if ( !flats.isEmpty()&&flats.get(flats.size()-1).getNumber() == pitch.getNumber())
-                    flats.remove(flats.size()-1);
+                if (!sharps.isEmpty() && sharps.get(sharps.size() - 1).getNumber() == pitch.getNumber())
+                    sharps.remove(sharps.size() - 1);
+//                if (!flats.isEmpty() && flats.get(flats.size() - 1).getNumber() == pitch.getNumber())
+//                    flats.remove(flats.size() - 1);
 
                 sharps.add(pitch);
                 flats.add(pitch);
