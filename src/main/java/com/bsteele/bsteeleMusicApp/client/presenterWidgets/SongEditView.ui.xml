@@ -138,30 +138,7 @@
                                                 <g:Button ui:field="major">major</g:Button>
                                                 <g:Button ui:field="minor">m</g:Button>
                                                 <g:Button ui:field="dominant7">7</g:Button>
-                                                <g:Button ui:field="add9">add9</g:Button>
-                                                <g:Button ui:field="augmented5">aug5</g:Button>
-                                                <g:Button ui:field="augmented7">aug7</g:Button>
-                                                <g:Button ui:field="diminished">dim</g:Button>
-                                                <g:Button ui:field="diminished7">dim7</g:Button>
-                                                <g:Button ui:field="jazz7b9">jazz7b9</g:Button>
-                                                <g:Button ui:field="major7">maj7</g:Button>
-                                                <g:Button ui:field="minor11">m11</g:Button>
-                                                <g:Button ui:field="minor13">m13</g:Button>
-                                                <g:Button ui:field="minor7">m7</g:Button>
-                                                <g:Button ui:field="minor7b5">m7b5</g:Button>
-                                                <g:Button ui:field="sevenFlat5">7b5</g:Button>
-                                                <g:Button ui:field="sevenFlat9">7b9</g:Button>
-                                                <g:Button ui:field="sevenSharp5">7#5</g:Button>
-                                                <g:Button ui:field="sevenSharp9">7#9</g:Button>
-                                                <g:Button ui:field="suspended">sus</g:Button>
-                                                <g:Button ui:field="suspended2">sus2</g:Button>
-                                                <g:Button ui:field="suspended4">sus4</g:Button>
-                                                <g:Button ui:field="suspended7">sus7</g:Button>
-                                                <g:Button ui:field="power5">5</g:Button>
-                                                <g:Button ui:field="major6">6</g:Button>
-                                                <g:Button ui:field="dominant9">9</g:Button>
-                                                <g:Button ui:field="dominant11">11</g:Button>
-                                                <g:Button ui:field="dominant13">13</g:Button>
+                                                <select ui:field="scaleNoteOtherSelection"/>
                                             </td>
                                         </tr>
                                     </table>

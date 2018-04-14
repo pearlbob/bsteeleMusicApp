@@ -113,6 +113,9 @@ public class SongEditView
     SelectElement scaleNoteSelection;
 
     @UiField
+    SelectElement scaleNoteOtherSelection;
+
+    @UiField
     Button recent0;
     @UiField
     Button recent1;
@@ -143,54 +146,6 @@ public class SongEditView
     Button minor;
     @UiField
     Button dominant7;
-    @UiField
-    Button add9;
-    @UiField
-    Button augmented5;
-    @UiField
-    Button augmented7;
-    @UiField
-    Button diminished;
-    @UiField
-    Button diminished7;
-    @UiField
-    Button jazz7b9;
-    @UiField
-    Button major7;
-    @UiField
-    Button minor11;
-    @UiField
-    Button minor13;
-    @UiField
-    Button minor7;
-    @UiField
-    Button minor7b5;
-    @UiField
-    Button sevenFlat5;
-    @UiField
-    Button sevenFlat9;
-    @UiField
-    Button sevenSharp5;
-    @UiField
-    Button sevenSharp9;
-    @UiField
-    Button suspended;
-    @UiField
-    Button suspended2;
-    @UiField
-    Button suspended4;
-    @UiField
-    Button suspended7;
-    @UiField
-    Button power5;
-    @UiField
-    Button major6;
-    @UiField
-    Button dominant9;
-    @UiField
-    Button dominant11;
-    @UiField
-    Button dominant13;
 
     @UiField
     Button chordsUndo;
@@ -212,30 +167,6 @@ public class SongEditView
         chordDescriptorMap.put(ChordDescriptor.major, major);
         chordDescriptorMap.put(ChordDescriptor.minor, minor);
         chordDescriptorMap.put(ChordDescriptor.dominant7, dominant7);
-        chordDescriptorMap.put(ChordDescriptor.add9, add9);
-        chordDescriptorMap.put(ChordDescriptor.augmented5, augmented5);
-        chordDescriptorMap.put(ChordDescriptor.augmented7, augmented7);
-        chordDescriptorMap.put(ChordDescriptor.diminished, diminished);
-        chordDescriptorMap.put(ChordDescriptor.diminished7, diminished7);
-        chordDescriptorMap.put(ChordDescriptor.jazz7b9, jazz7b9);
-        chordDescriptorMap.put(ChordDescriptor.major7, major7);
-        chordDescriptorMap.put(ChordDescriptor.minor11, minor11);
-        chordDescriptorMap.put(ChordDescriptor.minor13, minor13);
-        chordDescriptorMap.put(ChordDescriptor.minor7, minor7);
-        chordDescriptorMap.put(ChordDescriptor.minor7b5, minor7b5);
-        chordDescriptorMap.put(ChordDescriptor.sevenFlat5, sevenFlat5);
-        chordDescriptorMap.put(ChordDescriptor.sevenFlat9, sevenFlat9);
-        chordDescriptorMap.put(ChordDescriptor.sevenSharp5, sevenSharp5);
-        chordDescriptorMap.put(ChordDescriptor.sevenSharp9, sevenSharp9);
-        chordDescriptorMap.put(ChordDescriptor.suspended, suspended);
-        chordDescriptorMap.put(ChordDescriptor.suspended2, suspended2);
-        chordDescriptorMap.put(ChordDescriptor.suspended4, suspended4);
-        chordDescriptorMap.put(ChordDescriptor.suspended7, suspended7);
-        chordDescriptorMap.put(ChordDescriptor.power5, power5);
-        chordDescriptorMap.put(ChordDescriptor.major6, major6);
-        chordDescriptorMap.put(ChordDescriptor.dominant9, dominant9);
-        chordDescriptorMap.put(ChordDescriptor.dominant11, dominant11);
-        chordDescriptorMap.put(ChordDescriptor.dominant13, dominant13);
 
         //  key selection
         Event.sinkEvents(keySelection, Event.ONCHANGE);
@@ -252,6 +183,16 @@ public class SongEditView
                 titleChordSelections();
             }
         });
+
+        Event.sinkEvents(scaleNoteOtherSelection, Event.ONCHANGE);
+        Event.setEventListener(scaleNoteOtherSelection, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                if (scaleNoteOtherSelection.getSelectedIndex() > 0)
+                    enterChord(scaleNoteOtherSelection.getValue());
+                scaleNoteOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
+            }
+        });
+
 
         chordsTextEntry.setFocus(true);
         chordsTextEntry.addValueChangeHandler((ValueChangeEvent) -> {
@@ -530,11 +471,15 @@ public class SongEditView
     }
 
     private void enterChord(ClickEvent event) {
-        enterChord(event.getRelativeElement().getInnerText());
+        String s = event.getRelativeElement().getInnerText();
+        if (s.length() > 0)
+            enterChord(s);
     }
 
     private void enterChord(String name) {
         ScaleChord scaleChord = ScaleChord.parse(name);
+        if (scaleChord == null)
+            return; //  fixme: shouldn't happen
         addRecentScaleChord(scaleChord);
         chordsTextAdd(scaleChord.toString());
         findMostCommonScaleChords();
@@ -670,6 +615,21 @@ public class SongEditView
             Button b = chordDescriptorMap.get(cd);
             ScaleChord sc = new ScaleChord(scaleNote, cd);
             b.setText(sc.toString());
+        }
+
+        {    // other chords
+            scaleNoteOtherSelection.clear();
+            OptionElement optionElement = document.createOptionElement();
+            optionElement.setLabel("Other chord");
+            optionElement.setValue("");
+            scaleNoteOtherSelection.add(optionElement, null);
+            for (ChordDescriptor cd : ChordDescriptor.getOtherChordDescriptorsOrdered()) {
+                optionElement = document.createOptionElement();
+                ScaleChord sc = new ScaleChord(scaleNote, cd);
+                optionElement.setLabel(sc.toString());
+                optionElement.setValue(sc.toString());
+                scaleNoteOtherSelection.add(optionElement, null);
+            }
         }
     }
 
