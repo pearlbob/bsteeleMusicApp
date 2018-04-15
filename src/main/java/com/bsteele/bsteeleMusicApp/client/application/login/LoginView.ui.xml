@@ -18,7 +18,8 @@
                     Password:
                 </td>
                 <td>
-                    <g:PasswordTextBox ui:field="password"/>
+                    <!--requires ssh!   <g:PasswordTextBox ui:field="password"/> -->
+                    <g:TextBox ui:field="password"/>
                 </td>
             </tr>
         </table>

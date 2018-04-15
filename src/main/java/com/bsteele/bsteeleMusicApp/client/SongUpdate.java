@@ -131,7 +131,7 @@ public class SongUpdate {
         Grid<String> chordSection = song.getChordSection(sectionVersion);
         ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
         chordSectionColumn++;
-        if (this.chordSectionColumn >= chordCols.size()) {
+        if (chordCols == null || this.chordSectionColumn >= chordCols.size()) {
             //  go to the next row
             this.chordSectionColumn = 0;
             this.chordSectionRow++;
@@ -157,7 +157,6 @@ public class SongUpdate {
                 sectionNumber++;
             }
         }
-
 
         //  validate where we've landed after the increment
         if (sectionNumber >= songSectionSequence.size())

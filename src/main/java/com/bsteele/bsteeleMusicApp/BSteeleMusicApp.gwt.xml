@@ -43,7 +43,10 @@
     <set-property name="gwt.logging.enabled" value="TRUE">
         <when-property-is name="jre.debugMode" value="ENABLED"/>
     </set-property>
-       
+
+    <!--    fixme: temp debug logging!      -->
+    <set-property name="gwt.logging.enabled" value="TRUE"/>
+
     <!--<inherits name="com.vaadin.polymer.Elements"/>-->
 
     <!-- enable source maps -->

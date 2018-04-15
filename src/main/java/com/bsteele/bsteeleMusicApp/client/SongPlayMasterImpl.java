@@ -36,7 +36,7 @@ public class SongPlayMasterImpl
     /**
      * A rough timer handler designed to pump commands to the audio
      * about once a measure but not intended to be synchronous.
-     * The intent is to run on measure ahed to assure time to
+     * The intent is to run on measure ahead to assure time to
      * load the audio properly.
      */
     @Override
@@ -54,7 +54,30 @@ public class SongPlayMasterImpl
         }
 
         if (audioFilePlayer != null) {
-            switch (action) {
+            switch (requestedState){
+                case idle:
+                    switch ( state ){
+                        case playing:
+                            //  stop
+                            audioFilePlayer.stop();
+                            songOutUpdate.setState(SongUpdate.State.idle);
+                            eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+                            bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
+                            state = requestedState;
+                            break;
+                    }
+                    break;
+                case playing:
+                    switch ( state ){
+                        case idle:
+                            //  start
+                            state = requestedState;
+                            break;
+                    }
+                    break;
+            }
+
+            switch (state) {
                 case playing:
                     //  distribute the time update locally
                     songLocalUpdate(systemT);
@@ -67,15 +90,6 @@ public class SongPlayMasterImpl
 
                         beatTheDrums(defaultDrumSelection);
                     }
-                    break;
-                case stopSong:
-                    audioFilePlayer.stop();
-                    songOutUpdate.setState(SongUpdate.State.idle);
-                    eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
-                    bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
-                    action = Action.idle;
-                    break;
-                case idle:
                     break;
             }
         }
@@ -105,7 +119,7 @@ public class SongPlayMasterImpl
         logger.fine("t: " + t + ", m: " + m + " != " + songOutUpdate.getMeasure());
 
         if (m <= 0) {
-            //  preroll
+            //  preRoll
             songOutUpdate.setMeasure(m);
         } else {
             while (m > songOutUpdate.getMeasure()) {
@@ -186,6 +200,7 @@ public class SongPlayMasterImpl
                 }
             }
         }
+        logger.info("<" + drumSelection.toString());
     }
 
     @Override
@@ -197,6 +212,9 @@ public class SongPlayMasterImpl
             if (!songInUpdate.getSong().equals(songOutUpdate.getSong()))
                 eventBus.fireEvent(new SongSelectionEvent(songInUpdate.getSong()));
             eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
+
+            songOutUpdate = songInUpdate;
+            requestedState = songOutUpdate.getState();
         } catch (JSONException jsonException) {
             GWT.log(jsonException.getMessage());
         }
@@ -211,43 +229,34 @@ public class SongPlayMasterImpl
         this.bSteeleMusicIO = bSteeleMusicIO;
     }
 
-    public enum Action {
-        stopSong,
-        playSong,
-        //        continueSong,
-//        loopSong,
-//        loop1,
-//        loop2,
-//        loop4,
-//        loopSelected,
-        playing,
-        idle;
-    }
-
     public void stopSong() {
-        requestAction(Action.stopSong);
+        requestedState = SongUpdate.State.idle;
     }
 
     public void play() {
-        requestAction(Action.playSong);
+        songOutUpdate = new SongUpdate();
+        songOutUpdate.setBeatsPerBar(song.getBeatsPerBar());
+        songOutUpdate.setBeatsPerMinute(song.getBeatsPerMinute());
+
+        songOutUpdate.setEventTime(
+                Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
+                        //  add margin into the future
+                        + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
+        songOutUpdate.setSong(song);
+        songOutUpdate.setMeasure(-preRoll);
+        songOutUpdate.setState(SongUpdate.State.playing);
+
+        bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
+        requestedState = SongUpdate.State.playing;
     }
 
     public void playSong(Song song) {
         setSong(song);
-        requestAction(Action.playSong);
+        play();
     }
 
     public void continueSong() {
-        requestAction(Action.playSong);
-    }
-
-    private void requestAction(Action action) {
-        if (this.action == null) {
-            return;
-        }
-
-        this.action = action;
-        process();
+        requestedState = SongUpdate.State.playing;
     }
 
     public void setSelection(int first, int last) {
@@ -261,31 +270,6 @@ public class SongPlayMasterImpl
         lastSection = -1;
         beatsPerBar = song.getBeatsPerBar();
         measureDuration = song.getBeatsPerBar() * 60.0 / song.getBeatsPerMinute();
-    }
-
-    private void process() {
-
-        switch (action) {
-            case idle:
-                break;
-            case playSong:
-                songOutUpdate.setBeatsPerBar(song.getBeatsPerBar());
-                songOutUpdate.setBeatsPerMinute(song.getBeatsPerMinute());
-
-                songOutUpdate.setEventTime(
-                        Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
-                                //  add margin into the future
-                                + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
-                songOutUpdate.setSong(song);
-                songOutUpdate.setMeasure(-preRoll);
-                songOutUpdate.setState(SongUpdate.State.playing);
-
-                bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
-                action = Action.playing;
-                break;
-            case playing:
-                break;
-        }
     }
 
     @Override
@@ -306,12 +290,10 @@ public class SongPlayMasterImpl
         audioFilePlayer.bufferFile(highHat3);
         audioFilePlayer.bufferFile(kick);
         audioFilePlayer.bufferFile(snare);
-
-
+        
         GWT.log("Latency: " + audioFilePlayer.getBaseLatency()
                 + ", " + audioFilePlayer.getOutputLatency()
         );
-
 
         //  fixme: should wait for end of audio buffer loading
 
@@ -330,16 +312,15 @@ public class SongPlayMasterImpl
     private double thisMeasureStart;
     private double nextMeasureStart;
     private Song song;
-    private final SongUpdate songOutUpdate = new SongUpdate();
-    private final SongUpdate.State state = SongUpdate.State.idle;
-    private Action action = Action.idle;
+    private SongUpdate songOutUpdate = new SongUpdate();
+    private SongUpdate.State requestedState =  SongUpdate.State.idle;
+    private SongUpdate.State state =  SongUpdate.State.idle;
     private LegacyDrumMeasure defaultDrumSelection = new LegacyDrumMeasure();
     private static final String highHat1 = "images/hihat3.mp3";
     private static final String highHat3 = "images/hihat1.mp3";
     private static final String kick = "images/kick_4513.mp3";
     private static final String snare = "images/snare_4405.mp3";
     private static final double swing = 1.5;
-    private double lastOffset;
     private static final int preRoll = 3;
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;

@@ -25,6 +25,7 @@ public class LegacyDrumMeasure {
 
         /**
          * The drum type for the part described
+         *
          * @return the drum type
          */
         public DrumType getDrumType() {
@@ -33,6 +34,7 @@ public class LegacyDrumMeasure {
 
         /**
          * The drum type for the part described
+         *
          * @param drumType the drum type
          */
         public void setDrumType(DrumType drumType) {
@@ -41,7 +43,8 @@ public class LegacyDrumMeasure {
 
         /**
          * Get the divisions per beat, i.e. the drum part resolution
-         * @return  divisions per beat
+         *
+         * @return divisions per beat
          */
         public int getDivisionsPerBeat() {
             return divisionsPerBeat;
@@ -49,6 +52,7 @@ public class LegacyDrumMeasure {
 
         /**
          * Set the divisions per beat, i.e. the drum part resolution
+         *
          * @param divisionsPerBeat divisions per beat
          */
         public void setDivisionsPerBeat(int divisionsPerBeat) {
@@ -61,6 +65,7 @@ public class LegacyDrumMeasure {
          * description is determined by the divisions per beat.  When the length
          * of the description is less than the divisions per beat times the beats per measure,
          * the balance of the measure will be silent.
+         *
          * @return the string encoded drum description
          */
         public String getDescription() {
@@ -69,6 +74,7 @@ public class LegacyDrumMeasure {
 
         /**
          * Set the drum part description
+         *
          * @param description the string encoded drum description
          */
         public void setDescription(String description) {
@@ -136,6 +142,11 @@ public class LegacyDrumMeasure {
 
     public void setKick(String kick) {
         this.kick = kick;
+    }
+
+    @Override
+    public String toString() {
+        return "{" + highHat + ", " + snare + ", " + kick + '}';
     }
 
     private String highHat;

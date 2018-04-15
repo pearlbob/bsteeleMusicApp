@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- *
  * @author bob
  */
 public class SongListView
@@ -37,165 +36,168 @@ public class SongListView
         implements SongListPresenterWidget.MyView,
         HasHandlers {
 
-  @Override
-  public void setSongList(Set<Song> songs) {
-    allSongs.clear();
-    allSongs.addAll(songs);
-    searchSongs(songSearch.getValue());
-  }
-
-  interface Binder extends UiBinder<Widget, SongListView> {
-  }
-
-  @UiField
-  TextBox songSearch;
-
-  @UiField
-  Button clearSearch;
-
-  @UiField
-  FileUpload readSongFiles;
-  // multiple accept=".songlyrics" 
-
-  @UiField
-  Grid songGrid;
-
-  @Inject
-  SongListView(Binder binder) {
-    initWidget(binder.createAndBindUi(this));
-
-    handlerManager = new HandlerManager(this);
-
-    songGrid.addClickHandler(event -> {
-      if (filteredSongs != null) {
-        Song selectedSong = filteredSongs.get(songGrid.getCellForEvent(event).getRowIndex());
-        fireEvent(new SongSelectionEvent(selectedSong));
-      }
-    });
-
-    songSearch.addKeyUpHandler((event) -> {
-      searchSongs(songSearch.getValue());
-    });
-
-    /**
-     * The X button
-     */
-    clearSearch.addClickHandler((event) -> {
-      songSearch.setText("");
-      searchSongs(songSearch.getValue());
-      songSearch.setFocus(true);
-    });
-
-    /**
-     * Song file read
-     */
-    readSongFiles.addChangeHandler((event) -> {
-      FileList files = new FileList(getFiles(event.getNativeEvent()));
-
-      int limit = files.getLength();
-      for (int i = 0; i < limit; i++) {
-        asyncReadSongFile(files.getItem(i));
-      }
-      clearFiles(event.getNativeEvent()); //  clear files for a new "change"
-    });
-
-    songSearch.setFocus(true);
-
-    //  work around GWT to allow multiple files in a selection
-    readSongFiles.getElement().setPropertyString("multiple", "multiple");
-  }
-
-  @Override
-  public void fireEvent(GwtEvent<?> event) {
-    handlerManager.fireEvent(event);
-  }
-
-  @Override
-  public HandlerRegistration addSongSelectionEventHandler(
-          SongSelectionEventHandler handler) {
-    return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
-  }
-
-  @Override
-  public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler) {
-    return handlerManager.addHandler(SongReadEvent.TYPE, handler);
-  }
-
-  private void searchSongs(String search) {
-    if (search == null) {
-      search = "";
+    @Override
+    public void setSongList(Set<Song> songs) {
+        allSongs.clear();
+        allSongs.addAll(songs);
+        searchSongs(songSearch.getValue());
     }
-    search = search.replaceAll("[^\\w\\s']+", "");
-    search = search.toLowerCase();
-    {
-      TreeSet<Song> sortedSongs = new TreeSet<>();
-      for (Song song : allSongs) {
-        if (search.length() == 0
-                || song.getTitle().toLowerCase().contains(search)
-                || song.getArtist().toLowerCase().contains(search)) {
-          sortedSongs.add(song);
+
+    interface Binder extends UiBinder<Widget, SongListView> {
+    }
+
+    @UiField
+    TextBox songSearch;
+
+    @UiField
+    Button clearSearch;
+
+    @UiField
+    FileUpload readSongFiles;
+    // multiple accept=".songlyrics"
+
+    @UiField
+    Grid songGrid;
+
+    @Inject
+    SongListView(Binder binder) {
+        initWidget(binder.createAndBindUi(this));
+
+        handlerManager = new HandlerManager(this);
+
+        songGrid.addClickHandler(event -> {
+            if (filteredSongs != null && songGrid != null) {
+                HTMLTable.Cell cell = songGrid.getCellForEvent(event);
+                if (cell != null) {
+                    Song selectedSong = filteredSongs.get(cell.getRowIndex());
+                    fireEvent(new SongSelectionEvent(selectedSong));
+                }
+            }
+        });
+
+        songSearch.addKeyUpHandler((event) -> {
+            searchSongs(songSearch.getValue());
+        });
+
+        /**
+         * The X button
+         */
+        clearSearch.addClickHandler((event) -> {
+            songSearch.setText("");
+            searchSongs(songSearch.getValue());
+            songSearch.setFocus(true);
+        });
+
+        /**
+         * Song file read
+         */
+        readSongFiles.addChangeHandler((event) -> {
+            FileList files = new FileList(getFiles(event.getNativeEvent()));
+
+            int limit = files.getLength();
+            for (int i = 0; i < limit; i++) {
+                asyncReadSongFile(files.getItem(i));
+            }
+            clearFiles(event.getNativeEvent()); //  clear files for a new "change"
+        });
+
+        songSearch.setFocus(true);
+
+        //  work around GWT to allow multiple files in a selection
+        readSongFiles.getElement().setPropertyString("multiple", "multiple");
+    }
+
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        handlerManager.fireEvent(event);
+    }
+
+    @Override
+    public HandlerRegistration addSongSelectionEventHandler(
+            SongSelectionEventHandler handler) {
+        return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler) {
+        return handlerManager.addHandler(SongReadEvent.TYPE, handler);
+    }
+
+    private void searchSongs(String search) {
+        if (search == null) {
+            search = "";
         }
-      }
-      filteredSongs.clear();
-      filteredSongs.addAll(sortedSongs);
+        search = search.replaceAll("[^\\w\\s']+", "");
+        search = search.toLowerCase();
+        {
+            TreeSet<Song> sortedSongs = new TreeSet<>();
+            for (Song song : allSongs) {
+                if (search.length() == 0
+                        || song.getTitle().toLowerCase().contains(search)
+                        || song.getArtist().toLowerCase().contains(search)) {
+                    sortedSongs.add(song);
+                }
+            }
+            filteredSongs.clear();
+            filteredSongs.addAll(sortedSongs);
+        }
+        displaySongList(filteredSongs);
     }
-    displaySongList(filteredSongs);
-  }
 
-  /**
-   *
-   * @param filteredSongs
-   */
-  public void displaySongList(ArrayList<Song> filteredSongs) {
+    /**
+     * @param filteredSongs
+     */
+    public void displaySongList(ArrayList<Song> filteredSongs) {
 
-    this.filteredSongs = filteredSongs;
-    songGrid.resize(filteredSongs.size(), columns);
-    {
-      int r = 0;
-      for (Song song : filteredSongs) {
-        songGrid.setHTML(r, 0,
-                "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItem\">"
-                + song.getTitle() + "</div>");
-        songGrid.setHTML(r, 1,
-                "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItemData\">"
-                + song.getArtist() + "</div>");
-        r++;
-      }
+        this.filteredSongs = filteredSongs;
+        songGrid.resize(filteredSongs.size(), columns);
+        {
+            int r = 0;
+            for (Song song : filteredSongs) {
+                songGrid.setHTML(r, 0,
+                        "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItem\">"
+                                + song.getTitle() + "</div>");
+                songGrid.setHTML(r, 1,
+                        "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItemData\">"
+                                + song.getArtist() + "</div>");
+                r++;
+            }
+        }
     }
-  }
 
-  private native FileListImpl getFiles(NativeEvent event)/*-{
-    var ret = event.target.files;
-          if ( ret.length <= 0 )
-          return null;
-          
-    return ret;
-  }-*/;
-  
-  /**
-   * JS hack to allow the same file or files to be reloaded
-   * if selected again.  Otherwise there is no change event.
-   * @param event 
-   */
-  private native void clearFiles(NativeEvent event)/*-{
-    event.srcElement.value = null;
-  }-*/;
+    private native FileListImpl getFiles(NativeEvent event)/*-{
+        var ret = event.target.files;
+        if (ret.length <= 0)
+            return null;
 
-  private void asyncReadSongFile(Object entry) {
+        return ret;
+    }-*/;
 
-    File file = (File) entry;
+    /**
+     * JS hack to allow the same file or files to be reloaded
+     * if selected again.  Otherwise there is no change event.
+     *
+     * @param event
+     */
+    private native void clearFiles(NativeEvent event)/*-{
+        event.srcElement.value = null;
+    }-*/;
 
-    FileReader reader = new FileReader();
-    reader.addLoadEndHandler((LoadEndEvent event) -> {
-      Song song = Song.fromJson(reader.getStringResult());
-      fireEvent(new SongReadEvent(song));
-    });
-    reader.readAsText(file);
-  }
+    private void asyncReadSongFile(Object entry) {
 
-  private final HandlerManager handlerManager;
+        File file = (File) entry;
 
-  private static final int columns = 2;
-  private ArrayList<Song> filteredSongs = new ArrayList<>();
-  private final TreeSet<Song> allSongs = new TreeSet<>();
+        FileReader reader = new FileReader();
+        reader.addLoadEndHandler((LoadEndEvent event) -> {
+            Song song = Song.fromJson(reader.getStringResult());
+            fireEvent(new SongReadEvent(song));
+        });
+        reader.readAsText(file);
+    }
+
+    private final HandlerManager handlerManager;
+
+    private static final int columns = 2;
+    private ArrayList<Song> filteredSongs = new ArrayList<>();
+    private final TreeSet<Song> allSongs = new TreeSet<>();
 }
