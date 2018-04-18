@@ -30,6 +30,7 @@ public enum ChordDescriptor {
     diminished("dim", "R m3 m5"),
     augmented5("aug5", "R 3 #5"),
     augmented7("aug7", "R 3 #5 m7"),
+    augmented("aug", "R 3 #5"),
     suspended7("sus7", "R 5 m7"),
     suspended4("sus4", "R 4 5"),
     suspended2("sus2", "R 2 5"),
@@ -141,6 +142,7 @@ public enum ChordDescriptor {
     private static final ChordDescriptor[] otherChordDescriptorsOrdered ={
             //  less pop by shortname
             add9,
+            augmented,
             augmented5,
             augmented7,
             diminished,

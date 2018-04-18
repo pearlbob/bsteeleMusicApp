@@ -1100,7 +1100,9 @@ public class Song implements Comparable<Song> {
     public enum ComparatorType {
         title,
         artist,
-        lastModifiedDate;
+        lastModifiedDate,
+        lastModifiedDateLast
+        ;
     }
 
     public static Comparator<Song> getComparatorByType(ComparatorType type) {
@@ -1111,6 +1113,8 @@ public class Song implements Comparable<Song> {
                 return new ComparatorByArtist();
             case lastModifiedDate:
                 return new ComparatorByLastModifiedDate();
+            case lastModifiedDateLast:
+                return new ComparatorByLastModifiedDateLast();
         }
     }
 
@@ -1189,6 +1193,39 @@ public class Song implements Comparable<Song> {
             }
             if (mod2 != null) {
                 return 1;
+            }
+            return o1.compareTo(o2);
+        }
+    }
+    public static class ComparatorByLastModifiedDateLast implements Comparator<Song> {
+
+        /**
+         * Compares its two arguments for order my most recent modification date.
+         *
+         * @param o1 the first object to be compared.
+         * @param o2 the second object to be compared.
+         * @return a negative integer, zero, or a positive integer as the
+         * first argument is less than, equal to, or greater than the
+         * second.
+         * @throws NullPointerException if an argument is null and this
+         *                              comparator does not permit null arguments
+         * @throws ClassCastException   if the arguments' types prevent them from
+         *                              being compared by this comparator.
+         */
+        @Override
+        public int compare(Song o1, Song o2) {
+            JsDate mod1 = o1.lastModifiedDate;
+            JsDate mod2 = o2.lastModifiedDate;
+            if (mod1 != null) {
+                if (mod2 != null) {
+                    if (mod1.getTime() == mod2.getTime())
+                        return o1.compareTo(o2);
+                    return mod1.getTime() < mod2.getTime() ? -1 : 1;
+                }
+                return 1;
+            }
+            if (mod2 != null) {
+                return -1;
             }
             return o1.compareTo(o2);
         }

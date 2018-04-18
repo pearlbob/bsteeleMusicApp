@@ -66,6 +66,8 @@ public class SongListView
 
     @UiField
     Grid songGrid;
+    @UiField
+    Label listCount;
 
     @Inject
     SongListView(Binder binder) {
@@ -179,10 +181,11 @@ public class SongListView
                                 + song.getArtist() + "</div>");
                 songGrid.setHTML(r, 2,
                         "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItemData\">"
-                                + (song.getLastModifiedDate() == null ? "unknown" : song.getLastModifiedDate().toDateString()) + "</div>");
+                                + (song.getLastModifiedDate() == null ? "unloved since 2017" : song.getLastModifiedDate().toDateString()) + "</div>");
                 r++;
             }
         }
+        listCount.setText("Count: "+Integer.toString(filteredSongs.size()));
     }
 
     private native FileListImpl getFiles(NativeEvent event)/*-{

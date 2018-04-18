@@ -37,6 +37,7 @@
                         <div class="{resources.style.songList}">
                             <g:Grid ui:field="songGrid"/>
                         </div>
+                        <p><g:Label ui:field="listCount" /></p>
                     </div>
                 </g:HTMLPanel>
             </g:ScrollPanel>

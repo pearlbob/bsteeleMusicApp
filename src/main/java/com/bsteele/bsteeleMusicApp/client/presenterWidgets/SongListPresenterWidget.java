@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -91,8 +92,14 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                 JSONArray ja = jv.isArray();
                 if (ja != null) {
                     int jaLimit = ja.size();
+                    //  order by oldest first
+                    TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(Song.ComparatorType.lastModifiedDateLast));
                     for (int i = 0; i < jaLimit; i++) {
-                        addToSonglist(Song.fromJsonObject(ja.get(i).isObject()));
+                        sortedSet.add(Song.fromJsonObject(ja.get(i).isObject()));
+                    }
+                    //  add to all songs
+                    for (Song song: sortedSet) {
+                        addToSonglist(song);
                     }
                 }
             }
@@ -102,7 +109,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     private void addToSonglist(Song song) {
         if (song != null) {
-            allSongs.remove(song);  //  remove any prior version
+            if ( allSongs.contains(song)) {
+                GWT.log("Dup: "+song.getTitle());
+                allSongs.remove(song);  //  remove any prior version
+            }
             allSongs.add(song);
         }
     }

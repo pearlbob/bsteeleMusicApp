@@ -49,7 +49,7 @@ fi
 
 
 #	write the output file
-
+cd $appRoot/$dst
 rm -f $json
 
 #	open the JSON
