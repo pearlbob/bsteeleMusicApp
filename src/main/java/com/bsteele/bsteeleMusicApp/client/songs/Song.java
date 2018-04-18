@@ -82,9 +82,12 @@ public class Song implements Comparable<Song> {
      * @return the new song
      */
     public final Song copySong() {
-        return createSong(getTitle(), getArtist(),
+        Song ret =  createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getChordsAsString(), getLyricsAsString());
+        ret.setFileName(getFileName());
+        ret.setLastModifiedDate(getLastModifiedDate());
+        return ret;
     }
 
     /**
@@ -118,8 +121,11 @@ public class Song implements Comparable<Song> {
         if (jsonObject == null) {
             return null;
         }
+        //  file information available
         if (jsonObject.keySet().contains("file"))
             return songFromJsonFileObject(jsonObject);
+        
+        //  straight song
         return songFromJsonObject(jsonObject);
     }
 
@@ -399,7 +405,7 @@ public class Song implements Comparable<Song> {
                         //  fall through
                     case 1:
                         String token = rawChordTableText.substring(i);
-                        Section.Version v = Section.parse(token.substring(0, 11));
+                        Section.Version v = Section.parse(token.substring(0, Math.min(token.length()-1,11)));
                         if (v != null) {
                             version = v;
                             i += version.getParseLength() - 1;//   consume the section label
@@ -872,17 +878,6 @@ public class Song implements Comparable<Song> {
         this.artist = artist;
     }
 
-    private void parseChords(String s) {
-        chordSections.clear();
-        for (; ; ) {
-            ChordSection chordSection = ChordSection.parse(s, beatsPerBar);
-            if (chordSection == null)
-                break;
-            s = s.substring(chordSection.getParseLength());
-            chordSections.add(chordSection);
-        }
-    }
-
     /**
      * Set the key for this song.
      *
@@ -1078,14 +1073,6 @@ public class Song implements Comparable<Song> {
     }
 
 
-    public ArrayList<ChordSection> getChordSections() {
-        return chordSections;
-    }
-
-    public void setChordSections(ArrayList<ChordSection> chordSections) {
-        this.chordSections = chordSections;
-    }
-
     public Arrangement getDrumArrangement() {
         return drumArrangement;
     }
@@ -1209,7 +1196,7 @@ public class Song implements Comparable<Song> {
 
     @Override
     public int compareTo(Song o) {
-        int ret = getTitle().compareTo(o.getTitle());
+        int ret = getSongId().compareTo(o.getSongId());
         if (ret != 0) {
             return ret;
         }
@@ -1262,7 +1249,6 @@ public class Song implements Comparable<Song> {
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
-    private ArrayList<ChordSection> chordSections = new ArrayList<>();
     private String rawLyrics = "";
     private String chords = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();

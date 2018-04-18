@@ -68,7 +68,7 @@ do
 	fi
 
 	#	set the file and modification date
-	echo '{ "file": "'$f'", "lastModifiedDate":' `stat -c %Y000 $f`', "song": ' >> $json
+	echo '{ "file": "'$f'", "lastModifiedDate":' `stat -c %Y000.0 $f`', "song": ' >> $json
 	#	copy the song
 	cat $f >>  $json
 	echo '}' >> $json
