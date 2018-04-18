@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
@@ -27,7 +28,6 @@ import java.util.logging.Logger;
 @JsType
 public class SongUpdate {
 
-
     public enum State {
         playing,
         idle;
@@ -36,21 +36,6 @@ public class SongUpdate {
     public SongUpdate() {
         song = Song.createEmptySong();
     }
-
-//    void copySongUpdate(SongUpdate other) {
-//        this.state = other.state;
-//        this.eventTime = other.eventTime;
-//        this.title = other.title;
-//        this.sectionCount = other.sectionCount;
-//        this.sectionVersion = other.sectionVersion;
-//        this.chordSectionRow = other.chordSectionRow;
-//        this.repeatCurrent = other.repeatCurrent;
-//        this.chordSectionRepeat = other.chordSectionRepeat;
-//        this.measure = other.measure;
-//        this.beat = other.beat;
-//        this.beatsPerMeasure = other.beatsPerMeasure;
-//        this.beatsPerMinute = other.beatsPerMinute;
-//    }
 
     public State getState() {
         return state;
@@ -267,6 +252,13 @@ public class SongUpdate {
         return measure;
     }
 
+
+    public double getMeasureDuration() {
+        if ( song== null)
+            return 2;
+        return song.getBeatsPerBar() * 60.0 / (currentBeatsPerMinute == 0 ? 30 : currentBeatsPerMinute);
+    }
+
     /**
      * Beat number from start of the current measure. Starts at zero and goes to
      * beatsPerBar - 1
@@ -285,10 +277,10 @@ public class SongUpdate {
     }
 
     /**
-     * @return the beatsPerMinute
+     * @return the currentBeatsPerMinute
      */
-    public int getBeatsPerMinute() {
-        return beatsPerMinute;
+    public int getCurrentBeatsPerMinute() {
+        return currentBeatsPerMinute;
     }
 
 
@@ -306,7 +298,7 @@ public class SongUpdate {
     /**
      * @param song the song to set
      */
-    void setSong(Song song) {
+    public void setSong(Song song) {
         this.song = song;
     }
 
@@ -347,10 +339,10 @@ public class SongUpdate {
     }
 
     /**
-     * @param beatsPerMinute the beatsPerMinute to set
+     * @param currentBeatsPerMinute the currentBeatsPerMinute to set
      */
-    void setBeatsPerMinute(int beatsPerMinute) {
-        this.beatsPerMinute = beatsPerMinute;
+    public void setCurrentBeatsPerMinute(int currentBeatsPerMinute) {
+        this.currentBeatsPerMinute = currentBeatsPerMinute;
     }
 
     public int getRepeatTotal() {
@@ -370,6 +362,16 @@ public class SongUpdate {
     }
 
 
+    public Key getCurrentKey() {
+        return currentKey;
+    }
+
+    public void setCurrentKey(Key currentKey) {
+        this.currentKey = currentKey;
+    }
+
+
+
     public String diff(SongUpdate other) {
         if (other == null || other.song == null)
             return "no old song";
@@ -379,6 +381,12 @@ public class SongUpdate {
             return "new sectionNumber: " + other.getSectionNumber();
         if (measure != other.measure)
             return "new measure: " + other.measure;
+        if (!currentKey.equals(other.currentKey))
+            return "new key: " + other.currentKey;
+        if (!currentKey.equals(other.currentKey))
+            return "new key: " + other.currentKey;
+        if (currentBeatsPerMinute !=other.currentBeatsPerMinute)
+            return "new tempo: " + other.currentBeatsPerMinute;
         return "no change";
     }
 
@@ -440,6 +448,9 @@ public class SongUpdate {
                 case "state":
                     songUpdate.setState(State.valueOf(jv.isString().stringValue()));
                     break;
+                case "currentKey":
+                    songUpdate.setCurrentKey(Key.valueOf(jv.isString().stringValue()));
+                    break;
                 case "eventTime":
                     songUpdate.setEventTime(JsonUtil.toDouble(jv));
                     break;
@@ -456,8 +467,8 @@ public class SongUpdate {
                 case "beatsPerMeasure":
                     songUpdate.beatsPerMeasure = JsonUtil.toInt(jv);
                     break;
-                case "beatsPerMinute":
-                    songUpdate.beatsPerMinute = JsonUtil.toInt(jv);
+                case "currentBeatsPerMinute":
+                    songUpdate.currentBeatsPerMinute = JsonUtil.toInt(jv);
                     break;
             }
         }
@@ -470,6 +481,9 @@ public class SongUpdate {
         sb.append("{\n")
                 .append("\"state\": \"")
                 .append(getState().name())
+                .append("\",\n")
+                .append("\"currentKey\": \"")
+                .append(getCurrentKey().name())
                 .append("\",\n")
                 .append("\"eventTime\": ")
                 .append(getEventTime())
@@ -488,8 +502,8 @@ public class SongUpdate {
                 .append("\"beatsPerMeasure\": ")
                 .append(getBeatsPerMeasure())
                 .append(",\n")
-                .append("\"beatsPerMinute\": ")
-                .append(getBeatsPerMinute())
+                .append("\"currentBeatsPerMinute\": ")
+                .append(getCurrentBeatsPerMinute())
                 .append("\n}\n");
 
         return sb.toString();
@@ -499,6 +513,7 @@ public class SongUpdate {
     public int hashCode() {
         int hash = 5;
         hash = (83 * hash + state.hashCode()) % (1 << 31);
+        hash = (83 * hash + currentKey.hashCode()) % (1 << 31);
         hash = (83 * hash + (int) this.eventTime) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
@@ -514,7 +529,7 @@ public class SongUpdate {
         hash = (83 * hash + this.measure) % (1 << 31);
         hash = (83 * hash + this.beat) % (1 << 31);
         hash = (83 * hash + this.beatsPerMeasure) % (1 << 31);
-        hash = (83 * hash + this.beatsPerMinute) % (1 << 31);
+        hash = (83 * hash + this.currentBeatsPerMinute) % (1 << 31);
         return hash;
     }
 
@@ -536,7 +551,11 @@ public class SongUpdate {
             }
         } else if (other.song != null)
             return false;
+
         if (!this.state.equals(other.state)) {
+            return false;
+        }
+        if (!this.currentKey.equals(other.currentKey)) {
             return false;
         }
         if (this.eventTime != other.eventTime) {
@@ -578,7 +597,7 @@ public class SongUpdate {
         if (this.beatsPerMeasure != other.beatsPerMeasure) {
             return false;
         }
-        if (this.beatsPerMinute != other.beatsPerMinute) {
+        if (this.currentBeatsPerMinute != other.currentBeatsPerMinute) {
             return false;
         }
         if (this.sectionNumber != other.sectionNumber) {
@@ -605,8 +624,11 @@ public class SongUpdate {
     private int measure;
     private String measureContent;
 
+    //  play values
     private int beat;
     private int beatsPerMeasure;
-    private int beatsPerMinute;
+    private int currentBeatsPerMinute;
+    private Key currentKey = Key.getDefault();
+
     private static final Logger logger = Logger.getLogger(SongUpdate.class.getName());
 }

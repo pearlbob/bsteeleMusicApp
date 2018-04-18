@@ -11,6 +11,11 @@
                     <span class="{resources.style.label}">Search:</span>
                     <g:TextBox ui:field="songSearch"/>
                     <g:Button text="X" ui:field="clearSearch"/>
+                    <select ui:field="listBySelect" >
+                        <option value="title" selected="true">by Title</option>
+                        <option value="artist" >by Artist</option>
+                        <option value="lastModifiedDate" >by Mod Date</option>
+                    </select>
                     <span class="{resources.style.tooltip}">
                         <span style="font-weight: bold;">Read Song Files:</span>
                         <g:FileUpload ui:field="readSongFiles"/>

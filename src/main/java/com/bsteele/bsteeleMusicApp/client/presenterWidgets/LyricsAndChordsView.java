@@ -6,11 +6,12 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
+import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -83,7 +84,6 @@ public class LyricsAndChordsView
         this.eventBus = eventBus;
         initWidget(binder.createAndBindUi(this));
 
-        this.songPlayMaster = songPlayMaster;
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
 
@@ -94,9 +94,11 @@ public class LyricsAndChordsView
                         songPlayMaster.stopSong();
                         break;
                     case idle:
-                        Song songToPlay = song.copySong();
-                        songToPlay.setBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
-                        songPlayMaster.playSong(songToPlay);
+                        SongUpdate songUpdate = new SongUpdate();
+                        songUpdate.setSong(song.copySong());
+                        songUpdate.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                        songUpdate.setCurrentKey(currentKey);
+                        songPlayMaster.playSongUpdate(songUpdate);
                         break;
                 }
             }
@@ -120,23 +122,23 @@ public class LyricsAndChordsView
         });
 
         currentBpmEntry.addChangeHandler((event) -> {
-            GWT.log("currentBpmEntry change: "    //fixme
-                    + currentBpmEntry.getText()
-            );
+            setBpm(currentBpmEntry.getValue());
         });
 
         Event.sinkEvents(bpmSelect, Event.ONCHANGE);
         Event.setEventListener(bpmSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
-                int bpm = Integer.parseInt(bpmSelect.getValue());
-                currentBpmEntry.setValue(Integer.toString(bpm));
-                GWT.log("bpm select: " + bpm);
+                setBpm(bpmSelect.getValue());
+                bpmSelect.setSelectedIndex(0);
             }
         });
     }
 
     @Override
     public void onSongUpdate(SongUpdate songUpdate) {
+
+        if (songUpdate == null || songUpdate.getSong() == null)
+            return;     //  defense
 
         this.songUpdate = songUpdate;
 
@@ -165,9 +167,29 @@ public class LyricsAndChordsView
                 break;
         }
 
-        keyLabel.setInnerHTML(songUpdate.getSong().getKey().toString());
+        //  set the song prior to play selection overrides
+        setSong(songUpdate.getSong(), songUpdate.getCurrentKey());
 
+        setCurrentKey(songUpdate.getCurrentKey());
+        setBpm(songUpdate.getCurrentBeatsPerMinute());
+
+        chordsFontSize =0;//    will never match, forces the fontSize set
         chordsDirty = true;
+
+    }
+
+    private void setCurrentKey(Key key) {
+        this.currentKey = key;
+        currentKeyTransposition = key.getHalfStep() - song.getKey().getHalfStep();
+        keyLabel.setInnerHTML(currentKey.toString());
+    }
+
+    private void setBpm(String bpm) {
+        setBpm(Integer.parseInt(bpm));
+    }
+
+    private void setBpm(int bpm) {
+        currentBpmEntry.setValue(Integer.toString(bpm));
     }
 
     private void labelPlayStop() {
@@ -184,21 +206,24 @@ public class LyricsAndChordsView
     }
 
     @Override
-    public void onMusicAnimationEvent(double t) {
-        if (song != null
-            //&& songUpdate.getState() == SongUpdate.State.playing
-                )
-            audioBeatDisplay.update(t, songUpdate.getEventTime(),
-                    songUpdate.getBeatsPerMinute(), false, song.getBeatsPerBar());
+    public void onMusicAnimationEvent(MusicAnimationEvent event) {
+        if (song != null)
+            audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+                    songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+        {
+            Widget parent = chords.getParent();
+            double parentWidth = parent.getOffsetWidth();
+            double parentHeight = parent.getOffsetHeight();
+            if (parentWidth != chordsParentWidth) {
+                chordsParentWidth = parentWidth;
+                chordsDirty = true;
+            }
+            if (parentHeight != chordsParentHeight) {
+                chordsParentHeight = parentHeight;
+                chordsDirty = true;
+            }
+        }
 
-        if (chords.getOffsetWidth() != chordsWidth) {
-            chordsWidth = chords.getOffsetWidth();
-            chordsDirty = true;
-        }
-        if (chords.getOffsetHeight() != chordsHeight) {
-            chordsHeight = chords.getOffsetHeight();
-            chordsDirty = true;
-        }
         if (chordsDirty) {
 
             //  turn off all highlights
@@ -210,43 +235,57 @@ public class LyricsAndChordsView
                 lastLyricsElement.getStyle().clearBackgroundColor();
                 lastLyricsElement = null;
             }
-
-            //  add highlights
-            if (songUpdate.getMeasure() >= 0) {
-                String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
-                        songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-
-                Element ce = chords.getElementById(chordCellId);
-                if (ce != null) {
-                    ce.getStyle().setBackgroundColor(highlightColor);
-                    lastChordElement = ce;
-                }
-                String lyricsCellId = Song.genLyricsId(songUpdate.getSectionNumber());
-                Element le = lyrics.getElementById(lyricsCellId);
-                if (le != null) {
-                    le.getStyle().setBackgroundColor(highlightColor);
-                    lastLyricsElement = le;
-                }
+            if (event.getMeasureNumber() != lastMeasureNumber) {
+                chordsDirty = true;
+                lastMeasureNumber = event.getMeasureNumber();
             }
 
             switch (songUpdate.getState()) {
-                case idle:
-                    resizeChords();
+                case playing:
+                    //  add highlights
+                    if (songUpdate.getMeasure() >= 0) {
+                        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
+                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+
+                        Element ce = chords.getElementById(chordCellId);
+                        if (ce != null) {
+                            ce.getStyle().setBackgroundColor(highlightColor);
+                            lastChordElement = ce;
+                        }
+                        String lyricsCellId = Song.genLyricsId(songUpdate.getSectionNumber());
+                        Element le = lyrics.getElementById(lyricsCellId);
+                        if (le != null) {
+                            le.getStyle().setBackgroundColor(highlightColor);
+                            lastLyricsElement = le;
+                        }
+                    }
                     break;
             }
+
+            resizeChords();
         }
     }
 
 
     @Override
     public void setSong(Song song) {
-        boolean keepKey = (this.song != null && song != null
-                && this.song.getSongId().equals(song.getSongId()));  //  identity only
+        setSong(song, null);
+    }
+
+    private void setSong(Song song, Key key) {
+
+        if (key == null) {
+            boolean keepKey = (this.song != null && song != null
+                    && this.song.getSongId().equals(song.getSongId()));  //  identity only
+            if (keepKey)
+                ;   //  keep the current key transposition unchanged from our recent use of this song
+            else
+                currentKeyTransposition = 0;
+        } else
+            currentKeyTransposition = key.getHalfStep() - song.getKey().getHalfStep();
 
         this.song = song;
         originalKey = song.getKey();
-        if (!keepKey)
-            currentKeyTransposition = 0;
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());
@@ -255,23 +294,21 @@ public class LyricsAndChordsView
 
         timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
 
-        currentBpmEntry.setValue(Integer.toString(song.getBeatsPerMinute()));
-
+        setBpm(song.getBeatsPerMinute());
         transpose(currentKeyTransposition);
 
         lyrics.clear();
         lyrics.add(new HTML(song.generateHtmlLyricsTable()));
 
-        chordsDirty = true;
+        //chordsDirty = true;   //  done by transpose()
     }
 
     private void transpose(int tran) {
         currentKeyTransposition = Util.mod(tran, MusicConstant.halfStepsPerOctave);
 
-        Key currentKey = Key.getKeyByHalfStep(originalKey.getHalfStep() + currentKeyTransposition);
-        song.setKey(currentKey);
+        currentKey = Key.getKeyByHalfStep(originalKey.getHalfStep() + currentKeyTransposition);
         keyLabel.setInnerHTML(currentKey.toString());
-        
+
         chords.clear();
         chords.add(new HTML(song.transpose(currentKeyTransposition)));
 
@@ -297,52 +334,43 @@ public class LyricsAndChordsView
                         logger.fine("chords panel: (" + parentWidth + ","
                                 + parentHeight + ") for (" + tableWidth + ","
                                 + tableHeight + ")");
-
-                        double maxFontSizeUsed = 0;
+                        
                         if (parentWidth < tableWidth
                                 || parentHeight < tableHeight
-                                || parentWidth > 1.2 * tableWidth) {
+                                || parentWidth > (1+1.0/chordsFontSize) * tableWidth) {
                             double ratio = Math.min(parentWidth / tableWidth,
                                     parentHeight / tableHeight);
                             logger.fine("wratio: " + (parentWidth / tableWidth)
                                     + ", hratio: " + (parentHeight / tableHeight));
                             NodeList<Element> cells = e.getElementsByTagName("td");
-                            final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
-                            for (int c = 0; c < cells.getLength(); c++) {
-                                Style cellStyle = cells.getItem(c).getStyle();
 
-                                double currentSize = chordsMaxFontSize;     //  fixme: demands all chord fonts be the same size
-                                MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
-                                if (mr != null)
-                                    currentSize = Double.parseDouble(mr.getGroup(1));
-                                double size = Math.min(Math.max(chordsMinFontSize, ratio * currentSize), chordsMaxFontSize);
-                                maxFontSizeUsed = Math.max(maxFontSizeUsed, size);
-                                if (currentSize != size) {
+                            int size = (int) Math.floor(Math.max(chordsMinFontSize,Math.min(chordsFontSize*ratio,chordsMaxFontSize)));
+                            if (chordsFontSize != size) {
+                                //  fixme: demands all chord fonts be the same size
+                                for (int c = 0; c < cells.getLength(); c++) {
+                                    Style cellStyle = cells.getItem(c).getStyle();
                                     cellStyle.setFontSize(size, Style.Unit.PX);
                                     cellStyle.setPaddingTop(size / 6, Style.Unit.PX);
                                     cellStyle.setPaddingBottom(size / 6, Style.Unit.PX);
                                     cellStyle.setPaddingLeft(size / 6, Style.Unit.PX);
                                     cellStyle.setPaddingRight(size / 3, Style.Unit.PX);
                                 }
+                                chordsFontSize = size;
                             }
-                            chordsDirty = !((ratio >= 1 && ratio <= 1.1)
-                                    || maxFontSizeUsed == chordsMinFontSize
-                                    || maxFontSizeUsed == chordsMaxFontSize);
+                            sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
+
+                            chordsDirty = !((ratio >= 1 && ratio <= (1+2.0/chordsFontSize))
+                                    || chordsFontSize == chordsMinFontSize
+                                    || chordsFontSize == chordsMaxFontSize);
+                            sendStatus("chordsDirty", Boolean.toString(chordsDirty));
                         } else
                             chordsDirty = false;
-
-                        //  move the splitter closer
-//                    if (!chordsDirty && chords.getOffsetWidth() - tableWidth > 5) {
-////                        fixme:      move the splitter closer to the chords
-// split.getLayoutData();
-//                    }
-
                         break;
                     }
                 }
             }
 
-            //  optimize the lyrics fontsize
+            //  optimize the lyrics fontSize
             if (!chordsDirty) {
                 //  last pass
                 NodeList<Element> list = lyrics.getElement().getElementsByTagName("table");
@@ -359,7 +387,7 @@ public class LyricsAndChordsView
                             || lyrics.getOffsetWidth() > 1.1 * tableWidth)          //  try to use the extra width
                     {
                         final double ratio = 0.95 * (double) lyrics.getOffsetWidth() / tableWidth;
-                        logger.fine("lyrics ratio: " + ((double) lyrics.getOffsetWidth() / tableWidth));
+                        //sendStatus("lyrics ratio: ", Double.toString((double) lyrics.getOffsetWidth() / tableWidth));
                         final NodeList<Element> cells = e.getElementsByTagName("td");
                         final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
                         for (int c = 0; c < cells.getLength(); c++) {
@@ -376,9 +404,13 @@ public class LyricsAndChordsView
                     }
                 }
 
-                audioBeatDisplayCanvas.setWidth(chordsWidth);
+                audioBeatDisplayCanvas.setWidth((int) Math.floor(chordsParentWidth));
             }
         }
+    }
+
+    private void sendStatus(String name, String value) {
+        eventBus.fireEvent(new StatusEvent(name, value));
     }
 
 
@@ -386,19 +418,21 @@ public class LyricsAndChordsView
     private Song song;
     private Key originalKey;
     private SongUpdate songUpdate = new SongUpdate();
-    private SongPlayMaster songPlayMaster;
     private int currentKeyTransposition = 0;
+    private Key currentKey = Key.getDefault();
     private Element lastChordElement;
     private Element lastLyricsElement;
     private boolean chordsDirty = true;
-    private int chordsWidth;
-    private int chordsHeight;
+    private double chordsParentWidth;
+    private double chordsParentHeight;
     private Element lastRepeatElement;
     private int lastRepeatTotal;
+    private int lastMeasureNumber;
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;
     private static final int chordsMaxFontSize = 52;
+    private   int chordsFontSize = chordsMaxFontSize;
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
     private final EventBus eventBus;

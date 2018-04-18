@@ -27,7 +27,7 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
 
         void onSongUpdate(SongUpdate songUpdate);
         
-        void onMusicAnimationEvent(double t);
+        void onMusicAnimationEvent(MusicAnimationEvent event);
     }
 
     @Inject
@@ -58,7 +58,7 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        view.onMusicAnimationEvent(event.getT());
+        view.onMusicAnimationEvent(event);
     }
 
     private final EventBus eventBus;

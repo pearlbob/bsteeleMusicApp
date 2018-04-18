@@ -11,9 +11,11 @@ public class MusicAnimationEvent extends GwtEvent<MusicAnimationEventHandler> {
     public static Type<MusicAnimationEventHandler> TYPE = new Type<MusicAnimationEventHandler>();
 
     private final double t; //  units: seconds
+    private final int measureNumber;
 
-    public MusicAnimationEvent(double t) {
+    public MusicAnimationEvent(double t, int measureNumber) {
         this.t = t;
+        this.measureNumber = measureNumber;
     }
 
     @Override
@@ -28,5 +30,9 @@ public class MusicAnimationEvent extends GwtEvent<MusicAnimationEventHandler> {
 
     public double getT() {
         return t;
+    }
+
+    public int getMeasureNumber() {
+        return measureNumber;
     }
 }

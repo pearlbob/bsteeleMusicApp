@@ -112,14 +112,14 @@ public class SongUpdateTest extends GWTTestCase {
     }
 
     /**
-     * Test of getBeatsPerMinute method, of class SongUpdate.
+     * Test of getCurrentBeatsPerMinute method, of class SongUpdate.
      */
     @Test
     public void testGetBeatsPerMinute() {
-        System.out.println("getBeatsPerMinute");
+        System.out.println("getCurrentBeatsPerMinute");
         SongUpdate instance = new SongUpdate();
         int expResult = 0;
-        int result = instance.getBeatsPerMinute();
+        int result = instance.getCurrentBeatsPerMinute();
         assertEquals(expResult, result);
     }
 
@@ -205,14 +205,14 @@ public class SongUpdateTest extends GWTTestCase {
     }
 
     /**
-     * Test of setBeatsPerMinute method, of class SongUpdate.
+     * Test of setCurrentBeatsPerMinute method, of class SongUpdate.
      */
     @Test
     public void testSetBeatsPerMinute() {
-        System.out.println("setBeatsPerMinute");
+        System.out.println("setCurrentBeatsPerMinute");
         int beatsPerMinute = 0;
         SongUpdate instance = new SongUpdate();
-        instance.setBeatsPerMinute(beatsPerMinute);
+        instance.setCurrentBeatsPerMinute(beatsPerMinute);
     }
 
     /**

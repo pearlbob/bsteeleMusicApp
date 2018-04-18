@@ -5,6 +5,8 @@ import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.LoggedInGatekeeper;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.StatusEventHandler;
 import com.bsteele.bsteeleMusicApp.client.place.NameTokens;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.DrumOptionsPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsPresenterWidget;
@@ -24,11 +26,12 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * @author bob
  */
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
-        implements SongSelectionEventHandler {
+        implements SongSelectionEventHandler, StatusEventHandler {
 
     interface MyView extends View {
 
         void selectTab(String tabName);
+        void onStatusEvent(StatusEvent event);
     }
 
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
@@ -78,11 +81,17 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         setInSlot(SLOT_DRUMOPTIONS_CONTENT, drumOptionsPresenterWidget);
 
         eventBus.addHandler(SongSelectionEvent.TYPE, this);
+        eventBus.addHandler(StatusEvent.TYPE, this);
     }
 
     @Override
     public void onSongSelection(SongSelectionEvent event) {
         getView().selectTab("lyricsAndChordsTab");
+    }
+
+    @Override
+    public void onStatusEvent(StatusEvent event) {
+        getView().onStatusEvent(event);
     }
 
     private final EventBus eventBus;

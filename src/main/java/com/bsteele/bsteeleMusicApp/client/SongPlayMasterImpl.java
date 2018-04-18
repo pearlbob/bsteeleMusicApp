@@ -53,10 +53,11 @@ public class SongPlayMasterImpl
                     ? dt : systemToAudioOffset * pass + (1 - pass) * dt;
         }
 
+        int measureNumber = Integer.MIN_VALUE;
         if (audioFilePlayer != null) {
-            switch (requestedState){
+            switch (requestedState) {
                 case idle:
-                    switch ( state ){
+                    switch (state) {
                         case playing:
                             //  stop
                             audioFilePlayer.stop();
@@ -68,7 +69,7 @@ public class SongPlayMasterImpl
                     }
                     break;
                 case playing:
-                    switch ( state ){
+                    switch (state) {
                         case idle:
                             //  start
                             state = requestedState;
@@ -82,20 +83,29 @@ public class SongPlayMasterImpl
                     //  distribute the time update locally
                     songLocalUpdate(systemT);
 
-                    double n = Math.floor((t + systemToAudioOffset - t0) / measureDuration);
-                    thisMeasureStart = n * measureDuration + (t0 - systemToAudioOffset);
+                    double measureDuration = songOutUpdate.getMeasureDuration();
+                    measureNumber = (int) (Math.floor((t + systemToAudioOffset - t0) / measureDuration));
+                    thisMeasureStart = measureNumber * measureDuration + (t0 - systemToAudioOffset);
                     if (nextMeasureStart - thisMeasureStart < measureDuration / 2) {
                         //  schedule the audio one measure early
                         nextMeasureStart = thisMeasureStart + measureDuration;
 
                         beatTheDrums(defaultDrumSelection);
+
+                        sendMeasureNumberStatus(measureNumber);
+                        sendMeasureDurationStatus(systemT);
                     }
+
+                    //GWT.log(".");
+                    break;
+                default:
+                    lastSystemT = systemT;
                     break;
             }
         }
 
         //  tell everyone else it's animation time
-        eventBus.fireEvent(new MusicAnimationEvent(systemT));
+        eventBus.fireEvent(new MusicAnimationEvent(systemT, measureNumber));
 
         //  get ready for next time
         timer.requestAnimationFrame(this);
@@ -112,6 +122,7 @@ public class SongPlayMasterImpl
     private void songLocalUpdate(double t) {
         double songT = songOutUpdate.getEventTime();
 
+        double measureDuration = songOutUpdate.getMeasureDuration();
         int m = (int) Math.floor((t - songT) / measureDuration);
         if (m == songOutUpdate.getMeasure())
             return;     //  that measure has already been updated
@@ -135,7 +146,11 @@ public class SongPlayMasterImpl
     }
 
     private void beatTheDrums(LegacyDrumMeasure drumSelection) {
+        Song song = songOutUpdate.getSong();
+        int beatsPerBar = song.getBeatsPerBar();
+        double measureDuration = songOutUpdate.getMeasureDuration();
         {
+
             String drum = drumSelection.getHighHat();
             if (drum != null && drum.length() > 0) {
                 int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
@@ -200,7 +215,7 @@ public class SongPlayMasterImpl
                 }
             }
         }
-        logger.info("<" + drumSelection.toString());
+        //logger.info("<" + drumSelection.toString());
     }
 
     @Override
@@ -233,16 +248,15 @@ public class SongPlayMasterImpl
         requestedState = SongUpdate.State.idle;
     }
 
-    public void play() {
-        songOutUpdate = new SongUpdate();
-        songOutUpdate.setBeatsPerBar(song.getBeatsPerBar());
-        songOutUpdate.setBeatsPerMinute(song.getBeatsPerMinute());
+    @Override
+    public void playSongUpdate(SongUpdate songUpdate) {
+        songOutUpdate = songUpdate;
 
+        double measureDuration = songOutUpdate.getMeasureDuration();
         songOutUpdate.setEventTime(
                 Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
                         //  add margin into the future
                         + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
-        songOutUpdate.setSong(song);
         songOutUpdate.setMeasure(-preRoll);
         songOutUpdate.setState(SongUpdate.State.playing);
 
@@ -250,9 +264,14 @@ public class SongPlayMasterImpl
         requestedState = SongUpdate.State.playing;
     }
 
-    public void playSong(Song song) {
-        setSong(song);
-        play();
+    @Override
+    public void play(Song song) {
+        SongUpdate songUpdate = new SongUpdate();
+        songUpdate.setSong(song);
+        songUpdate.setBeatsPerBar(song.getBeatsPerBar());
+        songUpdate.setCurrentBeatsPerMinute(song.getBeatsPerMinute());
+        songUpdate.setCurrentKey(song.getKey());
+        playSongUpdate(songUpdate);
     }
 
     public void continueSong() {
@@ -264,13 +283,13 @@ public class SongPlayMasterImpl
         this.lastSection = last;
     }
 
-    public void setSong(Song song) {
-        this.song = song;
-        firstSection = 0;
-        lastSection = -1;
-        beatsPerBar = song.getBeatsPerBar();
-        measureDuration = song.getBeatsPerBar() * 60.0 / song.getBeatsPerMinute();
-    }
+//    public void setSong(Song song) {
+//        this.song = song;
+//        firstSection = 0;
+//        lastSection = -1;
+//        beatsPerBar = song.getBeatsPerBar();
+//        measureDuration = song.getBeatsPerBar() * 60.0 / song.getCurrentBeatsPerMinute();
+//    }
 
     @Override
     public void initialize() {
@@ -290,7 +309,7 @@ public class SongPlayMasterImpl
         audioFilePlayer.bufferFile(highHat3);
         audioFilePlayer.bufferFile(kick);
         audioFilePlayer.bufferFile(snare);
-        
+
         GWT.log("Latency: " + audioFilePlayer.getBaseLatency()
                 + ", " + audioFilePlayer.getOutputLatency()
         );
@@ -302,19 +321,32 @@ public class SongPlayMasterImpl
         timer.requestAnimationFrame(this);
     }
 
+    private void sendMeasureDurationStatus(double songT) {
+        double dur = songT - lastSystemT;
+        sendStatus("measureDuration", Double.toString(dur));
+        //double lowPassDur =  pass * lowPassDur + (1-pass) * dur;
+        lastSystemT = songT;
+    }
+
+    private void sendMeasureNumberStatus(int measureNumber) {
+        sendStatus("measureNumber", Integer.toString(measureNumber));
+    }
+
+    private void sendStatus(String name, String value) {
+        eventBus.fireEvent(new StatusEvent(name, value));
+    }
+
     private int firstSection;
     private int lastSection;
 
     private AudioFilePlayer audioFilePlayer;
     private AnimationScheduler timer;
-    private int beatsPerBar = 4;
-    private double measureDuration = 120.0 / 60;
+
     private double thisMeasureStart;
     private double nextMeasureStart;
-    private Song song;
     private SongUpdate songOutUpdate = new SongUpdate();
-    private SongUpdate.State requestedState =  SongUpdate.State.idle;
-    private SongUpdate.State state =  SongUpdate.State.idle;
+    private SongUpdate.State requestedState = SongUpdate.State.idle;
+    private SongUpdate.State state = SongUpdate.State.idle;
     private LegacyDrumMeasure defaultDrumSelection = new LegacyDrumMeasure();
     private static final String highHat1 = "images/hihat3.mp3";
     private static final String highHat3 = "images/hihat1.mp3";
@@ -325,7 +357,8 @@ public class SongPlayMasterImpl
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;
     private double systemToAudioOffset;
-    private double pass = 0.95;
+    private static double pass = 0.95;
+    private double lastSystemT;
 
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 }

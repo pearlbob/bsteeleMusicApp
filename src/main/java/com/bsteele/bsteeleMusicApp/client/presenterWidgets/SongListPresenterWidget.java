@@ -47,8 +47,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        addJsonToSonglist(AppResources.INSTANCE.legacySongsAsJsonString().getText());
-        addJsonToSonglist(AppResources.INSTANCE.allSongsAsJsonString().getText());
+        addJsonToSongList(AppResources.INSTANCE.legacySongsAsJsonString().getText());
+        addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
     }
 
     @Override
@@ -84,7 +84,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         fireEvent(new SongSelectionEvent(song));
     }
 
-    private void addJsonToSonglist(String jsonString) {
+    private void addJsonToSongList(String jsonString) {
         if (jsonString != null && jsonString.length() > 0) {
             JSONValue jv = JSONParser.parseStrict(jsonString);
             if (jv != null) {

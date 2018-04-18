@@ -30,6 +30,18 @@
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
+                            <g:header size='3'>Drums</g:header>
+                            <g:SimplePanel ui:field="drumOptions"/>
+                        </g:tab>
+                        <!--<g:tab>-->
+                        <!--<g:header size='3'>Bass Study</g:header>-->
+                        <!--<g:ResizeLayoutPanel>-->
+                        <!--<g:HTMLPanel>-->
+                        <!--stuff goes here-->
+                        <!--</g:HTMLPanel>-->
+                        <!--</g:ResizeLayoutPanel>-->
+                        <!--</g:tab>-->
+                        <g:tab>
                             <g:header size='3'>Options</g:header>
                             <g:ScrollPanel>
                                 <g:HTMLPanel>
@@ -56,12 +68,15 @@
                                             <g:CheckBox ui:field="flashOn1" text="Flash on beat one"/>
                                         </g:TreeItem>
                                     </g:Tree>
-                                      <br/>
+                                    <br/>
                                     <g:Button ui:field="showAllScales">Show all scales</g:Button>
                                     <g:HTML ui:field="allScales" />
                                     <br/>
                                     <g:Button ui:field="showAllChords">Show all chords</g:Button>
                                     <g:HTML ui:field="allChords" />
+                                    <br/>
+                                    <g:Button ui:field="showStatus">Show Status</g:Button>
+                                    <g:HTML ui:field="allStatus" />
                                     <br/>
                                     buildId:
                                     <g:Label ui:field="buildId"/>
@@ -69,19 +84,8 @@
 
                             </g:ScrollPanel>
                         </g:tab>
-                        <g:tab>
-                            <g:header size='3'>Drums</g:header>
-                            <g:SimplePanel ui:field="drumOptions"/>
-                        </g:tab>
-                        <!--<g:tab>-->
-                        <!--<g:header size='3'>Bass Study</g:header>-->
-                        <!--<g:ResizeLayoutPanel>-->
-                        <!--<g:HTMLPanel>-->
-                        <!--stuff goes here-->
-                        <!--</g:HTMLPanel>-->
-                        <!--</g:ResizeLayoutPanel>-->
-                        <!--</g:tab>-->
                     </g:TabLayoutPanel>
+
                 </g:center>
             </g:DockLayoutPanel>
         </g:layer>

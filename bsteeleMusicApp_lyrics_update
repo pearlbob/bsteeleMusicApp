@@ -17,13 +17,17 @@ mkdir -p $dst
 #	note: without the -r option, gsutil rsync will not recurse into sub-directories, e.g. wars
 gsutil -m rsync -p -d $src/ $dst
 
+#	fail on \r in a file
+od -c $dst/*.songlyrics | grep '\\r'
+if [ $? -ne 1 ]; then
+	exit $?    #	a \r found
+fi
+
+
+#	convert any ancient file formats
 cd $dst
-
-rm -f $json
-firstJson=1
 conversions=0
-
-IFS=$(echo -en "\n\b")
+IFS=$'\n'
 for f in *.songlyrics
 do
 	echo $f
@@ -35,23 +39,42 @@ do
 		conversions=1
 	fi
 
-	if [ "$firstJson" -eq 1 ]; then
-		firstJson=0
-		#echo "let newSongs = [" > $json
-		echo "[" > $json
-	else
-		echo "," >> $json
-	fi
-
-	cat "$f" >> $json
-
 done
-echo "]" >> $json
 
 if [ "$conversions" -eq 1 ]; then
 	#	put any modified files back to source
 	cd $appRoot
 	gsutil -m rsync -p $dst/ $src
 fi
+
+
+#	write the output file
+
+rm -f $json
+
+#	open the JSON
+echo '[' > $json
+
+#	copy and modify the contents
+firstJson=1
+IFS=$'\n'
+for f in *.songlyrics
+do
+	echo "$f"
+	if [ "$firstJson" -eq 1 ]; then
+		firstJson=0
+	else
+		echo "," >> $json
+	fi
+
+	#	set the file and modification date
+	echo '{ "file": "'$f'", "lastModifiedDate":' `stat -c %Y000 $f`', "song": ' >> $json
+	#	copy the song
+	cat $f >>  $json
+	echo '}' >> $json
+done
+
+#	close the JSON
+echo ']' >> $json
 
 exit $status

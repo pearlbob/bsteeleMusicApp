@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: select a key that's a minor key
 todo: fix staging script: it removes beta on a test failure
 fixme: The minor scale starts with the assumption of the major scale note names, and then flats the third and seventh, keeping those note name positions accordingly.
 
