@@ -13,11 +13,12 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+____: fix last chord not shown if no ending newline for the file
 todo: select a key that's a minor key
-todo: fix staging script: it removes beta on a test failure
+____: fix staging script: it removes beta on a test failure
 fixme: The minor scale starts with the assumption of the major scale note names, and then flats the third and seventh, keeping those note name positions accordingly.
 
-todo: prescribed (#,b,natural) notes affects all octaves for the duration of the bar
+todo: study tool: prescribed (#,b,natural) notes affects all octaves for the duration of the bar
 todo: arrangement display in song display as comment
 todo: arrangements can be part of song, e.g. drums
 todo: option list on/off

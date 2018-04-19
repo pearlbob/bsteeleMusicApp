@@ -62,7 +62,7 @@ if ( $stat != 0 ) then
 endif
 
 
-#	strip the classes from the war
+#	strip the client classes from the war
 #	they should all be in the .js after gwt
 set tmp=`mktemp -d /tmp/bsteeleMusicApp_tmp.XXXXXXXXXX`
 cd $tmp
@@ -73,7 +73,7 @@ jar -xf $finalWar
 #		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
 #	if ( $status != 0 ) exit -1;
 #endif
-rm -rf WEB-INF/classes
+rm -rf WEB-INF/classes/com/bsteele/bsteeleMusicApp/client
 jar -cfm $finalWar META-INF/MANIFEST.MF *
 cd $cwd
 rm -rf $tmp

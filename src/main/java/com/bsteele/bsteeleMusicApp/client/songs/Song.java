@@ -379,7 +379,12 @@ public class Song implements Comparable<Song> {
 
         chordSectionMap.clear();
 
+        if ( rawChordTableText != null && rawChordTableText.length() > 0 )
         {
+            //  repair definitions without a final newline
+            if ( rawChordTableText.charAt(rawChordTableText.length()-1) != '\n')
+                rawChordTableText += "\n";
+
             //  build the initial chord section map
             Grid<String> grid = new Grid<>();
             int row = 0;
