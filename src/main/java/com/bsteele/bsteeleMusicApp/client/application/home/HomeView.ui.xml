@@ -22,17 +22,23 @@
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
+                            <g:header size='3'>Edit</g:header>
+                            <g:ResizeLayoutPanel>
+                                <g:ScrollPanel>
+                                    <g:SimplePanel ui:field="songEdit"/>
+                                </g:ScrollPanel>
+                            </g:ResizeLayoutPanel>
+                        </g:tab>
+                        <g:tab>
                             <g:header size='3'>Player</g:header>
                             <g:ResizeLayoutPanel>
                                 <g:DockLayoutPanel ui:field="player"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
-                            <g:header size='3'>Edit</g:header>
+                            <g:header size='3'>Singer</g:header>
                             <g:ResizeLayoutPanel>
-                                <g:ScrollPanel>
-                                    <g:SimplePanel ui:field="songEdit"/>
-                                </g:ScrollPanel>
+                                <g:DockLayoutPanel ui:field="singer"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>

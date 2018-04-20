@@ -34,6 +34,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
     public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot<>();
     public static final SingleSlot<PlayerPresenterWidget> SLOT_PLAYER_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<SingerPresenterWidget> SLOT_SINGER_CONTENT = new SingleSlot<>();
     public static final SingleSlot<SongEditPresenterWidget> SLOT_SONGEDIT_CONTENT = new SingleSlot<>();
     public static final SingleSlot<DrumOptionsPresenterWidget> SLOT_DRUMOPTIONS_CONTENT = new SingleSlot<>();
 
@@ -41,6 +42,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     private final SongListPresenterWidget songListPresenterWidget;
     private final LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget;
     private final PlayerPresenterWidget playerPresenterWidget;
+    private final SingerPresenterWidget singerPresenterWidget;
     private final SongEditPresenterWidget songEditPresenterWidget;
     private final DrumOptionsPresenterWidget drumOptionsPresenterWidget;
 
@@ -58,6 +60,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             SongListPresenterWidget songListPresenterWidget,
             LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget,
             PlayerPresenterWidget playerPresenterWidget,
+            SingerPresenterWidget singerPresenterWidget,
             SongEditPresenterWidget songEditPresenterWidget,
             DrumOptionsPresenterWidget drumOptionsPresenterWidget,
             BSteeleMusicIO bSteeleMusicIO
@@ -68,6 +71,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         this.songListPresenterWidget = songListPresenterWidget;
         this.lyricsAndChordsPresenterWidget = lyricsAndChordsPresenterWidget;
         this.playerPresenterWidget = playerPresenterWidget;
+        this.singerPresenterWidget = singerPresenterWidget;
         this.songEditPresenterWidget = songEditPresenterWidget;
         this.drumOptionsPresenterWidget = drumOptionsPresenterWidget;
 
@@ -79,6 +83,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
         setInSlot(SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChordsPresenterWidget);
         setInSlot(SLOT_PLAYER_CONTENT, playerPresenterWidget);
+        setInSlot(SLOT_SINGER_CONTENT, singerPresenterWidget);
         setInSlot(SLOT_SONGEDIT_CONTENT, songEditPresenterWidget);
         setInSlot(SLOT_DRUMOPTIONS_CONTENT, drumOptionsPresenterWidget);
 

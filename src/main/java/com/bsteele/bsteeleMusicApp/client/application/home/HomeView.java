@@ -32,6 +32,9 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     DockLayoutPanel player;
 
     @UiField
+    DockLayoutPanel singer;
+
+    @UiField
     SimplePanel songEdit;
 
     @UiField
@@ -60,6 +63,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
         bindSlot(HomePresenter.SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChords);
         bindSlot(HomePresenter.SLOT_PLAYER_CONTENT, player);
+        bindSlot(HomePresenter.SLOT_SINGER_CONTENT, singer);
         bindSlot(HomePresenter.SLOT_SONGEDIT_CONTENT, songEdit);
         bindSlot(HomePresenter.SLOT_DRUMOPTIONS_CONTENT, drumOptions);
 

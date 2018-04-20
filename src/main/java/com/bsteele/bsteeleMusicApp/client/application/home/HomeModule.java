@@ -20,6 +20,9 @@ public class HomeModule extends AbstractPresenterModule {
         bindPresenterWidget(PlayerPresenterWidget.class,
                 PlayerPresenterWidget.MyView.class, PlayerView.class);
 
+        bindPresenterWidget(SingerPresenterWidget.class,
+                SingerPresenterWidget.MyView.class, SingerView.class);
+
         bindPresenterWidget(SongEditPresenterWidget.class,
                 SongEditPresenterWidget.MyView.class, SongEditView.class);
 

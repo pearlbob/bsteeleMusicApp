@@ -337,8 +337,8 @@ public class PlayerView
         sb.append("</table>");
         player.add(new HTMLPanel(sb.toString()));
 
-        //player.add(new HTML(song.generateHtmlLyricsTable()));
-        //player.add(new HTML(song.transpose(currentKeyTransposition)));
+        //singer.add(new HTML(song.generateHtmlLyricsTable()));
+        //singer.add(new HTML(song.transpose(currentKeyTransposition)));
 
         resizeChords();
     }
