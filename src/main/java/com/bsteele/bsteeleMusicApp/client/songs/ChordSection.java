@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * User: bob
  */
 public class ChordSection {
-    public ChordSection(Section.Version section, ArrayList<Measure> measures) {
+    public ChordSection(SectionVersion section, ArrayList<Measure> measures) {
         this.section = section;
         this.measures = measures;
     }
@@ -16,7 +16,7 @@ public class ChordSection {
         if (s == null || s.length() <= 0)
             return null;
 
-        Section.Version section = Section.parse(s);
+        SectionVersion section = Section.parse(s);
         if (section == null)
             return null;
 
@@ -34,11 +34,11 @@ public class ChordSection {
         return ret;
     }
 
-    public Section.Version getSection() {
+    public SectionVersion getSection() {
         return section;
     }
 
-    public void setSection(Section.Version section) {
+    public void setSection(SectionVersion section) {
         this.section = section;
     }
 
@@ -91,7 +91,7 @@ public class ChordSection {
         return parseLength;
     }
 
-    private Section.Version section;
+    private SectionVersion section;
     private Integer bpm;
     private Integer beatsPerBar;
     private ArrayList<Measure> measures;

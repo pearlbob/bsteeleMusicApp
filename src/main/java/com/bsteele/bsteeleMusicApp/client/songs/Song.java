@@ -82,7 +82,7 @@ public class Song implements Comparable<Song> {
      * @return the new song
      */
     public final Song copySong() {
-        Song ret =  createSong(getTitle(), getArtist(),
+        Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getChordsAsString(), getLyricsAsString());
         ret.setFileName(getFileName());
@@ -124,7 +124,7 @@ public class Song implements Comparable<Song> {
         //  file information available
         if (jsonObject.keySet().contains("file"))
             return songFromJsonFileObject(jsonObject);
-        
+
         //  straight song
         return songFromJsonObject(jsonObject);
     }
@@ -343,7 +343,7 @@ public class Song implements Comparable<Song> {
     }
 
     @Deprecated
-    public Grid<String> getChordSection(Section.Version sv) {
+    public Grid<String> getChordSection(SectionVersion sv) {
         return chordSectionMap.get(sv);
     }
 
@@ -355,7 +355,7 @@ public class Song implements Comparable<Song> {
      */
     public String getChordSectionId(String sectionId) {
         //  map the section to it's reduced, common section
-        for (Section.Version v : displaySectionMap.keySet()) {
+        for (SectionVersion v : displaySectionMap.keySet()) {
             if (v.toString().equals(sectionId)) {
                 sectionId = displaySectionMap.get(v).toString();
                 break;
@@ -371,7 +371,7 @@ public class Song implements Comparable<Song> {
      * @deprecated use {@link #getLyricSections()} instead.
      */
     @Deprecated
-    public ArrayList<Section.Version> getSectionSequence() {
+    public ArrayList<SectionVersion> getSectionSequence() {
         return sequence;
     }
 
@@ -379,10 +379,9 @@ public class Song implements Comparable<Song> {
 
         chordSectionMap.clear();
 
-        if ( rawChordTableText != null && rawChordTableText.length() > 0 )
-        {
+        if (rawChordTableText != null && rawChordTableText.length() > 0) {
             //  repair definitions without a final newline
-            if ( rawChordTableText.charAt(rawChordTableText.length()-1) != '\n')
+            if (rawChordTableText.charAt(rawChordTableText.length() - 1) != '\n')
                 rawChordTableText += "\n";
 
             //  build the initial chord section map
@@ -391,8 +390,8 @@ public class Song implements Comparable<Song> {
             int col = 0;
 
             int state = 0;
-            Section.Version version;
-            TreeSet<Section.Version> versionsDeclared = new TreeSet<>();
+            SectionVersion version;
+            TreeSet<SectionVersion> versionsDeclared = new TreeSet<>();
             String block = "";
             for (int i = 0; i < rawChordTableText.length(); i++) {
                 char c = rawChordTableText.charAt(i);
@@ -410,13 +409,13 @@ public class Song implements Comparable<Song> {
                         //  fall through
                     case 1:
                         String token = rawChordTableText.substring(i);
-                        Section.Version v = Section.parse(token.substring(0, Math.min(token.length()-1,11)));
+                        SectionVersion v = Section.parse(token.substring(0, Math.min(token.length() - 1, 11)));
                         if (v != null) {
                             version = v;
                             i += version.getParseLength() - 1;//   consume the section label
 
                             if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
-                                for (Section.Version vd : versionsDeclared) {
+                                for (SectionVersion vd : versionsDeclared) {
                                     chordSectionMap.put(vd, grid);
                                 }
                                 //  fixme: worry about chords before a section is declared
@@ -463,7 +462,7 @@ public class Song implements Comparable<Song> {
 
             //  put the last grid on the end
             if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
-                for (Section.Version vd : versionsDeclared) {
+                for (SectionVersion vd : versionsDeclared) {
                     chordSectionMap.put(vd, grid);
                 }
             }
@@ -477,12 +476,12 @@ public class Song implements Comparable<Song> {
         //  collect remap sections with identical declarations
         {
             //  build a reverse lookup map
-            HashMap<Grid<String>, TreeSet<Section.Version>> reverseMap = new HashMap<>();
-            for (Section.Version version : chordSectionMap.keySet()) {
+            HashMap<Grid<String>, TreeSet<SectionVersion>> reverseMap = new HashMap<>();
+            for (SectionVersion version : chordSectionMap.keySet()) {
                 Grid<String> grid = chordSectionMap.get(version);
-                TreeSet<Section.Version> lookup = reverseMap.get(grid);
+                TreeSet<SectionVersion> lookup = reverseMap.get(grid);
                 if (lookup == null) {
-                    TreeSet<Section.Version> ts = new TreeSet<>();
+                    TreeSet<SectionVersion> ts = new TreeSet<>();
                     ts.add(version);
                     reverseMap.put(grid, ts);
                 } else {
@@ -492,17 +491,17 @@ public class Song implements Comparable<Song> {
             //  build version mapping to version displayed map
             displaySectionMap.clear();
             for (Grid<String> g : reverseMap.keySet()) {
-                TreeSet<Section.Version> mappedVersions = reverseMap.get(g);
-                Section.Version first = mappedVersions.first();
-                for (Section.Version dv : mappedVersions) {
+                TreeSet<SectionVersion> mappedVersions = reverseMap.get(g);
+                SectionVersion first = mappedVersions.first();
+                for (SectionVersion dv : mappedVersions) {
                     //  more convenient to put idenity mapping in for first
                     displaySectionMap.put(dv, first);
                 }
             }
 
             //GWT.log(displayMap.toString());
-            HashMap<Section.Version, Grid<String>> reducedChordSectionMap = new HashMap<>();
-            for (Section.Version version : chordSectionMap.keySet()) {
+            HashMap<SectionVersion, Grid<String>> reducedChordSectionMap = new HashMap<>();
+            for (SectionVersion version : chordSectionMap.keySet()) {
                 reducedChordSectionMap.put(version, chordSectionMap.get(displaySectionMap.get(version)));
             }
 
@@ -513,7 +512,7 @@ public class Song implements Comparable<Song> {
         }
 
         //  build map for js
-        for (Section.Version v : chordSectionMap.keySet()) {
+        for (SectionVersion v : chordSectionMap.keySet()) {
             jsChordSectionMap.put(v.toString(), chordSectionMap.get(v).getJavasriptCopy());
         }
 
@@ -559,7 +558,7 @@ public class Song implements Comparable<Song> {
                     state++;
                     //  fall through
                 case 1:
-                    Section.Version version = Section.parse(rawLyrics.substring(i, i + 11));
+                    SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
                     if (version != null) {
                         i += version.getParseLength() - 1; //  skip the end of the section id
                         isSection = true;
@@ -612,6 +611,74 @@ public class Song implements Comparable<Song> {
         return lyrics;
     }
 
+    public final ArrayList<LyricSection> parseLyrics() {
+        int state = 0;
+        int sectionIndex = 0;
+        boolean isSection = false;
+        String whiteSpace = "";
+        String lyrics = "";
+        LyricSection lyricSection = new LyricSection();
+        lyricSection.setSectionVersion(Section.getDefaultVersion());
+
+        lyricSections = new ArrayList<>();
+
+        for (int i = 0; i < rawLyrics.length(); i++) {
+            char c = rawLyrics.charAt(i);
+            switch (state) {
+                default:
+                    state = 0;
+                case 0:
+                    //  absorb leading white space
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                        break;
+                    }
+                    state++;
+                    //  fall through
+                case 1:
+                    SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
+                    if (version != null) {
+                        i += version.getParseLength() - 1; //  skip the end of the section id
+                        isSection = true;
+
+                        if (!lyricSection.getLyricsLines().isEmpty())
+                            lyricSections.add(lyricSection);
+
+                        lyricSection = new LyricSection();
+                        lyricSection.setSectionVersion(version);
+
+                        sectionIndex++;
+                        whiteSpace = ""; //  ignore white space
+                        state = 0;
+                    } else {
+                        //  absorb trailing white space
+                        switch (c) {
+                            case ' ':
+                            case '\t':
+                                whiteSpace += c;
+                                break;
+                            case '\n':
+                            case '\r':
+                                lyricSection.add(new LyricsLine(lyrics));
+                                lyrics = "";
+                                whiteSpace = ""; //  ignore trailing white space
+                                state = 0;
+                                break;
+                            default:
+                                lyrics += whiteSpace + c;
+                                whiteSpace = "";
+                                break;
+                        }
+                    }
+                    break;
+            }
+        }
+        if (!lyricSection.getLyricsLines().isEmpty())
+            lyricSections.add(lyricSection);
+
+        //GWT.log(lyrics);
+        return lyricSections;
+    }
+
     /**
      * Utility to generate a lyrics section sequence id
      *
@@ -622,7 +689,21 @@ public class Song implements Comparable<Song> {
         return "L." + sectionIndex;
     }
 
-    private String generateHtmlChordTableFromMap(HashMap<Section.Version, Grid<String>> map) {
+    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map) {
+
+        if (map.isEmpty()) {
+            return "";
+        }
+        return generateHtmlChordTableFromMap(map, map.keySet());
+    }
+
+    public String generateHtmlChordTable(SectionVersion sectionVersion) {
+        TreeSet<SectionVersion> keys = new TreeSet<>();
+        keys.add(sectionVersion);
+        return generateHtmlChordTableFromMap(chordSectionMap, keys); //    fixme!!! no transpose!
+    }
+
+    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map, Set<SectionVersion> keys) {
 
         if (map.isEmpty()) {
             return "";
@@ -639,19 +720,19 @@ public class Song implements Comparable<Song> {
 
         StringBuilder chordText = new StringBuilder(); //  table formatted
 
-        SortedSet<Section.Version> sortedKeys = new TreeSet<>(map.keySet());
-        SortedSet<Section.Version> displayed = new TreeSet<>();
-        for (Section.Version version : sortedKeys) {
+        SortedSet<SectionVersion> sortedKeys = new TreeSet<>(keys);
+        SortedSet<SectionVersion> displayed = new TreeSet<>();
+        for (SectionVersion version : sortedKeys) {
             if (displayed.contains(version)) {
                 continue;
             }
 
             Grid<String> grid = map.get(version);
-            Section.Version displayVersion = displaySectionMap.get(version);
+            SectionVersion displayVersion = displaySectionMap.get(version);
 
             //  section label
             String start = sectionStart;
-            for (Section.Version v : displaySectionMap.keySet()) {
+            for (SectionVersion v : displaySectionMap.keySet()) {
                 if (displaySectionMap.get(v) == version) {
                     start += v.toString() + ":<br/>";
                     displayed.add(v);
@@ -694,7 +775,7 @@ public class Song implements Comparable<Song> {
      * @param col                   cell column
      * @return the generated chord section id
      */
-    public static final String genChordId(Section.Version displaySectionVersion, int row, int col) {
+    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col) {
         if (displaySectionVersion == null)
             return "";
         return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
@@ -715,9 +796,9 @@ public class Song implements Comparable<Song> {
         }
 
         //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
-        HashMap<Section.Version, Grid<String>> tranMap = deepCopy(chordSectionMap);
+        HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionMap);
 
-        for (Section.Version version : tranMap.keySet()) {
+        for (SectionVersion version : tranMap.keySet()) {
             Grid<String> grid = tranMap.get(version);
 
             TreeSet<String> transChords = new TreeSet<>();
@@ -783,7 +864,7 @@ public class Song implements Comparable<Song> {
 
                     //  don't transpose the section identifiers that happen to look like notes
                     String toMatch = m.substring(ci, Math.min(m.length() - ci, Section.maxLength));
-                    Section.Version version = Section.parse(toMatch);
+                    SectionVersion version = Section.parse(toMatch);
                     if (version != null) {
                         sout += version.toString();
                         ci += version.getParseLength() - 1; //  skip the end of the section id
@@ -840,9 +921,9 @@ public class Song implements Comparable<Song> {
         return sout;
     }
 
-    private static HashMap<Section.Version, Grid<String>> deepCopy(HashMap<Section.Version, Grid<String>> map) {
-        HashMap<Section.Version, Grid<String>> ret = new HashMap<>();
-        for (Section.Version version : map.keySet()) {
+    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {
+        HashMap<SectionVersion, Grid<String>> ret = new HashMap<>();
+        for (SectionVersion version : map.keySet()) {
             ret.put(version, new Grid<String>().deepCopy(map.get(version)));
             //  fixme: worry about version alteration!
         }
@@ -1026,7 +1107,7 @@ public class Song implements Comparable<Song> {
      *
      * @return the chordSectionMap
      */
-    public HashMap<Section.Version, Grid<String>> getChordSectionMap() {
+    public HashMap<SectionVersion, Grid<String>> getChordSectionMap() {
         return chordSectionMap;
     }
 
@@ -1035,7 +1116,7 @@ public class Song implements Comparable<Song> {
      *
      * @return the displaySectionMap
      */
-    public HashMap<Section.Version, Section.Version> getDisplaySectionMap() {
+    public HashMap<SectionVersion, SectionVersion> getDisplaySectionMap() {
         return displaySectionMap;
     }
 
@@ -1106,8 +1187,7 @@ public class Song implements Comparable<Song> {
         title,
         artist,
         lastModifiedDate,
-        lastModifiedDateLast
-        ;
+        lastModifiedDateLast;
     }
 
     public static Comparator<Song> getComparatorByType(ComparatorType type) {
@@ -1202,6 +1282,7 @@ public class Song implements Comparable<Song> {
             return o1.compareTo(o2);
         }
     }
+
     public static class ComparatorByLastModifiedDateLast implements Comparator<Song> {
 
         /**
@@ -1297,9 +1378,9 @@ public class Song implements Comparable<Song> {
     private Arrangement drumArrangement;    //  default
     private TreeSet<Metadata> metadata = new TreeSet<>();
 
-    private ArrayList<Section.Version> sequence;
-    private final HashMap<Section.Version, Grid<String>> chordSectionMap = new HashMap<>();
-    private final HashMap<Section.Version, Section.Version> displaySectionMap = new HashMap<>();
+    private ArrayList<SectionVersion> sequence;
+    private final HashMap<SectionVersion, Grid<String>> chordSectionMap = new HashMap<>();
+    private final HashMap<SectionVersion, SectionVersion> displaySectionMap = new HashMap<>();
     private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
     private static final char flat = (char) 9837;
     private static final char sharp = (char) 9839;

@@ -175,7 +175,7 @@
              firefox, mac & linux, messes the page on play
              safari won't play
              
-             multiple section id's on one definition:  improve display
+             multiple sectionVersion id's on one definition:  improve display
              transposition for Bb instruments
              fix chord box not finding it's parent size
              
@@ -201,7 +201,7 @@
              
              control s to legacy when editing a song
              
-             multiple section id's on a single chord section
+             multiple sectionVersion id's on a single chord sectionVersion
              
              scroll to newly edited song
              
@@ -211,7 +211,7 @@
              search for text
              
              select start by sections
-             loop by section
+             loop by sectionVersion
              to dynamically change font size for chords to fit
              set an indicator for added songs, font color change? 
              
@@ -227,8 +227,8 @@
              
              
              
-             section alterations imply: ch1 ch2 etc
-             Beat vs measure resolution on a section basis 
+             sectionVersion alterations imply: ch1 ch2 etc
+             Beat vs measure resolution on a sectionVersion basis
              */
 
 
@@ -318,7 +318,7 @@
                 if (mySong === undefined)
                     return;     //  too early
 
-                //  put the chords into the chord section
+                //  put the chords into the chord sectionVersion
                 let a = document.getElementById(hash.substring(1));
                 if (a === null)
                     return;
@@ -447,7 +447,7 @@
                 }
 
                 restart() {
-                    this.section = 0;
+                    this.sectionVersion = 0;
                     this.chordRow = 0;
                     this.chordCol = 0;
                     this.repeatFirstRow = undefined;
@@ -460,16 +460,16 @@
                 }
 
                 getMeasure() {
-                    if (this.section < this.songSectionSequence.length) {
-                        let sectionId = this.songSectionSequence[this.section];
+                    if (this.sectionVersion < this.songSectionSequence.length) {
+                        let sectionId = this.songSectionSequence[this.sectionVersion];
                         let chordSection = mySong.getChordSection(sectionId);
                         if (chordSection !== undefined) {
                             let chordCols = chordSection[this.chordRow];
                             this.measure = chordCols[this.chordCol];
                             return {
-                                sectionIndex: this.section,
+                                sectionIndex: this.sectionVersion,
                                 measureCount: this.measureCount,
-                                //  for chord section reduction:
+                                //  for chord sectionVersion reduction:
                                 sectionId: mySong.getChordSectionId(sectionId),
                                 chordSection: chordSection,
                                 chordRow: this.chordRow,
@@ -495,11 +495,11 @@
                 }
 
                 nextMeasure() {
-                    if (this.section > this.songSectionSequence.length)
+                    if (this.sectionVersion > this.songSectionSequence.length)
                         return false;
 
                     //  increment to next the next measure slot
-                    let sectionId = this.songSectionSequence[this.section];
+                    let sectionId = this.songSectionSequence[this.sectionVersion];
                     let chordSection = mySong.getChordSection(sectionId);
                     let chordCols = chordSection[this.chordRow];
                     this.chordCol++;
@@ -521,19 +521,19 @@
                                 this.repeatFirstRow = undefined;
                             }
                         }
-                        //  go to the next section
+                        //  go to the next sectionVersion
                         if (this.chordRow >= chordSection.length) {
                             this.repeatTotal = 0;
                             this.chordRow = 0;
-                            this.section++;
+                            this.sectionVersion++;
                         }
                     }
 
 
                     //  validate where we've landed after the increment
-                    if (this.section >= this.songSectionSequence.length)
+                    if (this.sectionVersion >= this.songSectionSequence.length)
                         return false;
-                    sectionId = this.songSectionSequence[this.section];
+                    sectionId = this.songSectionSequence[this.sectionVersion];
                     chordSection = mySong.getChordSection(sectionId);
 
                     chordCols = chordSection[this.chordRow];

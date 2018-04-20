@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
+import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.google.gwt.json.client.JSONObject;
@@ -62,7 +63,7 @@ public class SongUpdate {
                 && song != null
                 && song.getSectionSequence() != null
                 && song.getSectionSequence().size() > 0) {
-            ArrayList<Section.Version> songSectionSequence = song.getSectionSequence();
+            ArrayList<SectionVersion> songSectionSequence = song.getSectionSequence();
             sectionVersion = songSectionSequence.get(sectionNumber);
             Grid<String> chordSection = song.getChordSection(sectionVersion);
             if (chordSection != null && !chordSection.isEmpty()) {
@@ -107,7 +108,7 @@ public class SongUpdate {
             return true;
         }
 
-        ArrayList<Section.Version> songSectionSequence = song.getSectionSequence();
+        ArrayList<SectionVersion> songSectionSequence = song.getSectionSequence();
         if (sectionNumber >= songSectionSequence.size())
             return false;
 
@@ -217,7 +218,7 @@ public class SongUpdate {
      *
      * @return
      */
-    public Section.Version getSectionVersion() {
+    public SectionVersion getSectionVersion() {
         return sectionVersion;
     }
 
@@ -612,7 +613,7 @@ public class SongUpdate {
     private int sectionNumber;
     private int sectionCount;
     private String sectionId;
-    private Section.Version sectionVersion;
+    private SectionVersion sectionVersion;
     private int chordSectionRow;
     private int chordSectionColumn;
     private int repeatCurrent;

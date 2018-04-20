@@ -58,7 +58,7 @@
         <g:center>
             <g:SplitLayoutPanel ui:field="split">
                 <g:west size='300'>     <!--    small for phones!   -->
-                    <g:HTMLPanel>
+                    <g:HTMLPanel ui:field="chordsContainer">
                         <canvas ui:field="audioBeatDisplayCanvas" height="45"
                                 title="Beat display of audio.">
                             Your browser does not support the HTML5 canvas tag.

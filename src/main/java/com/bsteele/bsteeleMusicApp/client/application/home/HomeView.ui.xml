@@ -15,13 +15,19 @@
                             <g:header size='3'>Songs</g:header>
                             <g:SimpleLayoutPanel ui:field="songList"/>
                         </g:tab>
-                        <g:tab ui:field="lyricsAndChordsTab">
+                        <g:tab>
                             <g:header size='3'>Lyrics &amp; Chords</g:header>
                             <g:ResizeLayoutPanel>
                                 <g:SplitLayoutPanel ui:field="lyricsAndChords"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
-                        <g:tab ui:field="EditTab">
+                        <g:tab>
+                            <g:header size='3'>Player</g:header>
+                            <g:ResizeLayoutPanel>
+                                <g:DockLayoutPanel ui:field="player"/>
+                            </g:ResizeLayoutPanel>
+                        </g:tab>
+                        <g:tab>
                             <g:header size='3'>Edit</g:header>
                             <g:ResizeLayoutPanel>
                                 <g:ScrollPanel>

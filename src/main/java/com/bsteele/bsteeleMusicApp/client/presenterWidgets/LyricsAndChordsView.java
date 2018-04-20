@@ -67,6 +67,9 @@ public class LyricsAndChordsView
     CanvasElement audioBeatDisplayCanvas;
 
     @UiField
+    HTMLPanel chordsContainer;
+
+    @UiField
     HTMLPanel chords;
 
     @UiField
@@ -319,7 +322,7 @@ public class LyricsAndChordsView
         //  adjust fontSize so the table fits but is still minimally, if possible
         if (chords != null && chords.getOffsetWidth() > 0 && chords.getOffsetHeight() > 0) {
             {
-                Widget parent = chords.getParent();
+                Widget parent = chordsContainer;
                 double parentWidth = parent.getOffsetWidth();
                 double parentHeight = parent.getOffsetHeight();
                 NodeList<Element> list = chords.getElement().getElementsByTagName("table");
@@ -331,7 +334,7 @@ public class LyricsAndChordsView
                         int tableHeight = e.getClientHeight();
 
                         //GWT.log//
-                        logger.fine("chords panel: (" + parentWidth + ","
+                        logger.info("chords panel: (" + parentWidth + ","
                                 + parentHeight + ") for (" + tableWidth + ","
                                 + tableHeight + ")");
                         
