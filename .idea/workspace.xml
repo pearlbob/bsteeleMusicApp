@@ -12,15 +12,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SingerPresenterWidget.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SingerView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SingerView.ui.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeModule.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomePresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomePresenter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeView.ui.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeView.ui.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerView.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -289,7 +281,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds">
     <option name="x" value="289" />
     <option name="y" value="202" />
     <option name="width" value="3492" />
@@ -1319,7 +1311,7 @@
       <workItem from="1524142359386" duration="1133000" />
       <workItem from="1524143944919" duration="5961000" />
       <workItem from="1524176687511" duration="2343000" />
-      <workItem from="1524230827429" duration="10074000" />
+      <workItem from="1524230827429" duration="10213000" />
     </task>
     <task id="LOCAL-00001" summary="move to idea">
       <created>1520747617322</created>
@@ -1650,7 +1642,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524238470718</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="roughed in singer view">
+      <created>1524241027160</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1524241027160</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1686,7 +1685,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="486401000" />
+    <option name="totallyTimeSpent" value="486540000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1698,8 +1697,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="-27" width="3842" height="2193" extended-state="0" />
-    <editor active="true" />
+    <frame x="289" y="202" width="3492" height="1957" extended-state="0" />
     <layout>
       <window_info anchor="right" id="PlantUML" order="9" />
       <window_info anchor="right" id="Palette" order="3" />
@@ -1721,9 +1719,9 @@
       <window_info anchor="bottom" id="Java Enterprise" order="11" show_stripe_button="false" weight="0.32949728" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
-      <window_info anchor="bottom" auto_hide="true" x="75" y="1782" width="3430" height="341" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
+      <window_info anchor="bottom" auto_hide="true" x="75" y="1782" width="3430" height="341" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" weight="0.5031591" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32931122" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.22163309" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.24430157" />
       <window_info anchor="right" id="Bean Validation" order="10" />
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
       <window_info anchor="bottom" auto_hide="true" id="Find" internal_type="SLIDING" order="1" weight="0.37121588" />
@@ -1784,7 +1782,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="started chord descriptor and tensions, started change of key guess" />
     <MESSAGE value="wrote ScaleChords and it's parts, adjusted key guess" />
     <MESSAGE value="adjusted song key change" />
     <MESSAGE value="package imports fooled with by ide, added Pitch" />
@@ -1809,7 +1806,8 @@
     <MESSAGE value="newest versions win (not very efficient), songlist count, new songs, fixed lyrics update" />
     <MESSAGE value="fixed disappearing last chord, fixed websocket 404" />
     <MESSAGE value="roughed in player view" />
-    <option name="LAST_COMMIT_MESSAGE" value="roughed in player view" />
+    <MESSAGE value="roughed in singer view" />
+    <option name="LAST_COMMIT_MESSAGE" value="roughed in singer view" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
