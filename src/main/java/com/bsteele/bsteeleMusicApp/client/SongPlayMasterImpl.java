@@ -260,7 +260,8 @@ public class SongPlayMasterImpl
         songOutUpdate.setMeasure(-preRoll);
         songOutUpdate.setState(SongUpdate.State.playing);
 
-        bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
+        if (bSteeleMusicIO != null)
+            bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
         requestedState = SongUpdate.State.playing;
     }
 

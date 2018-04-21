@@ -61,11 +61,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         initWidget(uiBinder.createAndBindUi(this));
 
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
-        bindSlot(HomePresenter.SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChords);
+        bindSlot(HomePresenter.SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChords);
         bindSlot(HomePresenter.SLOT_PLAYER_CONTENT, player);
         bindSlot(HomePresenter.SLOT_SINGER_CONTENT, singer);
-        bindSlot(HomePresenter.SLOT_SONGEDIT_CONTENT, songEdit);
-        bindSlot(HomePresenter.SLOT_DRUMOPTIONS_CONTENT, drumOptions);
+        bindSlot(HomePresenter.SLOT_SONG_EDIT_CONTENT, songEdit);
+        bindSlot(HomePresenter.SLOT_DRUM_OPTIONS_CONTENT, drumOptions);
 
         allScales.setVisible(false);
         showAllScales.addClickHandler((ClickEvent event) -> {

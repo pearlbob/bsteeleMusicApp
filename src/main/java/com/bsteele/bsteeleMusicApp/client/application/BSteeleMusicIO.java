@@ -30,7 +30,7 @@ public class BSteeleMusicIO {
         socket.onerror = new SocketErrorFunction();
         socket.onmessage = new SocketReceiveFunction();
 
-        songPlayMaster.setBSteeleMusicIO(this); //  fixme: this can't be correct
+        songPlayMaster.setBSteeleMusicIO(this);
 
         songPlayMaster.initialize();
     }

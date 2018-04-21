@@ -176,9 +176,8 @@ public class LyricsAndChordsView
         setCurrentKey(songUpdate.getCurrentKey());
         setBpm(songUpdate.getCurrentBeatsPerMinute());
 
-        chordsFontSize =0;//    will never match, forces the fontSize set
+        forceChordsFontSize = true;  //    force the fontSize set
         chordsDirty = true;
-
     }
 
     private void setCurrentKey(Key key) {
@@ -334,21 +333,23 @@ public class LyricsAndChordsView
                         int tableHeight = e.getClientHeight();
 
                         //GWT.log//
-                        logger.info("chords panel: (" + parentWidth + ","
+                        logger.fine("L&C chords panel: (" + parentWidth + ","
                                 + parentHeight + ") for (" + tableWidth + ","
-                                + tableHeight + ")");
-                        
-                        if (parentWidth < tableWidth
+                                + tableHeight + ") "
+                                + ((1 + 1.0 / chordsFontSize) * tableWidth));
+
+                        if (forceChordsFontSize
+                                || parentWidth < tableWidth
                                 || parentHeight < tableHeight
-                                || parentWidth > (1+1.0/chordsFontSize) * tableWidth) {
+                                || parentWidth > (1 + 3.0 / chordsFontSize) * tableWidth) {
                             double ratio = Math.min(parentWidth / tableWidth,
                                     parentHeight / tableHeight);
                             logger.fine("wratio: " + (parentWidth / tableWidth)
                                     + ", hratio: " + (parentHeight / tableHeight));
                             NodeList<Element> cells = e.getElementsByTagName("td");
 
-                            int size = (int) Math.floor(Math.max(chordsMinFontSize,Math.min(chordsFontSize*ratio,chordsMaxFontSize)));
-                            if (chordsFontSize != size) {
+                            int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio, chordsMaxFontSize)));
+                            if (forceChordsFontSize || chordsFontSize != size) {
                                 //  fixme: demands all chord fonts be the same size
                                 for (int c = 0; c < cells.getLength(); c++) {
                                     Style cellStyle = cells.getItem(c).getStyle();
@@ -360,12 +361,14 @@ public class LyricsAndChordsView
                                 }
                                 chordsFontSize = size;
                             }
-                            sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
+                            //sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
 
-                            chordsDirty = !((ratio >= 1 && ratio <= (1+2.0/chordsFontSize))
+                            chordsDirty = !((ratio >= 1 && ratio <= (1 + 6.0 / chordsFontSize))
                                     || chordsFontSize == chordsMinFontSize
-                                    || chordsFontSize == chordsMaxFontSize);
-                            sendStatus("chordsDirty", Boolean.toString(chordsDirty));
+                                    || chordsFontSize == chordsMaxFontSize)
+                            || forceChordsFontSize;
+                            forceChordsFontSize = false;
+                            //sendStatus("chordsDirty", Boolean.toString(chordsDirty));
                         } else
                             chordsDirty = false;
                         break;
@@ -435,7 +438,8 @@ public class LyricsAndChordsView
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;
     private static final int chordsMaxFontSize = 52;
-    private   int chordsFontSize = chordsMaxFontSize;
+    private int chordsFontSize = chordsMaxFontSize;
+    private boolean forceChordsFontSize = true;
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
     private final EventBus eventBus;

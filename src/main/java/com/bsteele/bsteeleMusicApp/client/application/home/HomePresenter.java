@@ -32,11 +32,11 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     }
 
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
-    public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICSANDCHORDS_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICS_AND_CHORDS_CONTENT = new SingleSlot<>();
     public static final SingleSlot<PlayerPresenterWidget> SLOT_PLAYER_CONTENT = new SingleSlot<>();
     public static final SingleSlot<SingerPresenterWidget> SLOT_SINGER_CONTENT = new SingleSlot<>();
-    public static final SingleSlot<SongEditPresenterWidget> SLOT_SONGEDIT_CONTENT = new SingleSlot<>();
-    public static final SingleSlot<DrumOptionsPresenterWidget> SLOT_DRUMOPTIONS_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<SongEditPresenterWidget> SLOT_SONG_EDIT_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<DrumOptionsPresenterWidget> SLOT_DRUM_OPTIONS_CONTENT = new SingleSlot<>();
 
 
     private final SongListPresenterWidget songListPresenterWidget;
@@ -75,17 +75,18 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         this.songEditPresenterWidget = songEditPresenterWidget;
         this.drumOptionsPresenterWidget = drumOptionsPresenterWidget;
 
-        this.bSteeleMusicIO = bSteeleMusicIO;
+
+        this.bSteeleMusicIO = bSteeleMusicIO; //  fixme: do this better: force the presence of the singleton
     }
 
     @Override
     protected void onBind() {
         setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
-        setInSlot(SLOT_LYRICSANDCHORDS_CONTENT, lyricsAndChordsPresenterWidget);
+        setInSlot(SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChordsPresenterWidget);
         setInSlot(SLOT_PLAYER_CONTENT, playerPresenterWidget);
         setInSlot(SLOT_SINGER_CONTENT, singerPresenterWidget);
-        setInSlot(SLOT_SONGEDIT_CONTENT, songEditPresenterWidget);
-        setInSlot(SLOT_DRUMOPTIONS_CONTENT, drumOptionsPresenterWidget);
+        setInSlot(SLOT_SONG_EDIT_CONTENT, songEditPresenterWidget);
+        setInSlot(SLOT_DRUM_OPTIONS_CONTENT, drumOptionsPresenterWidget);
 
         eventBus.addHandler(SongSelectionEvent.TYPE, this);
         eventBus.addHandler(StatusEvent.TYPE, this);
