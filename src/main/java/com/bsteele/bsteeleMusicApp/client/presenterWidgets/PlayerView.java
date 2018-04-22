@@ -144,6 +144,16 @@ public class PlayerView
             lastRepeatElement = null;
         }
 
+        if (songUpdate.getState() != lastState) {
+            lastState = songUpdate.getState();
+            switch (lastState) {
+                case playing:
+                    scrollPosition = 0;
+                    chordsScrollPanel.setVerticalScrollPosition(0);
+                    break;
+            }
+        }
+
         //  turn on highlights if required
         switch (songUpdate.getState()) {
             case idle:
@@ -241,8 +251,9 @@ public class PlayerView
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getSectionNumber()+Song.genChordId(songUpdate.getSectionVersion(),
+                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate.getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+                        //GWT.log(chordCellId );
                         Element ce = player.getElementById(chordCellId);
                         if (ce != null) {
                             ce.getStyle().setBackgroundColor(highlightColor);
@@ -264,30 +275,30 @@ public class PlayerView
         //  auto scroll
         switch (songUpdate.getState()) {
             case playing:
-                if ( song.getTotalBeats()== 0|| player.getOffsetHeight() == 0)
+                if (song.getTotalBeats() == 0 || player.getOffsetHeight() == 0)
                     break;
 
                 //  auto scroll
-                int max = chordsScrollPanel.getMaximumVerticalScrollPosition() ;
-                int h = player.getParent().getOffsetHeight();
+                int max = chordsScrollPanel.getMaximumVerticalScrollPosition();
+                int h = chordsScrollPanel.getOffsetHeight();
 
-                scrollPosition += max / ( 60.0 * song.getTotalBeats() * 60/ songUpdate.getCurrentBeatsPerMinute());
-                scrollPosition = Math.min(max, scrollPosition);
-                        //GWT.log("scroll: " + Double.toString(scrollPosition)+"  m: "+Integer.toString(max)+"  h: "+Integer.toString(h));
+                scrollPosition += (max+1.5*h)/ (60.0 * song.getTotalBeats() * 60 / songUpdate.getCurrentBeatsPerMinute());
+                scrollPosition = Math.min(max+h/2, scrollPosition);
+                //GWT.log("scroll: " + Double.toString(scrollPosition)+"  m: "+Integer.toString(max)+"  h: "+Integer.toString(h));
                 int position = (int) Math.rint(scrollPosition);
-               position = Math.max(0,Math.min(position,max));
+                position = Math.max(0, Math.min(position - h / 2, max));
                 int currentPosition = chordsScrollPanel.getVerticalScrollPosition();
 //                if (Math.abs(currentPosition - position) > 4) {
 //                    scrollPosition = currentPosition;    // let the human override the scroll
 //                    lastScrollPosition = (int) Math.rint(scrollPosition);
 //                } else
-                    if (position != lastScrollPosition && scrollDelay > 1 ) {
+                if (position != lastScrollPosition && scrollDelay > 1) {
                     lastScrollPosition = position;
                     chordsScrollPanel.setVerticalScrollPosition(position);
-                    scrollDelay=0;
-                    GWT.log("player scroll: " + Double.toString(scrollPosition)+"  "+Integer.toString(max));
+                    scrollDelay = 0;
+                   // GWT.log("player scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
                 }
-                 scrollDelay++;
+                scrollDelay++;
                 break;
         }
     }
@@ -350,7 +361,7 @@ public class PlayerView
         for (LyricSection lyricSection : lyricSections) {
             sb.append("<tr>");
             sb.append("<td>")
-                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), prefix+sectionIndex));
+                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), prefix + sectionIndex));
             sb.append("<td class=\"")
                     .append(style)
                     .append("sectionLabel \">")
@@ -374,12 +385,6 @@ public class PlayerView
         player.add(new HTMLPanel(sb.toString()));
     }
 
-
-    private void sendStatus(String name, String value) {
-        eventBus.fireEvent(new StatusEvent(name, value));
-    }
-
-
     private AudioBeatDisplay audioBeatDisplay;
     private Song song;
     private Key originalKey;
@@ -397,6 +402,7 @@ public class PlayerView
     private int lastScrollPosition = 0;
     private double scrollPosition = 0;
     private int scrollDelay = 0;
+    private SongUpdate.State lastState = SongUpdate.State.idle;
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;

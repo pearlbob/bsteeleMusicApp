@@ -97,7 +97,7 @@ iframe {
 
 .sectionBrClass,
 .lyricsBrClass {
-  background-color: #e1cdf5;
+  background-color: #d2f5cd;
 }
 
 .sectionPCClass,
