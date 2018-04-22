@@ -92,7 +92,7 @@ public class SongPlayMasterImpl
 
                         beatTheDrums(defaultDrumSelection);
 
-                        sendMeasureNumberStatus(measureNumber);
+                        sendStatus("measureNumber", measureNumber);
                         sendMeasureDurationStatus(systemT);
                     }
 
@@ -324,16 +324,20 @@ public class SongPlayMasterImpl
 
     private void sendMeasureDurationStatus(double songT) {
         double dur = songT - lastSystemT;
-        sendStatus("measureDuration", Double.toString(dur));
+        sendStatus("measureDuration", dur);
         //double lowPassDur =  pass * lowPassDur + (1-pass) * dur;
         lastSystemT = songT;
     }
 
-    private void sendMeasureNumberStatus(int measureNumber) {
-        sendStatus("measureNumber", Integer.toString(measureNumber));
+    private void sendStatus(String name, String value) {
+        eventBus.fireEvent(new StatusEvent(name, value));
     }
 
-    private void sendStatus(String name, String value) {
+    private void sendStatus(String name, int value) {
+        eventBus.fireEvent(new StatusEvent(name, value));
+    }
+
+    private void sendStatus(String name, double value) {
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 

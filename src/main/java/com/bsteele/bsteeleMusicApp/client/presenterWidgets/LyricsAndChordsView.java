@@ -158,7 +158,7 @@ public class LyricsAndChordsView
                 break;
             case playing:
                 if (songUpdate.getRepeatTotal() > 0) {
-                    final String id = Song.genChordId(songUpdate.getSectionVersion(),
+                    final String id = prefix+Song.genChordId(songUpdate.getSectionVersion(),
                             songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
                     Element re = lyrics.getElementById(id);
                     if (re != null) {
@@ -246,7 +246,7 @@ public class LyricsAndChordsView
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = Song.genChordId(songUpdate.getSectionVersion(),
+                        String chordCellId = prefix+Song.genChordId(songUpdate.getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
 
                         Element ce = chords.getElementById(chordCellId);
@@ -254,7 +254,7 @@ public class LyricsAndChordsView
                             ce.getStyle().setBackgroundColor(highlightColor);
                             lastChordElement = ce;
                         }
-                        String lyricsCellId = Song.genLyricsId(songUpdate.getSectionNumber());
+                        String lyricsCellId = prefix+Song.genLyricsId(songUpdate.getSectionNumber());
                         Element le = lyrics.getElementById(lyricsCellId);
                         if (le != null) {
                             le.getStyle().setBackgroundColor(highlightColor);
@@ -300,7 +300,7 @@ public class LyricsAndChordsView
         transpose(currentKeyTransposition);
 
         lyrics.clear();
-        lyrics.add(new HTML(song.generateHtmlLyricsTable()));
+        lyrics.add(new HTML(song.generateHtmlLyricsTable(prefix)));
 
         //chordsDirty = true;   //  done by transpose()
     }
@@ -312,7 +312,7 @@ public class LyricsAndChordsView
         keyLabel.setInnerHTML(currentKey.toString());
 
         chords.clear();
-        chords.add(new HTML(song.transpose(currentKeyTransposition)));
+        chords.add(new HTML(song.transpose(currentKeyTransposition,prefix)));
 
         resizeChords();
     }
@@ -328,7 +328,7 @@ public class LyricsAndChordsView
                 for (int i = 0; i < list.getLength(); i++) {
                     //  html table
                     Element e = list.getItem(i);
-                    if (e.getId().equals("chordTable")) {
+                    if (e.getId().equals(prefix+"ChordTable")) {
                         int tableWidth = e.getClientWidth();
                         int tableHeight = e.getClientHeight();
 
@@ -443,6 +443,7 @@ public class LyricsAndChordsView
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
     private final EventBus eventBus;
+    private static String  prefix = "lyAndCh";
     private static final Logger logger = Logger.getLogger(LyricsAndChordsView.class.getName());
 
 }

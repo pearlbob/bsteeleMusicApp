@@ -132,7 +132,7 @@ public class SingerView
         setBpm(song.getBeatsPerMinute());
 
         singer.clear();
-        singer.add(new HTML(song.generateHtmlLyricsTable()));
+        singer.add(new HTML(song.generateHtmlLyricsTable(prefix)));
     }
 
     private AudioBeatDisplay audioBeatDisplay;
@@ -145,6 +145,7 @@ public class SingerView
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
     private final EventBus eventBus;
+    private static String  prefix = "singer";
     private static final Document document = Document.get();
     private static final Logger logger = Logger.getLogger(SingerView.class.getName());
 

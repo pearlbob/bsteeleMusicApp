@@ -106,7 +106,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         if (allStatus.isVisible()) {
             allStatus.setHTML(generateStatusHtml());
         }
-        GWT.log(event.getName()+": "+ event.getValue());
+        GWT.log(event.toString());
     }
 
     private String generateStatusHtml() {

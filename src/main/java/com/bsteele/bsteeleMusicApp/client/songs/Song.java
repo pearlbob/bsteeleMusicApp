@@ -65,13 +65,14 @@ public class Song implements Comparable<Song> {
         song.setArtist(artist);
         song.copyright = copyright;
         song.setKey(key);
-        song.setBeatsPerMinute(bpm);
-        song.setBeatsPerBar(beatsPerBar);
         song.unitsPerMeasure = unitsPerMeasure;
         song.rawLyrics = lyrics;
         song.chords = chords;
         song.parseChordTable(chords);
         song.parseLyricsToSectionSequence(lyrics);
+        song.setBeatsPerMinute(bpm);
+        song.setBeatsPerBar(beatsPerBar);
+        //  already done song.computeDuration();
 
         return song;
     }
@@ -87,6 +88,8 @@ public class Song implements Comparable<Song> {
                 getChordsAsString(), getLyricsAsString());
         ret.setFileName(getFileName());
         ret.setLastModifiedDate(getLastModifiedDate());
+        ret.duration = duration;
+        ret.totalBeats = totalBeats;
         return ret;
     }
 
@@ -319,6 +322,37 @@ public class Song implements Comparable<Song> {
             sequence.add(Section.getDefaultVersion());
         }
         //GWT.log(sequence.toString());
+        computeDuration();
+    }
+
+    private void computeDuration() {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
+
+        duration = 0;
+        totalBeats = 0;
+        if (beatsPerBar == 0 || defaultBpm == 0 || sequence == null)
+            return;
+        if (sequence.isEmpty())
+            return;
+        if (chordSectionMap.isEmpty())
+            return;
+
+        double measureDuration = beatsPerBar * 60.0 / defaultBpm;
+        for (SectionVersion sectionVersion : sequence) {
+            Grid<String> sectionGrid = chordSectionMap.get(sectionVersion);
+            if (sectionGrid == null)
+                continue;
+            for (int row = 0; row < sectionGrid.getRowCount(); row++) {
+                ArrayList<String> rowCols = sectionGrid.getRow(row);
+                if (rowCols == null)
+                    continue;
+
+                for (int col = 0; col < rowCols.size(); col++) {
+                    //  fixme: verify it's a real measure, not | or xN or comment
+                    duration += measureDuration;
+                    totalBeats += beatsPerBar;
+                }
+            }
+        }
     }
 
     /**
@@ -521,17 +555,19 @@ public class Song implements Comparable<Song> {
 //            GWT.log(v.toString());
 //            GWT.log("    " + chordSectionMap.get(v).toString());
 //        }
+
+        computeDuration();
     }
 
     @Deprecated
-    public String generateHtmlChordTable() {
-        return generateHtmlChordTableFromMap(chordSectionMap);
+    public String generateHtmlChordTable(String prefix) {
+        return generateHtmlChordTableFromMap(chordSectionMap, prefix);
     }
 
     @Deprecated
-    public String generateHtmlLyricsTable() {
+    public String generateHtmlLyricsTable(String prefix) {
         final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
-        String tableStart = "<table id=\"lyricsTable\">\n"
+        String tableStart = "<table id=\"" + prefix + "LyricsTable\">\n"
                 + "<colgroup>\n"
                 + "   <col style=\"width:2ch;\">\n"
                 + "  <col>\n"
@@ -568,7 +604,7 @@ public class Song implements Comparable<Song> {
                         }
                         lyrics += rowStart + version.toString() + ":"
                                 + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbbreviation() + "Class\""
-                                + " id=\"" + genLyricsId(sectionIndex) + "\">";
+                                + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
                         state = 0;
@@ -591,7 +627,7 @@ public class Song implements Comparable<Song> {
                                     lyrics += rowStart
                                             + Section.getDefaultVersion().toString() + ":"
                                             + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
-                                            + " id=\"" + genLyricsId(sectionIndex) + "\">";
+                                            + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                                     isSection = true;
                                 }
                                 lyrics += whiteSpace + c;
@@ -689,28 +725,31 @@ public class Song implements Comparable<Song> {
         return "L." + sectionIndex;
     }
 
-    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map) {
+    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map, String prefix) {
 
         if (map.isEmpty()) {
             return "";
         }
-        return generateHtmlChordTableFromMap(map, map.keySet());
+        return generateHtmlChordTableFromMap(map, map.keySet(), prefix);
     }
 
-    public String generateHtmlChordTable(SectionVersion sectionVersion) {
+    public String generateHtmlChordTable(SectionVersion sectionVersion, String prefix) {
         TreeSet<SectionVersion> keys = new TreeSet<>();
         keys.add(sectionVersion);
-        return generateHtmlChordTableFromMap(chordSectionMap, keys); //    fixme!!! no transpose!
+        return generateHtmlChordTableFromMap(chordSectionMap, keys, prefix); //    fixme!!! no transpose!
     }
 
-    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map, Set<SectionVersion> keys) {
+    private String generateHtmlChordTableFromMap(
+            HashMap<SectionVersion, Grid<String>> map,
+            Set<SectionVersion> keys,
+            String prefix) {
 
         if (map.isEmpty()) {
             return "";
         }
 
         final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
-        String tableStart = "<table id=\"chordTable\" "
+        String tableStart = "<table id=\"" + prefix + "ChordTable\" "
                 + "class=\"" + style + "chordTable\" "
                 + ">\n";
         String sectionStart = "<tr><td class=\"" + style + "sectionLabel\" >";
@@ -756,6 +795,7 @@ public class Song implements Comparable<Song> {
                         chordText.append(" style=\"border-right: 0px solid black;\"");
                     }
                     chordText.append(" id=\"")
+                            .append(prefix)
                             .append(genChordId(displayVersion, r, col))
                             .append("\" >")
                             .append(content).append("</td>\n\t");
@@ -789,10 +829,10 @@ public class Song implements Comparable<Song> {
      * @return an HTML representation for the chord sections
      */
     @Deprecated
-    public String transpose(int halfSteps) {
+    public String transpose(int halfSteps, String prefix) {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
         if (halfSteps == 0) {
-            return generateHtmlChordTable();
+            return generateHtmlChordTable(prefix);
         }
 
         //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
@@ -814,7 +854,7 @@ public class Song implements Comparable<Song> {
         }
 
         //GWT.log(tranMap.toString());
-        return generateHtmlChordTableFromMap(tranMap);
+        return generateHtmlChordTableFromMap(tranMap, prefix);
     }
 
     private String transposeMeasure(TreeSet<String> chords, String m, int halfSteps) {
@@ -1008,6 +1048,7 @@ public class Song implements Comparable<Song> {
      */
     private void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
+        computeDuration();
     }
 
 
@@ -1181,6 +1222,14 @@ public class Song implements Comparable<Song> {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public double getDuration() {
+        return duration;
+    }
+
+    public int getTotalBeats() {
+        return totalBeats;
     }
 
     public enum ComparatorType {
@@ -1371,6 +1420,8 @@ public class Song implements Comparable<Song> {
     private int defaultBpm = 106;  //  beats per minute
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
+    private transient double duration;    //  units of seconds
+    private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private String rawLyrics = "";
     private String chords = "";
