@@ -12257,7 +12257,7 @@
 }
 }
 ,
-{ "file": "Vienna.songlyrics", "lastModifiedDate": 1524400083000.0, "song": 
+{ "file": "Vienna.songlyrics", "lastModifiedDate": 1524423421000.0, "song": 
 {
 "title": "Vienna",
 "artist": "Billy Joel",
@@ -12284,7 +12284,7 @@
     ],
 "lyrics": 
     [
-	"",
+	"I: (piano)",
 	"A:",
 	"Slow down, you crazy child",
 	"You're so ambitious for a juvenile",
@@ -12335,7 +12335,7 @@
 	"Why don't you realize, Vienna waits for you",
 	"When will you realize, Vienna waits for you?",
 	"",
-	"I:"
+	"I: (piano)"
     ]
 }
 }

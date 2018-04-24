@@ -70,6 +70,8 @@ public interface AppResources extends ClientBundle {
 
         String chordTable();
 
+        String lyricsTable();
+
         String sectionLabel();
 
         String chords();

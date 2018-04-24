@@ -17,8 +17,7 @@ import com.gwtplatform.mvp.client.View;
 public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget.MyView>
         implements SongSelectionEventHandler,
         SongUpdateEventHandler,
-        MusicAnimationEventHandler
-{
+        MusicAnimationEventHandler {
 
 
     public interface MyView extends View {
@@ -58,7 +57,8 @@ public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        view.onMusicAnimationEvent(event);
+        if (isVisible())
+            view.onMusicAnimationEvent(event);
     }
 
     private final EventBus eventBus;

@@ -1,5 +1,6 @@
 /* Don't obfuscate the classes starting with gwt- */
 @external 'gwt-*';
+@external 'td*';
 
 h1,
 .gwt-H1 {
@@ -84,12 +85,14 @@ iframe {
 
 .sectionCClass,
 .lyricsCClass,
+.sectionBClass,
 .lyricsBClass {
   background-color: #fff;
 }
 
 .sectionVClass,
 .lyricsVClass,
+.sectionAClass,
 .lyricsAClass
  {
   background-color: #f5ebcd;
@@ -171,7 +174,8 @@ th, td {
     font-weight: bold;
 }
 
-table.songList  {
+table.songList,
+table.lyricsTable {
     border-bottom: 1px solid black;
 }
 
@@ -195,15 +199,15 @@ table td.chordTable {
 .chordsTextEntry {
      font-size: large;
      width: 20em;
-     height: 30em;
+     height: chord30em;
 }
 /*  chords  */
-[id^="C."]{
+td[id*="C."]{
     border-right: 1.5px solid black;
     border-collapse: separate;
 }
 /*  lyrics  */
-[id^="L."]{
+td[id*="L."]{
     border-bottom: 1px solid black;
 }
 .entryLine { width: 30em; font-size: 24px; }

@@ -17,8 +17,7 @@ import com.gwtplatform.mvp.client.View;
 public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndChordsPresenterWidget.MyView>
         implements SongSelectionEventHandler,
         SongUpdateEventHandler,
-        MusicAnimationEventHandler
-{
+        MusicAnimationEventHandler {
 
 
     public interface MyView extends View {
@@ -26,7 +25,7 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
         void setSong(Song song);
 
         void onSongUpdate(SongUpdate songUpdate);
-        
+
         void onMusicAnimationEvent(MusicAnimationEvent event);
     }
 
@@ -58,7 +57,8 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        view.onMusicAnimationEvent(event);
+        if (isVisible())
+            view.onMusicAnimationEvent(event);
     }
 
     private final EventBus eventBus;

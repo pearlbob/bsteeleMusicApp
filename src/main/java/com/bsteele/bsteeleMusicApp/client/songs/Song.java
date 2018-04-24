@@ -746,18 +746,19 @@ public class Song implements Comparable<Song> {
         if (map.isEmpty()) {
             return "";
         }
-        return generateHtmlChordTableFromMap(map, map.keySet(), prefix, false);
+        return generateHtmlChordTableFromMap(map, map.keySet(), 0, prefix, false);
     }
 
-    public String generateHtmlChordTable(SectionVersion sectionVersion, String prefix) {
+    public String generateHtmlChordTable(SectionVersion sectionVersion, int trans, String prefix) {
         TreeSet<SectionVersion> keys = new TreeSet<>();
         keys.add(sectionVersion);
-        return generateHtmlChordTableFromMap(chordSectionMap, keys, prefix, true); //    fixme!!! no transpose!
+        return generateHtmlChordTableFromMap(chordSectionMap, keys, trans, prefix, true);
     }
 
     private String generateHtmlChordTableFromMap(
             HashMap<SectionVersion, Grid<String>> map,
             Set<SectionVersion> keys,
+            int trans,
             String prefix,
             boolean isSingle) {
 
@@ -788,7 +789,7 @@ public class Song implements Comparable<Song> {
             //  section label
             String start = sectionStart;
             if (isSingle) {
-                start += version.toString()+ ":";
+                start += version.toString() + ":";
                 displayed.add(version);
             } else {
                 for (SectionVersion v : displaySectionMap.keySet()) {
@@ -819,7 +820,7 @@ public class Song implements Comparable<Song> {
                             .append(prefix)
                             .append(genChordId(isSingle ? version : displaySectionMap.get(version), r, col))
                             .append("\" >")
-                            .append(content).append("</td>\n\t");
+                            .append(transposeMeasure(content,trans)).append("</td>\n\t");
                 }
                 chordText.append(rowEnd);
             }
@@ -862,13 +863,12 @@ public class Song implements Comparable<Song> {
         for (SectionVersion version : tranMap.keySet()) {
             Grid<String> grid = tranMap.get(version);
 
-            TreeSet<String> transChords = new TreeSet<>();
             int rLimit = grid.getRowCount();
             for (int r = 0; r < rLimit; r++) {
                 ArrayList<String> row = grid.getRow(r);
                 int colLimit = row.size();
                 for (int col = 0; col < colLimit; col++) {
-                    grid.set(col, r, transposeMeasure(transChords, row.get(col), halfSteps));
+                    grid.set(col, r, transposeMeasure(row.get(col), halfSteps));
                 }
             }
             //GWT.log(transChords.toString());
@@ -878,11 +878,13 @@ public class Song implements Comparable<Song> {
         return generateHtmlChordTableFromMap(tranMap, prefix);
     }
 
-    private String transposeMeasure(TreeSet<String> chords, String m, int halfSteps) {
+    private String transposeMeasure(String m, int halfSteps) {
+        if ( halfSteps== 0)
+            return m;
 
         int chordNumber = 0;
         String chordLetter;
-        String sout = "";
+        StringBuilder sb = new StringBuilder();
 
         int state = 0;
 
@@ -894,31 +896,27 @@ public class Song implements Comparable<Song> {
                     if (c == 'b' || c == js_flat) {
                         chordNumber -= 1;
                         chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                        sout += chordLetter;
-                        chords.add(chordLetter);
+                        sb.append(chordLetter);
                         break;
                     }
                     if (c == '#' || c == js_sharp) {
                         chordNumber += 1;
                         chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                        sout += chordLetter;
-                        chords.add(chordLetter);
+                        sb.append(chordLetter);
                         break;
                     }
                     if (c == js_natural) {
                         chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                        sout += chordLetter;
-                        chords.add(chordLetter);
+                        sb.append(chordLetter);
                         break;
                     }
                     chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                    sout += chordLetter;
-                    chords.add(chordLetter);
+                    sb.append(chordLetter);
                     //	fall through
                 default:
                 case 0:
                     if (c == '(') {
-                        sout += c;
+                        sb.append(c);
                         state = 11;
                         break;
                     }
@@ -927,7 +925,7 @@ public class Song implements Comparable<Song> {
                     String toMatch = m.substring(ci, Math.min(m.length() - ci, Section.maxLength));
                     SectionVersion version = Section.parse(toMatch);
                     if (version != null) {
-                        sout += version.toString();
+                        sb.append(version.toString());
                         ci += version.getParseLength() - 1; //  skip the end of the section id
                         break;
                     }
@@ -938,10 +936,10 @@ public class Song implements Comparable<Song> {
                         break;
                     }
                     if (toMatch.startsWith("maj")) {
-                        sout += "maj";
+                        sb.append("maj");
                         ci += 2;
                     } else if (toMatch.startsWith("sus")) {
-                        sout += "sus";
+                        sb.append("sus");
                         ci += 2;
                     } else if ((c >= '0' && c <= '9')
                             || c == 'm'
@@ -949,21 +947,22 @@ public class Song implements Comparable<Song> {
                             || c == '[' || c == ']'
                             || c == '{' || c == '}'
                             || c == '.'
+                            || c == '<' || c == '>'
                             || c == '\n'
                             || c == js_delta) {
-                        sout += c;
+                        sb.append(c);
                     } else {    //  don't parse the rest
-                        sout += c;
+                        sb.append(c);
                         state = 10;
                     }
                     break;
 
                 case 10: //	wait for newline
-                    sout += c;
+                    sb.append(c);
                     break;
 
                 case 11: //	wait for newline or closing paren
-                    sout += c;
+                    sb.append(c);
                     if (c == ')') {
                         state = 0;
                     }
@@ -973,13 +972,10 @@ public class Song implements Comparable<Song> {
         //  do the last chord
         if (state == 1) {
             chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-            sout += chordLetter;
-            chords.add(chordLetter);
+            sb.append(chordLetter);
         }
-        //sout += '\n';
 
-        //GWT.log(sout);
-        return sout;
+        return sb.toString();
     }
 
     private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {

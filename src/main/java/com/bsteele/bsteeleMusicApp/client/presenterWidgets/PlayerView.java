@@ -280,23 +280,22 @@ public class PlayerView
 
                 //  auto scroll
                 int max = chordsScrollPanel.getMaximumVerticalScrollPosition();
-                int h = chordsScrollPanel.getOffsetHeight();
+                int h = chordsScrollPanel.getElement().getScrollHeight() - max;
 
-                scrollPosition += (max+1.5*h)/ (60.0 * song.getTotalBeats() * 60 / songUpdate.getCurrentBeatsPerMinute());
-                scrollPosition = Math.min(max+h/2, scrollPosition);
-                //GWT.log("scroll: " + Double.toString(scrollPosition)+"  m: "+Integer.toString(max)+"  h: "+Integer.toString(h));
+                scrollPosition += (max + 1.5 * h) / (60.0 * song.getTotalBeats() * 60 / songUpdate.getCurrentBeatsPerMinute());
+                scrollPosition = Math.min(max + h / 2, scrollPosition);
+                //GWT.log("scroll: " + Double.toString(scrollPosition) + "  m: " + Integer.toString(max) + "  h: " + Integer.toString(h));
                 int position = (int) Math.rint(scrollPosition);
                 position = Math.max(0, Math.min(position - h / 2, max));
                 int currentPosition = chordsScrollPanel.getVerticalScrollPosition();
-//                if (Math.abs(currentPosition - position) > 4) {
-//                    scrollPosition = currentPosition;    // let the human override the scroll
-//                    lastScrollPosition = (int) Math.rint(scrollPosition);
-//                } else
-                if (position != lastScrollPosition && scrollDelay > 1) {
+                if (Math.abs(currentPosition - position) > 8) {
+                    scrollPosition = currentPosition;    // let the human override the scroll
+                    lastScrollPosition = (int) Math.rint(scrollPosition);
+                } else if (position != lastScrollPosition && scrollDelay > 1) {
                     lastScrollPosition = position;
                     chordsScrollPanel.setVerticalScrollPosition(position);
                     scrollDelay = 0;
-                   // GWT.log("player scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
+                    // GWT.log("player scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
                 }
                 scrollDelay++;
                 break;
@@ -356,12 +355,12 @@ public class PlayerView
         ArrayList<LyricSection> lyricSections = song.parseLyrics();
         int sectionIndex = 0;
         StringBuilder sb = new StringBuilder();
-        sb.append("<table>");
+        sb.append("<table class=\"" + style + "lyricsTable\" >");
         song.getChordSectionMap();
         for (LyricSection lyricSection : lyricSections) {
             sb.append("<tr>");
             sb.append("<td>")
-                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), prefix + sectionIndex));
+                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), tran, prefix + sectionIndex));
             sb.append("<td class=\"")
                     .append(style)
                     .append("sectionLabel \">")

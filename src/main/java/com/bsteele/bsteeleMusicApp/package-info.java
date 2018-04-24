@@ -18,6 +18,11 @@ todo: select a key that's a minor key
 ____: fix staging script: it removes beta on a test failure
 fixme: The minor scale starts with the assumption of the major scale note names, and then flats the third and seventh, keeping those note name positions accordingly.
 
+todo: mouse over a chord displayed to get a fingering chart.  Dropdown at top has options for guitar, ukulele, bass)
+todo: basically need a look-up table that displays image-file associated with appropriately-displayed chord.
+  I can help find files to fill table with appropriate chords if you can create
+   the structure to hold the table and display as mouse-over.
+
 todo: study tool: prescribed (#,b,natural) notes affects all octaves for the duration of the bar
 todo: arrangement display in song display as comment
 todo: arrangements can be part of song, e.g. drums
