@@ -13,6 +13,8 @@
   <component name="ChangeListManager">
     <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
       <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/songlyrics/Lover, You Should've Come Over (3).songlyrics" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/songlyrics/Man Who Sold the World (1).songlyrics" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/CommonPlayViewImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logging.properties" beforeDir="false" afterPath="$PROJECT_DIR$/logging.properties" afterDir="false" />
@@ -1266,14 +1268,7 @@
       <workItem from="1525411776297" duration="4950000" />
       <workItem from="1525441518733" duration="7826000" />
       <workItem from="1525476650942" duration="8100000" />
-      <workItem from="1525487861187" duration="2436000" />
-    </task>
-    <task id="LOCAL-00003" summary="UI adjustments">
-      <created>1520922223817</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1520922223817</updated>
+      <workItem from="1525487861187" duration="2893000" />
     </task>
     <task id="LOCAL-00004" summary="adjustments to song updates, working towards play, minimized server role">
       <created>1520983229351</created>
@@ -1611,7 +1606,14 @@
       <option name="project" value="LOCAL" />
       <updated>1524553056865</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="fixed many play problems, including server play. created CommonPlayViewImpl">
+      <created>1525491427914</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1525491427914</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1647,7 +1649,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="592236000" />
+    <option name="totallyTimeSpent" value="592693000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1745,7 +1747,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="javadoc, small adjustments" />
     <MESSAGE value="released key guess to only use the scale notes of the diatonics" />
     <MESSAGE value="added arrangement class basics, moved current drums to legacy" />
     <MESSAGE value="commit prior to the elmination of ChordTension" />
@@ -1770,7 +1771,8 @@
     <MESSAGE value="re-fixed bSteeleMusicIO mess, improved lyricsAndChords chord resize" />
     <MESSAGE value="found and fixed the duplicate id issue" />
     <MESSAGE value="animation if visible, player scroll position improved, css fixes, player transpose" />
-    <option name="LAST_COMMIT_MESSAGE" value="animation if visible, player scroll position improved, css fixes, player transpose" />
+    <MESSAGE value="fixed many play problems, including server play. created CommonPlayViewImpl" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed many play problems, including server play. created CommonPlayViewImpl" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1972,6 +1974,11 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
           <caret line="21" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="e#430#454#0" expanded="true" />
+            <element signature="e#636#637#0" expanded="true" />
+            <element signature="e#703#704#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2060,6 +2067,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="544">
           <caret line="33" column="39" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
+          <folding>
+            <element signature="e#2150#2151#0" expanded="true" />
+            <element signature="e#2191#2192#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2088,6 +2099,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
           <caret line="35" column="31" selection-start-line="35" selection-start-column="31" selection-end-line="35" selection-end-column="31" />
+          <folding>
+            <element signature="e#4996#4997#0" expanded="true" />
+            <element signature="e#5049#5050#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2109,6 +2124,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2368">
           <caret line="74" column="13" selection-start-line="74" selection-start-column="13" selection-end-line="74" selection-end-column="13" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
