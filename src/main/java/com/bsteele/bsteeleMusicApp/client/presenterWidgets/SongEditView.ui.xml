@@ -90,13 +90,13 @@
                                     Section:
                                 </td>
                                 <td>
-                                    <g:Button ui:field="sectionI">Intro</g:Button>
-                                    <g:Button ui:field="sectionV">Verse</g:Button>
-                                    <g:Button ui:field="sectionPC">PreChorus</g:Button>
-                                    <g:Button ui:field="sectionC">Chorus</g:Button>
-                                    <g:Button ui:field="sectionBr">Bridge</g:Button>
-                                    <g:Button ui:field="sectionO">Outro</g:Button>
-                                    <select ui:field="sectionOtherSelection"/>
+                                    <g:Button ui:field="sectionI" styleName="{resources.style.lyricsIClass}">Intro</g:Button>
+                                    <g:Button ui:field="sectionV" styleName="{resources.style.lyricsVClass}">Verse</g:Button>
+                                    <g:Button ui:field="sectionPC" styleName="{resources.style.lyricsPCClass}">PreChorus</g:Button>
+                                    <g:Button ui:field="sectionC" styleName="{resources.style.lyricsCClass}">Chorus</g:Button>
+                                    <g:Button ui:field="sectionBr" styleName="{resources.style.lyricsBrClass}">Bridge</g:Button>
+                                    <g:Button ui:field="sectionO" styleName="{resources.style.lyricsOClass}">Outro</g:Button>
+                                    <select ui:field="sectionOtherSelection" />
                                     <!--
                                     <g:Button ui:field="sectionA">Section A</g:Button>
                                     <g:Button ui:field="sectionB">Section B</g:Button>

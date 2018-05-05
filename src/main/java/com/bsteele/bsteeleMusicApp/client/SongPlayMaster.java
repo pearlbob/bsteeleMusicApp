@@ -19,6 +19,8 @@ public interface SongPlayMaster {
 
     public void playSongUpdate(SongUpdate songUpdate);
 
+    public void issueSongUpdate(SongUpdate songUpdate);
+
     public void play( Song song );
 
     public void continueSong();

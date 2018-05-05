@@ -7,6 +7,8 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
@@ -80,7 +82,7 @@ public class SongListView
                 HTMLTable.Cell cell = songGrid.getCellForEvent(event);
                 if (cell != null) {
                     Song selectedSong = filteredSongs.get(cell.getRowIndex());
-                    fireEvent(new SongSelectionEvent(selectedSong));
+                    fireEvent(new SongUpdateEvent(selectedSong));
                 }
             }
         });
@@ -135,6 +137,11 @@ public class SongListView
     public HandlerRegistration addSongSelectionEventHandler(
             SongSelectionEventHandler handler) {
         return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler) {
+        return handlerManager.addHandler(SongUpdateEvent.TYPE, handler);
     }
 
     @Override

@@ -248,6 +248,12 @@ public class SongPlayMasterImpl
         requestedState = SongUpdate.State.idle;
     }
 
+    public void issueSongUpdate(SongUpdate songUpdate){
+        if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson()))
+            //  issue the song update locally if there is no communication with the server
+            eventBus.fireEvent(new SongUpdateEvent(songUpdate));
+    }
+
     @Override
     public void playSongUpdate(SongUpdate songUpdate) {
         songOutUpdate = songUpdate;
@@ -260,8 +266,7 @@ public class SongPlayMasterImpl
         songOutUpdate.setMeasure(-preRoll);
         songOutUpdate.setState(SongUpdate.State.playing);
 
-        if (bSteeleMusicIO != null)
-            bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
+        issueSongUpdate(songOutUpdate);
         requestedState = SongUpdate.State.playing;
     }
 

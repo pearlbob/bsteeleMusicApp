@@ -12,8 +12,9 @@ import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -21,17 +22,18 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.*;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.ViewImpl;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.logging.Logger;
 
 /**
  * @author bob
  */
-public class LyricsAndChordsView
-        extends ViewImpl
-        implements LyricsAndChordsPresenterWidget.MyView {
+public class LyricsAndChordsViewImpl
+        extends CommonPlayViewImpl
+        implements LyricsAndChordsPresenterWidget.MyView
+        , KeyPressHandler {
 
     @UiField
     Button playStopButton;
@@ -68,74 +70,73 @@ public class LyricsAndChordsView
 
     @UiField
     HTMLPanel chordsContainer;
-
+    @UiField
+    FocusPanel chordsFocus;
     @UiField
     HTMLPanel chords;
-
+    @UiField
+    FocusPanel lyricsFocus;
     @UiField
     HTMLPanel lyrics;
 
     @UiField
     SpanElement copyright;
 
-
-    interface Binder extends UiBinder<Widget, LyricsAndChordsView> {
+    interface Binder extends UiBinder<Widget, LyricsAndChordsViewImpl> {
     }
 
     @Inject
-    LyricsAndChordsView(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
-        this.eventBus = eventBus;
+    LyricsAndChordsViewImpl(@Nonnull final EventBus eventBus,
+                            @Nonnull Binder binder,
+                            @Nonnull final SongPlayMaster songPlayMaster) {
+        super(eventBus, songPlayMaster);
+
         initWidget(binder.createAndBindUi(this));
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                switch (songUpdate.getState()) {
-                    case playing:
-                        songPlayMaster.stopSong();
-                        break;
-                    case idle:
-                        SongUpdate songUpdate = new SongUpdate();
-                        songUpdate.setSong(song.copySong());
-                        songUpdate.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
-                        songUpdate.setCurrentKey(currentKey);
-                        songPlayMaster.playSongUpdate(songUpdate);
-                        break;
-                }
-            }
+            playStop();
         });
 
         originalKeyButton.addClickHandler((ClickEvent event) -> {
             if (song != null) {
-                transpose(0);
+                setCurrentKey(song.getKey());
             }
         });
 
         keyUpButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                transpose(currentKeyTransposition + 1);
-            }
+            stepCurrentKey( 1);
         });
         keyDownButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                transpose(currentKeyTransposition - 1);
-            }
+            stepCurrentKey(- 1);
         });
 
         currentBpmEntry.addChangeHandler((event) -> {
-            setBpm(currentBpmEntry.getValue());
+            setCurrentBpm(currentBpmEntry.getValue());
         });
 
         Event.sinkEvents(bpmSelect, Event.ONCHANGE);
         Event.setEventListener(bpmSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
-                setBpm(bpmSelect.getValue());
-                bpmSelect.setSelectedIndex(0);
+                setCurrentBpm(bpmSelect.getValue());
             }
         });
+
+        chordsFocus.addDomHandler(this, KeyPressEvent.getType());
+        lyricsFocus.addDomHandler(this, KeyPressEvent.getType());
     }
+
+    @Override
+    public void onKeyPress(KeyPressEvent keyPressEvent) {
+        GWT.log("onKeyPress: " + keyPressEvent.toDebugString());
+        int keyCode = keyPressEvent.getNativeEvent().getKeyCode();
+        if (keyCode == KeyCodes.KEY_SPACE) {
+            playStop();
+        }
+    }
+
 
     @Override
     public void onSongUpdate(SongUpdate songUpdate) {
@@ -152,13 +153,18 @@ public class LyricsAndChordsView
             lastRepeatElement = null;
         }
 
+        if (songUpdate.getState() != lastState) {
+            lastState = songUpdate.getState();
+            setEnables();
+        }
+
         //  turn on highlights if required
         switch (songUpdate.getState()) {
             case idle:
                 break;
             case playing:
                 if (songUpdate.getRepeatTotal() > 0) {
-                    final String id = prefix+Song.genChordId(songUpdate.getSectionVersion(),
+                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
                             songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
                     Element re = lyrics.getElementById(id);
                     if (re != null) {
@@ -170,28 +176,42 @@ public class LyricsAndChordsView
                 break;
         }
 
-        //  set the song prior to play selection overrides
-        setSong(songUpdate.getSong(), songUpdate.getCurrentKey());
+        song = songUpdate.getSong();
 
-        setCurrentKey(songUpdate.getCurrentKey());
-        setBpm(songUpdate.getCurrentBeatsPerMinute());
+        //  load new data even if the identity has not changed
+        title.setInnerHTML(song.getTitle());
+        artist.setInnerHTML(song.getArtist());
+        copyright.setInnerHTML(song.getCopyright());
+
+        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+
+        syncCurrentKey(songUpdate.getCurrentKey());
+        syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
+
+        lyrics.clear();
+        lyrics.add(new HTML(song.generateHtmlLyricsTable(prefix)));
 
         forceChordsFontSize = true;  //    force the fontSize set
         chordsDirty = true;
     }
 
-    private void setCurrentKey(Key key) {
-        this.currentKey = key;
-        currentKeyTransposition = key.getHalfStep() - song.getKey().getHalfStep();
-        keyLabel.setInnerHTML(currentKey.toString());
+    private void setEnables() {
+        boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
+
+        originalKeyButton.setEnabled(enable);
+        keyUpButton.setEnabled(enable);
+        keyDownButton.setEnabled(enable);
+        currentBpmEntry.setEnabled(enable);
+        bpmSelect.setDisabled(!enable);
     }
 
-    private void setBpm(String bpm) {
-        setBpm(Integer.parseInt(bpm));
+    private void syncCurrentKey(Key key) {
+        transpose(key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep());
     }
 
-    private void setBpm(int bpm) {
+    private void syncCurrentBpm(int bpm) {
         currentBpmEntry.setValue(Integer.toString(bpm));
+        bpmSelect.setSelectedIndex(0);
     }
 
     private void labelPlayStop() {
@@ -209,9 +229,12 @@ public class LyricsAndChordsView
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        if (song != null)
-            audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-                    songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+        if (song == null)
+            return;
+
+        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+
         {
             Widget parent = chords.getParent();
             double parentWidth = parent.getOffsetWidth();
@@ -246,7 +269,7 @@ public class LyricsAndChordsView
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix+Song.genChordId(songUpdate.getSectionVersion(),
+                        String chordCellId = prefix + Song.genChordId(songUpdate.getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
 
                         Element ce = chords.getElementById(chordCellId);
@@ -254,7 +277,7 @@ public class LyricsAndChordsView
                             ce.getStyle().setBackgroundColor(highlightColor);
                             lastChordElement = ce;
                         }
-                        String lyricsCellId = prefix+Song.genLyricsId(songUpdate.getSectionNumber());
+                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
                         Element le = lyrics.getElementById(lyricsCellId);
                         if (le != null) {
                             le.getStyle().setBackgroundColor(highlightColor);
@@ -268,51 +291,15 @@ public class LyricsAndChordsView
         }
     }
 
-
-    @Override
-    public void setSong(Song song) {
-        setSong(song, null);
-    }
-
-    private void setSong(Song song, Key key) {
-
-        if (key == null) {
-            boolean keepKey = (this.song != null && song != null
-                    && this.song.getSongId().equals(song.getSongId()));  //  identity only
-            if (keepKey)
-                ;   //  keep the current key transposition unchanged from our recent use of this song
-            else
-                currentKeyTransposition = 0;
-        } else
-            currentKeyTransposition = key.getHalfStep() - song.getKey().getHalfStep();
-
-        this.song = song;
-        originalKey = song.getKey();
-
-        //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        artist.setInnerHTML(song.getArtist());
-        copyright.setInnerHTML(song.getCopyright());
-
-        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-
-        setBpm(song.getBeatsPerMinute());
-        transpose(currentKeyTransposition);
-
-        lyrics.clear();
-        lyrics.add(new HTML(song.generateHtmlLyricsTable(prefix)));
-
-        //chordsDirty = true;   //  done by transpose()
-    }
-
     private void transpose(int tran) {
-        currentKeyTransposition = Util.mod(tran, MusicConstant.halfStepsPerOctave);
-
-        currentKey = Key.getKeyByHalfStep(originalKey.getHalfStep() + currentKeyTransposition);
+        currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
         keyLabel.setInnerHTML(currentKey.toString());
 
+        if (song == null)
+            return;
+
         chords.clear();
-        chords.add(new HTML(song.transpose(currentKeyTransposition,prefix)));
+        chords.add(new HTML(song.transpose(tran, prefix)));
 
         resizeChords();
     }
@@ -321,22 +308,23 @@ public class LyricsAndChordsView
         //  adjust fontSize so the table fits but is still minimally, if possible
         if (chords != null && chords.getOffsetWidth() > 0 && chords.getOffsetHeight() > 0) {
             {
-                Widget parent = chordsContainer;
+                Widget parent = chordsFocus;
                 double parentWidth = parent.getOffsetWidth();
                 double parentHeight = parent.getOffsetHeight();
                 NodeList<Element> list = chords.getElement().getElementsByTagName("table");
                 for (int i = 0; i < list.getLength(); i++) {
                     //  html table
                     Element e = list.getItem(i);
-                    if (e.getId().equals(prefix+"ChordTable")) {
+                    if (e.getId().equals(prefix + "ChordTable")) {
                         int tableWidth = e.getClientWidth();
                         int tableHeight = e.getClientHeight();
 
-                        //GWT.log//
-                        logger.fine("L&C chords panel: (" + parentWidth + ","
-                                + parentHeight + ") for (" + tableWidth + ","
-                                + tableHeight + ") "
-                                + ((1 + 1.0 / chordsFontSize) * tableWidth));
+                        //  GWT.log
+//                        logger.fine
+//                                ("L&C chords panel: (" + parentWidth + ","
+//                                        + parentHeight + ") for (" + tableWidth + ","
+//                                        + tableHeight + ") "
+//                                        + ((1 + 1.0 / chordsFontSize) * tableWidth));
 
                         if (forceChordsFontSize
                                 || parentWidth < tableWidth
@@ -366,7 +354,7 @@ public class LyricsAndChordsView
                             chordsDirty = !((ratio >= 1 && ratio <= (1 + 6.0 / chordsFontSize))
                                     || chordsFontSize == chordsMinFontSize
                                     || chordsFontSize == chordsMaxFontSize)
-                            || forceChordsFontSize;
+                                    || forceChordsFontSize;
                             forceChordsFontSize = false;
                             //sendStatus("chordsDirty", Boolean.toString(chordsDirty));
                         } else
@@ -419,13 +407,8 @@ public class LyricsAndChordsView
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 
-
     private AudioBeatDisplay audioBeatDisplay;
-    private Song song;
-    private Key originalKey;
-    private SongUpdate songUpdate = new SongUpdate();
-    private int currentKeyTransposition = 0;
-    private Key currentKey = Key.getDefault();
+
     private Element lastChordElement;
     private Element lastLyricsElement;
     private boolean chordsDirty = true;
@@ -442,8 +425,7 @@ public class LyricsAndChordsView
     private boolean forceChordsFontSize = true;
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
-    private final EventBus eventBus;
-    private static String  prefix = "lyAndCh";
-    private static final Logger logger = Logger.getLogger(LyricsAndChordsView.class.getName());
+    private static String prefix = "lyAndCh";
+    private static final Logger logger = Logger.getLogger(LyricsAndChordsViewImpl.class.getName());
 
 }

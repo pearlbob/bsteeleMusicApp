@@ -3,10 +3,10 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
@@ -15,51 +15,53 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
 /**
- *
  * @author bob
  */
 public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWidget.MyView>
-        implements SongSelectionEventHandler,
-        SongSubmissionEventHandler
-{
+        implements SongUpdateEventHandler,
+        SongSubmissionEventHandler {
 
-  public interface MyView extends View
-  {
-    public HandlerRegistration SongSubmissionEventHandler(
-          SongSubmissionEventHandler handler);
-    
-    void setSongEdit(Song song);
-  }
 
-  @Inject
-  SongEditPresenterWidget(final EventBus eventBus,
-          final MyView view
-  ) {
-    super(eventBus, view);
+    public interface MyView extends View {
 
-    this.eventBus = eventBus;
-    this.view = view;
-  }
+        public HandlerRegistration SongUpdateEventHandler(
+                SongUpdateEventHandler handler);
 
-  @Override
-  public void onBind() {
-    eventBus.addHandler(SongSelectionEvent.TYPE, this);
-    
-    view.SongSubmissionEventHandler(this);
-  }
-  
-  
-  @Override
-  public void onSongSubmission(SongSubmissionEvent event) {
-    eventBus.fireEvent(event);
-  }
+        public HandlerRegistration SongSubmissionEventHandler(
+                SongSubmissionEventHandler handler);
 
-  
-  @Override
-  public void onSongSelection(SongSelectionEvent event) {
-    view.setSongEdit(event.getSong());
-  }
+        void setSongEdit(Song song);
+    }
 
-  private final EventBus eventBus;
-  private final MyView view;
+    @Inject
+    SongEditPresenterWidget(final EventBus eventBus,
+                            final MyView view
+    ) {
+        super(eventBus, view);
+
+        this.eventBus = eventBus;
+        this.view = view;
+    }
+
+    @Override
+    public void onBind() {
+        eventBus.addHandler(SongUpdateEvent.TYPE, this);
+
+        view.SongUpdateEventHandler(this);
+        view.SongSubmissionEventHandler(this);
+    }
+
+
+    @Override
+    public void onSongSubmission(SongSubmissionEvent event) {
+        eventBus.fireEvent(event);
+    }
+
+    @Override
+    public void onSongUpdate(SongUpdateEvent event) {
+        view.setSongEdit(event.getSongUpdate().getSong());
+    }
+
+    private final EventBus eventBus;
+    private final MyView view;
 }

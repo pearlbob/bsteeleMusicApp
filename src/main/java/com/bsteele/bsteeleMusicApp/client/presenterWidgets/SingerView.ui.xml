@@ -21,8 +21,8 @@
             </g:HTMLPanel>
         </g:north>
         <g:center>
-            <g:ScrollPanel>
-                <g:HTMLPanel ui:field="chordsContainer">
+            <g:ScrollPanel ui:field="lyricsScrollPanel">
+                <g:HTMLPanel ui:field="lyricsContainer">
                     <canvas ui:field="audioBeatDisplayCanvas" height="45"
                             title="Beat display of audio.">
                         Your browser does not support the HTML5 canvas tag.

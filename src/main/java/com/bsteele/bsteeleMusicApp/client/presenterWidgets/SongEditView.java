@@ -5,10 +5,23 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
-import com.bsteele.bsteeleMusicApp.client.songs.*;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.songs.ChordComponent;
+import com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor;
+import com.bsteele.bsteeleMusicApp.client.songs.Key;
+import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
+import com.bsteele.bsteeleMusicApp.client.songs.ScaleChord;
+import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
+import com.bsteele.bsteeleMusicApp.client.songs.Section;
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.*;
-import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.OptionElement;
+import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -28,7 +41,6 @@ import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.TreeSet;
 
@@ -407,6 +419,15 @@ public class SongEditView
 
     @Override
     public void setSongEdit(Song song) {
+        if (song == null)
+            return;
+
+        //  don't reload on every update
+        if (song.equals(this.song))
+            return;
+        this.song = song;
+
+
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
         copyrightEntry.setText(song.getCopyright());
@@ -620,12 +641,16 @@ public class SongEditView
         handlerManager.fireEvent(event);
     }
 
+    @Override
+    public HandlerRegistration SongUpdateEventHandler(SongUpdateEventHandler handler) {
+        return handlerManager.addHandler(SongUpdateEvent.TYPE, handler);
+    }
 
     @Override
-    public HandlerRegistration SongSubmissionEventHandler(
-            SongSubmissionEventHandler handler) {
+    public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler) {
         return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
     }
+
 
     private void guessTheKey() {
         HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(chordsTextEntry.getValue());
@@ -703,6 +728,7 @@ public class SongEditView
     private ArrayList<ScaleChord> commonScaleChords = new ArrayList<>();
     HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private Key key = Key.getDefault();
+    private Song song;
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
     private final HandlerManager handlerManager;

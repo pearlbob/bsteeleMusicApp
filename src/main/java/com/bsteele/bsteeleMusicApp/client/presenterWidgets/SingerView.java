@@ -9,14 +9,18 @@ import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.google.gwt.dom.client.*;
+import com.google.gwt.dom.client.CanvasElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
 import java.util.logging.Logger;
@@ -25,7 +29,7 @@ import java.util.logging.Logger;
  * @author bob
  */
 public class SingerView
-        extends ViewImpl
+        extends CommonPlayViewImpl
         implements SingerPresenterWidget.MyView {
 
     @UiField
@@ -44,10 +48,13 @@ public class SingerView
     SpanElement artist;
 
     @UiField
+    ScrollPanel lyricsScrollPanel;
+
+    @UiField
     CanvasElement audioBeatDisplayCanvas;
 
     @UiField
-    HTMLPanel chordsContainer;
+    HTMLPanel lyricsContainer;
 
     @UiField
     HTMLPanel singer;
@@ -61,12 +68,11 @@ public class SingerView
 
     @Inject
     SingerView(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
-        this.eventBus = eventBus;
+        super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
-
     }
 
     @Override
@@ -79,18 +85,40 @@ public class SingerView
 
         labelPlayStop();
 
-        //  set the song prior to play selection overrides
-        setSong(songUpdate.getSong(), songUpdate.getCurrentKey());
+        if (songUpdate.getState() != lastState) {
+            switch (lastState) {
+                case idle:
+                    resetScroll(lyricsScrollPanel);
+                    break;
+            }
+            lastState = songUpdate.getState();
+        }
 
-        setCurrentKey(songUpdate.getCurrentKey());
-        setBpm(songUpdate.getCurrentBeatsPerMinute());
+
+        syncCurrentKey(songUpdate.getCurrentKey());
+        syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
+        
+        if (song == null || !song.equals(songUpdate.getSong())) {
+            resetScroll(lyricsScrollPanel);
+
+            song = songUpdate.getSong();
+            
+            title.setInnerHTML(song.getTitle());
+            artist.setInnerHTML(song.getArtist());
+            copyright.setInnerHTML(song.getCopyright());
+
+            timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+
+            singer.clear();
+            singer.add(new HTML(song.generateHtmlLyricsTable(prefix)));
+        }
     }
 
-    private void setCurrentKey(Key key) {
+    private void syncCurrentKey(Key key) {
         keyLabel.setInnerHTML(key.toString());
     }
 
-    private void setBpm(int bpm) {
+    private void syncCurrentBpm(int bpm) {
         currentBpm.setInnerText(Integer.toString(bpm));
     }
 
@@ -107,46 +135,41 @@ public class SingerView
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        if (song != null)
-            audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-                    songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
-    }
+        if (song == null)
+            return;
 
+        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
 
-    @Override
-    public void setSong(Song song) {
-        setSong(song, null);
-    }
+        //  turn off all highlights
+        if (lastLyricsElement != null) {
+            lastLyricsElement.getStyle().clearBackgroundColor();
+            lastLyricsElement = null;
+        }
 
-    private void setSong(Song song, Key key) {
-        this.song = song;
+        //  high light chord and lyrics
+        switch (songUpdate.getState()) {
+            case playing:
+                //  add highlights
+                if (songUpdate.getMeasure() >= 0) {
+                    String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
+                    Element le = singer.getElementById(lyricsCellId);
+                    if (le != null) {
+                        le.getStyle().setBackgroundColor(highlightColor);
+                        lastLyricsElement = le;
+                    }
+                }
+                break;
+        }
 
-        //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        artist.setInnerHTML(song.getArtist());
-        copyright.setInnerHTML(song.getCopyright());
-
-        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-
-        setCurrentKey(song.getKey());
-        setBpm(song.getBeatsPerMinute());
-
-        singer.clear();
-        singer.add(new HTML(song.generateHtmlLyricsTable(prefix)));
+        //  auto scroll
+        autoScroll(lyricsScrollPanel, singer);
     }
 
     private AudioBeatDisplay audioBeatDisplay;
-    private Song song;
-    private SongUpdate songUpdate = new SongUpdate();
-    private Element lastLyricsElement;
-    private int lastMeasureNumber;
 
     public static final String highlightColor = "#e4c9ff";
-    private static final int lyricsMinFontSize = 8;
-    private static final int lyricsMaxFontSize = 28;
-    private final EventBus eventBus;
-    private static String  prefix = "singer";
+    private static String prefix = "singer";
     private static final Document document = Document.get();
     private static final Logger logger = Logger.getLogger(SingerView.class.getName());
-
 }

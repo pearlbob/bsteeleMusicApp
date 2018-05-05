@@ -73,7 +73,7 @@
                                         <iron-icon icon="help" item-icon=""/>
                                         <div>About</div>
                                     </paper-icon-item>
-                                    <g:Tree ui:field="optionTree" >
+                                    <g:Tree ui:field="optionTree">
                                         <g:TreeItem text="Display">
                                             <g:CheckBox ui:field="countIn" text="Count-In" checked="true"/>
                                             <g:CheckBox ui:field="alwaysCount" text="Always Count"/>
@@ -82,13 +82,13 @@
                                     </g:Tree>
                                     <br/>
                                     <g:Button ui:field="showAllScales">Show all scales</g:Button>
-                                    <g:HTML ui:field="allScales" />
+                                    <g:HTML ui:field="allScales"/>
                                     <br/>
                                     <g:Button ui:field="showAllChords">Show all chords</g:Button>
-                                    <g:HTML ui:field="allChords" />
+                                    <g:HTML ui:field="allChords"/>
                                     <br/>
                                     <g:Button ui:field="showStatus">Show Status</g:Button>
-                                    <g:HTML ui:field="allStatus" />
+                                    <g:HTML ui:field="allStatus"/>
                                     <br/>
                                     buildId:
                                     <g:Label ui:field="buildId"/>

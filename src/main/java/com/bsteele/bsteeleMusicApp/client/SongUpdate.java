@@ -35,7 +35,19 @@ public class SongUpdate {
     }
 
     public SongUpdate() {
-        song = Song.createEmptySong();
+        assignSong(Song.createEmptySong());
+    }
+
+    public static final SongUpdate createSongUpdate(Song song) {
+        SongUpdate ret = new SongUpdate();
+        ret.assignSong(song);
+        return ret;
+    }
+
+    private void assignSong(Song song){
+        this.song = song;
+        currentBeatsPerMinute = song.getBeatsPerMinute();
+        currentKey = song.getKey();
     }
 
     public final State getState() {
@@ -99,6 +111,11 @@ public class SongUpdate {
         }
     }
 
+    /**
+     * Walk to the next measure.
+     *
+     * @return true if the measure exists
+     */
     public final boolean nextMeasure() {
         logger.fine("nextMeasure() from " + measure);
         if (measure < 0) {
@@ -115,6 +132,9 @@ public class SongUpdate {
         //  increment to next the next measure slot
         sectionVersion = songSectionSequence.get(sectionNumber);
         Grid<String> chordSection = song.getChordSection(sectionVersion);
+        if (chordSection == null)
+            return true;
+
         ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
         chordSectionColumn++;
         if (chordCols == null || this.chordSectionColumn >= chordCols.size()) {
@@ -255,7 +275,7 @@ public class SongUpdate {
 
 
     public final double getMeasureDuration() {
-        if ( song== null)
+        if (song == null)
             return 2;
         return song.getBeatsPerBar() * 60.0 / (currentBeatsPerMinute == 0 ? 30 : currentBeatsPerMinute);
     }
@@ -281,25 +301,25 @@ public class SongUpdate {
      * @return the currentBeatsPerMinute
      */
     public final int getCurrentBeatsPerMinute() {
-        return currentBeatsPerMinute;
+        return currentBeatsPerMinute > 0 ? currentBeatsPerMinute : song.getBeatsPerMinute();
     }
 
 
-    final void  setState(State state) {
+    final void setState(State state) {
         this.state = state;
     }
 
     /**
      * @param eventTime the eventTime to set
      */
-   final void  setEventTime(double eventTime) {
+    final void setEventTime(double eventTime) {
         this.eventTime = eventTime;
     }
 
     /**
      * @param song the song to set
      */
-    public final  void setSong(Song song) {
+    public final void setSong(Song song) {
         this.song = song;
     }
 
@@ -320,7 +340,7 @@ public class SongUpdate {
     /**
      * @param repeatCurrent the repeatCurrent to set
      */
-    final void  setRepeatCurrent(int repeatCurrent) {
+    final void setRepeatCurrent(int repeatCurrent) {
         this.repeatCurrent = repeatCurrent;
     }
 
@@ -328,14 +348,14 @@ public class SongUpdate {
     /**
      * @param beat the beat to set
      */
-    final void  setBeat(int beat) {
+    final void setBeat(int beat) {
         this.beat = beat;
     }
 
     /**
      * @param beatsPerMeasure the beatsPerMeasure to set
      */
-    final  void  setBeatsPerBar(int beatsPerMeasure) {
+    final void setBeatsPerBar(int beatsPerMeasure) {
         this.beatsPerMeasure = beatsPerMeasure;
     }
 
@@ -364,13 +384,12 @@ public class SongUpdate {
 
 
     public final Key getCurrentKey() {
-        return currentKey;
+        return currentKey != null ? currentKey : song.getKey();
     }
 
     public final void setCurrentKey(Key currentKey) {
         this.currentKey = currentKey;
     }
-
 
 
     public final String diff(SongUpdate other) {
@@ -386,7 +405,7 @@ public class SongUpdate {
             return "new key: " + other.currentKey;
         if (!currentKey.equals(other.currentKey))
             return "new key: " + other.currentKey;
-        if (currentBeatsPerMinute !=other.currentBeatsPerMinute)
+        if (currentBeatsPerMinute != other.currentBeatsPerMinute)
             return "new tempo: " + other.currentBeatsPerMinute;
         return "no change";
     }
@@ -514,7 +533,7 @@ public class SongUpdate {
     public int hashCode() {
         int hash = 5;
         hash = (83 * hash + state.hashCode()) % (1 << 31);
-        hash = (83 * hash + currentKey.hashCode()) % (1 << 31);
+        hash = (83 * hash + Objects.hashCode(currentKey)) % (1 << 31);
         hash = (83 * hash + (int) this.eventTime) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(this.song)) % (1 << 31);
         hash = (83 * hash + this.sectionCount) % (1 << 31);
@@ -629,7 +648,7 @@ public class SongUpdate {
     private int beat;
     private int beatsPerMeasure;
     private int currentBeatsPerMinute;
-    private Key currentKey = Key.getDefault();
+    private Key currentKey;
 
     private static final Logger logger = Logger.getLogger(SongUpdate.class.getName());
 }

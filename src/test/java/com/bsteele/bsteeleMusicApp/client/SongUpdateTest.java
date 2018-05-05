@@ -118,7 +118,7 @@ public class SongUpdateTest extends GWTTestCase {
     public void testGetBeatsPerMinute() {
         System.out.println("getCurrentBeatsPerMinute");
         SongUpdate instance = new SongUpdate();
-        int expResult = 0;
+        int expResult = 100; // fixme: bad default
         int result = instance.getCurrentBeatsPerMinute();
         assertEquals(expResult, result);
     }

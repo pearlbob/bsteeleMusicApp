@@ -7,18 +7,25 @@ import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
-import com.bsteele.bsteeleMusicApp.client.songs.*;
-import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.*;
+import com.bsteele.bsteeleMusicApp.client.songs.Key;
+import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
+import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.google.gwt.dom.client.CanvasElement;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -27,8 +34,8 @@ import java.util.logging.Logger;
 /**
  * @author bob
  */
-public class PlayerView
-        extends ViewImpl
+public class PlayerViewImpl
+        extends CommonPlayViewImpl
         implements PlayerPresenterWidget.MyView {
 
     @UiField
@@ -71,12 +78,12 @@ public class PlayerView
     SpanElement copyright;
 
 
-    interface Binder extends UiBinder<Widget, PlayerView> {
+    interface Binder extends UiBinder<Widget, PlayerViewImpl> {
     }
 
     @Inject
-    PlayerView(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
-        this.eventBus = eventBus;
+    PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
+        super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
@@ -100,31 +107,24 @@ public class PlayerView
         });
 
         originalKeyButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                transpose(0);
-            }
+            setCurrentKey(songUpdate.getSong().getKey());
         });
 
         keyUpButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                transpose(currentKeyTransposition + 1);
-            }
+            stepCurrentKey(+1);
         });
         keyDownButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                transpose(currentKeyTransposition - 1);
-            }
+            stepCurrentKey(-1);
         });
 
         currentBpmEntry.addChangeHandler((event) -> {
-            setBpm(currentBpmEntry.getValue());
+            setCurrentBpm(currentBpmEntry.getValue());
         });
 
         Event.sinkEvents(bpmSelect, Event.ONCHANGE);
         Event.setEventListener(bpmSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
-                setBpm(bpmSelect.getValue());
-                bpmSelect.setSelectedIndex(0);
+                setCurrentBpm(bpmSelect.getValue());
             }
         });
     }
@@ -145,13 +145,14 @@ public class PlayerView
         }
 
         if (songUpdate.getState() != lastState) {
-            lastState = songUpdate.getState();
             switch (lastState) {
-                case playing:
-                    scrollPosition = 0;
-                    chordsScrollPanel.setVerticalScrollPosition(0);
+                case idle:
+                    resetScroll(chordsScrollPanel);
                     break;
             }
+            lastState = songUpdate.getState();
+
+            setEnables();
         }
 
         //  turn on highlights if required
@@ -172,26 +173,46 @@ public class PlayerView
                 break;
         }
 
-        //  set the song prior to play selection overrides
-        if (song == null || !song.equals(songUpdate.getSong()))
-            setSong(songUpdate.getSong(), songUpdate.getCurrentKey());
+        if ( song != null && !song.equals(songUpdate.getSong())){
+            resetScroll(chordsScrollPanel);
+        }
+        song = songUpdate.getSong();
 
-        setCurrentKey(songUpdate.getCurrentKey());
-        setBpm(songUpdate.getCurrentBeatsPerMinute());
+        //  load new data even if the identity has not changed
+        title.setInnerHTML(song.getTitle());
+        artist.setInnerHTML(song.getArtist());
+        copyright.setInnerHTML(song.getCopyright());
+
+        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+
+        syncCurrentKey(songUpdate.getCurrentKey());
+        syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
+
+        syncKey(songUpdate.getCurrentKey());
+
+        chordsDirty = true;
+
+        chordsFontSize = 0;     //    will never match, forces the fontSize set
+        chordsDirty = true;   //  done by syncKey()
     }
 
-    private void setCurrentKey(Key key) {
-        this.currentKey = key;
-        currentKeyTransposition = key.getHalfStep() - song.getKey().getHalfStep();
-        keyLabel.setInnerHTML(currentKey.toString());
+    private void setEnables() {
+        boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
+
+        originalKeyButton.setEnabled(enable);
+        keyUpButton.setEnabled(enable);
+        keyDownButton.setEnabled(enable);
+        currentBpmEntry.setEnabled(enable);
+        bpmSelect.setDisabled(!enable);
     }
 
-    private void setBpm(String bpm) {
-        setBpm(Integer.parseInt(bpm));
+    private void syncCurrentKey(Key key) {
+        keyLabel.setInnerHTML(key.toString());
     }
 
-    private void setBpm(int bpm) {
+    private void syncCurrentBpm(int bpm) {
         currentBpmEntry.setValue(Integer.toString(bpm));
+        bpmSelect.setSelectedIndex(0);
     }
 
     private void labelPlayStop() {
@@ -273,81 +294,17 @@ public class PlayerView
         }
 
         //  auto scroll
-        switch (songUpdate.getState()) {
-            case playing:
-                if (song.getTotalBeats() == 0 || player.getOffsetHeight() == 0)
-                    break;
+      autoScroll( chordsScrollPanel, player );
 
-                //  auto scroll
-                int max = chordsScrollPanel.getMaximumVerticalScrollPosition();
-                int h = chordsScrollPanel.getElement().getScrollHeight() - max;
-
-                scrollPosition += (max + 1.5 * h) / (60.0 * song.getTotalBeats() * 60 / songUpdate.getCurrentBeatsPerMinute());
-                scrollPosition = Math.min(max + h / 2, scrollPosition);
-                //GWT.log("scroll: " + Double.toString(scrollPosition) + "  m: " + Integer.toString(max) + "  h: " + Integer.toString(h));
-                int position = (int) Math.rint(scrollPosition);
-                position = Math.max(0, Math.min(position - h / 2, max));
-                int currentPosition = chordsScrollPanel.getVerticalScrollPosition();
-                if (Math.abs(currentPosition - position) > 8) {
-                    scrollPosition = currentPosition;    // let the human override the scroll
-                    lastScrollPosition = (int) Math.rint(scrollPosition);
-                } else if (position != lastScrollPosition && scrollDelay > 1) {
-                    lastScrollPosition = position;
-                    chordsScrollPanel.setVerticalScrollPosition(position);
-                    scrollDelay = 0;
-                    // GWT.log("player scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
-                }
-                scrollDelay++;
-                break;
-        }
     }
 
-
-    @Override
-    public void setSong(Song song) {
-        setSong(song, null);
+    private void syncKey(Key key) {
+        int tran = key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
+        syncKey(tran);
     }
 
-    private void setSong(Song song, Key key) {
-
-        if (key == null) {
-            boolean keepKey = (this.song != null && song != null
-                    && this.song.getSongId().equals(song.getSongId()));  //  identity only
-            if (keepKey)
-                ;   //  keep the current key transposition unchanged from our recent use of this song
-            else
-                currentKeyTransposition = 0;
-        } else
-            currentKeyTransposition = key.getHalfStep() - song.getKey().getHalfStep();
-
-        this.song = song;
-        originalKey = song.getKey();
-
-        //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        artist.setInnerHTML(song.getArtist());
-        copyright.setInnerHTML(song.getCopyright());
-
-        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-
-        setBpm(song.getBeatsPerMinute());
-        transpose(currentKeyTransposition);
-
-//        lyrics.clear();
-//        lyrics.add(new HTML(song.generateHtmlLyricsTable()));
-
-
-        scrollPosition = 0;
-        chordsScrollPanel.setVerticalScrollPosition(0);
-        chordsFontSize = 0;     //    will never match, forces the fontSize set
-        chordsDirty = true;   //  done by transpose()
-    }
-
-    private void transpose(int tran) {
-        currentKeyTransposition = Util.mod(tran, MusicConstant.halfStepsPerOctave);
-
-        currentKey = Key.getKeyByHalfStep(originalKey.getHalfStep() + currentKeyTransposition);
-        keyLabel.setInnerHTML(currentKey.toString());
+    private void syncKey(int tran) {
+        keyLabel.setInnerHTML(Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran).toString());
 
         player.clear();
 
@@ -385,23 +342,14 @@ public class PlayerView
     }
 
     private AudioBeatDisplay audioBeatDisplay;
-    private Song song;
-    private Key originalKey;
-    private SongUpdate songUpdate = new SongUpdate();
-    private int currentKeyTransposition = 0;
-    private Key currentKey = Key.getDefault();
-    private Element lastChordElement;
-    private Element lastLyricsElement;
+
     private boolean chordsDirty = true;
     private double chordsParentWidth;
     private double chordsParentHeight;
     private Element lastRepeatElement;
     private int lastRepeatTotal;
     private int lastMeasureNumber;
-    private int lastScrollPosition = 0;
-    private double scrollPosition = 0;
-    private int scrollDelay = 0;
-    private SongUpdate.State lastState = SongUpdate.State.idle;
+
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;
@@ -409,8 +357,7 @@ public class PlayerView
     private int chordsFontSize = chordsMaxFontSize;
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
-    private final EventBus eventBus;
     private static final String prefix = "player";
-    private static final Logger logger = Logger.getLogger(PlayerView.class.getName());
+    private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
 }

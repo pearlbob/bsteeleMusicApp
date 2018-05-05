@@ -23,15 +23,21 @@ import java.util.TreeSet;
  * @author bob
  */
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
-        implements SongSelectionEventHandler,
+        implements
+        SongSelectionEventHandler,
+        SongUpdateEventHandler,
         SongSubmissionEventHandler,
         SongReadEventHandler {
+
 
 
     public interface MyView extends View {
 
         HandlerRegistration addSongSelectionEventHandler(
                 SongSelectionEventHandler handler);
+
+        HandlerRegistration addSongUpdateEventHandler(
+                SongUpdateEventHandler handler);
 
         HandlerRegistration addSongReadEventHandler(
                 SongReadEventHandler handler);
@@ -55,6 +61,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     @Override
     public void onBind() {
         view.addSongSelectionEventHandler(this);
+        view.addSongUpdateEventHandler(this);
         view.addSongReadEventHandler(this);
 
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
@@ -66,13 +73,18 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
+    public void onSongUpdate(SongUpdateEvent event) {
+        eventBus.fireEvent(event);
+    }
+
+    @Override
     public void onSongSubmission(SongSubmissionEvent event) {
         Song song = event.getSong();
         String filename = song.getTitle() + ".songlyrics";
 
         saveSongAs(filename, song.toJson());
 
-        addToSonglist(song);
+        addToSongList(song);
         view.setSongList(allSongs);
         fireEvent(new SongSelectionEvent(song));
     }
@@ -80,7 +92,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     @Override
     public void onSongRead(SongReadEvent event) {
         Song song = event.getSong();
-        addToSonglist(song);
+        addToSongList(song);
         view.setSongList(allSongs);
         fireEvent(new SongSelectionEvent(song));
     }
@@ -98,8 +110,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                         sortedSet.add(Song.fromJsonObject(ja.get(i).isObject()));
                     }
                     //  add to all songs
-                    for (Song song: sortedSet) {
-                        addToSonglist(song);
+                    for (Song song : sortedSet) {
+                        addToSongList(song);
                     }
                 }
             }
@@ -107,10 +119,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         view.setSongList(allSongs);
     }
 
-    private void addToSonglist(Song song) {
+    private void addToSongList(Song song) {
         if (song != null) {
-            if ( allSongs.contains(song)) {
-                GWT.log("Dup: "+song.getTitle());
+            if (allSongs.contains(song)) {
+                GWT.log("Dup: " + song.getTitle());
                 allSongs.remove(song);  //  remove any prior version
             }
             allSongs.add(song);
@@ -124,24 +136,24 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
      * @param data
      */
     private native void saveSongAs(String filename, String data) /*-{
-    var data = new Blob([data], {type: 'text/plain'});
-    // If we are replacing a previously generated file we need to
-    // manually revoke the object URL to avoid memory leaks.
-    //if (textFile !== null) {
-    //    window.URL.revokeObjectURL(textFile);
-    //}
+        var data = new Blob([data], {type: 'text/plain'});
+        // If we are replacing a previously generated file we need to
+        // manually revoke the object URL to avoid memory leaks.
+        //if (textFile !== null) {
+        //    window.URL.revokeObjectURL(textFile);
+        //}
 
-    var textFile = window.URL.createObjectURL(data);
+        var textFile = window.URL.createObjectURL(data);
 //    if (downloadlink === null) {
 //        downloadlink = document.createElement("a");
 //        downloadlink.style = "display:none";
 //    }
-    var downloadlink = document.createElement("a");
-    downloadlink.style = "display:none";
-    downloadlink.download = filename;
-    downloadlink.href = textFile;
-    downloadlink.click();
-}-*/;
+        var downloadlink = document.createElement("a");
+        downloadlink.style = "display:none";
+        downloadlink.download = filename;
+        downloadlink.href = textFile;
+        downloadlink.click();
+    }-*/;
 
     private final TreeSet<Song> allSongs = new TreeSet<>();
     private final EventBus eventBus;

@@ -3,12 +3,17 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 import com.bsteele.bsteeleMusicApp.client.application.ApplicationPresenter;
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.LoggedInGatekeeper;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEventHandler;
 import com.bsteele.bsteeleMusicApp.client.place.NameTokens;
-import com.bsteele.bsteeleMusicApp.client.presenterWidgets.*;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.DrumOptionsPresenterWidget;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsPresenterWidget;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.PlayerPresenterWidget;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SingerPresenterWidget;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongEditPresenterWidget;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongListPresenterWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -23,11 +28,13 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * @author bob
  */
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
-        implements SongSelectionEventHandler, StatusEventHandler {
+        implements SongUpdateEventHandler, StatusEventHandler {
+
 
     interface MyView extends View {
 
-        void selectTab(String tabName);
+        void selectLastPlayTab();
+
         void onStatusEvent(StatusEvent event);
     }
 
@@ -88,13 +95,14 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         setInSlot(SLOT_SONG_EDIT_CONTENT, songEditPresenterWidget);
         setInSlot(SLOT_DRUM_OPTIONS_CONTENT, drumOptionsPresenterWidget);
 
-        eventBus.addHandler(SongSelectionEvent.TYPE, this);
+        eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(StatusEvent.TYPE, this);
     }
 
+
     @Override
-    public void onSongSelection(SongSelectionEvent event) {
-        getView().selectTab("lyricsAndChordsTab");
+    public void onSongUpdate(SongUpdateEvent event) {
+                getView().selectLastPlayTab();
     }
 
     @Override

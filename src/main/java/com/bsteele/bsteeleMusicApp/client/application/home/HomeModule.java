@@ -15,10 +15,10 @@ public class HomeModule extends AbstractPresenterModule {
                 SongListPresenterWidget.MyView.class, SongListView.class);
 
         bindPresenterWidget(LyricsAndChordsPresenterWidget.class,
-                LyricsAndChordsPresenterWidget.MyView.class, LyricsAndChordsView.class);
+                LyricsAndChordsPresenterWidget.MyView.class, LyricsAndChordsViewImpl.class);
 
         bindPresenterWidget(PlayerPresenterWidget.class,
-                PlayerPresenterWidget.MyView.class, PlayerView.class);
+                PlayerPresenterWidget.MyView.class, PlayerViewImpl.class);
 
         bindPresenterWidget(SingerPresenterWidget.class,
                 SingerPresenterWidget.MyView.class, SingerView.class);

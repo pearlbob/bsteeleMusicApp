@@ -4,8 +4,10 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
-import com.bsteele.bsteeleMusicApp.client.application.events.*;
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
@@ -15,14 +17,12 @@ import com.gwtplatform.mvp.client.View;
  * @author bob
  */
 public class SingerPresenterWidget extends PresenterWidget<SingerPresenterWidget.MyView>
-        implements SongSelectionEventHandler,
+        implements
         SongUpdateEventHandler,
         MusicAnimationEventHandler {
 
 
     public interface MyView extends View {
-
-        void setSong(Song song);
 
         void onSongUpdate(SongUpdate songUpdate);
 
@@ -40,14 +40,8 @@ public class SingerPresenterWidget extends PresenterWidget<SingerPresenterWidget
 
     @Override
     protected void onBind() {
-        eventBus.addHandler(SongSelectionEvent.TYPE, this);
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(MusicAnimationEvent.TYPE, this);
-    }
-
-    @Override
-    public void onSongSelection(SongSelectionEvent event) {
-        view.setSong(event.getSong());
     }
 
     @Override

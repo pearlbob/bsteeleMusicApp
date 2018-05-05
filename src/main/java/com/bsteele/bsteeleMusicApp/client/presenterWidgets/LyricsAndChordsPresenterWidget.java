@@ -15,14 +15,12 @@ import com.gwtplatform.mvp.client.View;
  * @author bob
  */
 public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndChordsPresenterWidget.MyView>
-        implements SongSelectionEventHandler,
+        implements
         SongUpdateEventHandler,
         MusicAnimationEventHandler {
 
 
     public interface MyView extends View {
-
-        void setSong(Song song);
 
         void onSongUpdate(SongUpdate songUpdate);
 
@@ -40,14 +38,8 @@ public class LyricsAndChordsPresenterWidget extends PresenterWidget<LyricsAndCho
 
     @Override
     protected void onBind() {
-        eventBus.addHandler(SongSelectionEvent.TYPE, this);
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(MusicAnimationEvent.TYPE, this);
-    }
-
-    @Override
-    public void onSongSelection(SongSelectionEvent event) {
-        view.setSong(event.getSong());
     }
 
     @Override

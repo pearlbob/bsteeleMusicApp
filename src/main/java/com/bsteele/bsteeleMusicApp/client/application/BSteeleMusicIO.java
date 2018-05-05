@@ -67,9 +67,13 @@ public class BSteeleMusicIO {
         @Override
         public Object call(Object event) {
             GWT.log("error: socket readyState: " + socket.readyState);
-            isSocketOpen = (socket.readyState == 1);
+            isSocketOpen = isSocketOpen();
             return event;
         }
+    }
+
+    private boolean isSocketOpen(){
+        return socket != null && socket.readyState == 1 ;
     }
 
     @JsType(isNative = true, name = "Object", namespace = GLOBAL)
@@ -97,6 +101,9 @@ public class BSteeleMusicIO {
 
 //        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
 //                + " at my " + System.currentTimeMillis());
+        if ( !isSocketOpen())
+            return false;
+        
         socket.send(message);
         return true;
     }

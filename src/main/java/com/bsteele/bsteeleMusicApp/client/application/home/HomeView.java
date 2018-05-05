@@ -3,11 +3,18 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimpleLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import com.google.gwt.user.client.ui.TabLayoutPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.inject.Inject;
@@ -15,6 +22,7 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView {
+
 
     interface Binder extends UiBinder<Widget, HomeView> {
     }
@@ -92,12 +100,33 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
             }
         });
 
+        homeTabs.addSelectionHandler(selectionEvent -> {
+            int tab = homeTabs.getSelectedIndex();
+            switch (tab) {           // fixme: very weak tab selection!
+                case 1:
+                case 3:
+                case 4:
+                    lastPlayTab = tab;
+                    break;
+            }
+        });
+
+//        // Listen for keyboard events
+//        homeTabs.addKeyDownHandler(new KeyDownHandler() {
+//            public void onKeyDown(KeyDownEvent event) {
+//                if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+//                    addStock();
+//                }
+//            }
+//        });
+
         buildId.setText(AppResources.INSTANCE.buildId().getText());
     }
 
     @Override
-    public void selectTab(String tabName) {
-        homeTabs.selectTab(1);    //  fixme
+    public void selectLastPlayTab() {
+        if (homeTabs.getSelectedIndex() != lastPlayTab)
+            homeTabs.selectTab(lastPlayTab);
     }
 
     @Override
@@ -122,4 +151,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     }
 
     private HashMap<String, String> statusMap = new HashMap<>();
+    private int lastPlayTab = 1;
 }
