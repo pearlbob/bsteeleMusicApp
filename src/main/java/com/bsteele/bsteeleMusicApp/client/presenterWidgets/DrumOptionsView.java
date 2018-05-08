@@ -5,8 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -83,9 +83,9 @@ public class DrumOptionsView
     }
 
     @Override
-    public HandlerRegistration addSongSelectionEventHandler(
-            SongSelectionEventHandler handler) {
-        return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
+    public HandlerRegistration addSongUpdateEventHandler(
+            SongUpdateEventHandler handler) {
+        return handlerManager.addHandler(SongUpdateEvent.TYPE, handler);
     }
 
     @Override

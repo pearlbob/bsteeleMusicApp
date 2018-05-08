@@ -151,5 +151,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     }
 
     private HashMap<String, String> statusMap = new HashMap<>();
-    private int lastPlayTab = 1;
+    private int lastPlayTab = 1;   // fixme: very weak tab selection!
 }

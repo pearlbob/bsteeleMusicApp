@@ -5,13 +5,9 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
-import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -21,7 +17,13 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FileUpload;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 import org.vectomatic.file.File;
 import org.vectomatic.file.FileList;
@@ -133,11 +135,6 @@ public class SongListView
         handlerManager.fireEvent(event);
     }
 
-    @Override
-    public HandlerRegistration addSongSelectionEventHandler(
-            SongSelectionEventHandler handler) {
-        return handlerManager.addHandler(SongSelectionEvent.TYPE, handler);
-    }
 
     @Override
     public HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler) {

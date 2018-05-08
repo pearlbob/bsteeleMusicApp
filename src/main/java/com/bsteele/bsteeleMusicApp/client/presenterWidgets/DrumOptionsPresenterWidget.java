@@ -5,8 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSelectionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -18,15 +18,14 @@ import com.gwtplatform.mvp.client.View;
  * User: bob
  */
 public class DrumOptionsPresenterWidget extends PresenterWidget<DrumOptionsPresenterWidget.MyView>
-        implements SongSelectionEventHandler,
+        implements SongUpdateEventHandler,
         DefaultDrumSelectEventHandler
 {
 
-
     public interface MyView extends View {
 
-        HandlerRegistration addSongSelectionEventHandler(
-                SongSelectionEventHandler handler);
+        HandlerRegistration addSongUpdateEventHandler(
+                SongUpdateEventHandler handler);
         HandlerRegistration addDefaultDrumSelectEventHandler(
                 DefaultDrumSelectEventHandler handler);
     }
@@ -43,13 +42,13 @@ public class DrumOptionsPresenterWidget extends PresenterWidget<DrumOptionsPrese
 
     @Override
     public void onBind() {
-        view.addSongSelectionEventHandler(this);
         view.addDefaultDrumSelectEventHandler(this);
     }
 
+
     @Override
-    public void onSongSelection(SongSelectionEvent event) {
-            //  adjust drum to song drum description
+    public void onSongUpdate(SongUpdateEvent event) {
+        //  todo: adjust drum to song drum description
     }
     
     @Override

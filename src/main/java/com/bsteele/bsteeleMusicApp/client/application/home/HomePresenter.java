@@ -3,6 +3,8 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 import com.bsteele.bsteeleMusicApp.client.application.ApplicationPresenter;
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.LoggedInGatekeeper;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
@@ -28,7 +30,8 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * @author bob
  */
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
-        implements SongUpdateEventHandler, StatusEventHandler {
+        implements SongUpdateEventHandler, SongSubmissionEventHandler,
+        StatusEventHandler {
 
 
     interface MyView extends View {
@@ -96,14 +99,22 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         setInSlot(SLOT_DRUM_OPTIONS_CONTENT, drumOptionsPresenterWidget);
 
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
+        eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(StatusEvent.TYPE, this);
     }
 
 
     @Override
     public void onSongUpdate(SongUpdateEvent event) {
-                getView().selectLastPlayTab();
+        getView().selectLastPlayTab();
     }
+
+
+    @Override
+    public void onSongSubmission(SongSubmissionEvent event) {
+        getView().selectLastPlayTab();
+    }
+
 
     @Override
     public void onStatusEvent(StatusEvent event) {

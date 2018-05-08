@@ -24,7 +24,6 @@ import java.util.TreeSet;
  */
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
         implements
-        SongSelectionEventHandler,
         SongUpdateEventHandler,
         SongSubmissionEventHandler,
         SongReadEventHandler {
@@ -32,9 +31,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
 
     public interface MyView extends View {
-
-        HandlerRegistration addSongSelectionEventHandler(
-                SongSelectionEventHandler handler);
 
         HandlerRegistration addSongUpdateEventHandler(
                 SongUpdateEventHandler handler);
@@ -60,16 +56,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     @Override
     public void onBind() {
-        view.addSongSelectionEventHandler(this);
         view.addSongUpdateEventHandler(this);
         view.addSongReadEventHandler(this);
 
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
-    }
-
-    @Override
-    public void onSongSelection(SongSelectionEvent event) {
-        eventBus.fireEvent(event);
     }
 
     @Override
@@ -86,7 +76,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         addToSongList(song);
         view.setSongList(allSongs);
-        fireEvent(new SongSelectionEvent(song));
+        fireEvent(new SongUpdateEvent(song));
     }
 
     @Override
@@ -94,7 +84,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         Song song = event.getSong();
         addToSongList(song);
         view.setSongList(allSongs);
-        fireEvent(new SongSelectionEvent(song));
+        fireEvent(new SongUpdateEvent(song));
     }
 
     private void addJsonToSongList(String jsonString) {

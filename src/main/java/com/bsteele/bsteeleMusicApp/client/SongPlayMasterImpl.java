@@ -224,8 +224,6 @@ public class SongPlayMasterImpl
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
             GWT.log("update diff: " + songInUpdate.diff(songOutUpdate));
 
-            if (!songInUpdate.getSong().equals(songOutUpdate.getSong()))
-                eventBus.fireEvent(new SongSelectionEvent(songInUpdate.getSong()));
             eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
 
             songOutUpdate = songInUpdate;
