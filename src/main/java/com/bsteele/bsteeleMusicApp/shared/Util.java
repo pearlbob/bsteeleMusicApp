@@ -5,9 +5,16 @@ package com.bsteele.bsteeleMusicApp.shared;
  * User: bob
  */
 public class Util {
-    public static final int mod( int n, int modulus)  {
+    public static final int mod(int n, int modulus) {
         n = n % modulus;
-        if ( n < 0 )
+        if (n < 0)
+            n += modulus;
+        return n;
+    }
+
+    public static final double mod(double n, double modulus) {
+        n = n % modulus;
+        if (n < 0)
             n += modulus;
         return n;
     }

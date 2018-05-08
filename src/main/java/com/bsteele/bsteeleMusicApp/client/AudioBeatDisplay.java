@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.CanvasElement;
 
@@ -36,12 +37,12 @@ public class AudioBeatDisplay {
     }
 
     public void update(final double currentTime, final double startTime,
-                       final int bpm, final boolean doSubBeat, final int reqestedBeatsPerBar) {
+                       final int bpm, final boolean doSubBeat, final int requestedBeatsPerBar) {
 
-        int beatsPerBar = (reqestedBeatsPerBar <= 0 ? 4 : reqestedBeatsPerBar);
+        int beatsPerBar = (requestedBeatsPerBar <= 0 ? 4 : requestedBeatsPerBar);
         double sPerBeat =                  60.0 / bpm;
         double sPerBar = beatsPerBar * sPerBeat;
-        double barT = currentTime % sPerBar;
+        double barT = Util.mod(currentTime, sPerBar);
         int beat = (int) Math.floor(beatsPerBar * barT / sPerBar);
         double beatT = barT % (sPerBar / beatsPerBar);
         boolean beatFlash = (beatT < sPerBeat/2);
@@ -74,7 +75,8 @@ public class AudioBeatDisplay {
             String beatColor = ((beat == 0 && beatFlash) ? beat1FlashColor : startColor);
 
             ctx.setFillStyle(beatColor);
-            ctx.fillRect(0, 0, w, h);
+            double padding = w * 0.15;
+            ctx.fillRect(padding, 0, w-2*padding, h);
 
             //  text
             ctx.setFillStyle("#000000");

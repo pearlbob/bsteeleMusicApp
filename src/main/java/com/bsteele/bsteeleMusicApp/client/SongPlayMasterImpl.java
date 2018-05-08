@@ -52,6 +52,9 @@ public class SongPlayMasterImpl
             systemToAudioOffset = (Math.abs(systemToAudioOffset - dt) > 0.1)
                     ? dt : systemToAudioOffset * pass + (1 - pass) * dt;
         }
+        double tn = t + systemToAudioOffset;
+        if (Math.abs(tn - systemT) > 0.005)
+            GWT.log("dt: " + (tn - systemT));
 
         int measureNumber = Integer.MIN_VALUE;
         if (audioFilePlayer != null) {
@@ -81,10 +84,10 @@ public class SongPlayMasterImpl
             switch (state) {
                 case playing:
                     //  distribute the time update locally
-                    songLocalUpdate(systemT);
+                    songLocalUpdate(tn);
 
                     double measureDuration = songOutUpdate.getMeasureDuration();
-                    measureNumber = (int) (Math.floor((t + systemToAudioOffset - t0) / measureDuration));
+                    measureNumber = (int) (Math.floor(tn / measureDuration));
                     thisMeasureStart = measureNumber * measureDuration + (t0 - systemToAudioOffset);
                     if (nextMeasureStart - thisMeasureStart < measureDuration / 2) {
                         //  schedule the audio one measure early
@@ -93,7 +96,7 @@ public class SongPlayMasterImpl
                         beatTheDrums(defaultDrumSelection);
 
                         sendStatus("measureNumber", measureNumber);
-                        sendMeasureDurationStatus(systemT);
+                        sendMeasureDurationStatus(tn);
                     }
 
                     //GWT.log(".");
@@ -105,7 +108,7 @@ public class SongPlayMasterImpl
         }
 
         //  tell everyone else it's animation time
-        eventBus.fireEvent(new MusicAnimationEvent(systemT, measureNumber));
+        eventBus.fireEvent(new MusicAnimationEvent(tn, measureNumber));
 
         //  get ready for next time
         timer.requestAnimationFrame(this);
@@ -246,7 +249,7 @@ public class SongPlayMasterImpl
         requestedState = SongUpdate.State.idle;
     }
 
-    public void issueSongUpdate(SongUpdate songUpdate){
+    public void issueSongUpdate(SongUpdate songUpdate) {
         if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson()))
             //  issue the song update locally if there is no communication with the server
             eventBus.fireEvent(new SongUpdateEvent(songUpdate));

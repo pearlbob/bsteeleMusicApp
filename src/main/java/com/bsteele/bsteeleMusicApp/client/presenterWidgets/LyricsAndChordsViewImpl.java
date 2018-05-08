@@ -10,6 +10,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
+import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
@@ -269,7 +270,8 @@ public class LyricsAndChordsViewImpl
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + Song.genChordId(songUpdate.getSectionVersion(),
+                        SectionVersion v = song.getChordSectionVersion(songUpdate.getSectionVersion());
+                        String chordCellId = prefix + Song.genChordId(v,
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
 
                         Element ce = chords.getElementById(chordCellId);
@@ -329,7 +331,7 @@ public class LyricsAndChordsViewImpl
                         if (forceChordsFontSize
                                 || parentWidth < tableWidth
                                 || parentHeight < tableHeight
-                                || parentWidth > (1 + 3.0 / chordsFontSize) * tableWidth) {
+                                || parentWidth > (1 + 4.0 / chordsFontSize) * tableWidth) {
                             double ratio = Math.min(parentWidth / tableWidth,
                                     parentHeight / tableHeight);
                             logger.fine("wratio: " + (parentWidth / tableWidth)
@@ -351,7 +353,7 @@ public class LyricsAndChordsViewImpl
                             }
                             //sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
 
-                            chordsDirty = !((ratio >= 1 && ratio <= (1 + 6.0 / chordsFontSize))
+                            chordsDirty = !((ratio >= 1 && ratio <= (1 + 8.0 / chordsFontSize))
                                     || chordsFontSize == chordsMinFontSize
                                     || chordsFontSize == chordsMaxFontSize)
                                     || forceChordsFontSize;

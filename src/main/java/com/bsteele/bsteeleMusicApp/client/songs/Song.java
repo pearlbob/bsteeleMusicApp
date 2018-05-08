@@ -400,18 +400,16 @@ public class Song implements Comparable<Song> {
     /**
      * map the section id to it's reduced, common section id
      *
-     * @param sectionId
-     * @return common section id
+     * @param sectionVersion
+     * @return common section version
      */
-    public final String getChordSectionId(String sectionId) {
+    public final SectionVersion getChordSectionVersion(SectionVersion sectionVersion) {
         //  map the section to it's reduced, common section
-        for (SectionVersion v : displaySectionMap.keySet()) {
-            if (v.toString().equals(sectionId)) {
-                sectionId = displaySectionMap.get(v).toString();
-                break;
-            }
+        SectionVersion v = displaySectionMap.get(sectionVersion);
+        if (v != null) {
+            return v;
         }
-        return sectionId;
+        return sectionVersion;
     }
 
     /**
@@ -1488,10 +1486,6 @@ public class Song implements Comparable<Song> {
     private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
     private static final char flat = (char) 9837;
     private static final char sharp = (char) 9839;
-    private static final String chordNumberToLetterSharps[] = new String[]{
-            "A", "A" + sharp, "B", "C", "C" + sharp, "D", "D" + sharp, "E", "F", "F" + sharp, "G", "G" + sharp};
-    private static final String chordNumberToLetterFlats[] = new String[]{
-            "A", "B" + flat, "B", "C", "D" + flat, "D", "E" + flat, "E", "F", "G" + flat, "G", "A" + flat};
     private static final char js_flat = '\u266D';
     private static final char js_natural = '\u266E';
     private static final char js_sharp = '\u266F';

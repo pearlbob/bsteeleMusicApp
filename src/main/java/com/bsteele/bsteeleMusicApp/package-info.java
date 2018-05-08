@@ -13,8 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-fixme: player view selection not held at song selection
-fixme: assure some player selection after song selection
+fixme:  chords and lyrics can jiggle chords at some sizes
 fixme: x1/3  doesn't work, allow proper space for it
 fixme: chords jiggle in play on chordsAndLyrics
 fixme: in play, no chord indicator on multiple sections of same chords  on chordsAndLyrics
