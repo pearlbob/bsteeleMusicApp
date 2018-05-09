@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
+
 import java.util.ArrayList;
 
 /**
@@ -28,6 +30,7 @@ public class Measure {
     }
 
     public static final Measure parse(String s, int beatCount) {
+        //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
             return null;
 
@@ -134,6 +137,11 @@ public class Measure {
      */
     public void setChords(ArrayList<Chord> chords) {
         this.chords = chords;
+    }
+
+
+    public int getParseLength() {
+        return parseLength;
     }
 
     private int beatCount = 4;  //  default only

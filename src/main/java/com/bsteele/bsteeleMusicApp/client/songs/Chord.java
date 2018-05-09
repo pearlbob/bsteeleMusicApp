@@ -1,7 +1,5 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import java.util.HashMap;
-
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
@@ -21,7 +19,7 @@ public class Chord {
 
         int beats = 1;  //  default only
         ScaleChord scaleChord = ScaleChord.parse(s);
-        if ( scaleChord == null)
+        if (scaleChord == null)
             return null;
         int parseLength = scaleChord.getParseLength();
         s = s.substring(parseLength);

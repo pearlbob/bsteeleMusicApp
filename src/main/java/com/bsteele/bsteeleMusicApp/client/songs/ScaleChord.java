@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
+
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Objects;

@@ -1206,6 +1206,11 @@ public class Song implements Comparable<Song> {
         return lyricSections;
     }
 
+
+    public ArrayList<ChordSection> getChordSections() {
+        return chordSections;
+    }
+
     /**
      * Set the song's lyric sections.
      *
@@ -1247,6 +1252,7 @@ public class Song implements Comparable<Song> {
     public final int getTotalBeats() {
         return totalBeats;
     }
+
 
     public enum ComparatorType {
         title,
@@ -1474,6 +1480,7 @@ public class Song implements Comparable<Song> {
     private transient double duration;    //  units of seconds
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
+    private ArrayList<ChordSection> chordSections = new ArrayList<>();
     private String rawLyrics = "";
     private String chords = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();

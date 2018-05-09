@@ -3,11 +3,14 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
+import com.bsteele.bsteeleMusicApp.client.songs.ChordSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
+import com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -210,6 +213,17 @@ public class SongUpdate {
         sectionId = sectionVersion.toString();
         measure++;
         return true;
+    }
+
+    public final ArrayList<MeasureSequenceItem> getMeasureSequenceList()
+    {
+        ArrayList<MeasureSequenceItem> ret = new   ArrayList<>();
+
+        setMeasure(-1 );
+        while ( nextMeasure()){
+            ret.add( new MeasureSequenceItem(getSectionVersion(),  null, getMeasure(),0));
+        }
+        return ret;
     }
 
     /**

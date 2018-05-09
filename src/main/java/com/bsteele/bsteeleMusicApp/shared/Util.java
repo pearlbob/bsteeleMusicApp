@@ -18,4 +18,45 @@ public class Util {
             n += modulus;
         return n;
     }
+
+    public final String stripLeadingWhitespace(String s) {
+        clear();
+
+        if (s == null)
+            return null;
+
+        for (; s.length() > 0; ) {
+            switch (s.charAt(0)) {
+                case '\n':
+                    wasNewline = true;
+                    //  fall through
+                case ' ':
+                case '\t':
+                case '\r':
+                    leadingWhitespaceCount++;
+                    s = s.substring(1);
+                    continue;
+            }
+            break;
+        }
+        if (s.length() == 0)
+            return null;
+        return s;
+    }
+
+    public final int getLeadingWhitespaceCount() {
+        return leadingWhitespaceCount;
+    }
+
+    public final boolean wasNewline() {
+        return wasNewline;
+    }
+
+    public final void clear() {
+        leadingWhitespaceCount = 0;
+        wasNewline = false;
+    }
+
+    private int leadingWhitespaceCount;
+    private boolean wasNewline;
 }

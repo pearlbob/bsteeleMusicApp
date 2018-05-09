@@ -53,8 +53,8 @@ public class SongPlayMasterImpl
                     ? dt : systemToAudioOffset * pass + (1 - pass) * dt;
         }
         double tn = t + systemToAudioOffset;
-        if (Math.abs(tn - systemT) > 0.005)
-            GWT.log("dt: " + (tn - systemT));
+//        if (Math.abs(tn - systemT) > 0.005)
+//            GWT.log("dt: " + (tn - systemT));
 
         int measureNumber = Integer.MIN_VALUE;
         if (audioFilePlayer != null) {
