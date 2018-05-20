@@ -1,7 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.Util;
-
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
@@ -16,7 +15,7 @@ import java.util.ArrayList;
  * When added, chord beat durations exceeding the measure beat count will be ignored on playback.
  * </p>
  */
-public class Measure {
+public class Measure extends MeasureNode {
 
     /**
      * A convenience constructor to build a typical measure.
@@ -24,31 +23,56 @@ public class Measure {
      * @param beatCount the beat count for the measure
      * @param chords    the chords to be played over this measure
      */
-    public Measure(int beatCount, ArrayList<Chord> chords) {
+    public Measure(@Nonnull SectionVersion sectionVersion, int beatCount, ArrayList<Chord> chords) {
+        super(sectionVersion);
         setBeatCount(beatCount);
         setChords(chords);
     }
 
-    public static final Measure parse(String s, int beatCount) {
+    public static final Measure parse(@Nonnull SectionVersion sectionVersion,
+                                      String s, int beatCount) {
+        return parse(sectionVersion, s, beatCount, null);
+    }
+
+    public static final Measure parse(@Nonnull SectionVersion sectionVersion,
+                                      String s, int beatCount, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
             return null;
 
         ArrayList<Chord> chords = new ArrayList<>();
         int parseLength = 0;
+        Measure ret = null;
         for (int i = 0; i < 8; i++)    //  safety
         {
             if (s.length() <= 0)
                 break;
+
+            //  assure this is not a section
+            if ( Section.parse(s)!= null )
+                break;
+
             Chord chord = Chord.parse(s);
             if (chord == null) {
+                //  see if this is a chord less measure
+                if (s.charAt(0) == 'X') {
+                    ret = new Measure(sectionVersion, beatCount, emptyChordList);
+                    parseLength += 1;
+                    break;
+                }
+                //  see if this is a repeat measure
+                if (s.charAt(0) == '-' && lastMeasure != null) {
+                    ret = new Measure(sectionVersion, beatCount, lastMeasure.getChords());
+                    parseLength += 1;
+                    break;
+                }
                 if (i > 0) {
                     //  look for in-measure beats for the chord
                     while (s.length() > 0 && s.charAt(0) == '.') {
                         s = s.substring(1);
                         parseLength += 1;
                         if (chords.isEmpty())
-                            return null;
+                            break;
                         chord = chords.get(chords.size() - 1);
                         chord.setBeats(chord.getBeats() + 1);
                     }
@@ -56,14 +80,6 @@ public class Measure {
                 break;
             }
             s = s.substring(chord.getParseLength());
-
-            //  assure this is not a section in disguise
-            if (s.length() > 0 && s.charAt(0) == ':') {
-                //  oops
-                //  don't use this chord
-                //  don't increment the parse count
-                break;
-            }
 
             //  look for in-measure beats for the chord
             while (s.length() > 0 && s.charAt(0) == '.') {
@@ -75,10 +91,21 @@ public class Measure {
             parseLength += chord.getParseLength();
             chords.add(chord);
         }
-        if (chords.isEmpty())
+        if (ret == null && chords.isEmpty())
             return null;
 
-        Measure ret = new Measure(beatCount, chords);
+        //  distribute the slash chord to all
+        if (chords.size() > 1) {
+            ScaleChord slashScaleChord = chords.get(chords.size() - 1).getSlashScaleChord();
+            if (slashScaleChord != null) {
+                for (Chord chord : chords) {
+                    chord.setSlashScaleChord(slashScaleChord);
+                }
+            }
+        }
+
+        if (ret == null)
+            ret = new Measure(sectionVersion, beatCount, chords);
 
         // allocate the beats
         if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1) {
@@ -86,6 +113,7 @@ public class Measure {
             chords.get(0).setBeats(beatCount / 2);
             chords.get(1).setBeats(beatCount / 2);
         }
+        if ( !chords.isEmpty())
         {    // fill the beat count onto the last chord if required
             //  works for one chord as well
             int count = 0;
@@ -139,13 +167,27 @@ public class Measure {
         this.chords = chords;
     }
 
+    @Override
+    public ArrayList<Measure> getMeasures() {
+        if (measures == null) {
+            measures = new ArrayList<>();
+            measures.add(this);
+        }
+        return measures;
+    }
 
-    public int getParseLength() {
-        return parseLength;
+    public boolean isRepeat() {
+        return isRepeat;
+    }
+
+    
+    @Override
+    public int getTotalMeasures() {
+        return 1;
     }
 
     private int beatCount = 4;  //  default only
+    private boolean isRepeat = false;
     private ArrayList<Chord> chords = new ArrayList<>();
-    private transient int parseLength;
-
+    public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
 }

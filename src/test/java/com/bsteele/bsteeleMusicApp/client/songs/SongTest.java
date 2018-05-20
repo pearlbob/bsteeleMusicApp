@@ -8,7 +8,6 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -71,79 +70,6 @@ public class SongTest
         logger.info("chords: " + chordDescriptors.size());
         logger.info("chords: " + chordDescriptors.toString());
         logger.info("count: " + songCount);
-    }
-
-    @Test
-    public void testChordSectionParse() {
-        {
-            ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
-                    "AbBb/G# Am7 Ebsus4 C7/Bb", 4);
-            assertTrue(chordSection != null);
-            SectionVersion intro = new SectionVersion(Section.intro);
-            assertTrue(chordSection.getSection().equals(intro));
-            ArrayList<MeasureSequenceItem> measureSequences = chordSection.getMeasureSequenceItems();
-            assertTrue(measureSequences != null);
-            assertEquals(1, measureSequences.size());
-            ArrayList<Measure> measures = measureSequences.get(0).getMeasures();
-            assertEquals(8, measures.size());
-            assertEquals(ScaleNote.A, measures.get(0).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.B, measures.get(1).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.C, measures.get(2).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.D, measures.get(3).getChords().get(0).getScaleChord().getScaleNote());
-        }
-        {
-            ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
-                    "AbBb/G# Am7 Ebsus4 C7/Bb x4", 4);
-            assertTrue(chordSection != null);
-            SectionVersion intro = new SectionVersion(Section.intro);
-            assertTrue(chordSection.getSection().equals(intro));
-            ArrayList<MeasureSequenceItem> measureSequenceItems = chordSection.getMeasureSequenceItems();
-            assertTrue(measureSequenceItems != null);
-            assertEquals(2, measureSequenceItems.size());
-            MeasureSequenceItem measureSequenceItem = measureSequenceItems.get(0);
-            assertEquals(0, measureSequenceItem.getSequenceNumber());
-            assertEquals(4, measureSequenceItem.getTotalMeasures());
-            ArrayList<Measure> measures = measureSequenceItem.getMeasures();
-            assertEquals(4, measures.size());
-            assertEquals(ScaleNote.A, measures.get(0).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.B, measures.get(1).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.C, measures.get(2).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.D, measures.get(3).getChords().get(0).getScaleChord().getScaleNote());
-            measureSequenceItem = measureSequenceItems.get(1);
-            assertEquals(4, measureSequenceItem.getSequenceNumber());
-            assertEquals(4 * 4, measureSequenceItem.getTotalMeasures());
-            measures = measureSequenceItem.getMeasures();
-            assertEquals(4, measures.size());
-            assertEquals(2, measures.get(0).getChords().size());
-            assertEquals(ScaleNote.Ab, measures.get(0).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.Bb, measures.get(0).getChords().get(1).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.A, measures.get(1).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.Eb, measures.get(2).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(ScaleNote.C, measures.get(3).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(4 + 4 * 4, chordSection.getTotalMeasures());
-        }
-        {
-            ChordSection chordSection = ChordSection.parse("I:       A B C D\n\n", 4);
-            assertEquals(4, chordSection.getTotalMeasures());
-            chordSection = ChordSection.parse("\n\tI:\n       A B C D\n\n", 4);
-            assertEquals(4, chordSection.getTotalMeasures());
-            chordSection = ChordSection.parse("v: A B C D\n"
-                    + "AbBb/G# Am7 Ebsus4 C7/Bb\n", 4);
-            assertEquals(8, chordSection.getTotalMeasures());
-            chordSection = ChordSection.parse("v: A B C D\n"
-                    + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
-            assertEquals(4 + 4 * 4, chordSection.getTotalMeasures());
-            chordSection = ChordSection.parse("v: \n"
-                    + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
-            assertEquals(4 * 4, chordSection.getTotalMeasures());
-            chordSection = ChordSection.parse("v: A B C D\n\n"
-                    + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
-            assertEquals(4 + 4 * 4, chordSection.getTotalMeasures());
-            chordSection = ChordSection.parse("v: A B C D\n\n"
-                    + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n" +
-                    "G F F# E", 4);
-            assertEquals(4 + 4 * 4 + 4, chordSection.getTotalMeasures());
-        }
     }
 
     @Test

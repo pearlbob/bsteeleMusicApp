@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.core.client.GWT;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
@@ -7,34 +9,55 @@ import java.util.ArrayList;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureSequenceItem {
+public class MeasureSequenceItem extends MeasureNode {
 
-    public MeasureSequenceItem(@Nonnull SectionVersion sectionVersion, @Nonnull ArrayList<Measure> measures, int sequenceNumber, int repeats) {
-        this.sectionVersion = sectionVersion;
-        this.measures = measures;
-        this.sequenceNumber = sequenceNumber;
-        this.repeats = repeats;
+
+    public MeasureSequenceItem(@Nonnull SectionVersion sectionVersion, @Nonnull ArrayList<MeasureNode> measureNodes) {
+        super(sectionVersion);
+        this.measureNodes = measureNodes;
     }
 
-    public final int getSequenceNumber() {
-        return sequenceNumber;
+
+    @Override
+    public final ArrayList<MeasureNode> getMeasureNodes() {
+        return measureNodes;
     }
 
-    public final SectionVersion getSectionVersion() {
-        return sectionVersion;
-    }
 
-    public final ArrayList<Measure> getMeasures() {
+    @Override
+    public ArrayList<Measure> getMeasures() {
+        if (measures == null) {
+            measures = new ArrayList<>();
+            if (measureNodes != null)
+                for (MeasureNode measureNode : measureNodes) {
+                    ArrayList<Measure> childMeasures = measureNode.getMeasures();
+                    if (childMeasures == null)
+                        continue;
+                    GWT.log("add child: " + childMeasures.size());
+                    if (childMeasures != null)
+                        measures.addAll(childMeasures);
+                }
+        }
+        GWT.log("total measures: " + measures.size());
         return measures;
     }
 
-    public final int getTotalMeasures() {
-        return (repeats <= 1 ? 1 : repeats) * measures.size();
+
+    @Override
+    public int getTotalMeasures() {
+        int ret = 0;
+
+        for (MeasureNode measureNode : measureNodes)
+            ret += measureNode.getTotalMeasures();
+        return ret;
     }
 
-    private final int sequenceNumber;
-    private final SectionVersion sectionVersion;
-    private final ArrayList<Measure> measures;
-    private final int repeats;
 
+    public void setMeasureNodes(ArrayList<MeasureNode> measureNodes) {
+        this.measureNodes = measureNodes;
+        measures = null;
+    }
+
+
+    protected ArrayList<MeasureNode> measureNodes;
 }

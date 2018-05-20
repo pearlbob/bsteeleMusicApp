@@ -2,7 +2,8 @@
 "title": "Moondance",
 "artist": "Van Morrison",
 "copyright": "Warner/Chappell Music, Inc",
-"bpm": 110,
+"key": "C",
+"defaultBpm": 100,
 "timeSignature": "2/4",
 "chords": 
     [

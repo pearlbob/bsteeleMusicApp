@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
+import com.bsteele.bsteeleMusicApp.client.songs.ChordSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
@@ -108,10 +109,10 @@ public class LyricsAndChordsViewImpl
         });
 
         keyUpButton.addClickHandler((ClickEvent event) -> {
-            stepCurrentKey( 1);
+            stepCurrentKey(1);
         });
         keyDownButton.addClickHandler((ClickEvent event) -> {
-            stepCurrentKey(- 1);
+            stepCurrentKey(-1);
         });
 
         currentBpmEntry.addChangeHandler((event) -> {
@@ -178,6 +179,22 @@ public class LyricsAndChordsViewImpl
         }
 
         song = songUpdate.getSong();
+
+               updateCount++;
+        {       // fixme: testing only
+            String s = song.getChordsAsString();
+            GWT.log("s= <"+s+">");
+            ChordSection chordSection;
+            while ((chordSection = ChordSection.parse(s, song.getBeatsPerBar())) != null) {
+
+                GWT.log("parseLength: "+chordSection.getParseLength());
+                GWT.log(updateCount+": "+song.getTitle() + ", cs: " + chordSection.toString()
+                        + ", measures: " + chordSection.getMeasures().size()
+                        + ", total measures: " + chordSection.getTotalMeasures());
+                s = s.substring(chordSection.getParseLength());
+                GWT.log("s= <"+s+">");
+            }
+        }
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());
@@ -419,6 +436,7 @@ public class LyricsAndChordsViewImpl
     private Element lastRepeatElement;
     private int lastRepeatTotal;
     private int lastMeasureNumber;
+    private int updateCount;
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;

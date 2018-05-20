@@ -215,17 +215,6 @@ public class SongUpdate {
         return true;
     }
 
-    public final ArrayList<MeasureSequenceItem> getMeasureSequenceList()
-    {
-        ArrayList<MeasureSequenceItem> ret = new   ArrayList<>();
-
-        setMeasure(-1 );
-        while ( nextMeasure()){
-            ret.add( new MeasureSequenceItem(getSectionVersion(),  null, getMeasure(),0));
-        }
-        return ret;
-    }
-
     /**
      * return event time in seconds
      *

@@ -99,15 +99,15 @@ public class Chord {
         return slashScaleChord;
     }
 
-//    /**
-//     * The matching slash chord for this chord.
-//     * Typically is is the bass inversion.
-//     *
-//     * @param slashScaleChord
-//     */
-//    public void setSlashScaleChord(ScaleChord slashScaleChord) {
-//        this.slashScaleChord = slashScaleChord;
-//    }
+    /**
+     * The matching slash chord for this chord.
+     * Typically is is the bass inversion.
+     *
+     * @param slashScaleChord
+     */
+    void setSlashScaleChord(ScaleChord slashScaleChord) {
+        this.slashScaleChord = slashScaleChord;
+    }
 
     /**
      * Small timing adjustment to alter the feel of the chord.

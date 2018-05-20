@@ -30,6 +30,17 @@ public class Song implements Comparable<Song> {
      */
     @Deprecated
     public Song() {
+        setTitle("");
+        setArtist("");
+        copyright = "";
+        setKey(Key.C);
+        unitsPerMeasure = 4;
+        rawLyrics = "";
+        chords = "";
+        parseChordTable(chords);
+        parseLyricsToSectionSequence("");
+        setBeatsPerMinute(100);
+        setBeatsPerBar(4);
     }
 
     /**

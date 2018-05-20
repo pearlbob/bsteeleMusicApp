@@ -13,10 +13,11 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: bass clef, notes above top line don't have partial lines above
 fixme:  chords and lyrics can jiggle chords at some sizes
-fixme: x1/3  doesn't work, allow proper space for it
+fixme: x1/3 doesn't work, allow proper space for it
 fixme: chords jiggle in play on chordsAndLyrics
-fixme: in play, no chord indicator on multiple sections of same chords  on chordsAndLyrics
+fixme: in play, no chord indicator on multiple sections of same chords on chordsAndLyrics
 fixme: in play, beat display out of sync with measure update
 ____: fix last chord not shown if no ending newline for the file
 todo: select a key that's a minor key

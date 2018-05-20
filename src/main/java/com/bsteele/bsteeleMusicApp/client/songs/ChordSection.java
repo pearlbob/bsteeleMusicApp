@@ -10,10 +10,9 @@ import java.util.ArrayList;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordSection {
-    public ChordSection(SectionVersion section, ArrayList<MeasureSequenceItem> measureSequenceItems) {
-        this.section = section;
-        this.measureSequenceItems = measureSequenceItems;
+public class ChordSection extends MeasureSequenceItem {
+    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureNode> measureNodes) {
+        super(sectionVersion, measureNodes);
     }
 
     public static ChordSection parse(String s, int beatsPerBar) {
@@ -21,33 +20,39 @@ public class ChordSection {
             return null;
 
         Util util = new Util();
-        if ((s = util.stripLeadingWhitespace(s)) == null)
+        String ms;
+        if ((ms = util.stripLeadingWhitespace(s)) == null)
             return null;
         int n = util.getLeadingWhitespaceCount();
 
-        SectionVersion section = Section.parse(s);
-        if (section == null)
-            return null;
+        SectionVersion sectionVersion = Section.parse(ms);
+        if (sectionVersion == null) {
+            //  cope with badly formatted songs
+            sectionVersion = new SectionVersion(Section.verse);
+        }
+        n += sectionVersion.getParseLength();
 
-        n += section.getParseLength();
-        ArrayList<MeasureSequenceItem> measureSequenceItems = new ArrayList<>();
-        ArrayList<Measure> measures = new ArrayList<>();
-        ArrayList<Measure> lineMeasures = new ArrayList<>();
+        ArrayList<MeasureNode> measureSequenceItems = new ArrayList<>();
+        ArrayList<MeasureNode> measures = new ArrayList<>();
+        ArrayList<MeasureNode> lineMeasures = new ArrayList<>();
         boolean repeatMarker = false;
-        int sequenceNumber = 0;
+        Measure lastMeasure = null;
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
         {
-            String ms = s.substring(n);
+            ms = s.substring(n);
             if ((ms = util.stripLeadingWhitespace(ms)) == null)
                 break;
             n += util.getLeadingWhitespaceCount();
+
+            //  quit if next section found
+            if (Section.parse(ms) != null)
+                break;
 
             //  look for a repeat marker
             if (ms.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.add(new MeasureSequenceItem(section, measures, sequenceNumber, 0));
-                    sequenceNumber += measures.size();
+                    measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -57,7 +62,7 @@ public class ChordSection {
             }
 
             //  look for a repeat end
-            if (ms.charAt(0) == 'x' || ms.charAt(0) == 'X') {
+            if (ms.charAt(0) == 'x') {
                 repeatMarker = false;
                 n++;
                 ms = s.substring(n);
@@ -71,15 +76,13 @@ public class ChordSection {
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new MeasureSequenceItem(section, measures, sequenceNumber, 0));
-                        sequenceNumber += measures.size();
+                        measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
                     n += ns.length();
                     int repeatTotal = Integer.parseInt(ns);
-                    measureSequenceItems.add(new MeasureSequenceItem(section, lineMeasures, sequenceNumber, repeatTotal));
-                    sequenceNumber += lineMeasures.size() * repeatTotal;
+                    measureSequenceItems.add(new MeasureRepeat(sectionVersion, lineMeasures, repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
                 util.clear();
@@ -88,48 +91,44 @@ public class ChordSection {
 
             if (util.wasNewline() && !repeatMarker) {
                 //  add line of measures to output collection
-                for (Measure m : lineMeasures)
+                for (MeasureNode m : lineMeasures)
                     measures.add(m);
                 lineMeasures = new ArrayList<>();
                 util.clear();
             }
 
             //  add a measure to the current line measures
-            Measure measure = Measure.parse(ms, beatsPerBar);
-            if (measure == null) {
-                //  fixme: look for a comment in parenthesis
-
-                //  fixme: treat the rest of the line as a comment/error
+            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, lastMeasure);
+            if (measure != null) {
+                n += measure.getParseLength();
+                lineMeasures.add(measure);
+                lastMeasure = measure;
+            } else {
+                //  look for a comment
+                MeasureComment measureComment = MeasureComment.parse(sectionVersion, ms);
+                if (measureComment != null) {
+                    n += measureComment.getParseLength();
+                    lineMeasures.add(measureComment);
+                }
 
                 break;      //  fixme: not a measure, we're done
             }
-
-            n += measure.getParseLength();
-            lineMeasures.add(measure);
         }
 
         //  don't assume every line has an eol
-        for (Measure m : lineMeasures)
-            measures.add(m);
+        for (MeasureNode mn : lineMeasures)
+            measures.add(mn);
         if (!measures.isEmpty()) {
-            measureSequenceItems.add(new MeasureSequenceItem(section, measures, sequenceNumber, 0));
+            measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
         }
 
-        ChordSection ret = new ChordSection(section, measureSequenceItems);
+        ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
         ret.parseLength = n;
         return ret;
     }
 
-    public SectionVersion getSection() {
-        return section;
-    }
-
-    public void setSection(SectionVersion section) {
-        this.section = section;
-    }
-
     /**
-     * Set the section beats per minute.
+     * Set the sectionVersion beats per minute.
      *
      * @param bpm the defaultBpm to set
      */
@@ -138,10 +137,10 @@ public class ChordSection {
     }
 
     /**
-     * Return the section beats per minute
+     * Return the sectionVersion beats per minute
      * or null to default to the song BPM.
      *
-     * @return the section BPM or null
+     * @return the sectionVersion BPM or null
      */
     public Integer getBeatsPerMinute() {
         return bpm;
@@ -165,32 +164,18 @@ public class ChordSection {
         return beatsPerBar;
     }
 
-    public int getParseLength() {
-        return parseLength;
+    @Override
+    public String toString() {
+        int m = 0;
+        if (getMeasures() != null)
+            m = getMeasures().size();
+        return "ChordSection{" +
+                "section=" + getSectionVersion() +
+                ", measureNodes=" + (measureNodes != null ? measureNodes.size() : 0) +
+                ", measures=" + m +
+                '}';
     }
 
-    public ArrayList<MeasureSequenceItem> getMeasureSequenceItems() {
-        return measureSequenceItems;
-    }
-
-    public void setMeasureSequenceItems(ArrayList<MeasureSequenceItem> measureSequenceItems) {
-        this.measureSequenceItems = measureSequenceItems;
-    }
-
-    public int getTotalMeasures() {
-        int ret = 0;
-
-        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems)
-            ret += measureSequenceItem.getTotalMeasures();
-        return ret;
-
-    }
-
-    private SectionVersion section;
     private Integer bpm;
     private Integer beatsPerBar;
-    private ArrayList<MeasureSequenceItem> measureSequenceItems;
-    private transient int parseLength;
-
-
 }
