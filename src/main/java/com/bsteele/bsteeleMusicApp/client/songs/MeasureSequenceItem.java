@@ -58,6 +58,35 @@ public class MeasureSequenceItem extends MeasureNode {
         measures = null;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+
+        if (measureNodes != null)
+            for (MeasureNode measureNode : measureNodes) {
+                sb.append(measureNode.toString()).append(" ");
+            }
+        sb.append("} ");
+        return sb.toString();
+    }
+
+    @Override
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder();
+
+        String id = "testingherelyAndChChordTable";
+        sb.append("<table id=\"" + id + "\" class=\"" + style + "chordTable\">\n");
+        if (measureNodes != null)
+            for (MeasureNode measureNode : measureNodes) {
+                sb.append("<tr>");
+                sb.append(measureNode.toHtml());
+                sb.append("</tr>\n");
+            }
+        sb.append("</table>\n");
+        return sb.toString();
+    }
+
 
     protected ArrayList<MeasureNode> measureNodes;
 }

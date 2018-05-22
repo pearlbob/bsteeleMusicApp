@@ -98,7 +98,7 @@ public class ChordSection extends MeasureSequenceItem {
             }
 
             //  add a measure to the current line measures
-            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, lastMeasure);
+            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, beatsPerBar, lastMeasure);
             if (measure != null) {
                 n += measure.getParseLength();
                 lineMeasures.add(measure);
@@ -166,14 +166,15 @@ public class ChordSection extends MeasureSequenceItem {
 
     @Override
     public String toString() {
-        int m = 0;
-        if (getMeasures() != null)
-            m = getMeasures().size();
-        return "ChordSection{" +
-                "section=" + getSectionVersion() +
-                ", measureNodes=" + (measureNodes != null ? measureNodes.size() : 0) +
-                ", measures=" + m +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSectionVersion().toString()).append("{");
+
+        if (measureNodes != null)
+            for (MeasureNode measureNode : measureNodes) {
+                sb.append(measureNode.toString()).append(" ");
+            }
+        sb.append("}");
+        return sb.toString();
     }
 
     private Integer bpm;

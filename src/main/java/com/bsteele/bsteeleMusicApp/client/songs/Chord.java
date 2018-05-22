@@ -6,14 +6,15 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  */
 public class Chord {
 
-    public Chord(ScaleChord scaleChord, int beats, ScaleChord slashScaleChord, AnticipationOrDelay anticipationOrDelay) {
+    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar, ScaleChord slashScaleChord, AnticipationOrDelay anticipationOrDelay) {
         this.scaleChord = scaleChord;
         this.beats = beats;
+        this.beatsPerBar = beatsPerBar;
         this.slashScaleChord = slashScaleChord;
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
-    public static final Chord parse(String s) {
+    public static final Chord parse(String s, int beatsPerBar) {
         if (s == null || s.length() <= 0)
             return null;
 
@@ -39,18 +40,18 @@ public class Chord {
             if (beats >= 8)
                 break;
         }
-        Chord ret = new Chord(scaleChord, beats, slashScaleChord,
+        Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord,
                 AnticipationOrDelay.none);      //  fixme
         ret.parseLength = parseLength;
         return ret;
     }
 
     public Chord(ScaleChord scaleChord) {
-        this(scaleChord, 4, null, AnticipationOrDelay.none);
+        this(scaleChord, 4, 4, null, AnticipationOrDelay.none);
     }
 
-    public Chord(ScaleChord scaleChord, int beats) {
-        this(scaleChord, beats, null, AnticipationOrDelay.none);
+    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar) {
+        this(scaleChord, beats, beatsPerBar, null, AnticipationOrDelay.none);
     }
 
     /**
@@ -158,9 +159,11 @@ public class Chord {
         String ret = scaleChord.toString()
                 + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
-        int b = 1;
-        while (b++ < beats && b < 8)
-            ret += ".";
+        if ( beats < beatsPerBar ) {
+            int b = 1;
+            while (b++ < beats && b < 8)
+                ret += ".";
+        }
         return ret;
     }
 
@@ -181,10 +184,20 @@ public class Chord {
                 ;
     }
 
+    public int getBeatsPerBar() {
+        return beatsPerBar;
+    }
+
+    public void setBeatsPerBar(int beatsPerBar) {
+        this.beatsPerBar = beatsPerBar;
+    }
+
     private ScaleChord scaleChord;
     private int beats = 4;    //  default only, a typical full measure
+    private int beatsPerBar = beats;
     private ScaleChord slashScaleChord;
     private AnticipationOrDelay anticipationOrDelay = AnticipationOrDelay.none;
     private transient int parseLength;
+
 
 }

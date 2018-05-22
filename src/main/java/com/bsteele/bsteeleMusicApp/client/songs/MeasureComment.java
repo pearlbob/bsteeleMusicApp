@@ -46,5 +46,15 @@ public class MeasureComment extends MeasureNode {
         this.comment = comment;
     }
 
+    @Override
+    public String toString() {
+        return "/* "+comment+"*/ ";
+    }
+
+    @Override
+    public String toHtml() {
+        return toString();           // fixme
+    }
+
     private String comment;
 }

@@ -1,0 +1,48 @@
+{
+"title": "Honkytonk Woman",
+"artist": "Rolling Stones",
+"copyright": "Jagger",
+"key": "C",
+"defaultBpm": 106,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"v:",
+	"A A D D",
+	"A B E E",
+	"A A D D",
+	"A E A A",
+	"",
+	"ch:",
+	"A E A A",
+	"A E A A",
+	"A E A A",
+	"A E A A"
+    ],
+"lyrics": 
+    [
+	"v:",
+	"I met a gin soaked, bar-room queen in Memphis,",
+	"She tried to take me upstairs for a ride.",
+	"She had to heave me right across her shoulder",
+	"'Cause I just can't seem to drink you off my mind.",
+	"ch:",
+	"It's the honky tonk women",
+	"Gimme, gimme, gimme the honky tonk blues.",
+	"v:",
+	"I laid a divorcee in New York City,",
+	"I had to put up some kind of a fight.",
+	"The lady then she covered me in roses,",
+	"She blew my nose and then she blew my mind.",
+	"ch:",
+	"It's the honky tonk women",
+	"Gimme, gimme, gimme the honky tonk blues.",
+	"v: (instrumental)",
+	"ch:",
+	"(Yeah!) It's the honky tonk women.",
+	"Gimme, gimme, gimme the honky tonk blues.",
+	"ch:",
+	"(Yeah!) It's the honky tonk women.",
+	"Gimme, gimme, gimme the honky tonk blues."
+    ]
+}

@@ -29,5 +29,10 @@ public class MeasureRepeat extends MeasureSequenceItem {
         this.repeats = repeats;
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "x"+repeats+" ";
+    }
+
     private int repeats;
 }

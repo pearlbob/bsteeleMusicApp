@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandle
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -52,6 +53,11 @@ public class SongListView
         searchSongs(songSearch.getValue());
     }
 
+    @Override
+    public void setSongMoveList(String s) {
+        songMoveList=s;
+    }
+
     interface Binder extends UiBinder<Widget, SongListView> {
     }
 
@@ -72,6 +78,10 @@ public class SongListView
     Grid songGrid;
     @UiField
     Label listCount;
+
+
+    @UiField
+    Button showSongFileUpdates;
 
     @Inject
     SongListView(Binder binder) {
@@ -122,6 +132,10 @@ public class SongListView
                 asyncReadSongFile(files.getItem(i));
             }
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
+        });
+
+        showSongFileUpdates.addClickHandler((event) -> {
+            GWT.log(songMoveList);
         });
 
         songSearch.setFocus(true);
@@ -229,4 +243,5 @@ public class SongListView
     private ArrayList<Song> filteredSongs = new ArrayList<>();
     private final TreeSet<Song> allSongs = new TreeSet<>();
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
+    private String songMoveList = "";
 }

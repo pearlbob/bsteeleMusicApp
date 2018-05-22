@@ -1,0 +1,46 @@
+{
+"title": "Wild Horses",
+"artist": " The Rolling Stones : Keith Richards / Mick Jagger",
+"copyright": " © Abkco Music, Inc",
+"key": "C",
+"defaultBpm": 90,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"v: Bm G  Bm G",
+	"Am C..D G D    ",
+	"ch:Am C..D GF C",
+	"  Am C..D GF C"
+    ],
+"lyrics": 
+    [
+	"",
+	"v:Childhood living is easy to do",
+	"The things you wanted I bought them for you",
+	"v:",
+	"Graceless lady you know who I am",
+	"You know I can't let you slide through my hands",
+	"",
+	"C:Wild horses couldn't drag me away",
+	"Wild, wild horses couldn't drag me away",
+	"",
+	"V:I watched you suffer a dull aching pain",
+	"Now you've decided to show me the same",
+	"v:",
+	"No sweeping exit or offstage lines",
+	"Could make me feel bitter or treat you unkind",
+	"",
+	"C:Wild horses couldn't drag me away",
+	"Wild, wild horses couldn't drag me away",
+	"",
+	"v:I know I've dreamed you a sin and a lie",
+	"I have my freedom but I don't have much time",
+	"Faith has been broken tears must be cried",
+	"Let's do some living after we die",
+	"",
+	"Ch:Wild horses couldn't drag me away",
+	"Wild, wild horses we'll ride them some day",
+	"ch:Wild horses couldn't drag me away",
+	"Wild, wild horses we'll ride them some day"
+    ]
+}

@@ -1,0 +1,48 @@
+{
+"title": "Fragile",
+"artist": "Sting",
+"copyright": "Sony/ATV Music Publishing LLC",
+"key": "C",
+"defaultBpm": 100,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"v:",
+	"Em Am7 B7 Em",
+	"Em Am7 B7 Em",
+	"ch:",
+	"Am B7 Em Em ",
+	"Am B7 Em Em",
+	"",
+	"t:",
+	"Em Em Em Em"
+    ],
+"lyrics": 
+    [
+	"v: instrumental intro",
+	"v:",
+	"If blood will flow when flesh and steel are one",
+	"Drying in the colour of the evening sun",
+	"Tomorrow's rain will wash the stains away",
+	"But something in our minds will always stay",
+	"v:",
+	"Perhaps this final act was meant",
+	"To clinch a lifetime's argument",
+	"That nothing comes from violence and nothing ever could",
+	"For all those born beneath an angry star",
+	"Lest we forget how fragile we are",
+	"ch:",
+	"On and on the rain will fall",
+	"Like tears from a star like tears from a star",
+	"On and on the rain will say",
+	"How fragile we are how fragile we are",
+	"v: (instrumental)",
+	"ch:",
+	"On and on the rain will fall",
+	"Like tears from a star like tears from a star",
+	"On and on the rain will say",
+	"How fragile we are how fragile we are",
+	"t:",
+	"How fragile we are how fragile we are"
+    ]
+}

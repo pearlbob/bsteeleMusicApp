@@ -8,12 +8,9 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
-import com.bsteele.bsteeleMusicApp.client.songs.ChordSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
-import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.*;
 import com.google.gwt.event.dom.client.*;
@@ -180,21 +177,14 @@ public class LyricsAndChordsViewImpl
 
         song = songUpdate.getSong();
 
-               updateCount++;
-        {       // fixme: testing only
-            String s = song.getChordsAsString();
-            GWT.log("s= <"+s+">");
-            ChordSection chordSection;
-            while ((chordSection = ChordSection.parse(s, song.getBeatsPerBar())) != null) {
-
-                GWT.log("parseLength: "+chordSection.getParseLength());
-                GWT.log(updateCount+": "+song.getTitle() + ", cs: " + chordSection.toString()
-                        + ", measures: " + chordSection.getMeasures().size()
-                        + ", total measures: " + chordSection.getTotalMeasures());
-                s = s.substring(chordSection.getParseLength());
-                GWT.log("s= <"+s+">");
-            }
-        }
+        updateCount++;
+//        {       // fixme: testing only
+//            //String s = song.getChordsAsString();
+//            //GWT.log("s= <" + s + ">");
+//
+//            String chordString = song.measureNodesToHtml();
+//            GWT.log(song.getTitle() + ": " + chordString);
+//        }
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());

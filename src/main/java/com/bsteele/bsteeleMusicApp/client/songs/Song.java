@@ -84,6 +84,8 @@ public class Song implements Comparable<Song> {
         song.parseLyricsToSectionSequence(lyrics);
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
+        song.measureNodes = parse(beatsPerBar, song.chords);
+
         //  already done song.computeDuration();
 
         return song;
@@ -258,8 +260,8 @@ public class Song implements Comparable<Song> {
                     song.parseLyricsToSectionSequence(song.rawLyrics);
                     break;
             }
-
         }
+        song.measureNodes = parse(song.beatsPerBar, song.chords);
         return song;
     }
 
@@ -423,6 +425,27 @@ public class Song implements Comparable<Song> {
         return sectionVersion;
     }
 
+    public static final ArrayList<MeasureNode> parse(int beatsPerBar, String s) {
+        ArrayList<MeasureNode> measureNodes = new ArrayList<>();
+        ChordSection chordSection;
+
+        while ((chordSection = ChordSection.parse(s, beatsPerBar)) != null) {
+            measureNodes.add(chordSection);
+            s = s.substring(chordSection.getParseLength());
+        }
+        return measureNodes;
+    }
+
+    public final String measureNodesToString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (MeasureNode measureNode : measureNodes) {
+            sb.append(measureNode.toString()).append(" ");
+        }
+
+        return sb.toString();
+    }
+
     /**
      * Return the section sequence of this song.
      *
@@ -584,6 +607,16 @@ public class Song implements Comparable<Song> {
         computeDuration();
     }
 
+    public String measureNodesToHtml() {
+        StringBuilder sb = new StringBuilder();
+
+        for (MeasureNode measureNode : measureNodes) {
+            sb.append(measureNode.toHtml()).append(" ");
+        }
+
+        return sb.toString();
+    }
+
     @Deprecated
     public final String generateHtmlChordTable(String prefix) {
         return generateHtmlChordTableFromMap(chordSectionMap, prefix);
@@ -627,7 +660,7 @@ public class Song implements Comparable<Song> {
                         if (lyrics.length() > 0) {
                             lyrics += rowEnd;
                         }
-                        lyrics += rowStart + version.toString() + ":"
+                        lyrics += rowStart + version.toString()
                                 + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbbreviation() + "Class\""
                                 + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                         sectionIndex++;
@@ -650,7 +683,7 @@ public class Song implements Comparable<Song> {
                                 if (!isSection) {
                                     //  deal with bad formatting
                                     lyrics += rowStart
-                                            + Section.getDefaultVersion().toString() + ":"
+                                            + Section.getDefaultVersion().toString()
                                             + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
                                             + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                                     isSection = true;
@@ -799,12 +832,12 @@ public class Song implements Comparable<Song> {
             //  section label
             String start = sectionStart;
             if (isSingle) {
-                start += version.toString() + ":";
+                start += version.toString();
                 displayed.add(version);
             } else {
                 for (SectionVersion v : displaySectionMap.keySet()) {
                     if (displaySectionMap.get(v) == version) {
-                        start += v.toString() + ":<br/>";
+                        start += v.toString() + "<br/>";
                         displayed.add(v);
                     }
                 }
@@ -1492,8 +1525,9 @@ public class Song implements Comparable<Song> {
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private ArrayList<ChordSection> chordSections = new ArrayList<>();
-    private String rawLyrics = "";
     private String chords = "";
+    private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
+    private String rawLyrics = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();
     private Arrangement drumArrangement;    //  default
     private TreeSet<Metadata> metadata = new TreeSet<>();

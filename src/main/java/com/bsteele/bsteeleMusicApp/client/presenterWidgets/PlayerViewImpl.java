@@ -322,7 +322,7 @@ public class PlayerViewImpl
                     .append(style)
                     .append("sectionLabel \">")
                     .append(lyricSection.getSectionVersion().toString())
-                    .append(":</td>");
+                    .append("</td>");
             sb.append("<td")
                     .append(" class=\"")
                     .append(style)

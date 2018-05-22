@@ -16,6 +16,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,16 +30,14 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongReadEventHandler {
 
 
-
     public interface MyView extends View {
 
-        HandlerRegistration addSongUpdateEventHandler(
-                SongUpdateEventHandler handler);
+        HandlerRegistration addSongUpdateEventHandler( SongUpdateEventHandler handler);
 
-        HandlerRegistration addSongReadEventHandler(
-                SongReadEventHandler handler);
+        HandlerRegistration addSongReadEventHandler( SongReadEventHandler handler);
 
         void setSongList(Set<Song> songs);
+        void  setSongMoveList( String s );
     }
 
     @Inject
@@ -50,8 +49,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
+        songMoveList = "";
         addJsonToSongList(AppResources.INSTANCE.legacySongsAsJsonString().getText());
         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+        GWT.log(songMoveList);
     }
 
     @Override
@@ -112,8 +113,16 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private void addToSongList(Song song) {
         if (song != null) {
             if (allSongs.contains(song)) {
-                GWT.log("Dup: " + song.getTitle());
+                NavigableSet<Song> oldSongs = allSongs.subSet(song, true, song, true);
+                for (Song s : oldSongs)
+                    if (s.getFileName() != null) {
+                        songMoveList += "REM  \"" + s.getFileName() + "\" is replaced by \"" + song.getFileName() + "\"\r";
+                        songMoveList += "\n";
+                        songMoveList += "move \"" + s.getFileName() + "\" archive\r";
+                        songMoveList += "\n";
+                    }
                 allSongs.remove(song);  //  remove any prior version
+                getView().setSongMoveList(songMoveList);
             }
             allSongs.add(song);
         }
@@ -148,4 +157,5 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private final TreeSet<Song> allSongs = new TreeSet<>();
     private final EventBus eventBus;
     private final MyView view;
+    private String songMoveList = "";
 }

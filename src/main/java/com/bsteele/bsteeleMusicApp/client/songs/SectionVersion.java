@@ -50,7 +50,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
     @Override
     public String toString() {
         //  note: designed to go to the user display
-        return getSection().getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
+        return getSection().getAbbreviation() + (version > 0 ? Integer.toString(version) : "") + ":";
     }
 
     @Override

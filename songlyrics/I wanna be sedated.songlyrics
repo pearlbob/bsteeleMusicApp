@@ -1,0 +1,50 @@
+{
+"title": "I wanna be sedated",
+"artist": "Ramones",
+"copyright": "Warner/Chappell Music, Inc",
+"key": "C",
+"defaultBpm": 100,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"v:",
+	"G - C G",
+	"G - C G",
+	"D G D G",
+	"D G C D",
+	"ch:",
+	"G C D G x2"
+    ],
+"lyrics": 
+    [
+	"v:",
+	"Twenty-twenty-twenty four hours to go I wanna be sedated",
+	"Nothin' to do and no where to go-o-oh I wanna be sedated",
+	"Just get me to the airport put me on a plane",
+	"Hurry hurry hurry before I go insane",
+	"I can't control my fingers I can't control my brain",
+	"Oh no no no no no",
+	"v:Twenty-twenty-twenty four hours to go....",
+	"Just put me in a wheelchair, get me on a plane",
+	"Hurry hurry hurry before I go insane",
+	"I can't control my fingers I can't control my brain",
+	"Oh no no no no no",
+	"ch:",
+	"Ba-ba-bamp-ba ba-ba-ba-bamp-ba I wanna be sedated",
+	"Ba-ba-bamp-ba ba-ba-ba-bamp-ba I wanna be sedated",
+	"v:Twenty-twenty-twenty four hours to go I wanna be sedated",
+	"Nothin' to do and no where to go-o-o I wanna be sedated",
+	"Just put me in a wheelchair get me to the show",
+	"Hurry hurry hurry before I go loco",
+	"I can't control my fingers I can't control my toes",
+	"Oh no no no no no",
+	"v:",
+	"Twenty-twenty-twenty four hours to go...",
+	"Just put me in a wheelchair...",
+	"ch:",
+	"Ba-ba-bamp-ba ba-ba-ba-bamp-ba I wanna be sedated",
+	"Ba-ba-bamp-ba ba-ba-ba-bamp-ba I wanna be sedated",
+	"Ba-ba-bamp-ba ba-ba-ba-bamp-ba I wanna be sedated",
+	"Ba-ba-bamp-ba ba-ba-ba-bamp-ba I wanna be sedated"
+    ]
+}

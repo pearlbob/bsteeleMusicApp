@@ -46,8 +46,11 @@ public abstract class MeasureNode {
         return measures;
     }
 
+    public abstract String toHtml();
+
     private int sequenceNumber;
     private SectionVersion sectionVersion;
     protected transient int parseLength;
     protected transient ArrayList<Measure> measures;
+    protected static final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
 }

@@ -30,12 +30,12 @@ public class Measure extends MeasureNode {
     }
 
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatCount) {
-        return parse(sectionVersion, s, beatCount, null);
+                                      String s, int beatCount, int beatsPerBar) {
+        return parse(sectionVersion, s, beatCount, beatsPerBar, null);
     }
 
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatCount, Measure lastMeasure) {
+                                      String s, int beatCount, int beatsPerBar, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
             return null;
@@ -52,7 +52,7 @@ public class Measure extends MeasureNode {
             if ( Section.parse(s)!= null )
                 break;
 
-            Chord chord = Chord.parse(s);
+            Chord chord = Chord.parse(s, beatsPerBar );
             if (chord == null) {
                 //  see if this is a chord less measure
                 if (s.charAt(0) == 'X') {
@@ -176,10 +176,26 @@ public class Measure extends MeasureNode {
         return measures;
     }
 
+    @Override
+    public String toHtml() {
+        return toString();
+    }
+
     public boolean isRepeat() {
         return isRepeat;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (chords != null)
+            for (Chord chord : chords) {
+                sb.append(chord.toString());
+            }
+        sb.append(" ");
+        return sb.toString();
+    }
     
     @Override
     public int getTotalMeasures() {

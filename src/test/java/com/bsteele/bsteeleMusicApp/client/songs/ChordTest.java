@@ -9,13 +9,13 @@ import java.util.TreeSet;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordTest extends GWTTestCase
-{
+public class ChordTest extends GWTTestCase {
 
     @Test
     public void testSetScaleChord() {
 
         TreeSet<ScaleChord> slashScaleChords = new TreeSet<>();
+        int beatsPerBar = 4;
         //       for (AnticipationOrDelay anticipationOrDelay : AnticipationOrDelay.values()) {
         AnticipationOrDelay anticipationOrDelay = AnticipationOrDelay.none;
         for (ScaleNote scaleNote : ScaleNote.values()) {
@@ -24,9 +24,9 @@ public class ChordTest extends GWTTestCase
                     ScaleChord scaleChord = new ScaleChord(scaleNote, chordDescriptor);
                     if (chordDescriptor == ChordDescriptor.minor)
                         slashScaleChords.add(scaleChord);
-                    Chord chord = new Chord(scaleChord, beats, null, anticipationOrDelay);
+                    Chord chord = new Chord(scaleChord, beats, beatsPerBar, null, anticipationOrDelay);
                     System.out.println(chord.toString());
-                    Chord pChord = Chord.parse(chord.toString());
+                    Chord pChord = Chord.parse(chord.toString(), beatsPerBar);
                     assertEquals(chord, pChord);
                 }
             }

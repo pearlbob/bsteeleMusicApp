@@ -16,87 +16,87 @@ public class MeasureTest extends TestCase {
         Section section = Section.verse;
         SectionVersion sectionVersion = new SectionVersion(section);
 
-        for (int beatCount = 2; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "A", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "A", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(1, m.getChords().size());
             Chord chord = m.getChords().get(0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.A), beatCount), chord);
+            assertEquals(new Chord(new ScaleChord(ScaleNote.A), beatsPerBar, beatsPerBar), chord);
         }
 
-        for (int beatCount = 2; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "BC", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "BC", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             Chord chord1 = m.getChords().get(1);
-            int beat0 = beatCount / 2;
-            int beat1 = beatCount - beat0;
-            assertEquals(new Chord(new ScaleChord(ScaleNote.B), beat0), chord0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat1), chord1);
+            int beat0 = beatsPerBar / 2;
+            int beat1 = beatsPerBar - beat0;
+            assertEquals(new Chord(new ScaleChord(ScaleNote.B), beat0, beatsPerBar), chord0);
+            assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat1, beatsPerBar), chord1);
         }
-        for (int beatCount = 2; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "E#m7. ", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "E#m7. ", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(1, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatCount), chord0);
+            assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
         }
-        for (int beatCount = 2; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "E#m7Gb7", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "E#m7Gb7", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             Chord chord1 = m.getChords().get(1);
-            int beat0 = beatCount / 2;
-            int beat1 = beatCount - beat0;
-            assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beat0), chord0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.Gb, ChordDescriptor.dominant7), beat1), chord1);
+            int beat0 = beatsPerBar / 2;
+            int beat1 = beatsPerBar - beat0;
+            assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beat0, beatsPerBar), chord0);
+            assertEquals(new Chord(new ScaleChord(ScaleNote.Gb, ChordDescriptor.dominant7), beat1, beatsPerBar), chord1);
         }
-        for (int beatCount = 3; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "F#m7.Asus4", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "F#m7.Asus4", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             Chord chord1 = m.getChords().get(1);
             int beat0 = 2;
-            int beat1 = beatCount - beat0;
-            assertEquals(new Chord(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor7), beat0), chord0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.suspended4), beat1), chord1);
+            int beat1 = beatsPerBar - beat0;
+            assertEquals(new Chord(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor7), beat0, beatsPerBar), chord0);
+            assertEquals(new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.suspended4), beat1, beatsPerBar), chord1);
         }
-        for (int beatCount = 2; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "A/G#", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "A/G#", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(1, m.getChords().size());
             Chord chord = m.getChords().get(0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.A), beatCount,
+            assertEquals(new Chord(new ScaleChord(ScaleNote.A), beatsPerBar, beatsPerBar,
                     new ScaleChord(ScaleNote.Gs), AnticipationOrDelay.none), chord);
         }
-        for (int beatCount = 3; beatCount <= 4; beatCount++) {
-            Measure m = Measure.parse(sectionVersion, "C/F#.G", beatCount);
-            assertEquals(beatCount, m.getBeatCount());
+        for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
+            Measure m = Measure.parse(sectionVersion, "C/F#.G", beatsPerBar, beatsPerBar);
+            assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             Chord chord1 = m.getChords().get(1);
             int beat0 = 2;
-            int beat1 = beatCount - beat0;
-            assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat0,
+            int beat1 = beatsPerBar - beat0;
+            assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat0, beatsPerBar,
                     new ScaleChord(ScaleNote.Fs), AnticipationOrDelay.none), chord0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.G), beat1), chord1);
+            assertEquals(new Chord(new ScaleChord(ScaleNote.G), beat1, beatsPerBar), chord1);
         }
         {
-            for (int beatCount = 3; beatCount <= 4; beatCount++) {
-                Measure m0 = Measure.parse(sectionVersion, "C", beatCount);
-                Measure m = Measure.parse(sectionVersion, "-", beatCount, m0);
-                assertEquals(beatCount, m.getBeatCount());
+            for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
+                Measure m0 = Measure.parse(sectionVersion, "C", beatsPerBar, beatsPerBar);
+                Measure m = Measure.parse(sectionVersion, "-", beatsPerBar, beatsPerBar, m0);
+                assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(1, m.getChords().size());
                 assertEquals(m0.getChords(),m.getChords());
             }
         }
         {
-            for (int beatCount = 3; beatCount <= 4; beatCount++) {
-                Measure m = Measure.parse(sectionVersion, "X", beatCount);
-                assertEquals(beatCount, m.getBeatCount());
+            for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
+                Measure m = Measure.parse(sectionVersion, "X", beatsPerBar, beatsPerBar);
+                assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(0, m.getChords().size());
             }
         }
