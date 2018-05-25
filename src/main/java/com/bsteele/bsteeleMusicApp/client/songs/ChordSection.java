@@ -98,7 +98,7 @@ public class ChordSection extends MeasureSequenceItem {
             }
 
             //  add a measure to the current line measures
-            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, beatsPerBar, lastMeasure);
+            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, lastMeasure);
             if (measure != null) {
                 n += measure.getParseLength();
                 lineMeasures.add(measure);

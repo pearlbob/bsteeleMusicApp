@@ -30,12 +30,12 @@ public class Measure extends MeasureNode {
     }
 
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatCount, int beatsPerBar) {
-        return parse(sectionVersion, s, beatCount, beatsPerBar, null);
+                                      String s, int beatsPerBar) {
+        return parse(sectionVersion, s, beatsPerBar, null);
     }
 
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatCount, int beatsPerBar, Measure lastMeasure) {
+                                      String s, int beatsPerBar, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
             return null;
@@ -49,44 +49,26 @@ public class Measure extends MeasureNode {
                 break;
 
             //  assure this is not a section
-            if ( Section.parse(s)!= null )
+            if (Section.parse(s) != null)
                 break;
 
-            Chord chord = Chord.parse(s, beatsPerBar );
+            Chord chord = Chord.parse(s, beatsPerBar);
             if (chord == null) {
                 //  see if this is a chord less measure
                 if (s.charAt(0) == 'X') {
-                    ret = new Measure(sectionVersion, beatCount, emptyChordList);
+                    ret = new Measure(sectionVersion, beatsPerBar, emptyChordList);
                     parseLength += 1;
                     break;
                 }
                 //  see if this is a repeat measure
                 if (s.charAt(0) == '-' && lastMeasure != null) {
-                    ret = new Measure(sectionVersion, beatCount, lastMeasure.getChords());
+                    ret = new Measure(sectionVersion, beatsPerBar, lastMeasure.getChords());
                     parseLength += 1;
                     break;
-                }
-                if (i > 0) {
-                    //  look for in-measure beats for the chord
-                    while (s.length() > 0 && s.charAt(0) == '.') {
-                        s = s.substring(1);
-                        parseLength += 1;
-                        if (chords.isEmpty())
-                            break;
-                        chord = chords.get(chords.size() - 1);
-                        chord.setBeats(chord.getBeats() + 1);
-                    }
                 }
                 break;
             }
             s = s.substring(chord.getParseLength());
-
-            //  look for in-measure beats for the chord
-            while (s.length() > 0 && s.charAt(0) == '.') {
-                s = s.substring(1);
-                parseLength += 1;
-                chord.setBeats(chord.getBeats() + 1);
-            }
 
             parseLength += chord.getParseLength();
             chords.add(chord);
@@ -105,23 +87,24 @@ public class Measure extends MeasureNode {
         }
 
         if (ret == null)
-            ret = new Measure(sectionVersion, beatCount, chords);
+            ret = new Measure(sectionVersion, beatsPerBar, chords);
 
         // allocate the beats
         if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1) {
             //  common case: split the beats even across the two chords
-            chords.get(0).setBeats(beatCount / 2);
-            chords.get(1).setBeats(beatCount / 2);
+            //  bias to beat 1 on 3 beats to the bar
+            int b2 = beatsPerBar / 2;
+            chords.get(1).setBeats(b2);
+            chords.get(0).setBeats(beatsPerBar - b2);
         }
-        if ( !chords.isEmpty())
-        {    // fill the beat count onto the last chord if required
+        if (!chords.isEmpty()) {    // fill the beat count onto the last chord if required
             //  works for one chord as well
             int count = 0;
             for (Chord chord : chords)
                 count += chord.getBeats();
-            if (count < beatCount) {
+            if (count < beatsPerBar) {
                 Chord lastChord = chords.get(chords.size() - 1);
-                lastChord.setBeats(lastChord.getBeats() + (beatCount - count));
+                lastChord.setBeats(lastChord.getBeats() + (beatsPerBar - count));
             }
         }
 
@@ -196,7 +179,7 @@ public class Measure extends MeasureNode {
         sb.append(" ");
         return sb.toString();
     }
-    
+
     @Override
     public int getTotalMeasures() {
         return 1;
