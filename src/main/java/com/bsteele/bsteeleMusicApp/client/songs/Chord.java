@@ -18,7 +18,7 @@ public class Chord {
         if (s == null || s.length() <= 0)
             return null;
 
-        int beats = 1;  //  default only
+        int beats = beatsPerBar;  //  default only
         ScaleChord scaleChord = ScaleChord.parse(s);
         if (scaleChord == null)
             return null;
@@ -31,14 +31,18 @@ public class Chord {
             slashScaleChord = ScaleChord.parse(s);
             if (slashScaleChord != null) {
                 parseLength += slashScaleChord.getParseLength();
+                s = s.substring(slashScaleChord.getParseLength());
             }
         }
-        while (s.length() > 0 && s.charAt(0) == '.') {
-            s = s.substring(1);
-            parseLength++;
-            beats++;
-            if (beats >= 8)
-                break;
+        if ( s.length() > 0 && s.charAt(0) == '.') {
+            beats = 1;
+            while (s.length() > 0 && s.charAt(0) == '.') {
+                s = s.substring(1);
+                parseLength++;
+                beats++;
+                if (beats >= 8)
+                    break;
+            }
         }
         Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord,
                 AnticipationOrDelay.none);      //  fixme
