@@ -53,14 +53,14 @@ public class SongTest
                     assertTrue(song.getChordSectionMap().size() > 0);
                     assertTrue(song.getLyricsAsString().length() > 0);
 
-                    Song song1 = Song.fromJson(song.toJson());
+                    Song song1 = Song.fromJson(song.toJson()).get(0);
 //                    if ( !song.equals(song1)) {
                     //  fixme:      SongTest.testFromJson() fails on chord whitespace
 //                        logger.info("equals error ref: " + song.toJson());
 //                        logger.info("equals error 2nd: " + song1.toJson());
 //                        song.equals(song1);
 //                    }
-                    Song song2 = Song.fromJson(song1.toJson());
+                    Song song2 = Song.fromJson(song1.toJson()).get(0);
                     assertTrue(song.compareTo(song2) == 0);
                     assertTrue(song1.compareTo(song2) == 0);
                     assertTrue(song1.equals(song2));

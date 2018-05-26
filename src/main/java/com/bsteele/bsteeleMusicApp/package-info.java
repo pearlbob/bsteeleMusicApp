@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: validate song before entry: all lyrics sections should have matching chord sections
 fixme: bass clef, notes above top line don't have partial lines above
 fixme:  chords and lyrics can jiggle chords at some sizes
 fixme: x1/3 doesn't work, allow proper space for it

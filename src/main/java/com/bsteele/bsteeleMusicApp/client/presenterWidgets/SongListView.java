@@ -3,6 +3,8 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -55,7 +57,7 @@ public class SongListView
 
     @Override
     public void setSongMoveList(String s) {
-        songMoveList=s;
+        songMoveList = s;
     }
 
     interface Binder extends UiBinder<Widget, SongListView> {
@@ -203,7 +205,7 @@ public class SongListView
                 r++;
             }
         }
-        listCount.setText("Count: "+Integer.toString(filteredSongs.size()));
+        listCount.setText("Count: " + Integer.toString(filteredSongs.size()));
     }
 
     private native FileListImpl getFiles(NativeEvent event)/*-{
@@ -230,9 +232,13 @@ public class SongListView
 
         FileReader reader = new FileReader();
         reader.addLoadEndHandler((LoadEndEvent event) -> {
-            Song song = Song.fromJson(reader.getStringResult());
-            song.setLastModifiedDate(file.getLastModifiedDate());
-            fireEvent(new SongReadEvent(song));
+            ArrayList<Song> songs = Song.fromJson(reader.getStringResult());
+            if (songs.size() == 1) {
+                Song song = songs.get(0);
+                song.setLastModifiedDate(file.getLastModifiedDate());
+                fireEvent(new SongReadEvent(song));
+            } else
+                fireEvent(new SongReadEvent(songs));
         });
         reader.readAsText(file);
     }

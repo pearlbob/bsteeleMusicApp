@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -16,6 +17,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,17 +30,19 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         implements
         SongUpdateEventHandler,
         SongSubmissionEventHandler,
-        SongReadEventHandler {
+        SongReadEventHandler,
+        AllSongWriteEventHandler {
 
 
     public interface MyView extends View {
 
-        HandlerRegistration addSongUpdateEventHandler( SongUpdateEventHandler handler);
+        HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler);
 
-        HandlerRegistration addSongReadEventHandler( SongReadEventHandler handler);
+        HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler);
 
         void setSongList(Set<Song> songs);
-        void  setSongMoveList( String s );
+
+        void setSongMoveList(String s);
     }
 
     @Inject
@@ -50,7 +55,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.view = view;
 
         songMoveList = "";
-        addJsonToSongList(AppResources.INSTANCE.legacySongsAsJsonString().getText());
+        //addJsonToSongList(AppResources.INSTANCE.legacySongsAsJsonString().getText());
         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
         GWT.log(songMoveList);
     }
@@ -61,6 +66,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         view.addSongReadEventHandler(this);
 
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
+        eventBus.addHandler(AllSongWriteEvent.TYPE, this);
     }
 
     @Override
@@ -82,11 +88,26 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     @Override
     public void onSongRead(SongReadEvent event) {
-        Song song = event.getSong();
-        addToSongList(song);
-        view.setSongList(allSongs);
-        fireEvent(new SongUpdateEvent(song));
+        ArrayList<Song> songs = event.getSongs();
+        if (!songs.isEmpty()) {
+            for ( Song song: songs )
+                addToSongList(song);
+            view.setSongList(allSongs);
+            Song song = songs.get(songs.size() - 1);
+            fireEvent(new SongUpdateEvent(song));
+        }
     }
+
+    @Override
+    public void onAllSongWrite(AllSongWriteEvent event) {
+        Date now = new Date();
+        DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
+
+        String data = Song.toJson(allSongs);
+        saveSongAs("allSongs_" + fmt.format(now) + ".songlyrics", data);
+        //allSongs.clear(); view.setSongList(allSongs);// test only
+    }
+
 
     private void addJsonToSongList(String jsonString) {
         if (jsonString != null && jsonString.length() > 0) {

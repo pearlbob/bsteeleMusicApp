@@ -89,9 +89,15 @@
                                     <br/>
                                     <g:Button ui:field="showStatus">Show Status</g:Button>
                                     <g:HTML ui:field="allStatus"/>
-                                    <br/>
+                                    <p>
                                     buildId:
                                     <g:Label ui:field="buildId"/>
+                                    </p>
+                                    <p>
+                                    allSongId:
+                                    <g:Label ui:field="allSongId"/>
+                                    <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
+                                    </p>
                                 </g:HTMLPanel>
 
                             </g:ScrollPanel>

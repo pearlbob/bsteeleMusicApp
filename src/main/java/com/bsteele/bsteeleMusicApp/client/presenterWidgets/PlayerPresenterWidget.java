@@ -38,7 +38,7 @@ public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget
 
     @Override
     protected void onBind() {
-          eventBus.addHandler(SongUpdateEvent.TYPE, this);
+        eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(MusicAnimationEvent.TYPE, this);
     }
 

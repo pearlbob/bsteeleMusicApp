@@ -3,6 +3,8 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 import com.bsteele.bsteeleMusicApp.client.application.ApplicationPresenter;
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.LoggedInGatekeeper;
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -16,6 +18,7 @@ import com.bsteele.bsteeleMusicApp.client.presenterWidgets.PlayerPresenterWidget
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SingerPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongEditPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongListPresenterWidget;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -30,7 +33,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  * @author bob
  */
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
-        implements SongUpdateEventHandler, SongSubmissionEventHandler,
+        implements SongUpdateEventHandler, SongSubmissionEventHandler, AllSongWriteEventHandler,
         StatusEventHandler {
 
 
@@ -39,6 +42,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         void selectLastPlayTab();
 
         void onStatusEvent(StatusEvent event);
+
+        HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler);
     }
 
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
@@ -86,6 +91,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         this.drumOptionsPresenterWidget = drumOptionsPresenterWidget;
 
 
+        view.addSongReadEventHandler(this);
+
         this.bSteeleMusicIO = bSteeleMusicIO; //  fixme: do this better: force the presence of the singleton
     }
 
@@ -101,6 +108,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(StatusEvent.TYPE, this);
+
     }
 
 
@@ -119,6 +127,11 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @Override
     public void onStatusEvent(StatusEvent event) {
         getView().onStatusEvent(event);
+    }
+
+    @Override
+    public void onAllSongWrite(AllSongWriteEvent event) {
+        eventBus.fireEvent(event);
     }
 
     private final EventBus eventBus;

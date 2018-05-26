@@ -113,19 +113,30 @@ public class Song implements Comparable<Song> {
      * @param jsonString
      * @return the song. Can be null.
      */
-    public static final Song fromJson(String jsonString) {
+    public static final ArrayList<Song> fromJson(String jsonString) {
+        ArrayList<Song> ret = new ArrayList<>();
         if (jsonString == null || jsonString.length() <= 0) {
-            return null;
+            return ret;
         }
-        JSONObject jo;
-        {
-            JSONValue jv = JSONParser.parseStrict(jsonString);
-            if (jv == null) {
-                return null;
+
+        JSONValue jv = JSONParser.parseStrict(jsonString);
+        if (jv == null) {
+            return ret;
+        }
+
+        JSONArray ja = jv.isArray();
+        if (ja != null) {
+            int jaLimit = ja.size();
+            for (int i = 0; i < jaLimit; i++) {
+                ret.add(Song.fromJsonObject(ja.get(i).isObject()));
             }
-            jo = jv.isObject();
+        } else {
+            JSONObject jo = jv.isObject();
+            ret.add(fromJsonObject(jo));
         }
-        return fromJsonObject(jo);
+
+        return ret;
+
     }
 
     /**
@@ -172,7 +183,8 @@ public class Song implements Comparable<Song> {
         if (song == null)
             return null;
 
-        song.setLastModifiedDate(JsDate.create(lastModifiedDate));
+        if (lastModifiedDate > 0)
+            song.setLastModifiedDate(JsDate.create(lastModifiedDate));
         song.setFileName(fileName);
 
         return song;
@@ -187,6 +199,7 @@ public class Song implements Comparable<Song> {
             switch (name) {
                 case "title":
                     song.setTitle(jv.isString().stringValue());
+                    //GWT.log("reading: " + song.getTitle());
                     break;
                 case "artist":
                     song.setArtist(jv.isString().stringValue());
@@ -263,6 +276,31 @@ public class Song implements Comparable<Song> {
         }
         song.measureNodes = parse(song.beatsPerBar, song.chords);
         return song;
+    }
+
+    public static final String toJson(Collection<Song> songs) {
+        if (songs == null || songs.isEmpty()) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        boolean first = true;
+        for (Song song : songs) {
+            if (first)
+                first = false;
+            else
+                sb.append(",\n");
+            sb.append(song.toJsonAsFile());
+        }
+        sb.append("]\n");
+        return sb.toString();
+    }
+
+    private String toJsonAsFile() {
+        double time = lastModifiedDate == null ? 0 : lastModifiedDate.getTime();
+        return "{ \"file\": \"" + JsonUtil.encode(getFileName()) + "\", \"lastModifiedDate\": " + time + ", \"song\": \n"
+                + toJson()
+                + "}";
     }
 
     /**

@@ -1,9 +1,15 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Button;
@@ -21,7 +27,8 @@ import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-public class HomeView extends ViewImpl implements HomePresenter.MyView {
+public class HomeView extends ViewImpl implements HomePresenter.MyView,
+        HasHandlers {
 
 
     interface Binder extends UiBinder<Widget, HomeView> {
@@ -64,6 +71,12 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
     @UiField
     Label buildId;
 
+    @UiField
+    Label allSongId;
+
+    @UiField
+    Button writeAllSongs;
+
     @Inject
     HomeView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
@@ -74,6 +87,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         bindSlot(HomePresenter.SLOT_SINGER_CONTENT, singer);
         bindSlot(HomePresenter.SLOT_SONG_EDIT_CONTENT, songEdit);
         bindSlot(HomePresenter.SLOT_DRUM_OPTIONS_CONTENT, drumOptions);
+
+        handlerManager = new HandlerManager(this);
 
         allScales.setVisible(false);
         showAllScales.addClickHandler((ClickEvent event) -> {
@@ -120,6 +135,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
 //            }
 //        });
 
+        writeAllSongs.addClickHandler((ClickEvent event) -> {
+            fireEvent(new AllSongWriteEvent());
+        });
+
         buildId.setText(AppResources.INSTANCE.buildId().getText());
     }
 
@@ -138,6 +157,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         //GWT.log(event.toString());
     }
 
+    @Override
+    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler) {
+        return handlerManager.addHandler(AllSongWriteEvent.TYPE, handler);
+    }
+
     private String generateStatusHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<table><tr><th>Name</th><th>Value</th></tr>");
@@ -149,6 +173,13 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView {
         sb.append("</table>");
         return sb.toString();
     }
+
+    @Override
+    public void fireEvent(GwtEvent<?> event) {
+        handlerManager.fireEvent(event);
+    }
+
+    private final HandlerManager handlerManager;
 
     private HashMap<String, String> statusMap = new HashMap<>();
     private int lastPlayTab = 1;   // fixme: very weak tab selection!

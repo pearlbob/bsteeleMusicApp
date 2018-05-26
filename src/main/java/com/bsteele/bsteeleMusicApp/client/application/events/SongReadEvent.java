@@ -6,6 +6,8 @@ package com.bsteele.bsteeleMusicApp.client.application.events;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.GwtEvent;
 
+import java.util.ArrayList;
+
 /**
  * @author bob
  */
@@ -13,10 +15,15 @@ public class SongReadEvent extends GwtEvent<SongReadEventHandler> {
 
     public static Type<SongReadEventHandler> TYPE = new Type<SongReadEventHandler>();
 
-    private final Song song;
+    private final ArrayList<Song> songs;
 
     public SongReadEvent(Song song) {
-        this.song = song;
+        songs = new ArrayList<Song>();
+        songs.add(song);
+    }
+
+    public SongReadEvent(ArrayList<Song> songs) {
+        this.songs = songs;
     }
 
     @Override
@@ -29,7 +36,7 @@ public class SongReadEvent extends GwtEvent<SongReadEventHandler> {
         handler.onSongRead(this);
     }
 
-    public Song getSong() {
-        return song;
+    public ArrayList<Song> getSongs() {
+        return songs;
     }
 }
