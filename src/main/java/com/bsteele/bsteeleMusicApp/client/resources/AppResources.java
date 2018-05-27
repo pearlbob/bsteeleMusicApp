@@ -88,6 +88,10 @@ public interface AppResources extends ClientBundle {
 
         String lyricsBClass();
 
+        String rightJustified();
+
+        String rightJustifiedClass();
+
         String label();
     }
 
@@ -97,8 +101,8 @@ public interface AppResources extends ClientBundle {
     @Source("allSongs.songlyrics")
     TextResource allSongsAsJsonString();
 
-    @Source("legacySongs.songlyrics")
-    TextResource legacySongsAsJsonString();
+//    @Source("legacySongs.songlyrics")
+//    TextResource legacySongsAsJsonString();
 
     @Source("buildId.txt")
     TextResource buildId();

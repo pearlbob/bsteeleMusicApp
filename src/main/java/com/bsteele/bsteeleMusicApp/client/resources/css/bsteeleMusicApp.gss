@@ -221,3 +221,12 @@ td[id*="L."]{
     font-size: 26px;
     font-weight: bold;
 }
+
+.rightJustified {
+    float: right;
+    padding: 10px;
+}
+
+.rightJustifiedClass {
+    float: right;
+}

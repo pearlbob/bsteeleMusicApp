@@ -7,6 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
@@ -60,6 +61,11 @@ public class LyricsAndChordsViewImpl
 
     @UiField
     SpanElement artist;
+
+    @UiField
+    Button nextSongButton;
+    @UiField
+    Button prevSongButton;
 
     @UiField
     SplitLayoutPanel split;
@@ -121,6 +127,13 @@ public class LyricsAndChordsViewImpl
             if (Event.ONCHANGE == event.getTypeInt()) {
                 setCurrentBpm(bpmSelect.getValue());
             }
+        });
+
+        prevSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent(false));
+        });
+        nextSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent());
         });
 
         chordsFocus.addDomHandler(this, KeyPressEvent.getType());

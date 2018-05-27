@@ -7,6 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
@@ -64,6 +65,11 @@ public class PlayerViewImpl
 
     @UiField
     SpanElement artist;
+
+    @UiField
+    Button nextSongButton;
+    @UiField
+    Button prevSongButton;
 
     @UiField
     CanvasElement audioBeatDisplayCanvas;
@@ -126,6 +132,13 @@ public class PlayerViewImpl
             if (Event.ONCHANGE == event.getTypeInt()) {
                 setCurrentBpm(bpmSelect.getValue());
             }
+        });
+
+        prevSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent(false));
+        });
+        nextSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent());
         });
     }
 

@@ -54,6 +54,13 @@
                 <span ui:field="title" class="{resources.style.songTitle}"/>
                 by
                 <span ui:field="artist"/>
+                <!--    note the reverse order due to right justification of the last item  -->
+                <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"
+                          title="Click for next song in filtered song list.">&#x25B6;
+                </g:Button>
+                <g:Button ui:field="prevSongButton" styleName="{resources.style.rightJustified}"
+                          title="Click for previous song in filtered song list.">&#x25C0;
+                </g:Button>
             </g:HTMLPanel>
         </g:north>
         <g:center>

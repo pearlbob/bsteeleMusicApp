@@ -161,23 +161,26 @@ public class Measure extends MeasureNode {
 
     @Override
     public String toHtml() {
-        return toString();
+        return chordsToString();
     }
 
     public boolean isRepeat() {
         return isRepeat;
     }
 
-    @Override
-    public String toString() {
+    private String chordsToString() {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
             for (Chord chord : chords) {
                 sb.append(chord.toString());
             }
-        sb.append(" ");
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+        return chordsToString() + " ";
     }
 
     @Override

@@ -61,6 +61,9 @@ IFS=$'\n'
 for f in *.songlyrics
 do
 	echo "$f"
+	if [[ $f == allSongs_* ]]; then
+		continue;
+	fi
 	if [ "$firstJson" -eq 1 ]; then
 		firstJson=0
 	else

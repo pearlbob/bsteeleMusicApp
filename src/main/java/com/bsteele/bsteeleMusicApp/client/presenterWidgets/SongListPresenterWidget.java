@@ -31,6 +31,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongUpdateEventHandler,
         SongSubmissionEventHandler,
         SongReadEventHandler,
+        NextSongEventHandler,
         AllSongWriteEventHandler {
 
 
@@ -42,7 +43,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         void setSongList(Set<Song> songs);
 
-        void setSongMoveList(String s);
+        void nextSong(boolean forward);
     }
 
     @Inject
@@ -54,10 +55,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        songMoveList = "";
         //addJsonToSongList(AppResources.INSTANCE.legacySongsAsJsonString().getText());
         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
-        GWT.log(songMoveList);
     }
 
     @Override
@@ -67,6 +66,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(AllSongWriteEvent.TYPE, this);
+        eventBus.addHandler(NextSongEvent.TYPE, this);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     public void onSongRead(SongReadEvent event) {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
-            for ( Song song: songs )
+            for (Song song : songs)
                 addToSongList(song);
             view.setSongList(allSongs);
             Song song = songs.get(songs.size() - 1);
@@ -134,20 +134,17 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private void addToSongList(Song song) {
         if (song != null) {
             if (allSongs.contains(song)) {
-                NavigableSet<Song> oldSongs = allSongs.subSet(song, true, song, true);
-                for (Song s : oldSongs)
-                    if (s.getFileName() != null) {
-                        songMoveList += "REM  \"" + s.getFileName() + "\" is replaced by \"" + song.getFileName() + "\"\r";
-                        songMoveList += "\n";
-                        songMoveList += "move \"" + s.getFileName() + "\" archive\r";
-                        songMoveList += "\n";
-                    }
                 allSongs.remove(song);  //  remove any prior version
-                getView().setSongMoveList(songMoveList);
             }
             allSongs.add(song);
         }
     }
+
+    @Override
+    public void onNextSong(NextSongEvent event) {
+        getView().nextSong(event.isForward());
+    }
+
 
     /**
      * Native function to write the song as JSON.
@@ -178,5 +175,4 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private final TreeSet<Song> allSongs = new TreeSet<>();
     private final EventBus eventBus;
     private final MyView view;
-    private String songMoveList = "";
 }

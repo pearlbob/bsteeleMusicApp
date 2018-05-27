@@ -75,7 +75,7 @@ public class MeasureSequenceItem extends MeasureNode {
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
 
-        String id = "testingherelyAndChChordTable";
+        String id = "lyAndChChordTable";
         sb.append("<table id=\"" + id + "\" class=\"" + style + "chordTable\">\n");
         if (measureNodes != null)
             for (MeasureNode measureNode : measureNodes) {

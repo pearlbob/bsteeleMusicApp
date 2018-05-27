@@ -7,6 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.dom.client.CanvasElement;
@@ -14,8 +15,10 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -48,6 +51,11 @@ public class SingerView
     SpanElement artist;
 
     @UiField
+    Button nextSongButton;
+    @UiField
+    Button prevSongButton;
+
+    @UiField
     ScrollPanel lyricsScrollPanel;
 
     @UiField
@@ -73,6 +81,13 @@ public class SingerView
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
+
+        prevSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent(false));
+        });
+        nextSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent());
+        });
     }
 
     @Override

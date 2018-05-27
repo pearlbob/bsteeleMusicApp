@@ -4832,7 +4832,7 @@
     ]
 }
 },
-{ "file": "Down by the Water (1).songlyrics", "lastModifiedDate": 1519449776000, "song": 
+{ "file": "", "lastModifiedDate": 1527386260815, "song": 
 {
 "title": "Down by the Water",
 "artist": "Decemberists, The",
@@ -4844,56 +4844,64 @@
     [
 	"",
 	"Intro:",
-	"C Em C |Em D |",
+	"C Em C EmD",
 	"",
-	"Verse & Chorus:",
+	"V:",
+	"Em G D  C",
+	"Em D Em Em",
+	"Chorus:",
 	"Em G D  C",
 	"Em D Em Em",
 	"",
-	"Pre-Chorus:",
+	"Pc:",
 	"Em D Em -",
 	"Em D C pause",
 	"",
-	"break:",
-	"C Em C |Em D |"
+	"t:",
+	"C Em C EmD"
     ],
 "lyrics": 
     [
-	"",
+	"i:",
+	"v:",
 	"See this ancient riverbed",
 	"See where all our follies are led",
 	"Down by the water and down by the old main drag",
-	"",
+	"v:",
 	"I was just some towhead teen",
 	"Feeling 'round for fingers to get in between",
 	"Down by the water and down by the old main drag",
 	"",
+	"pc:",
 	"The season rubs me wrong",
 	"The summer swells anon",
+	"c:",
 	"So knock me down, tear me up",
 	"But I would bear it all broken just to fill my cup",
 	"Down by the water and down by the old main drag",
-	"",
+	"v:",
 	"Sweet descend this rabble round",
 	"The pretty little patter of a seaport town",
 	"Rolling down the water and rolling down the old main drag",
-	"",
+	"v:",
 	"All dolled up in gabardine",
 	"The lash-flashing Leda of Pier nineteen",
 	"Queen of the water and queen of the old main drag",
-	"",
+	"pc:",
 	"The season rubs me wrong",
 	"The summer swells anon",
+	"c:",
 	"So knock me down, tear me up",
 	"But I would bear it all broken just to fill my cup",
 	"Down by the water and down by the old main drag",
-	"",
+	"pc:",
 	"The season rubs me wrong",
 	"The summer swells anon",
+	"c:",
 	"So knock me down, tear me up",
 	"But I would bear it all broken just to fill my cup",
 	"Down by the water and down by the old main drag",
-	"",
+	"t:",
 	"Down by the water and down by the old main drag",
 	"Down by the water and down by the old main drag"
     ]
@@ -7412,7 +7420,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1527386467877, "song": 
 {
 "title": "Head Like A Hole",
 "artist": "Nine Inch Nails",
@@ -7422,16 +7430,26 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"v:",
+	"Em - - -",
+	"C  - D -",
+	"",
+	"C: ",
+	"Em - - -",
+	"C  - D -",
+	"",
+	"Br: ",
 	"Em - - -",
 	"C  - D -"
     ],
 "lyrics": 
     [
+	"v:",
 	"God money I'll do anything for you.",
 	"God money just tell me what you want me to.",
 	"God money nail me up against the wall.",
 	"God money don't want everything he wants it all.",
-	"[Bridge:]",
+	"Br:",
 	"no you can't take it",
 	"no you can't take it",
 	"no you can't take that away from me",
@@ -7444,7 +7462,7 @@
 	"head like a hole.",
 	"black as your soul.",
 	"I'd rather die than give you control.",
-	"[Chorus]",
+	"Ch:",
 	"bow down before the one you serve.",
 	"you're going to get what you deserve.",
 	"bow down before the one you serve.",
@@ -7453,11 +7471,11 @@
 	"God money's not concerned with the sick amongst the pure.",
 	"God money let's go dancing on the backs of the bruised.",
 	"God money's not one to choose",
-	"[Bridge]",
-	"[Chorus]",
-	"[Chorus]",
-	"[Bridge]",
-	"[Chorus]"
+	"Br:",
+	"Ch:",
+	"Ch:",
+	"Br:",
+	"Ch:"
     ]
 }
 },
@@ -9554,7 +9572,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1527386715091, "song": 
 {
 "title": "Keep your lamps Trimmed and Burning",
 "artist": "African American spiritual",
@@ -9564,36 +9582,60 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"v:",
+	"Em - Em - D -  D -",
+	"Em - Em - C Em B Em",
+	"C:",
 	"Em - Em - D -  D -",
 	"Em - Em - C Em B Em"
     ],
 "lyrics": 
     [
-	"1 Keep your lamps trimmed an burning,",
+	"v:Keep your lamps trimmed an burning,",
 	"keep your lamps trimmed and burning,",
 	"keep your lamps trimmed and burning,",
 	"for the time is drawing nigh.",
-	"Refrain:",
+	"c:",
 	"Children, don't grow weary,",
 	"children, don't grow weary,",
 	"children, don't grow weary,",
 	"for the time is drawing nigh.",
-	"2 Darker midnight lies before us,",
+	"v:Darker midnight lies before us,",
 	"darker midnight lies before us,",
 	"darker midnight lies before us,",
-	"for the time is drawing nigh. [Refrain]",
-	"3 Lo, the morning soon is breaking,",
+	"for the time is drawing nigh. ",
+	"c:",
+	"Children, don't grow weary,",
+	"children, don't grow weary,",
+	"children, don't grow weary,",
+	"for the time is drawing nigh.",
+	"v:Lo, the morning soon is breaking,",
 	"lo, the morning soon is breaking,",
 	"lo, the morning soon is breaking,",
-	"for the time is drawing nigh. [Refrain]",
-	"4 Christian, journey soon be over,",
+	"for the time is drawing nigh.",
+	"c:",
+	"Children, don't grow weary,",
+	"children, don't grow weary,",
+	"children, don't grow weary,",
+	"for the time is drawing nigh.",
+	"v: Christian, journey soon be over,",
 	"christian, journey soon be over,",
 	"christian, journey soon be over,",
-	"for the time is drawing nigh. [Refrain]",
-	"5 Keep your lamps trimmed an burning,",
+	"for the time is drawing nigh.",
+	"c:",
+	"Children, don't grow weary,",
+	"children, don't grow weary,",
+	"children, don't grow weary,",
+	"for the time is drawing nigh.",
+	"v: Keep your lamps trimmed an burning,",
 	"keep your lamps trimmed and burning,",
 	"keep your lamps trimmed and burning,",
-	"for the time is drawing nigh. [Refrain]"
+	"for the time is drawing nigh.",
+	"c:",
+	"Children, don't grow weary,",
+	"children, don't grow weary,",
+	"children, don't grow weary,",
+	"for the time is drawing nigh."
     ]
 }
 },
@@ -9828,6 +9870,105 @@
 	"La la la la",
 	"La la la la la",
 	"La la la"
+    ]
+}
+},
+{ "file": "", "lastModifiedDate": 1527276538624, "song": 
+{
+"title": "King of Pain",
+"artist": "Police, Gordon Sumner, The",
+"copyright": "© Sony/ATV Music Publishing LLC",
+"key": "G",
+"defaultBpm": 136,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"i: ",
+	"BmA BmA BmA BmA x4",
+	"",
+	"v1:",
+	"BmA BmA BmA BmA",
+	"GA GA F#m G",
+	"BmA BmA BmA BmA",
+	"GA GA F#m G",
+	"",
+	"v: ",
+	"BmA BmA BmA BmA  ",
+	"GA GA F#m G",
+	"BmA BmA BmA BmA",
+	"GA GA F#m G",
+	"",
+	"ch: ",
+	"D D/E D/F# G x4",
+	"G G",
+	"",
+	"ch1:",
+	"D D/E D/F# G x4",
+	"",
+	"",
+	"",
+	"Br: ",
+	"AG AG AG AG",
+	"AG AG AG AG ",
+	"BmA BmA BmA BmA",
+	"GA GA F#m G"
+    ],
+"lyrics": 
+    [
+	"",
+	"",
+	"v:There's a little black spot on the sun today",
+	"It's the same old thing as yesterday",
+	"There's a black hat caught in the high tree top",
+	"There's a flag pole rag and the wind won't stop",
+	"",
+	"ch:I have stood here before inside the pouring rain",
+	"With the world turning circles running 'round my brain",
+	"I guess I'm always hoping that you'll end this reign",
+	"But it's my destiny to be the king of pain",
+	"",
+	"v1:There's a little black spot on the sun today(that's my soul up there)",
+	"It's the same old thing as yesterday(that's my soul up there)",
+	"There's a black hat caught in a high tree top(that's my soul up there)",
+	"There's a flag pole rag and the wind won't stop (that's my soul up there)",
+	"",
+	"ch:I have stood here before inside the pouring rain",
+	"With the world turning circles running 'round my brain",
+	"I guess I'm always hoping that you'll end this reign",
+	"But it's my destiny to be the king of pain",
+	"",
+	"v1:There's a fossil that's trapped in a high cliff wall, that's my soul up there",
+	"There's a dead salmon frozen in a waterfall, that's my soul up there",
+	"There's a blue whale beached by a springtide's ebb, that's my soul up there",
+	"There's a butterfly trapped in a spider's web, that's my soul up there",
+	"",
+	"ch1:I have stood here before inside the pouring rain",
+	"With the world turning circles running 'round my brain",
+	"I guess I'm always hoping that you'll end this reign",
+	"But it's my destiny to be the king of pain",
+	"",
+	"Br:There's a king on a throne with his eyes torn out",
+	"There's a blind man looking for a shadow of doubt",
+	"There's a rich man sleeping on a golden bed",
+	"There's a skeleton choking on a crust of bread",
+	"(instrumental)",
+	"\"King of Pain\" ",
+	"",
+	"v:There's a red fox torn by a huntmen's pack, that's my soul up there",
+	"There's a black winged gull with a broken back, that's my soul up there",
+	"There's a little black spot on the sun today",
+	"It's the same old thing as yesterday",
+	"",
+	"ch1:I have stood here before inside the pouring rain",
+	"With the world turning circles running 'round my brain",
+	"I guess I'm always hoping that you'll end this reign",
+	"But it's my destiny to be the king of pain",
+	"",
+	"ch1:King of pain",
+	"I always be king of pain",
+	"king of pain, ",
+	"king of pain,",
+	"I always be king of pain"
     ]
 }
 },
@@ -10140,7 +10281,7 @@
     ]
 }
 },
-{ "file": "Learning to Fly (2).songlyrics", "lastModifiedDate": 1524073762000, "song": 
+{ "file": "", "lastModifiedDate": 1527387605017, "song": 
 {
 "title": "Learning to Fly",
 "artist": "Tom Petty",
@@ -10151,6 +10292,9 @@
 "chords": 
     [
 	"v:",
+	"F FC C C",
+	"Am AmG G G",
+	"c:",
 	"F FC C C",
 	"Am AmG G G"
     ],
@@ -10175,12 +10319,11 @@
 	"ch:",
 	"I'm learning to fly, around the clouds",
 	"But what goes up must come down",
-	"",
-	"[Chorus]"
+	"c:"
     ]
 }
 },
-{ "file": "Learn to Fly.songlyrics", "lastModifiedDate": 1519453042000, "song": 
+{ "file": "", "lastModifiedDate": 1527387514490, "song": 
 {
 "title": "Learn to Fly",
 "artist": "Foo Fighters",
@@ -10191,13 +10334,15 @@
 "chords": 
     [
 	"",
-	"(verse)(Chorus)",
+	"v:",
+	"B F#m E -",
+	"C:",
 	"B F#m E -",
 	"",
-	"(pre-chorus)",
+	"pc:",
 	"G A",
 	"",
-	"(Bridge)",
+	"br:",
 	"B G D E G A x2"
     ],
 "lyrics": 
@@ -10392,7 +10537,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1527387703417, "song": 
 {
 "title": "Life",
 "artist": "Our Lady Peace",
@@ -10402,9 +10547,10 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"v:",
 	"C G/B Am Em",
 	"F C   F  G",
-	"bridge:",
+	"br:",
 	"F C   G  G   x2"
     ],
 "lyrics": 
@@ -11032,7 +11178,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1527387994715, "song": 
 {
 "title": "Love Interruption",
 "artist": "Jack White",
@@ -11048,6 +11194,7 @@
     ],
 "lyrics": 
     [
+	"v:",
 	"I want love to: roll me over slowly,",
 	"Stick a knife inside me, and twist it all around.",
 	"I want love to: grab my fingers gently,",
@@ -11673,7 +11820,7 @@
     ]
 }
 },
-{ "file": "Mary Jane (2).songlyrics", "lastModifiedDate": 1524073763000, "song": 
+{ "file": "", "lastModifiedDate": 1527388899928, "song": 
 {
 "title": "Mary Jane",
 "artist": "Alanis Morisette",
@@ -11683,9 +11830,10 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"I:",
+	"D Dsus4/G D Dsus4/G x4",
 	"v:",
 	"D Dsus4/G D Dsus4/G x4",
-	"",
 	"ch:",
 	"C G D D",
 	"Bb F D D",
@@ -12524,7 +12672,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1527388998380, "song": 
 {
 "title": "One",
 "artist": "U2",
@@ -12534,6 +12682,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"v:",
 	"Am D F G x4",
 	"chorus:",
 	"C Am F C x2 ",
@@ -12610,7 +12759,7 @@
     ]
 }
 },
-{ "file": "One Dance (1).songlyrics", "lastModifiedDate": 1524073764000, "song": 
+{ "file": "", "lastModifiedDate": 1527389098271, "song": 
 {
 "title": "One Dance",
 "artist": "Drake",
@@ -12621,6 +12770,12 @@
 "chords": 
     [
 	"v:",
+	"Bm A D Em x2",
+	"c:",
+	"Bm A D Em x2",
+	"br:",
+	"Bm A D Em x2",
+	"t:",
 	"Bm A D Em x2"
     ],
 "lyrics": 
@@ -13447,7 +13602,7 @@
     ]
 }
 },
-{ "file": "Ring of Fire (1).songlyrics", "lastModifiedDate": 1524073766000, "song": 
+{ "file": "", "lastModifiedDate": 1527385282237, "song": 
 {
 "title": "Ring of Fire",
 "artist": "Johnny Cash",
@@ -13457,7 +13612,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"i:",
+	"t:",
 	"GG C GG GG",
 	"GG C GG GG",
 	"",
@@ -15445,7 +15600,7 @@
     ]
 }
 },
-{ "file": "Songbird.songlyrics", "lastModifiedDate": 1524073767000, "song": 
+{ "file": "", "lastModifiedDate": 1527385464016, "song": 
 {
 "title": "Songbird",
 "artist": "Eva Cassidy",
@@ -15463,6 +15618,8 @@
 	"G G",
 	"Ch:",
 	"D C Em Em",
+	"C D G G",
+	"t:",
 	"C D G G"
     ],
 "lyrics": 
@@ -15492,7 +15649,7 @@
 	"And I love you, I love you, I love you",
 	"Like never before",
 	"t:Like never before",
-	"tPLike never before"
+	"t:Like never before"
     ]
 }
 },
@@ -17031,7 +17188,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1527385651991, "song": 
 {
 "title": "Telephone",
 "artist": "Lady Gaga, Beyonce",
@@ -17041,10 +17198,14 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"v:",
+	"Am C G Am",
+	"pc:",
 	"Am C G Am"
     ],
 "lyrics": 
     [
+	"v:",
 	"[Lady Gaga]",
 	"Hello, hello, baby, you called?",
 	"I can't hear a thing",
@@ -17064,7 +17225,7 @@
 	"You knew that I was free",
 	"And now you won't stop calling me",
 	"I'm kinda busy",
-	"[Pre-Chorus:]",
+	"Pc:",
 	"Stop callin'",
 	"Stop callin'",
 	"I don't wanna think anymore",
@@ -18020,7 +18181,7 @@
     ]
 }
 },
-{ "file": "Wave of Mutilation (2).songlyrics", "lastModifiedDate": 1519453044000, "song": 
+{ "file": "", "lastModifiedDate": 1527385777498, "song": 
 {
 "title": "Wave of Mutilation",
 "artist": "Pixies",
@@ -18030,7 +18191,9 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"",
+	"i:",
+	"C E F |D FED| x2",
+	"C E F D",
 	"v:",
 	"C E F |D FED| x2",
 	"C E F D",
@@ -18355,7 +18518,7 @@
     ]
 }
 },
-{ "file": "Where Did you Sleep last night.songlyrics", "lastModifiedDate": 1519453044000, "song": 
+{ "file": "", "lastModifiedDate": 1527385861429, "song": 
 {
 "title": "Where Did you Sleep last night",
 "artist": "Nirvana",
@@ -18365,8 +18528,10 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"",
 	"V:",
+	"E E A G",
+	"B B E E",
+	"C:",
 	"E E A G",
 	"B B E E"
     ],

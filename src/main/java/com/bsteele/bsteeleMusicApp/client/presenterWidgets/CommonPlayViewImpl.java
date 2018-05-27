@@ -18,7 +18,9 @@ import javax.annotation.Nonnull;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-class CommonPlayViewImpl extends ViewImpl {
+class CommonPlayViewImpl
+        extends ViewImpl
+{
     protected CommonPlayViewImpl(
             @Nonnull final EventBus eventBus,
             @Nonnull final SongPlayMaster songPlayMaster) {

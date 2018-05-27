@@ -548,34 +548,38 @@ public class Song implements Comparable<Song> {
                             col = 0;
                             block = "";
                             state = 0;
-
-                        } else {
-                            //  absorb trailing white space
-                            switch (c) {
-                                case ' ':
-                                case '\t':
-                                    if (block.length() > 0) {
-                                        grid.add(col, row, block);
-                                        col++;
-                                    }
-                                    block = "";
-                                    break;
-                                case '\n':
-                                case '\r':
-                                    if (block.length() > 0) {
-                                        grid.add(col, row, block);
-                                        col++;
-                                    }
-                                    row++;
-                                    col = 0;
-                                    block = "";
-                                    state = 0;
-                                    break;
-                                default:
-                                    block += c;
-                                    break;
-                            }
+                            continue;
                         }
+                        state++;
+
+                        //  fall through
+                    case 2:
+                        //  absorb characters until newline
+                        switch (c) {
+                            case ' ':
+                            case '\t':
+                                if (block.length() > 0) {
+                                    grid.add(col, row, block);
+                                    col++;
+                                }
+                                block = "";
+                                break;
+                            case '\n':
+                            case '\r':
+                                if (block.length() > 0) {
+                                    grid.add(col, row, block);
+                                    col++;
+                                }
+                                row++;
+                                col = 0;
+                                block = "";
+                                state = 0;
+                                break;
+                            default:
+                                block += c;
+                                break;
+                        }
+
                         break;
                 }
             }
@@ -704,32 +708,35 @@ public class Song implements Comparable<Song> {
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
                         state = 0;
-                    } else {
-                        //  absorb trailing white space
-                        switch (c) {
-                            case ' ':
-                            case '\t':
-                                whiteSpace += c;
-                                break;
-                            case '\n':
-                            case '\r':
-                                lyrics += c;
-                                whiteSpace = ""; //  ignore trailing white space
-                                state = 0;
-                                break;
-                            default:
-                                if (!isSection) {
-                                    //  deal with bad formatting
-                                    lyrics += rowStart
-                                            + Section.getDefaultVersion().toString()
-                                            + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
-                                            + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
-                                    isSection = true;
-                                }
-                                lyrics += whiteSpace + c;
-                                whiteSpace = "";
-                                break;
-                        }
+                        continue;
+                    }
+                    state++;
+                    //  fall through
+                case 2:
+                    //  absorb characters to newline
+                    switch (c) {
+                        case ' ':
+                        case '\t':
+                            whiteSpace += c;
+                            break;
+                        case '\n':
+                        case '\r':
+                            lyrics += c;
+                            whiteSpace = ""; //  ignore trailing white space
+                            state = 0;
+                            break;
+                        default:
+                            if (!isSection) {
+                                //  deal with bad formatting
+                                lyrics += rowStart
+                                        + Section.getDefaultVersion().toString()
+                                        + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
+                                        + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
+                                isSection = true;
+                            }
+                            lyrics += whiteSpace + c;
+                            whiteSpace = "";
+                            break;
                     }
                     break;
             }
@@ -776,30 +783,33 @@ public class Song implements Comparable<Song> {
 
                         whiteSpace = ""; //  ignore white space
                         state = 0;
-                    } else {
-                        //  absorb trailing white space
-                        switch (c) {
-                            case ' ':
-                            case '\t':
-                                whiteSpace += c;
-                                break;
-                            case '\n':
-                            case '\r':
-                                if (lyricSection == null) {
-                                    //  oops, an old unformatted song, force a lyrics section
-                                    lyricSection = new LyricSection();
-                                    lyricSection.setSectionVersion(Section.getDefaultVersion());
-                                }
-                                lyricSection.add(new LyricsLine(lyrics));
-                                lyrics = "";
-                                whiteSpace = ""; //  ignore trailing white space
-                                state = 0;
-                                break;
-                            default:
-                                lyrics += whiteSpace + c;
-                                whiteSpace = "";
-                                break;
-                        }
+                        continue;
+                    }
+                    state++;
+                    //  fall through
+                case 2:
+                    //  absorb all characters to newline
+                    switch (c) {
+                        case ' ':
+                        case '\t':
+                            whiteSpace += c;
+                            break;
+                        case '\n':
+                        case '\r':
+                            if (lyricSection == null) {
+                                //  oops, an old unformatted song, force a lyrics section
+                                lyricSection = new LyricSection();
+                                lyricSection.setSectionVersion(Section.getDefaultVersion());
+                            }
+                            lyricSection.add(new LyricsLine(lyrics));
+                            lyrics = "";
+                            whiteSpace = ""; //  ignore trailing white space
+                            state = 0;
+                            break;
+                        default:
+                            lyrics += whiteSpace + c;
+                            whiteSpace = "";
+                            break;
                     }
                     break;
             }

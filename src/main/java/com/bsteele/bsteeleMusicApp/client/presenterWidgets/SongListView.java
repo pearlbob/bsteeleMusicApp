@@ -10,6 +10,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandle
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
@@ -55,10 +56,6 @@ public class SongListView
         searchSongs(songSearch.getValue());
     }
 
-    @Override
-    public void setSongMoveList(String s) {
-        songMoveList = s;
-    }
 
     interface Binder extends UiBinder<Widget, SongListView> {
     }
@@ -81,10 +78,6 @@ public class SongListView
     @UiField
     Label listCount;
 
-
-    @UiField
-    Button showSongFileUpdates;
-
     @Inject
     SongListView(Binder binder) {
         initWidget(binder.createAndBindUi(this));
@@ -95,7 +88,7 @@ public class SongListView
             if (filteredSongs != null && songGrid != null) {
                 HTMLTable.Cell cell = songGrid.getCellForEvent(event);
                 if (cell != null) {
-                    Song selectedSong = filteredSongs.get(cell.getRowIndex());
+                    selectedSong = filteredSongs.get(cell.getRowIndex());
                     fireEvent(new SongUpdateEvent(selectedSong));
                 }
             }
@@ -134,10 +127,6 @@ public class SongListView
                 asyncReadSongFile(files.getItem(i));
             }
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
-        });
-
-        showSongFileUpdates.addClickHandler((event) -> {
-            GWT.log(songMoveList);
         });
 
         songSearch.setFocus(true);
@@ -208,6 +197,22 @@ public class SongListView
         listCount.setText("Count: " + Integer.toString(filteredSongs.size()));
     }
 
+
+    @Override
+    public void nextSong(boolean forward) {
+        if (filteredSongs.isEmpty() || selectedSong == null || !filteredSongs.contains(selectedSong))
+            return;
+
+        for (int i = 0; i < filteredSongs.size(); i++)
+            if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
+            {
+                selectedSong = filteredSongs.get(Util.mod(i + (forward ? 1 : -1), filteredSongs.size()));
+                fireEvent(new SongUpdateEvent(selectedSong));
+                break;
+            }
+
+    }
+
     private native FileListImpl getFiles(NativeEvent event)/*-{
         var ret = event.target.files;
         if (ret.length <= 0)
@@ -248,6 +253,6 @@ public class SongListView
     private static final int columns = 3;
     private ArrayList<Song> filteredSongs = new ArrayList<>();
     private final TreeSet<Song> allSongs = new TreeSet<>();
+    private Song selectedSong;
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
-    private String songMoveList = "";
 }
