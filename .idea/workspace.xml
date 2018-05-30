@@ -13,8 +13,6 @@
   <component name="ChangeListManager">
     <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/BassFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/BassFile.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/GenerateSongHtml.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/GenerateSongHtml.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -869,14 +867,7 @@
       <workItem from="1527609349622" duration="2794000" />
       <workItem from="1527627651302" duration="25131000" />
       <workItem from="1527655262867" duration="569000" />
-      <workItem from="1527713213213" duration="3568000" />
-    </task>
-    <task id="LOCAL-00012" summary="started work on fontsizing, test for AudioFilePlayer constructor on mac">
-      <created>1521758681237</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1521758681237</updated>
+      <workItem from="1527713213213" duration="3644000" />
     </task>
     <task id="LOCAL-00013" summary="had to add MusicAnimationEvent to workaround GWT issues, in process">
       <created>1521826594815</created>
@@ -1214,7 +1205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1527655728034</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="adjusted bass study file format output, added to tonics display">
+      <created>1527719610379</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1527719610380</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1250,7 +1248,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="766442000" />
+    <option name="totallyTimeSpent" value="766518000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1263,6 +1261,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="167" y="292" width="3359" height="1835" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="PlantUML" order="9" />
       <window_info anchor="right" id="Palette" order="3" />
@@ -1283,7 +1282,7 @@
       <window_info anchor="bottom" id="Java Enterprise" order="11" show_stripe_button="false" weight="0.32949728" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
-      <window_info active="true" anchor="bottom" auto_hide="true" x="1" y="919" width="3758" height="1170" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
+      <window_info anchor="bottom" auto_hide="true" x="1" y="919" width="3758" height="1170" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" weight="0.5031591" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32931122" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.18181819" />
       <window_info anchor="right" id="Bean Validation" order="10" />
@@ -1349,7 +1348,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="fixed select on edit view, fancy login" />
     <MESSAGE value="added all scales and chords, adjusted dominant chords" />
     <MESSAGE value="fixed(?) re-click on edit section select and chord select" />
     <MESSAGE value="replaced section select and chord select with buttons" />
@@ -1374,7 +1372,8 @@
     <MESSAGE value="added write all songs, some small json fixes" />
     <MESSAGE value="next song, song fixes, small parsing fixes" />
     <MESSAGE value="bass tab, initial bass study file format output, show tonics" />
-    <option name="LAST_COMMIT_MESSAGE" value="bass tab, initial bass study file format output, show tonics" />
+    <MESSAGE value="adjusted bass study file format output, added to tonics display" />
+    <option name="LAST_COMMIT_MESSAGE" value="adjusted bass study file format output, added to tonics display" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2277,6 +2276,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1088">
           <caret line="160" column="30" selection-start-line="160" selection-start-column="30" selection-end-line="160" selection-end-column="30" />
+          <folding>
+            <element signature="method#parse#1;class#Measure#0" />
+            <element signature="e#5113#5114#0" expanded="true" />
+            <element signature="e#5152#5153#0" expanded="true" />
+            <element signature="e#5185#5186#0" expanded="true" />
+            <element signature="e#5216#5217#0" expanded="true" />
+            <element signature="e#5514#5515#0" expanded="true" />
+            <element signature="e#5559#5560#0" expanded="true" />
+            <element signature="e#5610#5611#0" expanded="true" />
+            <element signature="e#5634#5635#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2401,6 +2411,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="644">
           <caret line="251" column="28" selection-start-line="251" selection-start-column="28" selection-end-line="251" selection-end-column="28" />
+          <folding>
+            <element signature="e#1085#1086#0" expanded="true" />
+            <element signature="e#1169#1170#0" expanded="true" />
+            <element signature="e#1211#1212#0" expanded="true" />
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#2047#2048#0" expanded="true" />
+            <element signature="e#2078#2079#0" expanded="true" />
+            <element signature="e#2429#2430#0" expanded="true" />
+            <element signature="e#2478#2479#0" expanded="true" />
+            <element signature="e#7795#7796#0" expanded="true" />
+            <element signature="e#7823#7824#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
