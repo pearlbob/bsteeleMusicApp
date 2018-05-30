@@ -13,7 +13,7 @@ public class GenerateSongHtml {
         StringBuilder sb = new StringBuilder();
 
         sb.append(
-                "<table border=\"1\" >\n" +
+                "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
                         "<tr><th>Chord</th>" +
                         "<th>Formula</th>" +
                         "<th>Key</th>" +
@@ -68,7 +68,7 @@ public class GenerateSongHtml {
         StringBuilder sb = new StringBuilder();
 
         sb.append(
-                "<table border=\"1\" >\n" +
+                "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
                         "<tr><th>Chord</th>" +
                         "<th>Key</th>" +
                         "<th colspan=\"7\">Major Notes</th>" +
@@ -125,9 +125,42 @@ public class GenerateSongHtml {
 
     public String generateAllTonicHtml() {
         StringBuilder sb = new StringBuilder();
+        sb.append( "<p> </p>\n");
 
+        //  sequence
         sb.append(
-                "<table border=\"1\" >\n" +
+                "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
+                        "<tr><th>Key</th><th>I</th>" +
+                        "<th>ii</th>" +
+                        "<th>iii</th>" +
+                        "<th>IV</th>" +
+                        "<th>V</th>" +
+                        "<th>VI</th>" +
+                        "<th>vii</th>" +
+                        "</tr>");
+
+        for (Key key : Key.values()) {
+            sb.append("<tr><td style=\"padding: 15px; \">" + key.toString() + " "+key.sharpsFlatsToString()+"</td>" );
+            for ( MusicConstant.Diatonic diatonic: MusicConstant.Diatonic.values()) {
+
+                ScaleChord builtScaleChord = key.getDiatonicByDegree(diatonic.ordinal());
+
+                ArrayList<ScaleChord> scaleChords = new ArrayList<>();
+                scaleChords.add(builtScaleChord);
+
+                sb.append("<td style=\"padding: 15px; \">"
+                        + builtScaleChord.toString()
+                        + "</td>");
+            }
+            sb.append("</tr>\n" );
+        }
+        sb.append( "  </table>\n");
+        sb.append( "<p> </p>\n");
+
+
+        //  details
+         sb.append(
+                "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
                         "<tr><th>Key</th>" +
                         "<th>Tonic</th>" +
                         "<th>Chord</th>" +
@@ -135,6 +168,7 @@ public class GenerateSongHtml {
                         "<th>Notes</th>" +
                         "</tr>");
 
+        String style = " style=\"padding-left: 15px; padding-right: 15px;\"";
         for (Key key : Key.values()) {
             for ( MusicConstant.Diatonic diatonic: MusicConstant.Diatonic.values()) {
 
@@ -143,11 +177,11 @@ public class GenerateSongHtml {
                 ArrayList<ScaleChord> scaleChords = new ArrayList<>();
                 scaleChords.add(builtScaleChord);
 
-                sb.append("<tr><td>" + key.toString() + " "+key.sharpsFlatsToString()+"</td><td>"
+                sb.append("<tr><td"+style+">" + key.toString() + " "+key.sharpsFlatsToString()+"</td><td>"
                         +diatonic.name()
-                        + "</td><td>"
+                        + "</td><td"+style+">"
                         + builtScaleChord.toString()
-                        + "</td><td>");
+                        + "</td><td"+style+">");
                 boolean first = true;
                 for (ChordComponent chordComponent : builtScaleChord.getChordComponents() )
                 {
@@ -157,7 +191,7 @@ public class GenerateSongHtml {
                         sb.append(" ");
                     sb.append(chordComponent.getShortName());
                 }
-                sb.append("</td><td>\n" );
+                sb.append("</td><td"+style+">\n" );
 
                 sb.append( chordComponentScaleNotesToString( key.getKeyByHalfStep(builtScaleChord.getScaleNote().getHalfStep()), builtScaleChord) );
                 sb.append("</td></tr>\n" );

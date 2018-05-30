@@ -115,13 +115,33 @@ public class BassFile {
                 + chordN
                 + ",\"chordModifier\":\""
                 + chordDescriptor.getShortName()
-                + "\",\"minorMajor\":\"major\","
+                + "\",\"minorMajor\":\""
+                + majorMinorMap(chordDescriptor)
+                + "\","
                 + "\"minorMajorSelectIndex\":0,\"scaleN\":"
                 + (scaleN < 0 ? "" : scaleN)
                 + ",\"lyrics\":\""
                 + lyrics
                 + "\","
                 + "\"tied\":false}";
+    }
+
+    private String majorMinorMap(ChordDescriptor chordDescriptor) {
+        switch (chordDescriptor) {
+            case major:
+            case major6:
+            case major7:
+            default:
+                return "major";
+            case minor:
+            case minor7:
+                return "minor";
+            case dominant7:
+            case dominant9:
+            case dominant11:
+            case dominant13:
+                return "dominant";
+        }
     }
 
     private int bassString(Pitch pitch, int position) {
