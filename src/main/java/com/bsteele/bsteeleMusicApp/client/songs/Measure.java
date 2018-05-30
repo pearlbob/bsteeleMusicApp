@@ -150,6 +150,19 @@ public class Measure extends MeasureNode {
         this.chords = chords;
     }
 
+    public Chord getChordAtBeat(double beat) {
+        if (chords == null || chords.isEmpty())
+            return null;
+
+        double beatSum = 0;
+        for ( Chord chord: chords){
+             beatSum += chord.getBeats();
+             if ( beat <= beatSum)
+                 return chord;
+        }
+        return chords.get(chords.size()-1);
+    }
+
     @Override
     public ArrayList<Measure> getMeasures() {
         if (measures == null) {

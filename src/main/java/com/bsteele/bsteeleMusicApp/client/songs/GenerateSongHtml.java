@@ -122,4 +122,50 @@ public class GenerateSongHtml {
                 "  </table>\n");
         return sb.toString();
     }
+
+    public String generateAllTonicHtml() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(
+                "<table border=\"1\" >\n" +
+                        "<tr><th>Key</th>" +
+                        "<th>Tonic</th>" +
+                        "<th>Chord</th>" +
+                        "<th>Formula</th>" +
+                        "<th>Notes</th>" +
+                        "</tr>");
+
+        for (Key key : Key.values()) {
+            for ( MusicConstant.Diatonic diatonic: MusicConstant.Diatonic.values()) {
+
+                ScaleChord builtScaleChord = key.getDiatonicByDegree(diatonic.ordinal());
+
+                ArrayList<ScaleChord> scaleChords = new ArrayList<>();
+                scaleChords.add(builtScaleChord);
+
+                sb.append("<tr><td>" + key.toString() + " "+key.sharpsFlatsToString()+"</td><td>"
+                        +diatonic.name()
+                        + "</td><td>"
+                        + builtScaleChord.toString()
+                        + "</td><td>");
+                boolean first = true;
+                for (ChordComponent chordComponent : builtScaleChord.getChordComponents() )
+                {
+                    if ( first)
+                        first=false;
+                    else
+                        sb.append(" ");
+                    sb.append(chordComponent.getShortName());
+                }
+                sb.append("</td><td>\n" );
+
+                sb.append( chordComponentScaleNotesToString( key.getKeyByHalfStep(builtScaleChord.getScaleNote().getHalfStep()), builtScaleChord) );
+                sb.append("</td></tr>\n" );
+            }
+        }
+        sb.append(
+                "  </table>\n");
+        return sb.toString();
+    }
+
 }

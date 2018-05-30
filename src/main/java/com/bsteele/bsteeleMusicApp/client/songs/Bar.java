@@ -22,6 +22,12 @@ public class Bar {
         return notes;
     }
 
+    public Chord getChordAtBeat(double beat) {
+        if (measure == null)
+            return null;
+        return measure.getChordAtBeat(beat);
+    }
+
     public void setNotes(ArrayList<Note> notes) {
         this.notes = notes;
     }

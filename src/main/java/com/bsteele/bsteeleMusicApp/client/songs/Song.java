@@ -1154,7 +1154,7 @@ public class Song implements Comparable<Song> {
      *
      * @param beatsPerBar the beatsPerBar to set
      */
-    private void setBeatsPerBar(int beatsPerBar) {
+    public void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
         computeDuration();
     }
@@ -1168,6 +1168,10 @@ public class Song implements Comparable<Song> {
      */
     public final int getUnitsPerMeasure() {
         return unitsPerMeasure;
+    }
+
+    public void setUnitsPerMeasure(int unitsPerMeasure) {
+        this.unitsPerMeasure = unitsPerMeasure;
     }
 
     /**
@@ -1567,8 +1571,8 @@ public class Song implements Comparable<Song> {
     private transient String fileName;
     private Key key = Key.C;  //  default
     private int defaultBpm = 106;  //  beats per minute
-    private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature
-    private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature
+    private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature numerator
+    private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature denominator
     private transient double duration;    //  units of seconds
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();

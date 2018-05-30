@@ -3,15 +3,12 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -22,6 +19,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
@@ -56,9 +54,11 @@ public class SongListView
         searchSongs(songSearch.getValue());
     }
 
-
     interface Binder extends UiBinder<Widget, SongListView> {
     }
+
+    @UiField
+    DockLayoutPanel dockLayoutPanel;
 
     @UiField
     TextBox songSearch;
@@ -129,8 +129,6 @@ public class SongListView
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
         });
 
-        songSearch.setFocus(true);
-
         //  work around GWT to allow multiple files in a selection
         readSongFiles.getElement().setPropertyString("multiple", "multiple");
     }
@@ -195,22 +193,25 @@ public class SongListView
             }
         }
         listCount.setText("Count: " + Integer.toString(filteredSongs.size()));
-    }
 
+        songSearch.setFocus(true);
+    }
 
     @Override
     public void nextSong(boolean forward) {
-        if (filteredSongs.isEmpty() || selectedSong == null || !filteredSongs.contains(selectedSong))
+        if (filteredSongs.isEmpty())
             return;
 
-        for (int i = 0; i < filteredSongs.size(); i++)
-            if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
-            {
-                selectedSong = filteredSongs.get(Util.mod(i + (forward ? 1 : -1), filteredSongs.size()));
-                fireEvent(new SongUpdateEvent(selectedSong));
-                break;
-            }
-
+        if (selectedSong == null || !filteredSongs.contains(selectedSong))
+            selectedSong = filteredSongs.get(0);
+        else
+            for (int i = 0; i < filteredSongs.size(); i++)
+                if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
+                {
+                    selectedSong = filteredSongs.get(Util.mod(i + (forward ? 1 : -1), filteredSongs.size()));
+                    fireEvent(new SongUpdateEvent(selectedSong));
+                    break;
+                }
     }
 
     private native FileListImpl getFiles(NativeEvent event)/*-{

@@ -5,24 +5,17 @@ import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHa
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -54,6 +47,9 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     DockLayoutPanel player;
 
     @UiField
+    DockLayoutPanel bass;
+
+    @UiField
     DockLayoutPanel singer;
 
     @UiField
@@ -70,6 +66,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     Button showAllChords;
     @UiField
     HTML allChords;
+    @UiField
+    Button showAllTonics;
+    @UiField
+    HTML allTonics;
+
     @UiField
     Button showStatus;
     @UiField
@@ -91,6 +92,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
         bindSlot(HomePresenter.SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChords);
         bindSlot(HomePresenter.SLOT_PLAYER_CONTENT, player);
+        bindSlot(HomePresenter.SLOT_BASS_CONTENT, bass);
         bindSlot(HomePresenter.SLOT_SINGER_CONTENT, singer);
         bindSlot(HomePresenter.SLOT_SONG_EDIT_CONTENT, songEdit);
         bindSlot(HomePresenter.SLOT_DRUM_OPTIONS_CONTENT, drumOptions);
@@ -101,16 +103,25 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         showAllScales.addClickHandler((ClickEvent event) -> {
             allScales.setVisible(!allScales.isVisible());
             if (allScales.isVisible()) {
-                GenerateSongHtml generateAllChordHtml = new GenerateSongHtml();
-                allScales.setHTML(generateAllChordHtml.generateAllScalesHtml());
+                GenerateSongHtml generateSongHtml = new GenerateSongHtml();
+                allScales.setHTML(generateSongHtml.generateAllScalesHtml());
             }
         });
         allChords.setVisible(false);
         showAllChords.addClickHandler((ClickEvent event) -> {
             allChords.setVisible(!allChords.isVisible());
             if (allChords.isVisible()) {
-                GenerateSongHtml generateAllChordHtml = new GenerateSongHtml();
-                allChords.setHTML(generateAllChordHtml.generateAllChordHtml());
+                GenerateSongHtml generateSongHtml = new GenerateSongHtml();
+                allChords.setHTML(generateSongHtml.generateAllChordHtml());
+            }
+        });
+
+        allTonics.setVisible(false);
+        showAllTonics.addClickHandler((ClickEvent event) -> {
+            allTonics.setVisible(!allTonics.isVisible());
+            if (allTonics.isVisible()) {
+                GenerateSongHtml generateSongHtml = new GenerateSongHtml();
+                allTonics.setHTML(generateSongHtml.generateAllTonicHtml());
             }
         });
 
@@ -124,7 +135,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
         homeTabs.addSelectionHandler(selectionEvent -> {
             int tab = homeTabs.getSelectedIndex();
-            switch (tab) {           // fixme: very weak tab selection!
+            switch (tab) {           // fixme: very weak tab selection mechanism!
                 case 1:
                 case 3:
                 case 4:

@@ -37,10 +37,25 @@ public class MusicConstant {
                     ChordDescriptor.minor7b5,   //  6 + 1 = 7
             };
 
+    public enum Diatonic {
+        i,
+        ii,
+        iii,
+        IV,
+        V,
+        VI,
+        vii;
+
+        public ChordDescriptor getChordDescriptor(){
+            return diatonicChordModifiers[this.ordinal()];
+        }
+    }
+
     /**
      * Return the major diatonic chord descriptor for the given degree.
-     * @param degree  the given degree
-     * @return  the major diatonic chord descriptor
+     *
+     * @param degree the given degree
+     * @return the major diatonic chord descriptor
      */
     public static final ChordDescriptor getDiatonicChordModifier(int degree) {
         return diatonicChordModifiers[Util.mod(degree, diatonicChordModifiers.length)];

@@ -71,6 +71,10 @@ public class ScaleChord implements Comparable<ScaleChord> {
         return chordDescriptor.getChordComponents();
     }
 
+    public boolean contains(ChordComponent chordComponent){
+        return chordDescriptor.getChordComponents().contains(chordComponent);
+    }
+
     public int getParseLength() {
         return parseLength;
     }

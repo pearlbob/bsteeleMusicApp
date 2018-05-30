@@ -229,6 +229,15 @@ public enum Pitch {
         frequency = 440 * Math.pow(2, (double) ((number + 1) - 49) / 12);
     }
 
+
+    public static final Pitch findPitch(ScaleNote scaleNote, Pitch atOrAbove) {
+        for (Pitch p : Pitch.values()) {
+            if (p.scaleNote.equals(scaleNote) && p.getNumber() >= atOrAbove.getNumber())
+                return p;
+        }
+        return null;
+    }
+
     public final int getLabelNumber() {
         return labelNumber;
     }

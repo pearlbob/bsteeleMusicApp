@@ -110,7 +110,7 @@ class CommonPlayViewImpl
                     lastScrollPosition = position;
                     scrollPanel.setVerticalScrollPosition(position);
                     scrollDelay = 0;
-                    // GWT.log("player scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
+                    // GWT.log("bass scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
                 }
                 scrollDelay++;
                 break;

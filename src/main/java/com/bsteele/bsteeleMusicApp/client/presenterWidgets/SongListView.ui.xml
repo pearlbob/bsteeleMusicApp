@@ -4,7 +4,7 @@
 
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
-    <g:DockLayoutPanel unit="EM">
+    <g:DockLayoutPanel ui:field="dockLayoutPanel" unit="EM">
         <g:north size="3">
             <g:HTMLPanel>
                 <div style="margin: 10px;">
@@ -12,7 +12,7 @@
                     <g:TextBox ui:field="songSearch"/>
                     <g:Button text="X" ui:field="clearSearch"/>
                     <select ui:field="listBySelect" >
-                        <option value="title" selected="true">by Title</option>
+                        <option value="title" selected="selected">by Title</option>
                         <option value="artist" >by Artist</option>
                         <option value="lastModifiedDate" >by Mod Date</option>
                     </select>

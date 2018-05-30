@@ -10,6 +10,11 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  */
 public class Note
 {
+    public Note( Pitch pitch, double duration) {
+        this.pitch = pitch;
+        this.duration = duration;
+        scaleNote = pitch.getScaleNote();
+    }
     private Pitch pitch;
     private double duration; // units of beat
     private boolean isDotted;
@@ -23,8 +28,8 @@ public class Note
     private transient boolean isSwing;//fixme: 1, 2
     private transient boolean isTriplet; //fixme: 1, 2, 3
     private transient boolean isPreNotationRequired; //   #,b, natural
-    private transient int trebleClefPostion;
-    transient int bassClefPostion;
+    private transient int trebleClefPosition;
+    transient int bassClefPosition;
 
 
     public double getDuration() {
@@ -75,8 +80,8 @@ public class Note
         return isPreNotationRequired;
     }
 
-    public int getTrebleClefPostion() {
-        return trebleClefPostion;
+    public int getTrebleClefPosition() {
+        return trebleClefPosition;
     }
 
     public DrumType getDrumType() {

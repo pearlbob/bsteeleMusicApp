@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.DateTimeFormat;
@@ -152,25 +153,9 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
      * @param filename
      * @param data
      */
-    private native void saveSongAs(String filename, String data) /*-{
-        var data = new Blob([data], {type: 'text/plain'});
-        // If we are replacing a previously generated file we need to
-        // manually revoke the object URL to avoid memory leaks.
-        //if (textFile !== null) {
-        //    window.URL.revokeObjectURL(textFile);
-        //}
-
-        var textFile = window.URL.createObjectURL(data);
-//    if (downloadlink === null) {
-//        downloadlink = document.createElement("a");
-//        downloadlink.style = "display:none";
-//    }
-        var downloadlink = document.createElement("a");
-        downloadlink.style = "display:none";
-        downloadlink.download = filename;
-        downloadlink.href = textFile;
-        downloadlink.click();
-    }-*/;
+    private void saveSongAs(String filename, String data) {
+        ClientFileIO.saveDataAs(filename, data);
+    }
 
     private final TreeSet<Song> allSongs = new TreeSet<>();
     private final EventBus eventBus;

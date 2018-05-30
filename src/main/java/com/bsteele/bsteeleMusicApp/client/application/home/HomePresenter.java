@@ -12,6 +12,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHand
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEventHandler;
 import com.bsteele.bsteeleMusicApp.client.place.NameTokens;
+import com.bsteele.bsteeleMusicApp.client.presenterWidgets.BassPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.DrumOptionsPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.PlayerPresenterWidget;
@@ -36,7 +37,6 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         implements SongUpdateEventHandler, SongSubmissionEventHandler, AllSongWriteEventHandler,
         StatusEventHandler {
 
-
     interface MyView extends View {
 
         void selectLastPlayTab();
@@ -49,6 +49,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
     public static final SingleSlot<LyricsAndChordsPresenterWidget> SLOT_LYRICS_AND_CHORDS_CONTENT = new SingleSlot<>();
     public static final SingleSlot<PlayerPresenterWidget> SLOT_PLAYER_CONTENT = new SingleSlot<>();
+    public static final SingleSlot<BassPresenterWidget> SLOT_BASS_CONTENT = new SingleSlot<>();
     public static final SingleSlot<SingerPresenterWidget> SLOT_SINGER_CONTENT = new SingleSlot<>();
     public static final SingleSlot<SongEditPresenterWidget> SLOT_SONG_EDIT_CONTENT = new SingleSlot<>();
     public static final SingleSlot<DrumOptionsPresenterWidget> SLOT_DRUM_OPTIONS_CONTENT = new SingleSlot<>();
@@ -57,6 +58,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     private final SongListPresenterWidget songListPresenterWidget;
     private final LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget;
     private final PlayerPresenterWidget playerPresenterWidget;
+    private final BassPresenterWidget bassPresenterWidget;
     private final SingerPresenterWidget singerPresenterWidget;
     private final SongEditPresenterWidget songEditPresenterWidget;
     private final DrumOptionsPresenterWidget drumOptionsPresenterWidget;
@@ -75,6 +77,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             SongListPresenterWidget songListPresenterWidget,
             LyricsAndChordsPresenterWidget lyricsAndChordsPresenterWidget,
             PlayerPresenterWidget playerPresenterWidget,
+            BassPresenterWidget bassPresenterWidget,
             SingerPresenterWidget singerPresenterWidget,
             SongEditPresenterWidget songEditPresenterWidget,
             DrumOptionsPresenterWidget drumOptionsPresenterWidget,
@@ -86,6 +89,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         this.songListPresenterWidget = songListPresenterWidget;
         this.lyricsAndChordsPresenterWidget = lyricsAndChordsPresenterWidget;
         this.playerPresenterWidget = playerPresenterWidget;
+        this.bassPresenterWidget = bassPresenterWidget;
         this.singerPresenterWidget = singerPresenterWidget;
         this.songEditPresenterWidget = songEditPresenterWidget;
         this.drumOptionsPresenterWidget = drumOptionsPresenterWidget;
@@ -101,6 +105,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
         setInSlot(SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChordsPresenterWidget);
         setInSlot(SLOT_PLAYER_CONTENT, playerPresenterWidget);
+        setInSlot(SLOT_BASS_CONTENT, bassPresenterWidget);
         setInSlot(SLOT_SINGER_CONTENT, singerPresenterWidget);
         setInSlot(SLOT_SONG_EDIT_CONTENT, songEditPresenterWidget);
         setInSlot(SLOT_DRUM_OPTIONS_CONTENT, drumOptionsPresenterWidget);
@@ -108,7 +113,6 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(StatusEvent.TYPE, this);
-
     }
 
 

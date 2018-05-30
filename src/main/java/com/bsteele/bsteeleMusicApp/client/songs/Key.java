@@ -48,6 +48,10 @@ public enum Key {
         return keysByHalfStep[Util.mod(halfStep + 1, keysByHalfStep.length)];
     }
 
+    public Key nextKeyByFifth() {
+        return keysByHalfStep[Util.mod(halfStep + 7, keysByHalfStep.length)];
+    }
+
     /**
      * Return the next key that is one half step lower.
      * Of course the keys are cyclic in their relationship.
@@ -56,6 +60,10 @@ public enum Key {
      */
     public Key previousKeyByHalfStep() {
         return keysByHalfStep[Util.mod(halfStep - 1, keysByHalfStep.length)];
+    }
+
+    public Key previousKeyByFifth() {
+        return keysByHalfStep[Util.mod(halfStep - 7, keysByHalfStep.length)];
     }
 
     /**
@@ -165,7 +173,7 @@ public enum Key {
                     if ((count = useMap.get(diatonicScaleNote)) != null)
                         score += count * guessWeights[i];
                     else {
-                        if ( (diatonic = diatonic.getAlias()) != null ) {
+                        if ((diatonic = diatonic.getAlias()) != null) {
                             diatonicScaleNote = diatonic.getScaleNote();
                             if (diatonic != null && (count = useMap.get(diatonicScaleNote)) != null)
                                 score += count * guessWeights[i];
@@ -241,10 +249,18 @@ public enum Key {
         return ret;
     }
 
-    public static final Key getDefault(){
+    public static final Key getDefault() {
         return Key.C;
     }
 
+
+    public String sharpsFlatsToString() {
+        if (keyValue < 0)
+            return Integer.toString(Math.abs(keyValue)) + MusicConstant.flatChar;
+        if (keyValue > 0)
+            return Integer.toString(keyValue) + MusicConstant.sharpChar;
+        return "";
+    }
 
     /**
      * Returns the name of this enum constant in a user friendly format,
