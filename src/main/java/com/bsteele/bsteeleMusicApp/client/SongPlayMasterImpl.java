@@ -241,15 +241,15 @@ public class SongPlayMasterImpl
         defaultDrumSelection = event.getDrumSelection();
     }
 
-    public void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO) {
+    public final void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO) {
         this.bSteeleMusicIO = bSteeleMusicIO;
     }
 
-    public void stopSong() {
+    public final void stopSong() {
         requestedState = SongUpdate.State.idle;
     }
 
-    public void issueSongUpdate(SongUpdate songUpdate) {
+    public final void issueSongUpdate(SongUpdate songUpdate) {
         if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson()))
             //  issue the song update locally if there is no communication with the server
             eventBus.fireEvent(new SongUpdateEvent(songUpdate));
@@ -281,11 +281,11 @@ public class SongPlayMasterImpl
         playSongUpdate(songUpdate);
     }
 
-    public void continueSong() {
+    public final void continueSong() {
         requestedState = SongUpdate.State.playing;
     }
 
-    public void setSelection(int first, int last) {
+    public final void setSelection(int first, int last) {
         this.firstSection = first;
         this.lastSection = last;
     }

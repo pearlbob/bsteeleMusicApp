@@ -12,7 +12,7 @@ import com.google.gwt.json.client.JSONValue;
  */
 public class JsonUtil {
 
-    public static int toInt(JSONValue jv) {
+    public static final int toInt(JSONValue jv) {
         JSONNumber jn = jv.isNumber();
         if (jn != null) {
             return (int) jn.doubleValue();
@@ -20,13 +20,13 @@ public class JsonUtil {
         return Integer.parseInt(jv.isString().stringValue());
     }
 
-    public static long toLong(JSONValue jv) {
+    public static final long toLong(JSONValue jv) {
         if (jv == null)
             return 0;
         return Long.parseLong(jv.toString());
     }
 
-    public static double toDouble(JSONValue jv) {
+    public static final double toDouble(JSONValue jv) {
         JSONNumber jn = jv.isNumber();
         if (jn != null) {
             return jn.doubleValue();
@@ -34,7 +34,7 @@ public class JsonUtil {
         return Double.NaN;
     }
 
-    public static String encode(String s) {
+    public static final String encode(String s) {
         if (s == null || s.length() == 0)
             return "";
         return s.replaceAll("\\\n", " ")

@@ -26,7 +26,7 @@ public class MusicConstant {
 
 
     //  has to be ahead of it's use since it's static
-    private static final ChordDescriptor diatonicChordModifiers[] =
+    private static final ChordDescriptor majorDiatonicChordModifiers[] =
             {
                     ChordDescriptor.major,      //  0 + 1 = 1
                     ChordDescriptor.minor,     //  1 + 1 = 2
@@ -37,7 +37,7 @@ public class MusicConstant {
                     ChordDescriptor.minor7b5,   //  6 + 1 = 7
             };
 
-    public enum Diatonic {
+    public enum MajorDiatonic {
         i,
         ii,
         iii,
@@ -45,10 +45,6 @@ public class MusicConstant {
         V,
         VI,
         vii;
-
-        public ChordDescriptor getChordDescriptor(){
-            return diatonicChordModifiers[this.ordinal()];
-        }
     }
 
     /**
@@ -57,7 +53,39 @@ public class MusicConstant {
      * @param degree the given degree
      * @return the major diatonic chord descriptor
      */
-    public static final ChordDescriptor getDiatonicChordModifier(int degree) {
-        return diatonicChordModifiers[Util.mod(degree, diatonicChordModifiers.length)];
+    public static final ChordDescriptor getMajorDiatonicChordModifier(int degree) {
+        return majorDiatonicChordModifiers[Util.mod(degree, majorDiatonicChordModifiers.length)];
+    }
+
+    //  has to be ahead of it's use since it's static
+    private static final ChordDescriptor minorDiatonicChordModifiers[] =
+            {
+                    ChordDescriptor.minor,      //  0 + 1 = 1
+                    ChordDescriptor.diminished, //  1 + 1 = 2
+                    ChordDescriptor.major,      //  2 + 1 = 3
+                    ChordDescriptor.minor,      //  3 + 1 = 4
+                    ChordDescriptor.minor,      //  4 + 1 = 5
+                    ChordDescriptor.major,      //  5 + 1 = 6
+                    ChordDescriptor.major,      //  6 + 1 = 7
+            };
+
+    public enum MinorDiatonic {
+        i,
+        ii,
+        III,
+        iv,
+        v,
+        VI,
+        VII;
+    }
+
+    /**
+     * Return the major diatonic chord descriptor for the given degree.
+     *
+     * @param degree the given degree
+     * @return the major diatonic chord descriptor
+     */
+    public static final ChordDescriptor getMinorDiatonicChordModifier(int degree) {
+        return minorDiatonicChordModifiers[Util.mod(degree, minorDiatonicChordModifiers.length)];
     }
 }

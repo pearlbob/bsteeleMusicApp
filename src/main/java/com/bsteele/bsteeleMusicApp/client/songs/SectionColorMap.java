@@ -11,7 +11,7 @@ import com.google.gwt.canvas.dom.client.CssColor;
  */
 public class SectionColorMap {
 
-    public static CssColor sectionColor(Section s) {
+    public static  final CssColor sectionColor(Section s) {
         switch (s) {
             case a:
                 return verseColor;

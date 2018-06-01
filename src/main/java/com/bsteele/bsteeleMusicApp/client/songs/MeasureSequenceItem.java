@@ -53,7 +53,7 @@ public class MeasureSequenceItem extends MeasureNode {
     }
 
 
-    public void setMeasureNodes(ArrayList<MeasureNode> measureNodes) {
+    public  final void setMeasureNodes(ArrayList<MeasureNode> measureNodes) {
         this.measureNodes = measureNodes;
         measures = null;
     }

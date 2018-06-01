@@ -38,11 +38,11 @@ public class MeasureComment extends MeasureNode {
     }
 
 
-    public String getComment() {
+    public  final String getComment() {
         return comment;
     }
 
-    public void setComment(String comment) {
+    public  final void setComment(String comment) {
         this.comment = comment;
     }
 

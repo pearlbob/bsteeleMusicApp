@@ -83,7 +83,7 @@ public enum Section {
      * @param s the string to parse
      * @return the length of the parse. Zero if no parse
      */
-    public static SectionVersion parse(String s) {
+    public static  final SectionVersion parse(String s) {
         if (s == null) {
             return null;
         }
@@ -115,7 +115,7 @@ public enum Section {
      * @param s the string to parse
      * @return the section versions found
      */
-    public static ArrayList<SectionVersion> matchAll(String s) {
+    public static  final ArrayList<SectionVersion> matchAll(String s) {
         ArrayList<SectionVersion> ret = new ArrayList<>();
 
         //  look for possible candidates
@@ -154,7 +154,7 @@ public enum Section {
      * Return the abbreviation for the section
      * @return
      */
-    public String getAbbreviation() {
+    public  final String getAbbreviation() {
         return originalAbbreviation;
     }
 

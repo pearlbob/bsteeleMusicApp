@@ -34,7 +34,7 @@ public class Chord {
                 s = s.substring(slashScaleChord.getParseLength());
             }
         }
-        if ( s.length() > 0 && s.charAt(0) == '.') {
+        if (s.length() > 0 && s.charAt(0) == '.') {
             beats = 1;
             while (s.length() > 0 && s.charAt(0) == '.') {
                 s = s.substring(1);
@@ -81,7 +81,7 @@ public class Chord {
      *
      * @return the beat count
      */
-    public int getBeats() {
+    public final int getBeats() {
         return beats;
     }
 
@@ -90,7 +90,7 @@ public class Chord {
      *
      * @param beats the beat count
      */
-    public void setBeats(int beats) {
+    public final void setBeats(int beats) {
         this.beats = beats;
     }
 
@@ -100,7 +100,7 @@ public class Chord {
      *
      * @return
      */
-    public ScaleChord getSlashScaleChord() {
+    public final ScaleChord getSlashScaleChord() {
         return slashScaleChord;
     }
 
@@ -110,7 +110,7 @@ public class Chord {
      *
      * @param slashScaleChord
      */
-    void setSlashScaleChord(ScaleChord slashScaleChord) {
+    final void setSlashScaleChord(ScaleChord slashScaleChord) {
         this.slashScaleChord = slashScaleChord;
     }
 
@@ -119,7 +119,7 @@ public class Chord {
      *
      * @return the timing adjustment
      */
-    public AnticipationOrDelay getAnticipationOrDelay() {
+    public final AnticipationOrDelay getAnticipationOrDelay() {
         return anticipationOrDelay;
     }
 
@@ -128,12 +128,12 @@ public class Chord {
      *
      * @param anticipationOrDelay the timing adjustment
      */
-    public void setAnticipationOrDelay(AnticipationOrDelay anticipationOrDelay) {
+    public final void setAnticipationOrDelay(AnticipationOrDelay anticipationOrDelay) {
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
 
-    public int getParseLength() {
+    public final int getParseLength() {
         return parseLength;
     }
 
@@ -163,7 +163,7 @@ public class Chord {
         String ret = scaleChord.toString()
                 + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
-        if ( beats < beatsPerBar ) {
+        if (beats < beatsPerBar) {
             int b = 1;
             while (b++ < beats && b < 8)
                 ret += ".";
@@ -188,11 +188,11 @@ public class Chord {
                 ;
     }
 
-    public int getBeatsPerBar() {
+    public final int getBeatsPerBar() {
         return beatsPerBar;
     }
 
-    public void setBeatsPerBar(int beatsPerBar) {
+    public final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
     }
 

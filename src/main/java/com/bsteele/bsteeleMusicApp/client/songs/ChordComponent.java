@@ -71,16 +71,16 @@ public enum ChordComponent {
         return chordComponentByHalfSteps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
 
-    public int getHalfSteps() {
+    public final  int getHalfSteps() {
         return halfSteps;
     }
 
-    public String getShortName() {
+    public final String getShortName() {
         return shortName;
     }
 
 
-    public int getScaleNumber() {
+    public final int getScaleNumber() {
         return scaleNumber;
     }
 

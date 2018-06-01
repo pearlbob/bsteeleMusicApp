@@ -20,12 +20,12 @@ public class MeasureRepeat extends MeasureSequenceItem {
     }
 
 
-    public int getRepeats() {
+    public  final int getRepeats() {
         return repeats;
     }
 
 
-    public void setRepeats(int repeats) {
+    public  final void setRepeats(int repeats) {
         this.repeats = repeats;
     }
 

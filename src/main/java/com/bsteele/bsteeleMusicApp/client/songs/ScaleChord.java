@@ -35,7 +35,7 @@ public class ScaleChord implements Comparable<ScaleChord> {
         this(scaleNote, ChordDescriptor.major);
     }
 
-    public static ScaleChord parse(String s) {
+    public static final ScaleChord parse(String s) {
         if (s == null || s.length() < 1)
             return null;
 
@@ -52,30 +52,30 @@ public class ScaleChord implements Comparable<ScaleChord> {
         return new ScaleChord(retScaleNote, retChordDescriptor, parseLength);
     }
 
-    public ScaleNote getScaleNote() {
+    public final ScaleNote getScaleNote() {
         return scaleNote;
     }
 
-    public ScaleChord getAlias() {
+    public final ScaleChord getAlias() {
         ScaleNote alias = scaleNote.getAlias();
         if (alias == null)
             return null;
         return new ScaleChord(alias, chordDescriptor);
     }
 
-    public ChordDescriptor getChordDescriptor() {
+    public final ChordDescriptor getChordDescriptor() {
         return chordDescriptor;
     }
 
-    public TreeSet<ChordComponent> getChordComponents() {
+    public final TreeSet<ChordComponent> getChordComponents() {
         return chordDescriptor.getChordComponents();
     }
 
-    public boolean contains(ChordComponent chordComponent){
+    public final boolean contains(ChordComponent chordComponent) {
         return chordDescriptor.getChordComponents().contains(chordComponent);
     }
 
-    public int getParseLength() {
+    public final int getParseLength() {
         return parseLength;
     }
 

@@ -15,7 +15,7 @@ public class SongId implements Comparable<SongId> {
         this.songId = songId;
     }
 
-    public String getSongId() {
+    public  final String getSongId() {
         return songId;
     }
 

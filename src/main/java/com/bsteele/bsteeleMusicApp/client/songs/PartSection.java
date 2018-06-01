@@ -13,27 +13,27 @@ public class PartSection {
         loop;
     }
 
-    public Section getSection() {
+    public final Section getSection() {
         return section;
     }
 
-    public void setSection(Section section) {
+    public final void setSection(Section section) {
         this.section = section;
     }
 
-    public ArrayList<Bar> getBars() {
+    public final ArrayList<Bar> getBars() {
         return bars;
     }
 
-    public void setBars(ArrayList<Bar> bars) {
+    public final void setBars(ArrayList<Bar> bars) {
         this.bars = bars;
     }
 
-    public PartSectionEarlyEnding getPartSectionEarlyEnding() {
+    public final PartSectionEarlyEnding getPartSectionEarlyEnding() {
         return partSectionEarlyEnding;
     }
 
-    public void setPartSectionEarlyEnding(PartSectionEarlyEnding partSectionEarlyEnding) {
+    public final void setPartSectionEarlyEnding(PartSectionEarlyEnding partSectionEarlyEnding) {
         this.partSectionEarlyEnding = partSectionEarlyEnding;
     }
 

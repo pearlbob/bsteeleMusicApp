@@ -36,7 +36,7 @@ public class Metadata implements Comparable<Metadata> {
      *
      * @return metadata name
      */
-    public String getName() {
+    public  final String getName() {
         return name;
     }
 
@@ -45,11 +45,11 @@ public class Metadata implements Comparable<Metadata> {
      *
      * @return metadata value
      */
-    public String getValue() {
+    public  final String getValue() {
         return value;
     }
 
-    public MetadataType getType() {
+    public  final MetadataType getType() {
         return type;
     }
 

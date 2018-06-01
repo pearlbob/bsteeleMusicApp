@@ -12,27 +12,27 @@ public class Part {
     private String name;
     private Set<PartSection> sections;
 
-    public PartType getPartType() {
+    public final PartType getPartType() {
         return partType;
     }
 
-    public void setPartType(PartType partType) {
+    public final void setPartType(PartType partType) {
         this.partType = partType;
     }
 
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public final void setName(String name) {
         this.name = name;
     }
 
-    public Set<PartSection> getSections() {
+    public final Set<PartSection> getSections() {
         return sections;
     }
 
-    public void setSections(Set<PartSection> sections) {
+    public final void setSections(Set<PartSection> sections) {
         this.sections = sections;
     }
 }

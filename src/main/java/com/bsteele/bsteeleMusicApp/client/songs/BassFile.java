@@ -41,10 +41,10 @@ public class BassFile {
         boolean first = true;
         Key key = song.getKey();
         for (int keyCount = 0; keyCount < MusicConstant.halfStepsPerOctave; keyCount++) {
-            for (int tonicNumber = 0; tonicNumber < MusicConstant.Diatonic.values().length; tonicNumber++) {
+            for (int tonicNumber = 0; tonicNumber < MusicConstant.MajorDiatonic.values().length; tonicNumber++) {
                 sb.append("\n");
 
-                ScaleChord scaleChord = key.getDiatonicByDegree(tonicNumber);
+                ScaleChord scaleChord = key.getMajorDiatonicByDegree(tonicNumber);
 
                 ArrayList<Chord> chords = new ArrayList<>();
                 chords.add(new Chord(scaleChord));
@@ -76,7 +76,7 @@ public class BassFile {
 
                 //  output
                 double beatCount = 0;
-                String lyrics = key.toString() + " " + MusicConstant.Diatonic.values()[tonicNumber].name();
+                String lyrics = key.toString() + " " + MusicConstant.MajorDiatonic.values()[tonicNumber].name();
                 for (Note note : bar.getNotes()) {
                     if (first)
                         first = false;

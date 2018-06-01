@@ -687,20 +687,20 @@ public class SongEditView
     }
 
     private void titleChordButtons() {
-        ScaleChord keyScaleChord = key.getDiatonicByDegree(1 - 1);
+        ScaleChord keyScaleChord = key.getMajorDiatonicByDegree(1 - 1);
         chordsI.setHTML(keyScaleChord.toString());
-        ScaleChord iv = key.getDiatonicByDegree(4 - 1);
+        ScaleChord iv = key.getMajorDiatonicByDegree(4 - 1);
         chordsIV.setHTML(iv.toString());
         chordsIV7.setHTML(new ScaleChord(iv.getScaleNote(), ChordDescriptor.dominant7).toString());
-        ScaleChord v7 = key.getDiatonicByDegree(5 - 1);
+        ScaleChord v7 = key.getMajorDiatonicByDegree(5 - 1);
         chordsV7.setHTML(v7.toString());
         ScaleChord v = new ScaleChord(v7.getScaleNote(), ChordDescriptor.major);
         chordsV.setHTML(v.toString());
 
-        chordsii.setHTML(key.getDiatonicByDegree(2 - 1).toString());
-        chordsiii.setHTML(key.getDiatonicByDegree(3 - 1).toString());
-        chordsvi.setHTML(key.getDiatonicByDegree(6 - 1).toString());
-        chordsvii.setHTML(key.getDiatonicByDegree(7 - 1).toString());
+        chordsii.setHTML(key.getMajorDiatonicByDegree(2 - 1).toString());
+        chordsiii.setHTML(key.getMajorDiatonicByDegree(3 - 1).toString());
+        chordsvi.setHTML(key.getMajorDiatonicByDegree(6 - 1).toString());
+        chordsvii.setHTML(key.getMajorDiatonicByDegree(7 - 1).toString());
 
         //  list all the scale notes with the key scale notes first
         scaleNoteSelection.clear();     //  fixme: document garbage collection?

@@ -119,7 +119,7 @@ public class Measure extends MeasureNode {
      *
      * @return the beat count for the measure
      */
-    public int getBeatCount() {
+    public  final int getBeatCount() {
         return beatCount;
     }
 
@@ -128,7 +128,7 @@ public class Measure extends MeasureNode {
      *
      * @param beatCount
      */
-    public void setBeatCount(int beatCount) {
+    public  final void setBeatCount(int beatCount) {
         this.beatCount = beatCount;
     }
 
@@ -137,7 +137,7 @@ public class Measure extends MeasureNode {
      *
      * @return the chords
      */
-    public ArrayList<Chord> getChords() {
+    public  final ArrayList<Chord> getChords() {
         return chords;
     }
 
@@ -146,11 +146,11 @@ public class Measure extends MeasureNode {
      *
      * @param chords the chords
      */
-    public void setChords(ArrayList<Chord> chords) {
+    public  final void setChords(ArrayList<Chord> chords) {
         this.chords = chords;
     }
 
-    public Chord getChordAtBeat(double beat) {
+    public  final Chord getChordAtBeat(double beat) {
         if (chords == null || chords.isEmpty())
             return null;
 
@@ -177,11 +177,11 @@ public class Measure extends MeasureNode {
         return chordsToString();
     }
 
-    public boolean isRepeat() {
+    public  final boolean isRepeat() {
         return isRepeat;
     }
 
-    private String chordsToString() {
+    private  final String chordsToString() {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)

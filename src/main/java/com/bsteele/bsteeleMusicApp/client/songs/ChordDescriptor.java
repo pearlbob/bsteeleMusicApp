@@ -58,7 +58,7 @@ public enum ChordDescriptor {
      * @param s the string to parse
      * @return the matching chord descriptor
      */
-    public static ChordDescriptor parse(String s) {
+    public static final ChordDescriptor parse(String s) {
         if (s != null && s.length() > 0) {
             //  special for major7 thanks to John Coltrane
             if (s.startsWith(MusicConstant.greekCapitalDelta))
@@ -73,16 +73,16 @@ public enum ChordDescriptor {
         return ChordDescriptor.major; //  chord without modifier short name
     }
 
-    public static ChordDescriptor[] getOtherChordDescriptorsOrdered() {
+    public static final ChordDescriptor[] getOtherChordDescriptorsOrdered() {
         return otherChordDescriptorsOrdered;
     }
 
-    public static ChordDescriptor[] getPrimaryChordDescriptorsOrdered() {
+    public static final ChordDescriptor[] getPrimaryChordDescriptorsOrdered() {
         return primaryChordDescriptorsOrdered;
     }
 
 
-    public static ChordDescriptor[] getAllChordDescriptorsOrdered() {
+    public static final ChordDescriptor[] getAllChordDescriptorsOrdered() {
         return allChordDescriptorsOrdered;
     }
 
@@ -92,11 +92,11 @@ public enum ChordDescriptor {
      *
      * @return short, human readable name for the chord description.
      */
-    public String getShortName() {
+    public final String getShortName() {
         return shortName;
     }
 
-    public int getParseLength(){
+    public final int getParseLength() {
         return shortName.length();
     }
 
@@ -107,12 +107,12 @@ public enum ChordDescriptor {
      */
     @Override
     public String toString() {
-        if ( shortName.length() == 0)
+        if (shortName.length() == 0)
             return name();
         return shortName;
     }
 
-    public String chordComponentsToString() {
+    public final String chordComponentsToString() {
         StringBuilder sb = new StringBuilder();
 
         boolean first = true;
@@ -126,20 +126,20 @@ public enum ChordDescriptor {
         return sb.toString();
     }
 
-    public TreeSet<ChordComponent> getChordComponents() {
+    public final TreeSet<ChordComponent> getChordComponents() {
         return chordComponents;
     }
 
 
     private String shortName;
     private final TreeSet<ChordComponent> chordComponents;
-    private static final ChordDescriptor[] primaryChordDescriptorsOrdered={
+    private static final ChordDescriptor[] primaryChordDescriptorsOrdered = {
             //  most common
             major,
             minor,
             dominant7,
     };
-    private static final ChordDescriptor[] otherChordDescriptorsOrdered ={
+    private static final ChordDescriptor[] otherChordDescriptorsOrdered = {
             //  less pop by shortname
             add9,
             augmented,
@@ -173,14 +173,14 @@ public enum ChordDescriptor {
 
     static {
         //  compute the ordered list of all chord descriptors
-        ArrayList<ChordDescriptor>  list = new ArrayList<>();
-        for (ChordDescriptor cd: primaryChordDescriptorsOrdered ) {
+        ArrayList<ChordDescriptor> list = new ArrayList<>();
+        for (ChordDescriptor cd : primaryChordDescriptorsOrdered) {
             list.add(cd);
         }
-        for (ChordDescriptor cd: otherChordDescriptorsOrdered ) {
+        for (ChordDescriptor cd : otherChordDescriptorsOrdered) {
             list.add(cd);
         }
-        allChordDescriptorsOrdered =  list.toArray(new ChordDescriptor[0]);
+        allChordDescriptorsOrdered = list.toArray(new ChordDescriptor[0]);
     }
 
 }

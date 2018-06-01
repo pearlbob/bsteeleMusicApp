@@ -12,7 +12,7 @@ public class ClientFileIO {
      * @param filename
      * @param data
      */
-    public static native void saveDataAs(String filename, String data) /*-{
+    public static final native void saveDataAs(String filename, String data) /*-{
         var data = new Blob([data], {type: 'text/plain'});
         // If we are replacing a previously generated file we need to
         // manually revoke the object URL to avoid memory leaks.

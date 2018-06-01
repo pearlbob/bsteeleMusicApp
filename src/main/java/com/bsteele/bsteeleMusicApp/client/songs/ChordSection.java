@@ -15,7 +15,7 @@ public class ChordSection extends MeasureSequenceItem {
         super(sectionVersion, measureNodes);
     }
 
-    public static ChordSection parse(String s, int beatsPerBar) {
+    public final static ChordSection parse(String s, int beatsPerBar) {
         if (s == null || s.length() <= 0)
             return null;
 
@@ -132,7 +132,7 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @param bpm the defaultBpm to set
      */
-    public void setBeatsPerMinute(int bpm) {
+    public  final void setBeatsPerMinute(int bpm) {
         this.bpm = bpm;
     }
 
@@ -142,7 +142,7 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @return the sectionVersion BPM or null
      */
-    public Integer getBeatsPerMinute() {
+    public  final Integer getBeatsPerMinute() {
         return bpm;
     }
 
@@ -151,7 +151,7 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @param beatsPerBar the beats per bar to set
      */
-    private void setBeatsPerBar(int beatsPerBar) {
+    private  final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
     }
 
@@ -160,7 +160,7 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @return the number of beats per bar
      */
-    public Integer getBeatsPerBar() {
+    public  final Integer getBeatsPerBar() {
         return beatsPerBar;
     }
 

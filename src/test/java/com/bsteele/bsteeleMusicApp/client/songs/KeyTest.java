@@ -41,7 +41,7 @@ public class KeyTest extends GWTTestCase {
 
             System.out.print("\tdiatonics: ");
             for (int j = 0; j < 7; j++) {
-                ScaleChord sc = key.getDiatonicByDegree(j);
+                ScaleChord sc = key.getMajorDiatonicByDegree(j);
                 String s = sc.toString();
                 System.out.print(s);
                 int len = s.length();
@@ -163,7 +163,7 @@ public class KeyTest extends GWTTestCase {
     private String diatonicByDegree(Key key) {
         StringBuilder sb = new StringBuilder();
         for (int j = 0; j < 7; j++) {
-            ScaleChord sc = key.getDiatonicByDegree(j);
+            ScaleChord sc = key.getMajorDiatonicByDegree(j);
             String s = sc.toString();
             sb.append(s);
             int i = s.length();
@@ -180,7 +180,7 @@ public class KeyTest extends GWTTestCase {
     public void testIsDiatonic() {
         for (Key key : Key.values()) {
             for (int j = 0; j < MusicConstant.notesPerScale; j++) {
-                ScaleChord sc = key.getDiatonicByDegree(j);
+                ScaleChord sc = key.getMajorDiatonicByDegree(j);
                 assertTrue(key.isDiatonic(sc));
                 // fixme: add more tests
             }

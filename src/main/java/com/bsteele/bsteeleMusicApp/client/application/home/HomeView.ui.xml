@@ -93,7 +93,7 @@
                                     <g:Button ui:field="showAllChords">Show all chords</g:Button>
                                     <g:HTML ui:field="allChords"/>
                                     <br/>
-                                    <g:Button ui:field="showAllTonics">Show all tonics</g:Button>
+                                    <g:Button ui:field="showAllTonics">Show all Diatonic chords</g:Button>
                                     <g:HTML ui:field="allTonics"/>
                                     <br/>
                                     <g:Button ui:field="showStatus">Show Status</g:Button>
