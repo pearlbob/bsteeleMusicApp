@@ -38,6 +38,7 @@ public enum ChordDescriptor {
     minor11("m11", "R m3 5 m7 11"),
     minor13("m13", "R m3 5 m7 13"),
     major7("maj7", "R 3 5 7"),
+    suspendedFourth("4", "R 4 5"),      //  alias for suspended 4
     power5("5", "R 5"),  //  3rd omitted typically to avoid distortions
     minor7("m7", "R m3 5 m7"),
     dominant7("7", "R 3 5 m7"),
@@ -61,8 +62,11 @@ public enum ChordDescriptor {
     public static final ChordDescriptor parse(String s) {
         if (s != null && s.length() > 0) {
             //  special for major7 thanks to John Coltrane
-            if (s.startsWith(MusicConstant.greekCapitalDelta))
+            if (s.charAt(0) == MusicConstant.greekCapitalDelta)
                 return ChordDescriptor.major7;
+
+            if (s.charAt(0) == MusicConstant.diminishedCircle)
+                return ChordDescriptor.diminished;
 
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 if (cd.getShortName().length() > 0 && s.startsWith(cd.getShortName())) {
@@ -160,6 +164,7 @@ public enum ChordDescriptor {
             suspended,
             suspended2,
             suspended4,
+            suspendedFourth,
             suspended7,
 
             //  numerically named chords

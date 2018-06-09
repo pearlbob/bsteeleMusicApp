@@ -2,6 +2,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -119,7 +120,7 @@ public class Measure extends MeasureNode {
      *
      * @return the beat count for the measure
      */
-    public  final int getBeatCount() {
+    public final int getBeatCount() {
         return beatCount;
     }
 
@@ -128,7 +129,7 @@ public class Measure extends MeasureNode {
      *
      * @param beatCount
      */
-    public  final void setBeatCount(int beatCount) {
+    public final void setBeatCount(int beatCount) {
         this.beatCount = beatCount;
     }
 
@@ -137,7 +138,7 @@ public class Measure extends MeasureNode {
      *
      * @return the chords
      */
-    public  final ArrayList<Chord> getChords() {
+    public final ArrayList<Chord> getChords() {
         return chords;
     }
 
@@ -146,21 +147,21 @@ public class Measure extends MeasureNode {
      *
      * @param chords the chords
      */
-    public  final void setChords(ArrayList<Chord> chords) {
+    public final void setChords(ArrayList<Chord> chords) {
         this.chords = chords;
     }
 
-    public  final Chord getChordAtBeat(double beat) {
+    public final Chord getChordAtBeat(double beat) {
         if (chords == null || chords.isEmpty())
             return null;
 
         double beatSum = 0;
-        for ( Chord chord: chords){
-             beatSum += chord.getBeats();
-             if ( beat <= beatSum)
-                 return chord;
+        for (Chord chord : chords) {
+            beatSum += chord.getBeats();
+            if (beat <= beatSum)
+                return chord;
         }
-        return chords.get(chords.size()-1);
+        return chords.get(chords.size() - 1);
     }
 
     @Override
@@ -177,11 +178,11 @@ public class Measure extends MeasureNode {
         return chordsToString();
     }
 
-    public  final boolean isRepeat() {
+    public final boolean isRepeat() {
         return isRepeat;
     }
 
-    private  final String chordsToString() {
+    private final String chordsToString() {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
@@ -189,6 +190,21 @@ public class Measure extends MeasureNode {
                 sb.append(chord.toString());
             }
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Measure measure = (Measure) o;
+        return beatCount == measure.beatCount &&
+                isRepeat == measure.isRepeat &&
+                Objects.equals(chords, measure.chords);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(beatCount, isRepeat, chords);
     }
 
     @Override

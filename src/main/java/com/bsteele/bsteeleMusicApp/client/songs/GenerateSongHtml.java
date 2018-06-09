@@ -172,7 +172,7 @@ public class GenerateSongHtml {
         for (Key key : Key.values()) {
             for ( MusicConstant.MajorDiatonic majorDiatonic : MusicConstant.MajorDiatonic.values()) {
 
-                ScaleChord builtScaleChord = key.getMajorScaleChord();
+                ScaleChord builtScaleChord = key.getMajorDiatonicByDegree(majorDiatonic.ordinal());
 
                 ArrayList<ScaleChord> scaleChords = new ArrayList<>();
                 scaleChords.add(builtScaleChord);

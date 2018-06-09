@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import java.util.Objects;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
@@ -185,7 +187,13 @@ public class Chord {
         return scaleChord.equals(oc.scaleChord)
                 && anticipationOrDelay.equals(oc.anticipationOrDelay)
                 && beats == oc.beats
+                && beatsPerBar == oc.beatsPerBar
                 ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay);
     }
 
     public final int getBeatsPerBar() {

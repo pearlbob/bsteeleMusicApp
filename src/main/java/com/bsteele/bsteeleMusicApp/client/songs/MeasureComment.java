@@ -2,6 +2,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -22,7 +23,7 @@ public class MeasureComment extends MeasureNode {
         int n = -1;
         if (s.charAt(0) == '(') {
             n = s.indexOf(')'); //  match a parenthesis
-            if ( n > 0 )
+            if (n > 0)
                 n++;        //  include the right paren
         }
         if (n < 0)
@@ -38,17 +39,30 @@ public class MeasureComment extends MeasureNode {
     }
 
 
-    public  final String getComment() {
+    public final String getComment() {
         return comment;
     }
 
-    public  final void setComment(String comment) {
+    public final void setComment(String comment) {
         this.comment = comment;
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MeasureComment that = (MeasureComment) o;
+        return Objects.equals(comment, that.comment);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(comment);
+    }
+
+    @Override
     public String toString() {
-        return "/* "+comment+"*/ ";
+        return "( " + comment + ") ";
     }
 
     @Override

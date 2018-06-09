@@ -46,11 +46,17 @@ public abstract class MeasureNode {
         return measures;
     }
 
+    public boolean isSingleItem() { return true; }
+
     public abstract String toHtml();
+
+    public abstract boolean equals(Object o);
+
+    public abstract int hashCode();
 
     private int sequenceNumber;
     private SectionVersion sectionVersion;
     protected transient int parseLength;
     protected transient ArrayList<Measure> measures;
-    protected static final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
+       protected static final int measuresPerLine = 4;
 }

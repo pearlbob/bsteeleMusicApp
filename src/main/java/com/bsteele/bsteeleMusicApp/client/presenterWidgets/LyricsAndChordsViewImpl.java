@@ -207,13 +207,6 @@ public class LyricsAndChordsViewImpl
         song = songUpdate.getSong();
 
         updateCount++;
-//        {       // fixme: testing only
-//            //String s = song.getChordsAsString();
-//            //GWT.log("s= <" + s + ">");
-//
-//            String chordString = song.measureNodesToHtml();
-//            GWT.log(song.getTitle() + ": " + chordString);
-//        }
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());

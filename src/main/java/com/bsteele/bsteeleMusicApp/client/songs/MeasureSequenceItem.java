@@ -1,9 +1,11 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -53,9 +55,27 @@ public class MeasureSequenceItem extends MeasureNode {
     }
 
 
-    public  final void setMeasureNodes(ArrayList<MeasureNode> measureNodes) {
+    public final void setMeasureNodes(ArrayList<MeasureNode> measureNodes) {
         this.measureNodes = measureNodes;
         measures = null;
+    }
+
+    @Override
+    public boolean isSingleItem() {
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || !(o instanceof MeasureSequenceItem)) return false;
+        MeasureSequenceItem that = (MeasureSequenceItem) o;
+        return Objects.equals(measureNodes, that.measureNodes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(measureNodes);
     }
 
     @Override
@@ -75,15 +95,45 @@ public class MeasureSequenceItem extends MeasureNode {
     public String toHtml() {
         StringBuilder sb = new StringBuilder();
 
-        String id = "lyAndChChordTable";
-        sb.append("<table id=\"" + id + "\" class=\"" + style + "chordTable\">\n");
-        if (measureNodes != null)
-            for (MeasureNode measureNode : measureNodes) {
-                sb.append("<tr>");
-                sb.append(measureNode.toHtml());
-                sb.append("</tr>\n");
+        if (measureNodes != null && !measureNodes.isEmpty()) {
+            MeasureNode lastMeasureNode = null;
+            int measuresOnThisLine = 0;
+            for (int i = 0; i < measureNodes.size(); i++) {
+                MeasureNode measureNode = measureNodes.get(i);
+
+                if (measureNode.isSingleItem()) {
+                    if (i > 0 && measuresOnThisLine == 0) {
+                        sb.append("<tr><td></td>");
+                        lastMeasureNode = null;
+                    }
+                    sb.append("<td>");
+
+                    if (measureNode.equals(lastMeasureNode))
+                        sb.append("-");
+                    else
+                        sb.append(measureNode.toHtml());
+                    lastMeasureNode = measureNode;
+                    sb.append("</td>");
+
+                    if (measuresOnThisLine % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
+                        sb.append("</tr>\n");
+                    }
+                    measuresOnThisLine = Util.mod(measuresOnThisLine + 1, measuresPerLine);
+                } else {
+                    if (measuresOnThisLine > 0) {
+                        while (measuresOnThisLine % measuresPerLine < measuresPerLine - 1) {
+                            sb.append("<td></td>");
+                            measuresOnThisLine++;
+                        }
+                        sb.append("</tr><tr><td></td>\n");
+                    } else if (i > 0)
+                        sb.append("<tr><td></td>\n");
+                    sb.append(measureNode.toHtml());
+                    measuresOnThisLine = 0;
+                }
             }
-        sb.append("</table>\n");
+        }
+
         return sb.toString();
     }
 

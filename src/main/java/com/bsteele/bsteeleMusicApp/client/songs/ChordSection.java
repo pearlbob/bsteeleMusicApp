@@ -5,6 +5,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -52,7 +53,7 @@ public class ChordSection extends MeasureSequenceItem {
             if (ms.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
+                    measureSequenceItems.addAll(measures);
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -76,7 +77,7 @@ public class ChordSection extends MeasureSequenceItem {
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
+                        measureSequenceItems.addAll(measures);
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
@@ -119,7 +120,7 @@ public class ChordSection extends MeasureSequenceItem {
         for (MeasureNode mn : lineMeasures)
             measures.add(mn);
         if (!measures.isEmpty()) {
-            measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
+            measureSequenceItems.addAll(measures);
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
@@ -127,12 +128,24 @@ public class ChordSection extends MeasureSequenceItem {
         return ret;
     }
 
+    @Override
+    public String toHtml() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<tr class=\"" + getSectionVersion().toString() + "\">");
+        sb.append("<td>" + getSectionVersion().toString() + "</td>");
+        sb.append(super.toHtml());
+        sb.append("</tr>\n");
+
+        return sb.toString();
+    }
+
     /**
      * Set the sectionVersion beats per minute.
      *
      * @param bpm the defaultBpm to set
      */
-    public  final void setBeatsPerMinute(int bpm) {
+    public final void setBeatsPerMinute(int bpm) {
         this.bpm = bpm;
     }
 
@@ -142,7 +155,7 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @return the sectionVersion BPM or null
      */
-    public  final Integer getBeatsPerMinute() {
+    public final Integer getBeatsPerMinute() {
         return bpm;
     }
 
@@ -151,7 +164,7 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @param beatsPerBar the beats per bar to set
      */
-    private  final void setBeatsPerBar(int beatsPerBar) {
+    private final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
     }
 
@@ -160,8 +173,23 @@ public class ChordSection extends MeasureSequenceItem {
      *
      * @return the number of beats per bar
      */
-    public  final Integer getBeatsPerBar() {
+    public final Integer getBeatsPerBar() {
         return beatsPerBar;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ChordSection that = (ChordSection) o;
+        return Objects.equals(bpm, that.bpm) &&
+                Objects.equals(beatsPerBar, that.beatsPerBar);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), bpm, beatsPerBar);
     }
 
     @Override

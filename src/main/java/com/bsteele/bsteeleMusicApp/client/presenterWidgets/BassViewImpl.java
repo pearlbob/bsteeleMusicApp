@@ -13,6 +13,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
@@ -359,7 +360,10 @@ public class BassViewImpl
             sb.append("</tr>\n");
             sectionIndex++;
         }
-        sb.append("</table>");
+        sb.append("</table>\n");
+
+        sb.append( song.measureNodesToHtml());
+
         bass.add(new HTMLPanel(sb.toString()));
     }
 

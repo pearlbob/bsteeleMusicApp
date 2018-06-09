@@ -14,12 +14,16 @@ public class MusicConstant {
     public static final char flatChar = '\u266D';
     public static final char naturalChar = '\u266E';
     public static final char sharpChar = '\u266F';
-    public static final String greekCapitalDelta = "\u0394";
+    public static final char greekCapitalDelta = '\u0394';
+    public static final char whiteBullet = '\u25e6';
+    public static final char diminishedCircle = whiteBullet;
 
     public static final String flatHtml = "&#9837;";
     public static final String naturalHtml = "&#9838;";
     public static final String sharpHtml = "&#9839;";
     public static final String greekCapitalDeltaHtml = "&#916;";
+    public static final String whiteBulletHtml = "&#25e6;";
+    public static final String diminishedCircleHtml = whiteBulletHtml;
 
     public static final int halfStepsPerOctave = 12;
     public static final int notesPerScale = 7;

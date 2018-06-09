@@ -652,9 +652,13 @@ public class Song implements Comparable<Song> {
     public String measureNodesToHtml() {
         StringBuilder sb = new StringBuilder();
 
+        final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
+        String id = "lyAndChChordTable";
+        sb.append("<table id=\"" + id + "\" class=\"" + style + "chordTable\">\n");
         for (MeasureNode measureNode : measureNodes) {
             sb.append(measureNode.toHtml()).append(" ");
         }
+        sb.append("</table>\n");
 
         return sb.toString();
     }
