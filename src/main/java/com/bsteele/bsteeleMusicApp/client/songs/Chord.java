@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
@@ -8,7 +9,8 @@ import java.util.Objects;
  */
 public class Chord {
 
-    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar, ScaleChord slashScaleChord, AnticipationOrDelay anticipationOrDelay) {
+    public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
+                 ScaleChord slashScaleChord, AnticipationOrDelay anticipationOrDelay) {
         this.scaleChord = scaleChord;
         this.beats = beatsPerBar;
         this.beatsPerBar = beatsPerBar;
@@ -58,6 +60,11 @@ public class Chord {
 
     public Chord(ScaleChord scaleChord, int beats, int beatsPerBar) {
         this(scaleChord, beats, beatsPerBar, null, AnticipationOrDelay.none);
+    }
+
+    public Chord transpose(Key key, int halfsteps) {
+        return new Chord(scaleChord.transpose(key, halfsteps), beats, beatsPerBar,
+                slashScaleChord == null ? null : slashScaleChord.transpose(key, halfsteps), anticipationOrDelay);
     }
 
     /**

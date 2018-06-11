@@ -42,6 +42,16 @@ public class ChordTest extends TestCase {
         // }
     }
 
+    @Test
+    public void testChordParse() {
+        Chord chord = new Chord(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished));
+        chord.setSlashScaleChord(new ScaleChord(ScaleNote.G));
+        assertEquals(chord, Chord.parse("Ddim/G", 4));
+        chord = new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished));
+        chord.setSlashScaleChord(new ScaleChord(ScaleNote.G));
+        assertEquals(chord, Chord.parse("Adim/G", 4));
+    }
+
 //    @Override
 //    public String getModuleName() {
 //        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";

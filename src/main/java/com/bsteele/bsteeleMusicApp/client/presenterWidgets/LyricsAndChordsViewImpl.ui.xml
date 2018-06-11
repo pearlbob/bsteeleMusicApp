@@ -10,7 +10,7 @@
             <g:HTMLPanel>
                 <g:Button ui:field="playStopButton">Play</g:Button>
                 Key:
-                <span ui:field="keyLabel"/>
+                <span ui:field="keyLabel" />
                 <g:Button ui:field="originalKeyButton">Original</g:Button>
                 <g:Button ui:field="keyUpButton">&#x25b2;</g:Button>
                 <g:Button ui:field="keyDownButton">&#x25bc;</g:Button>

@@ -48,6 +48,10 @@ public enum Key {
         return keysByHalfStep[Util.mod(halfStep + 1, keysByHalfStep.length)];
     }
 
+    public final Key nextKeyByHalfStep(int step) {
+        return keysByHalfStep[Util.mod(halfStep + step, keysByHalfStep.length)];
+    }
+
     public final Key nextKeyByFifth() {
         return keysByHalfStep[Util.mod(halfStep + 7, keysByHalfStep.length)];
     }

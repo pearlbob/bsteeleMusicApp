@@ -140,6 +140,9 @@ public class PlayerViewImpl
         nextSongButton.addClickHandler((ClickEvent event) -> {
             eventBus.fireEvent(new NextSongEvent());
         });
+
+        keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+        keyLabel.getStyle().setWidth(3, Style.Unit.EM);
     }
 
     @Override

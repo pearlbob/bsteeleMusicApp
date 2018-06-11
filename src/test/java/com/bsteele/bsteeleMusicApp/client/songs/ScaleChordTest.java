@@ -98,6 +98,8 @@ public class ScaleChordTest extends GWTTestCase
         assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.parse("Fm"));
         assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#m"));
         assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
+        assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.parse("Ddim/G"));
+        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.parse("Adim/G"));
     }
 
     @Override

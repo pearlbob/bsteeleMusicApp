@@ -99,24 +99,24 @@ public enum ScaleNote {
      * A utility to map the sharp scale notes to their half step offset.
      * Should use the scale notes from the key under normal situations.
      *
-     * @param halfStep the number of half steps from A
+     * @param step the number of half steps from A
      * @return the sharp scale note
      */
     @Deprecated
-    static final ScaleNote getSharpByHalfStep(int halfStep) {
-        return sharps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
+    static final ScaleNote getSharpByHalfStep(int step) {
+        return sharps[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
 
     /**
      * A utility to map the flat scale notes to their half step offset.
      * Should use the scale notes from the key under normal situations.
      *
-     * @param halfStep the number of half steps from A
+     * @param step the number of half steps from A
      * @return the sharp scale note
      */
     @Deprecated
-    static final ScaleNote getFlatByHalfStep(int halfStep) {
-        return flats[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
+    static final ScaleNote getFlatByHalfStep(int step) {
+        return flats[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
 
     /**
@@ -154,6 +154,10 @@ public enum ScaleNote {
         }
 
         return ScaleNote.valueOf(sb.toString());
+    }
+
+    public final ScaleNote transpose( Key key, int step ){
+        return key.getScaleNoteByHalfStep( halfStep + step);
     }
 
     /**

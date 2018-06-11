@@ -153,7 +153,8 @@ public class LyricsAndChordsViewImpl
         chordsFocus.addDomHandler(this, KeyPressEvent.getType());
         lyricsFocus.addDomHandler(this, KeyPressEvent.getType());
 
-
+        keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+        keyLabel.getStyle().setWidth(3, Style.Unit.EM);
     }
 
     @Override
@@ -324,7 +325,7 @@ public class LyricsAndChordsViewImpl
 
     private void transpose(int tran) {
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
-        keyLabel.setInnerHTML(currentKey.toString());
+        keyLabel.setInnerHTML(currentKey.toString()+ " "+currentKey.sharpsFlatsToString());
 
         if (song == null)
             return;

@@ -13,6 +13,11 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: Bodhi question:  arrangement presentation
+todo: Bodhi question:  arrangement change of key with notes... after 12 offsets?
+todo: Bodhi question:  arrangement after song change
+
+fixme: Ddim/G transposes to Cdim/G and Adim/G as well.
 fixme: in play, beat display out of sync with measure update
 fixme: section progress indicator
 fixme: training options

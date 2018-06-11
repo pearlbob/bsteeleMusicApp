@@ -915,7 +915,7 @@ public class Song implements Comparable<Song> {
                             .append(prefix)
                             .append(genChordId(isSingle ? version : displaySectionMap.get(version), r, col))
                             .append("\" >")
-                            .append(transposeMeasure(content, trans)).append("</td>\n\t");
+                            .append(transposeMeasure(key, content, trans)).append("</td>\n\t");
                 }
                 chordText.append(rowEnd);
             }
@@ -952,6 +952,8 @@ public class Song implements Comparable<Song> {
             return generateHtmlChordTable(prefix);
         }
 
+        Key newKey = key.nextKeyByHalfStep(halfSteps);
+
         //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
         HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionMap);
 
@@ -963,7 +965,7 @@ public class Song implements Comparable<Song> {
                 ArrayList<String> row = grid.getRow(r);
                 int colLimit = row.size();
                 for (int col = 0; col < colLimit; col++) {
-                    grid.set(col, r, transposeMeasure(row.get(col), halfSteps));
+                    grid.set(col, r, transposeMeasure(newKey, row.get(col), halfSteps));
                 }
             }
             //GWT.log(transChords.toString());
@@ -973,12 +975,12 @@ public class Song implements Comparable<Song> {
         return generateHtmlChordTableFromMap(tranMap, prefix);
     }
 
-    private String transposeMeasure(String m, int halfSteps) {
+    private String transposeMeasure(Key newKey, String m, int halfSteps) {
         if (halfSteps == 0)
             return m;
 
         int chordNumber = 0;
-        String chordLetter;
+        // String chordLetter;
         StringBuilder sb = new StringBuilder();
 
         int state = 0;
@@ -988,25 +990,25 @@ public class Song implements Comparable<Song> {
             switch (state) {
                 case 1:    //  chord symbol modifier, one character only
                     state = 0;
-                    if (c == 'b' || c == js_flat) {
-                        chordNumber -= 1;
-                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                        sb.append(chordLetter);
-                        break;
-                    }
-                    if (c == '#' || c == js_sharp) {
-                        chordNumber += 1;
-                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                        sb.append(chordLetter);
-                        break;
-                    }
-                    if (c == js_natural) {
-                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                        sb.append(chordLetter);
-                        break;
-                    }
-                    chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-                    sb.append(chordLetter);
+//                    if (c == 'b' || c == js_flat) {
+//                        chordNumber -= 1;
+//                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+//                        sb.append(chordLetter);
+//                        break;
+//                    }
+//                    if (c == '#' || c == js_sharp) {
+//                        chordNumber += 1;
+//                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+//                        sb.append(chordLetter);
+//                        break;
+//                    }
+//                    if (c == js_natural) {
+//                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+//                        sb.append(chordLetter);
+//                        break;
+//                    }
+//                    chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+//                    sb.append(chordLetter);
                     //	fall through
                 default:
                 case 0:
@@ -1017,7 +1019,7 @@ public class Song implements Comparable<Song> {
                     }
 
                     //  don't transpose the section identifiers that happen to look like notes
-                    String toMatch = m.substring(ci, Math.min(m.length() - ci, Section.maxLength));
+                    String toMatch = m.substring(ci, Math.min(m.length() - ci + 1, Section.maxLength));
                     SectionVersion version = Section.parse(toMatch);
                     if (version != null) {
                         sb.append(version.toString());
@@ -1025,26 +1027,37 @@ public class Song implements Comparable<Song> {
                         break;
                     }
 
+                    Chord chord = Chord.parse(toMatch, beatsPerBar);
+                    if (chord != null) {
+                        sb.append(chord.transpose(newKey, halfSteps).toString());
+                        ci += chord.getParseLength() - 1; //     watch for the increment in the for loop!
+                        break;
+                    }
+                    
+
                     if (c >= 'A' && c <= 'G') {
                         chordNumber = chordLetterToNumber(c);
                         state = 1;
                         break;
                     }
-                    if (toMatch.startsWith("maj")) {
-                        sb.append("maj");
-                        ci += 2;
-                    } else if (toMatch.startsWith("sus")) {
-                        sb.append("sus");
-                        ci += 2;
-                    } else if ((c >= '0' && c <= '9')
-                            || c == 'm'
-                            || c == ' ' || c == '-' || c == '|' || c == '/'
-                            || c == '[' || c == ']'
-                            || c == '{' || c == '}'
-                            || c == '.'
-                            || c == '<' || c == '>'
-                            || c == '\n'
-                            || c == js_delta) {
+
+//                    if (toMatch.startsWith("maj")) {
+//                        sb.append("maj");
+//                        ci += 2;
+//                    } else if (toMatch.startsWith("sus")) {
+//                        sb.append("sus");
+//                        ci += 2;
+//                    } else
+                    if (
+                            (c >= '0' && c <= '9')
+                                    || c == 'm'
+                                    || c == ' ' || c == '-' || c == '|' || c == '/'
+                                    || c == '[' || c == ']'
+                                    || c == '{' || c == '}'
+                                    || c == '.'
+                                    || c == '<' || c == '>'
+                                    || c == '\n'
+                                    || c == js_delta) {
                         sb.append(c);
                     } else {    //  don't parse the rest
                         sb.append(c);
@@ -1065,10 +1078,10 @@ public class Song implements Comparable<Song> {
             }
         }
         //  do the last chord
-        if (state == 1) {
-            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-            sb.append(chordLetter);
-        }
+//        if (state == 1) {
+//            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+//            sb.append(chordLetter);
+//        }
 
         return sb.toString();
     }

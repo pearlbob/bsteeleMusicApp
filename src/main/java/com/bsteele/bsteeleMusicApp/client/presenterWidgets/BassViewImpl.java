@@ -150,6 +150,9 @@ public class BassViewImpl
             BassFile bassFile = new BassFile();
             bassFile.writeBassFile(song);
         });
+
+        keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
+        keyLabel.getStyle().setWidth(3, Style.Unit.EM);
     }
 
     @Override
@@ -196,7 +199,7 @@ public class BassViewImpl
                 break;
         }
 
-        if ( song != null && !song.equals(songUpdate.getSong())){
+        if (song != null && !song.equals(songUpdate.getSong())) {
             resetScroll(chordsScrollPanel);
         }
         song = songUpdate.getSong();
@@ -317,7 +320,7 @@ public class BassViewImpl
         }
 
         //  auto scroll
-      autoScroll( chordsScrollPanel, bass);
+        autoScroll(chordsScrollPanel, bass);
 
     }
 
@@ -362,7 +365,7 @@ public class BassViewImpl
         }
         sb.append("</table>\n");
 
-        sb.append( song.measureNodesToHtml());
+        sb.append(song.measureNodesToHtml());
 
         bass.add(new HTMLPanel(sb.toString()));
     }
