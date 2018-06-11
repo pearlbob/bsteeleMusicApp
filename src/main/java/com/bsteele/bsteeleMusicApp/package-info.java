@@ -16,6 +16,7 @@ package com.bsteele.bsteeleMusicApp;
 todo: Bodhi question:  arrangement presentation
 todo: Bodhi question:  arrangement change of key with notes... after 12 offsets?
 todo: Bodhi question:  arrangement after song change
+todo: Bodhi question:  AB/G     assume G under A and B?  B only?
 
 fixme: Ddim/G transposes to Cdim/G and Adim/G as well.
 fixme: in play, beat display out of sync with measure update

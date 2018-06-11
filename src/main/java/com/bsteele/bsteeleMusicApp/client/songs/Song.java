@@ -988,30 +988,9 @@ public class Song implements Comparable<Song> {
         for (int ci = 0; ci < m.length(); ci++) {
             char c = m.charAt(ci);
             switch (state) {
-                case 1:    //  chord symbol modifier, one character only
-                    state = 0;
-//                    if (c == 'b' || c == js_flat) {
-//                        chordNumber -= 1;
-//                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-//                        sb.append(chordLetter);
-//                        break;
-//                    }
-//                    if (c == '#' || c == js_sharp) {
-//                        chordNumber += 1;
-//                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-//                        sb.append(chordLetter);
-//                        break;
-//                    }
-//                    if (c == js_natural) {
-//                        chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-//                        sb.append(chordLetter);
-//                        break;
-//                    }
-//                    chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-//                    sb.append(chordLetter);
-                    //	fall through
                 default:
                 case 0:
+                    //  look for comments
                     if (c == '(') {
                         sb.append(c);
                         state = 11;
@@ -1033,21 +1012,7 @@ public class Song implements Comparable<Song> {
                         ci += chord.getParseLength() - 1; //     watch for the increment in the for loop!
                         break;
                     }
-                    
 
-                    if (c >= 'A' && c <= 'G') {
-                        chordNumber = chordLetterToNumber(c);
-                        state = 1;
-                        break;
-                    }
-
-//                    if (toMatch.startsWith("maj")) {
-//                        sb.append("maj");
-//                        ci += 2;
-//                    } else if (toMatch.startsWith("sus")) {
-//                        sb.append("sus");
-//                        ci += 2;
-//                    } else
                     if (
                             (c >= '0' && c <= '9')
                                     || c == 'm'
