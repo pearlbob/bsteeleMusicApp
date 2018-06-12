@@ -330,7 +330,9 @@ public class BassViewImpl
     }
 
     private void syncKey(int tran) {
-        keyLabel.setInnerHTML(Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran).toString());
+
+        currentKey =      Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
+        keyLabel.setInnerHTML(currentKey.toString()+ " "+currentKey.sharpsFlatsToString());
 
         bass.clear();
 
@@ -343,7 +345,7 @@ public class BassViewImpl
         for (LyricSection lyricSection : lyricSections) {
             sb.append("<tr>");
             sb.append("<td>")
-                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), tran, prefix + sectionIndex));
+                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), currentKey, tran, prefix + sectionIndex));
             sb.append("<td class=\"")
                     .append(style)
                     .append("sectionLabel \">")

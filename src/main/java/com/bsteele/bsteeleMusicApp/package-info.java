@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: remember the last selected key for a song
 todo: Bodhi question:  arrangement presentation
 todo: Bodhi question:  arrangement change of key with notes... after 12 offsets?
 todo: Bodhi question:  arrangement after song change

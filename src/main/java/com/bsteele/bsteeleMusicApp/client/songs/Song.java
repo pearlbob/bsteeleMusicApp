@@ -841,18 +841,19 @@ public class Song implements Comparable<Song> {
         if (map.isEmpty()) {
             return "";
         }
-        return generateHtmlChordTableFromMap(map, map.keySet(), 0, prefix, false);
+        return generateHtmlChordTableFromMap(map, map.keySet(), key, 0, prefix, false);
     }
 
-    public final String generateHtmlChordTable(SectionVersion sectionVersion, int trans, String prefix) {
-        TreeSet<SectionVersion> keys = new TreeSet<>();
-        keys.add(sectionVersion);
-        return generateHtmlChordTableFromMap(chordSectionMap, keys, trans, prefix, true);
+    public final String generateHtmlChordTable(SectionVersion sectionVersion, Key newKey, int trans, String prefix) {
+        TreeSet<SectionVersion> sectionVersions = new TreeSet<>();
+        sectionVersions.add(sectionVersion);
+        return generateHtmlChordTableFromMap(chordSectionMap, sectionVersions, newKey, trans, prefix, true);
     }
 
     private String generateHtmlChordTableFromMap(
             HashMap<SectionVersion, Grid<String>> map,
-            Set<SectionVersion> keys,
+            Set<SectionVersion> sectionVersions,
+            Key newKey,
             int trans,
             String prefix,
             boolean isSingle) {
@@ -872,9 +873,9 @@ public class Song implements Comparable<Song> {
 
         StringBuilder chordText = new StringBuilder(); //  table formatted
 
-        SortedSet<SectionVersion> sortedKeys = new TreeSet<>(keys);
+        SortedSet<SectionVersion> sortedSectionVersions = new TreeSet<>(sectionVersions);
         SortedSet<SectionVersion> displayed = new TreeSet<>();
-        for (SectionVersion version : sortedKeys) {
+        for (SectionVersion version : sortedSectionVersions) {
             if (displayed.contains(version)) {
                 continue;
             }
@@ -915,7 +916,7 @@ public class Song implements Comparable<Song> {
                             .append(prefix)
                             .append(genChordId(isSingle ? version : displaySectionMap.get(version), r, col))
                             .append("\" >")
-                            .append(transposeMeasure(key, content, trans)).append("</td>\n\t");
+                            .append(transposeMeasure(newKey, content, trans)).append("</td>\n\t");
                 }
                 chordText.append(rowEnd);
             }
