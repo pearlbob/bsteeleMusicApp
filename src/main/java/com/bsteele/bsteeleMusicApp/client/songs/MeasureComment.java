@@ -48,6 +48,11 @@ public class MeasureComment extends MeasureNode {
     }
 
     @Override
+    public String generateHtml(@Nonnull Key key, int tran) {
+        return toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -63,11 +68,6 @@ public class MeasureComment extends MeasureNode {
     @Override
     public String toString() {
         return "( " + comment + ") ";
-    }
-
-    @Override
-    public String toHtml() {
-        return toString();           // fixme
     }
 
     private String comment;

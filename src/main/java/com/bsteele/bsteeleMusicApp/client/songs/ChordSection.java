@@ -1,9 +1,11 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -129,12 +131,12 @@ public class ChordSection extends MeasureSequenceItem {
     }
 
     @Override
-    public String toHtml() {
+    public String generateHtml(Key key, int tran) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("<tr class=\"" + getSectionVersion().toString() + "\">");
-        sb.append("<td>" + getSectionVersion().toString() + "</td>");
-        sb.append(super.toHtml());
+        sb.append("<tr>");
+        sb.append("<td class=\"" + CssConstants.style + "sectionLabel\">" + getSectionVersion().toString() + "</td>");
+        sb.append(super.generateHtml(key, tran));
         sb.append("</tr>\n");
 
         return sb.toString();

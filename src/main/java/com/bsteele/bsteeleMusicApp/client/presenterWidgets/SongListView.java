@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandle
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
@@ -181,13 +182,13 @@ public class SongListView
             int r = 0;
             for (Song song : filteredSongs) {
                 songGrid.setHTML(r, 0,
-                        "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItem\">"
+                        "<div class=\"" + CssConstants.style + "songListItem\">"
                                 + song.getTitle() + "</div>");
                 songGrid.setHTML(r, 1,
-                        "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItemData\">"
+                        "<div class=\"" + CssConstants.style + "songListItemData\">"
                                 + song.getArtist() + "</div>");
                 songGrid.setHTML(r, 2,
-                        "<div class=\"com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-songListItemData\">"
+                        "<div class=\"" + CssConstants.style + "songListItemData\">"
                                 + (song.getLastModifiedDate() == null ? "unloved since 2017" : song.getLastModifiedDate().toDateString()) + "</div>");
                 r++;
             }

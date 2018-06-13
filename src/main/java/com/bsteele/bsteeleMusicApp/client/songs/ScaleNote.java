@@ -156,8 +156,8 @@ public enum ScaleNote {
         return ScaleNote.valueOf(sb.toString());
     }
 
-    public final ScaleNote transpose( Key key, int step ){
-        return key.getScaleNoteByHalfStep( halfStep + step);
+    public final ScaleNote transpose( Key key, int steps ){
+        return key.getScaleNoteByHalfStep( halfStep + steps);
     }
 
     /**

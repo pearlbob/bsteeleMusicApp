@@ -22,9 +22,7 @@ public abstract class MeasureNode {
         this.sequenceNumber = sequenceNumber;
     }
 
-    public final SectionVersion getSectionVersion() {
-        return sectionVersion;
-    }
+    public final SectionVersion getSectionVersion() { return sectionVersion; }
 
     public final void setSectionVersion(SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
@@ -48,8 +46,8 @@ public abstract class MeasureNode {
 
     public boolean isSingleItem() { return true; }
 
-    public abstract String toHtml();
-
+    public abstract String generateHtml(@Nonnull Key key, int tran );
+    
     public abstract boolean equals(Object o);
 
     public abstract int hashCode();

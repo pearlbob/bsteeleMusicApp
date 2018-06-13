@@ -62,9 +62,9 @@ public class Chord {
         this(scaleChord, beats, beatsPerBar, null, AnticipationOrDelay.none);
     }
 
-    public Chord transpose(Key key, int halfsteps) {
-        return new Chord(scaleChord.transpose(key, halfsteps), beats, beatsPerBar,
-                slashScaleChord == null ? null : slashScaleChord.transpose(key, halfsteps), anticipationOrDelay);
+    public Chord transpose(Key key, int halfSteps) {
+        return new Chord(scaleChord.transpose(key, halfSteps), beats, beatsPerBar,
+                slashScaleChord == null ? null : slashScaleChord.transpose(key, halfSteps), anticipationOrDelay);
     }
 
     /**

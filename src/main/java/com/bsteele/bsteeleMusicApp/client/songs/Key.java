@@ -254,12 +254,12 @@ public enum Key {
         return getScaleNoteByHalfStep(halfStep);
     }
 
-    public final ScaleNote getScaleNoteByHalfStep(int halfStep) {
+    public final ScaleNote getScaleNoteByHalfStep(int halfSteps) {
 
-        halfStep = Util.mod(halfStep, MusicConstant.halfStepsPerOctave);
+        halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
         ScaleNote ret = (keyValue >= 0)
-                ? ScaleNote.getSharpByHalfStep(halfStep)
-                : ScaleNote.getFlatByHalfStep(halfStep);
+                ? ScaleNote.getSharpByHalfStep(halfSteps)
+                : ScaleNote.getFlatByHalfStep(halfSteps);
 
         //  deal with exceptions at +-6
         if (keyValue == 6 && ret.equals(ScaleNote.F))

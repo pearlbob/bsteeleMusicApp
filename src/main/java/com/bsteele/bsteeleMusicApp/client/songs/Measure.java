@@ -174,8 +174,14 @@ public class Measure extends MeasureNode {
     }
 
     @Override
-    public String toHtml() {
-        return chordsToString();
+    public String generateHtml(Key key, int tran) {
+        StringBuilder sb = new StringBuilder();
+
+        if (chords != null)
+            for (Chord chord : chords) {
+                sb.append(chord.transpose(key, tran));
+            }
+        return sb.toString();
     }
 
     public final boolean isRepeat() {

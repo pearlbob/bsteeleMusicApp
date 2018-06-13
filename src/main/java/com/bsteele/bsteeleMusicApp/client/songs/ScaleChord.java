@@ -52,8 +52,8 @@ public class ScaleChord implements Comparable<ScaleChord> {
         return new ScaleChord(retScaleNote, retChordDescriptor, parseLength);
     }
 
-    public final ScaleChord transpose( Key key, int halfStep ){
-        return new ScaleChord( scaleNote.transpose( key, halfStep), chordDescriptor);
+    public final ScaleChord transpose( Key key, int halfSteps ){
+        return new ScaleChord( scaleNote.transpose( key, halfSteps), chordDescriptor);
     }
 
     public final ScaleNote getScaleNote() {

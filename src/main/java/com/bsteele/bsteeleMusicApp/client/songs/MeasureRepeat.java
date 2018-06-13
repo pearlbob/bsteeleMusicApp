@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -30,9 +32,8 @@ public class MeasureRepeat extends MeasureSequenceItem {
         this.repeats = repeats;
     }
 
-
     @Override
-    public String toHtml() {
+    public String generateHtml(Key key, int tran) {
         StringBuilder sb = new StringBuilder();
 
         if (measureNodes != null && !measureNodes.isEmpty()) {
@@ -43,13 +44,17 @@ public class MeasureRepeat extends MeasureSequenceItem {
                     sb.append("<tr><td></td>");
                     lastMeasureNode = null;
                 }
-                sb.append("<td>");
 
                 MeasureNode measureNode = measureNodes.get(i);
+
+                sb.append("<td class=\"" + CssConstants.style + "section"
+                        + measureNode.getSectionVersion().getSection().getAbbreviation() + "Class\" id=\""
+                        +"C.\" >");
+
                 if (measureNode.equals(lastMeasureNode))
                     sb.append("-");
                 else
-                    sb.append(measureNode.toHtml());
+                    sb.append(measureNode.generateHtml(key, tran));
                 lastMeasureNode = measureNode;
                 sb.append("</td>");
 
@@ -61,7 +66,12 @@ public class MeasureRepeat extends MeasureSequenceItem {
                 sb.append("<td></td>");
                 i++;
             }
-            sb.append("<td>");
+
+            sb.append("<td class=\"" + CssConstants.style
+                    + "section"
+                    + lastMeasureNode.getSectionVersion().getSection().getAbbreviation()
+                    + "Class\" "
+                    + " style=\"border-right: 0px solid black;\">");
             if (i > measuresPerLine)
                 sb.append("| ");
             sb.append("x" + repeats);
@@ -71,7 +81,9 @@ public class MeasureRepeat extends MeasureSequenceItem {
     }
 
     @Override
-    public boolean isSingleItem() { return false; }
+    public boolean isSingleItem() {
+        return false;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 
@@ -92,7 +93,7 @@ public class MeasureSequenceItem extends MeasureNode {
     }
 
     @Override
-    public String toHtml() {
+    public String generateHtml(Key key, int tran) {
         StringBuilder sb = new StringBuilder();
 
         if (measureNodes != null && !measureNodes.isEmpty()) {
@@ -106,12 +107,15 @@ public class MeasureSequenceItem extends MeasureNode {
                         sb.append("<tr><td></td>");
                         lastMeasureNode = null;
                     }
-                    sb.append("<td>");
+
+                    sb.append("<td class=\"" + CssConstants.style + "section"
+                            + measureNode.getSectionVersion().getSection().getAbbreviation() + "Class\" id=\""
+                            +"C.\" >");
 
                     if (measureNode.equals(lastMeasureNode))
                         sb.append("-");
                     else
-                        sb.append(measureNode.toHtml());
+                        sb.append(measureNode.generateHtml(key, tran));
                     lastMeasureNode = measureNode;
                     sb.append("</td>");
 
@@ -121,6 +125,7 @@ public class MeasureSequenceItem extends MeasureNode {
                     measuresOnThisLine = Util.mod(measuresOnThisLine + 1, measuresPerLine);
                 } else {
                     if (measuresOnThisLine > 0) {
+                        //  fill with empty measures to end of line
                         while (measuresOnThisLine % measuresPerLine < measuresPerLine - 1) {
                             sb.append("<td></td>");
                             measuresOnThisLine++;
@@ -128,7 +133,7 @@ public class MeasureSequenceItem extends MeasureNode {
                         sb.append("</tr><tr><td></td>\n");
                     } else if (i > 0)
                         sb.append("<tr><td></td>\n");
-                    sb.append(measureNode.toHtml());
+                    sb.append(measureNode.generateHtml(key, tran));
                     measuresOnThisLine = 0;
                 }
             }
@@ -136,7 +141,6 @@ public class MeasureSequenceItem extends MeasureNode {
 
         return sb.toString();
     }
-
 
     protected ArrayList<MeasureNode> measureNodes;
 }

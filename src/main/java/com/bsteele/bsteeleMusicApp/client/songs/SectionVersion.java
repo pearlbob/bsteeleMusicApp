@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import javax.validation.constraints.NotNull;
+
 import static java.util.Objects.hash;
 
 /**
@@ -7,16 +9,15 @@ import static java.util.Objects.hash;
  */
 public class SectionVersion implements Comparable<SectionVersion> {
 
-    private Section section;
-
-    SectionVersion(Section section) {
+    SectionVersion(@NotNull  Section section) {
         this(section,0, 0);
     }
 
-    SectionVersion(Section section, int version, int sourceLength) {
+    SectionVersion(@NotNull Section section, int version, int sourceLength) {
         this.section = section;
         this.version = version;
         this.sourceLength = sourceLength;
+        name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
     /**
@@ -41,6 +42,10 @@ public class SectionVersion implements Comparable<SectionVersion> {
      */
     public final int getParseLength() {
         return sourceLength;
+    }
+
+    public final String getName() {
+        return name;
     }
 
     /**
@@ -89,6 +94,9 @@ public class SectionVersion implements Comparable<SectionVersion> {
         return 0;
     }
 
-    private int version;
+
+    private final Section section;
+    private final int version;
+    private final String name;
     private int sourceLength;
 }

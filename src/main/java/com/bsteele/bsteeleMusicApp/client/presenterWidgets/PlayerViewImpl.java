@@ -12,6 +12,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
@@ -325,25 +326,24 @@ public class PlayerViewImpl
         keyLabel.setInnerHTML(currentKey.toString()+ " "+currentKey.sharpsFlatsToString());
 
         player.clear();
-
-        final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
+        
         ArrayList<LyricSection> lyricSections = song.parseLyrics();
         int sectionIndex = 0;
         StringBuilder sb = new StringBuilder();
-        sb.append("<table class=\"" + style + "lyricsTable\" >");
+        sb.append("<table class=\"" + CssConstants.style + "lyricsTable\" >");
         song.getChordSectionMap();
         for (LyricSection lyricSection : lyricSections) {
             sb.append("<tr>");
             sb.append("<td>")
                     .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), currentKey, tran, prefix + sectionIndex));
             sb.append("<td class=\"")
-                    .append(style)
+                    .append(CssConstants.style)
                     .append("sectionLabel \">")
                     .append(lyricSection.getSectionVersion().toString())
                     .append("</td>");
             sb.append("<td")
                     .append(" class=\"")
-                    .append(style)
+                    .append(CssConstants.style)
                     .append("lyrics")
                     .append(lyricSection.getSectionVersion().getSection().getAbbreviation())
                     .append("Class\"")

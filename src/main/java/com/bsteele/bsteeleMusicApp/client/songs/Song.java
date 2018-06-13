@@ -5,9 +5,9 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -649,14 +649,13 @@ public class Song implements Comparable<Song> {
         computeDuration();
     }
 
-    public String measureNodesToHtml() {
+    public String measureNodesToHtml(Key key, int tran ) {
         StringBuilder sb = new StringBuilder();
 
-        final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
         String id = "lyAndChChordTable";
-        sb.append("<table id=\"" + id + "\" class=\"" + style + "chordTable\">\n");
+        sb.append("<table id=\"" + id + "\" class=\"" + CssConstants.style + "chordTable\">\n");
         for (MeasureNode measureNode : measureNodes) {
-            sb.append(measureNode.toHtml()).append(" ");
+            sb.append(measureNode.generateHtml(key, tran)).append(" ");
         }
         sb.append("</table>\n");
 
@@ -670,13 +669,12 @@ public class Song implements Comparable<Song> {
 
     @Deprecated
     public final String generateHtmlLyricsTable(String prefix) {
-        final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
         String tableStart = "<table id=\"" + prefix + "LyricsTable\">\n"
                 + "<colgroup>\n"
                 + "   <col style=\"width:2ch;\">\n"
                 + "  <col>\n"
                 + "</colgroup>\n";
-        String rowStart = "<tr><td class='" + style + "sectionLabel' >";
+        String rowStart = "<tr><td class='" + CssConstants.style + "sectionLabel' >";
         String rowEnd = "</td></tr>\n";
         String tableEnd = "</table>\n";
 
@@ -707,7 +705,7 @@ public class Song implements Comparable<Song> {
                             lyrics += rowEnd;
                         }
                         lyrics += rowStart + version.toString()
-                                + "</td><td class=\"" + style + "lyrics" + version.getSection().getAbbreviation() + "Class\""
+                                + "</td><td class=\"" + CssConstants.style + "lyrics" + version.getSection().getAbbreviation() + "Class\""
                                 + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
@@ -734,7 +732,7 @@ public class Song implements Comparable<Song> {
                                 //  deal with bad formatting
                                 lyrics += rowStart
                                         + Section.getDefaultVersion().toString()
-                                        + "</td><td class=\"" + style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
+                                        + "</td><td class=\"" + CssConstants.style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
                                         + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                                 isSection = true;
                             }
@@ -861,13 +859,12 @@ public class Song implements Comparable<Song> {
         if (map.isEmpty()) {
             return "";
         }
-
-        final String style = "com-bsteele-bsteeleMusicApp-client-resources-AppResources-Style-";
+        
         String tableStart = "<table id=\"" + prefix + "ChordTable\" "
-                + "class=\"" + style + "chordTable\" "
+                + "class=\"" + CssConstants.style + "chordTable\" "
                 + ">\n";
-        String sectionStart = "<tr><td class=\"" + style + "sectionLabel\" >";
-        String rowStart = "\t<tr><td class=\"" + style + "sectionLabel\" ></td>";
+        String sectionStart = "<tr><td class=\"" + CssConstants.style + "sectionLabel\" >";
+        String rowStart = "\t<tr><td class=\"" + CssConstants.style + "sectionLabel\" ></td>";
         String rowEnd = "</tr>\n";
         String tableEnd = "</table>\n";
 
@@ -906,7 +903,7 @@ public class Song implements Comparable<Song> {
                 ArrayList<String> row = grid.getRow(r);
                 final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
                 for (int col = 0; col < row.size(); col++) {
-                    chordText.append("<td class=\"" + style + "section").append(version.getSection().getAbbreviation())
+                    chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection().getAbbreviation())
                             .append("Class\" ");
                     String content = row.get(col);
                     if (endOfChordLineExp.test(content)) {
@@ -955,7 +952,7 @@ public class Song implements Comparable<Song> {
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
 
-        //GWT.log("Song.transpose()  here: " + halfSteps + " to: " + chords);
+        //GWT.log("Song.generateHtml()  here: " + halfSteps + " to: " + chords);
         HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionMap);
 
         for (SectionVersion version : tranMap.keySet()) {
@@ -998,7 +995,7 @@ public class Song implements Comparable<Song> {
                         break;
                     }
 
-                    //  don't transpose the section identifiers that happen to look like notes
+                    //  don't generateHtml the section identifiers that happen to look like notes
                     String toMatch = m.substring(ci, Math.min(m.length() - ci + 1, Section.maxLength));
                     SectionVersion version = Section.parse(toMatch);
                     if (version != null) {
