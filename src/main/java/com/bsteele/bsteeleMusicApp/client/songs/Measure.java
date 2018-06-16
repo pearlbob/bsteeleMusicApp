@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -174,18 +175,15 @@ public class Measure extends MeasureNode {
     }
 
     @Override
-    public String generateHtml(Key key, int tran) {
+    public String generateHtml(@NotNull SongMoment songMoment, Key key, int tran) {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
             for (Chord chord : chords) {
                 sb.append(chord.transpose(key, tran));
             }
-        return sb.toString();
-    }
 
-    public final boolean isRepeat() {
-        return isRepeat;
+        return sb.toString();
     }
 
     private final String chordsToString() {
@@ -198,19 +196,18 @@ public class Measure extends MeasureNode {
         return sb.toString();
     }
 
-    @Override
+      @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Measure measure = (Measure) o;
         return beatCount == measure.beatCount &&
-                isRepeat == measure.isRepeat &&
                 Objects.equals(chords, measure.chords);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(beatCount, isRepeat, chords);
+        return Objects.hash(beatCount, chords);
     }
 
     @Override
@@ -224,7 +221,6 @@ public class Measure extends MeasureNode {
     }
 
     private int beatCount = 4;  //  default only
-    private boolean isRepeat = false;
     private ArrayList<Chord> chords = new ArrayList<>();
     public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
 }

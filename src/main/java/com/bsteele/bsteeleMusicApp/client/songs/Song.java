@@ -23,13 +23,15 @@ import java.util.*;
 /**
  * A piece of music to be played according to the structure it contains.
  */
-public class Song implements Comparable<Song> {
+public class Song implements Comparable<Song>
+{
 
     /**
      * Not to be used externally but must remain public due to GWT constraints!
      */
     @Deprecated
-    public Song() {
+    public Song()
+    {
         setTitle("");
         setArtist("");
         copyright = "";
@@ -39,6 +41,7 @@ public class Song implements Comparable<Song> {
         chords = "";
         parseChordTable(chords);
         parseLyricsToSectionSequence("");
+        parseLyrics();
         setBeatsPerMinute(100);
         setBeatsPerBar(4);
     }
@@ -48,7 +51,8 @@ public class Song implements Comparable<Song> {
      *
      * @return a minimal song
      */
-    public static final Song createEmptySong() {
+    public static final Song createEmptySong()
+    {
         return createSong("", "",
                 "", Key.C, 100, 4, 4,
                 "", "");
@@ -71,7 +75,8 @@ public class Song implements Comparable<Song> {
     public static final Song createSong(@NotNull String title, @NotNull String artist,
                                         @NotNull String copyright,
                                         @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
-                                        @NotNull String chords, @NotNull String lyrics) {
+                                        @NotNull String chords, @NotNull String lyrics)
+    {
         Song song = new Song();
         song.setTitle(title);
         song.setArtist(artist);
@@ -80,13 +85,13 @@ public class Song implements Comparable<Song> {
         song.unitsPerMeasure = unitsPerMeasure;
         song.rawLyrics = lyrics;
         song.chords = chords;
+
         song.parseChordTable(chords);
         song.parseLyricsToSectionSequence(lyrics);
+        song.parseLyrics();
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
-        song.measureNodes = parse(beatsPerBar, song.chords);
-
-        //  already done song.computeDuration();
+        song.parse();
 
         return song;
     }
@@ -96,7 +101,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the new song
      */
-    public final Song copySong() {
+    public final Song copySong()
+    {
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getChordsAsString(), getLyricsAsString());
@@ -113,24 +119,30 @@ public class Song implements Comparable<Song> {
      * @param jsonString
      * @return the song. Can be null.
      */
-    public static final ArrayList<Song> fromJson(String jsonString) {
+    public static final ArrayList<Song> fromJson(String jsonString)
+    {
         ArrayList<Song> ret = new ArrayList<>();
-        if (jsonString == null || jsonString.length() <= 0) {
+        if (jsonString == null || jsonString.length() <= 0)
+        {
             return ret;
         }
 
         JSONValue jv = JSONParser.parseStrict(jsonString);
-        if (jv == null) {
+        if (jv == null)
+        {
             return ret;
         }
 
         JSONArray ja = jv.isArray();
-        if (ja != null) {
+        if (ja != null)
+        {
             int jaLimit = ja.size();
-            for (int i = 0; i < jaLimit; i++) {
+            for (int i = 0; i < jaLimit; i++)
+            {
                 ret.add(Song.fromJsonObject(ja.get(i).isObject()));
             }
-        } else {
+        } else
+        {
             JSONObject jo = jv.isObject();
             ret.add(fromJsonObject(jo));
         }
@@ -145,8 +157,10 @@ public class Song implements Comparable<Song> {
      * @param jsonObject
      * @return the song. Can be null.
      */
-    public static final Song fromJsonObject(JSONObject jsonObject) {
-        if (jsonObject == null) {
+    public static final Song fromJsonObject(JSONObject jsonObject)
+    {
+        if (jsonObject == null)
+        {
             return null;
         }
         //  file information available
@@ -157,21 +171,25 @@ public class Song implements Comparable<Song> {
         return songFromJsonObject(jsonObject);
     }
 
-    private static final Song songFromJsonFileObject(JSONObject jsonObject) {
+    private static final Song songFromJsonFileObject(JSONObject jsonObject)
+    {
         Song song = null;
         double lastModifiedDate = 0;
         String fileName = null;
 
         JSONNumber jn;
-        for (String name : jsonObject.keySet()) {
+        for (String name : jsonObject.keySet())
+        {
             JSONValue jv = jsonObject.get(name);
-            switch (name) {
+            switch (name)
+            {
                 case "song":
                     song = songFromJsonObject(jv.isObject());
                     break;
                 case "lastModifiedDate":
                     jn = jv.isNumber();
-                    if (jn != null) {
+                    if (jn != null)
+                    {
                         lastModifiedDate = jn.doubleValue();
                     }
                     break;
@@ -190,13 +208,16 @@ public class Song implements Comparable<Song> {
         return song;
     }
 
-    private static final Song songFromJsonObject(JSONObject jsonObject) {
+    private static final Song songFromJsonObject(JSONObject jsonObject)
+    {
         Song song = Song.createEmptySong();
         JSONNumber jn;
         JSONArray ja;
-        for (String name : jsonObject.keySet()) {
+        for (String name : jsonObject.keySet())
+        {
             JSONValue jv = jsonObject.get(name);
-            switch (name) {
+            switch (name)
+            {
                 case "title":
                     song.setTitle(jv.isString().stringValue());
                     //GWT.log("reading: " + song.getTitle());
@@ -212,30 +233,37 @@ public class Song implements Comparable<Song> {
                     break;
                 case "defaultBpm":
                     jn = jv.isNumber();
-                    if (jn != null) {
+                    if (jn != null)
+                    {
                         song.defaultBpm = (int) jn.doubleValue();
-                    } else {
+                    } else
+                    {
                         song.defaultBpm = Integer.parseInt(jv.isString().stringValue());
                     }
                     break;
                 case "timeSignature":
                     //  most of this is coping with real old events with poor formatting
                     jn = jv.isNumber();
-                    if (jn != null) {
+                    if (jn != null)
+                    {
                         song.beatsPerBar = (int) jn.doubleValue();
                         song.unitsPerMeasure = 4; //  safe default
-                    } else {
+                    } else
+                    {
                         String s = jv.isString().stringValue();
 
                         final RegExp timeSignatureExp = RegExp.compile("^\\w*(\\d{1,2})\\w*\\/\\w*(\\d)\\w*$");
                         MatchResult mr = timeSignatureExp.exec(s);
-                        if (mr != null) {
+                        if (mr != null)
+                        {
                             // parse
                             song.beatsPerBar = Integer.parseInt(mr.getGroup(1));
                             song.unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
-                        } else {
+                        } else
+                        {
                             s = s.replaceAll("/.*", "");    //  fixme: info lost
-                            if (s.length() > 0) {
+                            if (s.length() > 0)
+                            {
                                 song.beatsPerBar = Integer.parseInt(s);
                             }
                             song.unitsPerMeasure = 4; //  safe default
@@ -244,48 +272,58 @@ public class Song implements Comparable<Song> {
                     break;
                 case "chords":
                     ja = jv.isArray();
-                    if (ja != null) {
+                    if (ja != null)
+                    {
                         int jaLimit = ja.size();
                         StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < jaLimit; i++) {
+                        for (int i = 0; i < jaLimit; i++)
+                        {
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
                         song.chords = sb.toString();
-                    } else {
+                    } else
+                    {
                         song.chords = jv.isString().stringValue();
                     }
                     song.parseChordTable(song.chords);
                     break;
                 case "lyrics":
                     ja = jv.isArray();
-                    if (ja != null) {
+                    if (ja != null)
+                    {
                         int jaLimit = ja.size();
                         StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < jaLimit; i++) {
+                        for (int i = 0; i < jaLimit; i++)
+                        {
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
                         song.rawLyrics = sb.toString();
-                    } else {
+                    } else
+                    {
                         song.rawLyrics = jv.isString().stringValue();
                     }
                     song.parseLyricsToSectionSequence(song.rawLyrics);
+                    song.parseLyrics();
                     break;
             }
         }
-        song.measureNodes = parse(song.beatsPerBar, song.chords);
+        song.parse();
         return song;
     }
 
-    public static final String toJson(Collection<Song> songs) {
-        if (songs == null || songs.isEmpty()) {
+    public static final String toJson(Collection<Song> songs)
+    {
+        if (songs == null || songs.isEmpty())
+        {
             return null;
         }
         StringBuilder sb = new StringBuilder();
         sb.append("[\n");
         boolean first = true;
-        for (Song song : songs) {
+        for (Song song : songs)
+        {
             if (first)
                 first = false;
             else
@@ -296,9 +334,11 @@ public class Song implements Comparable<Song> {
         return sb.toString();
     }
 
-    private String toJsonAsFile() {
+    private String toJsonAsFile()
+    {
         double time = lastModifiedDate == null ? 0 : lastModifiedDate.getTime();
-        return "{ \"file\": \"" + JsonUtil.encode(getFileName()) + "\", \"lastModifiedDate\": " + time + ", \"song\": \n"
+        return "{ \"file\": \"" + JsonUtil.encode(getFileName()) + "\", \"lastModifiedDate\": " + time + ", \"song\":" +
+                " \n"
                 + toJson()
                 + "}";
     }
@@ -308,7 +348,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the JSON expression of this song
      */
-    public final String toJson() {
+    public final String toJson()
+    {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n")
                 .append("\"title\": \"")
@@ -336,10 +377,13 @@ public class Song implements Comparable<Song> {
 
         //  chord content
         boolean first = true;
-        for (String s : getChordsAsString().split("\n")) {
-            if (first) {
+        for (String s : getChordsAsString().split("\n"))
+        {
+            if (first)
+            {
                 first = false;
-            } else {
+            } else
+            {
                 sb.append(",\n");
             }
             sb.append("\t\"");
@@ -351,10 +395,13 @@ public class Song implements Comparable<Song> {
                 .append("    [\n");
         //  lyrics content
         first = true;
-        for (String s : getLyricsAsString().split("\n")) {
-            if (first) {
+        for (String s : getLyricsAsString().split("\n"))
+        {
+            if (first)
+            {
                 first = false;
-            } else {
+            } else
+            {
                 sb.append(",\n");
             }
             sb.append("\t\"");
@@ -367,17 +414,70 @@ public class Song implements Comparable<Song> {
         return sb.toString();
     }
 
-    private void parseLyricsToSectionSequence(String rawLyrics) {
+    @Deprecated
+    private void parseLyricsToSectionSequence(String rawLyrics)
+    {
         sequence = Section.matchAll(rawLyrics);
 
-        if (sequence.isEmpty()) {
+        if (sequence.isEmpty())
+        {
             sequence.add(Section.getDefaultVersion());
         }
         //GWT.log(sequence.toString());
-        computeDuration();
     }
 
-    private void computeDuration() {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
+    private void computeSongMoments()
+    {
+        songMoments = new ArrayList<>();
+
+        if (lyricSections == null)
+            return;
+
+        int sequenceNumber = 0;
+        for (LyricSection lyricSection : lyricSections)
+        {
+            ArrayList<MeasureNode> chordSectionNodes = null;
+            for (ChordSection chordSection : chordSections)
+            {
+                if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion()))
+                {
+                    chordSectionNodes = chordSection.getMeasureNodes();
+                    break;
+                }
+            }
+            if (chordSectionNodes != null)
+                for (MeasureNode measureNode : chordSectionNodes)
+                {
+                    if (measureNode.isRepeat())
+                    {
+                        MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
+                        int limit = measureRepeat.getRepeats();
+                        for (int repeat = 0; repeat < limit; repeat++)
+                        {
+                            ArrayList<Measure> measures = measureNode.getMeasures();
+                            if (measures != null)
+                                for (Measure measure : measures)
+                                {
+                                    songMoments.add(new SongMoment(sequenceNumber++, lyricSection, measureNode,
+                                            measure, repeat, limit));
+                                }
+                        }
+                    } else
+                    {
+                        ArrayList<Measure> measures = measureNode.getMeasures();
+                        if (measures != null)
+                            for (Measure measure : measures)
+                            {
+                                songMoments.add(new SongMoment(sequenceNumber++, lyricSection, measureNode,
+                                        measure, 0, 0));
+                            }
+                    }
+                }
+        }
+    }
+
+    private void computeDuration()
+    {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
 
         duration = 0;
         totalBeats = 0;
@@ -390,19 +490,22 @@ public class Song implements Comparable<Song> {
 
         double measureDuration = beatsPerBar * 60.0 / defaultBpm;
         final RegExp repeatExp = RegExp.compile("^\\w*x(\\d+)", "i");
-        for (SectionVersion sectionVersion : sequence) {
+        for (SectionVersion sectionVersion : sequence)
+        {
             Grid<String> sectionGrid = chordSectionMap.get(sectionVersion);
             if (sectionGrid == null)
                 continue;
 
-            for (int row = 0; row < sectionGrid.getRowCount(); row++) {
+            for (int row = 0; row < sectionGrid.getRowCount(); row++)
+            {
                 ArrayList<String> rowCols = sectionGrid.getRow(row);
                 if (rowCols == null)
                     continue;
 
                 int rowBeats = 0;   //  fixme: not correct for multiline repeats !!!!
                 int rowDuration = 0;   //  fixme: not correct for multiline repeats !!!!!!!!
-                for (int col = 0; col < rowCols.size(); col++) {
+                for (int col = 0; col < rowCols.size(); col++)
+                {
                     //  fixme: verify it's a real measure, not | or comment
                     duration += measureDuration;
                     totalBeats += beatsPerBar;
@@ -411,7 +514,8 @@ public class Song implements Comparable<Song> {
 
                     //  extra for repeats
                     MatchResult mr = repeatExp.exec(rowCols.get(col));
-                    if (mr != null) {
+                    if (mr != null)
+                    {
                         int n = Integer.parseInt(mr.getGroup(1));
                         n--;
                         duration += n * rowDuration;
@@ -428,23 +532,27 @@ public class Song implements Comparable<Song> {
      * @return
      */
     @Deprecated
-    public final String[] getSectionSequenceAsStrings() {
+    public final String[] getSectionSequenceAsStrings()
+    {
 
         //  dumb down the section sequence list for javascript
         String ret[] = new String[sequence.size()];
-        for (int i = 0; i < ret.length; i++) {
+        for (int i = 0; i < ret.length; i++)
+        {
             ret[i] = sequence.get(i).toString();
         }
         return ret;
     }
 
     @Deprecated
-    public final String[][] getJsChordSection(String sectionId) {
+    public final String[][] getJsChordSection(String sectionId)
+    {
         return jsChordSectionMap.get(sectionId);
     }
 
     @Deprecated
-    public final Grid<String> getChordSection(SectionVersion sv) {
+    public final Grid<String> getChordSection(SectionVersion sv)
+    {
         return chordSectionMap.get(sv);
     }
 
@@ -454,52 +562,58 @@ public class Song implements Comparable<Song> {
      * @param sectionVersion
      * @return common section version
      */
-    public final SectionVersion getChordSectionVersion(SectionVersion sectionVersion) {
+    public final SectionVersion getChordSectionVersion(SectionVersion sectionVersion)
+    {
         //  map the section to it's reduced, common section
         SectionVersion v = displaySectionMap.get(sectionVersion);
-        if (v != null) {
+        if (v != null)
+        {
             return v;
         }
         return sectionVersion;
     }
 
-    public static final ArrayList<MeasureNode> parse(int beatsPerBar, String s) {
-        ArrayList<MeasureNode> measureNodes = new ArrayList<>();
-        ChordSection chordSection;
+    private final void parse()
+    {
+        measureNodes = new ArrayList<>();
+        chordSections = new ArrayList<>();
 
-        while ((chordSection = ChordSection.parse(s, beatsPerBar)) != null) {
-            measureNodes.add(chordSection);
-            s = s.substring(chordSection.getParseLength());
+        if (chords != null)
+        {
+            String s = chords;
+            ChordSection chordSection;
+            while ((chordSection = ChordSection.parse(s, beatsPerBar)) != null)
+            {
+                s = s.substring(chordSection.getParseLength());
+                measureNodes.add(chordSection);
+                chordSections.add(chordSection);
+            }
         }
-        return measureNodes;
+
+        computeSongMoments();
+        computeDuration();
     }
 
-    public final String measureNodesToString() {
+    public final String measureNodesToString()
+    {
         StringBuilder sb = new StringBuilder();
 
-        for (MeasureNode measureNode : measureNodes) {
+        for (MeasureNode measureNode : measureNodes)
+        {
             sb.append(measureNode.toString()).append(" ");
         }
 
         return sb.toString();
     }
 
-    /**
-     * Return the section sequence of this song.
-     *
-     * @return the section sequence of this song
-     * @deprecated use {@link #getLyricSections()} instead.
-     */
     @Deprecated
-    public final ArrayList<SectionVersion> getSectionSequence() {
-        return sequence;
-    }
-
-    private void parseChordTable(String rawChordTableText) {
+    private void parseChordTable(String rawChordTableText)
+    {
 
         chordSectionMap.clear();
 
-        if (rawChordTableText != null && rawChordTableText.length() > 0) {
+        if (rawChordTableText != null && rawChordTableText.length() > 0)
+        {
             //  repair definitions without a final newline
             if (rawChordTableText.charAt(rawChordTableText.length() - 1) != '\n')
                 rawChordTableText += "\n";
@@ -513,14 +627,17 @@ public class Song implements Comparable<Song> {
             SectionVersion version;
             TreeSet<SectionVersion> versionsDeclared = new TreeSet<>();
             String block = "";
-            for (int i = 0; i < rawChordTableText.length(); i++) {
+            for (int i = 0; i < rawChordTableText.length(); i++)
+            {
                 char c = rawChordTableText.charAt(i);
-                switch (state) {
+                switch (state)
+                {
                     default:
                         state = 0;
                     case 0:
                         //  absorb leading white space
-                        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                        if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+                        {
                             break;
                         }
                         block = "";
@@ -530,12 +647,15 @@ public class Song implements Comparable<Song> {
                     case 1:
                         String token = rawChordTableText.substring(i);
                         SectionVersion v = Section.parse(token.substring(0, Math.min(token.length() - 1, 11)));
-                        if (v != null) {
+                        if (v != null)
+                        {
                             version = v;
                             i += version.getParseLength() - 1;//   consume the section label
 
-                            if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
-                                for (SectionVersion vd : versionsDeclared) {
+                            if (!versionsDeclared.isEmpty() && !grid.isEmpty())
+                            {
+                                for (SectionVersion vd : versionsDeclared)
+                                {
                                     chordSectionMap.put(vd, grid);
                                 }
                                 //  fixme: worry about chords before a section is declared
@@ -555,10 +675,12 @@ public class Song implements Comparable<Song> {
                         //  fall through
                     case 2:
                         //  absorb characters until newline
-                        switch (c) {
+                        switch (c)
+                        {
                             case ' ':
                             case '\t':
-                                if (block.length() > 0) {
+                                if (block.length() > 0)
+                                {
                                     grid.add(col, row, block);
                                     col++;
                                 }
@@ -566,7 +688,8 @@ public class Song implements Comparable<Song> {
                                 break;
                             case '\n':
                             case '\r':
-                                if (block.length() > 0) {
+                                if (block.length() > 0)
+                                {
                                     grid.add(col, row, block);
                                     col++;
                                 }
@@ -585,14 +708,17 @@ public class Song implements Comparable<Song> {
             }
 
             //  put the last grid on the end
-            if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
-                for (SectionVersion vd : versionsDeclared) {
+            if (!versionsDeclared.isEmpty() && !grid.isEmpty())
+            {
+                for (SectionVersion vd : versionsDeclared)
+                {
                     chordSectionMap.put(vd, grid);
                 }
             }
 
             //  deal with unformatted events
-            if (chordSectionMap.isEmpty()) {
+            if (chordSectionMap.isEmpty())
+            {
                 chordSectionMap.put(Section.getDefaultVersion(), grid);
             }
         }
@@ -601,23 +727,28 @@ public class Song implements Comparable<Song> {
         {
             //  build a reverse lookup map
             HashMap<Grid<String>, TreeSet<SectionVersion>> reverseMap = new HashMap<>();
-            for (SectionVersion version : chordSectionMap.keySet()) {
+            for (SectionVersion version : chordSectionMap.keySet())
+            {
                 Grid<String> grid = chordSectionMap.get(version);
                 TreeSet<SectionVersion> lookup = reverseMap.get(grid);
-                if (lookup == null) {
+                if (lookup == null)
+                {
                     TreeSet<SectionVersion> ts = new TreeSet<>();
                     ts.add(version);
                     reverseMap.put(grid, ts);
-                } else {
+                } else
+                {
                     lookup.add(version);
                 }
             }
             //  build version mapping to version displayed map
             displaySectionMap.clear();
-            for (Grid<String> g : reverseMap.keySet()) {
+            for (Grid<String> g : reverseMap.keySet())
+            {
                 TreeSet<SectionVersion> mappedVersions = reverseMap.get(g);
                 SectionVersion first = mappedVersions.first();
-                for (SectionVersion dv : mappedVersions) {
+                for (SectionVersion dv : mappedVersions)
+                {
                     //  more convenient to put idenity mapping in for first
                     displaySectionMap.put(dv, first);
                 }
@@ -625,7 +756,8 @@ public class Song implements Comparable<Song> {
 
             //GWT.log(displayMap.toString());
             HashMap<SectionVersion, Grid<String>> reducedChordSectionMap = new HashMap<>();
-            for (SectionVersion version : chordSectionMap.keySet()) {
+            for (SectionVersion version : chordSectionMap.keySet())
+            {
                 reducedChordSectionMap.put(version, chordSectionMap.get(displaySectionMap.get(version)));
             }
 
@@ -636,7 +768,8 @@ public class Song implements Comparable<Song> {
         }
 
         //  build map for js
-        for (SectionVersion v : chordSectionMap.keySet()) {
+        for (SectionVersion v : chordSectionMap.keySet())
+        {
             jsChordSectionMap.put(v.toString(), chordSectionMap.get(v).getJavasriptCopy());
         }
 
@@ -649,13 +782,35 @@ public class Song implements Comparable<Song> {
         computeDuration();
     }
 
-    public String measureNodesToHtml(Key key, int tran ) {
+    public String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran)
+    {
         StringBuilder sb = new StringBuilder();
 
-        String id = "lyAndChChordTable";
-        sb.append("<table id=\"" + id + "\" class=\"" + CssConstants.style + "chordTable\">\n");
-        for (MeasureNode measureNode : measureNodes) {
-            sb.append(measureNode.generateHtml(key, tran)).append(" ");
+        sb.append("<table id=\"" + tableName + "\" class=\"" + CssConstants.style + "chordTable\">\n");
+        for (SongMoment songMoment : getSongMoments())
+        {
+            LyricSection lyricSection = songMoment.getLyricSection();
+            SectionVersion sectionVersion = lyricSection.getSectionVersion();
+            sb.append("<tr><td class='" + CssConstants.style + "sectionLabel' >").
+                    append(sectionVersion.toString()).append("</td><td class=\"")
+                    .append(CssConstants.style)
+                    .append("lyrics")
+                    .append(sectionVersion.getSection().getAbbreviation())
+                    .append("Class\"")
+                    .append(" colspan=\"10\" >");
+
+            for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
+                sb.append(lyricsLine.getLyrics()).append("\n");
+
+            sb.append("</td></tr>");
+            for (MeasureNode measureNode : measureNodes)
+            {
+                if (measureNode.getSectionVersion().equals(lyricSection.getSectionVersion()))
+                {
+                    sb.append(measureNode.generateHtml(songMoment, key, tran));
+                    break;
+                }
+            }
         }
         sb.append("</table>\n");
 
@@ -663,12 +818,14 @@ public class Song implements Comparable<Song> {
     }
 
     @Deprecated
-    public final String generateHtmlChordTable(String prefix) {
+    public final String generateHtmlChordTable(String prefix)
+    {
         return generateHtmlChordTableFromMap(chordSectionMap, prefix);
     }
 
     @Deprecated
-    public final String generateHtmlLyricsTable(String prefix) {
+    public final String generateHtmlLyricsTable(String prefix)
+    {
         String tableStart = "<table id=\"" + prefix + "LyricsTable\">\n"
                 + "<colgroup>\n"
                 + "   <col style=\"width:2ch;\">\n"
@@ -683,29 +840,35 @@ public class Song implements Comparable<Song> {
         int sectionIndex = 0;
         boolean isSection = false;
         String whiteSpace = "";
-        for (int i = 0; i < rawLyrics.length(); i++) {
+        for (int i = 0; i < rawLyrics.length(); i++)
+        {
             char c = rawLyrics.charAt(i);
-            switch (state) {
+            switch (state)
+            {
                 default:
                     state = 0;
                 case 0:
                     //  absorb leading white space
-                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+                    {
                         break;
                     }
                     state++;
                     //  fall through
                 case 1:
                     SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
-                    if (version != null) {
+                    if (version != null)
+                    {
                         i += version.getParseLength() - 1; //  skip the end of the section id
                         isSection = true;
 
-                        if (lyrics.length() > 0) {
+                        if (lyrics.length() > 0)
+                        {
                             lyrics += rowEnd;
                         }
                         lyrics += rowStart + version.toString()
-                                + "</td><td class=\"" + CssConstants.style + "lyrics" + version.getSection().getAbbreviation() + "Class\""
+                                + "</td><td class=\"" + CssConstants.style + "lyrics" + version.getSection()
+                                .getAbbreviation() + "Class\""
                                 + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
@@ -716,7 +879,8 @@ public class Song implements Comparable<Song> {
                     //  fall through
                 case 2:
                     //  absorb characters to newline
-                    switch (c) {
+                    switch (c)
+                    {
                         case ' ':
                         case '\t':
                             whiteSpace += c;
@@ -728,11 +892,13 @@ public class Song implements Comparable<Song> {
                             state = 0;
                             break;
                         default:
-                            if (!isSection) {
+                            if (!isSection)
+                            {
                                 //  deal with bad formatting
                                 lyrics += rowStart
                                         + Section.getDefaultVersion().toString()
-                                        + "</td><td class=\"" + CssConstants.style + "lyrics" + Section.getDefaultVersion().toString() + "Class\""
+                                        + "</td><td class=\"" + CssConstants.style + "lyrics"
+                                        + Section.getDefaultVersion().getSection().getAbbreviation() + "Class\""
                                         + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
                                 isSection = true;
                             }
@@ -752,7 +918,8 @@ public class Song implements Comparable<Song> {
         return lyrics;
     }
 
-    public final ArrayList<LyricSection> parseLyrics() {
+    private final void parseLyrics()
+    {
         int state = 0;
         String whiteSpace = "";
         String lyrics = "";
@@ -760,21 +927,25 @@ public class Song implements Comparable<Song> {
 
         lyricSections = new ArrayList<>();
 
-        for (int i = 0; i < rawLyrics.length(); i++) {
+        for (int i = 0; i < rawLyrics.length(); i++)
+        {
             char c = rawLyrics.charAt(i);
-            switch (state) {
+            switch (state)
+            {
                 default:
                     state = 0;
                 case 0:
                     //  absorb leading white space
-                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r')
+                    {
                         break;
                     }
                     state++;
                     //  fall through
                 case 1:
                     SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
-                    if (version != null) {
+                    if (version != null)
+                    {
                         i += version.getParseLength() - 1; //  skip the end of the section id
 
                         if (lyricSection != null)
@@ -791,14 +962,16 @@ public class Song implements Comparable<Song> {
                     //  fall through
                 case 2:
                     //  absorb all characters to newline
-                    switch (c) {
+                    switch (c)
+                    {
                         case ' ':
                         case '\t':
                             whiteSpace += c;
                             break;
                         case '\n':
                         case '\r':
-                            if (lyricSection == null) {
+                            if (lyricSection == null)
+                            {
                                 //  oops, an old unformatted song, force a lyrics section
                                 lyricSection = new LyricSection();
                                 lyricSection.setSectionVersion(Section.getDefaultVersion());
@@ -819,9 +992,6 @@ public class Song implements Comparable<Song> {
         //  last one is not terminated by another section
         if (lyricSection != null)
             lyricSections.add(lyricSection);
-
-        //GWT.log(lyrics);
-        return lyricSections;
     }
 
     /**
@@ -830,19 +1000,23 @@ public class Song implements Comparable<Song> {
      * @param sectionIndex
      * @return a lyrics section sequence id
      */
-    public static final String genLyricsId(int sectionIndex) {
+    public static final String genLyricsId(int sectionIndex)
+    {
         return "L." + sectionIndex;
     }
 
-    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map, String prefix) {
+    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map, String prefix)
+    {
 
-        if (map.isEmpty()) {
+        if (map.isEmpty())
+        {
             return "";
         }
         return generateHtmlChordTableFromMap(map, map.keySet(), key, 0, prefix, false);
     }
 
-    public final String generateHtmlChordTable(SectionVersion sectionVersion, Key newKey, int trans, String prefix) {
+    public final String generateHtmlChordTable(SectionVersion sectionVersion, Key newKey, int trans, String prefix)
+    {
         TreeSet<SectionVersion> sectionVersions = new TreeSet<>();
         sectionVersions.add(sectionVersion);
         return generateHtmlChordTableFromMap(chordSectionMap, sectionVersions, newKey, trans, prefix, true);
@@ -854,12 +1028,14 @@ public class Song implements Comparable<Song> {
             Key newKey,
             int trans,
             String prefix,
-            boolean isSingle) {
+            boolean isSingle)
+    {
 
-        if (map.isEmpty()) {
+        if (map.isEmpty())
+        {
             return "";
         }
-        
+
         String tableStart = "<table id=\"" + prefix + "ChordTable\" "
                 + "class=\"" + CssConstants.style + "chordTable\" "
                 + ">\n";
@@ -872,8 +1048,10 @@ public class Song implements Comparable<Song> {
 
         SortedSet<SectionVersion> sortedSectionVersions = new TreeSet<>(sectionVersions);
         SortedSet<SectionVersion> displayed = new TreeSet<>();
-        for (SectionVersion version : sortedSectionVersions) {
-            if (displayed.contains(version)) {
+        for (SectionVersion version : sortedSectionVersions)
+        {
+            if (displayed.contains(version))
+            {
                 continue;
             }
 
@@ -881,12 +1059,16 @@ public class Song implements Comparable<Song> {
 
             //  section label
             String start = sectionStart;
-            if (isSingle) {
+            if (isSingle)
+            {
                 start += version.toString();
                 displayed.add(version);
-            } else {
-                for (SectionVersion v : displaySectionMap.keySet()) {
-                    if (displaySectionMap.get(v) == version) {
+            } else
+            {
+                for (SectionVersion v : displaySectionMap.keySet())
+                {
+                    if (displaySectionMap.get(v) == version)
+                    {
                         start += v.toString() + "<br/>";
                         displayed.add(v);
                     }
@@ -895,18 +1077,22 @@ public class Song implements Comparable<Song> {
             start += "</td>\n";
 
             //  section data
-            for (int r = 0; r < grid.getRowCount(); r++) {
+            for (int r = 0; r < grid.getRowCount(); r++)
+            {
 
                 chordText.append(start);
                 start = rowStart;   //  default to empty row start on subsequent rows
 
                 ArrayList<String> row = grid.getRow(r);
                 final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
-                for (int col = 0; col < row.size(); col++) {
-                    chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection().getAbbreviation())
+                for (int col = 0; col < row.size(); col++)
+                {
+                    chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection()
+                            .getAbbreviation())
                             .append("Class\" ");
                     String content = row.get(col);
-                    if (endOfChordLineExp.test(content)) {
+                    if (endOfChordLineExp.test(content))
+                    {
                         chordText.append(" style=\"border-right: 0px solid black;\"");
                     }
                     chordText.append(" id=\"")
@@ -930,7 +1116,8 @@ public class Song implements Comparable<Song> {
      * @param col                   cell column
      * @return the generated chord section id
      */
-    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col) {
+    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col)
+    {
         if (displaySectionVersion == null)
             return "";
         return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
@@ -944,9 +1131,11 @@ public class Song implements Comparable<Song> {
      * @return an HTML representation for the chord sections
      */
     @Deprecated
-    public final String transpose(int halfSteps, String prefix) {
+    public final String transpose(int halfSteps, String prefix)
+    {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
-        if (halfSteps == 0) {
+        if (halfSteps == 0)
+        {
             return generateHtmlChordTable(prefix);
         }
 
@@ -955,14 +1144,17 @@ public class Song implements Comparable<Song> {
         //GWT.log("Song.generateHtml()  here: " + halfSteps + " to: " + chords);
         HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionMap);
 
-        for (SectionVersion version : tranMap.keySet()) {
+        for (SectionVersion version : tranMap.keySet())
+        {
             Grid<String> grid = tranMap.get(version);
 
             int rLimit = grid.getRowCount();
-            for (int r = 0; r < rLimit; r++) {
+            for (int r = 0; r < rLimit; r++)
+            {
                 ArrayList<String> row = grid.getRow(r);
                 int colLimit = row.size();
-                for (int col = 0; col < colLimit; col++) {
+                for (int col = 0; col < colLimit; col++)
+                {
                     grid.set(col, r, transposeMeasure(newKey, row.get(col), halfSteps));
                 }
             }
@@ -973,7 +1165,8 @@ public class Song implements Comparable<Song> {
         return generateHtmlChordTableFromMap(tranMap, prefix);
     }
 
-    private String transposeMeasure(Key newKey, String m, int halfSteps) {
+    private String transposeMeasure(Key newKey, String m, int halfSteps)
+    {
         if (halfSteps == 0)
             return m;
 
@@ -983,13 +1176,16 @@ public class Song implements Comparable<Song> {
 
         int state = 0;
 
-        for (int ci = 0; ci < m.length(); ci++) {
+        for (int ci = 0; ci < m.length(); ci++)
+        {
             char c = m.charAt(ci);
-            switch (state) {
+            switch (state)
+            {
                 default:
                 case 0:
                     //  look for comments
-                    if (c == '(') {
+                    if (c == '(')
+                    {
                         sb.append(c);
                         state = 11;
                         break;
@@ -998,14 +1194,16 @@ public class Song implements Comparable<Song> {
                     //  don't generateHtml the section identifiers that happen to look like notes
                     String toMatch = m.substring(ci, Math.min(m.length() - ci + 1, Section.maxLength));
                     SectionVersion version = Section.parse(toMatch);
-                    if (version != null) {
+                    if (version != null)
+                    {
                         sb.append(version.toString());
                         ci += version.getParseLength() - 1; //  skip the end of the section id
                         break;
                     }
 
                     Chord chord = Chord.parse(toMatch, beatsPerBar);
-                    if (chord != null) {
+                    if (chord != null)
+                    {
                         sb.append(chord.transpose(newKey, halfSteps).toString());
                         ci += chord.getParseLength() - 1; //     watch for the increment in the for loop!
                         break;
@@ -1020,9 +1218,11 @@ public class Song implements Comparable<Song> {
                                     || c == '.'
                                     || c == '<' || c == '>'
                                     || c == '\n'
-                                    || c == js_delta) {
+                                    || c == js_delta)
+                    {
                         sb.append(c);
-                    } else {    //  don't parse the rest
+                    } else
+                    {    //  don't parse the rest
                         sb.append(c);
                         state = 10;
                     }
@@ -1034,7 +1234,8 @@ public class Song implements Comparable<Song> {
 
                 case 11: //	wait for newline or closing paren
                     sb.append(c);
-                    if (c == ')') {
+                    if (c == ')')
+                    {
                         state = 0;
                     }
                     break;
@@ -1049,16 +1250,19 @@ public class Song implements Comparable<Song> {
         return sb.toString();
     }
 
-    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {
+    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map)
+    {
         HashMap<SectionVersion, Grid<String>> ret = new HashMap<>();
-        for (SectionVersion version : map.keySet()) {
+        for (SectionVersion version : map.keySet())
+        {
             ret.put(version, new Grid<String>().deepCopy(map.get(version)));
             //  fixme: worry about version alteration!
         }
         return ret;
     }
 
-    private static int chordLetterToNumber(char letter) {
+    private static int chordLetterToNumber(char letter)
+    {
         int i = letter - 'A';
         //                            a  a# b  c  c# d  d# e  f f#  g  g#
         //                            0  1  2  3  4  5  6  7  8  9  10 11
@@ -1068,25 +1272,30 @@ public class Song implements Comparable<Song> {
 
     private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
 
-    private String chordNumberToLetter(int n, int halfSteps) {
+    private String chordNumberToLetter(int n, int halfSteps)
+    {
         return key.getScaleNoteByHalfStep(n + halfSteps).toString();
     }
 
-    private final void setTitle(String title) {
+    private final void setTitle(String title)
+    {
         //  move the leading "The " to the end
 
         final RegExp theRegExp = RegExp.compile("^the *", "i");
-        if (theRegExp.test(title)) {
+        if (theRegExp.test(title))
+        {
             title = theRegExp.replace(title, "") + ", The";
         }
         this.title = title;
         songId = new SongId("Song" + title.replaceAll("\\W+", ""));
     }
 
-    private final void setArtist(String artist) {
+    private final void setArtist(String artist)
+    {
         //  move the leading "The " to the end
         final RegExp theRegExp = RegExp.compile("^the *", "i");
-        if (theRegExp.test(artist)) {
+        if (theRegExp.test(artist))
+        {
             artist = theRegExp.replace(artist, "") + ", The";
         }
         this.artist = artist;
@@ -1097,7 +1306,8 @@ public class Song implements Comparable<Song> {
      *
      * @param key the given key
      */
-    public final void setKey(Key key) {
+    public final void setKey(Key key)
+    {
         this.key = key;
     }
 
@@ -1107,7 +1317,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the default BPM
      */
-    public final int getBeatsPerMinute() {
+    public final int getBeatsPerMinute()
+    {
         return defaultBpm;
     }
 
@@ -1116,7 +1327,8 @@ public class Song implements Comparable<Song> {
      *
      * @param bpm the defaultBpm to set
      */
-    public final void setBeatsPerMinute(int bpm) {
+    public final void setBeatsPerMinute(int bpm)
+    {
         this.defaultBpm = bpm;
     }
 
@@ -1125,7 +1337,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the number of beats per bar
      */
-    public final int getBeatsPerBar() {
+    public final int getBeatsPerBar()
+    {
         return beatsPerBar;
     }
 
@@ -1134,7 +1347,8 @@ public class Song implements Comparable<Song> {
      *
      * @param beatsPerBar the beatsPerBar to set
      */
-    public void setBeatsPerBar(int beatsPerBar) {
+    public void setBeatsPerBar(int beatsPerBar)
+    {
         this.beatsPerBar = beatsPerBar;
         computeDuration();
     }
@@ -1146,11 +1360,13 @@ public class Song implements Comparable<Song> {
      *
      * @return the unitsPerMeasure
      */
-    public final int getUnitsPerMeasure() {
+    public final int getUnitsPerMeasure()
+    {
         return unitsPerMeasure;
     }
 
-    public void setUnitsPerMeasure(int unitsPerMeasure) {
+    public void setUnitsPerMeasure(int unitsPerMeasure)
+    {
         this.unitsPerMeasure = unitsPerMeasure;
     }
 
@@ -1159,7 +1375,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the copyright
      */
-    public final String getCopyright() {
+    public final String getCopyright()
+    {
         return copyright;
     }
 
@@ -1168,7 +1385,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the key
      */
-    public final Key getKey() {
+    public final Key getKey()
+    {
         return key;
     }
 
@@ -1177,14 +1395,16 @@ public class Song implements Comparable<Song> {
      *
      * @return the songId
      */
-    public final SongId getSongId() {
+    public final SongId getSongId()
+    {
         return songId;
     }
 
     /**
      * @return the chordLetterToNumber
      */
-    public static final int[] getChordLetterToNumber() {
+    public static final int[] getChordLetterToNumber()
+    {
         return chordLetterToNumber;
     }
 
@@ -1193,7 +1413,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the title
      */
-    public final String getTitle() {
+    public final String getTitle()
+    {
         return title;
     }
 
@@ -1202,7 +1423,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the artist
      */
-    public final String getArtist() {
+    public final String getArtist()
+    {
         return artist;
     }
 
@@ -1212,7 +1434,8 @@ public class Song implements Comparable<Song> {
      * @return the rawLyrics
      */
     @Deprecated
-    public final String getLyricsAsString() {
+    public final String getLyricsAsString()
+    {
         return rawLyrics;
     }
 
@@ -1222,7 +1445,8 @@ public class Song implements Comparable<Song> {
      * @return the chords
      */
     @Deprecated
-    public final String getChordsAsString() {
+    public final String getChordsAsString()
+    {
         return chords;
     }
 
@@ -1231,7 +1455,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the defaultBpm
      */
-    public final int getDefaultBpm() {
+    public final int getDefaultBpm()
+    {
         return defaultBpm;
     }
 
@@ -1240,7 +1465,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the chordSectionMap
      */
-    public final HashMap<SectionVersion, Grid<String>> getChordSectionMap() {
+    public final HashMap<SectionVersion, Grid<String>> getChordSectionMap()
+    {
         return chordSectionMap;
     }
 
@@ -1249,7 +1475,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the displaySectionMap
      */
-    public final HashMap<SectionVersion, SectionVersion> getDisplaySectionMap() {
+    public final HashMap<SectionVersion, SectionVersion> getDisplaySectionMap()
+    {
         return displaySectionMap;
     }
 
@@ -1260,7 +1487,8 @@ public class Song implements Comparable<Song> {
      *
      * @return the drum section
      */
-    public final LegacyDrumSection getDrumSection() {
+    public final LegacyDrumSection getDrumSection()
+    {
         return drumSection;
     }
 
@@ -1269,76 +1497,79 @@ public class Song implements Comparable<Song> {
      *
      * @param drumSection the drum section
      */
-    public final void setDrumSection(LegacyDrumSection drumSection) {
+    public final void setDrumSection(LegacyDrumSection drumSection)
+    {
         this.drumSection = drumSection;
     }
 
-    /**
-     * Get the song's lyric sections.
-     *
-     * @return the song's lyric sections
-     */
-    public final ArrayList<LyricSection> getLyricSections() {
+    public ArrayList<ChordSection> getChordSections()
+    {
+        return chordSections;
+    }
+
+    public final Arrangement getDrumArrangement()
+    {
+        return drumArrangement;
+    }
+
+    public final void setDrumArrangement(Arrangement drumArrangement)
+    {
+        this.drumArrangement = drumArrangement;
+    }
+
+    public final JsDate getLastModifiedDate()
+    {
+        return lastModifiedDate;
+    }
+
+    public final void setLastModifiedDate(JsDate lastModifiedDate)
+    {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public final String getFileName()
+    {
+        return fileName;
+    }
+
+    public final void setFileName(String fileName)
+    {
+        this.fileName = fileName;
+    }
+
+    public final double getDuration()
+    {
+        return duration;
+    }
+
+    public final int getTotalBeats()
+    {
+        return totalBeats;
+    }
+
+    public ArrayList<SongMoment> getSongMoments()
+    {
+        return songMoments;
+    }
+
+    public ArrayList<LyricSection> getLyricSections()
+    {
         return lyricSections;
     }
 
 
-    public ArrayList<ChordSection> getChordSections() {
-        return chordSections;
-    }
-
-    /**
-     * Set the song's lyric sections.
-     *
-     * @param lyricSections the song's lyric sections.
-     */
-    public final void setLyricSections(ArrayList<LyricSection> lyricSections) {
-        this.lyricSections = lyricSections;
-    }
-
-
-    public final Arrangement getDrumArrangement() {
-        return drumArrangement;
-    }
-
-    public final void setDrumArrangement(Arrangement drumArrangement) {
-        this.drumArrangement = drumArrangement;
-    }
-
-    public final JsDate getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public final void setLastModifiedDate(JsDate lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public final String getFileName() {
-        return fileName;
-    }
-
-    public final void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public final double getDuration() {
-        return duration;
-    }
-
-    public final int getTotalBeats() {
-        return totalBeats;
-    }
-
-
-    public enum ComparatorType {
+    public enum ComparatorType
+    {
         title,
         artist,
         lastModifiedDate,
         lastModifiedDateLast;
     }
 
-    public static final Comparator<Song> getComparatorByType(ComparatorType type) {
-        switch (type) {
+    public static final Comparator<Song> getComparatorByType(ComparatorType type)
+    {
+        switch (type)
+        {
             default:
                 return new ComparatorByTitle();
             case artist:
@@ -1350,7 +1581,8 @@ public class Song implements Comparable<Song> {
         }
     }
 
-    public static final class ComparatorByTitle implements Comparator<Song> {
+    public static final class ComparatorByTitle implements Comparator<Song>
+    {
 
         /**
          * Compares its two arguments for order.
@@ -1366,12 +1598,14 @@ public class Song implements Comparable<Song> {
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2) {
+        public int compare(Song o1, Song o2)
+        {
             return o1.compareTo(o2);
         }
     }
 
-    public static final class ComparatorByArtist implements Comparator<Song> {
+    public static final class ComparatorByArtist implements Comparator<Song>
+    {
 
         /**
          * Compares its two arguments for order.
@@ -1387,16 +1621,19 @@ public class Song implements Comparable<Song> {
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2) {
+        public int compare(Song o1, Song o2)
+        {
             int ret = o1.getArtist().compareTo(o2.getArtist());
-            if (ret != 0) {
+            if (ret != 0)
+            {
                 return ret;
             }
             return o1.compareTo(o2);
         }
     }
 
-    public static final class ComparatorByLastModifiedDate implements Comparator<Song> {
+    public static final class ComparatorByLastModifiedDate implements Comparator<Song>
+    {
 
         /**
          * Compares its two arguments for order my most recent modification date.
@@ -1412,25 +1649,30 @@ public class Song implements Comparable<Song> {
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2) {
+        public int compare(Song o1, Song o2)
+        {
             JsDate mod1 = o1.lastModifiedDate;
             JsDate mod2 = o2.lastModifiedDate;
-            if (mod1 != null) {
-                if (mod2 != null) {
+            if (mod1 != null)
+            {
+                if (mod2 != null)
+                {
                     if (mod1.getTime() == mod2.getTime())
                         return o1.compareTo(o2);
                     return mod1.getTime() < mod2.getTime() ? 1 : -1;
                 }
                 return -1;
             }
-            if (mod2 != null) {
+            if (mod2 != null)
+            {
                 return 1;
             }
             return o1.compareTo(o2);
         }
     }
 
-    public static final class ComparatorByLastModifiedDateLast implements Comparator<Song> {
+    public static final class ComparatorByLastModifiedDateLast implements Comparator<Song>
+    {
 
         /**
          * Compares its two arguments for order my most recent modification date.
@@ -1446,18 +1688,22 @@ public class Song implements Comparable<Song> {
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2) {
+        public int compare(Song o1, Song o2)
+        {
             JsDate mod1 = o1.lastModifiedDate;
             JsDate mod2 = o2.lastModifiedDate;
-            if (mod1 != null) {
-                if (mod2 != null) {
+            if (mod1 != null)
+            {
+                if (mod2 != null)
+                {
                     if (mod1.getTime() == mod2.getTime())
                         return o1.compareTo(o2);
                     return mod1.getTime() < mod2.getTime() ? -1 : 1;
                 }
                 return 1;
             }
-            if (mod2 != null) {
+            if (mod2 != null)
+            {
                 return -1;
             }
             return o1.compareTo(o2);
@@ -1472,13 +1718,16 @@ public class Song implements Comparable<Song> {
      * @return
      */
     @Override
-    public int compareTo(Song o) {
+    public int compareTo(Song o)
+    {
         int ret = getSongId().compareTo(o.getSongId());
-        if (ret != 0) {
+        if (ret != 0)
+        {
             return ret;
         }
         ret = getArtist().compareTo(o.getArtist());
-        if (ret != 0) {
+        if (ret != 0)
+        {
             return ret;
         }
 
@@ -1495,12 +1744,15 @@ public class Song implements Comparable<Song> {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         //  fixme: song equals should include all fields
-        if (obj == null) {
+        if (obj == null)
+        {
             return false;
         }
-        if (!(obj instanceof Song)) {
+        if (!(obj instanceof Song))
+        {
             return false;
         }
         Song o = (Song) obj;
@@ -1528,7 +1780,8 @@ public class Song implements Comparable<Song> {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         //  fixme: song hashCode should include all fields
         int hash = 7;
         hash = (79 * hash + Objects.hashCode(this.title)) % (1 << 31);
@@ -1557,6 +1810,7 @@ public class Song implements Comparable<Song> {
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private ArrayList<ChordSection> chordSections = new ArrayList<>();
+    private ArrayList<SongMoment> songMoments = new ArrayList<>();
     private String chords = "";
     private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
     private String rawLyrics = "";

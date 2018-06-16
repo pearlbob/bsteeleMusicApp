@@ -36,15 +36,14 @@ public class MeasureSequenceItem extends MeasureNode {
                     ArrayList<Measure> childMeasures = measureNode.getMeasures();
                     if (childMeasures == null)
                         continue;
-                    GWT.log("add child: " + childMeasures.size());
+                    //GWT.log("add child: " + childMeasures.size());
                     if (childMeasures != null)
                         measures.addAll(childMeasures);
                 }
         }
-        GWT.log("total measures: " + measures.size());
+        //GWT.log("total measures: " + measures.size());
         return measures;
     }
-
 
     @Override
     public int getTotalMeasures() {
@@ -93,14 +92,16 @@ public class MeasureSequenceItem extends MeasureNode {
     }
 
     @Override
-    public String generateHtml(Key key, int tran) {
+    public String generateHtml(@Nonnull SongMoment songMoment, Key key, int tran) {
         StringBuilder sb = new StringBuilder();
 
+        int bassLine = 0;
         if (measureNodes != null && !measureNodes.isEmpty()) {
             MeasureNode lastMeasureNode = null;
             int measuresOnThisLine = 0;
+            MeasureNode measureNode = null;
             for (int i = 0; i < measureNodes.size(); i++) {
-                MeasureNode measureNode = measureNodes.get(i);
+                measureNode = measureNodes.get(i);
 
                 if (measureNode.isSingleItem()) {
                     if (i > 0 && measuresOnThisLine == 0) {
@@ -110,17 +111,20 @@ public class MeasureSequenceItem extends MeasureNode {
 
                     sb.append("<td class=\"" + CssConstants.style + "section"
                             + measureNode.getSectionVersion().getSection().getAbbreviation() + "Class\" id=\""
-                            +"C.\" >");
+                            + "C.\" >");
 
                     if (measureNode.equals(lastMeasureNode))
                         sb.append("-");
                     else
-                        sb.append(measureNode.generateHtml(key, tran));
+                        sb.append(measureNode.generateHtml(songMoment, key, tran));
                     lastMeasureNode = measureNode;
                     sb.append("</td>");
 
                     if (measuresOnThisLine % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
                         sb.append("</tr>\n");
+                        sb.append("<tr><td></td><td colspan=\"10\">" +
+                                "<canvas id=\"bassLine" + "fixMeHere"
+                                + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
                     }
                     measuresOnThisLine = Util.mod(measuresOnThisLine + 1, measuresPerLine);
                 } else {
@@ -131,11 +135,23 @@ public class MeasureSequenceItem extends MeasureNode {
                             measuresOnThisLine++;
                         }
                         sb.append("</tr><tr><td></td>\n");
+                        sb.append("<tr><td></td><td colspan=\"10\">" +
+                                "<canvas id=\"bassLine" + "fixMeHere"
+                                + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
                     } else if (i > 0)
                         sb.append("<tr><td></td>\n");
-                    sb.append(measureNode.generateHtml(key, tran));
+                    sb.append(measureNode.generateHtml(songMoment, key, tran));
+
                     measuresOnThisLine = 0;
                 }
+            }
+
+            if (measuresOnThisLine % measuresPerLine < measuresPerLine - 1) {
+                sb.append("</tr>\n");
+                if (measureNode.isSingleItem())
+                    sb.append("<tr><td></td><td colspan=\"10\">" +
+                            "<canvas id=\"bassLine" + "fixMeHere"
+                            + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
             }
         }
 

@@ -5,18 +5,16 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.SongUpdate;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.BassFile;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
-import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
-import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
@@ -32,7 +30,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -337,39 +334,14 @@ public class BassViewImpl
 
         bass.clear();
 
-        ArrayList<LyricSection> lyricSections = song.parseLyrics();
-        int sectionIndex = 0;
-        StringBuilder sb = new StringBuilder();
-        sb.append("<table class=\"" + CssConstants.style + "lyricsTable\" >");
-        song.getChordSectionMap();
-        for (LyricSection lyricSection : lyricSections) {
-            sb.append("<tr>");
-            sb.append("<td>")
-                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), currentKey, tran, prefix + sectionIndex));
-            sb.append("<td class=\"")
-                    .append(CssConstants.style)
-                    .append("sectionLabel \">")
-                    .append(lyricSection.getSectionVersion().toString())
-                    .append("</td>");
-            sb.append("<td")
-                    .append(" class=\"")
-                    .append(CssConstants.style)
-                    .append("lyrics")
-                    .append(lyricSection.getSectionVersion().getSection().getAbbreviation())
-                    .append("Class\"")
-                    .append(" id=\"" + prefix)
-                    .append(Song.genLyricsId(sectionIndex)).append("\">");
-            for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
-                sb.append(lyricsLine.getLyrics()).append("\n");
-            sb.append("</td>");
-            sb.append("</tr>\n");
-            sectionIndex++;
+        bass.add(new HTMLPanel(song.measureNodesToHtml(prefix + "Table", currentKey, tran)));
+
+        NodeList<Element> nodeList = bass.getElement().getElementsByTagName("canvas");
+        int limit = nodeList.getLength();
+        for (int i = 0; i < limit; i++) {
+            CanvasElement canvasElement = (CanvasElement) nodeList.getItem(i);
+            GWT.log("canvas id: " + canvasElement.getId());
         }
-        sb.append("</table>\n");
-
-        sb.append(song.measureNodesToHtml(currentKey, tran));
-
-        bass.add(new HTMLPanel(sb.toString()));
     }
 
     private AudioBeatDisplay audioBeatDisplay;

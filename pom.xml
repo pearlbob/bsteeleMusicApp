@@ -17,7 +17,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <!-- REQUIRED by appengine-maven-plugin plugin, if web.xml does not exist for your application -->
+        <!-- REQUIRED by app engine-maven-plugin plugin, if web.xml does not exist for your application -->
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Don't let your Mac use a crazy non-standard encoding -->
@@ -188,7 +188,7 @@
                 <configuration>
                     <archiveClasses>true</archiveClasses>
                     <webResources>
-                        <!-- in order to interpolate version from pom into appengine-web.xml -->
+                        <!-- in order to interpolate version from pom into app engine-web.xml -->
                         <resource>
                             <directory>${basedir}/src/main/webapp/WEB-INF</directory>
                             <filtering>true</filtering>

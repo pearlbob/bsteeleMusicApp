@@ -1,16 +1,10 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.client;
+package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.songs.ChordSection;
-import com.bsteele.bsteeleMusicApp.client.songs.Key;
-import com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem;
-import com.bsteele.bsteeleMusicApp.client.songs.Section;
-import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -30,37 +24,44 @@ import java.util.logging.Logger;
  * @author bob
  */
 @JsType
-public class SongUpdate {
+public class SongUpdate
+{
 
-    public enum State {
+    public enum State
+    {
         playing,
         idle;
     }
 
-    public SongUpdate() {
+    public SongUpdate()
+    {
         assignSong(Song.createEmptySong());
     }
 
-    public static final SongUpdate createSongUpdate(Song song) {
+    public static final SongUpdate createSongUpdate(Song song)
+    {
         SongUpdate ret = new SongUpdate();
         ret.assignSong(song);
         return ret;
     }
 
-    private void assignSong(Song song){
+    private void assignSong(Song song)
+    {
         this.song = song;
         currentBeatsPerMinute = song.getBeatsPerMinute();
         currentKey = song.getKey();
     }
 
-    public final State getState() {
+    public final State getState()
+    {
         return state;
     }
 
     /**
      * @param measure the measure to set
      */
-    void setMeasure(int measure) {
+    public void setMeasure(int measure)
+    {
         measureSet(measure);
     }
 
@@ -69,19 +70,24 @@ public class SongUpdate {
      *
      * @param m the measure to move to
      */
-    private void measureSet(int m) {
+    private void measureSet(int m)
+    {
         sectionNumber = 0;
         sectionVersion = Section.getDefaultVersion();
         measureContent = "";
         //  special for first measure
+
         if (m >= 0
                 && song != null
-                && song.getSectionSequence() != null
-                && song.getSectionSequence().size() > 0) {
-            ArrayList<SectionVersion> songSectionSequence = song.getSectionSequence();
-            sectionVersion = songSectionSequence.get(sectionNumber);
+                && song.getSongMoments() != null
+                && song.getSongMoments().size() > 0)
+        {
+            ArrayList<SongMoment> songMoments = song.getSongMoments();
+            songMoment = songMoments.get(sectionNumber);
+            sectionVersion = songMoment.getLyricSection().getSectionVersion();
             Grid<String> chordSection = song.getChordSection(sectionVersion);
-            if (chordSection != null && !chordSection.isEmpty()) {
+            if (chordSection != null && !chordSection.isEmpty())
+            {
                 ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
                 if (chordCols != null && chordCols.size() > 0)
                     measureContent = chordCols.get(0);
@@ -101,14 +107,17 @@ public class SongUpdate {
         beat = 0;
 
         //  fixme: performance improvements?
-        if (m == 0) {
+        if (m == 0)
+        {
             measure = 0;  //    we're done from the above
-        } else if (m > 0) {
+        } else if (m > 0)
+        {
             //  walk forward to correct measure
             while (measure < m)
                 if (!nextMeasure())
                     break;
-        } else {
+        } else
+        {
             //  leave negative measures as they are
             measure = m;
         }
@@ -119,28 +128,35 @@ public class SongUpdate {
      *
      * @return true if the measure exists
      */
-    public final boolean nextMeasure() {
+    public final boolean nextMeasure()
+    {
         logger.fine("nextMeasure() from " + measure);
-        if (measure < 0) {
+        if (measure < 0)
+        {
             measure++;
             if (measure == 0)
                 measureSet(0);
             return true;
         }
 
-        ArrayList<SectionVersion> songSectionSequence = song.getSectionSequence();
-        if (sectionNumber >= songSectionSequence.size())
+        ArrayList<SongMoment> songMoments = song.getSongMoments();
+        if (songMoments == null)
+            return false;
+
+        if (sectionNumber >= songMoments.size())
             return false;
 
         //  increment to next the next measure slot
-        sectionVersion = songSectionSequence.get(sectionNumber);
+        SongMoment songMoment = songMoments.get(sectionNumber);
+        sectionVersion = songMoment.getLyricSection().getSectionVersion();
         Grid<String> chordSection = song.getChordSection(sectionVersion);
         if (chordSection == null)
             return true;
 
         ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
         chordSectionColumn++;
-        if (chordCols == null || this.chordSectionColumn >= chordCols.size()) {
+        if (chordCols == null || this.chordSectionColumn >= chordCols.size())
+        {
             //  go to the next row
             this.chordSectionColumn = 0;
             this.chordSectionRow++;
@@ -149,18 +165,21 @@ public class SongUpdate {
             if (repeatTotal > 0
                     && chordSectionRow > repeatLastRow
                     && repeatCurrent < repeatTotal
-                    ) {
+                    )
+            {
                 repeatCurrent++;
                 if (repeatCurrent < repeatTotal)
                     chordSectionRow = repeatFirstRow;
-                else {
+                else
+                {
                     repeatTotal = 0;  //  repeat done
                     repeatFirstRow = -1;
                     repeatLastCol = -1;
                 }
             }
             //  go to the next sectionNumber
-            if (chordSectionRow >= chordSection.getRowCount()) {
+            if (chordSectionRow >= chordSection.getRowCount())
+            {
                 repeatTotal = 0;
                 chordSectionRow = 0;
                 sectionNumber++;
@@ -168,18 +187,22 @@ public class SongUpdate {
         }
 
         //  validate where we've landed after the increment
-        if (sectionNumber >= songSectionSequence.size())
+        if (sectionNumber >= songMoments.size())
             return false;
-        sectionVersion = songSectionSequence.get(sectionNumber);
+
+        songMoment = songMoments.get(sectionNumber);
+        sectionVersion = songMoment.getLyricSection().getSectionVersion();
         chordSection = song.getChordSection(sectionVersion);
 
         chordCols = chordSection.getRow(chordSectionRow);
-        if (chordCols == null) {
+        if (chordCols == null)
+        {
             return false;
         }
 
         measureContent = chordCols.get(chordSectionColumn);
-        if (measureContent == null) {
+        if (measureContent == null)
+        {
             return false;
         }
 
@@ -187,7 +210,8 @@ public class SongUpdate {
         //  look for the repeat extender
         //  note: doesn't have to be at the end of the row due to comments
         final RegExp extenderRegExp = RegExp.compile("^\\s*\\|");
-        if (extenderRegExp.test(measureContent)) {
+        if (extenderRegExp.test(measureContent))
+        {
             //  not currently repeating
             //  mark the first vertical bar row
             if (this.repeatFirstRow < 0)
@@ -198,8 +222,10 @@ public class SongUpdate {
         //  look for repeat
         final RegExp repeatRegExp = RegExp.compile("x *(?:\\d+\\/)?(\\d+)", "i");
         MatchResult mr = repeatRegExp.exec(measureContent);
-        if (mr != null) {
-            if (repeatTotal == 0) {
+        if (mr != null)
+        {
+            if (repeatTotal == 0)
+            {
                 //  not currently repeating
                 repeatTotal = Integer.parseInt(mr.getGroup(1));
                 repeatCurrent = 0;
@@ -220,19 +246,23 @@ public class SongUpdate {
      *
      * @return
      */
-    public final double getEventTime() {
+    public final double getEventTime()
+    {
         return eventTime;
     }
 
-    public final Song getSong() {
+    public final Song getSong()
+    {
         return song;
     }
 
-    public final int getSectionCount() {
+    public final int getSectionCount()
+    {
         return sectionCount;
     }
 
-    public final int getSectionNumber() {
+    public final int getSectionNumber()
+    {
         return sectionNumber;
     }
 
@@ -241,7 +271,8 @@ public class SongUpdate {
      *
      * @return
      */
-    public final SectionVersion getSectionVersion() {
+    public final SectionVersion getSectionVersion()
+    {
         return sectionVersion;
     }
 
@@ -250,11 +281,13 @@ public class SongUpdate {
      *
      * @return
      */
-    public final int getChordSectionRow() {
+    public final int getChordSectionRow()
+    {
         return chordSectionRow;
     }
 
-    public final int getChordSectionColumn() {
+    public final int getChordSectionColumn()
+    {
         return chordSectionColumn;
     }
 
@@ -263,7 +296,8 @@ public class SongUpdate {
      *
      * @return
      */
-    public final int getRepeatCurrent() {
+    public final int getRepeatCurrent()
+    {
         return repeatCurrent;
     }
 
@@ -272,12 +306,14 @@ public class SongUpdate {
      *
      * @return
      */
-    public final int getMeasure() {
+    public final int getMeasure()
+    {
         return measure;
     }
 
 
-    public final double getMeasureDuration() {
+    public final double getMeasureDuration()
+    {
         if (song == null)
             return 2;
         return song.getBeatsPerBar() * 60.0 / (currentBeatsPerMinute == 0 ? 30 : currentBeatsPerMinute);
@@ -289,61 +325,70 @@ public class SongUpdate {
      *
      * @return
      */
-    public final int getBeat() {
+    public final int getBeat()
+    {
         return beat;
     }
 
     /**
      * @return the beatsPerMeasure
      */
-    public final int getBeatsPerMeasure() {
+    public final int getBeatsPerMeasure()
+    {
         return beatsPerMeasure;
     }
 
     /**
      * @return the currentBeatsPerMinute
      */
-    public final int getCurrentBeatsPerMinute() {
+    public final int getCurrentBeatsPerMinute()
+    {
         return currentBeatsPerMinute > 0 ? currentBeatsPerMinute : song.getBeatsPerMinute();
     }
 
 
-    final void setState(State state) {
+    public final void setState(State state)
+    {
         this.state = state;
     }
 
     /**
      * @param eventTime the eventTime to set
      */
-    final void setEventTime(double eventTime) {
+    public final void setEventTime(double eventTime)
+    {
         this.eventTime = eventTime;
     }
 
     /**
      * @param song the song to set
      */
-    public final void setSong(Song song) {
+    public final void setSong(Song song)
+    {
         this.song = song;
     }
 
     /**
      * @param sectionCount the sectionCount to set
      */
-    final void setSectionCount(int sectionCount) {
+    final void setSectionCount(int sectionCount)
+    {
         this.sectionCount = sectionCount;
     }
 
     /**
      * @param chordSectionRow the chordSectionRow to set
      */
-    final void setChordSectionRow(int chordSectionRow) {
+    final void setChordSectionRow(int chordSectionRow)
+    {
         this.chordSectionRow = chordSectionRow;
     }
 
     /**
      * @param repeatCurrent the repeatCurrent to set
      */
-    final void setRepeatCurrent(int repeatCurrent) {
+    final void setRepeatCurrent(int repeatCurrent)
+    {
         this.repeatCurrent = repeatCurrent;
     }
 
@@ -351,51 +396,61 @@ public class SongUpdate {
     /**
      * @param beat the beat to set
      */
-    final void setBeat(int beat) {
+    final void setBeat(int beat)
+    {
         this.beat = beat;
     }
 
     /**
      * @param beatsPerMeasure the beatsPerMeasure to set
      */
-    final void setBeatsPerBar(int beatsPerMeasure) {
+    public final void setBeatsPerBar(int beatsPerMeasure)
+    {
         this.beatsPerMeasure = beatsPerMeasure;
     }
 
     /**
      * @param currentBeatsPerMinute the currentBeatsPerMinute to set
      */
-    public final void setCurrentBeatsPerMinute(int currentBeatsPerMinute) {
+    public final void setCurrentBeatsPerMinute(int currentBeatsPerMinute)
+    {
         this.currentBeatsPerMinute = currentBeatsPerMinute;
     }
 
-    public final int getRepeatTotal() {
+    public final int getRepeatTotal()
+    {
         return repeatTotal;
     }
 
-    public final int getRepeatFirstRow() {
+    public final int getRepeatFirstRow()
+    {
         return repeatFirstRow;
     }
 
-    public final int getRepeatLastRow() {
+    public final int getRepeatLastRow()
+    {
         return repeatLastRow;
     }
 
-    public final int getRepeatLastCol() {
+    public final int getRepeatLastCol()
+    {
         return repeatLastCol;
     }
 
 
-    public final Key getCurrentKey() {
+    public final Key getCurrentKey()
+    {
         return currentKey != null ? currentKey : song.getKey();
     }
 
-    public final void setCurrentKey(Key currentKey) {
+    public final void setCurrentKey(Key currentKey)
+    {
         this.currentKey = currentKey;
     }
 
 
-    public final String diff(SongUpdate other) {
+    public final String diff(SongUpdate other)
+    {
         if (other == null || other.song == null)
             return "no old song";
         if (!song.equals(other.song))
@@ -435,7 +490,8 @@ public class SongUpdate {
      * @return a string representation of the object.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder sb = new StringBuilder("SongUpdate: ");
         sb.append(getMeasure());
         sb.append(" ").append(getSectionNumber());
@@ -444,15 +500,18 @@ public class SongUpdate {
         return sb.toString();
     }
 
-    public static final SongUpdate fromJson(String jsonString) {
+    public static final SongUpdate fromJson(String jsonString)
+    {
         logger.fine(jsonString);
-        if (jsonString == null || jsonString.length() <= 0) {
+        if (jsonString == null || jsonString.length() <= 0)
+        {
             return null;
         }
         JSONObject jo;
         {
             JSONValue jv = JSONParser.parseStrict(jsonString);
-            if (jv == null) {
+            if (jv == null)
+            {
                 return null;
             }
             jo = jv.isObject();
@@ -460,14 +519,18 @@ public class SongUpdate {
         return fromJsonObject(jo);
     }
 
-    public static final SongUpdate fromJsonObject(JSONObject jo) {
-        if (jo == null) {
+    public static final SongUpdate fromJsonObject(JSONObject jo)
+    {
+        if (jo == null)
+        {
             return null;
         }
         SongUpdate songUpdate = new SongUpdate();
-        for (String name : jo.keySet()) {
+        for (String name : jo.keySet())
+        {
             JSONValue jv = jo.get(name);
-            switch (name) {
+            switch (name)
+            {
                 case "state":
                     songUpdate.setState(State.valueOf(jv.isString().stringValue()));
                     break;
@@ -499,7 +562,8 @@ public class SongUpdate {
         return songUpdate;
     }
 
-    public final String toJson() {
+    public final String toJson()
+    {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n")
                 .append("\"state\": \"")
@@ -533,7 +597,8 @@ public class SongUpdate {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int hash = 5;
         hash = (83 * hash + state.hashCode()) % (1 << 31);
         hash = (83 * hash + Objects.hashCode(currentKey)) % (1 << 31);
@@ -557,73 +622,96 @@ public class SongUpdate {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
             return true;
         }
-        if (obj == null) {
+        if (obj == null)
+        {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
+        {
             return false;
         }
         final SongUpdate other = (SongUpdate) obj;
-        if (song != null) {
-            if (!this.song.equals(other.song)) {
+        if (song != null)
+        {
+            if (!this.song.equals(other.song))
+            {
                 return false;
             }
         } else if (other.song != null)
             return false;
 
-        if (!this.state.equals(other.state)) {
+        if (!this.state.equals(other.state))
+        {
             return false;
         }
-        if (!this.currentKey.equals(other.currentKey)) {
+        if (!this.currentKey.equals(other.currentKey))
+        {
             return false;
         }
-        if (this.eventTime != other.eventTime) {
+        if (this.eventTime != other.eventTime)
+        {
             return false;
         }
-        if (this.sectionCount != other.sectionCount) {
+        if (this.sectionCount != other.sectionCount)
+        {
             return false;
         }
-        if (this.sectionVersion != other.sectionVersion) {
+        if (this.sectionVersion != other.sectionVersion)
+        {
             return false;
         }
-        if (this.chordSectionRow != other.chordSectionRow) {
+        if (this.chordSectionRow != other.chordSectionRow)
+        {
             return false;
         }
-        if (this.chordSectionColumn != other.chordSectionColumn) {
+        if (this.chordSectionColumn != other.chordSectionColumn)
+        {
             return false;
         }
-        if (this.repeatCurrent != other.repeatCurrent) {
+        if (this.repeatCurrent != other.repeatCurrent)
+        {
             return false;
         }
-        if (this.repeatTotal != other.repeatTotal) {
+        if (this.repeatTotal != other.repeatTotal)
+        {
             return false;
         }
-        if (this.repeatFirstRow != other.repeatFirstRow) {
+        if (this.repeatFirstRow != other.repeatFirstRow)
+        {
             return false;
         }
-        if (this.repeatLastRow != other.repeatLastRow) {
+        if (this.repeatLastRow != other.repeatLastRow)
+        {
             return false;
         }
-        if (this.repeatLastCol != other.repeatLastCol) {
+        if (this.repeatLastCol != other.repeatLastCol)
+        {
             return false;
         }
-        if (this.measure != other.measure) {
+        if (this.measure != other.measure)
+        {
             return false;
         }
-        if (this.beat != other.beat) {
+        if (this.beat != other.beat)
+        {
             return false;
         }
-        if (this.beatsPerMeasure != other.beatsPerMeasure) {
+        if (this.beatsPerMeasure != other.beatsPerMeasure)
+        {
             return false;
         }
-        if (this.currentBeatsPerMinute != other.currentBeatsPerMinute) {
+        if (this.currentBeatsPerMinute != other.currentBeatsPerMinute)
+        {
             return false;
         }
-        if (this.sectionNumber != other.sectionNumber) {
+        if (this.sectionNumber != other.sectionNumber)
+        {
             return false;
         }
         return true;
@@ -635,6 +723,7 @@ public class SongUpdate {
     private int sectionNumber;
     private int sectionCount;
     private String sectionId;
+    private SongMoment songMoment;
     private SectionVersion sectionVersion;
     private int chordSectionRow;
     private int chordSectionColumn;

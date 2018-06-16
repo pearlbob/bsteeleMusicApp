@@ -1,8 +1,9 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.client;
+package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.AfterClass;

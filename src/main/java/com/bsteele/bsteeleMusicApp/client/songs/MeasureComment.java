@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class MeasureComment extends MeasureNode {
     }
 
 
-    public static final MeasureComment parse(@Nonnull SectionVersion sectionVersion, String s) {
+    public static final MeasureComment parse(@NotNull SectionVersion sectionVersion, String s) {
         if (s == null || s.length() <= 0)
             return null;
 
@@ -48,7 +49,7 @@ public class MeasureComment extends MeasureNode {
     }
 
     @Override
-    public String generateHtml(@Nonnull Key key, int tran) {
+    public String generateHtml(@NotNull SongMoment songMoment, @NotNull Key key, int tran) {
         return toString();
     }
 

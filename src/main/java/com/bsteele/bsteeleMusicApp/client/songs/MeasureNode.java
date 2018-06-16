@@ -14,15 +14,9 @@ public abstract class MeasureNode {
         this.sectionVersion = sectionVersion;
     }
 
-    public final int getSequenceNumber() {
-        return sequenceNumber;
+    public final SectionVersion getSectionVersion() {
+        return sectionVersion;
     }
-
-    public final void setSequenceNumber(int sequenceNumber) {
-        this.sequenceNumber = sequenceNumber;
-    }
-
-    public final SectionVersion getSectionVersion() { return sectionVersion; }
 
     public final void setSectionVersion(SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
@@ -44,17 +38,22 @@ public abstract class MeasureNode {
         return measures;
     }
 
-    public boolean isSingleItem() { return true; }
+    public boolean isSingleItem() {
+        return true;
+    }
 
-    public abstract String generateHtml(@Nonnull Key key, int tran );
-    
+    public boolean isRepeat() {
+        return false;
+    }
+
+    public abstract String generateHtml(@Nonnull SongMoment songMoment, @Nonnull Key key, int tran);
+
     public abstract boolean equals(Object o);
 
     public abstract int hashCode();
 
-    private int sequenceNumber;
     private SectionVersion sectionVersion;
     protected transient int parseLength;
     protected transient ArrayList<Measure> measures;
-       protected static final int measuresPerLine = 4;
+    protected static final int measuresPerLine = 4;
 }

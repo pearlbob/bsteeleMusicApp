@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONException;

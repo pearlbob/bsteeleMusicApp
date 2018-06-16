@@ -20,17 +20,14 @@
     <facet type="gwt" name="GWT">
       <configuration>
         <setting name="compilerParameters" value="-failOnError -sourceLevel 1.8" />
+        <setting name="compilerMaxHeapSize" value="1024" />
+        <setting name="gwtScriptOutputStyle" value="DETAILED" />
         <setting name="gwtSdkUrl" value="file://$MAVEN_REPOSITORY$/com/google/gwt/gwt-dev/2.8.2/" />
         <setting name="gwtSdkType" value="maven" />
         <setting name="webFacet" value="Web" />
         <packaging>
           <module name="com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit" enabled="false" />
         </packaging>
-      </configuration>
-    </facet>
-    <facet type="google-app-engine" name="Google App Engine">
-      <configuration>
-        <sdk-home-path>$MAVEN_REPOSITORY$/com/google/appengine/appengine-java-sdk/1.9.63/appengine-java-sdk/appengine-java-sdk-1.9.63</sdk-home-path>
       </configuration>
     </facet>
   </component>

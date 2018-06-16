@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: fix chaos at song.parseLyrics() and song.parse(beatsPerBar, song.chords);
 todo: remember the last selected key for a song
 todo: Bodhi question:  arrangement presentation
 todo: Bodhi question:  arrangement change of key with notes... after 12 offsets?

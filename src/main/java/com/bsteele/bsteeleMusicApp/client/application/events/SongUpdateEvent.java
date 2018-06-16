@@ -3,7 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.application.events;
 
-import com.bsteele.bsteeleMusicApp.client.SongUpdate;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.GwtEvent;
 
