@@ -17,7 +17,8 @@ import java.util.Objects;
  * When added, chord beat durations exceeding the measure beat count will be ignored on playback.
  * </p>
  */
-public class Measure extends MeasureNode {
+public class Measure extends MeasureNode
+{
 
     /**
      * A convenience constructor to build a typical measure.
@@ -25,19 +26,22 @@ public class Measure extends MeasureNode {
      * @param beatCount the beat count for the measure
      * @param chords    the chords to be played over this measure
      */
-    public Measure(@Nonnull SectionVersion sectionVersion, int beatCount, ArrayList<Chord> chords) {
+    public Measure(@Nonnull SectionVersion sectionVersion, int beatCount, ArrayList<Chord> chords)
+    {
         super(sectionVersion);
         setBeatCount(beatCount);
         setChords(chords);
     }
 
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatsPerBar) {
+                                      String s, int beatsPerBar)
+    {
         return parse(sectionVersion, s, beatsPerBar, null);
     }
 
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatsPerBar, Measure lastMeasure) {
+                                      String s, int beatsPerBar, Measure lastMeasure)
+    {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
             return null;
@@ -55,15 +59,18 @@ public class Measure extends MeasureNode {
                 break;
 
             Chord chord = Chord.parse(s, beatsPerBar);
-            if (chord == null) {
+            if (chord == null)
+            {
                 //  see if this is a chord less measure
-                if (s.charAt(0) == 'X') {
+                if (s.charAt(0) == 'X')
+                {
                     ret = new Measure(sectionVersion, beatsPerBar, emptyChordList);
                     parseLength += 1;
                     break;
                 }
                 //  see if this is a repeat measure
-                if (s.charAt(0) == '-' && lastMeasure != null) {
+                if (s.charAt(0) == '-' && lastMeasure != null)
+                {
                     ret = new Measure(sectionVersion, beatsPerBar, lastMeasure.getChords());
                     parseLength += 1;
                     break;
@@ -79,10 +86,13 @@ public class Measure extends MeasureNode {
             return null;
 
         //  distribute the slash chord to all
-        if (chords.size() > 1) {
+        if (chords.size() > 1)
+        {
             ScaleChord slashScaleChord = chords.get(chords.size() - 1).getSlashScaleChord();
-            if (slashScaleChord != null) {
-                for (Chord chord : chords) {
+            if (slashScaleChord != null)
+            {
+                for (Chord chord : chords)
+                {
                     chord.setSlashScaleChord(slashScaleChord);
                 }
             }
@@ -92,19 +102,22 @@ public class Measure extends MeasureNode {
             ret = new Measure(sectionVersion, beatsPerBar, chords);
 
         // allocate the beats
-        if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1) {
+        if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1)
+        {
             //  common case: split the beats even across the two chords
             //  bias to beat 1 on 3 beats to the bar
             int b2 = beatsPerBar / 2;
             chords.get(1).setBeats(b2);
             chords.get(0).setBeats(beatsPerBar - b2);
         }
-        if (!chords.isEmpty()) {    // fill the beat count onto the last chord if required
+        if (!chords.isEmpty())
+        {    // fill the beat count onto the last chord if required
             //  works for one chord as well
             int count = 0;
             for (Chord chord : chords)
                 count += chord.getBeats();
-            if (count < beatsPerBar) {
+            if (count < beatsPerBar)
+            {
                 Chord lastChord = chords.get(chords.size() - 1);
                 lastChord.setBeats(lastChord.getBeats() + (beatsPerBar - count));
             }
@@ -121,7 +134,8 @@ public class Measure extends MeasureNode {
      *
      * @return the beat count for the measure
      */
-    public final int getBeatCount() {
+    public final int getBeatCount()
+    {
         return beatCount;
     }
 
@@ -130,7 +144,8 @@ public class Measure extends MeasureNode {
      *
      * @param beatCount
      */
-    public final void setBeatCount(int beatCount) {
+    public final void setBeatCount(int beatCount)
+    {
         this.beatCount = beatCount;
     }
 
@@ -139,7 +154,8 @@ public class Measure extends MeasureNode {
      *
      * @return the chords
      */
-    public final ArrayList<Chord> getChords() {
+    public final ArrayList<Chord> getChords()
+    {
         return chords;
     }
 
@@ -148,16 +164,19 @@ public class Measure extends MeasureNode {
      *
      * @param chords the chords
      */
-    public final void setChords(ArrayList<Chord> chords) {
+    public final void setChords(ArrayList<Chord> chords)
+    {
         this.chords = chords;
     }
 
-    public final Chord getChordAtBeat(double beat) {
+    public final Chord getChordAtBeat(double beat)
+    {
         if (chords == null || chords.isEmpty())
             return null;
 
         double beatSum = 0;
-        for (Chord chord : chords) {
+        for (Chord chord : chords)
+        {
             beatSum += chord.getBeats();
             if (beat <= beatSum)
                 return chord;
@@ -166,8 +185,10 @@ public class Measure extends MeasureNode {
     }
 
     @Override
-    public ArrayList<Measure> getMeasures() {
-        if (measures == null) {
+    public ArrayList<Measure> getMeasures()
+    {
+        if (measures == null)
+        {
             measures = new ArrayList<>();
             measures.add(this);
         }
@@ -175,29 +196,50 @@ public class Measure extends MeasureNode {
     }
 
     @Override
-    public String generateHtml(@NotNull SongMoment songMoment, Key key, int tran) {
+    public String generateHtml(@NotNull SongMoment songMoment, Key key, int tran)
+    {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
-            for (Chord chord : chords) {
+            for (Chord chord : chords)
+            {
                 sb.append(chord.transpose(key, tran));
             }
 
         return sb.toString();
     }
 
-    private final String chordsToString() {
+    @Override
+    public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran)
+    {
+        ArrayList<String> ret = new ArrayList<>();
+
+        StringBuilder sb = new StringBuilder();
+        if (chords != null)
+            for (Chord chord : chords)
+            {
+                sb.append(chord.transpose(key, tran));
+            }
+        ret.add(sb.toString());
+
+        return ret;
+    }
+
+    private final String chordsToString()
+    {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
-            for (Chord chord : chords) {
+            for (Chord chord : chords)
+            {
                 sb.append(chord.toString());
             }
         return sb.toString();
     }
 
-      @Override
-    public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Measure measure = (Measure) o;
@@ -206,17 +248,20 @@ public class Measure extends MeasureNode {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(beatCount, chords);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return chordsToString() + " ";
     }
 
     @Override
-    public int getTotalMeasures() {
+    public int getTotalMeasures()
+    {
         return 1;
     }
 

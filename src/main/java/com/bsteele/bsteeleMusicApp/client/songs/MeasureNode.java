@@ -8,45 +8,57 @@ import java.util.ArrayList;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public abstract class MeasureNode {
+public abstract class MeasureNode
+{
 
-    public MeasureNode(@Nonnull SectionVersion sectionVersion) {
+    public MeasureNode(@Nonnull SectionVersion sectionVersion)
+    {
         this.sectionVersion = sectionVersion;
     }
 
-    public final SectionVersion getSectionVersion() {
+    public final SectionVersion getSectionVersion()
+    {
         return sectionVersion;
     }
 
-    public final void setSectionVersion(SectionVersion sectionVersion) {
+    public final void setSectionVersion(SectionVersion sectionVersion)
+    {
         this.sectionVersion = sectionVersion;
     }
 
-    public int getParseLength() {
+    public int getParseLength()
+    {
         return parseLength;
     }
 
-    public int getTotalMeasures() {
+    public int getTotalMeasures()
+    {
         return (measures != null ? measures.size() : 0);
     }
 
-    public ArrayList<MeasureNode> getMeasureNodes() {
+    public ArrayList<MeasureNode> getMeasureNodes()
+    {
         return null;
     }
 
-    public ArrayList<Measure> getMeasures() {
+    public ArrayList<Measure> getMeasures()
+    {
         return measures;
     }
 
-    public boolean isSingleItem() {
+    public boolean isSingleItem()
+    {
         return true;
     }
 
-    public boolean isRepeat() {
+    public boolean isRepeat()
+    {
         return false;
     }
 
     public abstract String generateHtml(@Nonnull SongMoment songMoment, @Nonnull Key key, int tran);
+
+    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran);
 
     public abstract boolean equals(Object o);
 

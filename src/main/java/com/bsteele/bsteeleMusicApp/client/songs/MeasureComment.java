@@ -9,20 +9,24 @@ import java.util.Objects;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureComment extends MeasureNode {
+public class MeasureComment extends MeasureNode
+{
 
-    public MeasureComment(@Nonnull SectionVersion sectionVersion, String comment) {
+    public MeasureComment(@Nonnull SectionVersion sectionVersion, String comment)
+    {
         super(sectionVersion);
         this.comment = comment;
     }
 
 
-    public static final MeasureComment parse(@NotNull SectionVersion sectionVersion, String s) {
+    public static final MeasureComment parse(@NotNull SectionVersion sectionVersion, String s)
+    {
         if (s == null || s.length() <= 0)
             return null;
 
         int n = -1;
-        if (s.charAt(0) == '(') {
+        if (s.charAt(0) == '(')
+        {
             n = s.indexOf(')'); //  match a parenthesis
             if (n > 0)
                 n++;        //  include the right paren
@@ -40,21 +44,33 @@ public class MeasureComment extends MeasureNode {
     }
 
 
-    public final String getComment() {
+    public final String getComment()
+    {
         return comment;
     }
 
-    public final void setComment(String comment) {
+    public final void setComment(String comment)
+    {
         this.comment = comment;
     }
 
     @Override
-    public String generateHtml(@NotNull SongMoment songMoment, @NotNull Key key, int tran) {
+    public String generateHtml(@NotNull SongMoment songMoment, @NotNull Key key, int tran)
+    {
         return toString();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran)
+    {
+        ArrayList<String> ret = new ArrayList<>();
+        ret.add(toString());
+        return ret;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MeasureComment that = (MeasureComment) o;
@@ -62,12 +78,14 @@ public class MeasureComment extends MeasureNode {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(comment);
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "( " + comment + ") ";
     }
 

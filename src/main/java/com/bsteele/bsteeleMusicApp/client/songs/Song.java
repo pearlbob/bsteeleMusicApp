@@ -787,9 +787,19 @@ public class Song implements Comparable<Song>
         StringBuilder sb = new StringBuilder();
 
         sb.append("<table id=\"" + tableName + "\" class=\"" + CssConstants.style + "chordTable\">\n");
-        for (SongMoment songMoment : getSongMoments())
+
+        ArrayList<String> innerHtml = null;
+        int i = 0;
+        int j = 0;
+        LyricSection lyricSection = null;
+        SongMoment songMoment;
+        for (; i < 10000; i++)    //  safety
         {
-            LyricSection lyricSection = songMoment.getLyricSection();
+            if (i >= songMoments.size())
+                break;
+
+            songMoment = songMoments.get(i);
+            lyricSection = songMoment.getLyricSection();
             SectionVersion sectionVersion = lyricSection.getSectionVersion();
             sb.append("<tr><td class='" + CssConstants.style + "sectionLabel' >").
                     append(sectionVersion.toString()).append("</td><td class=\"")
@@ -802,15 +812,62 @@ public class Song implements Comparable<Song>
             for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
                 sb.append(lyricsLine.getLyrics()).append("\n");
 
-            sb.append("</td></tr>");
+            sb.append("</td></tr><td></td>");
             for (MeasureNode measureNode : measureNodes)
             {
                 if (measureNode.getSectionVersion().equals(lyricSection.getSectionVersion()))
                 {
-                    sb.append(measureNode.generateHtml(songMoment, key, tran));
+                    innerHtml = measureNode.generateInnerHtml(key, tran);
+                    j = 0;
                     break;
                 }
             }
+
+            //  exhaust the html we've been given
+            while (innerHtml != null)
+            {
+                String s = innerHtml.get(j++);
+                if (j >= innerHtml.size())
+                {
+                    j = 0;
+                    innerHtml = null;
+                }
+
+                switch (s)
+                {
+                    case "":
+                        sb.append("<td></td>");
+                        break;
+                    case "|":
+                        sb.append("<td>").append(s).append("</td></tr>\n<tr>");
+                        break;
+                    case "\n":
+                        sb.append("</tr>\n<tr><td></td>");
+                        break;
+                    default:
+                        sb.append("<td class=\"" + CssConstants.style + "section"
+                                + sectionVersion.getSection().getAbbreviation() + "Class\" id=\""
+                                + "C."+songMoment.getSequenceNumber()+"\" >")
+                                .append(s).append("</td>");
+
+                        //  repeat lines
+                        if (s.startsWith("|")||s.startsWith("x"))
+                        {
+                            sb.append("</td></tr>\n<tr><td></td>");
+                            break;
+                        }
+
+
+                        //  increment for next time
+                        if ( i < songMoments.size()-1)
+                        {
+                            i++;
+                            songMoment = songMoments.get(i);
+                        }
+                        break;
+                }
+            }
+            sb.append("</tr>\n");
         }
         sb.append("</table>\n");
 
