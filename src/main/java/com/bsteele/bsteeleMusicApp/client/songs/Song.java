@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -433,7 +434,6 @@ public class Song implements Comparable<Song>
         if (lyricSections == null)
             return;
 
-        int sequenceNumber = 0;
         for (LyricSection lyricSection : lyricSections)
         {
             ArrayList<MeasureNode> chordSectionNodes = null;
@@ -458,7 +458,9 @@ public class Song implements Comparable<Song>
                             if (measures != null)
                                 for (Measure measure : measures)
                                 {
-                                    songMoments.add(new SongMoment(sequenceNumber++, lyricSection, measureNode,
+                                    songMoments.add(new SongMoment(
+                                            songMoments.size(),  //  size prior to add
+                                            lyricSection, measureNode,
                                             measure, repeat, limit));
                                 }
                         }
@@ -468,7 +470,9 @@ public class Song implements Comparable<Song>
                         if (measures != null)
                             for (Measure measure : measures)
                             {
-                                songMoments.add(new SongMoment(sequenceNumber++, lyricSection, measureNode,
+                                songMoments.add(new SongMoment(
+                                        songMoments.size(),  //  size prior to add
+                                        lyricSection, measureNode,
                                         measure, 0, 0));
                             }
                     }
@@ -793,7 +797,7 @@ public class Song implements Comparable<Song>
         int j = 0;
         LyricSection lyricSection = null;
         SongMoment songMoment;
-        for (; i < 10000; i++)    //  safety
+        for (int safety = 0; safety < 10000; safety++)
         {
             if (i >= songMoments.size())
                 break;
@@ -847,23 +851,20 @@ public class Song implements Comparable<Song>
                     default:
                         sb.append("<td class=\"" + CssConstants.style + "section"
                                 + sectionVersion.getSection().getAbbreviation() + "Class\" id=\""
-                                + "C."+songMoment.getSequenceNumber()+"\" >")
+                                + "C." + songMoment.getSequenceNumber() + "\" >")
                                 .append(s).append("</td>");
 
                         //  repeat lines
-                        if (s.startsWith("|")||s.startsWith("x"))
+                        if (s.startsWith("|") || s.startsWith("x"))
                         {
                             sb.append("</td></tr>\n<tr><td></td>");
                             break;
                         }
-
-
+                        
                         //  increment for next time
-                        if ( i < songMoments.size()-1)
-                        {
-                            i++;
+                        i++;
+                        if (i < songMoments.size() )
                             songMoment = songMoments.get(i);
-                        }
                         break;
                 }
             }
