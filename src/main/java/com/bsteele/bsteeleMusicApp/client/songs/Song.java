@@ -793,16 +793,17 @@ public class Song implements Comparable<Song>
         sb.append("<table id=\"" + tableName + "\" class=\"" + CssConstants.style + "chordTable\">\n");
 
         ArrayList<String> innerHtml = null;
-        int i = 0;
+        int sequenceNumber = 0;
+        int rowStartSequenceNumber = 0;
         int j = 0;
         LyricSection lyricSection = null;
         SongMoment songMoment;
         for (int safety = 0; safety < 10000; safety++)
         {
-            if (i >= songMoments.size())
+            if (sequenceNumber >= songMoments.size())
                 break;
 
-            songMoment = songMoments.get(i);
+            songMoment = songMoments.get(sequenceNumber);
             lyricSection = songMoment.getLyricSection();
             SectionVersion sectionVersion = lyricSection.getSectionVersion();
             sb.append("<tr><td class='" + CssConstants.style + "sectionLabel' >").
@@ -822,10 +823,17 @@ public class Song implements Comparable<Song>
                 if (measureNode.getSectionVersion().equals(lyricSection.getSectionVersion()))
                 {
                     innerHtml = measureNode.generateInnerHtml(key, tran);
+                    rowStartSequenceNumber = sequenceNumber;
                     j = 0;
                     break;
                 }
             }
+            for (String s : innerHtml)
+                if (s.startsWith("\n"))
+                    GWT.log("\t<newline>");
+                else if (sb.equals(""))
+                    GWT.log("\t<empty>");
+                else GWT.log("\t" + s);
 
             //  exhaust the html we've been given
             while (innerHtml != null)
@@ -847,24 +855,38 @@ public class Song implements Comparable<Song>
                         break;
                     case "\n":
                         sb.append("</tr>\n<tr><td></td>");
+                        if (rowStartSequenceNumber < sequenceNumber)
+                        {
+                            sb.append("<td colspan=\"10\">" +
+                                    "<canvas id=\"bassLine" + rowStartSequenceNumber + "-" + (sequenceNumber - 1)
+                                    + "\" width=\"900\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
+//                            while (rowStartSequenceNumber <= sequenceNumber)
+//                            {
+//                                sb.append("</tr>\n<tr><td></td>");
+//                            }
+                            rowStartSequenceNumber = sequenceNumber;
+                        }
+
+                        sb.append("</tr>\n<tr><td></td>");
+
                         break;
                     default:
-                        sb.append("<td class=\"" + CssConstants.style + "section"
-                                + sectionVersion.getSection().getAbbreviation() + "Class\" id=\""
-                                + "C." + songMoment.getSequenceNumber() + "\" >")
-                                .append(s).append("</td>");
+//                        sb.append("<td class=\"" + CssConstants.style + "section"
+//                                + sectionVersion.getSection().getAbbreviation() + "Class\" id=\""
+//                                + "C." + songMoment.getSequenceNumber() + "\" >")
+//                                .append(s).append("</td>");
+//
+//                        //  repeat lines
+//                        if (s.startsWith("|") || s.startsWith("x"))
+//                        {
+//                            sb.append("</td></tr>\n<tr><td></td>");
+//                            break;
+//                        }
 
-                        //  repeat lines
-                        if (s.startsWith("|") || s.startsWith("x"))
-                        {
-                            sb.append("</td></tr>\n<tr><td></td>");
-                            break;
-                        }
-                        
                         //  increment for next time
-                        i++;
-                        if (i < songMoments.size() )
-                            songMoment = songMoments.get(i);
+                        sequenceNumber++;
+                        if (sequenceNumber < songMoments.size())
+                            songMoment = songMoments.get(sequenceNumber);
                         break;
                 }
             }

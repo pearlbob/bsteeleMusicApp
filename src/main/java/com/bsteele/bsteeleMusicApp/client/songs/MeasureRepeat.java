@@ -146,9 +146,6 @@ public class MeasureRepeat extends MeasureSequenceItem
                 }
                 ret.add("\n");
             }
-//            if (i > measuresPerLine)
-//                ret.add("| ");
-//            ret.add("x" + repeats);
         }
 
         return ret;

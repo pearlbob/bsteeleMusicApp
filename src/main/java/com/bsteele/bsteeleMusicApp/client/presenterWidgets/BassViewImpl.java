@@ -5,13 +5,15 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.BassFile;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.google.gwt.core.client.GWT;
+import com.bsteele.bsteeleMusicApp.client.songs.SongMoment;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
@@ -19,6 +21,8 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
@@ -37,7 +41,8 @@ import java.util.logging.Logger;
  */
 public class BassViewImpl
         extends CommonPlayViewImpl
-        implements BassPresenterWidget.MyView {
+        implements BassPresenterWidget.MyView
+{
 
     @UiField
     Button playStopButton;
@@ -87,11 +92,13 @@ public class BassViewImpl
     Button saveButton;
 
 
-    interface Binder extends UiBinder<Widget, BassViewImpl> {
+    interface Binder extends UiBinder<Widget, BassViewImpl>
+    {
     }
 
     @Inject
-    BassViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
+    BassViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster)
+    {
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
@@ -99,8 +106,10 @@ public class BassViewImpl
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                switch (songUpdate.getState()) {
+            if (song != null)
+            {
+                switch (songUpdate.getState())
+                {
                     case playing:
                         songPlayMaster.stopSong();
                         break;
@@ -132,7 +141,8 @@ public class BassViewImpl
 
         Event.sinkEvents(bpmSelect, Event.ONCHANGE);
         Event.setEventListener(bpmSelect, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
+            if (Event.ONCHANGE == event.getTypeInt())
+            {
                 setCurrentBpm(bpmSelect.getValue());
             }
         });
@@ -154,7 +164,8 @@ public class BassViewImpl
     }
 
     @Override
-    public void onSongUpdate(SongUpdate songUpdate) {
+    public void onSongUpdate(SongUpdate songUpdate)
+    {
 
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
@@ -163,13 +174,16 @@ public class BassViewImpl
 
         labelPlayStop();
 
-        if (lastRepeatElement != null) {
+        if (lastRepeatElement != null)
+        {
             lastRepeatElement.setInnerText("x" + lastRepeatTotal);
             lastRepeatElement = null;
         }
 
-        if (songUpdate.getState() != lastState) {
-            switch (lastState) {
+        if (songUpdate.getState() != lastState)
+        {
+            switch (lastState)
+            {
                 case idle:
                     resetScroll(chordsScrollPanel);
                     break;
@@ -180,15 +194,18 @@ public class BassViewImpl
         }
 
         //  turn on highlights if required
-        switch (songUpdate.getState()) {
+        switch (songUpdate.getState())
+        {
             case idle:
                 break;
             case playing:
-                if (songUpdate.getRepeatTotal() > 0) {
+                if (songUpdate.getRepeatTotal() > 0)
+                {
                     final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
                             songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
                     Element re = bass.getElementById(id);
-                    if (re != null) {
+                    if (re != null)
+                    {
                         re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
                         lastRepeatElement = re;
                         lastRepeatTotal = songUpdate.getRepeatTotal();
@@ -197,7 +214,8 @@ public class BassViewImpl
                 break;
         }
 
-        if (song != null && !song.equals(songUpdate.getSong())) {
+        if (song != null && !song.equals(songUpdate.getSong()))
+        {
             resetScroll(chordsScrollPanel);
         }
         song = songUpdate.getSong();
@@ -220,7 +238,8 @@ public class BassViewImpl
         chordsDirty = true;   //  done by syncKey()
     }
 
-    private void setEnables() {
+    private void setEnables()
+    {
         boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
 
         originalKeyButton.setEnabled(enable);
@@ -230,17 +249,21 @@ public class BassViewImpl
         bpmSelect.setDisabled(!enable);
     }
 
-    private void syncCurrentKey(Key key) {
+    private void syncCurrentKey(Key key)
+    {
         keyLabel.setInnerHTML(key.toString());
     }
 
-    private void syncCurrentBpm(int bpm) {
+    private void syncCurrentBpm(int bpm)
+    {
         currentBpmEntry.setValue(Integer.toString(bpm));
         bpmSelect.setSelectedIndex(0);
     }
 
-    private void labelPlayStop() {
-        switch (songUpdate.getState()) {
+    private void labelPlayStop()
+    {
+        switch (songUpdate.getState())
+        {
             case playing:
                 playStopButton.setText("Stop");
                 audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
@@ -253,7 +276,8 @@ public class BassViewImpl
     }
 
     @Override
-    public void onMusicAnimationEvent(MusicAnimationEvent event) {
+    public void onMusicAnimationEvent(MusicAnimationEvent event)
+    {
         if (song == null)
             return;
 
@@ -264,49 +288,60 @@ public class BassViewImpl
             Widget parent = bass.getParent();
             double parentWidth = parent.getOffsetWidth();
             double parentHeight = parent.getOffsetHeight();
-            if (parentWidth != chordsParentWidth) {
+            if (parentWidth != chordsParentWidth)
+            {
                 chordsParentWidth = parentWidth;
                 chordsDirty = true;
             }
-            if (parentHeight != chordsParentHeight) {
+            if (parentHeight != chordsParentHeight)
+            {
                 chordsParentHeight = parentHeight;
                 chordsDirty = true;
             }
         }
 
-        if (event.getMeasureNumber() != lastMeasureNumber) {
+        if (event.getMeasureNumber() != lastMeasureNumber)
+        {
             chordsDirty = true;
             lastMeasureNumber = event.getMeasureNumber();
         }
 
-        if (chordsDirty) {
+        if (chordsDirty)
+        {
 
             //  turn off all highlights
-            if (lastChordElement != null) {
+            if (lastChordElement != null)
+            {
                 lastChordElement.getStyle().clearBackgroundColor();
                 lastChordElement = null;
             }
-            if (lastLyricsElement != null) {
+            if (lastLyricsElement != null)
+            {
                 lastLyricsElement.getStyle().clearBackgroundColor();
                 lastLyricsElement = null;
             }
 
             //  high light chord and lyrics
-            switch (songUpdate.getState()) {
+            switch (songUpdate.getState())
+            {
                 case playing:
                     //  add highlights
-                    if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate.getSectionVersion(),
+                    if (songUpdate.getMeasure() >= 0)
+                    {
+                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate
+                                        .getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
                         //GWT.log(chordCellId );
                         Element ce = bass.getElementById(chordCellId);
-                        if (ce != null) {
+                        if (ce != null)
+                        {
                             ce.getStyle().setBackgroundColor(highlightColor);
                             lastChordElement = ce;
                         }
                         String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
                         Element le = bass.getElementById(lyricsCellId);
-                        if (le != null) {
+                        if (le != null)
+                        {
                             le.getStyle().setBackgroundColor(highlightColor);
                             lastLyricsElement = le;
                         }
@@ -322,12 +357,14 @@ public class BassViewImpl
 
     }
 
-    private void syncKey(Key key) {
+    private void syncKey(Key key)
+    {
         int tran = key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
         syncKey(tran);
     }
 
-    private void syncKey(int tran) {
+    private void syncKey(int tran)
+    {
 
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
         keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
@@ -336,13 +373,84 @@ public class BassViewImpl
 
         bass.add(new HTMLPanel(song.measureNodesToHtml(prefix + "Table", currentKey, tran)));
 
+
         NodeList<Element> nodeList = bass.getElement().getElementsByTagName("canvas");
         int limit = nodeList.getLength();
-        for (int i = 0; i < limit; i++) {
-            CanvasElement canvasElement = (CanvasElement) nodeList.getItem(i);
-            GWT.log("canvas id: " + canvasElement.getId());
+        for (int i = 0; i < limit; i++)
+        {
+            canvasElement = (CanvasElement) nodeList.getItem(i);
+            scoreCtx = canvasElement.getContext2d();
+
+            final RegExp timeSignatureExp = RegExp.compile("bassLine(\\d{1,4})-(\\d{1,4})$");
+            MatchResult mr = timeSignatureExp.exec(canvasElement.getId());
+            if (mr == null)
+            {
+                continue;
+            }
+            int firstMoment = Integer.parseInt(mr.getGroup(1));
+            int lastMoment = Integer.parseInt(mr.getGroup(2));
+
+
+            int w = canvasElement.getWidth();
+            int h = canvasElement.getHeight();
+
+            scoreCtx.setFillStyle(background);
+            scoreCtx.fillRect(0, 0, w, h);
+
+            double scoreTop = 3 * scoreLineHeight;
+            scoreLines(scoreTop);
+
+
+            scoreCtx.setStrokeStyle(black);
+            scoreCtx.setLineWidth(1);
+            scoreCtx.beginPath();
+            scoreCtx.moveTo(scoreMargin, scoreTop);
+            scoreCtx.lineTo(scoreMargin, scoreTop + 4 * scoreLineHeight);
+            scoreCtx.stroke();
+            for (int barCount = 1; barCount <= bars; barCount++)
+            {
+                scoreCtx.beginPath();
+                double x = barStart + barCount * barWidth;
+                scoreCtx.moveTo(x, scoreTop);
+                scoreCtx.lineTo(x, scoreTop + 4 * scoreLineHeight);
+                scoreCtx.stroke();
+            }
+
+            scoreCtx.setFillStyle("#000000");
+            scoreCtx.setFont("bold 15px sans-serif");
+            scoreCtx.fillText(canvasElement.getId(), scoreMargin, 2*scoreLineHeight);
+            for ( int m = firstMoment; m <= lastMoment; m++){
+                SongMoment songMoment=               song.getSongMoments().get(m);
+                scoreCtx.fillText(songMoment.getMeasure().toString(), barStart + (m-firstMoment)*barWidth, scoreLineHeight);
+            }
         }
     }
+
+    private double scoreLines(double y)
+    {
+        scoreCtx.setStrokeStyle(black);
+        scoreCtx.setLineWidth(1);
+        double scoreLength =  barStart+bars*barWidth;
+        for (int line = 0; line < 5; line++)
+        {
+            scoreCtx.beginPath();
+            scoreCtx.moveTo(scoreMargin, y);
+            scoreCtx.lineTo(scoreLength, y);
+            scoreCtx.stroke();
+            y += scoreLineHeight;
+        }
+        return y;
+    }
+
+    private static final CssColor background = CssColor.make("white");
+    private static final CssColor black = CssColor.make("black");
+    private double scoreLineHeight = 15;
+    private int bars = 4;
+    private double barWidth = 200;
+    private double scoreMargin = 10;
+    private double barStart = 100 - scoreMargin;
+    private CanvasElement canvasElement;
+    private Context2d scoreCtx;
 
     private AudioBeatDisplay audioBeatDisplay;
 

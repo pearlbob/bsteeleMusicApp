@@ -167,18 +167,23 @@ public class MeasureSequenceItem extends MeasureNode
                     else
                         ret.addAll(measureNode.generateInnerHtml(key, tran));
                     lastMeasureNode = measureNode;
+
+                    if (measuresOnThisLine % measuresPerLine == measuresPerLine - 1)
+                    {
+                        ret.add("\n");
+                        lastMeasureNode = null;
+                        measuresOnThisLine = 0;
+                    } else
+                        measuresOnThisLine++;
                 } else
                 {
                     ret.addAll(measureNode.generateInnerHtml(key, tran));
-                }
-                if (measuresOnThisLine % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1)
-                {
-                    ret.add("\n");
                     lastMeasureNode = null;
+                    measuresOnThisLine = 0;
                 }
-                measuresOnThisLine++;
             }
         }
+        ret.add("\n");
 
         return ret;
     }

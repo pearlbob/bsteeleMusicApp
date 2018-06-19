@@ -38,6 +38,7 @@ public enum ChordDescriptor {
     minor11("m11", "R m3 5 m7 11"),
     minor13("m13", "R m3 5 m7 13"),
     major7("maj7", "R 3 5 7"),
+    suspendedSecond("2", "R 2 5"),     //  alias for  suspended2
     suspendedFourth("4", "R 4 5"),      //  alias for suspended 4
     power5("5", "R 5"),  //  3rd omitted typically to avoid distortions
     minor7("m7", "R m3 5 m7"),

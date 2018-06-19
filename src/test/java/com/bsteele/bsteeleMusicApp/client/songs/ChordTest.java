@@ -50,6 +50,9 @@ public class ChordTest extends TestCase {
         chord = new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished));
         chord.setSlashScaleChord(new ScaleChord(ScaleNote.G));
         assertEquals(chord, Chord.parse("Adim/G", 4));
+        chord = new Chord(new ScaleChord(ScaleNote.G, ChordDescriptor.suspendedSecond));
+        chord.setSlashScaleChord(new ScaleChord(ScaleNote.A));
+        assertEquals(chord, Chord.parse("G2/A", 4));
     }
 
 //    @Override
