@@ -828,12 +828,6 @@ public class Song implements Comparable<Song>
                     break;
                 }
             }
-            for (String s : innerHtml)
-                if (s.startsWith("\n"))
-                    GWT.log("\t<newline>");
-                else if (sb.equals(""))
-                    GWT.log("\t<empty>");
-                else GWT.log("\t" + s);
 
             //  exhaust the html we've been given
             while (innerHtml != null)
@@ -860,10 +854,6 @@ public class Song implements Comparable<Song>
                             sb.append("<td colspan=\"10\">" +
                                     "<canvas id=\"bassLine" + rowStartSequenceNumber + "-" + (sequenceNumber - 1)
                                     + "\" width=\"900\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-//                            while (rowStartSequenceNumber <= sequenceNumber)
-//                            {
-//                                sb.append("</tr>\n<tr><td></td>");
-//                            }
                             rowStartSequenceNumber = sequenceNumber;
                         }
 
@@ -871,18 +861,6 @@ public class Song implements Comparable<Song>
 
                         break;
                     default:
-//                        sb.append("<td class=\"" + CssConstants.style + "section"
-//                                + sectionVersion.getSection().getAbbreviation() + "Class\" id=\""
-//                                + "C." + songMoment.getSequenceNumber() + "\" >")
-//                                .append(s).append("</td>");
-//
-//                        //  repeat lines
-//                        if (s.startsWith("|") || s.startsWith("x"))
-//                        {
-//                            sb.append("</td></tr>\n<tr><td></td>");
-//                            break;
-//                        }
-
                         //  increment for next time
                         sequenceNumber++;
                         if (sequenceNumber < songMoments.size())

@@ -25,6 +25,9 @@ public class MusicConstant {
     public static final String whiteBulletHtml = "&#25e6;";
     public static final String diminishedCircleHtml = whiteBulletHtml;
 
+    public static final String bassClef= "\uD834\uDD22";
+    public static final String gClef= "\uD834\uDD1E";
+
     public static final int halfStepsPerOctave = 12;
     public static final int notesPerScale = 7;
 
