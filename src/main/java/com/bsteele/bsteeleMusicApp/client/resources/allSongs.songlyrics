@@ -1644,7 +1644,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 1518670424836, "song":
+{ "file": "", "lastModifiedDate": 1518670424836, "song": 
 {
 "title": "Bad Bad Leroy Brown",
 "artist": "Jim Croce",
@@ -2173,7 +2173,7 @@
     ]
 }
 },
-{ "file": "Beautiful Way (1).songlyrics", "lastModifiedDate": 1524068093000, "song": 
+{ "file": "", "lastModifiedDate": 1523938651770, "song": 
 {
 "title": "Beautiful Way",
 "artist": "Beck",
@@ -4373,7 +4373,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1529475726573, "song": 
 {
 "title": "Counting Stars",
 "artist": "OneRepublic",
@@ -4383,15 +4383,25 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"V:",
+	"Am C G F",
+	"",
+	"PC:",
+	"Am C G F",
+	"",
+	"C:",
 	"Am C G F"
     ],
 "lyrics": 
     [
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"But, baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be counting stars",
 	"Yeah, we'll be counting stars",
+	"",
+	"V:",
 	"I see this life like a swinging vine,",
 	"Swing my heart across the line",
 	"In my face is flashing signs,",
@@ -4400,19 +4410,25 @@
 	"Young but I'm not that bold",
 	"And I don't think the world is sold",
 	"I'm just doing what we're told",
+	"",
+	"PC:",
 	"I I I I feel something so right by doing the wrong thing",
 	"And I I I I feel something so wrong by doing the right thing",
 	"I could lie, couldn't I, couldn't I?",
 	"Every thing that kills me makes me feel alive.",
+	"",
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"Baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be counting stars",
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"But, baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be-we'll be counting stars",
 	"Ye-e-yeah",
+	"V:",
 	"I feel her love",
 	"And I feel it burn down this river every time",
 	"Hope is our four-letter word, make that money watch it burn",
@@ -4420,17 +4436,25 @@
 	"Young, but I'm not that bold",
 	"And I don't think the world is sold",
 	"I'm just doing what we're told",
+	"",
+	"PC:",
 	"And I I I I feel something so wrong by doing the right thing",
 	"I could lie, couldn't I, couldn't I?",
 	"Everything that drowns me makes me wanna fly",
+	"",
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"Baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be counting stars",
+	"",
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"But, baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be-we'll be counting stars",
+	"",
+	"V:",
 	"Oh, take that money watch it burn,",
 	"Sing in the river the lessons I learned",
 	"Take that money watch it burn,",
@@ -4440,14 +4464,18 @@
 	"Take that money watch it burn,",
 	"Sing in the river the lessons I learned",
 	"Everything that kills me makes me feel alive",
+	"",
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"Baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be counting stars",
+	"C:",
 	"Lately I've been, I've been losing sleep",
 	"Dreaming about the things that we could be",
 	"But, baby I've been, I've been praying hard",
 	"Said no more counting dollars, we'll be-we'll be counting stars",
+	"V:",
 	"Take that money watch it burn,",
 	"Sing in the river the lessons I learned",
 	"Take that money watch it burn,",
@@ -4459,7 +4487,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1529475929332, "song": 
 {
 "title": "Crawl, The",
 "artist": "Spirit of the West",
@@ -4470,63 +4498,86 @@
 "chords": 
     [
 	"chorus:",
-	"GGGD",
-	"CGDD",
-	"GGGD",
-	"CGDG",
-	"FCG",
+	"G G G D",
+	"C G D D",
+	"G G G D",
+	"C G D G",
+	"F C G",
 	"verse:",
-	"G-D-",
-	"D-CG",
-	"G-DC",
-	"D-DCG"
+	"G - D -",
+	"D - C G",
+	"G - D C",
+	"D - D C G"
     ],
 "lyrics": 
     [
+	"C:",
 	"Well, we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
 	"From the Troller to the Raven with all stops in between",
+	"",
+	"V:",
 	"Well it all began one afternoon on the shores of Ambleside,",
 	"We were sittin' there quite peacefully with the rising of the tide;",
 	"When an idea it came to mind for to usher in the Fall,",
 	"And we all agreed next Friday night we'd go out on the crawl",
+	"",
+	"C:",
 	"And we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
 	"From the Troller to the Raven with all stops in between",
+	"",
+	"V:",
 	"Well we planned to have a gay old time, the cash we did not spare,",
 	"We left all the cars at home and paid the taxi fare;",
 	"I got out to Horseshoe Bay a little after five,",
 	"From a table in the corner I heard familiar voices rise",
+	"",
+	"C:",
 	"And we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
 	"From the Troller to the Raven with all stops in between",
+	"",
+	"V:",
 	"Well spirits they ran high that night, old stories we did share,",
 	"Of the days when we were younger men and never had a care;",
 	"And the beer flowed like a river and we drank the keg near dry,",
-	"So we drained down all our glasses and were thirsty by-and-by",
+	"So we drained down all our glasses and were thirsty by-and-by)",
+	"",
+	"C:",
 	"And we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
 	"From the Troller to the Raven with all stops in between",
+	"",
+	"V:",
 	"Park Royal Hotel, The Rusty Gull, Square-Rigger and Queen's Cross,",
 	"We'd started out with eight good boys but half had gotten lost;",
 	"And you'll never keep the lads together when their eyes begin to rove,",
 	"And there was just the three of us that made it to Deep Cove",
+	"",
+	"C:",
 	"And we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
 	"From the Troller to the Raven with all stops in between",
+	"",
+	"V:",
 	"We arrived out at The Raven just in time for the last call,",
 	"The final destination of this the first annual crawl;",
 	"We dug deep into our pockets there was no money to be found,",
 	"Nine miles home and for walking we are bound",
+	"",
+	"C:",
 	"And we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
 	"From the Troller to the Raven with all stops in between",
+	"",
+	"C:",
 	"And we're good old boys, we come from the North Shore,",
 	"Drinkers and carousers the likes you've never seen;",
 	"And this night, by God! We drank till there was no more,",
@@ -4686,7 +4737,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1529476041691, "song": 
 {
 "title": "Creep (STP)",
 "artist": "Stone Temple Pilots",
@@ -4696,30 +4747,35 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"V:",
 	"Em C B7 Em",
+	"",
+	"PC:",
 	"G Am Em -  x2",
 	"G Am C  D",
-	"Em /F# | G /B | x8"
+	"",
+	"C:",
+	"Em/F#  G/B x8"
     ],
 "lyrics": 
     [
-	"Forward yesterday",
-	"Makes me wanna stay",
-	"What they said was real",
-	"Makes me wanna steal",
-	"Livin' under house",
-	"Guess I'm livin', I'm a mouse",
-	"All's I gots is time",
-	"Got no meaning, just a rhyme",
+	"V:",
+	"Forward yesterday, makes me wanna stay",
+	"What they said was real, makes me wanna steal",
+	"Livin' under house,guess I'm livin', I'm a mouse",
+	"All's I gots is time,got no meaning, just a rhyme",
+	"",
+	"PC:",
 	"Take time with a wounded hand",
 	"'Cause it likes to heal",
 	"Take time with a wounded hand",
 	"'Cause I like to steal",
 	"Take time with a wounded hand",
 	"'Cause it likes to heal, I like to steal",
+	"",
+	"C:",
 	"I'm half the man I used to be",
-	"This I feel as the dawn",
-	"It fades to gray",
+	"This I feel as the dawn It fades to gray",
 	"Well, I'm half the man I used to be",
 	"This I feel as the dawn",
 	"It fades to gray",
@@ -4727,20 +4783,22 @@
 	"This I feel as the dawn",
 	"It fades to gray",
 	"Well, I'm half the man I used to be, half the man I used to be",
-	"Feelin' uninspired",
-	"Think I'll start a fire",
-	"Everybody run",
-	"Bobby's got a gun",
-	"Think you're kinda neat",
-	"Then she tells me I'm a creep",
-	"Friends don't mean a thing",
-	"Guess I'll leave it up to me",
+	"",
+	"V:",
+	"Feelin' uninspired,think I'll start a fire",
+	"Everybody run, Bobby's got a gun",
+	"Think you're kinda neat, then she tells me I'm a creep",
+	"Friends don't mean a thing,guess I'll leave it up to me",
+	"",
+	"PC:",
 	"Take time with a wounded hand",
 	"'Cause it likes to heal",
 	"Take time with a wounded hand",
 	"Guess I like to steal",
 	"Take time with a wounded hand",
 	"'Cause it likes to heal, I like to steal",
+	"",
+	"C:",
 	"I'm half the man I used to be",
 	"This I feel as the dawn",
 	"It fades to gray",
@@ -4751,12 +4809,16 @@
 	"This I feel as the dawn",
 	"It fades to gray",
 	"I'm half the man I used to be, half the man I used to be",
+	"",
+	"PC:",
 	"Take time with a wounded hand",
 	"'Cause it likes to heal",
 	"Take time with a wounded hand",
 	"Guess I like to steal",
 	"Take time with a wounded hand",
 	"'Cause it likes to heal, I like to steal",
+	"",
+	"C:",
 	"I'm half the man I used to be",
 	"This I feel as the dawn",
 	"It fades to gray",
@@ -5074,7 +5136,7 @@
     ]
 }
 },
-{ "file": "Dimming of the Day.songlyrics", "lastModifiedDate": 1519449458000, "song": 
+{ "file": "", "lastModifiedDate": 1529476307681, "song": 
 {
 "title": "Dimming of the Day",
 "artist": "Alison Krauss",
@@ -5085,46 +5147,43 @@
 "chords": 
     [
 	"",
-	"(verse)",
+	"v:",
 	"G - D -",
 	"C G D -",
 	"G - D -",
-	"C |G D| G -",
+	"C GD G -",
 	"",
-	"(Chorus)",
+	"c:",
 	"D - A -",
 	"D - A D",
 	"G -",
-	"",
-	"",
-	"(Note)",
-	"Exit on Verse",
-	"Tag last line"
+	"T:",
+	"C GD G -"
     ],
 "lyrics": 
     [
-	"",
+	"V:",
 	"This old house is falling down around my ears",
 	"I'm drowning in a river of my tears",
 	"When all my will is gone you hold me sway",
 	"I need you at the dimming of the day",
-	"",
+	"C:",
 	"You pulled me like the moon pulls on the tide",
 	"You know just where I keep my better side",
-	"",
+	"V:",
 	"What days have come to keep us far apart",
 	"A broken promise or a broken heart",
 	"Now all the bonny birds have wheeled away",
 	"I need you at the dimming of the day",
-	"",
+	"C:",
 	"Come the night you're only what I want",
 	"Come the night you could be my confidant",
-	"",
+	"V:",
 	"I see you on the street and in company",
 	"Why don't you come and ease your mind with me",
 	"I'm living for the night we steal away",
 	"I need you at the dimming of the day",
-	"",
+	"t:",
 	"I need you at the dimming of the day"
     ]
 }
@@ -5873,12 +5932,12 @@
     ]
 }
 },
-{ "file": "Drift Away (3).songlyrics", "lastModifiedDate": 1524073759000, "song": 
+{ "file": "", "lastModifiedDate": 1529476362757, "song": 
 {
 "title": "Drift Away",
 "artist": "Dobie Gray and others",
 "copyright": "Universal Music Publishing Group",
-"key": "C",
+"key": "B",
 "defaultBpm": 106,
 "timeSignature": "4/4",
 "chords": 
@@ -5896,45 +5955,45 @@
     ],
 "lyrics": 
     [
-	"",
+	"V:",
 	"Day after day I'm more confused",
 	"Yet I look for the light through the pouring rain",
 	"You know that's a game that I hate to lose",
 	"And I'm feelin' the strain",
 	"Ain't it a shame",
-	"",
+	"C:",
 	"Oh, give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
 	"Oh, give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
-	"",
+	"V:",
 	"Beginning to think that I'm wastin' time",
 	"I don't understand the things I do",
 	"The world outside looks so unkind",
 	"And I'm countin' on you",
 	"To carry me through",
-	"",
+	"C:",
 	"Oh, give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
 	"Yeah, give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
-	"",
+	"Br:",
 	"And when my mind is free",
 	"You know a melody can move me",
 	"And when I'm feelin' blue",
 	"The guitar's comin' through to soothe me",
-	"",
+	"v:",
 	"Thanks for the joy that you've given me",
 	"I want you to know I believe in your song",
 	"And rhythm and rhyme and harmony",
 	"You've helped me along",
 	"Makin' me strong",
-	"",
+	"C:",
 	"Oh, give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
 	"Give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
-	"",
+	"C:",
 	"Oh, give me the beat boys and free my soul",
 	"I wanna get lost in your rock and roll and drift away",
 	"Hey, give me the beat boys and free my soul",
@@ -7349,7 +7408,7 @@
     ]
 }
 },
-{ "file": "Friend of the Devil.songlyrics", "lastModifiedDate": 1524067977000, "song": 
+{ "file": "", "lastModifiedDate": 1524011687279, "song": 
 {
 "title": "Friend of the Devil",
 "artist": "Grateful Dead",
@@ -9134,7 +9193,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "", "lastModifiedDate": 1529414778974, "song": 
 {
 "title": "High and Dry",
 "artist": "Radiohead",
@@ -9144,11 +9203,22 @@
 "timeSignature": "4/4",
 "chords": 
     [
+	"I:",
+	"F#m - A - ",
+	"E   - - -",
+	"",
+	"V:",
+	"F#m - A - ",
+	"E   - - -",
+	"",
+	"C:",
 	"F#m - A - ",
 	"E   - - -"
     ],
 "lyrics": 
     [
+	"I:",
+	"V:",
 	"Two jumps in a week",
 	"I bet you think that's pretty clever don't you boy?",
 	"Flying on your motorcycle,",
@@ -9157,8 +9227,13 @@
 	"Kill yourself to never ever stop",
 	"You broke another mirror,",
 	"You're turning into something you are not",
+	"",
+	"C:",
 	"Don't leave me high, don't leave me dry",
 	"Don't leave me high, don't leave me dry",
+	"",
+	"I:",
+	"V:",
 	"Drying up in conversation,",
 	"You will be the one who cannot talk",
 	"All your insides fall to pieces,",
@@ -9167,12 +9242,19 @@
 	"When you think you've got the world all sussed out",
 	"They're the ones who'll spit at you,",
 	"You will be the one screaming out",
+	"",
+	"C:",
 	"Don't leave me high, don't leave me dry",
 	"Don't leave me high, don't leave me dry",
+	"",
+	"I:",
+	"V:",
 	"It's the best thing that you ever had,",
 	"The best thing that you ever, ever had",
 	"It's the best thing that you ever had,",
 	"The best thing you ever had has gone away",
+	"",
+	"C:",
 	"Don't leave me high, don't leave me dry",
 	"Don't leave me high, don't leave me dry",
 	"Don't leave me high, don't leave me dry",
@@ -9493,7 +9575,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 1524444240260, "song": 
+{ "file": "", "lastModifiedDate": 1524355099624, "song": 
 {
 "title": "I Buried Your Love Alive",
 "artist": "Ashley Monroe",
@@ -10461,7 +10543,7 @@
     ]
 }
 },
-{ "file": "Islands in the Stream (2001 version).songlyrics", "lastModifiedDate": 1524085879000, "song": 
+{ "file": "", "lastModifiedDate": 1529478839661, "song": 
 {
 "title": "Islands in the Stream (2001 version)",
 "artist": "Bee Gees",
@@ -10471,7 +10553,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: C# F- F# Ab x2",
+	"I: C# FF F# Ab x2",
 	"",
 	"V: C# - - - ",
 	"F# Ab C# -",
@@ -10479,14 +10561,14 @@
 	"F# Ab C# -",
 	"",
 	"",
-	"PC: F# - F#-/A - ",
+	"PC: F# - F#F#/A - ",
 	"C# - - -",
 	"",
-	"C: C# F# Eb- - ",
+	"C: C# F# EbEb - ",
 	"C# F# C# - ",
-	"Eb-",
+	"EbEb",
 	"",
-	"Br: C# F- F# Ab "
+	"Br: C# FF F# Ab "
     ],
 "lyrics": 
     [
@@ -10548,7 +10630,8 @@
 	"And we rely on each other's heart",
 	"From one lover to another's heart",
 	"",
-	"Br: x2",
+	"Br:",
+	"Br:",
 	"",
 	"C:",
 	"Ghetto superstar",
@@ -10560,7 +10643,8 @@
 	"We rely on each other's heart",
 	"From one lover to another's heart",
 	"",
-	"Br: x2"
+	"Br:",
+	"Br:"
     ]
 }
 },
@@ -13323,7 +13407,7 @@
     ]
 }
 },
-{ "file": "Lover, You Should've Come Over (3).songlyrics", "lastModifiedDate": 1524545643000, "song": 
+{ "file": "", "lastModifiedDate": 1524545593237, "song": 
 {
 "title": "Lover, You Should've Come Over",
 "artist": "Jeff Buckley",
@@ -13876,7 +13960,7 @@
     ]
 }
 },
-{ "file": "Man Who Sold the World (1).songlyrics", "lastModifiedDate": 1524545277000, "song": 
+{ "file": "", "lastModifiedDate": 1529478500503, "song": 
 {
 "title": "Man Who Sold the World",
 "artist": "David Bowie",
@@ -13898,8 +13982,8 @@
 	"Dm - C -",
 	"",
 	"C:",
-	"C F C#M7 F ",
-	"C F C#M7 ",
+	"C F C#maj7 F ",
+	"C F C#maj7 ",
 	"",
 	"Br:",
 	"Dm -",
@@ -15158,7 +15242,7 @@
     ]
 }
 },
-{ "file": "One Headlight (3).songlyrics", "lastModifiedDate": 1524073765000, "song": 
+{ "file": "", "lastModifiedDate": 1529365642715, "song": 
 {
 "title": "One Headlight",
 "artist": "Wallflowers, The",
@@ -15178,6 +15262,7 @@
     ],
 "lyrics": 
     [
+	"V:",
 	"So long ago, I don't remember when",
 	"That's when they say I lost my only friend",
 	"Well they said she died easy of a broken heart disease",
@@ -15187,7 +15272,9 @@
 	"Now it always seemed such a waste",
 	"She always had a pretty face",
 	"So I wondered how she hung around this place",
-	"[сhorus:]",
+	"",
+	"Pc:",
+	"C:",
 	"Hey, come on try a little",
 	"Nothing is forever",
 	"There's got to be something better than ",
@@ -15196,6 +15283,8 @@
 	"We put it all together",
 	"We can drive it home",
 	"With one headlight",
+	"",
+	"V:",
 	"She said it's cold",
 	"It feels like Independence Day",
 	"And I can't break away from this parade",
@@ -15208,7 +15297,17 @@
 	"We'll run until she's out of breath",
 	"She ran until there's nothin' left",
 	"She hit the end-it's just her window ledge",
-	"[chorus]",
+	"Pc:",
+	"C:",
+	"Hey, come on try a little",
+	"Nothing is forever",
+	"There's got to be something better than ",
+	"In the middle",
+	"But me & Cinderella",
+	"We put it all together",
+	"We can drive it home",
+	"With one headlight",
+	"V:",
 	"Well this place is old",
 	"It feels just like a beat up truck",
 	"I turn the engine, but the engine doesn't turn",
@@ -15219,7 +15318,16 @@
 	"Man, I ain't changed, but I know I ain't the same",
 	"But somewhere here in between the city walls of dyin' dreams",
 	"I think her death it must be killin' me",
-	"[chorus]"
+	"Pc:",
+	"C:",
+	"Hey, come on try a little",
+	"Nothing is forever",
+	"There's got to be something better than ",
+	"In the middle",
+	"But me & Cinderella",
+	"We put it all together",
+	"We can drive it home",
+	"With one headlight"
     ]
 }
 },
@@ -20212,7 +20320,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 1528832009721, "song": 
+{ "file": "", "lastModifiedDate": 1528497203611, "song": 
 {
 "title": "Tell Me Why",
 "artist": "Beatles",
@@ -20287,6 +20395,61 @@
 	"V: Tell me why you cried, and why you lied to me",
 	"Tell me why you cried, and why you lied to",
 	"O: me"
+    ]
+}
+},
+{ "file": "", "lastModifiedDate": 1529498006389, "song": 
+{
+"title": "Tennessee Whiskey",
+"artist": "Chris Stapleton",
+"copyright": "Sony/ATV Music Publishing LLC, Linda H Bartholomew / Dean Dillon",
+"key": "A",
+"defaultBpm": 90,
+"timeSignature": "6/8",
+"chords": 
+    [
+	"i:",
+	"A Bm - A",
+	"v:",
+	"A Bm - A  x2",
+	"c:",
+	"A Bm - A  x2"
+    ],
+"lyrics": 
+    [
+	"I:",
+	"v:",
+	"Used to spend my nights out in a barroom",
+	"Liquor was the only love I’ve known",
+	"But you rescued me from reachin’ for the bottom",
+	"And brought me back from being too far gone",
+	"You're as",
+	"c:",
+	"You’re as smooth       as Tennessee whiskey",
+	"You’re as sweeeeet as strawberry wine",
+	"You’re as warm as a glass of brandy",
+	"And honey, I stay stoned on your love all the time",
+	"v:",
+	"I’ve looked for love in all the same old places",
+	"Found the bottom of a bottle was always dry",
+	"But when you poured out your heart I didn’t waste it",
+	"‘Cause there’s nothing like your love to get me high, yeah",
+	"c:",
+	"You’re as smooth       as Tennessee whiskey",
+	"You’re as sweeeeet as strawberry wine",
+	"You’re as warm as a glass of brandy",
+	"And honey, I stay stoned on your love all the time",
+	"v:(instrumental)",
+	"c:",
+	"You’re as smooth       as Tennessee whiskey",
+	"You’re as sweeeeet as strawberry wine",
+	"You’re as warm as a glass of brandy",
+	"And honey, I stay stoned on your love all the time",
+	"c:",
+	"You’re as smooth      as Tennessee whiskey",
+	"Tennessee whiskey,  Tennessee whiskey",
+	"You’re as smooth       as Tennessee whiskey",
+	"Tennessee whiskey,  Tennessee whiskey"
     ]
 }
 },
@@ -20630,7 +20793,7 @@
     ]
 }
 },
-{ "file": "Time of the Season.songlyrics", "lastModifiedDate": 1523939540000, "song": 
+{ "file": "", "lastModifiedDate": 1523939350753, "song": 
 {
 "title": "Time of the Season",
 "artist": "Zombies, The",
@@ -20930,7 +21093,7 @@
     ]
 }
 },
-{ "file": "Vienna.songlyrics", "lastModifiedDate": 1524423421000, "song": 
+{ "file": "", "lastModifiedDate": 1524513113636, "song": 
 {
 "title": "Vienna",
 "artist": "Billy Joel",
@@ -20944,21 +21107,21 @@
 	"Daug Dflat5 Ebdim Eb",
 	"Ebm F7 Bb -",
 	"",
-	"A:",
+	"V:",
 	"Gm Bb F Ab ",
 	"Eb Bb C D",
 	"Gm Bb F Ab ",
 	"Eb Bb Am7 D",
 	"",
-	"B:",
+	"C:",
 	"Eb F BbF GmF",
 	"Eb D Gm C",
-	"Cº F Bb -"
+	"F#7 F Bb -"
     ],
 "lyrics": 
     [
-	"I: (piano)",
-	"A:",
+	"",
+	"V:",
 	"Slow down, you crazy child",
 	"You're so ambitious for a juvenile",
 	"But then if you're so smart, then tell me",
@@ -20968,14 +21131,14 @@
 	"You've got so much to do",
 	"And only so many hours in a day",
 	"",
-	"B:",
+	"C:",
 	"But you know that when the truth is told",
 	"That you can get what you want or you get old",
 	"You're gonna kick off before you even",
 	"Get halfway through",
 	"When will you realize, Vienna waits for you",
 	"",
-	"A:",
+	"V:",
 	"Slow down, you're doing fine",
 	"You can't be everything you want to be",
 	"Before your time",
@@ -20986,29 +21149,29 @@
 	"Though you can see when you're wrong, you know",
 	"You can't always see when you're right. you're right",
 	"",
-	"B:",
+	"C:",
 	"You've got your passion, you've got your pride",
 	"But don't you know that only fools are satisfied?",
 	"Dream on, but don't imagine they'll all come true",
 	"When will you realize, Vienna waits for you?",
 	"",
-	"A:",
+	"V:",
 	"Accordion solo",
 	"",
-	"B:",
+	"C:",
 	"Slow down, you crazy child",
 	"And take the phone off the hook and disappear for awhile",
 	"It's all right, you can afford to lose a day or two",
 	"When will you realize, Vienna waits for you?",
 	"",
-	"B:",
+	"C:",
 	"And you know that when the truth is told",
 	"That you can get what you want or you can just get old",
 	"You're gonna kick off before you even get half through",
 	"Why don't you realize, Vienna waits for you",
 	"When will you realize, Vienna waits for you?",
 	"",
-	"I: (piano)"
+	"I:"
     ]
 }
 },
@@ -21075,31 +21238,42 @@
     ]
 }
 },
-{ "file": "Waiting, The (3).songlyrics", "lastModifiedDate": 1524073769000, "song": 
+{ "file": "", "lastModifiedDate": 1523938735625, "song": 
 {
 "title": "Waiting, The",
 "artist": "Tom Petty ",
 "copyright": "© Warner/Chappell Music, Inc",
 "key": "C",
-"defaultBpm": 100,
+"defaultBpm": 106,
 "timeSignature": "4/4",
 "chords": 
     [
 	"In:",
-	"G D A D",
-	"G D A A",
-	"G D A D",
-	"G D A - -",
+	"G D A D |",
+	"G D A A | x2",
+	"A -",
+	"",
 	"V:",
-	"A GD x3",
-	"Bm -",
-	"G -",
-	"A - - - ",
-	"C:O:",
-	"G D A D x5",
-	"Br:",
+	"A - G D x3",
 	"Bm - - -",
-	"A D G F#"
+	"G - - -",
+	"A - - - x2",
+	"",
+	"C:",
+	"G D A D ",
+	"G D A -",
+	"G D A D x3",
+	"",
+	"Br:",
+	"Bm - - - x2",
+	"A - D -",
+	"G - F# - ",
+	"",
+	"O:",
+	"G D A - ",
+	"- -",
+	"G D A D |",
+	"G D A A | x2"
     ],
 "lyrics": 
     [
@@ -21144,12 +21318,16 @@
 	"You take it on faith, you take it to the heart",
 	"The waiting is the hardest part",
 	"Yeah, the waiting is the hardest part",
+	"",
 	"O:",
-	"(on chorus)",
+	"The waiting is the har...dest... ",
+	"part",
 	"Oh oh oh oh oh oh",
 	"Is the hardest part",
 	"Oh oh oh oh oh",
-	"Is the hardest part"
+	"Is the hardest part",
+	"",
+	"(repeat until fade)"
     ]
 }
 },
@@ -22557,6 +22735,73 @@
 	"My bride's gonna come",
 	"Oh, oh, are we gonna fly",
 	"Down in the easy chair !"
+    ]
+}
+},
+{ "file": "", "lastModifiedDate": 1529296612815, "song": 
+{
+"title": "You Better Run",
+"artist": "Rascals",
+"copyright": "Felix Cavaliere and Eddie Brigati",
+"key": "Bb",
+"defaultBpm": 106,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"I: C Bb C D#   x4",
+	"",
+	"V: C Bb C D#   x5",
+	"",
+	"C: C - - -",
+	"F - - -",
+	"C - - -",
+	"G - - -",
+	"",
+	"Br: ",
+	"Am - C -    x2",
+	"D - C -     x2",
+	"",
+	"",
+	"O: C Bb C D#   x4"
+    ],
+"lyrics": 
+    [
+	"",
+	"I: (instrumental)",
+	"",
+	"V: Whatcha tryin' to do to my heart",
+	"Whatcha tryin' to do to my heart",
+	"You go around, tellin' lies, and now you wanna compromise",
+	"Whatcha tryin' to do to my heart.",
+	"",
+	"C: You better run, you better hide, ",
+	"you better leave from my side, yeah.",
+	"",
+	"V: Whatcha tryin' to do to my soul",
+	"Whatcha tryin' to do to my soul",
+	"Well everything I had is yours, and now I'm closin' all the doors",
+	"Whatcha tryin' to do to my soul.",
+	"",
+	"C: You better run, you better hide, ",
+	"you better leave from my side, yeah.",
+	"",
+	"Br: I love you girl, I love you so, can't you see, don't you know",
+	"I can't stand your alibis, you tell me lies, drive me wild, yeah.",
+	"",
+	"V: (instrumental)",
+	"",
+	"V: I say what are you tryin' to do to my head",
+	"Say whatcha tryin' to do to my head",
+	"Well now I'm gonna draw the line",
+	"'Cause you ain't gonna take my mind",
+	"What are you tryin' to do to my head.",
+	"",
+	"C: You better run, you better hide, ",
+	"you better leave from my side.",
+	"",
+	"O:  (spoken) I could yell, yeah",
+	"I said go away and leave me alone",
+	"I can't stand you no more"
     ]
 }
 },

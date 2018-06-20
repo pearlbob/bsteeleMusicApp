@@ -21,6 +21,7 @@ public enum ChordDescriptor {
     add9("add9", "R 2 3 5 7"),
     jazz7b9("jazz7b9", "R m2 3 5"),
     sevenSharp5("7#5", "R 3 #5 m7"),
+    flat5("flat5", "R 3 b5"),
     sevenFlat5("7b5", "R 3 b5 m7"),
     sevenSharp9("7#9", "R m3 5 m7"),
     sevenFlat9("7b9", "R m2 3 5 7"),
@@ -38,6 +39,7 @@ public enum ChordDescriptor {
     minor11("m11", "R m3 5 m7 11"),
     minor13("m13", "R m3 5 m7 13"),
     major7("maj7", "R 3 5 7"),
+    majorSeven("M7", "R 3 5 7"),
     suspendedSecond("2", "R 2 5"),     //  alias for  suspended2
     suspendedFourth("4", "R 4 5"),      //  alias for suspended 4
     power5("5", "R 5"),  //  3rd omitted typically to avoid distortions
@@ -154,10 +156,12 @@ public enum ChordDescriptor {
             diminished7,
             jazz7b9,
             major7,
+            majorSeven,
             minor11,
             minor13,
             minor7,
             minor7b5,
+            flat5,
             sevenFlat5,
             sevenFlat9,
             sevenSharp5,
