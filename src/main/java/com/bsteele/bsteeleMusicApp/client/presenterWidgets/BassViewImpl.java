@@ -406,7 +406,7 @@ public class BassViewImpl
             {
                 scoreCtx.setFillStyle("#000000");
                 scoreCtx.setFont("84px sans-serif");
-                    scoreCtx.fillText(MusicConstant.bassClef, scoreMargin, scoreTop + 4.2 * scoreLineHeight);
+                    scoreCtx.fillText(MusicConstant.bassClef, 1.5 * hSpace, scoreTop + 4.2 * scoreLineHeight);
             }
 
             //  write the measure chords
@@ -438,10 +438,12 @@ public class BassViewImpl
 
     private static final CssColor background = CssColor.make("white");
     private static final CssColor black = CssColor.make("black");
-    private double scoreLineHeight = 15;
-    private int bars = 4;
-    private double barWidth = 200;
-    private double scoreMargin = 10;
+    private static final double scoreLineHeight = 15;
+    private static final int bars = 4;
+    private static final double barWidth = 200;
+    private static final double hSpace = 5;
+    private static final double scoreMargin = hSpace*2;
+
     private double barStart = 100 - scoreMargin;
     private CanvasElement canvasElement;
     private Context2d scoreCtx;

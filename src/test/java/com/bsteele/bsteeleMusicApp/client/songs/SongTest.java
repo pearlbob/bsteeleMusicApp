@@ -47,10 +47,11 @@ public class SongTest
                     JsDate date = song.getLastModifiedDate();
                     if (date != null) {
                         //logger.info(Double.toString(date.getTime()));
-                        assertTrue(date.getTime() > 1518820808000.0);
+                        assertTrue(date.getTime() > 1510000000000.0); //    ~6 November 2017
                     }
                     assertTrue(song.getKey() != null);
                     assertTrue(song.getChordSectionMap().size() > 0);
+                    //logger.info("song.getChordSectionMap().size() = "+song.getChordSectionMap().size());
                     assertTrue(song.getLyricsAsString().length() > 0);
 
                     Song song1 = Song.fromJson(song.toJson()).get(0);

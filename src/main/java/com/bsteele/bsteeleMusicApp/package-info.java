@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: written files should update their modification date
 fixme: fix chaos at song.parseLyrics() and song.parse(beatsPerBar, song.chords);
 todo: remember the last selected key for a song
 todo: Bodhi question:  arrangement presentation
