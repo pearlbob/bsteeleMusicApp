@@ -16,8 +16,8 @@ public class ChordTest extends TestCase {
 
         TreeSet<ScaleChord> slashScaleChords = new TreeSet<>();
         int beatsPerBar = 4;
-        //       for (AnticipationOrDelay anticipationOrDelay : AnticipationOrDelay.values()) {
-        AnticipationOrDelay anticipationOrDelay = AnticipationOrDelay.none;
+        //       for (ChordAnticipationOrDelay anticipationOrDelay : ChordAnticipationOrDelay.values()) {
+        ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.none;
         for (ScaleNote scaleNote : ScaleNote.values()) {
             for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
                 for (int beats = 2; beats <= 4; beats++) {

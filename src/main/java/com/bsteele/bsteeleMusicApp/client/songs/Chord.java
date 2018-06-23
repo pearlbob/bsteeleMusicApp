@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Chord {
 
     public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
-                 ScaleChord slashScaleChord, AnticipationOrDelay anticipationOrDelay) {
+                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay) {
         this.scaleChord = scaleChord;
         this.beats = beatsPerBar;
         this.beatsPerBar = beatsPerBar;
@@ -49,17 +49,17 @@ public class Chord {
             }
         }
         Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord,
-                AnticipationOrDelay.none);      //  fixme
+                ChordAnticipationOrDelay.none);      //  fixme
         ret.parseLength = parseLength;
         return ret;
     }
 
     public Chord(ScaleChord scaleChord) {
-        this(scaleChord, 4, 4, null, AnticipationOrDelay.none);
+        this(scaleChord, 4, 4, null, ChordAnticipationOrDelay.none);
     }
 
     public Chord(ScaleChord scaleChord, int beats, int beatsPerBar) {
-        this(scaleChord, beats, beatsPerBar, null, AnticipationOrDelay.none);
+        this(scaleChord, beats, beatsPerBar, null, ChordAnticipationOrDelay.none);
     }
 
     public Chord transpose(Key key, int halfSteps) {
@@ -128,7 +128,7 @@ public class Chord {
      *
      * @return the timing adjustment
      */
-    public final AnticipationOrDelay getAnticipationOrDelay() {
+    public final ChordAnticipationOrDelay getAnticipationOrDelay() {
         return anticipationOrDelay;
     }
 
@@ -137,7 +137,7 @@ public class Chord {
      *
      * @param anticipationOrDelay the timing adjustment
      */
-    public final void setAnticipationOrDelay(AnticipationOrDelay anticipationOrDelay) {
+    public final void setAnticipationOrDelay(ChordAnticipationOrDelay anticipationOrDelay) {
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
@@ -215,7 +215,7 @@ public class Chord {
     private int beats = 4;    //  default only, a typical full measure
     private int beatsPerBar = beats;
     private ScaleChord slashScaleChord;
-    private AnticipationOrDelay anticipationOrDelay = AnticipationOrDelay.none;
+    private ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.none;
     private transient int parseLength;
 
 

@@ -1087,51 +1087,6 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 1525928637915, "song": 
-{
-"title": "Annie Bananaie",
-"artist": "Doug Marshall",
-"copyright": "Marshall",
-"key": "C",
-"defaultBpm": 106,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"v:",
-	"CCmaj7 C7 F Cdim",
-	"C Am F G",
-	"CCmaj7 C7 F Cdim",
-	"C FG C C7",
-	"",
-	"ch:",
-	"F CC7 F CC7",
-	"FCdim CA D G"
-    ],
-"lyrics": 
-    [
-	"v:",
-	"I love you Annie, My Annie Bananie",
-	"You got a granny named Nanny who loves you too",
-	"My little Annie don'tcha think it's uncanny that it makes me feel",
-	"happy just thinking of you",
-	"",
-	"ch:",
-	"She's wonderful and beautiful and ever so sweet",
-	"and when she does the happy dance it's really a treat",
-	"she's just the kind of girl you'd be so happy to meet!",
-	"I love you so",
-	"",
-	"v:",
-	"My little Annie, my beautiful Annie",
-	"My annie Bananie, although we must soon part",
-	"I'll never forget you wherever i go Oh No!",
-	"She's sweet and she's nice",
-	"you wouldn't think twice",
-	"to love her from her heat to her toe,",
-	"my Annie Lebow"
-    ]
-}
-},
 { "file": "", "lastModifiedDate": 1526256784130, "song": 
 {
 "title": "Annie Bananie",
@@ -23157,48 +23112,5 @@
 	"Hey, oh, ya, ya-a"
     ]
 }
-},
-{ "file": "", "lastModifiedDate": 1518555916088, "song": 
-{
-"title": "testhtml",
-"artist": "wolff",
-"copyright": "wolff",
-"key": "C",
-"defaultBpm": 100,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"v:",
-	"&#x1D106;GA D GA D&#x1D107;x4",
-	"",
-	"&#10296;G&#10256;A D &#10296;G&#10256;A D",
-	"",
-	"&#9735;G A &#9735;G A",
-	"G A &#x1D110;G A"
-    ],
-"lyrics": 
-    [
-	"none"
-    ]
 }
-},
-{ "file": "", "lastModifiedDate": 1518554610967, "song": 
-{
-"title": "testofbraile2",
-"artist": "wolff",
-"copyright": "wolff",
-"key": "C",
-"defaultBpm": 100,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"v:",
-	"GA D D C",
-	"⠸G&#10256;A D D C"
-    ],
-"lyrics": 
-    [
-	"none"
-    ]
-}
-}]
+]

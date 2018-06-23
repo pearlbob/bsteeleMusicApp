@@ -409,6 +409,17 @@ public class BassViewImpl
                     scoreCtx.fillText(MusicConstant.bassClef, 1.5 * hSpace, scoreTop + 4.2 * scoreLineHeight);
             }
 
+            //  write the measure count
+            {
+                scoreCtx.setFillStyle("#000000");
+                scoreCtx.setFont("12px sans-serif");
+                for (int m = firstMoment; m <= lastMoment; m++) {
+                    SongMoment songMoment = song.getSongMoments().get(m);
+                    scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber()+1),
+                            barStart + (m - firstMoment) * barWidth+hSpace, scoreTop-hSpace/2 );
+                }
+            }
+
             //  write the measure chords
             //  fixme: preliminary measure chords
             scoreCtx.setFillStyle("#000000");

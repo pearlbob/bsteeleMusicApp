@@ -9,7 +9,8 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  * A small timing adjustment for a chord to change the feel of the chord.
  * Units are fractions of a beat expressed assuming quarter note beat duration.
  */
-public enum AnticipationOrDelay {
+public enum ChordAnticipationOrDelay
+{
     /**
      * Play the chord on time.
      */
@@ -40,9 +41,33 @@ public enum AnticipationOrDelay {
      */
     delayTriplet(">3"),;
 
-    AnticipationOrDelay(String shortName) {
+    ChordAnticipationOrDelay(String shortName) {
         this.shortName = shortName;
     }
+
+    public static final String generateGrammar()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t//\tChordAnticipationOrDelay\n");
+        sb.append("\t(");
+        boolean first = true;
+        for (ChordAnticipationOrDelay chordAnticipationOrDelay : ChordAnticipationOrDelay.values()) {
+            sb.append("\n\t\t");
+            String s = chordAnticipationOrDelay.shortName;
+            if (s.length() > 0) {
+                if (first)
+                    first = false;
+                else
+                    sb.append("| ");
+                sb.append("\"").append(s).append("\"");
+            }
+            sb.append("\t//\t").append(chordAnticipationOrDelay.name());
+
+        }
+        sb.append("\n\t)");
+        return sb.toString();
+    }
+
 
     /**
      * Returns the human name of this enum.

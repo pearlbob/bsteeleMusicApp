@@ -194,12 +194,21 @@ table td.chordTable {
     border-right: 1.5px solid black;
     font-size: 32px;
 }
+.errorLabel
+{
+    color:red;
+}
 .chords {
 }
 .chordsTextEntry {
      font-size: large;
      width: 20em;
      height: 30em;
+}
+.lyricsTextEntry {
+     font-size: large;
+     width: 60em;
+     height: 60em;
 }
 /*  chords  */
 td[id*="C."]{

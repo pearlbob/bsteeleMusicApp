@@ -12,7 +12,8 @@ import java.util.TreeSet;
  * The modifier to a chord specification that describes the basic type of chord.
  * Typical values are major, minor, dominant7, etc.
  */
-public enum ChordDescriptor {
+public enum ChordDescriptor
+{
     //  longest short names first!
     //  avoid starting descriptors with b, #, s to avoid confusion with scale notes
     dominant13("13", "R 3 5 m7 9 11 13"),
@@ -51,7 +52,8 @@ public enum ChordDescriptor {
      */
     major("", "r 3 5");
 
-    ChordDescriptor(String shortName, String structure) {
+    ChordDescriptor(String shortName, String structure)
+    {
         this.shortName = shortName;
         this.chordComponents = ChordComponent.parse(structure);
     }
@@ -62,7 +64,8 @@ public enum ChordDescriptor {
      * @param s the string to parse
      * @return the matching chord descriptor
      */
-    public static final ChordDescriptor parse(String s) {
+    public static final ChordDescriptor parse(String s)
+    {
         if (s != null && s.length() > 0) {
             //  special for major7 thanks to John Coltrane
             if (s.charAt(0) == MusicConstant.greekCapitalDelta)
@@ -80,16 +83,19 @@ public enum ChordDescriptor {
         return ChordDescriptor.major; //  chord without modifier short name
     }
 
-    public static final ChordDescriptor[] getOtherChordDescriptorsOrdered() {
+    public static final ChordDescriptor[] getOtherChordDescriptorsOrdered()
+    {
         return otherChordDescriptorsOrdered;
     }
 
-    public static final ChordDescriptor[] getPrimaryChordDescriptorsOrdered() {
+    public static final ChordDescriptor[] getPrimaryChordDescriptorsOrdered()
+    {
         return primaryChordDescriptorsOrdered;
     }
 
 
-    public static final ChordDescriptor[] getAllChordDescriptorsOrdered() {
+    public static final ChordDescriptor[] getAllChordDescriptorsOrdered()
+    {
         return allChordDescriptorsOrdered;
     }
 
@@ -99,11 +105,13 @@ public enum ChordDescriptor {
      *
      * @return short, human readable name for the chord description.
      */
-    public final String getShortName() {
+    public final String getShortName()
+    {
         return shortName;
     }
 
-    public final int getParseLength() {
+    public final int getParseLength()
+    {
         return shortName.length();
     }
 
@@ -113,13 +121,15 @@ public enum ChordDescriptor {
      * @return the human name of this enum constant
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         if (shortName.length() == 0)
             return name();
         return shortName;
     }
 
-    public final String chordComponentsToString() {
+    public final String chordComponentsToString()
+    {
         StringBuilder sb = new StringBuilder();
 
         boolean first = true;
@@ -133,7 +143,8 @@ public enum ChordDescriptor {
         return sb.toString();
     }
 
-    public final TreeSet<ChordComponent> getChordComponents() {
+    public final TreeSet<ChordComponent> getChordComponents()
+    {
         return chordComponents;
     }
 
@@ -180,6 +191,29 @@ public enum ChordDescriptor {
             dominant13,
     };
     private static final ChordDescriptor[] allChordDescriptorsOrdered;
+
+    public static final String generateGrammar()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t//\tChordDescriptor\n");
+        sb.append("\t(");
+        boolean first = true;
+        for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+            sb.append("\n\t\t");
+            String s = chordDescriptor.shortName;
+            if (s.length() > 0) {
+                if (first)
+                    first = false;
+                else
+                    sb.append("| ");
+                sb.append("\"").append(s).append("\"");
+            }
+            sb.append("\t//\t").append(chordDescriptor.name());
+
+        }
+        sb.append("\n\t)");
+        return sb.toString();
+    }
 
     static {
         //  compute the ordered list of all chord descriptors

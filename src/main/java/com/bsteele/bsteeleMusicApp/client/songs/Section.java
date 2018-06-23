@@ -20,7 +20,8 @@ import java.util.ArrayList;
  * will aid in song structure readability.
  * </p>
  */
-public enum Section {
+public enum Section
+{
     /**
      * A section the introduces the song.  Typically the tempo is
      * set here.
@@ -37,8 +38,8 @@ public enum Section {
      */
     preChorus("PC"),
     /**
-     *  A repeating section of the song that typically has repeats lyrics
-     *  to enforce the song's theme.
+     * A repeating section of the song that typically has repeats lyrics
+     * to enforce the song's theme.
      */
     chorus("C", "ch"),
     /**
@@ -70,7 +71,21 @@ public enum Section {
      */
     outro("O", "out");
 
-    private SectionVersion makeVersion(int v, int sourceLength) {
+    private Section(String originalAbbreviation)
+    {
+        lowerCaseName = name().toLowerCase();
+        this.originalAbbreviation = originalAbbreviation;
+        abbreviation = originalAbbreviation.toLowerCase();
+    }
+
+    private Section(String abbreviation, String alternateAbbreviation)
+    {
+        this(abbreviation);
+        this.alternateAbbreviation = alternateAbbreviation.toLowerCase();
+    }
+
+    private SectionVersion makeVersion(int v, int sourceLength)
+    {
         return new SectionVersion(this, v, sourceLength);
     }
 
@@ -83,7 +98,8 @@ public enum Section {
      * @param s the string to parse
      * @return the length of the parse. Zero if no parse
      */
-    public static  final SectionVersion parse(String s) {
+    public static final SectionVersion parse(String s)
+    {
         if (s == null) {
             return null;
         }
@@ -102,7 +118,8 @@ public enum Section {
             for (Section sec : Section.values()) {
                 if (sectionId.equals(sec.lowerCaseName)
                         || sectionId.equals(sec.abbreviation)
-                        || (sec.alternateAbbreviation != null && sectionId.equals(sec.alternateAbbreviation))) {
+                        || (sec.alternateAbbreviation != null && sectionId.equals(sec.alternateAbbreviation)))
+                {
                     return sec.makeVersion(version, m.getGroup(0).length());
                 }
             }
@@ -112,10 +129,12 @@ public enum Section {
 
     /**
      * Parse the given string for section version's and report all matches in order.
+     *
      * @param s the string to parse
      * @return the section versions found
      */
-    public static  final ArrayList<SectionVersion> matchAll(String s) {
+    public static final ArrayList<SectionVersion> matchAll(String s)
+    {
         ArrayList<SectionVersion> ret = new ArrayList<>();
 
         //  look for possible candidates
@@ -139,31 +158,49 @@ public enum Section {
         return ret;
     }
 
-    private Section(String originalAbbreviation) {
-        lowerCaseName = name().toLowerCase();
-        this.originalAbbreviation = originalAbbreviation;
-        abbreviation = originalAbbreviation.toLowerCase();
-    }
-
-    private Section(String abreviation, String alternateAbbreviation) {
-        this(abreviation);
-        this.alternateAbbreviation = alternateAbbreviation.toLowerCase();
-    }
 
     /**
      * Return the abbreviation for the section
+     *
      * @return
      */
-    public  final String getAbbreviation() {
+    public final String getAbbreviation()
+    {
         return originalAbbreviation;
     }
 
     /**
      * Utility to return the default section.
+     *
      * @return the default section
      */
-    public static final SectionVersion getDefaultVersion() {
+    public static final SectionVersion getDefaultVersion()
+    {
         return Section.verse.makeVersion(0, 0);
+    }
+
+    public static final String generateGrammar()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<Section: (");
+        boolean first = true;
+        for (Section section : Section.values()) {
+            sb.append("\n\t");
+
+            if (first)
+                first = false;
+            else
+                sb.append("| ");
+            sb.append("\"").append(section.name()).append("\"");
+            sb.append("| \"").append(section.getAbbreviation()).append("\"");
+            String lc = section.getAbbreviation().toLowerCase();
+            if (!lc.equals(section.name()))
+                sb.append("| \"").append(lc).append("\"");
+            if (section.alternateAbbreviation != null && !section.alternateAbbreviation.equals(section.name()))
+                sb.append("| \"").append(section.alternateAbbreviation).append("\"");
+        }
+        sb.append("\n\t) >\n");
+        return sb.toString();
     }
 
     private String lowerCaseName;

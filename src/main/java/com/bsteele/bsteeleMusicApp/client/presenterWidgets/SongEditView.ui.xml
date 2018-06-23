@@ -18,7 +18,9 @@
                 </tr>
                 <tr>
                     <td>
-
+                        <p>
+                            <g:Label ui:field="errorLabel" styleName="{resources.style.errorLabel}" />
+                        </p>
                         <p>
                             Title:
                             <br/>
@@ -220,7 +222,7 @@
             <p>
                 Lyrics:
                 <br/>
-                <textarea rows="60" cols="80" ui:field="lyricsEntry" style="font-size: medium;"></textarea>
+                <g:TextArea ui:field="lyricsTextEntry" styleName='{resources.style.lyricsTextEntry}'/>
             </p>
         </div>
     </g:HTMLPanel>

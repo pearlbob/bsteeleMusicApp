@@ -78,6 +78,8 @@ public interface AppResources extends ClientBundle {
 
         String chordsTextEntry();
 
+        String lyricsTextEntry();
+
         String songList();
 
         String entryLine();
@@ -93,6 +95,8 @@ public interface AppResources extends ClientBundle {
         String rightJustifiedClass();
 
         String label();
+
+        String errorLabel();
     }
 
     @Source("css/bsteeleMusicApp.gss")
