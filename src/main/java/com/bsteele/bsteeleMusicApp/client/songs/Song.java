@@ -1238,6 +1238,14 @@ public class Song implements Comparable<Song>
         return sb.toString();
     }
 
+    public final Song checkSong()
+            throws ParseException
+    {
+           return checkSong(title, artist, copyright,
+                   key, Integer.toString(defaultBpm), Integer.toString(beatsPerBar), Integer.toString(unitsPerMeasure),
+                   chords, rawLyrics) ;
+    }
+
     /**
      * Validate a song entry argument set
      *

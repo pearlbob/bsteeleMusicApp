@@ -106,7 +106,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         String data = Song.toJson(allSongs);
         saveSongAs("allSongs_" + fmt.format(now) + ".songlyrics", data);
-        //allSongs.clear(); view.setSongList(allSongs);// test only
+        //allSongs.clear(); view.setSongList(allSongs);// testParse only
     }
 
 
