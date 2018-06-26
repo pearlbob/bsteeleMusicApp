@@ -27,7 +27,7 @@ public class MeasureCommentTest extends TestCase {
         MeasureComment measureComment = MeasureComment.parse(sectionVersion, s);
         assertEquals(section, measureComment.getSectionVersion().getSection());
         assertEquals(s.length(), measureComment.getParseLength());
-        assertEquals(s, measureComment.getComment());
+        assertEquals(" this is a comment ", measureComment.getComment());
 
         s = "this is also a comment )";
         measureComment = MeasureComment.parse(sectionVersion, s);
@@ -40,7 +40,7 @@ public class MeasureCommentTest extends TestCase {
         sectionVersion = new SectionVersion(section);
         measureComment = MeasureComment.parse(sectionVersion, s);
         assertEquals(section, measureComment.getSectionVersion().getSection());
-        assertEquals(3, measureComment.getParseLength());
+        assertEquals(4, measureComment.getParseLength());
         assertEquals(s.substring(0, 3), measureComment.getComment());
 
         s = "";                  //  not a comment

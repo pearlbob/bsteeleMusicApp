@@ -220,7 +220,7 @@ public class SongTest
         assertEquals(1, chordSections.size());
         measureNode = chordSections.get(0);
         measures = measureNode.getMeasures();
-        assertEquals(4, measures.size());
+        assertEquals(5, measures.size());
     }
 
     @Override
