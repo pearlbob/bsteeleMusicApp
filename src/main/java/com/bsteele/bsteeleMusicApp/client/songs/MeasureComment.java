@@ -1,5 +1,8 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
+
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.Objects;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureComment extends MeasureNode
+public class MeasureComment extends Measure
 {
 
     public MeasureComment(@Nonnull SectionVersion sectionVersion, String comment)
@@ -24,15 +27,34 @@ public class MeasureComment extends MeasureNode
         if (s == null || s.length() <= 0)
             return null;
 
-        int n = -1;
-        if (s.charAt(0) == '(')
+
+        MatchResult mr;
+        //  properly formatted comment
         {
-            n = s.indexOf(')'); //  match a parenthesis
-            if (n > 0)
-                n++;        //  include the right paren
+            final RegExp commentRegExp = RegExp.compile("([ \\t]*\\((.*)\\)[ \\t]*\n)");
+            mr = commentRegExp.exec(s);
         }
-        if (n < 0)
-            n = s.indexOf('\n');    //  all comments end at the end of the line
+        if (mr == null) {
+            //  properly formatted embedded comment
+            final RegExp commentRegExp = RegExp.compile("([ \\t]*\\((.*)\\)[ \\t]*)");
+            mr = commentRegExp.exec(s);
+        }
+
+        if (mr == null) {
+            // improperly formatted comment
+            final RegExp uncommentRegExp = RegExp.compile("([ \\t]*(.+)[ \\t]*\n)");
+            mr = uncommentRegExp.exec(s);
+        }
+
+        //  format what we found
+        if (mr != null) {
+            String comment = mr.getGroup(2);
+            MeasureComment ret = new MeasureComment(sectionVersion, comment);
+            ret.parseLength = mr.getIndex() + mr.getGroup(1).length();
+            return ret;
+        }
+
+        int n = s.indexOf('\n');    //  all comments end at the end of the line
         if (n < 0)
             n = s.length();         //  all comments end at the end of the file
         if (n <= 0)
@@ -73,6 +95,7 @@ public class MeasureComment extends MeasureNode
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        
         MeasureComment that = (MeasureComment) o;
         return Objects.equals(comment, that.comment);
     }

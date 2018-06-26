@@ -22,13 +22,18 @@ import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
@@ -42,6 +47,10 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -116,8 +125,17 @@ public class SongEditView
     @UiField
     SelectElement sectionOtherSelection;
 
+
+    @UiField
+    TextBox measureEntry;
+
+    @UiField
+    HTMLPanel editChords;
+
     @UiField
     TextArea chordsTextEntry;
+    @UiField
+    FlexTable chordsFlexTable;
 
     @UiField
     Button chordsI;
@@ -486,7 +504,7 @@ public class SongEditView
             return;
 
         this.song = song;
-        
+
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
         copyrightEntry.setText(song.getCopyright());
@@ -497,6 +515,43 @@ public class SongEditView
         chordsTextEntry.setCursorPos(0);
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
+
+        editChords.clear();
+        editChords.add(new HTML(song.transpose(0, prefix)));
+        {
+            final NodeList<Element> cells = editChords.getElement().getElementsByTagName("td");
+            for (int c = 0; c < cells.getLength(); c++) {
+                Element e = cells.getItem(c);
+                Style cellStyle = e.getStyle();
+                cellStyle.setFontSize(16, Style.Unit.PX);
+
+            }
+        }
+
+        song.transpose(chordsFlexTable, 0);
+
+        lastCell = null;
+        chordsFlexTable.addClickHandler(clickEvent -> {
+            HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
+            String text = cell.getElement().getInnerText();
+
+            if (text != null && text.length() > 0) {
+                //  clear the last selection
+                if (lastCell != null)
+                    lastCell.getElement().getStyle().setBackgroundColor("");
+
+                GWT.log("chordsFlexTable click: (" +
+                        cell.getRowIndex()
+                        + ","
+                        + cell.getCellIndex()
+                        + ") "
+                        + cell.getElement().getInnerText());
+
+                //  indicate the current selection
+                cell.getElement().getStyle().setBackgroundColor("#ccff99");
+                lastCell = cell;
+            }
+        });
 
         checkSong();
     }
@@ -785,8 +840,10 @@ public class SongEditView
     HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private Key key = Key.getDefault();
     private Song song;
+    private HTMLTable.Cell lastCell;
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
+    private static String prefix = "songEdit";
 }

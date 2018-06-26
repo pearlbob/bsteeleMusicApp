@@ -2,7 +2,6 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -52,12 +51,12 @@ public class MeasureSequenceItem extends MeasureNode
     }
 
     @Override
-    public int getTotalMeasures()
+    public int getTotalMoments()
     {
         int ret = 0;
 
         for (MeasureNode measureNode : measureNodes)
-            ret += measureNode.getTotalMeasures();
+            ret += measureNode.getTotalMoments();
         return ret;
     }
 

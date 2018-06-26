@@ -31,7 +31,7 @@ public enum Section
      * A repeating section of the song that typically has new lyrics
      * for each instance.
      */
-    verse("V"),
+    verse("V", "vs"),
     /**
      * A section that precedes the chorus but may not be used
      * to lead all chorus sections.

@@ -33,6 +33,12 @@ public class Measure extends MeasureNode
         setChords(chords);
     }
 
+    protected Measure(@Nonnull SectionVersion sectionVersion)
+    {
+        super(sectionVersion);
+        setBeatCount(0);
+    }
+
     public static final Measure parse(@Nonnull SectionVersion sectionVersion,
                                       String s, int beatsPerBar)
     {
@@ -260,7 +266,7 @@ public class Measure extends MeasureNode
     }
 
     @Override
-    public int getTotalMeasures()
+    public int getTotalMoments()
     {
         return 1;
     }

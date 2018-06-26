@@ -94,7 +94,7 @@ public class ChordSectionTest extends TestCase {
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measureNodes, 3, 0, 0);
 
             MeasureNode measureNode = measureNodes.get(4);
-            assertEquals(16, measureNode.getTotalMeasures());
+            assertEquals(16, measureNode.getTotalMoments());
             ArrayList<Measure> measures = measureNode.getMeasures();
             assertEquals(4, measures.size());
 
@@ -106,7 +106,7 @@ public class ChordSectionTest extends TestCase {
             assertEquals(ScaleNote.A, measures.get(1).getChords().get(0).getScaleChord().getScaleNote());
             assertEquals(ScaleNote.Eb, measures.get(2).getChords().get(0).getScaleChord().getScaleNote());
             assertEquals(ScaleNote.C, measures.get(3).getChords().get(0).getScaleChord().getScaleNote());
-            assertEquals(4 + 4 * 4, chordSection.getTotalMeasures());
+            assertEquals(4 + 4 * 4, chordSection.getTotalMoments());
         }
         {
             ChordSection chordSection = ChordSection.parse("V:\n" +
@@ -120,7 +120,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(measureNodes != null);
             assertEquals(1, measureNodes.size());
             MeasureNode measureNode = measureNodes.get(0);
-            assertEquals(4 * 4, measureNode.getTotalMeasures());
+            assertEquals(4 * 4, measureNode.getTotalMoments());
             ArrayList<Measure> measures = measureNode.getMeasures();
             assertEquals(4, measures.size());
             assertEquals(ScaleNote.A, measures.get(0).getChords().get(0).getScaleChord().getScaleNote());
@@ -147,7 +147,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(measureNodes != null);
             assertEquals(4, measureNodes.size());
             MeasureNode measureNode = measureNodes.get(0);
-            assertEquals(1, measureNode.getTotalMeasures());
+            assertEquals(1, measureNode.getTotalMoments());
             ArrayList<Measure> measures = measureNode.getMeasures();
             assertEquals(1, measures.size());
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measureNodes, 0, 0, 0);
@@ -157,25 +157,25 @@ public class ChordSectionTest extends TestCase {
         }
         {
             ChordSection chordSection = ChordSection.parse("I:       A B C D\n\n", 4);
-            assertEquals(4, chordSection.getTotalMeasures());
+            assertEquals(4, chordSection.getTotalMoments());
             chordSection = ChordSection.parse("\n\tI:\n       A B C D\n\n", 4);
-            assertEquals(4, chordSection.getTotalMeasures());
+            assertEquals(4, chordSection.getTotalMoments());
             chordSection = ChordSection.parse("v: A B C D\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb\n", 4);
-            assertEquals(8, chordSection.getTotalMeasures());
+            assertEquals(8, chordSection.getTotalMoments());
             chordSection = ChordSection.parse("v: A B C D\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
-            assertEquals(4 + 4 * 4, chordSection.getTotalMeasures());
+            assertEquals(4 + 4 * 4, chordSection.getTotalMoments());
             chordSection = ChordSection.parse("v: \n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
-            assertEquals(4 * 4, chordSection.getTotalMeasures());
+            assertEquals(4 * 4, chordSection.getTotalMoments());
             chordSection = ChordSection.parse("v: A B C D\n\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
-            assertEquals(4 + 4 * 4, chordSection.getTotalMeasures());
+            assertEquals(4 + 4 * 4, chordSection.getTotalMoments());
             chordSection = ChordSection.parse("v: A B C D\n\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n" +
                     "G F F# E", 4);
-            assertEquals(4 + 4 * 4 + 4, chordSection.getTotalMeasures());
+            assertEquals(4 + 4 * 4 + 4, chordSection.getTotalMoments());
         }
     }
 

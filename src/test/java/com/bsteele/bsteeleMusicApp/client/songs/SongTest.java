@@ -8,6 +8,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -18,10 +19,12 @@ import java.util.logging.Logger;
  * User: bob
  */
 public class SongTest
-        extends GWTTestCase {
+        extends GWTTestCase
+{
 
     @Test
-    public void testFromJson() {
+    public void testFromJson()
+    {
         int songCount = 0;
         String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
         JSONValue jv = JSONParser.parseStrict(jsonString);
@@ -34,7 +37,8 @@ public class SongTest
                     songCount++;
                     Song song = Song.fromJsonObject(ja.get(i).isObject());
 
-                    HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(song.getChordsAsString());
+                    HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(song
+                            .getChordsAsString());
                     for (ScaleChord scaleChord : scaleChordMap.keySet())
                         chordDescriptors.add(scaleChord.getChordDescriptor());
                     assertTrue(song.getTitle() != null);
@@ -74,7 +78,8 @@ public class SongTest
     }
 
     @Test
-    public void testCompare() {
+    public void testCompare()
+    {
 
         Song aNull = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
@@ -133,7 +138,8 @@ public class SongTest
     }
 
     @Test
-    public void testEquals() {
+    public void testEquals()
+    {
 
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
@@ -192,8 +198,34 @@ public class SongTest
 
     }
 
+    @Test
+    public void testComments()
+    {
+        Song a;
+        ArrayList<ChordSection> chordSections;
+        MeasureNode measureNode;
+        ArrayList<Measure> measures;
+
+        a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        chordSections = a.getChordSections();
+        assertEquals(1, chordSections.size());
+        measureNode = chordSections.get(0);
+        measures = measureNode.getMeasures();
+        assertEquals(4, measures.size());
+
+        a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D (yo)", "v: bob, bob, bob berand");
+        chordSections = a.getChordSections();
+        assertEquals(1, chordSections.size());
+        measureNode = chordSections.get(0);
+        measures = measureNode.getMeasures();
+        assertEquals(4, measures.size());
+    }
+
     @Override
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 

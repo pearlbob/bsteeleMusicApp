@@ -21,9 +21,9 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public int getTotalMeasures()
+    public int getTotalMoments()
     {
-        return repeats * super.getTotalMeasures();
+        return repeats * super.getTotalMoments();
     }
 
 

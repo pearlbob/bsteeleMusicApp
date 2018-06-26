@@ -13,6 +13,7 @@ import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.ui.FlexTable;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
@@ -436,6 +437,18 @@ public class Song implements Comparable<Song>
                             }
                     }
                 }
+        }
+
+        //  debug
+        if (false) {
+            GWT.log(getSongId().toString());
+            for (int i = 0; i < songMoments.size(); i++) {
+                SongMoment songMoment = songMoments.get(i);
+                GWT.log(songMoment.getSequenceNumber() + ": "
+                        + " (" + songMoment.getRepeat() + "/" + songMoment.getRepeatMax() + ") "
+                        + songMoment.getMeasure().toString()
+                );
+            }
         }
     }
 
@@ -1084,7 +1097,6 @@ public class Song implements Comparable<Song>
      * @param halfSteps half steps for this transcription
      * @return an HTML representation for the chord sections
      */
-    @Deprecated
     public final String transpose(int halfSteps, String prefix)
     {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
@@ -1113,6 +1125,39 @@ public class Song implements Comparable<Song>
 
         //GWT.log(tranMap.toString());
         return generateHtmlChordTableFromMap(tranMap, prefix);
+    }
+
+    public final void transpose(FlexTable flexTable, int halfSteps)
+    {
+        halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
+
+        Key newKey = key.nextKeyByHalfStep(halfSteps);
+
+        flexTable.removeAllRows();
+        int rowBase = 0;
+        for (SectionVersion sectionVersion : chordSectionMap.keySet()) {
+            Grid<String> grid = chordSectionMap.get(sectionVersion);
+            flexTable.setHTML(rowBase, 0,
+                    "<span class=\"" + CssConstants.style + "sectionLabel\"  style=\"font-size: 16px;\" >"
+                            + sectionVersion.toString()
+                            + "</span>");
+
+            int rLimit = grid.getRowCount();
+            for (int r = 0; r < rLimit; r++) {
+                ArrayList<String> row = grid.getRow(r);
+                int colLimit = row.size();
+                for (int col = 0; col < colLimit; col++) {
+                    flexTable.setHTML(rowBase + r, col + 1,
+                            "<span class=\"" + CssConstants.style + "section"
+                                    + (sectionVersion.getSection().getAbbreviation())
+                                    + "Class\" style=\"font-size: 16px;\">"
+                                    + transposeMeasure(newKey, row.get(col), halfSteps)
+                                    + "</span>"
+                    );
+                }
+            }
+            rowBase += rLimit;
+        }
     }
 
     private String transposeMeasure(Key newKey, String m, int halfSteps)

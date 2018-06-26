@@ -19,7 +19,7 @@
                 <tr>
                     <td>
                         <p>
-                            <g:Label ui:field="errorLabel" styleName="{resources.style.errorLabel}" />
+                            <g:Label ui:field="errorLabel" styleName="{resources.style.errorLabel}"/>
                         </p>
                         <p>
                             Title:
@@ -83,7 +83,13 @@
                     <td>
                         Chords:
                         <br/>
+                        <g:TextBox ui:field="measureEntry" styleName="{resources.style.entryLine}"/>
+                        <br/>
+                        <g:FlexTable ui:field="chordsFlexTable"/>
+                        <g:HTMLPanel ui:field="editChords"/>
                         <g:TextArea ui:field="chordsTextEntry" styleName='{resources.style.chordsTextEntry}'/>
+
+
                     </td>
                     <td>
                         <table>
@@ -92,13 +98,20 @@
                                     Section:
                                 </td>
                                 <td>
-                                    <g:Button ui:field="sectionI" styleName="{resources.style.lyricsIClass}">Intro</g:Button>
-                                    <g:Button ui:field="sectionV" styleName="{resources.style.lyricsVClass}">Verse</g:Button>
-                                    <g:Button ui:field="sectionPC" styleName="{resources.style.lyricsPCClass}">PreChorus</g:Button>
-                                    <g:Button ui:field="sectionC" styleName="{resources.style.lyricsCClass}">Chorus</g:Button>
-                                    <g:Button ui:field="sectionBr" styleName="{resources.style.lyricsBrClass}">Bridge</g:Button>
-                                    <g:Button ui:field="sectionO" styleName="{resources.style.lyricsOClass}">Outro</g:Button>
-                                    <select ui:field="sectionOtherSelection" />
+                                    <g:Button ui:field="sectionI" styleName="{resources.style.lyricsIClass}">Intro
+                                    </g:Button>
+                                    <g:Button ui:field="sectionV" styleName="{resources.style.lyricsVClass}">Verse
+                                    </g:Button>
+                                    <g:Button ui:field="sectionPC" styleName="{resources.style.lyricsPCClass}">
+                                        PreChorus
+                                    </g:Button>
+                                    <g:Button ui:field="sectionC" styleName="{resources.style.lyricsCClass}">Chorus
+                                    </g:Button>
+                                    <g:Button ui:field="sectionBr" styleName="{resources.style.lyricsBrClass}">Bridge
+                                    </g:Button>
+                                    <g:Button ui:field="sectionO" styleName="{resources.style.lyricsOClass}">Outro
+                                    </g:Button>
+                                    <select ui:field="sectionOtherSelection"/>
                                     <!--
                                     <g:Button ui:field="sectionA">Section A</g:Button>
                                     <g:Button ui:field="sectionB">Section B</g:Button>

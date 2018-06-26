@@ -33,8 +33,7 @@ public class ChordSection extends MeasureSequenceItem
         int n = util.getLeadingWhitespaceCount();
 
         SectionVersion sectionVersion = Section.parse(ms);
-        if (sectionVersion == null)
-        {
+        if (sectionVersion == null) {
             //  cope with badly formatted songs
             sectionVersion = new SectionVersion(Section.verse);
         }
@@ -57,10 +56,8 @@ public class ChordSection extends MeasureSequenceItem
                 break;
 
             //  look for a repeat marker
-            if (ms.charAt(0) == '|')
-            {
-                if (!measures.isEmpty())
-                {
+            if (ms.charAt(0) == '|') {
+                if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
                     measureSequenceItems.addAll(measures);
                     measures = new ArrayList<>();
@@ -72,8 +69,7 @@ public class ChordSection extends MeasureSequenceItem
             }
 
             //  look for a repeat end
-            if (ms.charAt(0) == 'x')
-            {
+            if (ms.charAt(0) == 'x') {
                 repeatMarker = false;
                 n++;
                 ms = s.substring(n);
@@ -84,10 +80,8 @@ public class ChordSection extends MeasureSequenceItem
 
                 final RegExp oneOrMoreDigitsRegexp = RegExp.compile("^(\\d+)");
                 MatchResult mr = oneOrMoreDigitsRegexp.exec(ms);
-                if (mr != null)
-                {
-                    if (!measures.isEmpty())
-                    {
+                if (mr != null) {
+                    if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
                         measureSequenceItems.addAll(measures);
                         measures = new ArrayList<>();
@@ -102,8 +96,7 @@ public class ChordSection extends MeasureSequenceItem
                 continue;
             }
 
-            if (util.wasNewline() && !repeatMarker)
-            {
+            if (util.wasNewline() && !repeatMarker) {
                 //  add line of measures to output collection
                 for (MeasureNode m : lineMeasures)
                     measures.add(m);
@@ -113,30 +106,25 @@ public class ChordSection extends MeasureSequenceItem
 
             //  add a measure to the current line measures
             Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, lastMeasure);
-            if (measure != null)
-            {
+            if (measure != null) {
                 n += measure.getParseLength();
                 lineMeasures.add(measure);
                 lastMeasure = measure;
-            } else
-            {
+            } else {
                 //  look for a comment
                 MeasureComment measureComment = MeasureComment.parse(sectionVersion, ms);
-                if (measureComment != null)
-                {
+                if (measureComment != null) {
                     n += measureComment.getParseLength();
                     lineMeasures.add(measureComment);
-                }
-
-                break;      //  fixme: not a measure, we're done
+                } else
+                    break;      //  fixme: not a measure, we're done
             }
         }
 
         //  don't assume every line has an eol
         for (MeasureNode mn : lineMeasures)
             measures.add(mn);
-        if (!measures.isEmpty())
-        {
+        if (!measures.isEmpty()) {
             measureSequenceItems.addAll(measures);
         }
 
@@ -224,8 +212,7 @@ public class ChordSection extends MeasureSequenceItem
         sb.append(getSectionVersion().toString()).append("{");
 
         if (measureNodes != null)
-            for (MeasureNode measureNode : measureNodes)
-            {
+            for (MeasureNode measureNode : measureNodes) {
                 sb.append(measureNode.toString()).append(" ");
             }
         sb.append("}");

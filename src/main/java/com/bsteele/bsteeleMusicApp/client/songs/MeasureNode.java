@@ -31,7 +31,7 @@ public abstract class MeasureNode
         return parseLength;
     }
 
-    public int getTotalMeasures()
+    public int getTotalMoments()
     {
         return (measures != null ? measures.size() : 0);
     }
