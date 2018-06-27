@@ -31,18 +31,18 @@ public class MeasureComment extends Measure
         MatchResult mr;
         //  properly formatted comment
         {
-            final RegExp commentRegExp = RegExp.compile("([ \\t]*\\((.*)\\)[ \\t]*\n)");
+            final RegExp commentRegExp = RegExp.compile("^([ \\t]*\\((.*)\\)[ \\t]*\n)");
             mr = commentRegExp.exec(s);
         }
         if (mr == null) {
             //  properly formatted embedded comment
-            final RegExp commentRegExp = RegExp.compile("([ \\t]*\\((.*)\\)[ \\t]*)");
+            final RegExp commentRegExp = RegExp.compile("^([ \\t]*\\((.*)\\)[ \\t]*)");
             mr = commentRegExp.exec(s);
         }
 
         if (mr == null) {
             // improperly formatted comment
-            final RegExp uncommentRegExp = RegExp.compile("([ \\t]*(.+)[ \\t]*\n)");
+            final RegExp uncommentRegExp = RegExp.compile("^([ \\t]*(.+)[ \\t]*\n)");
             mr = uncommentRegExp.exec(s);
         }
 
@@ -50,7 +50,7 @@ public class MeasureComment extends Measure
         if (mr != null) {
             String comment = mr.getGroup(2);
             MeasureComment ret = new MeasureComment(sectionVersion, comment);
-            ret.parseLength = mr.getIndex() + mr.getGroup(1).length();
+            ret.parseLength = mr.getGroup(0).length();
             return ret;
         }
 

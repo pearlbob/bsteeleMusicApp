@@ -86,7 +86,7 @@
                         <g:TextBox ui:field="measureEntry" styleName="{resources.style.entryLine}"/>
                         <br/>
                         <g:FlexTable ui:field="chordsFlexTable"/>
-                        <g:HTMLPanel ui:field="editChords"/>
+                        <!--<g:HTMLPanel ui:field="editChords"/>-->
                         <g:TextArea ui:field="chordsTextEntry" styleName='{resources.style.chordsTextEntry}'/>
 
 

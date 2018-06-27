@@ -129,8 +129,8 @@ public class SongEditView
     @UiField
     TextBox measureEntry;
 
-    @UiField
-    HTMLPanel editChords;
+//    @UiField
+//    HTMLPanel editChords;
 
     @UiField
     TextArea chordsTextEntry;
@@ -516,19 +516,18 @@ public class SongEditView
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
 
-        editChords.clear();
-        editChords.add(new HTML(song.transpose(0, prefix)));
-        {
-            final NodeList<Element> cells = editChords.getElement().getElementsByTagName("td");
-            for (int c = 0; c < cells.getLength(); c++) {
-                Element e = cells.getItem(c);
-                Style cellStyle = e.getStyle();
-                cellStyle.setFontSize(16, Style.Unit.PX);
+//        editChords.clear();
+//        editChords.add(new HTML(song.transpose(0, prefix)));
+//        {
+//            final NodeList<Element> cells = editChords.getElement().getElementsByTagName("td");
+//            for (int c = 0; c < cells.getLength(); c++) {
+//                Element e = cells.getItem(c);
+//                Style cellStyle = e.getStyle();
+//                cellStyle.setFontSize(16, Style.Unit.PX);
+//            }
+//        }
 
-            }
-        }
-
-        song.transpose(chordsFlexTable, 0);
+        song.transpose(chordsFlexTable, 0); //    debug
 
         lastCell = null;
         chordsFlexTable.addClickHandler(clickEvent -> {
