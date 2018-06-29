@@ -1,25 +1,33 @@
 package com.bsteele.bsteeleMusicApp.shared;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
+import sun.misc.Regexp;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class Util {
-    public static final int mod(int n, int modulus) {
+public class Util
+{
+    public static final int mod(int n, int modulus)
+    {
         n = n % modulus;
         if (n < 0)
             n += modulus;
         return n;
     }
 
-    public static final double mod(double n, double modulus) {
+    public static final double mod(double n, double modulus)
+    {
         n = n % modulus;
         if (n < 0)
             n += modulus;
         return n;
     }
 
-    public final String stripLeadingWhitespace(String s) {
+    public final String stripLeadingWhitespace(String s)
+    {
         clear();
 
         if (s == null)
@@ -44,17 +52,26 @@ public class Util {
         return s;
     }
 
-    public final int getLeadingWhitespaceCount() {
+    public final int getLeadingWhitespaceCount()
+    {
         return leadingWhitespaceCount;
     }
 
-    public final boolean wasNewline() {
+    public final boolean wasNewline()
+    {
         return wasNewline;
     }
 
-    public final void clear() {
+    public final void clear()
+    {
         leadingWhitespaceCount = 0;
         wasNewline = false;
+    }
+
+    public static final String camelCaseToReadable(String s)
+    {
+        final RegExp camelCaseToReadableRegexp = RegExp.compile("([a-z0-9])([A-Z])", "g");
+        return camelCaseToReadableRegexp.replace(s, "$1 $2");
     }
 
     private int leadingWhitespaceCount;

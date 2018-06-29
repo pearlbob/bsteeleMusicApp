@@ -58,7 +58,7 @@ public abstract class MeasureNode
 
     public abstract String generateHtml(@Nonnull SongMoment songMoment, @Nonnull Key key, int tran);
 
-    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran);
+    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats );
 
     public abstract boolean equals(Object o);
 

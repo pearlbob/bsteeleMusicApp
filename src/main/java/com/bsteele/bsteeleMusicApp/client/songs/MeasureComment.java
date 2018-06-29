@@ -83,7 +83,7 @@ public class MeasureComment extends Measure
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran)
+    public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats)
     {
         ArrayList<String> ret = new ArrayList<>();
         ret.add(toString());

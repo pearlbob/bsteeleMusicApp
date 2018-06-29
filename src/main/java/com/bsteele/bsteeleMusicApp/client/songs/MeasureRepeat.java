@@ -101,10 +101,14 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml( Key key, int tran) {
+    public ArrayList<String> generateInnerHtml( Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 
-        if (measureNodes != null && !measureNodes.isEmpty()) {
+        if (measureNodes == null || measureNodes.isEmpty())
+        return ret;
+
+        if ( expandRepeats)
+        {
             for ( int r = 0; r < repeats; r++)
             {
                 MeasureNode lastMeasureNode = null;
@@ -126,11 +130,11 @@ public class MeasureRepeat extends MeasureSequenceItem
                         if (measureNode.equals(lastMeasureNode))
                             ret.add("-");
                         else
-                            ret.addAll(measureNode.generateInnerHtml(key, tran));
+                            ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                         lastMeasureNode = measureNode;
                     } else
                     {
-                        ret.addAll(measureNode.generateInnerHtml(key, tran));
+                        ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats ));
                         lastMeasureNode = null;
                     }
                     if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1)
@@ -146,6 +150,49 @@ public class MeasureRepeat extends MeasureSequenceItem
                 }
                 ret.add("\n");
             }
+        } else
+        {
+            MeasureNode lastMeasureNode = null;
+            MeasureNode measureNode;
+            int i = 0;
+            for (; i < measureNodes.size(); i++)
+            {
+                if (i > 0 && i % measuresPerLine == 0)
+                {
+                    ret.add("\n");
+                    lastMeasureNode = null;
+                }
+
+                measureNode = measureNodes.get(i);
+
+                if (measureNode.isSingleItem())
+                {
+
+                    if (measureNode.equals(lastMeasureNode))
+                        ret.add("-");
+                    else
+                        ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
+                    lastMeasureNode = measureNode;
+                } else
+                {
+                    ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats ));
+                    lastMeasureNode = null;
+                }
+                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1)
+                {
+                    ret.add("|");
+                    ret.add("\n");
+                }
+            }
+            while (i % measuresPerLine != 0)
+            {
+                ret.add("");
+                i++;
+            }
+            if ( measureNodes.size() > measuresPerLine )
+                ret.add("|");
+            ret.add("x"+repeats);
+            ret.add("\n");
         }
 
         return ret;

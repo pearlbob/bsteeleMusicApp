@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
+
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -7,9 +9,11 @@ import java.util.TreeSet;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class GenerateSongHtml {
+public class GenerateSongHtml
+{
 
-    public String generateAllChordHtml() {
+    public String generateAllChordHtml()
+    {
         StringBuilder sb = new StringBuilder();
 
         sb.append(
@@ -43,7 +47,8 @@ public class GenerateSongHtml {
         return sb.toString();
     }
 
-    private String chordComponentsToString(TreeSet<ChordComponent> chordComponents) {
+    private String chordComponentsToString(TreeSet<ChordComponent> chordComponents)
+    {
         StringBuilder sb = new StringBuilder();
         for (ChordComponent chordComponent : chordComponents) {
             if (!chordComponent.equals(chordComponents.first()))
@@ -53,7 +58,8 @@ public class GenerateSongHtml {
         return sb.toString();
     }
 
-    private String chordComponentScaleNotesToString(Key key, ScaleChord scaleChord) {
+    private String chordComponentScaleNotesToString(Key key, ScaleChord scaleChord)
+    {
         StringBuilder sb = new StringBuilder();
         TreeSet<ChordComponent> chordComponents = scaleChord.getChordComponents();
         for (ChordComponent chordComponent : chordComponents) {
@@ -64,73 +70,64 @@ public class GenerateSongHtml {
         return sb.toString();
     }
 
-    public String generateAllScalesHtml() {
+    public String generateAllScalesHtml()
+    {
         StringBuilder sb = new StringBuilder();
 
         sb.append(
-                "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
-                        "<tr><th>Chord</th>" +
-                        "<th>Key</th>" +
-                        "<th colspan=\"7\">Major Notes</th>" +
-                        "<th> </th>" +
-                        "<th colspan=\"7\">Minor Notes</th>" +
-                        "</tr>\n");
+                "<table border=\"2\" style=\"border-collapse: collapse;\">\n"
+                        + "<th>Key</th>"
+        );
+
+        for (Scale scale : Scale.values()) {
+            sb.append("<th>&nbsp;</th>");
+            sb.append("<th colspan=\"").append(scale.getFormula().length).append("\">")
+                    .append(Util.camelCaseToReadable(scale.name()))
+                    .append("</th>");
+        }
+        sb.append("</tr>\n");
+
         sb.append(
-                "<tr><th> </th><th> </th>" +
-                        "<th>R</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>" +
-                        "<th> </th>" +
-                        "<th>R</th><th>2</th><th>m3</th><th>4</th><th>5</th><th>m6</th><th>m7</th>" +
-                        "</tr>\n");
-        for (ScaleNote sn : ScaleNote.values()) {
-
-            sb.append("<tr><td>").append(sn.toString()).append("</td>");
-
-            //  major
-            ScaleChord builtScaleChord = new ScaleChord(sn, ChordDescriptor.major);
-            ArrayList<ScaleChord> scaleChords = new ArrayList<>();
-            scaleChords.add(builtScaleChord);
-            Key key = Key.guessKey(scaleChords);
-            sb.append("<td>").append(key.toString()).append("</td>");
-            for (int j = 0; j < MusicConstant.notesPerScale; j++) {
-                sb.append("<td>");
-                String s = key.getMajorScaleByNote(j).toString();
-                sb.append(s);
-                sb.append("</td>\n");
+                "<tr><th></th>");
+        for (Scale scale : Scale.values()) {
+            ScaleFormula formulas[] = scale.getFormula();
+            sb.append("<th> </th>");
+            for (ScaleFormula sf : formulas) {
+                sb.append("<th>").append(sf.getShortName()).append("</th>");
             }
-            sb.append("</td><td> </td>");
+        }
+        sb.append("</tr>\n");
 
-            //  minor
-            char lastC = ' ';
-            builtScaleChord = new ScaleChord(sn, ChordDescriptor.minor);
-            scaleChords = new ArrayList<>();
-            scaleChords.add(builtScaleChord);
-            key = Key.guessKey(scaleChords);
-            for (int j = 0; j < MusicConstant.notesPerScale; j++) {
-                sb.append("<td");
-                String s = key.getMinorScaleByNote(j).toString();
-                char c = s.charAt(0);
-                if (c == lastC)
-                    sb.append(" style=\"background-color: cyan;\"");
-                sb.append(">");
-                lastC = c;
-                sb.append(s);
-                sb.append("</td>\n");
+        for (Key key : Key.values()) {
+            String s = key.sharpsFlatsToString();
+            if (s.length() > 0)
+                s = "(" + s + ")";
+            sb.append("<tr><td>").append(key.toString() + " " + s).append("</td>");
+
+            for (Scale scale : Scale.values()) {
+                ScaleFormula formulas[] = scale.getFormula();
+                sb.append("<td>&nbsp;</td>");
+                for (ScaleFormula sf : formulas) {
+                    ScaleNote scaleNote = key.getScaleNoteByHalfStep(key.getHalfStep() + sf.ordinal());
+                    sb.append("<td>").append(scaleNote.toString()).append("</td>");
+                }
             }
+
             sb.append("</tr>\n");
         }
-        sb.append(
-                "  </table>\n");
+        sb.append("  </table>\n");
         return sb.toString();
     }
 
-    public String generateAllTonicHtml() {
+    public String generateAllTonicHtml()
+    {
         StringBuilder sb = new StringBuilder();
-        sb.append( "<p> </p>\n");
+        sb.append("<p> </p>\n");
 
         //  major
         sb.append(
                 "<p>Major</p>"
-                +"<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
+                        + "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
                         "<tr><th>Key</th><th>I</th>" +
                         "<th>ii</th>" +
                         "<th>iii</th>" +
@@ -141,8 +138,9 @@ public class GenerateSongHtml {
                         "</tr>");
 
         for (Key key : Key.values()) {
-            sb.append("<tr><td style=\"padding: 15px; \">" + key.toString() + " "+key.sharpsFlatsToString()+"</td>" );
-            for ( MusicConstant.MajorDiatonic majorDiatonic : MusicConstant.MajorDiatonic.values()) {
+            sb.append("<tr><td style=\"padding: 15px; \">" + key.toString() + " " + key.sharpsFlatsToString() +
+                    "</td>");
+            for (MusicConstant.MajorDiatonic majorDiatonic : MusicConstant.MajorDiatonic.values()) {
 
                 ScaleChord builtScaleChord = key.getMajorDiatonicByDegree(majorDiatonic.ordinal());
 
@@ -153,10 +151,10 @@ public class GenerateSongHtml {
                         + builtScaleChord.toString()
                         + "</td>");
             }
-            sb.append("</tr>\n" );
+            sb.append("</tr>\n");
         }
-        sb.append( "  </table>\n");
-        sb.append( "<p> </p>\n");
+        sb.append("  </table>\n");
+        sb.append("<p> </p>\n");
 
         //  details
         sb.append(
@@ -170,31 +168,31 @@ public class GenerateSongHtml {
 
         String style = " style=\"padding-left: 15px; padding-right: 15px;\"";
         for (Key key : Key.values()) {
-            for ( MusicConstant.MajorDiatonic majorDiatonic : MusicConstant.MajorDiatonic.values()) {
+            for (MusicConstant.MajorDiatonic majorDiatonic : MusicConstant.MajorDiatonic.values()) {
 
                 ScaleChord builtScaleChord = key.getMajorDiatonicByDegree(majorDiatonic.ordinal());
 
                 ArrayList<ScaleChord> scaleChords = new ArrayList<>();
                 scaleChords.add(builtScaleChord);
 
-                sb.append("<tr><td"+style+">" + key.toString() + " "+key.sharpsFlatsToString()+"</td><td>"
+                sb.append("<tr><td" + style + ">" + key.toString() + " " + key.sharpsFlatsToString() + "</td><td>"
                         + majorDiatonic.name()
-                        + "</td><td"+style+">"
+                        + "</td><td" + style + ">"
                         + builtScaleChord.toString()
-                        + "</td><td"+style+">");
+                        + "</td><td" + style + ">");
                 boolean first = true;
-                for (ChordComponent chordComponent : builtScaleChord.getChordComponents() )
-                {
-                    if ( first)
-                        first=false;
+                for (ChordComponent chordComponent : builtScaleChord.getChordComponents()) {
+                    if (first)
+                        first = false;
                     else
                         sb.append(" ");
                     sb.append(chordComponent.getShortName());
                 }
-                sb.append("</td><td"+style+">\n" );
+                sb.append("</td><td" + style + ">\n");
 
-                sb.append( chordComponentScaleNotesToString( key.getKeyByHalfStep(builtScaleChord.getScaleNote().getHalfStep()), builtScaleChord) );
-                sb.append("</td></tr>\n" );
+                sb.append(chordComponentScaleNotesToString(key.getKeyByHalfStep(builtScaleChord.getScaleNote()
+                        .getHalfStep()), builtScaleChord));
+                sb.append("</td></tr>\n");
             }
         }
         sb.append(
@@ -203,7 +201,7 @@ public class GenerateSongHtml {
         //  minor
         sb.append(
                 "<p>Minor</p>"
-                        +"<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
+                        + "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
                         "<tr><th>Key</th><th>i</th>" +
                         "<th>ii</th>" +
                         "<th>III</th>" +
@@ -215,9 +213,9 @@ public class GenerateSongHtml {
 
         for (Key key : Key.values()) {
             sb.append("<tr><td style=\"padding: 15px; \">" + key.getMinorScaleChord().toString()
-                    + " "+key.sharpsFlatsToString()+"</td>" );
-            
-            for ( MusicConstant.MinorDiatonic minorDiatonic : MusicConstant.MinorDiatonic.values()) {
+                    + " " + key.sharpsFlatsToString() + "</td>");
+
+            for (MusicConstant.MinorDiatonic minorDiatonic : MusicConstant.MinorDiatonic.values()) {
 
                 ScaleChord builtScaleChord = key.getMinorDiatonicByDegree(minorDiatonic.ordinal());
 
@@ -228,11 +226,10 @@ public class GenerateSongHtml {
                         + builtScaleChord.toString()
                         + "</td>");
             }
-            sb.append("</tr>\n" );
+            sb.append("</tr>\n");
         }
-        sb.append( "  </table>\n");
-        sb.append( "<p> </p>\n");
-
+        sb.append("  </table>\n");
+        sb.append("<p> </p>\n");
 
 
         //  details
@@ -245,33 +242,34 @@ public class GenerateSongHtml {
                         "<th>Notes</th>" +
                         "</tr>");
 
-         style = " style=\"padding-left: 15px; padding-right: 15px;\"";
+        style = " style=\"padding-left: 15px; padding-right: 15px;\"";
         for (Key key : Key.values()) {
-            for ( MusicConstant.MinorDiatonic minorDiatonic : MusicConstant.MinorDiatonic.values()) {
+            for (MusicConstant.MinorDiatonic minorDiatonic : MusicConstant.MinorDiatonic.values()) {
 
                 ScaleChord builtScaleChord = key.getMinorDiatonicByDegree(minorDiatonic.ordinal());
 
                 ArrayList<ScaleChord> scaleChords = new ArrayList<>();
                 scaleChords.add(builtScaleChord);
 
-                sb.append("<tr><td"+style+">" + key.getMinorScaleChord().toString() + " "+key.sharpsFlatsToString()+"</td><td>"
+                sb.append("<tr><td" + style + ">" + key.getMinorScaleChord().toString() + " " + key
+                        .sharpsFlatsToString() + "</td><td>"
                         + minorDiatonic.name()
-                        + "</td><td"+style+">"
+                        + "</td><td" + style + ">"
                         + builtScaleChord.toString()
-                        + "</td><td"+style+">");
+                        + "</td><td" + style + ">");
                 boolean first = true;
-                for (ChordComponent chordComponent : builtScaleChord.getChordComponents() )
-                {
-                    if ( first)
-                        first=false;
+                for (ChordComponent chordComponent : builtScaleChord.getChordComponents()) {
+                    if (first)
+                        first = false;
                     else
                         sb.append(" ");
                     sb.append(chordComponent.getShortName());
                 }
-                sb.append("</td><td"+style+">\n" );
+                sb.append("</td><td" + style + ">\n");
 
-                sb.append( chordComponentScaleNotesToString( key.getKeyByHalfStep(builtScaleChord.getScaleNote().getHalfStep()), builtScaleChord) );
-                sb.append("</td></tr>\n" );
+                sb.append(chordComponentScaleNotesToString(key.getKeyByHalfStep(builtScaleChord.getScaleNote()
+                        .getHalfStep()), builtScaleChord));
+                sb.append("</td></tr>\n");
             }
         }
         sb.append(
