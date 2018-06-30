@@ -3,40 +3,26 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.events.DomInputEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.DomInputEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor;
-import com.bsteele.bsteeleMusicApp.client.songs.ChordSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
-import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
-import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.dom.client.Style;
-import com.google.gwt.dom.client.TextAreaElement;
-import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -48,10 +34,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -128,6 +113,15 @@ public class SongEditView
 
     @UiField
     TextBox measureEntry;
+
+    @UiField
+    RadioButton editInsert;
+
+    @UiField
+    RadioButton editReplace;
+
+    @UiField
+    RadioButton editAppend;
 
 //    @UiField
 //    HTMLPanel editChords;
@@ -244,6 +238,8 @@ public class SongEditView
             }
         });
 
+
+        editAppend.setValue(true);
 
         chordsTextEntry.setFocus(true);
         chordsTextEntry.addKeyUpHandler((KeyUpHandler) -> {
@@ -527,32 +523,46 @@ public class SongEditView
 //            }
 //        }
 
-        song.transpose(chordsFlexTable, 0); //    debug
+        song.transpose(chordsFlexTable, 0);
+        selectLastChordsCell();
 
-        lastCell = null;
+        lastCellElement = null;
         chordsFlexTable.addClickHandler(clickEvent -> {
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
-            String text = cell.getElement().getInnerText();
-
-            if (text != null && text.length() > 0) {
-                //  clear the last selection
-                if (lastCell != null)
-                    lastCell.getElement().getStyle().setBackgroundColor("");
-
-                GWT.log("chordsFlexTable click: (" +
-                        cell.getRowIndex()
-                        + ","
-                        + cell.getCellIndex()
-                        + ") "
-                        + cell.getElement().getInnerText());
-
-                //  indicate the current selection
-                cell.getElement().getStyle().setBackgroundColor("#ccff99");
-                lastCell = cell;
-            }
+            selectChordsCell(cell.getElement());
         });
 
         checkSong();
+    }
+
+    private void selectLastChordsCell()
+    {
+        int rows = chordsFlexTable.getRowCount();
+        if (rows <= 0)
+            return;
+        int cols = chordsFlexTable.getCellCount(rows - 1);
+        if (cols <= 0)
+            return;
+        FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
+        selectChordsCell(formatter.getElement(rows - 1, cols - 1));
+    }
+
+    private void selectChordsCell(Element e)
+    {
+        if (e == null)
+            return;
+
+        String text = e.getInnerText();
+
+        if (text != null && text.length() > 0) {
+            //  clear the last selection
+            if (lastCellElement != null)
+                lastCellElement.getStyle().setBackgroundColor("");
+
+            //  indicate the current selection
+            e.getStyle().setBackgroundColor("#ccff99");
+            lastCellElement = e;
+        }
     }
 
     public Song checkSong()
@@ -583,6 +593,10 @@ public class SongEditView
             songEnter.setDisabled(true);
             return null;
         }
+
+        song = newSong;
+        song.transpose(chordsFlexTable, 0);
+        selectLastChordsCell();      // default
 
         errorLabel.setText("");
         songEnter.setDisabled(false);
@@ -839,7 +853,7 @@ public class SongEditView
     HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private Key key = Key.getDefault();
     private Song song;
-    private HTMLTable.Cell lastCell;
+    private Element lastCellElement;
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
     private final HandlerManager handlerManager;

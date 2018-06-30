@@ -107,8 +107,11 @@ public class GenerateSongHtml
             for (Scale scale : Scale.values()) {
                 ScaleFormula formulas[] = scale.getFormula();
                 sb.append("<td>&nbsp;</td>");
+                Key mKey = key;
+                if (!scale.isMajor())
+                    mKey = key.getMinorKey();
                 for (ScaleFormula sf : formulas) {
-                    ScaleNote scaleNote = key.getScaleNoteByHalfStep(key.getHalfStep() + sf.ordinal());
+                    ScaleNote scaleNote = key.getScaleNoteByHalfStep(mKey.getHalfStep() + sf.ordinal());
                     sb.append("<td>").append(scaleNote.toString()).append("</td>");
                 }
             }

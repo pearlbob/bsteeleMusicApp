@@ -1063,14 +1063,13 @@ public class Song implements Comparable<Song>
             Grid<String> grid = map.get(version);
 
             //  section label
-            String start = sectionStart;
+            String start = sectionStart+version.toString();
             if (isSingle) {
-                start += version.toString();
                 displayed.add(version);
             } else {
                 for (SectionVersion v : displaySectionMap.keySet()) {
                     if (displaySectionMap.get(v) == version) {
-                        start += v.toString() + "<br/>";
+                        start += "<br/>";
                         displayed.add(v);
                     }
                 }
@@ -1085,9 +1084,9 @@ public class Song implements Comparable<Song>
 
                 ArrayList<String> row = grid.getRow(r);
                 final RegExp endOfChordLineExp = RegExp.compile("^\\s*(x|\\|)", "i");
-                for (int col = 0; col < row.size(); col++) {
-                    GWT.log("g: " + col + ": " + grid.get(col, r));
-                }
+//                for (int col = 0; col < row.size(); col++) {
+//                    GWT.log("g: " + col + ": " + grid.get(col, r));
+//                }
                 for (int col = 0; col < row.size(); col++) {
                     chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection()
                             .getAbbreviation())

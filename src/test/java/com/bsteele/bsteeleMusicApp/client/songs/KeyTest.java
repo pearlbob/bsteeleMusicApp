@@ -188,6 +188,13 @@ public class KeyTest extends GWTTestCase {
     }
 
     @Test
+    public void testMinorKey() {
+
+        assertEquals(Key.A,Key.C.getMinorKey());
+
+    }
+
+    @Test
     public void testGuessKey() {
         Key key;
 

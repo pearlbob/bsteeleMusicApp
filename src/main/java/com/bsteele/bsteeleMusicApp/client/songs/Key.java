@@ -133,6 +133,11 @@ public enum Key {
         return Key.values()[0];     //  default, expected to be C
     }
 
+    public final Key getMinorKey(){
+             // the key's tonic
+        return getKeyByHalfStep(getHalfStep() + majorScale[6-1]);
+    }
+
     /**
      * Return a representation of the key in HTML.
      *
