@@ -34,6 +34,7 @@ public enum ChordDescriptor
     diminished7("dim7", "R m3 b5 6"),
     diminishedAsCircle(""+MusicConstant.diminishedCircle, "R m3 b5"),
     diminished("dim", "R m3 b5"),
+
     augmented5("aug5", "R 3 #5"),
     augmented7("aug7", "R 3 #5 m7"),
     augmented("aug", "R 3 #5"),
