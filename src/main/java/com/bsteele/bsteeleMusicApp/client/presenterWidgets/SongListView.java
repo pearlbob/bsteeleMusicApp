@@ -9,8 +9,10 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -136,8 +138,20 @@ public class SongListView
             FileList files = new FileList(getFiles(event.getNativeEvent()));
 
             int limit = files.getLength();
+            TreeSet<SongFile> reducedSongFiles = new TreeSet<>();
             for (int i = 0; i < limit; i++) {
-                asyncReadSongFile(files.getItem(i));
+                SongFile f = new SongFile(files.getItem(i));
+                reducedSongFiles.add(f);
+            }
+            SongFile lastSonFile = null;
+            for (SongFile songFile : reducedSongFiles) {
+                if (lastSonFile != null && lastSonFile.getSongTitle().equals(songFile.getSongTitle()))
+                    eventBus.fireEvent(new StatusEvent("song read skip",
+                            "\"" + songFile.getFile().getName() +
+                                    "\", used \"" + lastSonFile.getFile().getName() + "\""));
+                else
+                    asyncReadSongFile(songFile.getFile());
+                lastSonFile = songFile;
             }
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
         });
@@ -146,13 +160,17 @@ public class SongListView
         readSongFiles.getElement().setPropertyString("multiple", "multiple");
 
         testParse.addClickHandler((event) -> {
+            TreeSet<Song> sortedSongs = new TreeSet<>(songComparator);
             for (Song song : allSongs) {
                 try {
                     song.checkSong();
                 } catch (ParseException pe) {
-                    eventBus.fireEvent(new StatusEvent(song.getTitle() + " by " + song.getArtist(), pe.getMessage()));
+                    sortedSongs.add(song);
                 }
             }
+            filteredSongs.clear();
+            filteredSongs.addAll(sortedSongs);
+            displaySongList(filteredSongs);
         });
 
     }
@@ -275,6 +293,7 @@ public class SongListView
             if (songs.size() == 1) {
                 Song song = songs.get(0);
                 song.setLastModifiedDate(file.getLastModifiedDate());
+                song.setFileName(file.getName());
                 fireEvent(new SongReadEvent(song));
             } else
                 fireEvent(new SongReadEvent(songs));

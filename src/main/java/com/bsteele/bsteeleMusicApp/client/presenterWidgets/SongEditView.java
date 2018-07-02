@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -22,6 +23,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -40,8 +42,10 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewImpl;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -62,6 +66,11 @@ public class SongEditView
 
     @UiField
     ButtonElement songEntryClear;
+
+    @UiField
+    Button nextSongButton;
+    @UiField
+    Button prevSongButton;
 
     @UiField
     Label errorLabel;
@@ -200,8 +209,9 @@ public class SongEditView
     }
 
     @Inject
-    SongEditView(Binder binder)
+    SongEditView(@Nonnull final EventBus eventBus, Binder binder)
     {
+        this.eventBus = eventBus;
         initWidget(binder.createAndBindUi(this));
 
         handlerManager = new HandlerManager(this);
@@ -458,6 +468,13 @@ public class SongEditView
             }
         });
 
+        prevSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent(false));
+        });
+        nextSongButton.addClickHandler((ClickEvent event) -> {
+            eventBus.fireEvent(new NextSongEvent());
+        });
+
         for (ChordDescriptor cd : chordDescriptorMap.keySet()) {
             Button b = chordDescriptorMap.get(cd);
             b.addClickHandler((ClickEvent event) -> {
@@ -556,11 +573,23 @@ public class SongEditView
 
         if (text != null && text.length() > 0) {
             //  clear the last selection
-            if (lastCellElement != null)
+            if (lastCellElement != null) {
                 lastCellElement.getStyle().setBackgroundColor("");
+                lastCellElement.getStyle().setBorderStyle(Style.BorderStyle.NONE);
+            }
 
             //  indicate the current selection
-            e.getStyle().setBackgroundColor("#ccff99");
+            if (editInsert.getValue()) {
+                e.getStyle().setBorderColor("#ccff99");
+                e.getStyle().setBorderWidth(2,Style.Unit.PX);
+                e.getStyle().setBorderStyle(Style.BorderStyle.SOLID);
+            } else if (editAppend.getValue()) {
+                e.getStyle().setBorderColor("#ccff99");
+                e.getStyle().setBorderWidth(2,Style.Unit.PX);
+                e.getStyle().setBorderStyle(Style.BorderStyle.SOLID);
+            } else
+                e.getStyle().setBackgroundColor("#ccff99");
+            e.getStyle().setMarginRight(2, Style.Unit.PX);
             lastCellElement = e;
         }
     }
@@ -858,5 +887,6 @@ public class SongEditView
     private static final int maxBpm = 400;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
+    private final EventBus eventBus;
     private static String prefix = "songEdit";
 }

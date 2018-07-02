@@ -137,6 +137,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             int tab = homeTabs.getSelectedIndex();
             switch (tab) {           // fixme: very weak tab selection mechanism!
                 case 1:
+                case 2:     //  fixme: edit tab for now
                 case 3:
                 case 4:
                     lastPlayTab = tab;

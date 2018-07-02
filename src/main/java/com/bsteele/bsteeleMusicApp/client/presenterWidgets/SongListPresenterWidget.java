@@ -118,7 +118,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                 if (ja != null) {
                     int jaLimit = ja.size();
                     //  order by oldest first
-                    TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(Song.ComparatorType.lastModifiedDateLast));
+                    TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(Song.ComparatorType.versionNumber));
                     for (int i = 0; i < jaLimit; i++) {
                         sortedSet.add(Song.fromJsonObject(ja.get(i).isObject()));
                     }
