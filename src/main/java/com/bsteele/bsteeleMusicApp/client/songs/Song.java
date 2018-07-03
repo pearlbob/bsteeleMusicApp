@@ -1185,7 +1185,7 @@ public class Song implements Comparable<Song>
         for (SectionVersion sectionVersion : chordSectionMap.keySet()) {
             Grid<String> grid = chordSectionMap.get(sectionVersion);
             flexTable.setHTML(rowBase, 0,
-                    "<span style=\"font-size: 16px;\" >"
+                    "<span style=\"font-size: 18px;\" >"
                             + sectionVersion.toString()
                             + "</span>");
             formatter.addStyleName(rowBase, 0, CssConstants.style + "sectionLabel");
@@ -1198,7 +1198,7 @@ public class Song implements Comparable<Song>
                 int colLimit = row.size();
                 for (int col = 0; col < colLimit; col++) {
                     flexTable.setHTML(rowBase + r, col + 1,
-                            "<span style=\"font-size: 16px;\">"
+                            "<span style=\"font-size: 18px;\">"
                                     + transposeMeasure(newKey, row.get(col), halfSteps)
                                     + "</span>"
                     );
