@@ -234,3 +234,14 @@ td[id*="L."]{
 .rightJustifiedClass {
     float: right;
 }
+
+td[editSelect=insert] {
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-left-color: red;
+}
+td[editSelect=append] {
+    border-right-width: 2px;
+    border-right-style: solid;
+    border-right-color: red;
+}

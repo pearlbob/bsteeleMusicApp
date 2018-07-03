@@ -25,6 +25,7 @@ import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -250,6 +251,16 @@ public class SongEditView
 
 
         editAppend.setValue(true);
+        editInsert.addClickHandler((ClickEvent e) -> {
+            selectChordsCell(lastCellElement);
+        });
+        editReplace.addClickHandler((ClickEvent e) -> {
+            selectChordsCell(lastCellElement);
+        });
+        editAppend.addClickHandler((ClickEvent e) -> {
+            selectChordsCell(lastCellElement);
+        });
+
 
         chordsTextEntry.setFocus(true);
         chordsTextEntry.addKeyUpHandler((KeyUpHandler) -> {
@@ -572,27 +583,28 @@ public class SongEditView
         String text = e.getInnerText();
 
         if (text != null && text.length() > 0) {
+
             //  clear the last selection
             if (lastCellElement != null) {
+                lastCellElement.setAttribute("editSelect", "none");
                 lastCellElement.getStyle().setBackgroundColor("");
-                lastCellElement.getStyle().setBorderStyle(Style.BorderStyle.NONE);
             }
 
             //  indicate the current selection
             if (editInsert.getValue()) {
-                e.getStyle().setBorderColor("#ccff99");
-                e.getStyle().setBorderWidth(2,Style.Unit.PX);
-                e.getStyle().setBorderStyle(Style.BorderStyle.SOLID);
+                e.setAttribute("editSelect", "insert");
             } else if (editAppend.getValue()) {
-                e.getStyle().setBorderColor("#ccff99");
-                e.getStyle().setBorderWidth(2,Style.Unit.PX);
-                e.getStyle().setBorderStyle(Style.BorderStyle.SOLID);
-            } else
-                e.getStyle().setBackgroundColor("#ccff99");
-            e.getStyle().setMarginRight(2, Style.Unit.PX);
+                e.setAttribute("editSelect", "append");
+            } else {
+                e.setAttribute("editSelect", "replace");
+                e.getStyle().setBackgroundColor(selectedBorderColorValueString);
+            }
+
             lastCellElement = e;
         }
     }
+
+    private static final String selectedBorderColorValueString = "#f88";
 
     public Song checkSong()
     {
@@ -666,6 +678,8 @@ public class SongEditView
         ScaleChord scaleChord = ScaleChord.parse(name);
         if (scaleChord == null)
             return; //  fixme: shouldn't happen
+
+        chordsAdd(scaleChord);
         addRecentScaleChord(scaleChord);
         chordsTextAdd(scaleChord.toString());
         findMostCommonScaleChords();
@@ -760,6 +774,40 @@ public class SongEditView
             //GWT.log(i + ": hide");
             Button common = commons[i++];
             common.setVisible(false);
+        }
+    }
+
+    private void chordsAdd(ScaleChord scaleChord)
+    {
+        int row = 0;
+        int col = 0;
+
+        if (lastCellElement == null)
+            selectLastChordsCell();
+
+        FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
+        if (lastCellElement != null) {
+            int rowCount = chordsFlexTable.getRowCount();
+            search:
+            for (row = 0; row < rowCount; row++) {
+                int colCount = chordsFlexTable.getCellCount(row);
+                for (col = 0; col < colCount; col++) {
+                    if (lastCellElement == formatter.getElement(row, col)) {
+                        break search;
+                    }
+                }
+            }
+        }
+
+        if (editInsert.getValue()) {
+            GWT.log( "insert: ("+row+", "+col+"): "+scaleChord.toString());
+        } else if (editAppend.getValue()) {
+            GWT.log( "append: ("+row+", "+col+"): "+scaleChord.toString());
+
+        } else {
+               //   replace
+            GWT.log( "replace: ("+row+", "+col+"): "+scaleChord.toString());
+
         }
     }
 
