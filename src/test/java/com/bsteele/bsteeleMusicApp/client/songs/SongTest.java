@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.JSONArray;
@@ -54,8 +55,9 @@ public class SongTest
                         assertTrue(date.getTime() > 1510000000000.0); //    ~6 November 2017
                     }
                     assertTrue(song.getKey() != null);
-                    assertTrue(song.getChordSectionMap().size() > 0);
-                    //logger.info("song.getChordSectionMap().size() = "+song.getChordSectionMap().size());
+                    assertTrue(song.getChordSectionInnerHtmlMap().size() > 0);
+                    //logger.info("song.getChordSectionInnerHtmlMap().size() = "+song.getChordSectionInnerHtmlMap()
+                    // .size());
                     assertTrue(song.getLyricsAsString().length() > 0);
 
                     Song song1 = Song.fromJson(song.toJson()).get(0);
@@ -221,6 +223,88 @@ public class SongTest
         measureNode = chordSections.get(0);
         measures = measureNode.getMeasures();
         assertEquals(5, measures.size());
+    }
+
+
+    @Test
+    public void testGetStructuralGrid()
+    {
+        Song a;
+        ArrayList<ChordSection> chordSections;
+        MeasureNode measureNode;
+        ArrayList<Measure> measures;
+
+        a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D E F G A C: D D GD E\n"
+                +"A B C D x3\n"
+                        + "Ab G Gb F", "v: bob, bob, bob berand");
+        Grid<MeasureNode> grid = a.getStructuralGrid();
+        logger.info(grid.toString());
+        assertEquals(5, grid.getRowCount());
+        for (int r = 0; r < grid.getRowCount(); r++) {
+            ArrayList<MeasureNode> row = grid.getRow(r);
+            for (int c = 0; c < row.size(); c++) {
+                MeasureNode node = row.get(c);
+                switch (r) {
+                    case 0:
+                        switch (c) {
+                            case 0:
+                                assertEquals(ChordSection.class, node.getClass());
+                                assertEquals(Section.verse, ((ChordSection) node).getSectionVersion().getSection());
+                                break;
+                            case 1:
+                                assertEquals(ScaleNote.A, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                            case 4:
+                                assertEquals(ScaleNote.D, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                        }
+                        break;
+                    case 2:
+                        switch (c) {
+                            case 0:
+                                assertEquals(ChordSection.class, node.getClass());
+                                assertEquals(Section.chorus, ((ChordSection) node).getSectionVersion().getSection());
+                                break;
+                            case 1:
+                            case 2:
+                                assertEquals(ScaleNote.D, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                            case 3:
+                                assertEquals(ScaleNote.G, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                            case 4:
+                                assertEquals(ScaleNote.E, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                        }
+                        break;
+                    case 3:
+                        switch (c) {
+                            case 0:
+                                assertEquals(ChordSection.class, node.getClass());
+                                assertEquals(Section.chorus, ((ChordSection) node).getSectionVersion().getSection());
+                                break;
+                            case 1:
+                                assertEquals(ScaleNote.A, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                            case 4:
+                                assertEquals(ScaleNote.D, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                        .getScaleChord().getScaleNote());
+                                break;
+                        }
+                        break;
+                }
+
+                logger.finest("grid[" + r + "," + c + "]: " + node.toString());
+            }
+        }
+
     }
 
     @Override

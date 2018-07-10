@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
+
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -65,18 +67,15 @@ public class Measure extends MeasureNode
                 break;
 
             Chord chord = Chord.parse(s, beatsPerBar);
-            if (chord == null)
-            {
+            if (chord == null) {
                 //  see if this is a chord less measure
-                if (s.charAt(0) == 'X')
-                {
+                if (s.charAt(0) == 'X') {
                     ret = new Measure(sectionVersion, beatsPerBar, emptyChordList);
                     parseLength += 1;
                     break;
                 }
                 //  see if this is a repeat measure
-                if (s.charAt(0) == '-' && lastMeasure != null)
-                {
+                if (s.charAt(0) == '-' && lastMeasure != null) {
                     ret = new Measure(sectionVersion, beatsPerBar, lastMeasure.getChords());
                     parseLength += 1;
                     break;
@@ -92,13 +91,10 @@ public class Measure extends MeasureNode
             return null;
 
         //  distribute the slash chord to all
-        if (chords.size() > 1)
-        {
+        if (chords.size() > 1) {
             ScaleChord slashScaleChord = chords.get(chords.size() - 1).getSlashScaleChord();
-            if (slashScaleChord != null)
-            {
-                for (Chord chord : chords)
-                {
+            if (slashScaleChord != null) {
+                for (Chord chord : chords) {
                     chord.setSlashScaleChord(slashScaleChord);
                 }
             }
@@ -108,22 +104,19 @@ public class Measure extends MeasureNode
             ret = new Measure(sectionVersion, beatsPerBar, chords);
 
         // allocate the beats
-        if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1)
-        {
+        if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1) {
             //  common case: split the beats even across the two chords
             //  bias to beat 1 on 3 beats to the bar
             int b2 = beatsPerBar / 2;
             chords.get(1).setBeats(b2);
             chords.get(0).setBeats(beatsPerBar - b2);
         }
-        if (!chords.isEmpty())
-        {    // fill the beat count onto the last chord if required
+        if (!chords.isEmpty()) {    // fill the beat count onto the last chord if required
             //  works for one chord as well
             int count = 0;
             for (Chord chord : chords)
                 count += chord.getBeats();
-            if (count < beatsPerBar)
-            {
+            if (count < beatsPerBar) {
                 Chord lastChord = chords.get(chords.size() - 1);
                 lastChord.setBeats(lastChord.getBeats() + (beatsPerBar - count));
             }
@@ -181,8 +174,7 @@ public class Measure extends MeasureNode
             return null;
 
         double beatSum = 0;
-        for (Chord chord : chords)
-        {
+        for (Chord chord : chords) {
             beatSum += chord.getBeats();
             if (beat <= beatSum)
                 return chord;
@@ -193,8 +185,7 @@ public class Measure extends MeasureNode
     @Override
     public ArrayList<Measure> getMeasures()
     {
-        if (measures == null)
-        {
+        if (measures == null) {
             measures = new ArrayList<>();
             measures.add(this);
         }
@@ -207,8 +198,7 @@ public class Measure extends MeasureNode
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
-            for (Chord chord : chords)
-            {
+            for (Chord chord : chords) {
                 sb.append(chord.transpose(key, tran));
             }
 
@@ -222,8 +212,7 @@ public class Measure extends MeasureNode
 
         StringBuilder sb = new StringBuilder();
         if (chords != null)
-            for (Chord chord : chords)
-            {
+            for (Chord chord : chords) {
                 sb.append(chord.transpose(key, tran));
             }
         ret.add(sb.toString());
@@ -231,13 +220,18 @@ public class Measure extends MeasureNode
         return ret;
     }
 
+    @Override
+    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
+    {
+        grid.add(this);
+    }
+
     private final String chordsToString()
     {
         StringBuilder sb = new StringBuilder();
 
         if (chords != null)
-            for (Chord chord : chords)
-            {
+            for (Chord chord : chords) {
                 sb.append(chord.toString());
             }
         return sb.toString();

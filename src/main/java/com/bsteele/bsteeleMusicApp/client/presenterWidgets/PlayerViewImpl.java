@@ -331,7 +331,7 @@ public class PlayerViewImpl
         int sectionIndex = 0;
         StringBuilder sb = new StringBuilder();
         sb.append("<table class=\"" + CssConstants.style + "lyricsTable\" >");
-        song.getChordSectionMap();
+        song.getChordSectionInnerHtmlMap();
         for (LyricSection lyricSection : lyricSections) {
             sb.append("<tr>");
             sb.append("<td>")

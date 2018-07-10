@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -9,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -16,9 +18,9 @@ import java.util.Objects;
  */
 public class ChordSection extends MeasureSequenceItem
 {
-    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureNode> measureNodes)
+    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureNode> measureSequenceItems)
     {
-        super(sectionVersion, measureNodes);
+        super(sectionVersion, measureSequenceItems);
     }
 
     public final static ChordSection parse(String s, int beatsPerBar)
@@ -59,7 +61,7 @@ public class ChordSection extends MeasureSequenceItem
             if (ms.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.addAll(measures);
+                    measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -83,7 +85,7 @@ public class ChordSection extends MeasureSequenceItem
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.addAll(measures);
+                        measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
@@ -125,7 +127,7 @@ public class ChordSection extends MeasureSequenceItem
         for (MeasureNode mn : lineMeasures)
             measures.add(mn);
         if (!measures.isEmpty()) {
-            measureSequenceItems.addAll(measures);
+            measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
@@ -145,6 +147,21 @@ public class ChordSection extends MeasureSequenceItem
         sb.append("</tr>\n");
 
         return sb.toString();
+    }
+
+
+    @Override
+    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
+    {
+        logger.finest("ChordSection.addToGrid()");
+        if (grid.isEmpty())
+            grid.addTo(0, grid.getRowCount(), this);
+        
+        for (MeasureNode measureNode : getMeasureNodes()) {
+            if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1)
+                grid.addTo(0, grid.getRowCount(), this);
+            measureNode.addToGrid(grid,this);
+        }
     }
 
     /**
@@ -221,4 +238,5 @@ public class ChordSection extends MeasureSequenceItem
 
     private Integer bpm;
     private Integer beatsPerBar;
+    private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());
 }

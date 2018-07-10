@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
@@ -10,10 +12,16 @@ import java.util.ArrayList;
  */
 public abstract class MeasureNode
 {
-
     public MeasureNode(@Nonnull SectionVersion sectionVersion)
     {
         this.sectionVersion = sectionVersion;
+        sequenceItem = null;
+    }
+
+    public MeasureNode(@Nonnull SectionVersion sectionVersion, MeasureSequenceItem sequenceItem)
+    {
+        this.sectionVersion = sectionVersion;
+        this.sequenceItem = sequenceItem;
     }
 
     public final SectionVersion getSectionVersion()
@@ -21,44 +29,46 @@ public abstract class MeasureNode
         return sectionVersion;
     }
 
-    public final void setSectionVersion(SectionVersion sectionVersion)
+    MeasureSequenceItem getSequenceItem()
     {
-        this.sectionVersion = sectionVersion;
+        return sequenceItem;
     }
 
-    public int getParseLength()
+    int getParseLength()
     {
         return parseLength;
     }
 
-    public int getTotalMoments()
+    int getTotalMoments()
     {
         return (measures != null ? measures.size() : 0);
     }
 
-    public ArrayList<MeasureNode> getMeasureNodes()
+    ArrayList<MeasureNode> getMeasureNodes()
     {
         return null;
     }
 
-    public ArrayList<Measure> getMeasures()
+    ArrayList<Measure> getMeasures()
     {
         return measures;
     }
 
-    public boolean isSingleItem()
+    boolean isSingleItem()
     {
         return true;
     }
 
-    public boolean isRepeat()
+    boolean isRepeat()
     {
         return false;
     }
 
-    public abstract String generateHtml(@Nonnull SongMoment songMoment, @Nonnull Key key, int tran);
+    abstract String generateHtml(@Nonnull SongMoment songMoment, @Nonnull Key key, int tran);
 
-    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats );
+    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats);
+
+    public abstract void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection);
 
     public abstract boolean equals(Object o);
 
@@ -66,6 +76,7 @@ public abstract class MeasureNode
 
     private SectionVersion sectionVersion;
     protected transient int parseLength;
+    private transient MeasureSequenceItem sequenceItem;
     protected transient ArrayList<Measure> measures;
     protected static final int measuresPerLine = 4;
 }

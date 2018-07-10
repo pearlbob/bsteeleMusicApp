@@ -48,9 +48,11 @@ public class SongMoment
     }
 
     private int sequenceNumber;
+
+    private int repeat;
+    private int repeatMax;
+
     private LyricSection lyricSection;
     private MeasureNode measureNode;
     private Measure measure;
-    private int repeat;
-    private int repeatMax;
 }

@@ -10,11 +10,23 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" line="43" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
+    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="measure entry started, roughed in song.getStructuralGrid()">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logging.properties" beforeDir="false" afterPath="$PROJECT_DIR$/logging.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerViewImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerViewImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureRepeat.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureRepeat.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SectionVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SectionVersion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongMoment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongMoment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/SongTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/SongTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -31,39 +43,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Song.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
+      <file leaf-file-name="lyrics.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/lyrics.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="919">
-              <caret line="1187" column="56" selection-start-line="1187" selection-start-column="56" selection-end-line="1187" selection-end-column="56" />
+            <state relative-caret-position="405">
+              <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
               <folding>
-                <element signature="e#59498#59499#0" expanded="true" />
-                <element signature="e#59529#59530#0" expanded="true" />
-                <element signature="e#59573#59574#0" expanded="true" />
-                <element signature="e#59606#59607#0" expanded="true" />
-                <element signature="e#59663#59664#0" expanded="true" />
-                <element signature="e#59697#59698#0" expanded="true" />
-                <element signature="e#59758#59759#0" expanded="true" />
-                <element signature="e#59794#59795#0" expanded="true" />
-                <element signature="e#64704#64705#0" expanded="true" />
-                <element signature="e#64770#64771#0" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SongEditView.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java">
+      <file leaf-file-name="bassStudyTool.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/webapp/bassStudyTool.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="535">
-              <caret line="638" column="17" lean-forward="true" selection-start-line="638" selection-start-column="17" selection-end-line="638" selection-end-column="17" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#25516#25517#0" expanded="true" />
-                <element signature="e#25572#25573#0" expanded="true" />
-                <element signature="e#25638#25639#0" expanded="true" />
-                <element signature="e#25685#25686#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="85">
+              <caret line="14" column="55" lean-forward="true" selection-start-line="14" selection-start-column="55" selection-end-line="14" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -84,17 +80,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>chordSectionMap</find>
-      <find>g:</find>
-      <find>Δ</find>
-      <find>GWT.log</find>
-      <find>sectionLabel</find>
-      <find>chordsTextEntry</find>
-      <find>measureEntry</find>
-      <find>sectionOtherSelection</find>
-      <find>Cell</find>
-      <find>lastCell</find>
-      <find>.transpose(</find>
       <find>fileio</find>
       <find>asyncReadSongFile</find>
       <find>songlyrics</find>
@@ -113,7 +98,18 @@
       <find>f33</find>
       <find>reg</find>
       <find>getCellCount</find>
+      <find>onclick</find>
+      <find>selectChordsCell</find>
+      <find>measureEntry</find>
+      <find>grid.add</find>
+      <find>Logger logger</find>
+      <find>ChordSection.addToGrid()</find>
+      <find>GWT</find>
+      <find>MeasureSequenceItem.addToGrid()</find>
+      <find>logger</find>
+      <find>Grid</find>
       <find>chordsFlexTable</find>
+      <find>addTo</find>
     </findStrings>
     <replaceStrings>
       <replace>0,</replace>
@@ -133,6 +129,7 @@
       <replace>name</replace>
       <replace>m6</replace>
       <replace>b7</replace>
+      <replace>add</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client</dir>
@@ -145,18 +142,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Pitch.java" />
-        <option value="$PROJECT_DIR$/src/main/webapp/bassStudyTool.html" />
-        <option value="$PROJECT_DIR$/src/main/webapp/lyrics.html" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/BSteeleMusicApp.gwt.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongMoment.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongUpdate.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/SongUpdateTest.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerViewImpl.java" />
         <option value="$PROJECT_DIR$/logging.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/ChordTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/GrammerGeneratorTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/AnticipationOrDelay.java" />
@@ -167,35 +153,46 @@
         <option value="$PROJECT_DIR$/src/main/webapp/test.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/AppResources.java" />
         <option value="$USER_HOME$/google_drive/bass/songlyrics/dougSonglyrics/Homeward Bound.songlyrics" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongId.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/SongTest.java" />
         <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureCommentTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/allSongs.songlyrics" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListView.ui.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleFormula.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/shared/Util.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureComment.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureRepeat.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Scale.java" />
-        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/GenerateSongHtml.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListPresenterWidget.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongFile.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/home/HomeView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongMoment.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SectionVersion.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/SongTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsViewImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListPresenterWidget.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerViewImpl.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SingerView.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureRepeat.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/webapp/bassStudyTool.html" />
+        <option value="$PROJECT_DIR$/src/main/webapp/index.html" />
+        <option value="$PROJECT_DIR$/src/main/webapp/lyrics.html" />
       </list>
     </option>
   </component>
@@ -229,10 +226,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="335" />
-    <option name="y" value="164" />
-    <option name="width" value="3505" />
-    <option name="height" value="1945" />
+    <option name="x" value="360" />
+    <option name="y" value="215" />
+    <option name="width" value="3465" />
+    <option name="height" value="1942" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -243,58 +240,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-              <item name="legacy" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-              <item name="legacy" type="1f31426a:PackageElementNode" />
-              <item name="LegacyDrumSection" type="1a9f42e2:ClassTreeNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-              <item name="songs" type="1f31426a:PackageElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
-              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
-              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
-              <item name="client" type="1f31426a:PackageElementNode" />
-              <item name="songs" type="1f31426a:PackageElementNode" />
-              <item name="Key" type="1a9f42e2:ClassTreeNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -318,254 +263,46 @@
               <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="webapp" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 (1) &gt;" type="70bed36:NamedLibraryElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 (1) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 (1) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 (1) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 (1) &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="presenterWidgets" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="presenterWidgets" type="462c0819:PsiDirectoryNode" />
-              <item name="SongEditView" type="1a9f42e2:ClassTreeNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="songs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="songs" type="462c0819:PsiDirectoryNode" />
-              <item name="Song" type="1a9f42e2:ClassTreeNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="songs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="dom" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="dom" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="dom" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="Element" type="1a9f42e2:ClassTreeNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="dom" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="Style" type="1a9f42e2:ClassTreeNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="user" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="user" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: com.google.gwt:gwt-user:2.8.2" type="70bed36:NamedLibraryElementNode" />
-              <item name="gwt-user-2.8.2.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="google" type="462c0819:PsiDirectoryNode" />
-              <item name="gwt" type="462c0819:PsiDirectoryNode" />
-              <item name="user" type="462c0819:PsiDirectoryNode" />
-              <item name="client" type="462c0819:PsiDirectoryNode" />
-              <item name="ui" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: org.vectomatic:lib-gwt-file:0.3.9" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: org.vectomatic:lib-gwt-file:0.3.9" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib-gwt-file-0.3.9.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: org.vectomatic:lib-gwt-file:0.3.9" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib-gwt-file-0.3.9.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="vectomatic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: org.vectomatic:lib-gwt-file:0.3.9" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib-gwt-file-0.3.9.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="vectomatic" type="462c0819:PsiDirectoryNode" />
-              <item name="file" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="ArrayList" type="1a9f42e2:ClassTreeNode" />
             </path>
           </expand>
           <select />
@@ -734,6 +471,58 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+              <item name="legacy" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+              <item name="legacy" type="1f31426a:PackageElementNode" />
+              <item name="LegacyDrumSection" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+              <item name="songs" type="1f31426a:PackageElementNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="58d84e3e:PackageViewProjectNode" />
+              <item name="bsteeleMusicApp" type="616d4139:PackageViewModuleNode" />
+              <item name="com.bsteele.bsteeleMusicApp" type="1f31426a:PackageElementNode" />
+              <item name="client" type="1f31426a:PackageElementNode" />
+              <item name="songs" type="1f31426a:PackageElementNode" />
+              <item name="Key" type="1a9f42e2:ClassTreeNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="AndroidView" />
     </panes>
   </component>
@@ -757,10 +546,10 @@
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.language" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/songlyrics/#41 (1).songlyrics" />
   </component>
   <component name="RecentsManager">
@@ -847,6 +636,29 @@
       <option name="PACKAGE_NAME" value="com.bsteele.bsteeleMusicApp.client.songs" />
       <option name="MAIN_CLASS_NAME" value="com.bsteele.bsteeleMusicApp.client.songs.KeyTest" />
       <option name="METHOD_NAME" value="testMinorKey" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration name="SongTest.testGetStructuralGrid" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="bsteeleMusicApp" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.bsteele.bsteeleMusicApp.client.songs.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="com.bsteele.bsteeleMusicApp.client.songs" />
+      <option name="MAIN_CLASS_NAME" value="com.bsteele.bsteeleMusicApp.client.songs.SongTest" />
+      <option name="METHOD_NAME" value="testGetStructuralGrid" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
@@ -950,9 +762,11 @@
       <item itemvalue="Maven.local deploy" />
       <item itemvalue="JUnit.BSteeleMusicAppSuite" />
       <item itemvalue="JUnit.KeyTest.testMinorKey" />
+      <item itemvalue="JUnit.SongTest.testGetStructuralGrid" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.SongTest.testGetStructuralGrid" />
         <item itemvalue="JUnit.KeyTest.testMinorKey" />
         <item itemvalue="JUnit.BSteeleMusicAppSuite" />
       </list>
@@ -1159,14 +973,13 @@
       <workItem from="1530227073197" duration="23449000" />
       <workItem from="1530328781199" duration="8113000" />
       <workItem from="1530372289895" duration="2533000" />
-      <workItem from="1530549647282" duration="21836000" />
-    </task>
-    <task id="LOCAL-00033" summary="elminated ScaleChord.getRegExp()">
-      <created>1523163581504</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1523163581504</updated>
+      <workItem from="1530549647282" duration="22472000" />
+      <workItem from="1530641450816" duration="7285000" />
+      <workItem from="1530674179903" duration="1173000" />
+      <workItem from="1530820161679" duration="3679000" />
+      <workItem from="1530901817527" duration="1896000" />
+      <workItem from="1530925374944" duration="43000" />
+      <workItem from="1531163888514" duration="21325000" />
     </task>
     <task id="LOCAL-00034" summary="started chord parsing, added ChordSection, LyricsLines">
       <created>1523477349271</created>
@@ -1504,43 +1317,50 @@
       <option name="project" value="LOCAL" />
       <updated>1530570637763</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="edit ready?">
+      <created>1530586757659</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1530586757659</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="BSteeleMusicAppSuite - 2018.06.25 at 19h 39m 06s.xml">
-      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 29m 19s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BSteeleMusicAppSuite - 2018.06.28 at 16h 45m 39s.xml">
-      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 30m 15s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BSteeleMusicAppSuite - 2018.06.28 at 22h 47m 26s.xml">
-      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 35m 17s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BSteeleMusicAppSuite - 2018.06.28 at 23h 01m 29s.xml">
-      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 35m 45s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ChordTest_testChordParse - 2018.06.28 at 23h 04m 30s.xml">
-      <configuration name="ChordTest.testChordParse" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 47m 05s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ChordTest_testChordParse - 2018.06.28 at 23h 06m 55s.xml">
-      <configuration name="ChordTest.testChordParse" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 47m 36s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ChordTest_testChordParse - 2018.06.28 at 23h 09m 37s.xml">
-      <configuration name="ChordTest.testChordParse" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 48m 19s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ChordTest_testChordParse - 2018.06.28 at 23h 09m 44s.xml">
-      <configuration name="ChordTest.testChordParse" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 20h 49m 10s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="BSteeleMusicAppSuite - 2018.06.28 at 23h 10m 53s.xml">
-      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 21h 00m 27s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="KeyTest_testMinorKey - 2018.06.29 at 20h 39m 35s.xml">
-      <configuration name="KeyTest.testMinorKey" configurationId="JUnit" />
+    <history-entry file="SongTest_testGetStructuralGrid - 2018.07.09 at 21h 01m 12s.xml">
+      <configuration name="SongTest.testGetStructuralGrid" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1010094000" />
+    <option name="totallyTimeSpent" value="1046131000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1552,7 +1372,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="335" y="164" width="3505" height="1945" extended-state="0" />
+    <frame x="360" y="215" width="3465" height="1942" extended-state="0" />
     <layout>
       <window_info anchor="right" id="PlantUML" order="9" />
       <window_info anchor="right" id="Palette" order="3" />
@@ -1574,12 +1394,12 @@
       <window_info anchor="bottom" id="Java Enterprise" order="11" show_stripe_button="false" weight="0.32949728" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
-      <window_info active="true" anchor="bottom" auto_hide="true" x="47" y="1016" width="3301" height="1056" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
+      <window_info anchor="bottom" auto_hide="true" x="34" y="1030" width="3327" height="1045" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32931122" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.2" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.20790629" />
       <window_info anchor="right" id="Bean Validation" order="10" />
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
-      <window_info anchor="bottom" auto_hide="true" id="Find" internal_type="SLIDING" order="1" weight="0.3655292" />
+      <window_info anchor="bottom" auto_hide="true" id="Find" internal_type="SLIDING" order="1" weight="0.3646128" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="7" sideWeight="0.5021199" side_tool="true" weight="0.26712328" />
       <window_info anchor="bottom" id="Dependency Viewer" order="12" weight="0.32952854" />
@@ -1639,7 +1459,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="closer to measureNode, file update dos barf" />
     <MESSAGE value="fixed chord parsing and chord test" />
     <MESSAGE value="added write all songs, some small json fixes" />
     <MESSAGE value="next song, song fixes, small parsing fixes" />
@@ -1664,7 +1483,8 @@
     <MESSAGE value="app comment adjustments, added Scale and ScaleFormula class, added expandRepeats" />
     <MESSAGE value="started new chord entry, adjusted minor key option" />
     <MESSAGE value="edit tab is temporarily a &quot;play&quot; tab, added song file version support" />
-    <option name="LAST_COMMIT_MESSAGE" value="edit tab is temporarily a &quot;play&quot; tab, added song file version support" />
+    <MESSAGE value="edit ready?" />
+    <option name="LAST_COMMIT_MESSAGE" value="edit ready?" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1688,7 +1508,7 @@
           <option name="timeStamp" value="111" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="112" />
+      <option name="time" value="114" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Remote">
@@ -1762,205 +1582,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1433">
-          <caret line="134" column="65" lean-forward="true" selection-start-line="134" selection-start-column="23" selection-end-line="134" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///usr/lib/jvm/jdk1.8.0_161/src.zip!/java/lang/Enum.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="563">
-          <caret line="75" column="24" selection-start-line="75" selection-start-column="24" selection-end-line="75" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleFormula.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/shared/Util.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1344">
-          <caret line="70" column="60" lean-forward="true" selection-start-line="70" selection-start-column="31" selection-end-line="70" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureComment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="85" column="96" selection-start-line="85" selection-start-column="96" selection-end-line="85" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="242" column="58" lean-forward="true" selection-start-line="242" selection-start-column="58" selection-end-line="242" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureRepeat.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1392">
-          <caret line="192" column="29" selection-start-line="192" selection-start-column="29" selection-end-line="192" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1104">
-          <caret line="60" column="55" selection-start-line="60" selection-start-column="38" selection-end-line="60" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SectionVersion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-          <folding>
-            <element signature="method#parse#0;class#ChordSection#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/logging.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="16" column="29" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleChord.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="47" selection-start-line="47" selection-end-line="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="768">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/ChordTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1040">
-          <caret line="48" column="53" lean-forward="true" selection-start-line="48" selection-start-column="53" selection-end-line="48" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4160">
-          <caret line="138" column="29" selection-start-line="138" selection-start-column="29" selection-end-line="138" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
-          <caret line="17" column="149" selection-start-line="17" selection-start-column="149" selection-end-line="17" selection-end-column="149" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Scale.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-800">
-          <caret line="23" column="7" selection-start-line="23" selection-start-column="7" selection-end-line="23" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="883">
-          <caret line="192" column="50" lean-forward="true" selection-start-line="192" selection-start-column="50" selection-end-line="192" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1472">
-          <caret line="47" column="4" selection-start-line="47" selection-start-column="4" selection-end-line="47" selection-end-column="4" />
-          <folding>
-            <element signature="e#3708#3709#0" expanded="true" />
-            <element signature="e#3749#3750#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Key.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="303" column="29" selection-start-line="303" selection-start-column="29" selection-end-line="303" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar!/com/google/gwt/user/client/ui/CheckBox.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="563">
-          <caret line="165" column="16" selection-start-line="165" selection-start-column="16" selection-end-line="165" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar!/com/google/gwt/user/client/ui/HTMLTable.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="563">
-          <caret line="767" column="18" lean-forward="true" selection-start-line="767" selection-start-column="18" selection-end-line="767" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar!/com/google/gwt/user/client/ui/HTMLTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26048">
-          <caret line="898" column="13" selection-start-line="898" selection-start-column="9" selection-end-line="898" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar!/com/google/gwt/user/client/ui/FlexTable.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="27" column="38" selection-start-line="27" selection-start-column="11" selection-end-line="27" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/DrumOptionsPresenterWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="19" column="14" selection-start-line="19" selection-start-column="14" selection-end-line="19" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerPresenterWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="12" column="159" lean-forward="true" selection-start-line="12" selection-start-column="159" selection-end-line="12" selection-end-column="159" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/BassFileTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="15" column="11" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/GenerateSongHtml.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1584">
@@ -2003,16 +1624,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="976">
           <caret line="48" column="5" selection-start-line="48" selection-start-column="5" selection-end-line="48" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#834#835#0" expanded="true" />
-            <element signature="e#861#862#0" expanded="true" />
-            <element signature="e#903#904#0" expanded="true" />
-            <element signature="e#939#940#0" expanded="true" />
-            <element signature="e#1154#1155#0" expanded="true" />
-            <element signature="e#1186#1187#0" expanded="true" />
-            <element signature="docComment;method#compareTo#0;class#SongFile#0" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2051,9 +1662,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="535">
           <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2064,28 +1672,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListPresenterWidget.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="903">
-          <caret line="145" column="18" selection-start-line="145" selection-start-column="18" selection-end-line="145" selection-end-column="18" />
-          <folding>
-            <element signature="e#4679#4680#0" expanded="true" />
-            <element signature="e#4732#4733#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/NextSongEvent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="384">
           <caret line="14" column="24" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsViewImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2208">
-          <caret line="107" column="61" selection-start-line="107" selection-start-column="28" selection-end-line="107" selection-end-column="61" />
         </state>
       </provider>
     </entry>
@@ -2100,12 +1690,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="535">
           <caret line="741" column="22" selection-start-line="741" selection-start-column="22" selection-end-line="741" selection-end-column="22" />
-          <folding>
-            <element signature="e#21034#21035#0" expanded="true" />
-            <element signature="e#21088#21089#0" expanded="true" />
-            <element signature="e#25745#25746#0" expanded="true" />
-            <element signature="e#25799#25800#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2116,13 +1700,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="549">
-          <caret line="97" column="53" selection-start-line="97" selection-start-column="53" selection-end-line="97" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1337">
@@ -2130,36 +1707,1340 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar!/com/google/gwt/user/client/ui/HTMLTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="535">
-          <caret line="638" column="17" lean-forward="true" selection-start-line="638" selection-start-column="17" selection-end-line="638" selection-end-column="17" />
+        <state relative-caret-position="23808">
+          <caret line="906" column="15" selection-start-line="906" selection-start-column="15" selection-end-line="906" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/com/google/gwt/gwt-user/2.8.2/gwt-user-2.8.2.jar!/com/google/gwt/user/client/ui/HTMLTable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="691">
+          <caret line="771" column="20" selection-start-line="771" selection-start-column="20" selection-end-line="771" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/latest8/src.zip!/java/util/TreeSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-301">
+          <caret line="122" column="11" selection-start-line="122" selection-start-column="11" selection-end-line="122" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="29" column="90" lean-forward="true" selection-start-line="29" selection-start-column="90" selection-end-line="29" selection-end-column="90" />
+          <folding>
+            <element signature="e#3708#3709#0" expanded="true" />
+            <element signature="e#3749#3750#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongMoment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="950">
+          <caret line="56" column="28" selection-start-line="56" selection-start-column="28" selection-end-line="56" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/LyricSection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JAVA/com.bsteele.bsteeleMusicApp.client.songs">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>JAVA</ID>
+          <OriginalElement>com.bsteele.bsteeleMusicApp.client.songs</OriginalElement>
+          <nodes>
+            <node x="1918.9500000000003" y="2867.5">com.bsteele.bsteeleMusicApp.client.songs.ChordSection</node>
+            <node x="616.2263266323162" y="3060.5">com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByLastModifiedDate</node>
+            <node x="4837.017109234363" y="1682.5">com.bsteele.bsteeleMusicApp.client.songs.DrumType</node>
+            <node x="404.22632663231616" y="3060.5">com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByTitle</node>
+            <node x="4969.928020982634" y="0.0">com.bsteele.bsteeleMusicApp.client.songs.MusicConstant</node>
+            <node x="4484.021626033987" y="291.0">com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor</node>
+            <node x="1116.2263266323164" y="3060.5">com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorType</node>
+            <node x="3250.2000000000003" y="3033.5">com.bsteele.bsteeleMusicApp.client.songs.Arrangement</node>
+            <node x="964.8787434334959" y="547.5">com.bsteele.bsteeleMusicApp.client.songs.SectionVersion</node>
+            <node x="1173.505131372244" y="588.0">com.bsteele.bsteeleMusicApp.client.songs.LyricsLine</node>
+            <node x="0.0" y="3716.5">com.bsteele.bsteeleMusicApp.client.songs.SongUpdate.State</node>
+            <node x="735.3079101001622" y="1018.0">com.bsteele.bsteeleMusicApp.client.songs.LyricSection</node>
+            <node x="1020.0051313722443" y="318.0">com.bsteele.bsteeleMusicApp.client.songs.Section</node>
+            <node x="1893.4694901867429" y="3060.5">com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByArtist</node>
+            <node x="2897.425136156126" y="2881.0">com.bsteele.bsteeleMusicApp.client.songs.SongId</node>
+            <node x="2278.425136156126" y="2053.5">com.bsteele.bsteeleMusicApp.client.songs.Measure</node>
+            <node x="3916.087636156126" y="1601.5">com.bsteele.bsteeleMusicApp.client.songs.Chord</node>
+            <node x="3132.800136156126" y="2462.0">com.bsteele.bsteeleMusicApp.client.songs.PartSection.PartSectionEarlyEnding</node>
+            <node x="3066.550136156126" y="2644.5">com.bsteele.bsteeleMusicApp.client.songs.PartSection</node>
+            <node x="5644.595833333333" y="4472.0">com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml</node>
+            <node x="5315.084270982633" y="3716.5">com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MajorDiatonic</node>
+            <node x="910.2263266323162" y="3020.0">com.bsteele.bsteeleMusicApp.client.songs.Metadata</node>
+            <node x="1721.800136156126" y="1271.0">com.bsteele.bsteeleMusicApp.client.songs.SongMoment</node>
+            <node x="4778.183775901029" y="1932.0">com.bsteele.bsteeleMusicApp.client.songs.Note</node>
+            <node x="3305.852884826508" y="2854.0">com.bsteele.bsteeleMusicApp.client.songs.Part</node>
+            <node x="1574.62106664469" y="2408.0">com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem</node>
+            <node x="929.2263266323162" y="2894.5">com.bsteele.bsteeleMusicApp.client.songs.Metadata.MetadataType</node>
+            <node x="3598.237636156126" y="3060.5">com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByVersionNumber</node>
+            <node x="5484.941268891128" y="3047.0">com.bsteele.bsteeleMusicApp.client.songs.ScaleFormula</node>
+            <node x="5711.584270982633" y="165.5">com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MinorDiatonic</node>
+            <node x="4056.016207584697" y="2435.0">com.bsteele.bsteeleMusicApp.client.songs.Bar</node>
+            <node x="142.0" y="4202.0">com.bsteele.bsteeleMusicApp.client.songs.SongUpdate</node>
+            <node x="5504.584270982633" y="3689.5">com.bsteele.bsteeleMusicApp.client.songs.Scale</node>
+            <node x="1245.9763266323164" y="2631.0">com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat</node>
+            <node x="1513.6500000000003" y="1588.0">com.bsteele.bsteeleMusicApp.client.songs.MeasureNode</node>
+            <node x="4329.730493298984" y="507.0">com.bsteele.bsteeleMusicApp.client.songs.Key</node>
+            <node x="5063.231394948647" y="991.0">com.bsteele.bsteeleMusicApp.client.songs.ScaleNote</node>
+            <node x="4784.521626033987" y="125.0">com.bsteele.bsteeleMusicApp.client.songs.ChordComponent</node>
+            <node x="2575.425136156126" y="3060.5">com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByLastModifiedDateLast</node>
+            <node x="2046.425136156126" y="2448.5">com.bsteele.bsteeleMusicApp.client.songs.MeasureComment</node>
+            <node x="4427.017109234363" y="1284.5">com.bsteele.bsteeleMusicApp.client.songs.ScaleChord</node>
+            <node x="3879.237636156126" y="1352.0">com.bsteele.bsteeleMusicApp.client.songs.ChordAnticipationOrDelay</node>
+            <node x="5085.941413839776" y="1588.0">com.bsteele.bsteeleMusicApp.client.songs.Pitch</node>
+            <node x="1823.6166666666672" y="3406.0">com.bsteele.bsteeleMusicApp.client.songs.Song</node>
+            <node x="0.0" y="4822.0">com.bsteele.bsteeleMusicApp.client.songs.SongFile</node>
+            <node x="105.0" y="601.5">com.bsteele.bsteeleMusicApp.client.songs.SectionColorMap</node>
+            <node x="4921.006547619048" y="4472.0">com.bsteele.bsteeleMusicApp.client.songs.BassFile</node>
+            <node x="3464.550136156126" y="2685.0">com.bsteele.bsteeleMusicApp.client.songs.PartType</node>
+          </nodes>
+          <notes />
+          <edges>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.ChordSection">
+              <point x="-35.5333333333333" y="-328.0" />
+              <point x="2054.583333333334" y="3196.0" />
+              <point x="1882.9694901867429" y="3196.0" />
+              <point x="1882.9694901867429" y="3000.0" />
+              <point x="1973.2000000000003" y="3000.0" />
+              <point x="-54.25" y="44.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor">
+              <point x="33.09090909090901" y="-17.5" />
+              <point x="5768.686742424242" y="4182.0" />
+              <point x="5764.084270982633" y="4182.0" />
+              <point x="5764.084270982633" y="477.0" />
+              <point x="4830.521626033987" y="477.0" />
+              <point x="157.5" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="19.727272727272748" y="-44.5" />
+              <point x="2047.177272727273" y="2824.0" />
+              <point x="2024.925136156126" y="2824.0" />
+              <point x="2024.925136156126" y="1558.0" />
+              <point x="1847.800136156126" y="1558.0" />
+              <point x="0.0" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Metadata" target="com.bsteele.bsteeleMusicApp.client.songs.Metadata.MetadataType">
+              <point x="-62.0" y="-58.0" />
+              <point x="941.2263266323162" y="3000.0" />
+              <point x="953.8929932989827" y="3000.0" />
+              <point x="-49.33333333333337" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Part" target="com.bsteele.bsteeleMusicApp.client.songs.PartSection">
+              <point x="-86.625" y="-58.0" />
+              <point x="3334.727884826508" y="2834.0" />
+              <point x="3161.050136156126" y="2834.0" />
+              <point x="-94.5" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="-28.25" y="-112.0" />
+              <point x="1654.9000000000003" y="901.0" />
+              <point x="4375.230493298984" y="901.0" />
+              <point x="-84.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Bar">
+              <point x="-35.33333333333303" y="-17.5" />
+              <point x="4938.6732142857145" y="4152.0" />
+              <point x="4237.332782887396" y="4152.0" />
+              <point x="4237.332782887396" y="2611.0" />
+              <point x="4238.8912075846965" y="2611.0" />
+              <point x="78.375" y="44.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord">
+              <point x="81.53846153846143" y="-71.5" />
+              <point x="2492.4635976945874" y="1912.0" />
+              <point x="2490.8662231035837" y="1912.0" />
+              <point x="2490.8662231035837" y="1548.0" />
+              <point x="4458.517109234363" y="1548.0" />
+              <point x="-157.5" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="-126.0" y="-85.0" />
+              <point x="4490.017109234363" y="1251.0" />
+              <point x="4500.017109234363" y="1251.0" />
+              <point x="4500.017109234363" y="961.0" />
+              <point x="4492.230493298984" y="961.0" />
+              <point x="32.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem">
+              <point x="-39.454545454545496" y="-44.5" />
+              <point x="1987.9954545454548" y="2804.0" />
+              <point x="1788.1376720049245" y="2804.0" />
+              <point x="1788.1376720049245" y="2611.0" />
+              <point x="1786.49606664469" y="2611.0" />
+              <point x="42.375" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="119.625" y="-287.5" />
+              <point x="392.125" y="4182.0" />
+              <point x="2023.4916666666672" y="4182.0" />
+              <point x="-66.625" y="328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor" target="com.bsteele.bsteeleMusicApp.client.songs.ChordComponent">
+              <point x="151.19999999999982" y="-58.0" />
+              <point x="4824.2216260339865" y="271.0" />
+              <point x="4837.321626033987" y="271.0" />
+              <point x="-35.19999999999982" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MajorDiatonic">
+              <point x="-82.72727272727298" y="-17.5" />
+              <point x="5652.86856060606" y="4182.0" />
+              <point x="5426.084270982633" y="4182.0" />
+              <point x="37.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.Chord">
+              <point x="101.92307692307713" y="-71.5" />
+              <point x="2512.848213079203" y="1902.0" />
+              <point x="3947.587636156126" y="1902.0" />
+              <point x="-157.5" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Note" target="com.bsteele.bsteeleMusicApp.client.songs.Pitch">
+              <point x="64.75" y="-193.0" />
+              <point x="4972.433775901029" y="1902.0" />
+              <point x="5110.066413839776" y="1902.0" />
+              <point x="-72.375" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByLastModifiedDate" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="91.0" y="17.5" />
+              <point x="843.7263266323162" y="3256.0" />
+              <point x="1983.5166666666673" y="3256.0" />
+              <point x="-106.59999999999991" y="-328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Arrangement">
+              <point x="177.66666666666652" y="-328.0" />
+              <point x="2267.7833333333338" y="3316.0" />
+              <point x="3300.4500000000003" y="3316.0" />
+              <point x="-50.25" y="44.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureComment" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="0.0" y="-31.0" />
+              <point x="2135.425136156126" y="2348.0" />
+              <point x="2110.825136156126" y="2348.0" />
+              <point x="2110.825136156126" y="1902.0" />
+              <point x="2253.3085307958913" y="1902.0" />
+              <point x="2253.3085307958913" y="921.0" />
+              <point x="4401.230493298984" y="921.0" />
+              <point x="-58.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MajorDiatonic" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="0.0" y="-17.5" />
+              <point x="5389.084270982633" y="75.0" />
+              <point x="5090.261354315967" y="75.0" />
+              <point x="44.33333333333303" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="-54.375" y="-287.5" />
+              <point x="218.125" y="4152.0" />
+              <point x="94.5" y="4152.0" />
+              <point x="94.5" y="427.0" />
+              <point x="1027.7551313722443" y="427.0" />
+              <point x="-85.25" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="145.28571428571422" y="-71.5" />
+              <point x="1889.4067809304042" y="2358.0" />
+              <point x="2293.147358378348" y="2358.0" />
+              <point x="-117.77777777777783" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Section" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-7.75" y="31.0" />
+              <point x="1105.2551313722443" y="477.0" />
+              <point x="1066.1287434334959" y="477.0" />
+              <point x="20.25" y="-71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorType">
+              <point x="-71.0666666666666" y="-328.0" />
+              <point x="2019.0500000000006" y="3226.0" />
+              <point x="1157.7263266323164" y="3226.0" />
+              <point x="-41.5" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="61.125" y="-85.0" />
+              <point x="5205.856394948647" y="971.0" />
+              <point x="5184.413529013268" y="971.0" />
+              <point x="5184.413529013268" y="105.0" />
+              <point x="5052.261354315967" y="105.0" />
+              <point x="6.33333333333303" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Key" target="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor">
+              <point x="0.0" y="-112.0" />
+              <point x="4459.730493298984" y="487.0" />
+              <point x="4515.521626033987" y="487.0" />
+              <point x="-157.5" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MinorDiatonic">
+              <point x="66.18181818181802" y="-17.5" />
+              <point x="5801.777651515151" y="4172.0" />
+              <point x="5786.084270982633" y="4172.0" />
+              <point x="0.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Pitch" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="64.33333333333303" y="-112.0" />
+              <point x="5246.774747173109" y="1568.0" />
+              <point x="5254.012644948647" y="1568.0" />
+              <point x="5254.012644948647" y="95.0" />
+              <point x="5064.928020982634" y="95.0" />
+              <point x="19.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByVersionNumber">
+              <point x="213.19999999999982" y="-328.0" />
+              <point x="2303.316666666667" y="3346.0" />
+              <point x="3641.5709694894595" y="3346.0" />
+              <point x="-86.66666666666674" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByVersionNumber" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="86.66666666666674" y="17.5" />
+              <point x="3814.9043028227925" y="3366.0" />
+              <point x="2327.005555555556" y="3366.0" />
+              <point x="236.8888888888887" y="-328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-77.91666666666674" y="-71.5" />
+              <point x="1261.5596599656496" y="2611.0" />
+              <point x="1139.3096599656496" y="2611.0" />
+              <point x="1139.3096599656496" y="1211.0" />
+              <point x="713.8079101001622" y="1211.0" />
+              <point x="713.8079101001622" y="821.0" />
+              <point x="1013.4787434334958" y="821.0" />
+              <point x="-32.40000000000009" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="71.0666666666666" y="-328.0" />
+              <point x="2161.183333333334" y="3226.0" />
+              <point x="2564.925136156126" y="3226.0" />
+              <point x="2564.925136156126" y="1488.0" />
+              <point x="1965.400136156126" y="1488.0" />
+              <point x="117.60000000000014" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-78.90909090909099" y="-44.5" />
+              <point x="1948.5409090909093" y="2824.0" />
+              <point x="1481.3500000000001" y="2824.0" />
+              <point x="1481.3500000000001" y="841.0" />
+              <point x="1045.8787434334959" y="841.0" />
+              <point x="0.0" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-32.625" y="-287.5" />
+              <point x="239.875" y="4142.0" />
+              <point x="183.72632663231616" y="4142.0" />
+              <point x="183.72632663231616" y="1191.0" />
+              <point x="294.5" y="1191.0" />
+              <point x="294.5" y="781.0" />
+              <point x="970.278743433496" y="781.0" />
+              <point x="-75.59999999999991" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="47.37777777777774" y="-328.0" />
+              <point x="2137.494444444445" y="3206.0" />
+              <point x="2410.925136156126" y="3206.0" />
+              <point x="0.0" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="-248.73333333333312" y="-328.0" />
+              <point x="1841.3833333333341" y="3376.0" />
+              <point x="349.5" y="3376.0" />
+              <point x="349.5" y="447.0" />
+              <point x="1058.7551313722443" y="447.0" />
+              <point x="-54.25" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Chord" target="com.bsteele.bsteeleMusicApp.client.songs.ChordAnticipationOrDelay">
+              <point x="-75.59999999999991" y="-98.5" />
+              <point x="4029.487636156126" y="1538.0" />
+              <point x="4053.237636156126" y="1538.0" />
+              <point x="58.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.ChordComponent">
+              <point x="49.63636363636397" y="-17.5" />
+              <point x="5785.232196969697" y="4182.0" />
+              <point x="5775.084270982633" y="4182.0" />
+              <point x="5775.084270982633" y="261.0" />
+              <point x="4942.921626033986" y="261.0" />
+              <point x="70.39999999999964" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord">
+              <point x="10.095238095238528" y="-17.5" />
+              <point x="4984.101785714287" y="4102.0" />
+              <point x="5047.683775901029" y="4102.0" />
+              <point x="5047.683775901029" y="1568.0" />
+              <point x="4647.517109234363" y="1568.0" />
+              <point x="31.5" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate.State" target="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate">
+              <point x="28.0" y="17.5" />
+              <point x="70.0" y="4162.0" />
+              <point x="196.375" y="4162.0" />
+              <point x="-76.125" y="-287.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.LyricSection" target="com.bsteele.bsteeleMusicApp.client.songs.LyricsLine">
+              <point x="106.5" y="-58.0" />
+              <point x="983.8079101001622" y="861.0" />
+              <point x="1224.130131372244" y="861.0" />
+              <point x="-16.875" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MinorDiatonic" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="0.0" y="-17.5" />
+              <point x="5786.084270982633" y="65.0" />
+              <point x="5102.928020982634" y="65.0" />
+              <point x="57.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.PartSection" target="com.bsteele.bsteeleMusicApp.client.songs.PartSection.PartSectionEarlyEnding">
+              <point x="-54.0" y="-58.0" />
+              <point x="3201.550136156126" y="2611.0" />
+              <point x="3167.800136156126" y="2611.0" />
+              <point x="-70.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.PartSection.PartSectionEarlyEnding" target="com.bsteele.bsteeleMusicApp.client.songs.PartSection">
+              <point x="70.0" y="17.5" />
+              <point x="3307.800136156126" y="2611.0" />
+              <point x="3309.550136156126" y="2611.0" />
+              <point x="54.0" y="-58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByArtist">
+              <point x="-23.68888888888887" y="-328.0" />
+              <point x="2066.4277777777784" y="3186.0" />
+              <point x="1924.8028235200761" y="3186.0" />
+              <point x="-62.66666666666674" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureComment">
+              <point x="23.68888888888887" y="-328.0" />
+              <point x="2113.805555555556" y="3186.0" />
+              <point x="2256.925136156126" y="3186.0" />
+              <point x="2256.925136156126" y="2611.0" />
+              <point x="2179.925136156126" y="2611.0" />
+              <point x="44.5" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.SongId">
+              <point x="142.1333333333332" y="-328.0" />
+              <point x="2232.2500000000005" y="3286.0" />
+              <point x="2934.425136156126" y="3286.0" />
+              <point x="2934.425136156126" y="3000.0" />
+              <point x="2941.525136156126" y="3000.0" />
+              <point x="-29.40000000000009" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SectionColorMap" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="0.0" y="-17.5" />
+              <point x="189.0" y="437.0" />
+              <point x="1043.2551313722443" y="437.0" />
+              <point x="-69.75" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord" target="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor">
+              <point x="0.0" y="-85.0" />
+              <point x="4616.017109234363" y="1251.0" />
+              <point x="4600.230493298984" y="1251.0" />
+              <point x="4600.230493298984" y="487.0" />
+              <point x="4641.521626033987" y="487.0" />
+              <point x="-31.5" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="-260.57777777777756" y="-328.0" />
+              <point x="1829.5388888888897" y="3386.0" />
+              <point x="314.6509647055773" y="3386.0" />
+              <point x="314.6509647055773" y="1181.0" />
+              <point x="283.5" y="1181.0" />
+              <point x="283.5" y="55.0" />
+              <point x="4976.261354315967" y="55.0" />
+              <point x="-69.66666666666697" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="16.54545454545496" y="-17.5" />
+              <point x="5753.084270982633" y="931.0" />
+              <point x="4583.230493298984" y="931.0" />
+              <point x="123.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate" target="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate.State">
+              <point x="-97.875" y="-287.5" />
+              <point x="174.625" y="4172.0" />
+              <point x="42.0" y="4172.0" />
+              <point x="0.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongMoment" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode">
+              <point x="-33.59999999999991" y="98.5" />
+              <point x="1814.200136156126" y="1568.0" />
+              <point x="1824.4000000000003" y="1568.0" />
+              <point x="141.25" y="-112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="32.625" y="-287.5" />
+              <point x="305.125" y="4172.0" />
+              <point x="278.8912434334957" y="4172.0" />
+              <point x="278.8912434334957" y="1221.0" />
+              <point x="724.8079101001622" y="1221.0" />
+              <point x="724.8079101001622" y="881.0" />
+              <point x="4349.230493298984" y="881.0" />
+              <point x="-110.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="-46.75" y="-71.5" />
+              <point x="1292.7263266323164" y="2571.0" />
+              <point x="1322.7245767668287" y="2571.0" />
+              <point x="1322.7245767668287" y="891.0" />
+              <point x="4362.230493298984" y="891.0" />
+              <point x="-97.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote">
+              <point x="30.285714285714675" y="-17.5" />
+              <point x="5004.292261904762" y="4142.0" />
+              <point x="5289.441413839776" y="4142.0" />
+              <point x="5289.441413839776" y="1251.0" />
+              <point x="5195.668894948647" y="1251.0" />
+              <point x="50.9375" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Pitch" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote">
+              <point x="0.0" y="-112.0" />
+              <point x="5182.441413839776" y="1568.0" />
+              <point x="5174.702976190476" y="1568.0" />
+              <point x="30.5625" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.LyricsLine">
+              <point x="165.82222222222208" y="-328.0" />
+              <point x="2255.9388888888893" y="3306.0" />
+              <point x="3054.925136156126" y="3306.0" />
+              <point x="3054.925136156126" y="761.0" />
+              <point x="1291.630131372244" y="761.0" />
+              <point x="50.625" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant.MajorDiatonic">
+              <point x="50.47619047619082" y="-17.5" />
+              <point x="5024.482738095239" y="4182.0" />
+              <point x="5352.084270982633" y="4182.0" />
+              <point x="-37.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureComment" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-35.59999999999991" y="-31.0" />
+              <point x="2099.825136156126" y="1892.0" />
+              <point x="2214.5585307958913" y="1892.0" />
+              <point x="2214.5585307958913" y="791.0" />
+              <point x="1099.8787434334959" y="791.0" />
+              <point x="54.0" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Note" target="com.bsteele.bsteeleMusicApp.client.songs.DrumType">
+              <point x="-21.58333333333303" y="-193.0" />
+              <point x="4886.1004425676965" y="1912.0" />
+              <point x="4867.767109234363" y="1912.0" />
+              <point x="-30.75" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="0.0" y="-71.5" />
+              <point x="2410.925136156126" y="1912.0" />
+              <point x="2413.9049440595572" y="1912.0" />
+              <point x="2413.9049440595572" y="1508.0" />
+              <point x="1931.800136156126" y="1508.0" />
+              <point x="84.0" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord" target="com.bsteele.bsteeleMusicApp.client.songs.ChordComponent">
+              <point x="84.0" y="-85.0" />
+              <point x="4700.017109234363" y="1211.0" />
+              <point x="4872.521626033987" y="1211.0" />
+              <point x="0.0" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat">
+              <point x="-47.37777777777774" y="-328.0" />
+              <point x="2042.7388888888895" y="3206.0" />
+              <point x="1292.7263266323164" y="3206.0" />
+              <point x="-46.75" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="-5.047619047619264" y="-17.5" />
+              <point x="4968.958928571428" y="4092.0" />
+              <point x="4319.230493298984" y="4092.0" />
+              <point x="4319.230493298984" y="447.0" />
+              <point x="1198.2551313722443" y="447.0" />
+              <point x="85.25" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant" target="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor">
+              <point x="-31.66666666666697" y="17.5" />
+              <point x="5014.261354315967" y="85.0" />
+              <point x="4517.908378125491" y="85.0" />
+              <point x="4517.908378125491" y="261.0" />
+              <point x="4597.421626033986" y="261.0" />
+              <point x="-75.60000000000036" y="-58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongMoment" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="67.20000000000005" y="98.5" />
+              <point x="1915.000136156126" y="1518.0" />
+              <point x="2380.488720955974" y="1518.0" />
+              <point x="2380.488720955974" y="1912.0" />
+              <point x="2390.5405207715107" y="1912.0" />
+              <point x="-20.384615384615245" y="-71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="45.42857142857156" y="-17.5" />
+              <point x="5019.435119047619" y="4172.0" />
+              <point x="5304.584270982633" y="4172.0" />
+              <point x="5304.584270982633" y="85.0" />
+              <point x="5077.594687649301" y="85.0" />
+              <point x="31.66666666666697" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="48.42857142857156" y="-71.5" />
+              <point x="1792.5496380732616" y="2338.0" />
+              <point x="1882.4496380732614" y="2338.0" />
+              <point x="1882.4496380732614" y="1568.0" />
+              <point x="1831.000136156126" y="1568.0" />
+              <point x="-16.799999999999955" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="-60.75" y="-71.5" />
+              <point x="985.1287434334959" y="457.0" />
+              <point x="1074.2551313722443" y="457.0" />
+              <point x="-38.75" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode">
+              <point x="-142.1333333333332" y="-328.0" />
+              <point x="1947.983333333334" y="3286.0" />
+              <point x="605.7263266323162" y="3286.0" />
+              <point x="605.7263266323162" y="1892.0" />
+              <point x="1529.059090909091" y="1892.0" />
+              <point x="-154.09090909090924" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="-30.285714285714675" y="-17.5" />
+              <point x="4943.720833333333" y="4142.0" />
+              <point x="4281.770282887396" y="4142.0" />
+              <point x="4281.770282887396" y="2368.0" />
+              <point x="2499.2584694894595" y="2368.0" />
+              <point x="88.33333333333348" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByTitle">
+              <point x="-189.51111111111095" y="-328.0" />
+              <point x="1900.6055555555563" y="3326.0" />
+              <point x="434.22632663231616" y="3326.0" />
+              <point x="-60.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="20.384615384615245" y="-71.5" />
+              <point x="2431.309751540741" y="1892.0" />
+              <point x="2457.8662231035837" y="1892.0" />
+              <point x="2457.8662231035837" y="781.0" />
+              <point x="1110.6787434334958" y="781.0" />
+              <point x="64.79999999999995" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Scale" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleFormula">
+              <point x="72.0" y="-44.5" />
+              <point x="5684.584270982633" y="3386.0" />
+              <point x="5638.941268891128" y="3386.0" />
+              <point x="66.0" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.LyricSection" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-106.5" y="-58.0" />
+              <point x="770.8079101001622" y="831.0" />
+              <point x="1024.278743433496" y="831.0" />
+              <point x="-21.600000000000023" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByTitle" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="60.0" y="17.5" />
+              <point x="554.2263266323162" y="3306.0" />
+              <point x="1924.2944444444452" y="3306.0" />
+              <point x="-165.82222222222208" y="-328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-84.75" y="-112.0" />
+              <point x="1598.4000000000003" y="1518.0" />
+              <point x="1595.6912434334959" y="1518.0" />
+              <point x="1595.6912434334959" y="801.0" />
+              <point x="1089.078743433496" y="801.0" />
+              <point x="43.200000000000045" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Chord" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord">
+              <point x="151.19999999999982" y="-98.5" />
+              <point x="4256.287636156126" y="1568.0" />
+              <point x="4584.517109234363" y="1568.0" />
+              <point x="-31.5" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Chord">
+              <point x="-15.142857142856883" y="-17.5" />
+              <point x="4958.863690476192" y="4112.0" />
+              <point x="4296.913140030254" y="4112.0" />
+              <point x="4296.913140030254" y="1902.0" />
+              <point x="4262.587636156126" y="1902.0" />
+              <point x="157.5" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="-50.47619047619082" y="-17.5" />
+              <point x="4923.530357142858" y="4182.0" />
+              <point x="2156.7416666666672" y="4182.0" />
+              <point x="66.625" y="328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="98.63636363636363" y="-44.5" />
+              <point x="2126.086363636364" y="2834.0" />
+              <point x="2245.925136156126" y="2834.0" />
+              <point x="2245.925136156126" y="2388.0" />
+              <point x="2381.4806917116816" y="2388.0" />
+              <point x="-29.444444444444343" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="78.90909090909099" y="-44.5" />
+              <point x="2106.3590909090913" y="2824.0" />
+              <point x="2234.925136156126" y="2824.0" />
+              <point x="2234.925136156126" y="1912.0" />
+              <point x="2314.0585307958913" y="1912.0" />
+              <point x="2314.0585307958913" y="931.0" />
+              <point x="4414.230493298984" y="931.0" />
+              <point x="-45.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode">
+              <point x="-48.42857142857133" y="-71.5" />
+              <point x="1695.6924952161187" y="2388.0" />
+              <point x="1652.3318181818186" y="2388.0" />
+              <point x="-30.818181818181756" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="15.142857142856883" y="-17.5" />
+              <point x="4989.149404761905" y="4112.0" />
+              <point x="5052.731394948647" y="4112.0" />
+              <point x="5052.731394948647" y="971.0" />
+              <point x="4531.230493298984" y="971.0" />
+              <point x="71.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode">
+              <point x="-122.30769230769238" y="-71.5" />
+              <point x="2288.6174438484336" y="1872.0" />
+              <point x="1744.786363636364" y="1872.0" />
+              <point x="61.63636363636374" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="39.454545454545496" y="-44.5" />
+              <point x="2066.9045454545458" y="2814.0" />
+              <point x="2035.925136156126" y="2814.0" />
+              <point x="2035.925136156126" y="487.0" />
+              <point x="1136.2551313722443" y="487.0" />
+              <point x="23.25" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote">
+              <point x="0.0" y="-17.5" />
+              <point x="5735.595833333333" y="4182.0" />
+              <point x="5742.084270982633" y="4182.0" />
+              <point x="5742.084270982633" y="1241.0" />
+              <point x="5216.043894948647" y="1241.0" />
+              <point x="71.3125" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByArtist" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="62.66666666666674" y="17.5" />
+              <point x="2050.1361568534094" y="3166.0" />
+              <point x="2090.1166666666672" y="3166.0" />
+              <point x="0.0" y="-328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Arrangement" target="com.bsteele.bsteeleMusicApp.client.songs.SongId">
+              <point x="-75.375" y="-44.5" />
+              <point x="3275.3250000000003" y="3000.0" />
+              <point x="3000.325136156126" y="3000.0" />
+              <point x="29.40000000000009" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Chord">
+              <point x="260.577777777778" y="-328.0" />
+              <point x="2350.6944444444453" y="3386.0" />
+              <point x="4045.516207584697" y="3386.0" />
+              <point x="4045.516207584697" y="1912.0" />
+              <point x="4073.587636156126" y="1912.0" />
+              <point x="-31.5" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode">
+              <point x="15.583333333333258" y="-71.5" />
+              <point x="1355.0596599656496" y="2591.0" />
+              <point x="1382.85" y="2591.0" />
+              <point x="1382.85" y="1912.0" />
+              <point x="1590.6954545454548" y="1912.0" />
+              <point x="-92.4545454545455" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="0.0" y="-58.0" />
+              <point x="4673.021626033987" y="271.0" />
+              <point x="4615.308241969366" y="271.0" />
+              <point x="4615.308241969366" y="95.0" />
+              <point x="5026.928020982634" y="95.0" />
+              <point x="-19.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Note">
+              <point x="0.0" y="-17.5" />
+              <point x="4974.006547619048" y="4082.0" />
+              <point x="4969.9099663772195" y="4082.0" />
+              <point x="4969.9099663772195" y="2388.0" />
+              <point x="4940.058775901029" y="2388.0" />
+              <point x="32.375" y="193.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="28.25" y="-112.0" />
+              <point x="1711.4000000000003" y="1558.0" />
+              <point x="1780.600136156126" y="1558.0" />
+              <point x="-67.20000000000005" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="82.72727272727298" y="-17.5" />
+              <point x="5818.323106060606" y="4182.0" />
+              <point x="5871.084270982633" y="4182.0" />
+              <point x="5871.084270982633" y="55.0" />
+              <point x="5115.594687649301" y="55.0" />
+              <point x="69.66666666666697" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="248.73333333333312" y="-328.0" />
+              <point x="2338.8500000000004" y="3376.0" />
+              <point x="3868.737636156126" y="3376.0" />
+              <point x="3868.737636156126" y="961.0" />
+              <point x="4453.230493298984" y="961.0" />
+              <point x="-6.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.Pitch">
+              <point x="25.23809523809541" y="-17.5" />
+              <point x="4999.244642857144" y="4132.0" />
+              <point x="5225.476785714285" y="4132.0" />
+              <point x="5225.476785714285" y="1912.0" />
+              <point x="5254.816413839776" y="1912.0" />
+              <point x="72.375" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="40.769230769230944" y="-71.5" />
+              <point x="2451.694366925357" y="1902.0" />
+              <point x="2468.8662231035837" y="1902.0" />
+              <point x="2468.8662231035837" y="477.0" />
+              <point x="1151.7551313722443" y="477.0" />
+              <point x="38.75" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByLastModifiedDate">
+              <point x="-130.28888888888878" y="-328.0" />
+              <point x="1959.8277777777785" y="3276.0" />
+              <point x="661.7263266323162" y="3276.0" />
+              <point x="-91.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureComment" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="-71.20000000000005" y="-31.0" />
+              <point x="2064.2251361561257" y="2348.0" />
+              <point x="2088.825136156126" y="2348.0" />
+              <point x="2088.825136156126" y="1548.0" />
+              <point x="1864.600136156126" y="1548.0" />
+              <point x="16.799999999999955" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-10.095238095238528" y="-17.5" />
+              <point x="4963.91130952381" y="4102.0" />
+              <point x="4314.182874251364" y="4102.0" />
+              <point x="4314.182874251364" y="751.0" />
+              <point x="1121.4787434334958" y="751.0" />
+              <point x="75.59999999999991" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="123.27272727272725" y="112.0" />
+              <point x="1806.4227272727276" y="1852.0" />
+              <point x="2329.3866746176645" y="1852.0" />
+              <point x="-81.53846153846143" y="-71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureComment" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="35.59999999999991" y="-31.0" />
+              <point x="2171.025136156126" y="2368.0" />
+              <point x="2322.5918028227925" y="2368.0" />
+              <point x="-88.33333333333348" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-145.28571428571422" y="-71.5" />
+              <point x="1598.8353523589758" y="2388.0" />
+              <point x="1503.1500000000003" y="2388.0" />
+              <point x="1503.1500000000003" y="821.0" />
+              <point x="1067.4787434334958" y="821.0" />
+              <point x="21.59999999999991" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.Scale">
+              <point x="-33.09090909090901" y="-17.5" />
+              <point x="5702.504924242424" y="4152.0" />
+              <point x="5612.584270982633" y="4152.0" />
+              <point x="0.0" y="44.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Bar" target="com.bsteele.bsteeleMusicApp.client.songs.Chord">
+              <point x="0.0" y="-44.5" />
+              <point x="4160.5162075846965" y="1912.0" />
+              <point x="4136.587636156126" y="1912.0" />
+              <point x="31.5" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByLastModifiedDateLast" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="100.33333333333348" y="17.5" />
+              <point x="2826.2584694894595" y="3256.0" />
+              <point x="2196.716666666667" y="3256.0" />
+              <point x="106.59999999999991" y="-328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Bar" target="com.bsteele.bsteeleMusicApp.client.songs.Note">
+              <point x="41.80000000000018" y="-44.5" />
+              <point x="4202.316207584698" y="2378.0" />
+              <point x="4810.558775901029" y="2378.0" />
+              <point x="-97.125" y="193.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorType" target="com.bsteele.bsteeleMusicApp.client.songs.Song">
+              <point x="41.5" y="17.5" />
+              <point x="1240.7263266323164" y="3216.0" />
+              <point x="2030.894444444445" y="3216.0" />
+              <point x="-59.22222222222217" y="-328.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Song.ComparatorByLastModifiedDateLast">
+              <point x="82.91111111111104" y="-328.0" />
+              <point x="2173.0277777777783" y="3236.0" />
+              <point x="2625.5918028227925" y="3236.0" />
+              <point x="-100.33333333333348" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.Metadata">
+              <point x="-82.91111111111104" y="-328.0" />
+              <point x="2007.2055555555562" y="3236.0" />
+              <point x="1003.2263266323162" y="3236.0" />
+              <point x="0.0" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Key" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="-86.66666666666652" y="-112.0" />
+              <point x="4373.063826632317" y="487.0" />
+              <point x="4360.841711458825" y="487.0" />
+              <point x="4360.841711458825" y="65.0" />
+              <point x="4988.928020982634" y="65.0" />
+              <point x="-57.0" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Part" target="com.bsteele.bsteeleMusicApp.client.songs.PartType">
+              <point x="28.875" y="-58.0" />
+              <point x="3450.227884826508" y="2834.0" />
+              <point x="3492.300136156126" y="2834.0" />
+              <point x="-27.75" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Note" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote">
+              <point x="-64.75" y="-193.0" />
+              <point x="4842.933775901029" y="1912.0" />
+              <point x="4826.517109234363" y="1912.0" />
+              <point x="4826.517109234363" y="1251.0" />
+              <point x="5134.543894948647" y="1251.0" />
+              <point x="-10.1875" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.ChordComponent">
+              <point x="40.380952380952294" y="-17.5" />
+              <point x="5014.387500000001" y="4162.0" />
+              <point x="5299.536651935014" y="4162.0" />
+              <point x="5299.536651935014" y="271.0" />
+              <point x="4907.7216260339865" y="271.0" />
+              <point x="35.19999999999982" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Metadata.MetadataType" target="com.bsteele.bsteeleMusicApp.client.songs.Metadata">
+              <point x="49.333333333333485" y="17.5" />
+              <point x="1052.5596599656496" y="3000.0" />
+              <point x="1065.2263266323162" y="3000.0" />
+              <point x="62.0" y="-58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="96.85714285714289" y="-71.5" />
+              <point x="1840.978209501833" y="2348.0" />
+              <point x="2002.925136156126" y="2348.0" />
+              <point x="2002.925136156126" y="911.0" />
+              <point x="4388.230493298984" y="911.0" />
+              <point x="-71.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Arrangement" target="com.bsteele.bsteeleMusicApp.client.songs.Part">
+              <point x="25.125" y="-44.5" />
+              <point x="3375.8250000000003" y="3000.0" />
+              <point x="3363.602884826508" y="3000.0" />
+              <point x="-57.75" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.PartSection" target="com.bsteele.bsteeleMusicApp.client.songs.Section">
+              <point x="-162.0" y="-58.0" />
+              <point x="3093.550136156126" y="2611.0" />
+              <point x="3110.4500000000003" y="2611.0" />
+              <point x="3110.4500000000003" y="467.0" />
+              <point x="1167.2551313722443" y="467.0" />
+              <point x="54.25" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Key" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote">
+              <point x="110.5" y="112.0" />
+              <point x="4570.230493298984" y="941.0" />
+              <point x="5165.106394948647" y="941.0" />
+              <point x="20.375" y="-85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord">
+              <point x="-16.54545454545496" y="-17.5" />
+              <point x="5719.050378787878" y="4172.0" />
+              <point x="5731.084270982633" y="4172.0" />
+              <point x="5731.084270982633" y="1548.0" />
+              <point x="4773.517109234363" y="1548.0" />
+              <point x="157.5" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.PartSection" target="com.bsteele.bsteeleMusicApp.client.songs.Bar">
+              <point x="162.0" y="-58.0" />
+              <point x="3417.550136156126" y="2611.0" />
+              <point x="4134.3912075846965" y="2611.0" />
+              <point x="-26.125" y="44.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureComment">
+              <point x="59.18181818181802" y="-44.5" />
+              <point x="2086.6318181818183" y="2834.0" />
+              <point x="2090.925136156126" y="2834.0" />
+              <point x="-44.5" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.LyricSection">
+              <point x="-201.35555555555538" y="-328.0" />
+              <point x="1888.7611111111119" y="3336.0" />
+              <point x="393.72632663231616" y="3336.0" />
+              <point x="393.72632663231616" y="1241.0" />
+              <point x="820.507910100162" y="1241.0" />
+              <point x="-56.80000000000018" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Bar" target="com.bsteele.bsteeleMusicApp.client.songs.Measure">
+              <point x="-41.80000000000018" y="-44.5" />
+              <point x="4118.716207584697" y="2378.0" />
+              <point x="2469.8140250450147" y="2378.0" />
+              <point x="58.88888888888869" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Measure" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="61.15384615384619" y="-71.5" />
+              <point x="2472.078982309972" y="1912.0" />
+              <point x="2479.8662231035837" y="1912.0" />
+              <point x="2479.8662231035837" y="941.0" />
+              <point x="4427.230493298984" y="941.0" />
+              <point x="-32.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat">
+              <point x="-98.63636363636363" y="-44.5" />
+              <point x="1928.8136363636368" y="2834.0" />
+              <point x="1386.2263266323164" y="2834.0" />
+              <point x="46.75" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordSection" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureNode">
+              <point x="0.0" y="-44.5" />
+              <point x="2027.4500000000003" y="2834.0" />
+              <point x="2013.925136156126" y="2834.0" />
+              <point x="2013.925136156126" y="1912.0" />
+              <point x="1713.968181818182" y="1912.0" />
+              <point x="30.818181818181756" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ChordComponent" target="com.bsteele.bsteeleMusicApp.client.songs.MusicConstant">
+              <point x="0.0" y="-58.0" />
+              <point x="4872.521626033987" y="105.0" />
+              <point x="5039.594687649301" y="105.0" />
+              <point x="-6.33333333333303" y="17.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote">
+              <point x="126.0" y="-85.0" />
+              <point x="4742.017109234363" y="1221.0" />
+              <point x="5073.418894948647" y="1221.0" />
+              <point x="-71.3125" y="85.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.BassFile" target="com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor">
+              <point x="35.33333333333303" y="-17.5" />
+              <point x="5009.339880952381" y="4152.0" />
+              <point x="5294.489032887394" y="4152.0" />
+              <point x="5294.489032887394" y="487.0" />
+              <point x="4767.521626033987" y="487.0" />
+              <point x="94.5" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.ScaleNote" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="-61.125" y="-85.0" />
+              <point x="5083.606394948647" y="961.0" />
+              <point x="4544.230493298984" y="961.0" />
+              <point x="84.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongUpdate" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="54.375" y="-287.5" />
+              <point x="326.875" y="4162.0" />
+              <point x="289.8912434334957" y="4162.0" />
+              <point x="289.8912434334957" y="1528.0" />
+              <point x="1730.200136156126" y="1528.0" />
+              <point x="-117.59999999999991" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Chord" target="com.bsteele.bsteeleMusicApp.client.songs.Key">
+              <point x="0.0" y="-98.5" />
+              <point x="4105.087636156126" y="1538.0" />
+              <point x="4121.7376361561255" y="1538.0" />
+              <point x="4121.7376361561255" y="971.0" />
+              <point x="4466.230493298984" y="971.0" />
+              <point x="6.5" y="112.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.SongMoment" target="com.bsteele.bsteeleMusicApp.client.songs.LyricSection">
+              <point x="-63.0" y="-98.5" />
+              <point x="1784.800136156126" y="1201.0" />
+              <point x="934.1079101001624" y="1201.0" />
+              <point x="56.799999999999955" y="58.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat" target="com.bsteele.bsteeleMusicApp.client.songs.SongMoment">
+              <point x="-15.583333333333258" y="-71.5" />
+              <point x="1323.8929932989831" y="2581.0" />
+              <point x="1371.85" y="2581.0" />
+              <point x="1371.85" y="1548.0" />
+              <point x="1763.800136156126" y="1548.0" />
+              <point x="-84.0" y="98.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Song" target="com.bsteele.bsteeleMusicApp.client.songs.SectionVersion">
+              <point x="-225.04444444444425" y="-328.0" />
+              <point x="1865.072222222223" y="3356.0" />
+              <point x="371.72632663231616" y="3356.0" />
+              <point x="371.72632663231616" y="811.0" />
+              <point x="1002.6787434334956" y="811.0" />
+              <point x="-43.20000000000027" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.MeasureRepeat" target="com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem">
+              <point x="46.75" y="-71.5" />
+              <point x="1386.2263266323164" y="2601.0" />
+              <point x="1616.99606664469" y="2601.0" />
+              <point x="-127.125" y="71.5" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleFormula">
+              <point x="-49.63636363636397" y="-17.5" />
+              <point x="5685.959469696969" y="4162.0" />
+              <point x="5484.584270982633" y="4162.0" />
+              <point x="5484.584270982633" y="3386.0" />
+              <point x="5506.941268891128" y="3386.0" />
+              <point x="-66.0" y="31.0" />
+            </edge>
+            <edge source="com.bsteele.bsteeleMusicApp.client.songs.Key" target="com.bsteele.bsteeleMusicApp.client.songs.ScaleChord">
+              <point x="19.5" y="112.0" />
+              <point x="4479.230493298984" y="971.0" />
+              <point x="4489.017109234363" y="971.0" />
+              <point x="4489.017109234363" y="1241.0" />
+              <point x="4448.017109234363" y="1241.0" />
+              <point x="-168.0" y="-85.0" />
+            </edge>
+          </edges>
+          <settings layout="Hierarchic Group" zoom="1.101169826542961" x="989.9500329694483" y="960.9500329694483" />
+          <SelectedNodes />
+          <Categories>
+            <Category>Properties</Category>
+            <Category>Inner Classes</Category>
+          </Categories>
+          <SCOPE>Production</SCOPE>
+          <VISIBILITY>private</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Section.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1161">
+          <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///usr/lib/jvm/jdk1.8.0_172/src.zip!/java/util/ArrayList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="920">
+          <caret line="476" column="20" selection-start-line="476" selection-start-column="20" selection-end-line="476" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MusicConstant.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SectionVersion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2754">
+          <caret line="122" column="29" selection-start-line="122" selection-start-column="29" selection-end-line="122" selection-end-column="29" />
+          <folding>
+            <element signature="e#353#354#0" expanded="true" />
+            <element signature="e#387#388#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1215">
+          <caret line="99" column="48" lean-forward="true" selection-start-line="99" selection-start-column="48" selection-end-line="99" selection-end-column="48" />
+          <folding>
+            <element signature="e#2073#2074#0" expanded="true" />
+            <element signature="e#2126#2127#0" expanded="true" />
+            <element signature="e#2453#2454#0" expanded="true" />
+            <element signature="e#2487#2488#0" expanded="true" />
+            <element signature="e#2699#2700#0" expanded="true" />
+            <element signature="e#2727#2728#0" expanded="true" />
+            <element signature="e#2774#2775#0" expanded="true" />
+            <element signature="e#2824#2825#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1222">
+          <caret line="70" column="103" selection-start-line="70" selection-start-column="35" selection-end-line="70" selection-end-column="103" />
+          <folding>
+            <element signature="e#783#784#0" expanded="true" />
+            <element signature="e#818#819#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="569">
+          <caret line="37" column="14" selection-start-line="37" selection-start-column="14" selection-end-line="37" selection-end-column="14" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#25516#25517#0" expanded="true" />
-            <element signature="e#25572#25573#0" expanded="true" />
-            <element signature="e#25638#25639#0" expanded="true" />
-            <element signature="e#25685#25686#0" expanded="true" />
+            <element signature="e#6490#6491#0" expanded="true" />
+            <element signature="e#6520#6521#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureComment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="19" column="11" selection-start-line="19" selection-start-column="11" selection-end-line="19" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/SongTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="241" column="19" selection-start-line="241" selection-start-column="19" selection-end-line="241" selection-end-column="19" />
+          <folding>
+            <element signature="e#10971#10972#0" expanded="true" />
+            <element signature="e#11044#11045#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1114">
+          <caret line="99" column="55" lean-forward="true" selection-start-line="99" selection-start-column="55" selection-end-line="99" selection-end-column="55" />
+          <folding>
+            <element signature="n#td#1;n#tr#0;n#table#1;n#div#0;n#g:HTMLPanel#0;n#ui:UiBinder#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="490">
+          <caret line="36" column="10" selection-start-line="36" selection-start-column="10" selection-end-line="36" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/LyricsAndChordsViewImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="300" column="27" selection-start-line="300" selection-start-column="27" selection-end-line="300" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="265" column="31" selection-start-line="265" selection-start-column="31" selection-end-line="265" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/PlayerViewImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="289" column="27" selection-start-line="289" selection-start-column="27" selection-end-line="289" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/com/bsteele/bsteeleMusicApp/client/songs/KeyTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="184" column="29" selection-start-line="184" selection-start-column="29" selection-end-line="184" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="161" column="26" selection-start-line="161" selection-start-column="21" selection-end-line="161" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SingerView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="866">
+          <caret line="170" column="23" selection-start-line="170" selection-start-column="23" selection-end-line="170" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="184" column="26" selection-start-line="184" selection-start-column="21" selection-end-line="184" selection-end-column="26" />
+          <folding>
+            <element signature="method#generateHtml#0;class#MeasureSequenceItem#0" />
+            <element signature="method#generateInnerHtml#0;class#MeasureSequenceItem#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureRepeat.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="549">
+          <caret line="191" column="26" selection-start-line="191" selection-start-column="21" selection-end-line="191" selection-end-column="26" />
+          <folding>
+            <element signature="method#generateHtml#0;class#MeasureRepeat#0" />
+            <element signature="e#6804#6805#0" expanded="true" />
+            <element signature="e#6832#6833#0" expanded="true" />
+            <element signature="e#6883#6884#0" expanded="true" />
+            <element signature="e#6910#6911#0" expanded="true" />
+            <element signature="e#7230#7231#0" expanded="true" />
+            <element signature="e#7292#7293#0" expanded="true" />
+            <element signature="e#7342#7343#0" expanded="true" />
+            <element signature="e#7403#7404#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="317" column="27" selection-start-line="317" selection-start-column="27" selection-end-line="317" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListPresenterWidget.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="596">
+          <caret line="126" column="29" selection-start-line="126" selection-start-column="29" selection-end-line="126" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="559">
+          <caret line="573" column="19" selection-start-line="573" selection-start-column="19" selection-end-line="573" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="16" column="23" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="919">
-          <caret line="1187" column="56" selection-start-line="1187" selection-start-column="56" selection-end-line="1187" selection-end-column="56" />
+        <state relative-caret-position="549">
+          <caret line="603" column="49" lean-forward="true" selection-start-line="603" selection-start-column="29" selection-end-line="603" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/lyrics.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
           <folding>
-            <element signature="e#59498#59499#0" expanded="true" />
-            <element signature="e#59529#59530#0" expanded="true" />
-            <element signature="e#59573#59574#0" expanded="true" />
-            <element signature="e#59606#59607#0" expanded="true" />
-            <element signature="e#59663#59664#0" expanded="true" />
-            <element signature="e#59697#59698#0" expanded="true" />
-            <element signature="e#59758#59759#0" expanded="true" />
-            <element signature="e#59794#59795#0" expanded="true" />
-            <element signature="e#64704#64705#0" expanded="true" />
-            <element signature="e#64770#64771#0" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#td#2;n#tr#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/webapp/bassStudyTool.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="14" column="55" lean-forward="true" selection-start-line="14" selection-start-column="55" selection-end-line="14" selection-end-column="55" />
         </state>
       </provider>
     </entry>
@@ -2242,7 +3123,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Maven: ant:ant:1.6.5</last-edited>
+          <last-edited>Maven: com.google.jsinterop:jsinterop-annotations:1.0.2</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

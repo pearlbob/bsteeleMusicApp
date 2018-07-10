@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 
 import javax.annotation.Nonnull;
@@ -43,15 +44,12 @@ public class MeasureRepeat extends MeasureSequenceItem
     {
         StringBuilder sb = new StringBuilder();
 
-        if (measureNodes != null && !measureNodes.isEmpty())
-        {
+        if (measureNodes != null && !measureNodes.isEmpty()) {
             MeasureNode lastMeasureNode = null;
             int i = 0;
             MeasureNode measureNode = null;
-            for (; i < measureNodes.size(); i++)
-            {
-                if (i > 0 && i % measuresPerLine == 0)
-                {
+            for (; i < measureNodes.size(); i++) {
+                if (i > 0 && i % measuresPerLine == 0) {
                     sb.append("<tr><td></td>");
                     lastMeasureNode = null;
                 }
@@ -69,16 +67,14 @@ public class MeasureRepeat extends MeasureSequenceItem
                 lastMeasureNode = measureNode;
                 sb.append("</td>");
 
-                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1)
-                {
+                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
                     sb.append("<td>|</td></tr>\n");
                     sb.append("<tr><td></td><td colspan=\"10\">" +
                             "<canvas id=\"bassLine" + "fixmeHere"
                             + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
                 }
             }
-            while (i % measuresPerLine != 0)
-            {
+            while (i % measuresPerLine != 0) {
                 sb.append("<td></td>");
                 i++;
             }
@@ -101,101 +97,106 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml( Key key, int tran, boolean expandRepeats) {
+    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats)
+    {
         ArrayList<String> ret = new ArrayList<>();
 
         if (measureNodes == null || measureNodes.isEmpty())
-        return ret;
+            return ret;
 
-        if ( expandRepeats)
-        {
-            for ( int r = 0; r < repeats; r++)
-            {
+        if (expandRepeats) {
+            for (int r = 0; r < repeats; r++) {
                 MeasureNode lastMeasureNode = null;
                 MeasureNode measureNode = null;
                 int i = 0;
-                for (; i < measureNodes.size(); i++)
-                {
-                    if (i > 0 && i % measuresPerLine == 0)
-                    {
+                for (; i < measureNodes.size(); i++) {
+                    if (i > 0 && i % measuresPerLine == 0) {
                         ret.add("\n");
                         lastMeasureNode = null;
                     }
 
                     measureNode = measureNodes.get(i);
 
-                    if (measureNode.isSingleItem())
-                    {
-
+                    if (measureNode.isSingleItem()) {
                         if (measureNode.equals(lastMeasureNode))
                             ret.add("-");
                         else
                             ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                         lastMeasureNode = measureNode;
-                    } else
-                    {
-                        ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats ));
+                    } else {
+                        ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                         lastMeasureNode = null;
                     }
-                    if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1)
-                    {
+                    if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
                         // ret.add("|");
                         ret.add("\n");
                     }
                 }
-                while (i % measuresPerLine != 0)
-                {
+                while (i % measuresPerLine != 0) {
                     ret.add("");
                     i++;
                 }
                 ret.add("\n");
             }
-        } else
-        {
+        } else {
             MeasureNode lastMeasureNode = null;
             MeasureNode measureNode;
             int i = 0;
-            for (; i < measureNodes.size(); i++)
-            {
-                if (i > 0 && i % measuresPerLine == 0)
-                {
+            for (; i < measureNodes.size(); i++) {
+                if (i > 0 && i % measuresPerLine == 0) {
                     ret.add("\n");
                     lastMeasureNode = null;
                 }
 
                 measureNode = measureNodes.get(i);
 
-                if (measureNode.isSingleItem())
-                {
-
+                if (measureNode.isSingleItem()) {
                     if (measureNode.equals(lastMeasureNode))
                         ret.add("-");
                     else
                         ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                     lastMeasureNode = measureNode;
-                } else
-                {
-                    ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats ));
+                } else {
+                    ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                     lastMeasureNode = null;
                 }
-                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1)
-                {
+                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
                     ret.add("|");
                     ret.add("\n");
                 }
             }
-            while (i % measuresPerLine != 0)
-            {
+            while (i % measuresPerLine != 0) {
                 ret.add("");
                 i++;
             }
-            if ( measureNodes.size() > measuresPerLine )
+            if (measureNodes.size() > measuresPerLine)
                 ret.add("|");
-            ret.add("x"+repeats);
+            ret.add("x" + repeats);
             ret.add("\n");
         }
 
         return ret;
+    }
+
+    @Override
+    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
+    {
+        //  fixme: improve repeats.addToGrid()
+        int measureCount = 0;
+        for (MeasureNode measureNode : measureNodes) {
+            measureCount++;
+            if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1) {
+                if ( measureNodes.size() > MusicConstant.measuresPerDisplayRow) {
+                    grid.add(new MeasureComment(chordSection.getSectionVersion(),"|"));
+                }
+                grid.addTo(0, grid.getRowCount(), chordSection);
+            }
+            measureNode.addToGrid(grid, chordSection);
+        }
+        if ( measureNodes.size() > MusicConstant.measuresPerDisplayRow) {
+            grid.add(new MeasureComment(chordSection.getSectionVersion(),"|"));
+        }
+        grid.add(new MeasureComment(chordSection.getSectionVersion(),"x"+repeats));
     }
 
     @Override

@@ -11,10 +11,12 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHand
 import com.bsteele.bsteeleMusicApp.client.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
+import com.bsteele.bsteeleMusicApp.client.songs.Measure;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
+import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
@@ -23,9 +25,9 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NodeList;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -250,15 +252,33 @@ public class SongEditView
         });
 
 
+        measureEntry.addValueChangeHandler((ValueChangeEvent<String> event) -> {
+            if (song != null)
+                return;
+
+            GWT.log("measure change: \"" + event.getValue() + "\"");
+            if (lastChordSelection != null) {
+                SectionVersion sectionVersion = lastChordSelection.getSectionVersion();
+                Measure newMeasure = Measure.parse(sectionVersion, measureEntry.getValue(), song.getBeatsPerBar());
+                if (newMeasure != null) {
+                    GWT.log("new measure: " + newMeasure.toString());
+                    measureEntry.setValue("");
+                } else
+                    GWT.log("new measure: bad syntax: " + measureEntry.getValue());
+            }
+        });
+        measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
+            GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
+        });
         editAppend.setValue(true);
         editInsert.addClickHandler((ClickEvent e) -> {
-            selectChordsCell(lastCellElement);
+            selectChordsCell(lastChordSelection);
         });
         editReplace.addClickHandler((ClickEvent e) -> {
-            selectChordsCell(lastCellElement);
+            selectChordsCell(lastChordSelection);
         });
         editAppend.addClickHandler((ClickEvent e) -> {
-            selectChordsCell(lastCellElement);
+            selectChordsCell(lastChordSelection);
         });
 
 
@@ -541,12 +561,12 @@ public class SongEditView
         findMostCommonScaleChords();
 
 //        editChords.clear();
-//        editChords.add(new HTML(song.transpose(0, prefix)));
+//        editChords.addTo(new HTML(song.transpose(0, prefix)));
 //        {
 //            final NodeList<Element> cells = editChords.getElement().getElementsByTagName("td");
 //            for (int c = 0; c < cells.getLength(); c++) {
-//                Element e = cells.getItem(c);
-//                Style cellStyle = e.getStyle();
+//                Element element = cells.getItem(c);
+//                Style cellStyle = element.getStyle();
 //                cellStyle.setFontSize(16, Style.Unit.PX);
 //            }
 //        }
@@ -554,10 +574,10 @@ public class SongEditView
         song.transpose(chordsFlexTable, 0);
         selectLastChordsCell();
 
-        lastCellElement = null;
+        lastChordSelection = null;
         chordsFlexTable.addClickHandler(clickEvent -> {
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
-            selectChordsCell(cell.getElement());
+            selectChordsCell(new ChordSelection(cell));
         });
 
         checkSong();
@@ -572,35 +592,83 @@ public class SongEditView
         if (cols <= 0)
             return;
         FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
-        selectChordsCell(formatter.getElement(rows - 1, cols - 1));
+        selectChordsCell(new ChordSelection(formatter.getElement(rows - 1, cols - 1),
+                rows - 1, cols - 1));
     }
 
-    private void selectChordsCell(Element e)
+    private class ChordSelection
     {
-        if (e == null)
+        ChordSelection(Element e, int row, int col)
+        {
+            this.element = e;
+            this.row = row;
+            this.col = col;
+        }
+
+        ChordSelection(HTMLTable.Cell cell)
+        {
+            this.element = cell.getElement();
+            this.row = cell.getRowIndex();
+            this.col = cell.getCellIndex();
+        }
+
+        SectionVersion  getSectionVersion(){
+            Measure measure=  song.getMeasure( row, col );
+            if ( measure!= null)
+                return measure.getSectionVersion();
+            return null;
+        }
+
+        public Element getElement()
+        {
+            return element;
+        }
+
+        public int getRow()
+        {
+            return row;
+        }
+
+        public int getCol()
+        {
+            return col;
+        }
+
+        private Element element;
+        private int row;
+        private int col;
+
+    }
+
+    private void selectChordsCell(ChordSelection chordSelection)
+    {
+        if (chordSelection == null)
             return;
 
-        String text = e.getInnerText();
+        String text = chordSelection.element.getInnerText();
 
         if (text != null && text.length() > 0) {
 
             //  clear the last selection
-            if (lastCellElement != null) {
-                lastCellElement.setAttribute("editSelect", "none");
-                lastCellElement.getStyle().setBackgroundColor("");
+            if (lastChordSelection != null) {
+                lastChordSelection.element.setAttribute("editSelect", "none");
+                lastChordSelection.element.getStyle().setBackgroundColor("");
             }
 
             //  indicate the current selection
             if (editInsert.getValue()) {
-                e.setAttribute("editSelect", "insert");
+                chordSelection.element.setAttribute("editSelect", "insert");
             } else if (editAppend.getValue()) {
-                e.setAttribute("editSelect", "append");
+                chordSelection.element.setAttribute("editSelect", "append");
             } else {
-                e.setAttribute("editSelect", "replace");
-                e.getStyle().setBackgroundColor(selectedBorderColorValueString);
+                chordSelection.element.setAttribute("editSelect", "replace");
+                chordSelection.element.getStyle().setBackgroundColor(selectedBorderColorValueString);
             }
 
-            lastCellElement = e;
+            GWT.log("chordSelection: (" + chordSelection.row + "," + chordSelection.col + ") " + chordSelection.element
+                    .getInnerText());
+
+            lastChordSelection = chordSelection;
         }
     }
 
@@ -782,17 +850,17 @@ public class SongEditView
         int row = 0;
         int col = 0;
 
-        if (lastCellElement == null)
+        if (lastChordSelection == null)
             selectLastChordsCell();
 
         FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
-        if (lastCellElement != null) {
+        if (lastChordSelection != null) {
             int rowCount = chordsFlexTable.getRowCount();
             search:
             for (row = 0; row < rowCount; row++) {
                 int colCount = chordsFlexTable.getCellCount(row);
                 for (col = 0; col < colCount; col++) {
-                    if (lastCellElement == formatter.getElement(row, col)) {
+                    if (lastChordSelection.element == formatter.getElement(row, col)) {
                         break search;
                     }
                 }
@@ -800,14 +868,12 @@ public class SongEditView
         }
 
         if (editInsert.getValue()) {
-            GWT.log( "insert: ("+row+", "+col+"): "+scaleChord.toString());
+            GWT.log("insert: (" + row + ", " + col + "): " + scaleChord.toString());
         } else if (editAppend.getValue()) {
-            GWT.log( "append: ("+row+", "+col+"): "+scaleChord.toString());
-
+            GWT.log("append: (" + row + ", " + col + "): " + scaleChord.toString());
         } else {
-               //   replace
-            GWT.log( "replace: ("+row+", "+col+"): "+scaleChord.toString());
-
+            //   replace
+            GWT.log("replace: (" + row + ", " + col + "): " + scaleChord.toString());
         }
     }
 
@@ -930,7 +996,7 @@ public class SongEditView
     HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private Key key = Key.getDefault();
     private Song song;
-    private Element lastCellElement;
+    private ChordSelection lastChordSelection;
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
     private final HandlerManager handlerManager;

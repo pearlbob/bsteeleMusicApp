@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * @author bob
@@ -404,39 +405,36 @@ public class Song implements Comparable<Song>
             return;
 
         for (LyricSection lyricSection : lyricSections) {
-            ArrayList<MeasureNode> chordSectionNodes = null;
-            for (ChordSection chordSection : chordSections) {
-                if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion())) {
-                    chordSectionNodes = chordSection.getMeasureNodes();
-                    break;
-                }
-            }
-            if (chordSectionNodes != null)
-                for (MeasureNode measureNode : chordSectionNodes) {
-                    if (measureNode.isRepeat()) {
-                        MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
-                        int limit = measureRepeat.getRepeats();
-                        for (int repeat = 0; repeat < limit; repeat++) {
+            ChordSection chordSection = findChordSection(lyricSection);
+            if (chordSection != null) {
+                ArrayList<MeasureNode> chordSectionNodes = chordSection.getMeasureNodes();
+                if (chordSectionNodes != null)
+                    for (MeasureNode measureNode : chordSectionNodes) {
+                        if (measureNode.isRepeat()) {
+                            MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
+                            int limit = measureRepeat.getRepeats();
+                            for (int repeat = 0; repeat < limit; repeat++) {
+                                ArrayList<Measure> measures = measureNode.getMeasures();
+                                if (measures != null)
+                                    for (Measure measure : measures) {
+                                        songMoments.add(new SongMoment(
+                                                songMoments.size(),  //  size prior to add
+                                                lyricSection, measureNode,
+                                                measure, repeat, limit));
+                                    }
+                            }
+                        } else {
                             ArrayList<Measure> measures = measureNode.getMeasures();
                             if (measures != null)
                                 for (Measure measure : measures) {
                                     songMoments.add(new SongMoment(
                                             songMoments.size(),  //  size prior to add
                                             lyricSection, measureNode,
-                                            measure, repeat, limit));
+                                            measure, 0, 0));
                                 }
                         }
-                    } else {
-                        ArrayList<Measure> measures = measureNode.getMeasures();
-                        if (measures != null)
-                            for (Measure measure : measures) {
-                                songMoments.add(new SongMoment(
-                                        songMoments.size(),  //  size prior to add
-                                        lyricSection, measureNode,
-                                        measure, 0, 0));
-                            }
                     }
-                }
+            }
         }
 
         //  debug
@@ -452,6 +450,16 @@ public class Song implements Comparable<Song>
         }
     }
 
+    private ChordSection findChordSection(LyricSection lyricSection)
+    {
+        for (ChordSection chordSection : chordSections) {
+            if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion())) {
+                return chordSection;
+            }
+        }
+        return null;
+    }
+
     private void computeDuration()
     {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
 
@@ -461,13 +469,13 @@ public class Song implements Comparable<Song>
             return;
         if (sequence.isEmpty())
             return;
-        if (chordSectionMap.isEmpty())
+        if (chordSectionInnerHtmlMap.isEmpty())
             return;
 
         double measureDuration = beatsPerBar * 60.0 / defaultBpm;
         final RegExp repeatExp = RegExp.compile("^\\w*x(\\d+)", "i");
         for (SectionVersion sectionVersion : sequence) {
-            Grid<String> sectionGrid = chordSectionMap.get(sectionVersion);
+            Grid<String> sectionGrid = chordSectionInnerHtmlMap.get(sectionVersion);
             if (sectionGrid == null)
                 continue;
 
@@ -524,7 +532,7 @@ public class Song implements Comparable<Song>
     @Deprecated
     public final Grid<String> getChordSection(SectionVersion sv)
     {
-        return chordSectionMap.get(sv);
+        return chordSectionInnerHtmlMap.get(sv);
     }
 
     /**
@@ -558,8 +566,8 @@ public class Song implements Comparable<Song>
             }
         }
 
-        //  fixme: temp transform from chordSections to chordSectionMap
-        chordSectionMap.clear();
+        //  fixme: temp transform from chordSections to chordSectionInnerHtmlMap
+        chordSectionInnerHtmlMap.clear();
         for (ChordSection chordSection : chordSections) {
             //GWT.log(chordSection.toString());
 
@@ -580,17 +588,28 @@ public class Song implements Comparable<Song>
 //                        case "":
 //                            break;
                     default:
-                        grid.add(col++, row, s);
+                        grid.addTo(col++, row, s);
                         break;
                 }
 
             SectionVersion version = chordSection.getSectionVersion();
 
-            chordSectionMap.put(version, grid);
+            chordSectionInnerHtmlMap.put(version, grid);
         }
 
         computeSongMoments();
         computeDuration();
+    }
+
+    public Grid<MeasureNode> getStructuralGrid()
+    {
+        Grid<MeasureNode> ret = new Grid<>();
+
+        for (ChordSection chordSection : chordSections) {
+            chordSection.addToGrid(ret, chordSection);
+        }
+
+        return ret;
     }
 
     public final String measureNodesToString()
@@ -608,7 +627,7 @@ public class Song implements Comparable<Song>
     private void parseChordTable(String rawChordTableText)
     {
 
-        chordSectionMap.clear();
+        chordSectionInnerHtmlMap.clear();
 
         if (rawChordTableText != null && rawChordTableText.length() > 0) {
             //  repair definitions without a final newline
@@ -647,7 +666,7 @@ public class Song implements Comparable<Song>
 
                             if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
                                 for (SectionVersion vd : versionsDeclared) {
-                                    chordSectionMap.put(vd, grid);
+                                    chordSectionInnerHtmlMap.put(vd, grid);
                                 }
                                 //  fixme: worry about chords before a section is declared
                                 versionsDeclared.clear();
@@ -670,7 +689,7 @@ public class Song implements Comparable<Song>
                             case ' ':
                             case '\t':
                                 if (block.length() > 0) {
-                                    grid.add(col, row, block);
+                                    grid.addTo(col, row, block);
                                     col++;
                                 }
                                 block = "";
@@ -678,7 +697,7 @@ public class Song implements Comparable<Song>
                             case '\n':
                             case '\r':
                                 if (block.length() > 0) {
-                                    grid.add(col, row, block);
+                                    grid.addTo(col, row, block);
                                     col++;
                                 }
                                 row++;
@@ -698,13 +717,13 @@ public class Song implements Comparable<Song>
             //  put the last grid on the end
             if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
                 for (SectionVersion vd : versionsDeclared) {
-                    chordSectionMap.put(vd, grid);
+                    chordSectionInnerHtmlMap.put(vd, grid);
                 }
             }
 
             //  deal with unformatted events
-            if (chordSectionMap.isEmpty()) {
-                chordSectionMap.put(Section.getDefaultVersion(), grid);
+            if (chordSectionInnerHtmlMap.isEmpty()) {
+                chordSectionInnerHtmlMap.put(Section.getDefaultVersion(), grid);
             }
         }
 
@@ -712,8 +731,8 @@ public class Song implements Comparable<Song>
         {
             //  build a reverse lookup map
             HashMap<Grid<String>, TreeSet<SectionVersion>> reverseMap = new HashMap<>();
-            for (SectionVersion version : chordSectionMap.keySet()) {
-                Grid<String> grid = chordSectionMap.get(version);
+            for (SectionVersion version : chordSectionInnerHtmlMap.keySet()) {
+                Grid<String> grid = chordSectionInnerHtmlMap.get(version);
                 TreeSet<SectionVersion> lookup = reverseMap.get(grid);
                 if (lookup == null) {
                     TreeSet<SectionVersion> ts = new TreeSet<>();
@@ -736,25 +755,25 @@ public class Song implements Comparable<Song>
 
             //GWT.log(displayMap.toString());
             HashMap<SectionVersion, Grid<String>> reducedChordSectionMap = new HashMap<>();
-            for (SectionVersion version : chordSectionMap.keySet()) {
-                reducedChordSectionMap.put(version, chordSectionMap.get(displaySectionMap.get(version)));
+            for (SectionVersion version : chordSectionInnerHtmlMap.keySet()) {
+                reducedChordSectionMap.put(version, chordSectionInnerHtmlMap.get(displaySectionMap.get(version)));
             }
 
             //  install the reduced map
-            chordSectionMap.clear();
-            chordSectionMap.putAll(reducedChordSectionMap);
-            //GWT.log(chordSectionMap.toString());
+            chordSectionInnerHtmlMap.clear();
+            chordSectionInnerHtmlMap.putAll(reducedChordSectionMap);
+            //GWT.log(chordSectionInnerHtmlMap.toString());
         }
 
         //  build map for js
-        for (SectionVersion v : chordSectionMap.keySet()) {
-            jsChordSectionMap.put(v.toString(), chordSectionMap.get(v).getJavasriptCopy());
+        for (SectionVersion v : chordSectionInnerHtmlMap.keySet()) {
+            jsChordSectionMap.put(v.toString(), chordSectionInnerHtmlMap.get(v).getJavascriptCopy());
         }
 
-//        for (Section.Version v : chordSectionMap.keySet()) {
+//        for (Section.Version v : chordSectionInnerHtmlMap.keySet()) {
 //            GWT.log(" ");
 //            GWT.log(v.toString());
-//            GWT.log("    " + chordSectionMap.get(v).toString());
+//            GWT.log("    " + chordSectionInnerHtmlMap.get(v).toString());
 //        }
 
         computeDuration();
@@ -842,7 +861,7 @@ public class Song implements Comparable<Song>
     @Deprecated
     public final String generateHtmlChordTable(String prefix)
     {
-        return generateHtmlChordTableFromMap(chordSectionMap, prefix);
+        return generateHtmlChordTableFromMap(chordSectionInnerHtmlMap, prefix);
     }
 
     @Deprecated
@@ -1027,7 +1046,7 @@ public class Song implements Comparable<Song>
     {
         TreeSet<SectionVersion> sectionVersions = new TreeSet<>();
         sectionVersions.add(sectionVersion);
-        return generateHtmlChordTableFromMap(chordSectionMap, sectionVersions, newKey, trans, prefix, true);
+        return generateHtmlChordTableFromMap(chordSectionInnerHtmlMap, sectionVersions, newKey, trans, prefix, true);
     }
 
     private String generateHtmlChordTableFromMap(
@@ -1139,7 +1158,7 @@ public class Song implements Comparable<Song>
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
 
-        HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionMap);
+        HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionInnerHtmlMap);
 
         for (SectionVersion version : tranMap.keySet()) {
             Grid<String> grid = tranMap.get(version);
@@ -1158,6 +1177,12 @@ public class Song implements Comparable<Song>
         return generateHtmlChordTableFromMap(tranMap, prefix);
     }
 
+    public final Measure getMeasure(int row, int col)
+    {
+        // songMoments.equ
+        return null;
+    }
+
     public final void transpose(FlexTable flexTable, int halfSteps)
     {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
@@ -1169,8 +1194,9 @@ public class Song implements Comparable<Song>
         flexTable.getFlexCellFormatter();
         FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
 
-        for (SectionVersion sectionVersion : chordSectionMap.keySet()) {
-            Grid<String> grid = chordSectionMap.get(sectionVersion);
+        TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionInnerHtmlMap.keySet());
+        for (SectionVersion sectionVersion : sortedSectionVersions) {
+            Grid<String> grid = chordSectionInnerHtmlMap.get(sectionVersion);
             flexTable.setHTML(rowBase, 0,
                     "<span style=\"font-size: 18px;\" >"
                             + sectionVersion.toString()
@@ -1647,11 +1673,11 @@ public class Song implements Comparable<Song>
     /**
      * Return the chords in the song's sections as a map.
      *
-     * @return the chordSectionMap
+     * @return the chordSectionInnerHtmlMap
      */
-    public final HashMap<SectionVersion, Grid<String>> getChordSectionMap()
+    public final HashMap<SectionVersion, Grid<String>> getChordSectionInnerHtmlMap()
     {
-        return chordSectionMap;
+        return chordSectionInnerHtmlMap;
     }
 
     /**
@@ -2035,7 +2061,7 @@ public class Song implements Comparable<Song>
     private TreeSet<Metadata> metadata = new TreeSet<>();
 
     private ArrayList<SectionVersion> sequence;
-    private final HashMap<SectionVersion, Grid<String>> chordSectionMap = new HashMap<>();
+    private final HashMap<SectionVersion, Grid<String>> chordSectionInnerHtmlMap = new HashMap<>();
     private final HashMap<SectionVersion, SectionVersion> displaySectionMap = new HashMap<>();
     private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
     private static final char flat = (char) 9837;
@@ -2047,4 +2073,6 @@ public class Song implements Comparable<Song>
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
+
+    private static final Logger logger = Logger.getLogger(Song.class.getName());
 }

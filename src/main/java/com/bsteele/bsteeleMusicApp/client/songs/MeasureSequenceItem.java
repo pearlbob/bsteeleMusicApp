@@ -1,11 +1,13 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -173,6 +175,18 @@ public class MeasureSequenceItem extends MeasureNode
         return ret;
     }
 
+    @Override
+    public void addToGrid(Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
+    {
+        logger.finest("MeasureSequenceItem.addToGrid()");
+
+        for (MeasureNode measureNode : getMeasureNodes()) {
+            if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1)
+                grid.addTo(0, grid.getRowCount(), chordSection);
+            measureNode.addToGrid(grid, chordSection);
+        }
+    }
+
 
     @Override
     public boolean isSingleItem()
@@ -210,4 +224,6 @@ public class MeasureSequenceItem extends MeasureNode
     }
 
     protected ArrayList<MeasureNode> measureNodes;
+
+    private static final Logger logger = Logger.getLogger(MeasureSequenceItem.class.getName());
 }
