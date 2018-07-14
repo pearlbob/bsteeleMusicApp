@@ -20,7 +20,8 @@ public class ChordSection extends MeasureSequenceItem
 {
     public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureNode> measureSequenceItems)
     {
-        super(sectionVersion, measureSequenceItems);
+        super( measureSequenceItems);
+        this.sectionVersion = sectionVersion;
     }
 
     public final static ChordSection parse(String s, int beatsPerBar)
@@ -61,7 +62,7 @@ public class ChordSection extends MeasureSequenceItem
             if (ms.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
+                    measureSequenceItems.add(new MeasureSequenceItem(measures));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -85,13 +86,13 @@ public class ChordSection extends MeasureSequenceItem
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
+                        measureSequenceItems.add(new MeasureSequenceItem( measures));
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
                     n += ns.length();
                     int repeatTotal = Integer.parseInt(ns);
-                    measureSequenceItems.add(new MeasureRepeat(sectionVersion, lineMeasures, repeatTotal));
+                    measureSequenceItems.add(new MeasureRepeat( lineMeasures, repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
                 util.clear();
@@ -107,14 +108,14 @@ public class ChordSection extends MeasureSequenceItem
             }
 
             //  add a measure to the current line measures
-            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, lastMeasure);
+            Measure measure = Measure.parse(ms, beatsPerBar, lastMeasure);
             if (measure != null) {
                 n += measure.getParseLength();
                 lineMeasures.add(measure);
                 lastMeasure = measure;
             } else {
                 //  look for a comment
-                MeasureComment measureComment = MeasureComment.parse(sectionVersion, ms);
+                MeasureComment measureComment = MeasureComment.parse( ms);
                 if (measureComment != null) {
                     n += measureComment.getParseLength();
                     lineMeasures.add(measureComment);
@@ -127,7 +128,7 @@ public class ChordSection extends MeasureSequenceItem
         for (MeasureNode mn : lineMeasures)
             measures.add(mn);
         if (!measures.isEmpty()) {
-            measureSequenceItems.add(new MeasureSequenceItem(sectionVersion, measures));
+            measureSequenceItems.add(new MeasureSequenceItem( measures));
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
@@ -135,33 +136,19 @@ public class ChordSection extends MeasureSequenceItem
         return ret;
     }
 
-    @Override
-    public String generateHtml(@NotNull SongMoment songMoment, Key key, int tran)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("<tr>");
-        //sb.append("<td class=\"" + CssConstants.style + "sectionLabel\">" + getSectionVersion().toString() + "</td>");
-        sb.append("<td></td>");
-        sb.append(super.generateHtml(songMoment, key, tran));
-        sb.append("</tr>\n");
-
-        return sb.toString();
-    }
-
 
     @Override
     public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
     {
         logger.finest("ChordSection.addToGrid()");
-        if (grid.isEmpty())
-            grid.addTo(0, grid.getRowCount(), this);
-        
-        for (MeasureNode measureNode : getMeasureNodes()) {
-            if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1)
+
+            for (MeasureNode measureNode : getMeasureNodes()) {
                 grid.addTo(0, grid.getRowCount(), this);
-            measureNode.addToGrid(grid,this);
-        }
+                measureNode.addToGrid(grid, this);
+            }
+        if (grid.isEmpty())
+            //  initial editing
+            grid.addTo(0, grid.getRowCount(), this);
     }
 
     /**
@@ -236,6 +223,12 @@ public class ChordSection extends MeasureSequenceItem
         return sb.toString();
     }
 
+    public final SectionVersion getSectionVersion()
+    {
+            return sectionVersion;
+    }
+
+    private SectionVersion sectionVersion;
     private Integer bpm;
     private Integer beatsPerBar;
     private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());

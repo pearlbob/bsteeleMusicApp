@@ -1,8 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared;
 
-import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import sun.misc.Regexp;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -72,6 +70,15 @@ public class Util
     {
         final RegExp camelCaseToReadableRegexp = RegExp.compile("([a-z0-9])([A-Z])", "g");
         return camelCaseToReadableRegexp.replace(s, "$1 $2");
+    }
+
+    public static final String firstToUpper(String s)
+    {
+        if (s == null)
+            return null;
+        if (s.length() < 1)
+            return s;
+        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }
 
     private int leadingWhitespaceCount;

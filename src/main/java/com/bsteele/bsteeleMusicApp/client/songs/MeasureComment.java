@@ -15,14 +15,13 @@ import java.util.Objects;
 public class MeasureComment extends Measure
 {
 
-    public MeasureComment(@Nonnull SectionVersion sectionVersion, String comment)
+    public MeasureComment(String comment)
     {
-        super(sectionVersion);
         this.comment = comment;
     }
 
 
-    public static final MeasureComment parse(@NotNull SectionVersion sectionVersion, String s)
+    public static final MeasureComment parse(String s)
     {
         if (s == null || s.length() <= 0)
             return null;
@@ -49,7 +48,7 @@ public class MeasureComment extends Measure
         //  format what we found
         if (mr != null) {
             String comment = mr.getGroup(2);
-            MeasureComment ret = new MeasureComment(sectionVersion, comment);
+            MeasureComment ret = new MeasureComment( comment);
             ret.parseLength = mr.getGroup(0).length();
             return ret;
         }
@@ -60,7 +59,7 @@ public class MeasureComment extends Measure
         if (n <= 0)
             return null;
 
-        MeasureComment ret = new MeasureComment(sectionVersion, s.substring(0, n));
+        MeasureComment ret = new MeasureComment( s.substring(0, n));
         ret.parseLength = n;
         return ret;
     }
@@ -74,12 +73,6 @@ public class MeasureComment extends Measure
     public final void setComment(String comment)
     {
         this.comment = comment;
-    }
-
-    @Override
-    public String generateHtml(@NotNull SongMoment songMoment, @NotNull Key key, int tran)
-    {
-        return toString();
     }
 
     @Override

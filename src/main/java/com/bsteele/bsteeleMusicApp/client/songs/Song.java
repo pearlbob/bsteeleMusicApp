@@ -612,6 +612,32 @@ public class Song implements Comparable<Song>
         return ret;
     }
 
+    private SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row)
+    {
+        int rowCount = grid.getRowCount();
+        if (row >= rowCount)
+            return null;
+
+        MeasureNode measureNode = grid.getRow(row).get(0);
+        if (measureNode instanceof ChordSection) {
+            return ((ChordSection) measureNode).getSectionVersion();
+        }
+        return null;
+    }
+
+    public MeasureNode getStructuralMeasureNode(int r, int c)
+    {
+        try {
+            Grid<MeasureNode> grid = getStructuralGrid();   //  fixme: cache?
+            ArrayList<MeasureNode> row = grid.getRow(r);
+            if (row == null)
+                return null;
+            return row.get(c);
+        } catch (IndexOutOfBoundsException ex) {
+            return null;
+        }
+    }
+
     public final String measureNodesToString()
     {
         StringBuilder sb = new StringBuilder();
@@ -810,9 +836,10 @@ public class Song implements Comparable<Song>
                 sb.append(lyricsLine.getLyrics()).append("\n");
 
             sb.append("</td></tr><tr><td></td>");
-            for (MeasureNode measureNode : measureNodes) {
-                if (measureNode.getSectionVersion().equals(lyricSection.getSectionVersion())) {
-                    innerHtml = measureNode.generateInnerHtml(key, tran, true);
+
+            for (ChordSection chordSection : chordSections) {
+                if (chordSection.getSectionVersion().equals(lyricSection.getSectionVersion())) {
+                    innerHtml = chordSection.generateInnerHtml(key, tran, true);
                     rowStartSequenceNumber = sequenceNumber;
                     j = 0;
                     break;
@@ -1183,7 +1210,7 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public final void transpose(FlexTable flexTable, int halfSteps)
+    public final void transpose(String prefix, FlexTable flexTable, int halfSteps)
     {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
@@ -1194,35 +1221,60 @@ public class Song implements Comparable<Song>
         flexTable.getFlexCellFormatter();
         FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
 
-        TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionInnerHtmlMap.keySet());
-        for (SectionVersion sectionVersion : sortedSectionVersions) {
-            Grid<String> grid = chordSectionInnerHtmlMap.get(sectionVersion);
-            flexTable.setHTML(rowBase, 0,
-                    "<span style=\"font-size: 18px;\" >"
-                            + sectionVersion.toString()
-                            + "</span>");
-            formatter.addStyleName(rowBase, 0, CssConstants.style + "sectionLabel");
+        Grid<MeasureNode> grid = getStructuralGrid();
+        int rLimit = grid.getRowCount();
+        SectionVersion lastSectionVersion = null;
+        for (int r = 0; r < rLimit; r++) {
+            formatter.addStyleName(rowBase + r, 0, CssConstants.style + "sectionLabel");
 
-            int rLimit = grid.getRowCount();
-            for (int r = 0; r < rLimit; r++) {
-                formatter.addStyleName(rowBase + r, 0, CssConstants.style + "sectionLabel");
+            ArrayList<MeasureNode> row = grid.getRow(r);
+            int colLimit = row.size();
+            for (int col = 0; col < colLimit; col++) {
+                MeasureNode measureNode = row.get(col);
+                SectionVersion sectionVersion = getStructuralGridSectionVersionAtRow(grid,  r);
 
-                ArrayList<String> row = grid.getRow(r);
-                int colLimit = row.size();
-                for (int col = 0; col < colLimit; col++) {
-                    flexTable.setHTML(rowBase + r, col + 1,
-                            "<span style=\"font-size: 18px;\">"
-                                    + transposeMeasure(newKey, row.get(col), halfSteps)
-                                    + "</span>"
-                    );
-                    formatter.addStyleName(rowBase + r, col + 1, CssConstants.style
-                            + "section"
-                            + (sectionVersion.getSection().getAbbreviation())
-                            + "Class");
+                String s = "";
+                switch (col) {
+                    case 0:
+                        if (!sectionVersion.equals(lastSectionVersion))
+                            s = sectionVersion.getFormalName();
+                        lastSectionVersion = sectionVersion;
+                        break;
+                    default:
+                        s = measureNode.toString();
+                        break;
                 }
+                flexTable.setHTML(rowBase + r, col,
+                        "<span style=\"font-size: 18px;\">"
+                                //+ transposeMeasure(newKey, row.get(col), halfSteps)
+                                + s
+                                + "</span>"
+                );
+                formatter.addStyleName(rowBase + r, col, CssConstants.style
+                        + "section"
+                        + sectionVersion.getSection().getAbbreviation()
+                        + "Class");
+                formatter.getElement(r, col).setId(prefix + "." + measureNode.getHtmlBlockId() + "." + r + "." + col);
             }
-            rowBase += rLimit;
         }
+
+//        TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionInnerHtmlMap.keySet());
+//        for (SectionVersion sectionVersion : sortedSectionVersions) {
+//            Grid<String> grid = chordSectionInnerHtmlMap.get(sectionVersion);
+//            flexTable.setHTML(rowBase, 0,
+//                    "<span style=\"font-size: 18px;\" >"
+//                            + sectionVersion.toString()
+//                            + "</span>");
+//            formatter.addStyleName(rowBase, 0, CssConstants.style + "sectionLabel");
+//
+//            int rLimit = grid.getRowCount();
+//            for (int r = 0; r < rLimit; r++) {
+//                formatter.addStyleName(rowBase + r, 0, CssConstants.style + "sectionLabel");
+//
+
+//            }
+//            rowBase += rLimit;
+//        }
     }
 
     private String transposeMeasure(Key newKey, String m, int halfSteps)

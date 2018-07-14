@@ -74,7 +74,13 @@ public class SectionVersion implements Comparable<SectionVersion>
     public String toString()
     {
         //  note: designed to go to the user display
-        return getSection().getAbbreviation() + (version > 0 ? Integer.toString(version) : "") + ":";
+        return name + ":";
+    }
+
+    public String getFormalName()
+    {
+        //  note: designed to go to the user display
+        return section.getFormalName() + (version > 0 ? Integer.toString(version) : "")+ ":";
     }
 
     @Override

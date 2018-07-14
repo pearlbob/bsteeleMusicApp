@@ -12,6 +12,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Measure;
+import com.bsteele.bsteeleMusicApp.client.songs.MeasureNode;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
@@ -257,15 +258,15 @@ public class SongEditView
                 return;
 
             GWT.log("measure change: \"" + event.getValue() + "\"");
-            if (lastChordSelection != null) {
-                SectionVersion sectionVersion = lastChordSelection.getSectionVersion();
-                Measure newMeasure = Measure.parse(sectionVersion, measureEntry.getValue(), song.getBeatsPerBar());
-                if (newMeasure != null) {
-                    GWT.log("new measure: " + newMeasure.toString());
-                    measureEntry.setValue("");
-                } else
-                    GWT.log("new measure: bad syntax: " + measureEntry.getValue());
-            }
+//            if (lastChordSelection != null) {
+//                SectionVersion sectionVersion = lastChordSelection.getSectionVersion();
+//                Measure newMeasure = Measure.parse(sectionVersion, measureEntry.getValue(), song.getBeatsPerBar());
+//                if (newMeasure != null) {
+//                    GWT.log("new measure: " + newMeasure.toString());
+//                    measureEntry.setValue("");
+//                } else
+//                    GWT.log("new measure: bad syntax: " + measureEntry.getValue());
+//            }
         });
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
             GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
@@ -571,7 +572,7 @@ public class SongEditView
 //            }
 //        }
 
-        song.transpose(chordsFlexTable, 0);
+        song.transpose(prefix, chordsFlexTable, 0);
         selectLastChordsCell();
 
         lastChordSelection = null;
@@ -612,13 +613,6 @@ public class SongEditView
             this.col = cell.getCellIndex();
         }
 
-        SectionVersion  getSectionVersion(){
-            Measure measure=  song.getMeasure( row, col );
-            if ( measure!= null)
-                return measure.getSectionVersion();
-            return null;
-        }
-
         public Element getElement()
         {
             return element;
@@ -656,17 +650,24 @@ public class SongEditView
             }
 
             //  indicate the current selection
+            MeasureNode.EditLocation editLocation = MeasureNode.EditLocation.append;
             if (editInsert.getValue()) {
                 chordSelection.element.setAttribute("editSelect", "insert");
+                editLocation = MeasureNode.EditLocation.insert;
             } else if (editAppend.getValue()) {
                 chordSelection.element.setAttribute("editSelect", "append");
             } else {
                 chordSelection.element.setAttribute("editSelect", "replace");
                 chordSelection.element.getStyle().setBackgroundColor(selectedBorderColorValueString);
+                editLocation = MeasureNode.EditLocation.replace;
             }
 
-            GWT.log("chordSelection: (" + chordSelection.row + "," + chordSelection.col + ") " + chordSelection.element
-                    .getInnerText());
+            if (song != null) {
+                MeasureNode measureNode = song.getStructuralMeasureNode(chordSelection.row, chordSelection.col);
+                GWT.log("chordSelection: (" + chordSelection.row + "," + chordSelection.col + ") "
+                        + measureNode.toString()
+                        + " " + editLocation.name());
+            }
 
             lastChordSelection = chordSelection;
         }
@@ -704,7 +705,7 @@ public class SongEditView
         }
 
         song = newSong;
-        song.transpose(chordsFlexTable, 0);
+        song.transpose(prefix, chordsFlexTable, 0);
         selectLastChordsCell();      // default
 
         errorLabel.setText("");

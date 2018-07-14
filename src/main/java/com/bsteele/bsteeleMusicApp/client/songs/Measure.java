@@ -28,27 +28,23 @@ public class Measure extends MeasureNode
      * @param beatCount the beat count for the measure
      * @param chords    the chords to be played over this measure
      */
-    public Measure(@Nonnull SectionVersion sectionVersion, int beatCount, ArrayList<Chord> chords)
+    public Measure(int beatCount, ArrayList<Chord> chords)
     {
-        super(sectionVersion);
         setBeatCount(beatCount);
         setChords(chords);
     }
 
-    protected Measure(@Nonnull SectionVersion sectionVersion)
+    protected Measure()
     {
-        super(sectionVersion);
         setBeatCount(0);
     }
 
-    public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatsPerBar)
+    public static final Measure parse( String s, int beatsPerBar)
     {
-        return parse(sectionVersion, s, beatsPerBar, null);
+        return parse( s, beatsPerBar, null);
     }
 
-    public static final Measure parse(@Nonnull SectionVersion sectionVersion,
-                                      String s, int beatsPerBar, Measure lastMeasure)
+    public static final Measure parse(String s, int beatsPerBar, Measure lastMeasure)
     {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
@@ -70,13 +66,13 @@ public class Measure extends MeasureNode
             if (chord == null) {
                 //  see if this is a chord less measure
                 if (s.charAt(0) == 'X') {
-                    ret = new Measure(sectionVersion, beatsPerBar, emptyChordList);
+                    ret = new Measure( beatsPerBar, emptyChordList);
                     parseLength += 1;
                     break;
                 }
                 //  see if this is a repeat measure
                 if (s.charAt(0) == '-' && lastMeasure != null) {
-                    ret = new Measure(sectionVersion, beatsPerBar, lastMeasure.getChords());
+                    ret = new Measure( beatsPerBar, lastMeasure.getChords());
                     parseLength += 1;
                     break;
                 }
@@ -101,7 +97,7 @@ public class Measure extends MeasureNode
         }
 
         if (ret == null)
-            ret = new Measure(sectionVersion, beatsPerBar, chords);
+            ret = new Measure( beatsPerBar, chords);
 
         // allocate the beats
         if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1) {
@@ -192,18 +188,6 @@ public class Measure extends MeasureNode
         return measures;
     }
 
-    @Override
-    public String generateHtml(@NotNull SongMoment songMoment, Key key, int tran)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        if (chords != null)
-            for (Chord chord : chords) {
-                sb.append(chord.transpose(key, tran));
-            }
-
-        return sb.toString();
-    }
 
     @Override
     public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats)

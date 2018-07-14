@@ -21,6 +21,9 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection.getSectionVersion().equals(intro));
             ArrayList<MeasureNode> measureNodes = chordSection.getMeasureNodes();
             assertTrue(measureNodes != null);
+            assertEquals(1, measureNodes.size());
+            measureNodes = measureNodes.get(0).getMeasureNodes();
+            assertTrue(measureNodes != null);
             assertEquals(8, measureNodes.size());
 
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measureNodes, 0, 0, 0);
@@ -43,6 +46,9 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection.getSectionVersion().equals(intro));
             ArrayList<MeasureNode> measureNodes = chordSection.getMeasureNodes();
             assertTrue(measureNodes != null);
+            assertEquals(1, measureNodes.size());
+            measureNodes = measureNodes.get(0).getMeasureNodes();
+            assertTrue(measureNodes != null);
             assertEquals(8, measureNodes.size());
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measureNodes, 0, 0, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measureNodes, 1, 0, 0);
@@ -60,6 +66,9 @@ public class ChordSectionTest extends TestCase {
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
             ArrayList<MeasureNode> measureNodes = chordSection.getMeasureNodes();
+            assertTrue(measureNodes != null);
+            assertEquals(1, measureNodes.size());
+            measureNodes = measureNodes.get(0).getMeasureNodes();
             assertTrue(measureNodes != null);
             assertEquals(8, measureNodes.size());
             ArrayList<Measure> measures = measureNodes.get(0).getMeasures();
@@ -86,14 +95,17 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection.getSectionVersion().equals(intro));
             ArrayList<MeasureNode> measureNodes = chordSection.getMeasureNodes();
             assertTrue(measureNodes != null);
-            assertEquals(5, measureNodes.size());
+            assertEquals(2, measureNodes.size());
+            measureNodes = measureNodes.get(0).getMeasureNodes();
+            assertTrue(measureNodes != null);
+            assertEquals(4, measureNodes.size());
 
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measureNodes, 0, 0, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.B, measureNodes, 1, 0, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measureNodes, 2, 0, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measureNodes, 3, 0, 0);
 
-            MeasureNode measureNode = measureNodes.get(4);
+            MeasureNode measureNode = chordSection.getMeasureNodes().get(1);          //    the repeat
             assertEquals(16, measureNode.getTotalMoments());
             ArrayList<Measure> measures = measureNode.getMeasures();
             assertEquals(4, measures.size());
@@ -144,6 +156,9 @@ public class ChordSectionTest extends TestCase {
             SectionVersion sectionVersion = new SectionVersion(Section.tag);
             assertTrue(chordSection.getSectionVersion().equals(sectionVersion));
             ArrayList<MeasureNode> measureNodes = chordSection.getMeasureNodes();
+            assertTrue(measureNodes != null);
+            assertEquals(1, measureNodes.size());
+            measureNodes = measureNodes.get(0).getMeasureNodes();
             assertTrue(measureNodes != null);
             assertEquals(4, measureNodes.size());
             MeasureNode measureNode = measureNodes.get(0);

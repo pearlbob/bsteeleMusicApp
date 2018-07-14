@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -74,8 +75,10 @@ public enum Section
     private Section(String originalAbbreviation)
     {
         lowerCaseName = name().toLowerCase();
+        formalName = Util.firstToUpper(lowerCaseName);
         this.originalAbbreviation = originalAbbreviation;
         abbreviation = originalAbbreviation.toLowerCase();
+        this.alternateAbbreviation =null;
     }
 
     private Section(String abbreviation, String alternateAbbreviation)
@@ -203,9 +206,16 @@ public enum Section
         return sb.toString();
     }
 
-    private String lowerCaseName;
-    private String originalAbbreviation;
-    private String abbreviation;
+    public String getFormalName()
+    {
+        return formalName;
+    }
+
+    private final  String lowerCaseName;
+    private final String formalName;
+    private final String originalAbbreviation;
+    private final String abbreviation;
     private String alternateAbbreviation;
     public static final int maxLength = 10;    //  fixme: compute
+
 }

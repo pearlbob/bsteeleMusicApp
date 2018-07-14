@@ -317,8 +317,8 @@ public class BassViewImpl
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate
-                                        .getSectionVersion(),
+                        String chordCellId = prefix + songUpdate.getSectionNumber()
+                                + Song.genChordId(songUpdate.getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
                         //GWT.log(chordCellId );
                         Element ce = bass.getElementById(chordCellId);
@@ -406,7 +406,7 @@ public class BassViewImpl
             {
                 scoreCtx.setFillStyle("#000000");
                 scoreCtx.setFont("84px sans-serif");
-                    scoreCtx.fillText(MusicConstant.bassClef, 1.5 * hSpace, scoreTop + 4.2 * scoreLineHeight);
+                scoreCtx.fillText(MusicConstant.bassClef, 1.5 * hSpace, scoreTop + 4.2 * scoreLineHeight);
             }
 
             //  write the measure count
@@ -415,8 +415,8 @@ public class BassViewImpl
                 scoreCtx.setFont("12px sans-serif");
                 for (int m = firstMoment; m <= lastMoment; m++) {
                     SongMoment songMoment = song.getSongMoments().get(m);
-                    scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber()+1),
-                            barStart + (m - firstMoment) * barWidth+hSpace, scoreTop-hSpace/2 );
+                    scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber() + 1),
+                            barStart + (m - firstMoment) * barWidth + hSpace, scoreTop - hSpace / 2);
                 }
             }
 
@@ -453,7 +453,7 @@ public class BassViewImpl
     private static final int bars = 4;
     private static final double barWidth = 200;
     private static final double hSpace = 5;
-    private static final double scoreMargin = hSpace*2;
+    private static final double scoreMargin = hSpace * 2;
 
     private double barStart = 100 - scoreMargin;
     private CanvasElement canvasElement;

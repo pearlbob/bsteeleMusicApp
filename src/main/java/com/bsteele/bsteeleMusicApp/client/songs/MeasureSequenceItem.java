@@ -17,9 +17,8 @@ public class MeasureSequenceItem extends MeasureNode
 {
 
 
-    public MeasureSequenceItem(@Nonnull SectionVersion sectionVersion, @Nonnull ArrayList<MeasureNode> measureNodes)
+    public MeasureSequenceItem(@Nonnull ArrayList<MeasureNode> measureNodes)
     {
-        super(sectionVersion);
         this.measureNodes = measureNodes;
     }
 
@@ -65,76 +64,6 @@ public class MeasureSequenceItem extends MeasureNode
     {
         this.measureNodes = measureNodes;
         measures = null;
-    }
-
-
-    @Override
-    public String generateHtml(@Nonnull SongMoment songMoment, Key key, int tran)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        int bassLine = 0;
-        if (measureNodes != null && !measureNodes.isEmpty()) {
-            MeasureNode lastMeasureNode = null;
-            int measuresOnThisLine = 0;
-            MeasureNode measureNode = null;
-            for (int i = 0; i < measureNodes.size(); i++) {
-                measureNode = measureNodes.get(i);
-
-                if (measureNode.isSingleItem()) {
-                    if (i > 0 && measuresOnThisLine == 0) {
-                        sb.append("<tr><td></td>");
-                        lastMeasureNode = null;
-                    }
-
-                    sb.append("<td class=\"" + CssConstants.style + "section"
-                            + measureNode.getSectionVersion().getSection().getAbbreviation() + "Class\" id=\""
-                            + "C.\" >");
-
-                    if (measureNode.equals(lastMeasureNode))
-                        sb.append("-");
-                    else
-                        sb.append(measureNode.generateHtml(songMoment, key, tran));
-                    lastMeasureNode = measureNode;
-                    sb.append("</td>");
-
-                    if (measuresOnThisLine % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
-                        sb.append("</tr>\n");
-                        sb.append("<tr><td></td><td colspan=\"10\">" +
-                                "<canvas id=\"bassLine" + "fixMeHere"
-                                + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-                        measuresOnThisLine = 0;
-                    } else
-                        measuresOnThisLine++;
-                } else {
-                    if (measuresOnThisLine > 0) {
-                        //  fill with empty measures to end of line
-                        while (measuresOnThisLine % measuresPerLine < measuresPerLine - 1) {
-                            sb.append("<td></td>");
-                            measuresOnThisLine++;
-                        }
-                        sb.append("</tr><tr><td></td>\n");
-                        sb.append("<tr><td></td><td colspan=\"10\">" +
-                                "<canvas id=\"bassLine" + "fixMeHere"
-                                + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-                    } else if (i > 0)
-                        sb.append("<tr><td></td>\n");
-                    sb.append(measureNode.generateHtml(songMoment, key, tran));
-
-                    measuresOnThisLine = 0;
-                }
-            }
-
-            if (measuresOnThisLine % measuresPerLine < measuresPerLine - 1) {
-                sb.append("</tr>\n");
-                if (measureNode.isSingleItem())
-                    sb.append("<tr><td></td><td colspan=\"10\">" +
-                            "<canvas id=\"bassLine" + "fixMeHere"
-                            + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-            }
-        }
-
-        return sb.toString();
     }
 
     @Override

@@ -15,9 +15,9 @@ import java.util.Objects;
 public class MeasureRepeat extends MeasureSequenceItem
 {
 
-    MeasureRepeat(@Nonnull SectionVersion sectionVersion, @Nonnull ArrayList<MeasureNode> measureNodes, int repeats)
+    MeasureRepeat(/*@Nonnull SectionVersion sectionVersion, */@Nonnull ArrayList<MeasureNode> measureNodes, int repeats)
     {
-        super(sectionVersion, measureNodes);
+        super( measureNodes);
         this.repeats = repeats;
     }
 
@@ -37,63 +37,6 @@ public class MeasureRepeat extends MeasureSequenceItem
     public final void setRepeats(int repeats)
     {
         this.repeats = repeats;
-    }
-
-    @Override
-    public String generateHtml(@NotNull SongMoment songMoment, @NotNull Key key, int tran)
-    {
-        StringBuilder sb = new StringBuilder();
-
-        if (measureNodes != null && !measureNodes.isEmpty()) {
-            MeasureNode lastMeasureNode = null;
-            int i = 0;
-            MeasureNode measureNode = null;
-            for (; i < measureNodes.size(); i++) {
-                if (i > 0 && i % measuresPerLine == 0) {
-                    sb.append("<tr><td></td>");
-                    lastMeasureNode = null;
-                }
-
-                measureNode = measureNodes.get(i);
-
-                sb.append("<td class=\"" + CssConstants.style + "section"
-                        + measureNode.getSectionVersion().getSection().getAbbreviation() + "Class\" id=\""
-                        + "C.\" >");
-
-                if (measureNode.equals(lastMeasureNode))
-                    sb.append("-");
-                else
-                    sb.append(measureNode.generateHtml(songMoment, key, tran));
-                lastMeasureNode = measureNode;
-                sb.append("</td>");
-
-                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
-                    sb.append("<td>|</td></tr>\n");
-                    sb.append("<tr><td></td><td colspan=\"10\">" +
-                            "<canvas id=\"bassLine" + "fixmeHere"
-                            + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-                }
-            }
-            while (i % measuresPerLine != 0) {
-                sb.append("<td></td>");
-                i++;
-            }
-
-            sb.append("<td class=\"" + CssConstants.style
-                    + "section"
-                    + lastMeasureNode.getSectionVersion().getSection().getAbbreviation()
-                    + "Class\" "
-                    + " style=\"border-right: 0px solid black;\">");
-            if (i > measuresPerLine)
-                sb.append("| ");
-            sb.append("x" + repeats);
-            sb.append("</td></tr>\n");
-            if (measureNode != null)
-                sb.append("<tr><td></td><td colspan=\"10\">" +
-                        "<canvas id=\"bassLine" + "fixmeHere"
-                        + "\" width=\"800\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-        }
-        return sb.toString();
     }
 
     @Override
@@ -187,16 +130,16 @@ public class MeasureRepeat extends MeasureSequenceItem
             measureCount++;
             if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1) {
                 if ( measureNodes.size() > MusicConstant.measuresPerDisplayRow) {
-                    grid.add(new MeasureComment(chordSection.getSectionVersion(),"|"));
+                    grid.add(new MeasureRepeatExtension());
                 }
                 grid.addTo(0, grid.getRowCount(), chordSection);
             }
             measureNode.addToGrid(grid, chordSection);
         }
         if ( measureNodes.size() > MusicConstant.measuresPerDisplayRow) {
-            grid.add(new MeasureComment(chordSection.getSectionVersion(),"|"));
+            grid.add(new MeasureRepeatExtension());
         }
-        grid.add(new MeasureComment(chordSection.getSectionVersion(),"x"+repeats));
+        grid.add(new MeasureRepeatMarker(repeats));
     }
 
     @Override
