@@ -465,6 +465,7 @@ public class LyricsAndChordsViewImpl
                 audioBeatDisplayCanvas.setWidth((int) Math.floor(chordsParentWidth));
             }
         }
+
     }
 
     private void sendStatus(String name, String value)
