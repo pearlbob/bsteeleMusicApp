@@ -11,6 +11,12 @@ public class MeasureRepeatExtension extends Measure
     public String getHtmlBlockId() { return  "RE"; }
 
     @Override
+    public String transpose(@Nonnull Key key, int halfSteps)
+    {
+        return toString();
+    }
+    
+    @Override
     public String toString()
     {
         return "|";

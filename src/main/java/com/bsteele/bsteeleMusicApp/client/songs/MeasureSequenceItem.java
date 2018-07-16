@@ -38,9 +38,6 @@ public class MeasureSequenceItem extends MeasureNode
             if (measureNodes != null)
                 for (MeasureNode measureNode : measureNodes) {
                     ArrayList<Measure> childMeasures = measureNode.getMeasures();
-                    if (childMeasures == null)
-                        continue;
-                    //GWT.log("add child: " + childMeasures.size());
                     if (childMeasures != null)
                         measures.addAll(childMeasures);
                 }
@@ -114,6 +111,12 @@ public class MeasureSequenceItem extends MeasureNode
                 grid.addTo(0, grid.getRowCount(), chordSection);
             measureNode.addToGrid(grid, chordSection);
         }
+    }
+
+    @Override
+    public String transpose(@Nonnull Key key, int halfSteps)
+    {
+        return "MeasureSequenceItem";   //  error
     }
 
 

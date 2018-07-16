@@ -136,9 +136,6 @@ public class SongEditView
     @UiField
     RadioButton editAppend;
 
-//    @UiField
-//    HTMLPanel editChords;
-
     @UiField
     TextArea chordsTextEntry;
     @UiField
@@ -254,10 +251,8 @@ public class SongEditView
 
 
         measureEntry.addValueChangeHandler((ValueChangeEvent<String> event) -> {
-            if (song != null)
-                return;
-
             GWT.log("measure change: \"" + event.getValue() + "\"");
+            processMeasureEntry();
 //            if (lastChordSelection != null) {
 //                SectionVersion sectionVersion = lastChordSelection.getSectionVersion();
 //                Measure newMeasure = Measure.parse(sectionVersion, measureEntry.getValue(), song.getBeatsPerBar());
@@ -270,6 +265,24 @@ public class SongEditView
         });
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
             GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
+            String entry = measureEntry.getValue();
+            if (entry.isEmpty())
+                return;
+            char lastChar = entry.charAt(entry.length() - 1);
+            switch (lastChar) {
+                case ' ':
+                case '\n':
+                case '\r':
+                    processMeasureEntry();
+                    break;
+            }
+
+            //  speed entry enhancement: first chord char is always upper case
+            if ( entry.length() == 1 ){
+               char c = entry.charAt(0);
+               if ( c >= 'a' && c <= 'g' )
+                   measureEntry.setValue(entry.toUpperCase());
+            }
         });
         editAppend.setValue(true);
         editInsert.addClickHandler((ClickEvent e) -> {
@@ -495,6 +508,8 @@ public class SongEditView
                 bpmEntry.setText("106");
                 timeSignatureEntry.setValue("4/4");
                 chordsTextEntry.setValue("");
+                chordsFlexTable.removeAllRows();
+                editAppend.setValue(true);
                 lyricsTextEntry.setValue("");
                 checkSong();
             }
@@ -541,6 +556,38 @@ public class SongEditView
 
     }
 
+    private void processMeasureEntry()
+    {
+        String entry = measureEntry.getValue();
+        if (entry.isEmpty())
+            return;
+        
+        SectionVersion sectionVersion = Section.parse(entry);
+        if (sectionVersion != null) {
+            GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
+            entry = entry.substring(sectionVersion.getParseLength());
+        }
+        Measure measure = Measure.parse(entry, song.getBeatsPerBar());
+        if (measure != null) {
+            GWT.log("new measure: \"" + measure.toString() + "\"");
+            entry = entry.substring(measure.getParseLength());
+        }
+        measureEntry.setValue("");
+        if( sectionVersion!= null ){ //  fixme
+        }
+        if( measure!= null && lastChordSelection != null ){
+            MeasureNode.EditLocation editLocation = MeasureNode.EditLocation.append;
+            if (editInsert.getValue()) {
+                editLocation = MeasureNode.EditLocation.insert;
+            } else if ( editReplace.getValue()){
+                editLocation = MeasureNode.EditLocation.replace;
+            }
+
+            song.measureEdit(song.getStructuralMeasureNode(lastChordSelection.row, lastChordSelection.col),
+                    editLocation, measure);
+        }
+    }
+
 
     @Override
     public void setSongEdit(Song song)
@@ -561,18 +608,7 @@ public class SongEditView
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
 
-//        editChords.clear();
-//        editChords.addTo(new HTML(song.transpose(0, prefix)));
-//        {
-//            final NodeList<Element> cells = editChords.getElement().getElementsByTagName("td");
-//            for (int c = 0; c < cells.getLength(); c++) {
-//                Element element = cells.getItem(c);
-//                Style cellStyle = element.getStyle();
-//                cellStyle.setFontSize(16, Style.Unit.PX);
-//            }
-//        }
-
-        song.transpose(prefix, chordsFlexTable, 0);
+        song.transpose(prefix, chordsFlexTable, 0, fontsize);
         selectLastChordsCell();
 
         lastChordSelection = null;
@@ -705,7 +741,7 @@ public class SongEditView
         }
 
         song = newSong;
-        song.transpose(prefix, chordsFlexTable, 0);
+        song.transpose(prefix, chordsFlexTable, 0, fontsize);
         selectLastChordsCell();      // default
 
         errorLabel.setText("");
@@ -1000,6 +1036,7 @@ public class SongEditView
     private ChordSelection lastChordSelection;
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
+    private static final int fontsize = 32;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
     private final EventBus eventBus;

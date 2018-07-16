@@ -201,6 +201,45 @@ public class SongTest
     }
 
     @Test
+    public void testEdits()
+    {
+        Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
+        MeasureNode vc2 = a.getChordSections().get(0).getMeasureNodes().get(0);
+
+        Measure measure = vc2.getMeasures().get(1);
+        assertEquals(4, vc2.getMeasures().size());
+        assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
+        Measure newMeasure = Measure.parse("G", a.getBeatsPerBar());
+        a.measureEdit(measure, MeasureNode.EditLocation.replace, newMeasure);
+        assertEquals(4, vc2.getMeasures().size());
+        measure = vc2.getMeasures().get(1);
+        assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
+
+
+        measure = vc2.getMeasures().get(0);
+        assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
+        newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
+        a.measureEdit(measure, MeasureNode.EditLocation.replace, newMeasure);
+        assertEquals(4, vc2.getMeasures().size());
+        measure = vc2.getMeasures().get(0);
+        assertEquals(ScaleNote.Gb, measure.getChords().get(0).getScaleChord().getScaleNote());
+
+        measure = vc2.getMeasures().get(3);
+        assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
+        newMeasure = Measure.parse("F", a.getBeatsPerBar());
+        a.measureEdit(measure, MeasureNode.EditLocation.replace, newMeasure);
+        assertEquals(4, vc2.getMeasures().size());
+        measure = vc2.getMeasures().get(3);
+        assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
+
+        vc2 = a.getChordSections().get(0).getMeasureNodes().get(0);
+        logger.info( a.getChordSections().toString());
+        logger.info( vc2.toString());
+        logger.info( vc2.getMeasures().toString());
+    }
+
+    @Test
     public void testComments()
     {
         Song a;
@@ -236,7 +275,7 @@ public class SongTest
 
         a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D E F G A C: D D GD E\n"
-                +"A B C D x3\n"
+                        + "A B C D x3\n"
                         + "Ab G Gb F", "v: bob, bob, bob berand");
         Grid<MeasureNode> grid = a.getStructuralGrid();
         logger.info(grid.toString());

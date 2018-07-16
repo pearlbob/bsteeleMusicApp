@@ -13,6 +13,12 @@ public class MeasureRepeatMarker extends Measure
         this.repeats = repeats;
     }
 
+    @Override
+    public String transpose(@Nonnull Key key, int halfSteps)
+    {
+        return toString();
+    }
+
     public String getHtmlBlockId() { return "RX"; }
 
     @Override

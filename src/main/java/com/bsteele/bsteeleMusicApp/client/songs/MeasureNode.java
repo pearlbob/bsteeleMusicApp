@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public abstract class MeasureNode
 {
-    int getParseLength()
+    public int getParseLength()
     {
         return parseLength;
     }
@@ -46,6 +46,8 @@ public abstract class MeasureNode
 
     public abstract void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection);
 
+    public String transpose(@Nonnull Key key, int halfSteps) { return toString(); }     //  default only
+
     public abstract boolean equals(Object o);
 
     public abstract int hashCode();
@@ -58,6 +60,30 @@ public abstract class MeasureNode
         replace,
         append,
         delete;
+    }
+
+    void replace(MeasureNode measureNode, Measure newMeasure)
+    {
+        if (measureNode == null || measures == null || measures.isEmpty())
+            return;
+
+        if (!(measureNode instanceof Measure))
+            return;
+
+        Measure oldMeasure = (Measure) measureNode;
+        for (int i = 0; i < measures.size(); i++) {
+            if (oldMeasure.equals(measures.get(i))) {
+                ArrayList<Measure> replacementList = new ArrayList<>();
+                if (i > 0)
+                    replacementList.addAll(measures.subList(0, i));
+                replacementList.add(newMeasure);
+                if (i < measures.size() - 1)
+                    replacementList.addAll(measures.subList(i + 1, measures.size()));
+                measures = replacementList;
+            }
+        }
+        //   int i = measures.indexOf(oldMeasure);
+
     }
 
     protected transient int parseLength;

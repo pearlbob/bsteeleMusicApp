@@ -245,3 +245,6 @@ td[editSelect=append] {
     border-right-style: solid;
     border-right-color: red;
 }
+.textCenter {
+    text-align: center;
+}

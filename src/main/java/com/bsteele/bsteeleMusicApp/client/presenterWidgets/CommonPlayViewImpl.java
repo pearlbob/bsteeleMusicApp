@@ -128,6 +128,7 @@ class CommonPlayViewImpl
     protected Song song;
 
     protected static Key currentKey;
+    protected int halfStepOffset = 0;
     private static int currentBpm;
     protected SongUpdate songUpdate = new SongUpdate();
     protected SongUpdate.State lastState = SongUpdate.State.idle;

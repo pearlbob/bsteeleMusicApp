@@ -210,6 +210,18 @@ public class Measure extends MeasureNode
         grid.add(this);
     }
 
+    @Override
+    public String transpose(@Nonnull Key key, int halfSteps)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        if (chords != null)
+            for (Chord chord : chords) {
+                sb.append(chord.transpose(key,halfSteps).toString());
+            }
+        return sb.toString();
+    }
+
     private final String chordsToString()
     {
         StringBuilder sb = new StringBuilder();
@@ -240,7 +252,7 @@ public class Measure extends MeasureNode
     @Override
     public String toString()
     {
-        return chordsToString() + " ";
+        return chordsToString();
     }
 
     @Override
