@@ -55,7 +55,6 @@ public class SongTest
                         assertTrue(date.getTime() > 1510000000000.0); //    ~6 November 2017
                     }
                     assertTrue(song.getKey() != null);
-                    assertTrue(song.getChordSectionInnerHtmlMap().size() > 0);
                     //logger.info("song.getChordSectionInnerHtmlMap().size() = "+song.getChordSectionInnerHtmlMap()
                     // .size());
                     assertTrue(song.getLyricsAsString().length() > 0);

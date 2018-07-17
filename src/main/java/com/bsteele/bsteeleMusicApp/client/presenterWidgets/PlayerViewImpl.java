@@ -5,13 +5,14 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
+import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
@@ -23,6 +24,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -38,7 +40,8 @@ import java.util.logging.Logger;
  */
 public class PlayerViewImpl
         extends CommonPlayViewImpl
-        implements PlayerPresenterWidget.MyView {
+        implements PlayerPresenterWidget.MyView
+{
 
     @UiField
     Button playStopButton;
@@ -85,11 +88,13 @@ public class PlayerViewImpl
     SpanElement copyright;
 
 
-    interface Binder extends UiBinder<Widget, PlayerViewImpl> {
+    interface Binder extends UiBinder<Widget, PlayerViewImpl>
+    {
     }
 
     @Inject
-    PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
+    PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster)
+    {
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
@@ -147,7 +152,8 @@ public class PlayerViewImpl
     }
 
     @Override
-    public void onSongUpdate(SongUpdate songUpdate) {
+    public void onSongUpdate(SongUpdate songUpdate)
+    {
 
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
@@ -190,7 +196,7 @@ public class PlayerViewImpl
                 break;
         }
 
-        if ( song != null && !song.equals(songUpdate.getSong())){
+        if (song != null && !song.equals(songUpdate.getSong())) {
             resetScroll(chordsScrollPanel);
         }
         song = songUpdate.getSong();
@@ -213,7 +219,8 @@ public class PlayerViewImpl
         chordsDirty = true;   //  done by syncKey()
     }
 
-    private void setEnables() {
+    private void setEnables()
+    {
         boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
 
         originalKeyButton.setEnabled(enable);
@@ -223,16 +230,19 @@ public class PlayerViewImpl
         bpmSelect.setDisabled(!enable);
     }
 
-    private void syncCurrentKey(Key key) {
+    private void syncCurrentKey(Key key)
+    {
         keyLabel.setInnerHTML(key.toString());
     }
 
-    private void syncCurrentBpm(int bpm) {
+    private void syncCurrentBpm(int bpm)
+    {
         currentBpmEntry.setValue(Integer.toString(bpm));
         bpmSelect.setSelectedIndex(0);
     }
 
-    private void labelPlayStop() {
+    private void labelPlayStop()
+    {
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
@@ -246,7 +256,8 @@ public class PlayerViewImpl
     }
 
     @Override
-    public void onMusicAnimationEvent(MusicAnimationEvent event) {
+    public void onMusicAnimationEvent(MusicAnimationEvent event)
+    {
         if (song == null)
             return;
 
@@ -289,7 +300,8 @@ public class PlayerViewImpl
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate.getSectionVersion(),
+                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate
+                                        .getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
                         //GWT.log(chordCellId );
                         Element ce = player.getElementById(chordCellId);
@@ -311,52 +323,78 @@ public class PlayerViewImpl
         }
 
         //  auto scroll
-      autoScroll( chordsScrollPanel, player );
+        autoScroll(chordsScrollPanel, player);
 
     }
 
-    private void syncKey(Key key) {
+    private void syncKey(Key key)
+    {
         int tran = key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
         syncKey(tran);
     }
 
-    private void syncKey(int tran) {
+    private void syncKey(int tran)
+    {
 
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
-        keyLabel.setInnerHTML(currentKey.toString()+ " "+currentKey.sharpsFlatsToString());
+        keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
 
         player.clear();
-        
+
         ArrayList<LyricSection> lyricSections = song.getLyricSections();
         int sectionIndex = 0;
-        StringBuilder sb = new StringBuilder();
-        sb.append("<table class=\"" + CssConstants.style + "lyricsTable\" >");
-        song.getChordSectionInnerHtmlMap();
-        for (LyricSection lyricSection : lyricSections) {
-            sb.append("<tr>");
-            sb.append("<td>")
-                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), currentKey, tran, prefix + sectionIndex));
-            sb.append("<td class=\"")
-                    .append(CssConstants.style)
-                    .append("sectionLabel \">")
-                    .append(lyricSection.getSectionVersion().toString())
-                    .append("</td>");
-            sb.append("<td")
-                    .append(" class=\"")
-                    .append(CssConstants.style)
-                    .append("lyrics")
-                    .append(lyricSection.getSectionVersion().getSection().getAbbreviation())
-                    .append("Class\"")
-                    .append(" id=\"" + prefix)
-                    .append(Song.genLyricsId(sectionIndex)).append("\">");
-            for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
-                sb.append(lyricsLine.getLyrics()).append("\n");
-            sb.append("</td>");
-            sb.append("</tr>\n");
-            sectionIndex++;
+        {
+            FlexTable flexTable = new FlexTable();
+            FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+            final int lyricsCol = 1 + MusicConstant.measuresPerDisplayRow + 1 + 1;
+            for (LyricSection lyricSection : lyricSections) {
+
+                int firstRow = flexTable.getRowCount();
+                song.transpose(song.getChordSection(lyricSection.getSectionVersion()), prefix + sectionIndex++,
+                        flexTable, tran, lyricsDefaultFontSize, true);
+                int vSpan = flexTable.getRowCount() - firstRow;
+
+                StringBuilder sb = new StringBuilder();
+                for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
+                    sb.append(lyricsLine.getLyrics()).append("\n");
+
+                flexTable.setHTML(firstRow, lyricsCol, sb.toString());
+                formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
+                        .getSectionVersion().getSection().getAbbreviation() + "Class");
+                formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount()-firstRow);
+            }
+            player.add(flexTable);
         }
-        sb.append("</table>");
-        player.add(new HTMLPanel(sb.toString()));
+
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("<table class=\"" + CssConstants.style + "lyricsTable\" >");
+//
+//        for (LyricSection lyricSection : lyricSections) {
+//            sb.append("<tr>");
+//            sb.append("<td>")
+//                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), currentKey, tran, prefix +
+//                            sectionIndex));
+//            sb.append("<td class=\"")
+//                    .append(CssConstants.style)
+//                    .append("sectionLabel \">")
+//                    .append(lyricSection.getSectionVersion().toString())
+//                    .append("</td>");
+//            sb.append("<td")
+//                    .append(" class=\"")
+//                    .append(CssConstants.style)
+//                    .append("lyrics")
+//                    .append(lyricSection.getSectionVersion().getSection().getAbbreviation())
+//                    .append("Class\"")
+//                    .append(" id=\"" + prefix)
+//                    .append(Song.genLyricsId(sectionIndex)).append("\">");
+//            for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
+//                sb.append(lyricsLine.getLyrics()).append("\n");
+//            sb.append("</td>");
+//            sb.append("</tr>\n");
+//            sectionIndex++;
+//        }
+//        sb.append("</table>");
+//        player.add(new HTMLPanel(sb.toString()));
     }
 
     private AudioBeatDisplay audioBeatDisplay;
@@ -375,6 +413,7 @@ public class PlayerViewImpl
     private int chordsFontSize = chordsMaxFontSize;
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
+    private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
     private static final String prefix = "player";
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 

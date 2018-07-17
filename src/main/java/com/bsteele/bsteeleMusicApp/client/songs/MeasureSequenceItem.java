@@ -22,7 +22,7 @@ public class MeasureSequenceItem extends MeasureNode
     {
         return measures;
     }
-    
+
     public int getTotalMoments()
     {
         return measures.size();
@@ -47,7 +47,8 @@ public class MeasureSequenceItem extends MeasureNode
                         ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                     lastMeasureNode = measureNode;
 
-                    if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1) {
+                    if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow == MusicConstant
+                            .measuresPerDisplayRow - 1) {
                         ret.add("\n");
                         lastMeasureNode = null;
                         measuresOnThisLine = 0;
@@ -92,6 +93,27 @@ public class MeasureSequenceItem extends MeasureNode
         delete;
     }
 
+    void insert(MeasureNode measureNode, Measure newMeasure)
+    {
+        if (measures == null)
+            measures = new ArrayList<>();
+        if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
+            measures.add(newMeasure);
+            return;
+        }
+
+        Measure oldMeasure = (Measure) measureNode;
+
+        for (int i = 0; i < measures.size(); i++) {
+
+            if (oldMeasure.equals(measures.get(i))) {
+                measures.add(i, newMeasure);
+                return;
+            }
+        }
+        measures.add(newMeasure);
+    }
+
     void replace(MeasureNode measureNode, Measure newMeasure)
     {
         if (measureNode == null || measures == null || measures.isEmpty())
@@ -112,9 +134,28 @@ public class MeasureSequenceItem extends MeasureNode
                 measures = replacementList;
             }
         }
-        //   int i = measures.indexOf(oldMeasure);
-
     }
+
+    void append(MeasureNode measureNode, Measure newMeasure)
+    {
+        if (measures == null)
+            measures = new ArrayList<>();
+        if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
+            measures.add(newMeasure);
+            return;
+        }
+
+        Measure oldMeasure = (Measure) measureNode;
+
+        for (int i = 0; i < measures.size(); i++) {
+            if (oldMeasure.equals(measures.get(i)))  {
+                measures.add(i+1, newMeasure);
+                return;
+            }
+        }
+        measures.add(newMeasure);
+    }
+
 
     @Override
     public boolean isSingleItem()

@@ -20,6 +20,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
@@ -269,6 +270,7 @@ public class SongEditView
             String entry = measureEntry.getValue();
             if (entry.isEmpty())
                 return;
+
             char lastChar = entry.charAt(entry.length() - 1);
             switch (lastChar) {
                 case ' ':
@@ -278,12 +280,6 @@ public class SongEditView
                     break;
             }
 
-            //  speed entry enhancement: first chord char is always upper case
-            if ( entry.length() == 1 ){
-               char c = entry.charAt(0);
-               if ( c >= 'a' && c <= 'g' )
-                   measureEntry.setValue(entry.toUpperCase());
-            }
         });
         editAppend.setValue(true);
         editInsert.addClickHandler((ClickEvent e) -> {
@@ -562,6 +558,15 @@ public class SongEditView
         String entry = measureEntry.getValue();
         if (entry.isEmpty())
             return;
+
+        //  speed entry enhancement: first chord char is always upper case
+        if ( entry.length() >= 1 ){
+            char c = entry.charAt(0);
+            if ( c >= 'a' && c <= 'g' ) {
+                entry = Util.firstToUpper(entry);
+                measureEntry.setValue(entry);
+            }
+        }
         
         SectionVersion sectionVersion = Section.parse(entry);
         if (sectionVersion != null) {
