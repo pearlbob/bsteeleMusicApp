@@ -1,10 +1,8 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
-import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -15,9 +13,9 @@ import java.util.Objects;
 public class MeasureRepeat extends MeasureSequenceItem
 {
 
-    MeasureRepeat(/*@Nonnull SectionVersion sectionVersion, */@Nonnull ArrayList<MeasureNode> measureNodes, int repeats)
+    MeasureRepeat(/*@Nonnull SectionVersion sectionVersion, */@Nonnull ArrayList<Measure> measures, int repeats)
     {
-        super( measureNodes);
+        super(measures);
         this.repeats = repeats;
     }
 
@@ -44,7 +42,7 @@ public class MeasureRepeat extends MeasureSequenceItem
     {
         ArrayList<String> ret = new ArrayList<>();
 
-        if (measureNodes == null || measureNodes.isEmpty())
+        if (measures == null || measures.isEmpty())
             return ret;
 
         if (expandRepeats) {
@@ -52,13 +50,13 @@ public class MeasureRepeat extends MeasureSequenceItem
                 MeasureNode lastMeasureNode = null;
                 MeasureNode measureNode = null;
                 int i = 0;
-                for (; i < measureNodes.size(); i++) {
-                    if (i > 0 && i % measuresPerLine == 0) {
+                for (; i < measures.size(); i++) {
+                    if (i > 0 && i % MusicConstant.measuresPerDisplayRow == 0) {
                         ret.add("\n");
                         lastMeasureNode = null;
                     }
 
-                    measureNode = measureNodes.get(i);
+                    measureNode = measures.get(i);
 
                     if (measureNode.isSingleItem()) {
                         if (measureNode.equals(lastMeasureNode))
@@ -70,12 +68,13 @@ public class MeasureRepeat extends MeasureSequenceItem
                         ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                         lastMeasureNode = null;
                     }
-                    if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
+                    if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1 && i < measures
+                            .size() - 1) {
                         // ret.add("|");
                         ret.add("\n");
                     }
                 }
-                while (i % measuresPerLine != 0) {
+                while (i % MusicConstant.measuresPerDisplayRow != 0) {
                     ret.add("");
                     i++;
                 }
@@ -85,13 +84,13 @@ public class MeasureRepeat extends MeasureSequenceItem
             MeasureNode lastMeasureNode = null;
             MeasureNode measureNode;
             int i = 0;
-            for (; i < measureNodes.size(); i++) {
-                if (i > 0 && i % measuresPerLine == 0) {
+            for (; i < measures.size(); i++) {
+                if (i > 0 && i % MusicConstant.measuresPerDisplayRow == 0) {
                     ret.add("\n");
                     lastMeasureNode = null;
                 }
 
-                measureNode = measureNodes.get(i);
+                measureNode = measures.get(i);
 
                 if (measureNode.isSingleItem()) {
                     if (measureNode.equals(lastMeasureNode))
@@ -103,16 +102,17 @@ public class MeasureRepeat extends MeasureSequenceItem
                     ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                     lastMeasureNode = null;
                 }
-                if (i % measuresPerLine == measuresPerLine - 1 && i < measureNodes.size() - 1) {
+                if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1 && i < measures.size()
+                        - 1) {
                     ret.add("|");
                     ret.add("\n");
                 }
             }
-            while (i % measuresPerLine != 0) {
+            while (i % MusicConstant.measuresPerDisplayRow != 0) {
                 ret.add("");
                 i++;
             }
-            if (measureNodes.size() > measuresPerLine)
+            if (measures.size() > MusicConstant.measuresPerDisplayRow)
                 ret.add("|");
             ret.add("x" + repeats);
             ret.add("\n");
@@ -126,17 +126,17 @@ public class MeasureRepeat extends MeasureSequenceItem
     {
         //  fixme: improve repeats.addToGrid()
         int measureCount = 0;
-        for (MeasureNode measureNode : measureNodes) {
+        for (MeasureNode measureNode : measures) {
             measureCount++;
             if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1) {
-                if ( measureNodes.size() > MusicConstant.measuresPerDisplayRow) {
+                if (measures.size() > MusicConstant.measuresPerDisplayRow) {
                     grid.add(new MeasureRepeatExtension());
                 }
                 grid.addTo(0, grid.getRowCount(), chordSection);
             }
             measureNode.addToGrid(grid, chordSection);
         }
-        if ( measureNodes.size() > MusicConstant.measuresPerDisplayRow) {
+        if (measures.size() > MusicConstant.measuresPerDisplayRow) {
             grid.add(new MeasureRepeatExtension());
         }
         grid.add(new MeasureRepeatMarker(repeats));

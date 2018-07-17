@@ -13,6 +13,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Measure;
 import com.bsteele.bsteeleMusicApp.client.songs.MeasureNode;
+import com.bsteele.bsteeleMusicApp.client.songs.MeasureSequenceItem;
 import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
@@ -576,11 +577,11 @@ public class SongEditView
         if( sectionVersion!= null ){ //  fixme
         }
         if( measure!= null && lastChordSelection != null ){
-            MeasureNode.EditLocation editLocation = MeasureNode.EditLocation.append;
+            MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
             if (editInsert.getValue()) {
-                editLocation = MeasureNode.EditLocation.insert;
+                editLocation = MeasureSequenceItem.EditLocation.insert;
             } else if ( editReplace.getValue()){
-                editLocation = MeasureNode.EditLocation.replace;
+                editLocation = MeasureSequenceItem.EditLocation.replace;
             }
 
             song.measureEdit(song.getStructuralMeasureNode(lastChordSelection.row, lastChordSelection.col),
@@ -686,16 +687,16 @@ public class SongEditView
             }
 
             //  indicate the current selection
-            MeasureNode.EditLocation editLocation = MeasureNode.EditLocation.append;
+            MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
             if (editInsert.getValue()) {
                 chordSelection.element.setAttribute("editSelect", "insert");
-                editLocation = MeasureNode.EditLocation.insert;
+                editLocation = MeasureSequenceItem.EditLocation.insert;
             } else if (editAppend.getValue()) {
                 chordSelection.element.setAttribute("editSelect", "append");
             } else {
                 chordSelection.element.setAttribute("editSelect", "replace");
                 chordSelection.element.getStyle().setBackgroundColor(selectedBorderColorValueString);
-                editLocation = MeasureNode.EditLocation.replace;
+                editLocation = MeasureSequenceItem.EditLocation.replace;
             }
 
             if (song != null) {

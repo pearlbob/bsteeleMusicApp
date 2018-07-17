@@ -16,12 +16,12 @@ import java.util.logging.Logger;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordSection extends MeasureSequenceItem
+public class ChordSection extends MeasureNode
 {
-    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureNode> measureSequenceItems)
+    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems)
     {
-        super( measureSequenceItems);
         this.sectionVersion = sectionVersion;
+        this.measureSequenceItems = measureSequenceItems;
     }
 
     public final static ChordSection parse(String s, int beatsPerBar)
@@ -42,9 +42,9 @@ public class ChordSection extends MeasureSequenceItem
         }
         n += sectionVersion.getParseLength();
 
-        ArrayList<MeasureNode> measureSequenceItems = new ArrayList<>();
-        ArrayList<MeasureNode> measures = new ArrayList<>();
-        ArrayList<MeasureNode> lineMeasures = new ArrayList<>();
+        ArrayList<MeasureSequenceItem> measureSequenceItems = new ArrayList<>();
+        ArrayList<Measure> measures = new ArrayList<>();
+        ArrayList<Measure> lineMeasures = new ArrayList<>();
         boolean repeatMarker = false;
         Measure lastMeasure = null;
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
@@ -86,13 +86,13 @@ public class ChordSection extends MeasureSequenceItem
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new MeasureSequenceItem( measures));
+                        measureSequenceItems.add(new MeasureSequenceItem(measures));
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
                     n += ns.length();
                     int repeatTotal = Integer.parseInt(ns);
-                    measureSequenceItems.add(new MeasureRepeat( lineMeasures, repeatTotal));
+                    measureSequenceItems.add(new MeasureRepeat(lineMeasures, repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
                 util.clear();
@@ -101,7 +101,7 @@ public class ChordSection extends MeasureSequenceItem
 
             if (util.wasNewline() && !repeatMarker) {
                 //  add line of measures to output collection
-                for (MeasureNode m : lineMeasures)
+                for (Measure m : lineMeasures)
                     measures.add(m);
                 lineMeasures = new ArrayList<>();
                 util.clear();
@@ -115,7 +115,7 @@ public class ChordSection extends MeasureSequenceItem
                 lastMeasure = measure;
             } else {
                 //  look for a comment
-                MeasureComment measureComment = MeasureComment.parse( ms);
+                MeasureComment measureComment = MeasureComment.parse(ms);
                 if (measureComment != null) {
                     n += measureComment.getParseLength();
                     lineMeasures.add(measureComment);
@@ -125,10 +125,10 @@ public class ChordSection extends MeasureSequenceItem
         }
 
         //  don't assume every line has an eol
-        for (MeasureNode mn : lineMeasures)
-            measures.add(mn);
+        for (Measure m : lineMeasures)
+            measures.add(m);
         if (!measures.isEmpty()) {
-            measureSequenceItems.add(new MeasureSequenceItem( measures));
+            measureSequenceItems.add(new MeasureSequenceItem(measures));
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
@@ -142,13 +142,65 @@ public class ChordSection extends MeasureSequenceItem
     {
         logger.finest("ChordSection.addToGrid()");
 
-            for (MeasureNode measureNode : getMeasureNodes()) {
-                grid.addTo(0, grid.getRowCount(), this);
-                measureNode.addToGrid(grid, this);
-            }
+        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+            grid.addTo(0, grid.getRowCount(), this);
+            measureSequenceItem.addToGrid(grid, this);
+        }
         if (grid.isEmpty())
             //  initial editing
             grid.addTo(0, grid.getRowCount(), this);
+    }
+
+    @Override
+    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats)
+    {
+        ArrayList<String> ret = new ArrayList<>();
+
+        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+            ArrayList<Measure> measures = measureSequenceItem.getMeasures();
+            if (measures != null && !measures.isEmpty()) {
+                MeasureNode lastMeasureNode = null;
+                MeasureNode measureNode = null;
+                int measuresOnThisLine = 0;
+                for (int i = 0; i < measures.size(); i++) {
+                    measureNode = measures.get(i);
+
+                    if (measureNode.isSingleItem()) {
+                        if (measureNode.equals(lastMeasureNode))
+                            ret.add("-");
+                        else
+                            ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
+                        lastMeasureNode = measureNode;
+
+                        if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow == MusicConstant
+                                .measuresPerDisplayRow - 1) {
+
+                            ret.add("\n");
+                            lastMeasureNode = null;
+                            measuresOnThisLine = 0;
+                        } else
+                            measuresOnThisLine++;
+                    } else {
+                        //  a group of measures (typically a repeat)
+                        ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
+                        lastMeasureNode = null;
+                        measuresOnThisLine = 0;
+                    }
+                }
+            }
+            ret.add("\n");
+        }
+
+        return ret;
+    }
+
+    public int getTotalMoments()
+    {
+        int total = 0;
+        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+            total += measureSequenceItem.getTotalMoments();
+        }
+        return total;
     }
 
     /**
@@ -197,16 +249,17 @@ public class ChordSection extends MeasureSequenceItem
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         ChordSection that = (ChordSection) o;
-        return Objects.equals(bpm, that.bpm) &&
-                Objects.equals(beatsPerBar, that.beatsPerBar);
+        return Objects.equals(sectionVersion, that.sectionVersion)
+                && Objects.equals(measureSequenceItems, that.measureSequenceItems)
+                && Objects.equals(bpm, that.bpm)
+                && Objects.equals(beatsPerBar, that.beatsPerBar);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(super.hashCode(), bpm, beatsPerBar);
+        return Objects.hash(sectionVersion.hashCode(), measureSequenceItems.hashCode(), bpm, beatsPerBar);
     }
 
     @Override
@@ -215,9 +268,9 @@ public class ChordSection extends MeasureSequenceItem
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString()).append("{");
 
-        if (measureNodes != null)
-            for (MeasureNode measureNode : measureNodes) {
-                sb.append(measureNode.toString()).append(" ");
+        if (measureSequenceItems != null)
+            for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+                sb.append(measureSequenceItem.toString()).append(" ");
             }
         sb.append("}");
         return sb.toString();
@@ -225,11 +278,18 @@ public class ChordSection extends MeasureSequenceItem
 
     public final SectionVersion getSectionVersion()
     {
-            return sectionVersion;
+        return sectionVersion;
+    }
+
+    public ArrayList<MeasureSequenceItem> getMeasureSequenceItems()
+    {
+        return measureSequenceItems;
     }
 
     private SectionVersion sectionVersion;
+    private ArrayList<MeasureSequenceItem> measureSequenceItems;
     private Integer bpm;
     private Integer beatsPerBar;
     private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());
+
 }

@@ -205,13 +205,13 @@ public class SongTest
     {
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
-        MeasureNode vc2 = a.getChordSections().get(0).getMeasureNodes().get(0);
+        MeasureSequenceItem vc2 = a.getChordSections().get(0).getMeasureSequenceItems().get(0);
 
         Measure measure = vc2.getMeasures().get(1);
         assertEquals(4, vc2.getMeasures().size());
         assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
         Measure newMeasure = Measure.parse("G", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureNode.EditLocation.replace, newMeasure);
+        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(1);
         assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
@@ -220,7 +220,7 @@ public class SongTest
         measure = vc2.getMeasures().get(0);
         assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
         newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureNode.EditLocation.replace, newMeasure);
+        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(0);
         assertEquals(ScaleNote.Gb, measure.getChords().get(0).getScaleChord().getScaleNote());
@@ -228,15 +228,15 @@ public class SongTest
         measure = vc2.getMeasures().get(3);
         assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
         newMeasure = Measure.parse("F", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureNode.EditLocation.replace, newMeasure);
+        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(3);
         assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
 
-        vc2 = a.getChordSections().get(0).getMeasureNodes().get(0);
-        logger.info( a.getChordSections().toString());
-        logger.info( vc2.toString());
-        logger.info( vc2.getMeasures().toString());
+        vc2 = a.getChordSections().get(0).getMeasureSequenceItems().get(0);
+        logger.info(a.getChordSections().toString());
+        logger.info(vc2.toString());
+        logger.info(vc2.getMeasures().toString());
     }
 
     @Test
@@ -244,6 +244,7 @@ public class SongTest
     {
         Song a;
         ArrayList<ChordSection> chordSections;
+        ChordSection chordSection;
         MeasureNode measureNode;
         ArrayList<Measure> measures;
 
@@ -251,16 +252,16 @@ public class SongTest
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
         chordSections = a.getChordSections();
         assertEquals(1, chordSections.size());
-        measureNode = chordSections.get(0);
-        measures = measureNode.getMeasures();
+        chordSection = chordSections.get(0);
+        measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
         assertEquals(4, measures.size());
 
         a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D (yo)", "v: bob, bob, bob berand");
         chordSections = a.getChordSections();
         assertEquals(1, chordSections.size());
-        measureNode = chordSections.get(0);
-        measures = measureNode.getMeasures();
+        chordSection = chordSections.get(0);
+        measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
         assertEquals(5, measures.size());
     }
 
@@ -269,9 +270,7 @@ public class SongTest
     public void testGetStructuralGrid()
     {
         Song a;
-        ArrayList<ChordSection> chordSections;
-        MeasureNode measureNode;
-        ArrayList<Measure> measures;
+        Measure measure;
 
         a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D E F G A C: D D GD E\n"
@@ -292,12 +291,12 @@ public class SongTest
                                 assertEquals(Section.verse, ((ChordSection) node).getSectionVersion().getSection());
                                 break;
                             case 1:
-                                assertEquals(ScaleNote.A, ((Measure) node).getMeasures().get(0).getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                             case 4:
-                                assertEquals(ScaleNote.D, ((Measure) node).getMeasures().get(0).getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                         }
                         break;
@@ -309,15 +308,18 @@ public class SongTest
                                 break;
                             case 1:
                             case 2:
-                                assertEquals(ScaleNote.D, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.D, measure.getChords().get(0)
                                         .getScaleChord().getScaleNote());
                                 break;
                             case 3:
-                                assertEquals(ScaleNote.G, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.G, measure.getChords().get(0)
                                         .getScaleChord().getScaleNote());
                                 break;
                             case 4:
-                                assertEquals(ScaleNote.E, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.E, measure.getChords().get(0)
                                         .getScaleChord().getScaleNote());
                                 break;
                         }
@@ -329,11 +331,13 @@ public class SongTest
                                 assertEquals(Section.chorus, ((ChordSection) node).getSectionVersion().getSection());
                                 break;
                             case 1:
-                                assertEquals(ScaleNote.A, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.A, measure.getChords().get(0)
                                         .getScaleChord().getScaleNote());
                                 break;
                             case 4:
-                                assertEquals(ScaleNote.D, ((Measure) node).getMeasures().get(0).getChords().get(0)
+                                measure = (Measure) node;
+                                assertEquals(ScaleNote.D, measure.getChords().get(0)
                                         .getScaleChord().getScaleNote());
                                 break;
                         }

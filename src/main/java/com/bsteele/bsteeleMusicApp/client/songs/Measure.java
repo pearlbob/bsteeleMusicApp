@@ -179,17 +179,6 @@ public class Measure extends MeasureNode
     }
 
     @Override
-    public ArrayList<Measure> getMeasures()
-    {
-        if (measures == null) {
-            measures = new ArrayList<>();
-            measures.add(this);
-        }
-        return measures;
-    }
-
-
-    @Override
     public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats)
     {
         ArrayList<String> ret = new ArrayList<>();
@@ -253,12 +242,6 @@ public class Measure extends MeasureNode
     public String toString()
     {
         return chordsToString();
-    }
-
-    @Override
-    public int getTotalMoments()
-    {
-        return 1;
     }
 
     private int beatCount = 4;  //  default only

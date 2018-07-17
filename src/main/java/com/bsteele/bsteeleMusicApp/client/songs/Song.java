@@ -408,29 +408,29 @@ public class Song implements Comparable<Song>
         for (LyricSection lyricSection : lyricSections) {
             ChordSection chordSection = findChordSection(lyricSection);
             if (chordSection != null) {
-                ArrayList<MeasureNode> chordSectionNodes = chordSection.getMeasureNodes();
-                if (chordSectionNodes != null)
-                    for (MeasureNode measureNode : chordSectionNodes) {
-                        if (measureNode.isRepeat()) {
-                            MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
+                ArrayList<MeasureSequenceItem> chordMeasureSequenceItems = chordSection.getMeasureSequenceItems();
+                if (chordMeasureSequenceItems != null)
+                    for (MeasureSequenceItem measureSequenceItem : chordMeasureSequenceItems) {
+                        if (measureSequenceItem.isRepeat()) {
+                            MeasureRepeat measureRepeat = (MeasureRepeat) measureSequenceItem;
                             int limit = measureRepeat.getRepeats();
                             for (int repeat = 0; repeat < limit; repeat++) {
-                                ArrayList<Measure> measures = measureNode.getMeasures();
+                                ArrayList<Measure> measures = measureRepeat.getMeasures();
                                 if (measures != null)
                                     for (Measure measure : measures) {
                                         songMoments.add(new SongMoment(
                                                 songMoments.size(),  //  size prior to add
-                                                lyricSection, measureNode,
+                                                lyricSection, measureSequenceItem,
                                                 measure, repeat, limit));
                                     }
                             }
                         } else {
-                            ArrayList<Measure> measures = measureNode.getMeasures();
+                            ArrayList<Measure> measures = measureSequenceItem.getMeasures();
                             if (measures != null)
                                 for (Measure measure : measures) {
                                     songMoments.add(new SongMoment(
                                             songMoments.size(),  //  size prior to add
-                                            lyricSection, measureNode,
+                                            lyricSection, measureSequenceItem,
                                             measure, 0, 0));
                                 }
                         }
@@ -650,20 +650,20 @@ public class Song implements Comparable<Song>
         return sb.toString();
     }
 
-    public void measureEdit(@Nonnull MeasureNode refMeasureNode, @Nonnull MeasureNode.EditLocation editLocation,
+    public void measureEdit(@Nonnull MeasureNode refMeasureNode, @Nonnull MeasureSequenceItem.EditLocation editLocation,
                             @Nonnull Measure measure)
     {
         ChordSection chordSection = findChordSection(refMeasureNode);
         if (chordSection == null)
             return;
 
-        MeasureNode measureNode = findMeasureNode(chordSection, refMeasureNode);
-        if (measureNode == null)
+        MeasureSequenceItem measureSequenceItem = findMeasureSequenceItem(chordSection, refMeasureNode);
+        if (measureSequenceItem == null)
             return;
 
         switch (editLocation) {
             case replace:
-                measureNode.replace(refMeasureNode, measure);
+                measureSequenceItem.replace(refMeasureNode, measure);
                 break;
         }
     }
@@ -671,20 +671,20 @@ public class Song implements Comparable<Song>
     private ChordSection findChordSection(MeasureNode measureNode)
     {
         for (ChordSection chordSection : chordSections) {
-            if (chordSection.getMeasureNodes().contains(measureNode))
+            if (chordSection.getMeasureSequenceItems().contains(measureNode))
                 return chordSection;
-            MeasureNode mn = findMeasureNode(chordSection, measureNode);
+            MeasureNode mn = findMeasureSequenceItem(chordSection, measureNode);
             if (mn != null)
                 return chordSection;
         }
         return null;
     }
 
-    private MeasureNode findMeasureNode(ChordSection chordSection, MeasureNode measureNode)
+    private MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
     {
-        for (MeasureNode mn : chordSection.getMeasureNodes()) {
-            if (mn.getMeasureNodes().contains(measureNode))
-                return mn;
+        for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
+            if (msi.getMeasures().contains(measureNode))
+                return msi;
         }
         return null;
     }
@@ -1477,8 +1477,8 @@ public class Song implements Comparable<Song>
 
         //  outlaw comments in the chord section
         for (ChordSection chordSection : newSong.getChordSections()) {
-            for (MeasureNode measureNode : chordSection.getMeasureNodes()) {
-                for (Measure measure : measureNode.getMeasures()) {
+            for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems()) {
+                for (Measure measure : measureSequenceItem.getMeasures()) {
                     if (measure instanceof MeasureComment) {
                         throw new ParseException("Comments are not allowed in the chord section.  \""
                                 + ((MeasureComment) measure).getComment() + "\" is considered a comment."

@@ -1,8 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
-import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
-import com.bsteele.bsteeleMusicApp.shared.Util;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -15,52 +13,19 @@ import java.util.logging.Logger;
  */
 public class MeasureSequenceItem extends MeasureNode
 {
-
-
-    public MeasureSequenceItem(@Nonnull ArrayList<MeasureNode> measureNodes)
+    public MeasureSequenceItem(@Nonnull ArrayList<Measure> measures)
     {
-        this.measureNodes = measureNodes;
+        this.measures = measures;
     }
 
-
-    @Override
-    public final ArrayList<MeasureNode> getMeasureNodes()
-    {
-        return measureNodes;
-    }
-
-
-    @Override
     public ArrayList<Measure> getMeasures()
     {
-        if (measures == null) {
-            measures = new ArrayList<>();
-            if (measureNodes != null)
-                for (MeasureNode measureNode : measureNodes) {
-                    ArrayList<Measure> childMeasures = measureNode.getMeasures();
-                    if (childMeasures != null)
-                        measures.addAll(childMeasures);
-                }
-        }
-        //GWT.log("total measures: " + measures.size());
         return measures;
     }
-
-    @Override
+    
     public int getTotalMoments()
     {
-        int ret = 0;
-
-        for (MeasureNode measureNode : measureNodes)
-            ret += measureNode.getTotalMoments();
-        return ret;
-    }
-
-
-    public final void setMeasureNodes(ArrayList<MeasureNode> measureNodes)
-    {
-        this.measureNodes = measureNodes;
-        measures = null;
+        return measures.size();
     }
 
     @Override
@@ -68,12 +33,12 @@ public class MeasureSequenceItem extends MeasureNode
     {
         ArrayList<String> ret = new ArrayList<>();
 
-        if (measureNodes != null && !measureNodes.isEmpty()) {
+        if (measures != null && !measures.isEmpty()) {
             MeasureNode lastMeasureNode = null;
             MeasureNode measureNode = null;
             int measuresOnThisLine = 0;
-            for (int i = 0; i < measureNodes.size(); i++) {
-                measureNode = measureNodes.get(i);
+            for (int i = 0; i < measures.size(); i++) {
+                measureNode = measures.get(i);
 
                 if (measureNode.isSingleItem()) {
                     if (measureNode.equals(lastMeasureNode))
@@ -82,7 +47,7 @@ public class MeasureSequenceItem extends MeasureNode
                         ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                     lastMeasureNode = measureNode;
 
-                    if (measuresOnThisLine % measuresPerLine == measuresPerLine - 1) {
+                    if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1) {
                         ret.add("\n");
                         lastMeasureNode = null;
                         measuresOnThisLine = 0;
@@ -106,10 +71,10 @@ public class MeasureSequenceItem extends MeasureNode
     {
         logger.finest("MeasureSequenceItem.addToGrid()");
 
-        for (MeasureNode measureNode : getMeasureNodes()) {
+        for (Measure measure : measures) {
             if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1)
                 grid.addTo(0, grid.getRowCount(), chordSection);
-            measureNode.addToGrid(grid, chordSection);
+            measure.addToGrid(grid, chordSection);
         }
     }
 
@@ -119,6 +84,37 @@ public class MeasureSequenceItem extends MeasureNode
         return "MeasureSequenceItem";   //  error
     }
 
+    public enum EditLocation
+    {
+        insert,
+        replace,
+        append,
+        delete;
+    }
+
+    void replace(MeasureNode measureNode, Measure newMeasure)
+    {
+        if (measureNode == null || measures == null || measures.isEmpty())
+            return;
+
+        if (!(measureNode instanceof Measure))
+            return;
+
+        Measure oldMeasure = (Measure) measureNode;
+        for (int i = 0; i < measures.size(); i++) {
+            if (oldMeasure.equals(measures.get(i))) {
+                ArrayList<Measure> replacementList = new ArrayList<>();
+                if (i > 0)
+                    replacementList.addAll(measures.subList(0, i));
+                replacementList.add(newMeasure);
+                if (i < measures.size() - 1)
+                    replacementList.addAll(measures.subList(i + 1, measures.size()));
+                measures = replacementList;
+            }
+        }
+        //   int i = measures.indexOf(oldMeasure);
+
+    }
 
     @Override
     public boolean isSingleItem()
@@ -132,13 +128,13 @@ public class MeasureSequenceItem extends MeasureNode
         if (this == o) return true;
         if (o == null || !(o instanceof MeasureSequenceItem)) return false;
         MeasureSequenceItem that = (MeasureSequenceItem) o;
-        return Objects.equals(measureNodes, that.measureNodes);
+        return Objects.equals(measures, that.measures);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(measureNodes);
+        return Objects.hash(measures);
     }
 
     @Override
@@ -147,15 +143,16 @@ public class MeasureSequenceItem extends MeasureNode
         StringBuilder sb = new StringBuilder();
         sb.append("{");
 
-        if (measureNodes != null)
-            for (MeasureNode measureNode : measureNodes) {
-                sb.append(measureNode.toString()).append(" ");
+        if (measures != null)
+            for (Measure measure : measures) {
+                sb.append(measure.toString()).append(" ");
             }
         sb.append("} ");
         return sb.toString();
     }
 
-    protected ArrayList<MeasureNode> measureNodes;
+
+    protected transient ArrayList<Measure> measures;
 
     private static final Logger logger = Logger.getLogger(MeasureSequenceItem.class.getName());
 }
