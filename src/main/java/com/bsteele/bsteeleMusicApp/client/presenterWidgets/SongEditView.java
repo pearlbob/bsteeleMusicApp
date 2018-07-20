@@ -20,6 +20,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.client.songs.Section;
 import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
@@ -247,7 +248,6 @@ public class SongEditView
                 if (scaleNoteOtherSelection.getSelectedIndex() > 0)
                     enterChord(scaleNoteOtherSelection.getValue());
                 scaleNoteOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
-                checkSong();
             }
         });
 
@@ -255,15 +255,6 @@ public class SongEditView
         measureEntry.addValueChangeHandler((ValueChangeEvent<String> event) -> {
             GWT.log("measure change: \"" + event.getValue() + "\"");
             processMeasureEntry();
-//            if (lastChordSelection != null) {
-//                SectionVersion sectionVersion = lastChordSelection.getSectionVersion();
-//                Measure newMeasure = Measure.parse(sectionVersion, measureEntry.getValue(), song.getBeatsPerBar());
-//                if (newMeasure != null) {
-//                    GWT.log("new measure: " + newMeasure.toString());
-//                    measureEntry.setValue("");
-//                } else
-//                    GWT.log("new measure: bad syntax: " + measureEntry.getValue());
-//            }
         });
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
             GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
@@ -277,6 +268,9 @@ public class SongEditView
                 case '\n':
                 case '\r':
                     processMeasureEntry();
+                    break;
+                default:
+                    preProcessMeasureEntry();
                     break;
             }
 
@@ -292,39 +286,33 @@ public class SongEditView
             selectChordsCell(lastChordSelection);
         });
 
-
-        chordsTextEntry.setFocus(true);
-        chordsTextEntry.addKeyUpHandler((KeyUpHandler) -> {
-            checkSong();
-        });
-
         lyricsTextEntry.addKeyUpHandler((KeyUpHandler) -> {
             checkSong();
         });
 
         sectionI.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.intro.getAbbreviation() + ":");
+            processEntry(Section.intro.getAbbreviation() + ":");
             checkSong();
         });
         sectionV.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.verse.getAbbreviation() + ":");
+            processEntry(Section.verse.getAbbreviation() + ":");
             checkSong();
         });
         sectionPC.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.preChorus.getAbbreviation() + ":");
+            processEntry(Section.preChorus.getAbbreviation() + ":");
             checkSong();
         });
         sectionC.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.chorus.getAbbreviation() + ":");
+            processEntry(Section.chorus.getAbbreviation() + ":");
             checkSong();
         });
         sectionBr.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.bridge.getAbbreviation() + ":");
+            processEntry(Section.bridge.getAbbreviation() + ":");
             checkSong();
         });
 
         sectionO.addClickHandler((ClickEvent event) -> {
-            chordsTextAdd("\n" + Section.outro.getAbbreviation() + ":");
+            processEntry(Section.outro.getAbbreviation() + ":");
             checkSong();
         });
 //        sectionA.addClickHandler((ClickEvent event) -> {
@@ -349,7 +337,7 @@ public class SongEditView
             Event.setEventListener(sectionOtherSelection, (Event event) -> {
                 if (Event.ONCHANGE == event.getTypeInt()) {
                     if (sectionOtherSelection.getSelectedIndex() > 0)
-                        chordsTextAdd("\n" + sectionOtherSelection.getValue() + ":");
+                        processEntry(sectionOtherSelection.getValue() + ":");
                     sectionOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
                     checkSong();
                 }
@@ -374,39 +362,30 @@ public class SongEditView
         //  chord entry
         chordsI.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsIV.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsIV7.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsV.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsV7.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsii.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsiii.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsvi.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         chordsvii.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
 
         recent0.setVisible(false);   //  hide them all initially
@@ -417,32 +396,26 @@ public class SongEditView
         recent1.setVisible(false);   //  hide them all initially
         recent1.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         recent2.setVisible(false);   //  hide them all initially
         recent2.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         recent3.setVisible(false);   //  hide them all initially
         recent3.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         recent4.setVisible(false);   //  hide them all initially
         recent4.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         recent5.setVisible(false);   //  hide them all initially
         recent5.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         common0.setVisible(false);   //  hide them all initially
         common0.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         common1.setVisible(false);   //  hide them all initially
         common1.addClickHandler((ClickEvent event) -> {
@@ -452,22 +425,18 @@ public class SongEditView
         common2.setVisible(false);   //  hide them all initially
         common2.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         common3.setVisible(false);   //  hide them all initially
         common3.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         common4.setVisible(false);   //  hide them all initially
         common4.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
         common5.setVisible(false);   //  hide them all initially
         common5.addClickHandler((ClickEvent event) -> {
             enterChord(event);
-            checkSong();
         });
 
         chordsUndo.setEnabled(false);
@@ -553,21 +522,35 @@ public class SongEditView
 
     }
 
-    private void processMeasureEntry()
+    private void preProcessMeasureEntry()
     {
         String entry = measureEntry.getValue();
         if (entry.isEmpty())
             return;
 
         //  speed entry enhancement: first chord char is always upper case
-        if ( entry.length() >= 1 ){
+        if (entry.length() >= 1) {
             char c = entry.charAt(0);
-            if ( c >= 'a' && c <= 'g' ) {
+            if (c >= 'a' && c <= 'g') {
                 entry = Util.firstToUpper(entry);
                 measureEntry.setValue(entry);
             }
         }
-        
+    }
+
+    private void processMeasureEntry()
+    {
+        String entry = measureEntry.getValue();
+        if (entry.isEmpty())
+            return;
+
+        preProcessMeasureEntry();
+        if (processEntry(entry))
+            measureEntry.setValue("");
+    }
+
+    private boolean processEntry(String entry)
+    {
         SectionVersion sectionVersion = Section.parse(entry);
         if (sectionVersion != null) {
             GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
@@ -576,22 +559,29 @@ public class SongEditView
         Measure measure = Measure.parse(entry, song.getBeatsPerBar());
         if (measure != null) {
             GWT.log("new measure: \"" + measure.toString() + "\"");
-            entry = entry.substring(measure.getParseLength());
+            // entry = entry.substring(measure.getParseLength());
         }
-        measureEntry.setValue("");
-        if( sectionVersion!= null ){ //  fixme
+
+        if (sectionVersion != null) { //  fixme
         }
-        if( measure!= null && lastChordSelection != null ){
+
+        if (measure != null && lastChordSelection != null) {
             MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
             if (editInsert.getValue()) {
                 editLocation = MeasureSequenceItem.EditLocation.insert;
-            } else if ( editReplace.getValue()){
+            } else if (editReplace.getValue()) {
                 editLocation = MeasureSequenceItem.EditLocation.replace;
             }
 
-            song.measureEdit(song.getStructuralMeasureNode(lastChordSelection.row, lastChordSelection.col),
-                    editLocation, measure);
+            if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection.row, lastChordSelection.col),
+                    editLocation, measure))
+            {
+                editAppend.setValue(true);      //  select append
+                song.transpose(prefix, chordsFlexTable, 0, fontsize);
+                return true;
+            }
         }
+        return false;
     }
 
 
@@ -609,7 +599,7 @@ public class SongEditView
         setKey(song.getKey());
         bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
         timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-        chordsTextEntry.setValue(song.getChordsAsString());
+        chordsTextEntry.setValue(song.getStructuralGridAsText());
         chordsTextEntry.setCursorPos(0);
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
@@ -621,6 +611,7 @@ public class SongEditView
         chordsFlexTable.addClickHandler(clickEvent -> {
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
             selectChordsCell(new ChordSelection(cell));
+            measureEntry.setFocus(true);
         });
 
         checkSong();
@@ -739,7 +730,7 @@ public class SongEditView
             newSong = Song.checkSong(titleEntry.getText(), artistEntry.getText(),
                     copyrightEntry.getText(),
                     key, bpmEntry.getText(), beatsPerBar, unitsPerMeasure,
-                    chordsTextEntry.getValue(), lyricsTextEntry.getValue());
+                    song.getStructuralGridAsText(), lyricsTextEntry.getValue());
         } catch (ParseException pe) {
             errorLabel.setText(pe.getMessage());
             songEnter.setDisabled(true);
@@ -790,11 +781,11 @@ public class SongEditView
         if (scaleChord == null)
             return; //  fixme: shouldn't happen
 
-        chordsAdd(scaleChord);
-        addRecentScaleChord(scaleChord);
-        chordsTextAdd(scaleChord.toString());
-        findMostCommonScaleChords();
-        checkSong();
+        if (processEntry(scaleChord.toString() + " ")) {
+            addRecentScaleChord(scaleChord);
+            findMostCommonScaleChords();
+            checkSong();
+        }
     }
 
     private void addRecentScaleChord(ScaleChord scaleChord)
@@ -825,17 +816,17 @@ public class SongEditView
         }
     }
 
-    private class CommonScaleChordItem implements Comparable<CommonScaleChordItem>
+    private class MeasureCountItem implements Comparable<MeasureCountItem>
     {
-        CommonScaleChordItem(ScaleChord scaleChord, int count)
+        MeasureCountItem(Measure measure, int count)
         {
-            this.scaleChord = scaleChord;
+            this.measure = measure;
             this.count = count;
         }
 
-        public ScaleChord getScaleChord()
+        public Measure getScaleChord()
         {
-            return scaleChord;
+            return measure;
         }
 
         public int getCount()
@@ -844,14 +835,14 @@ public class SongEditView
         }
 
         @Override
-        public int compareTo(CommonScaleChordItem o)
+        public int compareTo(MeasureCountItem o)
         {
             if (count != o.count)
                 return count < o.count ? 1 : -1;   //  note reverse order
-            return scaleChord.compareTo(o.scaleChord);
+            return measure.compareTo(o.measure);
         }
 
-        private final ScaleChord scaleChord;
+        private final Measure measure;
         private final int count;
     }
 
@@ -866,23 +857,26 @@ public class SongEditView
                 common5
         };
 
-        HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(chordsTextEntry.getValue());
+        HashMap<Measure, Integer> measureMap = new HashMap<>();
+        for (SongMoment songMoment : song.getSongMoments()) {
+            Measure m = songMoment.getMeasure();
+            measureMap.put(m, (measureMap.containsKey(m) ? measureMap.get(m).intValue() : 0) + 1);
+        }
 
-        TreeSet<CommonScaleChordItem> commonScaleChordItems = new TreeSet<>();
-        for (ScaleChord key : scaleChordMap.keySet()) {
-            commonScaleChordItems.add(new CommonScaleChordItem(key, scaleChordMap.get(key)));
+        TreeSet<MeasureCountItem> MeasureCountItems = new TreeSet<>();
+        for (Measure measure : measureMap.keySet()) {
+            MeasureCountItems.add(new MeasureCountItem(measure, measureMap.get(measure)));
         }
         int i = 0;
-        for (CommonScaleChordItem item : commonScaleChordItems) {
+        for (MeasureCountItem item : MeasureCountItems) {
             if (i >= commons.length)
                 break;
             Button common = commons[i++];
             common.setHTML(item.getScaleChord().toString());
             common.setVisible(true);
-            //GWT.log((i - 1) + ": " + item.getCount() + " " + item.getScaleChord());
         }
         while (i < commons.length) {
-            //GWT.log(i + ": hide");
+            //  hide
             Button common = commons[i++];
             common.setVisible(false);
         }
@@ -919,21 +913,6 @@ public class SongEditView
             GWT.log("replace: (" + row + ", " + col + "): " + scaleChord.toString());
         }
     }
-
-    private void chordsTextAdd(String addition)
-    {
-        if (addition == null || addition.length() == 0)
-            return;
-        addition += " ";
-
-        int position = chordsTextEntry.getCursorPos();
-        String text = chordsTextEntry.getValue();
-        text = text.substring(0, position) + addition + text.substring(position);
-        chordsTextEntry.setText(text);
-        chordsTextEntry.setCursorPos(position + addition.length());
-        chordsTextEntry.setFocus(true);
-    }
-
 
     private void fireSongSubmission(Song song)
     {
@@ -1035,7 +1014,7 @@ public class SongEditView
     }
 
     private ArrayList<ScaleChord> recentScaleChords = new ArrayList<>();
-    private ArrayList<ScaleChord> commonScaleChords = new ArrayList<>();
+    //private ArrayList<ScaleChord> commonScaleChords = new ArrayList<>();
     HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private Key key = Key.getDefault();
     private Song song;

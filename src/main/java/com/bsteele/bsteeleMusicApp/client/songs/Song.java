@@ -615,6 +615,31 @@ public class Song implements Comparable<Song>
         return ret;
     }
 
+    public String getStructuralGridAsText()
+    {
+        StringBuilder sb = new StringBuilder();
+        Grid<MeasureNode> grid = getStructuralGrid();
+        int rowCount = grid.getRowCount();
+        MeasureNode lastChordSection = null;
+        for (int r = 0; r < rowCount; r++) {
+            ArrayList<MeasureNode> row = grid.getRow(r);
+            int colCount = row.size();
+            for (int c = 0; c < colCount; c++) {
+                MeasureNode mn = row.get(c);
+                if (c == 0) {
+                    sb.append("\n");
+                    if (!mn.equals(lastChordSection))
+                        sb.append(mn.toText()).append("\n");
+                    lastChordSection = mn;
+                    continue;
+                }
+                sb.append(" ").append(mn.toString());
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
     private SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row)
     {
         int rowCount = grid.getRowCount();
@@ -652,35 +677,35 @@ public class Song implements Comparable<Song>
         return sb.toString();
     }
 
-    public void measureEdit(@Nonnull MeasureNode refMeasureNode, @Nonnull MeasureSequenceItem.EditLocation editLocation,
-                            @Nonnull Measure measure)
+    public boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
+                               @Nonnull MeasureSequenceItem.EditLocation editLocation,
+                               @Nonnull Measure measure)
     {
         ChordSection chordSection = findChordSection(refMeasureNode);
         if (chordSection == null)
-            return;
+            return false;
 
         MeasureSequenceItem measureSequenceItem = findMeasureSequenceItem(chordSection, refMeasureNode);
         if (measureSequenceItem == null)
-            return;
+            return false;
 
         switch (editLocation) {
             case insert:
-                measureSequenceItem.insert(refMeasureNode, measure);
-                break;
+                return measureSequenceItem.insert(refMeasureNode, measure);
             case replace:
-                measureSequenceItem.replace(refMeasureNode, measure);
-                break;
+                return measureSequenceItem.replace(refMeasureNode, measure);
             case append:
-                measureSequenceItem.append(refMeasureNode, measure);
-                break;
+                return measureSequenceItem.append(refMeasureNode, measure);
         }
+        return false;
     }
 
     private ChordSection findChordSection(MeasureNode measureNode)
     {
         for (ChordSection chordSection : chordSections) {
-            if (chordSection.getMeasureSequenceItems().contains(measureNode))
-                return chordSection;
+            for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems())
+                if (measureSequenceItem == measureNode)
+                    return chordSection;
             MeasureNode mn = findMeasureSequenceItem(chordSection, measureNode);
             if (mn != null)
                 return chordSection;
@@ -691,8 +716,9 @@ public class Song implements Comparable<Song>
     private MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
     {
         for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
-            if (msi.getMeasures().contains(measureNode))
-                return msi;
+            for (Measure measure : msi.getMeasures())
+                if (measure == measureNode)
+                    return msi;
         }
         return null;
     }
@@ -1145,7 +1171,7 @@ public class Song implements Comparable<Song>
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
 
-        int offset =0;
+        int offset = 0;
         if (append)
             offset = flexTable.getRowCount();
         else
@@ -1156,7 +1182,7 @@ public class Song implements Comparable<Song>
         SectionVersion lastSectionVersion = null;
         int rLimit = grid.getRowCount();
         for (int r = 0; r < rLimit; r++) {
-            formatter.addStyleName(r+offset, 0, CssConstants.style + "sectionLabel");
+            formatter.addStyleName(r + offset, 0, CssConstants.style + "sectionLabel");
 
             ArrayList<MeasureNode> row = grid.getRow(r);
             int colLimit = row.size();
@@ -1179,20 +1205,21 @@ public class Song implements Comparable<Song>
                 //  enforce the - on repeated measures
                 if (c > 0 && c <= MusicConstant.measuresPerDisplayRow && s.equals(lastValue)) {
                     s = "-";
-                    formatter.addStyleName(r+offset, c,CssConstants.style + "textCenter");
+                    formatter.addStyleName(r + offset, c, CssConstants.style + "textCenter");
                 } else
                     lastValue = s;
 
-                flexTable.setHTML(r+offset, c,
+                flexTable.setHTML(r + offset, c,
                         "<span style=\"font-size: " + fontSize + "px;\">"
                                 + s
                                 + "</span>"
                 );
-                formatter.addStyleName(r+offset, c, CssConstants.style
+                formatter.addStyleName(r + offset, c, CssConstants.style
                         + "section"
                         + sectionVersion.getSection().getAbbreviation()
                         + "Class");
-                formatter.getElement(r+offset, c).setId(prefix + "." + measureNode.getHtmlBlockId() + "." + r + "." + c);
+                formatter.getElement(r + offset, c).setId(prefix + "." + measureNode.getHtmlBlockId() + "." + r + "."
+                        + c);
             }
         }
     }

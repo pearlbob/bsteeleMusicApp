@@ -33,6 +33,8 @@ public abstract class MeasureNode
 
     public String transpose(@Nonnull Key key, int halfSteps) { return toString(); }     //  default only
 
+    public String toText() { return toString(); }     //  default only
+
     public abstract boolean equals(Object o);
 
     public abstract int hashCode();

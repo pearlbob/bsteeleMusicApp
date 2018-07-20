@@ -7,10 +7,12 @@ import java.util.Objects;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class Chord {
+public class Chord implements Comparable<Chord>
+{
 
     public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
-                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay) {
+                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay)
+    {
         this.scaleChord = scaleChord;
         this.beats = beatsPerBar;
         this.beatsPerBar = beatsPerBar;
@@ -18,7 +20,8 @@ public class Chord {
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
-    public static final Chord parse(String s, int beatsPerBar) {
+    public static final Chord parse(String s, int beatsPerBar)
+    {
         if (s == null || s.length() <= 0)
             return null;
 
@@ -54,15 +57,18 @@ public class Chord {
         return ret;
     }
 
-    public Chord(ScaleChord scaleChord) {
+    public Chord(ScaleChord scaleChord)
+    {
         this(scaleChord, 4, 4, null, ChordAnticipationOrDelay.none);
     }
 
-    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar) {
+    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar)
+    {
         this(scaleChord, beats, beatsPerBar, null, ChordAnticipationOrDelay.none);
     }
 
-    public Chord transpose(Key key, int halfSteps) {
+    public Chord transpose(Key key, int halfSteps)
+    {
         return new Chord(scaleChord.transpose(key, halfSteps), beats, beatsPerBar,
                 slashScaleChord == null ? null : slashScaleChord.transpose(key, halfSteps), anticipationOrDelay);
     }
@@ -72,7 +78,8 @@ public class Chord {
      *
      * @return the scale chord
      */
-    public ScaleChord getScaleChord() {
+    public ScaleChord getScaleChord()
+    {
         return scaleChord;
     }
 
@@ -90,7 +97,8 @@ public class Chord {
      *
      * @return the beat count
      */
-    public final int getBeats() {
+    public final int getBeats()
+    {
         return beats;
     }
 
@@ -99,7 +107,8 @@ public class Chord {
      *
      * @param beats the beat count
      */
-    public final void setBeats(int beats) {
+    public final void setBeats(int beats)
+    {
         this.beats = beats;
     }
 
@@ -109,7 +118,8 @@ public class Chord {
      *
      * @return
      */
-    public final ScaleChord getSlashScaleChord() {
+    public final ScaleChord getSlashScaleChord()
+    {
         return slashScaleChord;
     }
 
@@ -119,7 +129,8 @@ public class Chord {
      *
      * @param slashScaleChord
      */
-    final void setSlashScaleChord(ScaleChord slashScaleChord) {
+    final void setSlashScaleChord(ScaleChord slashScaleChord)
+    {
         this.slashScaleChord = slashScaleChord;
     }
 
@@ -128,7 +139,8 @@ public class Chord {
      *
      * @return the timing adjustment
      */
-    public final ChordAnticipationOrDelay getAnticipationOrDelay() {
+    public final ChordAnticipationOrDelay getAnticipationOrDelay()
+    {
         return anticipationOrDelay;
     }
 
@@ -137,13 +149,79 @@ public class Chord {
      *
      * @param anticipationOrDelay the timing adjustment
      */
-    public final void setAnticipationOrDelay(ChordAnticipationOrDelay anticipationOrDelay) {
+    public final void setAnticipationOrDelay(ChordAnticipationOrDelay anticipationOrDelay)
+    {
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
 
-    public final int getParseLength() {
+    public final int getParseLength()
+    {
         return parseLength;
+    }
+
+
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * <p>The implementor must ensure <tt>sgn(x.compareTo(y)) ==
+     * -sgn(y.compareTo(x))</tt> for all <tt>x</tt> and <tt>y</tt>.  (This
+     * implies that <tt>x.compareTo(y)</tt> must throw an exception iff
+     * <tt>y.compareTo(x)</tt> throws an exception.)
+     *
+     * <p>The implementor must also ensure that the relation is transitive:
+     * <tt>(x.compareTo(y)&gt;0 &amp;&amp; y.compareTo(z)&gt;0)</tt> implies
+     * <tt>x.compareTo(z)&gt;0</tt>.
+     *
+     * <p>Finally, the implementor must ensure that <tt>x.compareTo(y)==0</tt>
+     * implies that <tt>sgn(x.compareTo(z)) == sgn(y.compareTo(z))</tt>, for
+     * all <tt>z</tt>.
+     *
+     * <p>It is strongly recommended, but <i>not</i> strictly required that
+     * <tt>(x.compareTo(y)==0) == (x.equals(y))</tt>.  Generally speaking, any
+     * class that implements the <tt>Comparable</tt> interface and violates
+     * this condition should clearly indicate this fact.  The recommended
+     * language is "Note: this class has a natural ordering that is
+     * inconsistent with equals."
+     *
+     * <p>In the foregoing description, the notation
+     * <tt>sgn(</tt><i>expression</i><tt>)</tt> designates the mathematical
+     * <i>signum</i> function, which is defined to return one of <tt>-1</tt>,
+     * <tt>0</tt>, or <tt>1</tt> according to whether the value of
+     * <i>expression</i> is negative, zero or positive.
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException   if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    @Override
+    public int compareTo(Chord o)
+    {
+        int ret = scaleChord.compareTo(o.scaleChord);
+        if (ret != 0)
+            return ret;
+        if (slashScaleChord == null && o.slashScaleChord != null)
+            return -1;
+        if (slashScaleChord != null && o.slashScaleChord == null)
+            return 1;
+        if (slashScaleChord != null && o.slashScaleChord != null) {
+            ret = slashScaleChord.compareTo(o.slashScaleChord);
+            if (ret != 0)
+                return ret;
+        }
+        if (beats != o.beats)
+            return beats < o.beats ? -1 : 1;
+        ret = anticipationOrDelay.compareTo(o.anticipationOrDelay);
+        if (ret != 0)
+            return ret;
+        if (beatsPerBar != o.beatsPerBar)
+            return beatsPerBar < o.beatsPerBar ? -1 : 1;
+        return 0;
     }
 
     /**
@@ -168,7 +246,8 @@ public class Chord {
      * @return a string representation of the object.
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         String ret = scaleChord.toString()
                 + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
@@ -180,9 +259,23 @@ public class Chord {
         return ret;
     }
 
+    public String toStringWithoutInversion()
+    {
+        String ret = scaleChord.toString()
+                //+ (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
+                + anticipationOrDelay.toString();
+        if (beats < beatsPerBar) {
+            int b = 1;
+            while (b++ < beats && b < 8)
+                ret += ".";
+        }
+        return ret;
+    }
+
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (!(o instanceof Chord))
             return false;
         Chord oc = (Chord) o;
@@ -199,15 +292,18 @@ public class Chord {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return Objects.hash(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay);
     }
 
-    public final int getBeatsPerBar() {
+    public final int getBeatsPerBar()
+    {
         return beatsPerBar;
     }
 
-    public final void setBeatsPerBar(int beatsPerBar) {
+    public final void setBeatsPerBar(int beatsPerBar)
+    {
         this.beatsPerBar = beatsPerBar;
     }
 
@@ -217,6 +313,4 @@ public class Chord {
     private ScaleChord slashScaleChord;
     private ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.none;
     private transient int parseLength;
-
-
 }

@@ -93,38 +93,39 @@ public class MeasureSequenceItem extends MeasureNode
         delete;
     }
 
-    void insert(MeasureNode measureNode, Measure newMeasure)
+    boolean insert(MeasureNode measureNode, Measure newMeasure)
     {
         if (measures == null)
             measures = new ArrayList<>();
         if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
             measures.add(newMeasure);
-            return;
+            return true;
         }
 
         Measure oldMeasure = (Measure) measureNode;
 
         for (int i = 0; i < measures.size(); i++) {
 
-            if (oldMeasure.equals(measures.get(i))) {
+            if (oldMeasure==measures.get(i)) {
                 measures.add(i, newMeasure);
-                return;
+                return true;
             }
         }
         measures.add(newMeasure);
+        return true;
     }
 
-    void replace(MeasureNode measureNode, Measure newMeasure)
+    boolean replace(MeasureNode measureNode, Measure newMeasure)
     {
         if (measureNode == null || measures == null || measures.isEmpty())
-            return;
+            return false;
 
         if (!(measureNode instanceof Measure))
-            return;
+            return false;
 
         Measure oldMeasure = (Measure) measureNode;
         for (int i = 0; i < measures.size(); i++) {
-            if (oldMeasure.equals(measures.get(i))) {
+            if (oldMeasure==measures.get(i)) {
                 ArrayList<Measure> replacementList = new ArrayList<>();
                 if (i > 0)
                     replacementList.addAll(measures.subList(0, i));
@@ -132,28 +133,31 @@ public class MeasureSequenceItem extends MeasureNode
                 if (i < measures.size() - 1)
                     replacementList.addAll(measures.subList(i + 1, measures.size()));
                 measures = replacementList;
+                return true;
             }
         }
+        return false;
     }
 
-    void append(MeasureNode measureNode, Measure newMeasure)
+    boolean append(MeasureNode measureNode, Measure newMeasure)
     {
         if (measures == null)
             measures = new ArrayList<>();
         if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
             measures.add(newMeasure);
-            return;
+            return true;
         }
 
         Measure oldMeasure = (Measure) measureNode;
 
         for (int i = 0; i < measures.size(); i++) {
-            if (oldMeasure.equals(measures.get(i)))  {
+            if (oldMeasure==measures.get(i))  {
                 measures.add(i+1, newMeasure);
-                return;
+                return true;
             }
         }
         measures.add(newMeasure);
+        return true;
     }
 
 

@@ -38,7 +38,8 @@
                             <g:Grid ui:field="songGrid"/>
                         </div>
                         <p><g:Label ui:field="listCount" /></p>
-                        <g:Button text="test" ui:field="testParse"/>
+                        <g:Button text="Test Parse" ui:field="testParse"/>&nbsp;
+                        <g:Button text="Remove All" ui:field="removeAll"/>
                     </div>
                 </g:HTMLPanel>
             </g:ScrollPanel>

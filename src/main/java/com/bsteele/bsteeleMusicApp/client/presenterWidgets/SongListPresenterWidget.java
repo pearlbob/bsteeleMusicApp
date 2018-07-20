@@ -33,24 +33,29 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongSubmissionEventHandler,
         SongReadEventHandler,
         NextSongEventHandler,
-        AllSongWriteEventHandler {
+        AllSongWriteEventHandler
+{
 
 
-    public interface MyView extends View {
+    public interface MyView extends View
+    {
 
         HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler);
 
         HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler);
 
-        void setSongList(Set<Song> songs);
+        void addToSongList(Song song);
+        void displaySongList();
+        void saveSongAs(String filename, String data);
+        void saveAllSongsAs( String fileName );
 
         void nextSong(boolean forward);
     }
 
     @Inject
     SongListPresenterWidget(final EventBus eventBus,
-                            final MyView view
-    ) {
+                            final MyView view)
+    {
         super(eventBus, view);
 
         this.eventBus = eventBus;
@@ -61,7 +66,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onBind() {
+    public void onBind()
+    {
         view.addSongUpdateEventHandler(this);
         view.addSongReadEventHandler(this);
 
@@ -71,46 +77,49 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onSongUpdate(SongUpdateEvent event) {
+    public void onSongUpdate(SongUpdateEvent event)
+    {
         eventBus.fireEvent(event);
     }
 
     @Override
-    public void onSongSubmission(SongSubmissionEvent event) {
+    public void onSongSubmission(SongSubmissionEvent event)
+    {
         Song song = event.getSong();
         String filename = song.getTitle() + ".songlyrics";
 
-        saveSongAs(filename, song.toJson());
+        view.saveSongAs(filename, song.toJson());
 
-        addToSongList(song);
-        view.setSongList(allSongs);
+        view.addToSongList(song);
+        view.displaySongList();
         fireEvent(new SongUpdateEvent(song));
     }
 
     @Override
-    public void onSongRead(SongReadEvent event) {
+    public void onSongRead(SongReadEvent event)
+    {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
             for (Song song : songs)
-                addToSongList(song);
-            view.setSongList(allSongs);
+                view.addToSongList(song);
+            view.displaySongList();
             Song song = songs.get(songs.size() - 1);
             fireEvent(new SongUpdateEvent(song));
         }
     }
 
     @Override
-    public void onAllSongWrite(AllSongWriteEvent event) {
+    public void onAllSongWrite(AllSongWriteEvent event)
+    {
         Date now = new Date();
         DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
 
-        String data = Song.toJson(allSongs);
-        saveSongAs("allSongs_" + fmt.format(now) + ".songlyrics", data);
-        //allSongs.clear(); view.setSongList(allSongs);// testParse only
+        view.saveAllSongsAs("allSongs_" + fmt.format(now) + ".songlyrics");
     }
 
 
-    private void addJsonToSongList(String jsonString) {
+    private void addJsonToSongList(String jsonString)
+    {
         if (jsonString != null && jsonString.length() > 0) {
             JSONValue jv = JSONParser.parseStrict(jsonString);
             if (jv != null) {
@@ -118,46 +127,29 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                 if (ja != null) {
                     int jaLimit = ja.size();
                     //  order by oldest first
-                    TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(Song.ComparatorType.versionNumber));
+                    TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(
+                            Song.ComparatorType.versionNumber));
                     for (int i = 0; i < jaLimit; i++) {
                         sortedSet.add(Song.fromJsonObject(ja.get(i).isObject()));
                     }
                     //  add to all songs
                     for (Song song : sortedSet) {
-                        addToSongList(song);
+                        view.addToSongList(song);
                     }
+                    view.displaySongList();
                 }
             }
         }
-        view.setSongList(allSongs);
     }
 
-    private void addToSongList(Song song) {
-        if (song != null) {
-            if (allSongs.contains(song)) {
-                allSongs.remove(song);  //  remove any prior version
-            }
-            allSongs.add(song);
-        }
-    }
 
     @Override
-    public void onNextSong(NextSongEvent event) {
+    public void onNextSong(NextSongEvent event)
+    {
         getView().nextSong(event.isForward());
     }
 
 
-    /**
-     * Native function to write the song as JSON.
-     *
-     * @param filename
-     * @param data
-     */
-    private void saveSongAs(String filename, String data) {
-        ClientFileIO.saveDataAs(filename, data);
-    }
-
-    private final TreeSet<Song> allSongs = new TreeSet<>();
     private final EventBus eventBus;
     private final MyView view;
 }

@@ -10,6 +10,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHand
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
+import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
@@ -54,15 +55,6 @@ public class SongListView
         implements SongListPresenterWidget.MyView,
         HasHandlers
 {
-
-    @Override
-    public void setSongList(Set<Song> songs)
-    {
-        allSongs.clear();
-        allSongs.addAll(songs);
-        searchSongs(songSearch.getValue());
-    }
-
     interface Binder extends UiBinder<Widget, SongListView>
     {
     }
@@ -89,6 +81,8 @@ public class SongListView
     Label listCount;
     @UiField
     Button testParse;
+    @UiField
+    Button removeAll;
 
     @Inject
     SongListView(@Nonnull final EventBus eventBus, @Nonnull Binder binder)
@@ -173,6 +167,10 @@ public class SongListView
             displaySongList(filteredSongs);
         });
 
+        removeAll.addClickHandler((event) -> {
+            allSongs.clear();
+            searchSongs(songSearch.getValue());
+        });
     }
 
     @Override
@@ -192,6 +190,45 @@ public class SongListView
     public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler)
     {
         return handlerManager.addHandler(SongReadEvent.TYPE, handler);
+    }
+
+    @Override
+    public void saveAllSongsAs(String fileName)
+    {
+        String data = Song.toJson(allSongs);
+        saveSongAs(fileName, data);
+    }
+
+
+    /**
+     * Native function to write the song as JSON.
+     *
+     * @param filename
+     * @param data
+     */
+    @Override
+    public void saveSongAs(String filename, String data)
+    {
+        ClientFileIO.saveDataAs(filename, data);
+    }
+
+
+    @Override
+    public void addToSongList(Song song)
+    {
+        if (song != null) {
+            if (allSongs.contains(song)) {
+                allSongs.remove(song);  //  remove any prior version
+            }
+            allSongs.add(song);
+
+        }
+    }
+
+    @Override
+    public void displaySongList()
+    {
+        searchSongs(songSearch.getValue());
     }
 
     private void searchSongs(String search)
@@ -252,9 +289,10 @@ public class SongListView
         if (filteredSongs.isEmpty())
             return;
 
-        if (selectedSong == null || !filteredSongs.contains(selectedSong))
+        if (selectedSong == null || !filteredSongs.contains(selectedSong)) {
             selectedSong = filteredSongs.get(0);
-        else
+            fireEvent(new SongUpdateEvent(selectedSong));
+        } else
             for (int i = 0; i < filteredSongs.size(); i++)
                 if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
                 {

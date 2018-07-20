@@ -263,16 +263,15 @@ public class ChordSection extends MeasureNode
     }
 
     @Override
+    public String toText(){
+       return getSectionVersion().toString();
+    }
+
+    @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(getSectionVersion().toString()).append("{");
-
-        if (measureSequenceItems != null)
-            for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
-                sb.append(measureSequenceItem.toString()).append(" ");
-            }
-        sb.append("}");
+        sb.append(getSectionVersion().toString()).append(super.toString());
         return sb.toString();
     }
 

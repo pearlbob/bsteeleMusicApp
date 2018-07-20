@@ -13,8 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-
-fixme: A/G♯E/G♯ As Tears Go By
+fixme: lyrics and chords sizing
 fixme: Black Velvet, Alannah Myles key of B, line 1 of c: DG♯♯ (was EbBb in key of C, became: D#A#),  AA of line 2 doesn't transpose either (was BbA)
 
 
