@@ -98,8 +98,7 @@
                         <g:RadioButton ui:field="editReplace" name="EditPosition">Replace</g:RadioButton>
                         <g:RadioButton ui:field="editAppend" name="EditPosition">Append</g:RadioButton>
                         <g:FlexTable ui:field="chordsFlexTable"/>
-                        <!--<g:HTMLPanel ui:field="editChords"/>-->
-                        <g:TextArea ui:field="chordsTextEntry" styleName='{resources.style.chordsTextEntry}'/>
+                        <g:Label ui:field="chordsText" styleName='{resources.style.chordsTextEntry}'/>
                     </td>
                     <td>
                         <table>
