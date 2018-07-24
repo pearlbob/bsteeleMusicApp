@@ -653,6 +653,13 @@ public class Song implements Comparable<Song>
         return null;
     }
 
+    public MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection)
+    {
+        if (songChordGridSelection == null)
+            return null;
+        return getStructuralMeasureNode(songChordGridSelection.getRow(), songChordGridSelection.getCol());
+    }
+
     public MeasureNode getStructuralMeasureNode(int r, int c)
     {
         try {
@@ -700,15 +707,19 @@ public class Song implements Comparable<Song>
         return false;
     }
 
-    private ChordSection findChordSection(MeasureNode measureNode)
+
+    public MeasureSequenceItem findMeasureSequenceItem(Measure measure)
     {
-        for (ChordSection chordSection : chordSections) {
-            for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems())
-                if (measureSequenceItem == measureNode)
-                    return chordSection;
-            MeasureNode mn = findMeasureSequenceItem(chordSection, measureNode);
-            if (mn != null)
-                return chordSection;
+        if (measure == null)
+            return null;
+
+        ChordSection chordSection = findChordSection(measure);
+        if (chordSection == null)
+            return null;
+        for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
+            for (Measure m : msi.getMeasures())
+                if (m == measure)
+                    return msi;
         }
         return null;
     }
@@ -723,9 +734,62 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public void measureDelete(@Nonnull Measure measure)
-    {
 
+    private ChordSection findChordSection(MeasureNode measureNode)
+    {
+        for (ChordSection chordSection : chordSections) {
+            for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems())
+                if (measureSequenceItem == measureNode)
+                    return chordSection;
+            MeasureNode mn = findMeasureSequenceItem(chordSection, measureNode);
+            if (mn != null)
+                return chordSection;
+        }
+        return null;
+    }
+
+    public SongChordGridSelection findMeasureChordGridLocation(Measure measure)
+    {
+        Grid<MeasureNode> grid = getStructuralGrid();
+        int rowCount = grid.getRowCount();
+        for (int r = 0; r < rowCount; r++) {
+            ArrayList<MeasureNode> row = grid.getRow(r);
+            int colCount = row.size();
+            for (int c = 0; c < colCount; c++) {
+                MeasureNode mn = row.get(c);
+                if (mn == measure) {
+                    return new SongChordGridSelection(r, c);
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public Measure findMeasure(SongChordGridSelection songChordGridSelection)
+    {
+        if (songChordGridSelection == null)
+            return null;
+        Grid<MeasureNode> grid = getStructuralGrid();
+        MeasureNode measureNode = grid.get(songChordGridSelection.getCol(), songChordGridSelection.getRow()); //   x,y!
+        if (measureNode != null && measureNode instanceof Measure)
+            return ((Measure) measureNode);
+        return null;
+    }
+
+    public boolean measureDelete(Measure measure)
+    {
+        if (measure == null)
+            return false;
+
+        for (ChordSection chordSection : chordSections) {
+            for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
+                for (Measure m : msi.getMeasures())
+                    if (m == measure)
+                        return msi.remove(m);
+            }
+        }
+        return false;
     }
 
     @Deprecated

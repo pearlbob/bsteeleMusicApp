@@ -10,23 +10,16 @@ import com.google.gwt.user.client.ui.HTMLTable;
 public class SongChordGridSelection
 {
 
-    public SongChordGridSelection(Element e, int row, int col)
+    public SongChordGridSelection(int row, int col)
     {
-        this.element = e;
         this.row = row;
         this.col = col;
     }
 
     public SongChordGridSelection(HTMLTable.Cell cell)
     {
-        this.element = cell.getElement();
         this.row = cell.getRowIndex();
         this.col = cell.getCellIndex();
-    }
-
-    public Element getElement()
-    {
-        return element;
     }
 
     public int getRow()
@@ -38,8 +31,7 @@ public class SongChordGridSelection
     {
         return col;
     }
-
-    private Element element;
+    
     private int row;
     private int col;
 }

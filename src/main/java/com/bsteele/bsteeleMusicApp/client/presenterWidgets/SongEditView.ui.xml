@@ -89,18 +89,19 @@
 
             <table>
                 <tr>
-                    <td>
+                    <td style="vertical-align:top">
                         Chords:
                         <br/>
                         <g:TextBox ui:field="measureEntry" styleName="{resources.style.entryLine}"/>
                         <br/>
                         <g:RadioButton ui:field="editInsert" name="EditPosition">Insert</g:RadioButton>
                         <g:RadioButton ui:field="editReplace" name="EditPosition">Replace</g:RadioButton>
+                        <g:Button ui:field="editDelete">Delete</g:Button>
                         <g:RadioButton ui:field="editAppend" name="EditPosition">Append</g:RadioButton>
                         <g:FlexTable ui:field="chordsFlexTable"/>
                         <g:Label ui:field="chordsText" styleName='{resources.style.chordsTextEntry}'/>
                     </td>
-                    <td>
+                    <td style="vertical-align:top">
                         <table>
                             <tr>
                                 <td>
@@ -237,9 +238,6 @@
                             <li>Comments are not allowed in the chord section.
                                 Anything else not recognized as a section identifier is considered lyrics
                                 to the end of the line in the lyrics section.
-                            </li>
-                            <li>Note: The free form chord entry will soon be replaced with a more structured entry user
-                                interface.
                             </li>
                         </ul>
                     </td>

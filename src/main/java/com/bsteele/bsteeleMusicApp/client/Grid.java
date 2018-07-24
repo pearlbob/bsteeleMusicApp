@@ -112,7 +112,7 @@ public class Grid<T>
         return "Grid{" + "grid=" + grid + '}';
     }
 
-    public T get(int x, int y)
+    public final T get(int x, int y)
     {
         try {
             ArrayList<T> row = grid.get(y);

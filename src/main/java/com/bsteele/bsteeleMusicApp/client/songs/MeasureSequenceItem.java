@@ -160,6 +160,10 @@ public class MeasureSequenceItem extends MeasureNode
         return true;
     }
 
+    boolean remove(Measure measure ) {
+        return measures.remove(measure);
+    }
+
 
     @Override
     public boolean isSingleItem()
