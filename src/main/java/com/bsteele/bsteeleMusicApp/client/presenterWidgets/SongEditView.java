@@ -148,8 +148,6 @@ public class SongEditView
     RadioButton editAppend;
 
     @UiField
-    Label chordsText;
-    @UiField
     FlexTable chordsFlexTable;
 
     @UiField
@@ -261,11 +259,11 @@ public class SongEditView
 
 
         measureEntry.addValueChangeHandler((ValueChangeEvent<String> event) -> {
-            GWT.log("measure change: \"" + event.getValue() + "\"");
+            //GWT.log("measure change: \"" + event.getValue() + "\"");
             processMeasureEntry();
         });
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
-            GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
+            //GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
             String entry = measureEntry.getValue();
             if (entry.isEmpty())
                 return;
@@ -470,7 +468,6 @@ public class SongEditView
                 copyrightEntry.setText("");
                 bpmEntry.setText("106");
                 timeSignatureEntry.setValue("4/4");
-                chordsText.setText("");
                 chordsFlexTable.removeAllRows();
                 editAppend.setValue(true);
                 lyricsTextEntry.setValue("");
@@ -555,8 +552,11 @@ public class SongEditView
         }
         Measure measure = Measure.parse(entry, song.getBeatsPerBar());
         if (measure != null) {
-            GWT.log("new measure: \"" + measure.toString() + "\"");
+            //GWT.log("new measure: \"" + measure.toString() + "\"");
             // entry = entry.substring(measure.getParseLength());
+        } else {
+            if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue())
+                measure = new Measure(song.findMeasure(lastChordSelection));
         }
 
         if (sectionVersion != null) { //  fixme
@@ -579,7 +579,6 @@ public class SongEditView
                     selectChordsCell(lastChordSelection);
                 } else
                     selectLastChordsCell();
-                chordsText.setText(song.getStructuralGridAsText());
                 return true;
             }
         }
@@ -601,7 +600,6 @@ public class SongEditView
         setKey(song.getKey());
         bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
         timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-        chordsText.setText(song.getStructuralGridAsText());
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
 
@@ -705,14 +703,14 @@ public class SongEditView
             }
             editDelete.setEnabled(deleteEnable);
 
-            if (song != null) {
-                MeasureNode measureNode = song.getStructuralMeasureNode(
-                        chordSelection.getRow(),
-                        chordSelection.getCol());
-                GWT.log("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
-                        + measureNode.toString()
-                        + " " + editLocation.name());
-            }
+//            if (song != null) {
+//                MeasureNode measureNode = song.getStructuralMeasureNode(
+//                        chordSelection.getRow(),
+//                        chordSelection.getCol());
+//                GWT.log("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
+//                        + measureNode.toString()
+//                        + " " + editLocation.name());
+//            }
 
             lastChordSelection = chordSelection;
         }
@@ -725,7 +723,8 @@ public class SongEditView
             return;
 
         Measure measure = song.findMeasure(lastChordSelection);
-        MeasureSequenceItem measureSequenceItem =  song.findMeasureSequenceItem(measure);    //fixme: here!  now!
+        MeasureSequenceItem measureSequenceItem = song.findMeasureSequenceItem(measure);    //fixme: here!  now!
+        int sizeRemaining = measureSequenceItem.size();
         song.measureDelete(measure);
 
         //  re-select
@@ -739,18 +738,20 @@ public class SongEditView
                 if (song.findMeasure(lastChordSelection) != null)
                     break search;
                 c--;
+                sizeRemaining--;
             }
             r--;
-            if (r < 0)
+            if (r < 0 || sizeRemaining <= 0) {
+                lastChordSelection = null;
                 break;
-            c = Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1);
+            }
+            c = Math.min(sizeRemaining, Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1));
         }
         if (r < 0)
             lastChordSelection = null;
 
         measureEntry.setFocus(true);
         checkSong();
-        chordsText.setText(song.getStructuralGridAsText());
     }
 
     private static final String selectedBorderColorValueString = "#f88";
@@ -828,20 +829,20 @@ public class SongEditView
 
     private void enterChord(String name)
     {
-        ScaleChord scaleChord = ScaleChord.parse(name);
-        if (scaleChord == null)
+        Measure measure = Measure.parse(name, song.getBeatsPerBar());
+        if (measure == null)
             return; //  fixme: shouldn't happen
 
-        if (processEntry(scaleChord.toString() + " ")) {
-            addRecentScaleChord(scaleChord);
+        if (processEntry(measure.toString() + " ")) {
+            addRecentMeasure(measure);
             findMostCommonScaleChords();
             checkSong();
         }
     }
 
-    private void addRecentScaleChord(ScaleChord scaleChord)
+    private void addRecentMeasure(Measure measure)
     {
-        if (recentScaleChords.contains(scaleChord))
+        if (recentMeasures.contains(measure))
             return; //  leave well enough alone
 
         //recentScaleChords.remove(scaleChord);
@@ -855,14 +856,14 @@ public class SongEditView
         };
 
         final int recentScaleChordsMaxSize = recents.length;
-        recentScaleChords.add(0, scaleChord);
-        while (recentScaleChords.size() > recentScaleChordsMaxSize)
-            recentScaleChords.remove(recentScaleChords.size() - 1);
+        recentMeasures.add(0, measure);
+        while (recentMeasures.size() > recentScaleChordsMaxSize)
+            recentMeasures.remove(recentMeasures.size() - 1);
 
         int i = 0;
-        for (ScaleChord recentScaleChord : recentScaleChords) {
+        for (Measure m : recentMeasures) {
             Button recent = recents[i++];
-            recent.setHTML(recentScaleChord.toString());
+            recent.setHTML(m.toString());
             recent.setVisible(true);
         }
     }
@@ -933,30 +934,6 @@ public class SongEditView
         }
     }
 
-    private void chordsAdd(ScaleChord scaleChord)
-    {
-        int row = 0;
-        int col = 0;
-
-        if (lastChordSelection == null)
-            selectLastChordsCell();
-
-        FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
-        if (lastChordSelection != null) {
-            Element le = formatter.getElement(lastChordSelection.getRow(), lastChordSelection.getCol());
-//  fixme:       chordsAdd(ScaleChord scaleChord)
-        }
-
-        if (editInsert.getValue()) {
-            GWT.log("insert: (" + row + ", " + col + "): " + scaleChord.toString());
-        } else if (editAppend.getValue()) {
-            GWT.log("append: (" + row + ", " + col + "): " + scaleChord.toString());
-        } else {
-            //   replace
-            GWT.log("replace: (" + row + ", " + col + "): " + scaleChord.toString());
-        }
-    }
-
     private void fireSongSubmission(Song song)
     {
         fireEvent(new SongSubmissionEvent(song));
@@ -983,7 +960,8 @@ public class SongEditView
 
     private void guessTheKey()
     {
-        HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(chordsText.getText());
+        HashMap<ScaleChord, Integer> scaleChordMap =
+                ScaleChord.findScaleChordsUsed(song.getStructuralGridAsText());     //  fime: temp?
         TreeSet<ScaleChord> treeSet = new TreeSet<>();
         treeSet.addAll(scaleChordMap.keySet());
         setKey(Key.guessKey(treeSet));
@@ -1056,7 +1034,7 @@ public class SongEditView
         titleChordSelections();
     }
 
-    private ArrayList<ScaleChord> recentScaleChords = new ArrayList<>();
+    private ArrayList<Measure> recentMeasures = new ArrayList<>();
     //private ArrayList<ScaleChord> commonScaleChords = new ArrayList<>();
     HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private Key key = Key.getDefault();

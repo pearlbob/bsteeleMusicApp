@@ -8,18 +8,17 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Function.java" />
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListView.java" />
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" line="43" />
-    <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" line="1265" />
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" line="1267" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongChordGridSelection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongChordGridSelection.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,110 +38,134 @@
       <file leaf-file-name="Song.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="547">
-              <caret line="710" column="10" selection-start-line="710" selection-start-column="10" selection-end-line="710" selection-end-column="10" />
+            <state relative-caret-position="297">
+              <caret line="789" column="39" selection-start-line="789" selection-start-column="39" selection-end-line="789" selection-end-column="39" />
               <folding>
-                <element signature="e#42331#42332#0" expanded="true" />
-                <element signature="e#42373#42374#0" expanded="true" />
-                <element signature="e#57046#57047#0" expanded="true" />
-                <element signature="e#57076#57077#0" expanded="true" />
-                <element signature="e#57228#57229#0" expanded="true" />
-                <element signature="e#57261#57262#0" expanded="true" />
-                <element signature="e#57426#57427#0" expanded="true" />
-                <element signature="e#57463#57464#0" expanded="true" />
-                <element signature="e#57623#57624#0" expanded="true" />
-                <element signature="e#57657#57658#0" expanded="true" />
-                <element signature="e#58168#58169#0" expanded="true" />
-                <element signature="e#58206#58207#0" expanded="true" />
-                <element signature="e#58269#58270#0" expanded="true" />
-                <element signature="e#58323#58324#0" expanded="true" />
-                <element signature="e#58456#58457#0" expanded="true" />
-                <element signature="e#58488#58489#0" expanded="true" />
-                <element signature="e#58600#58601#0" expanded="true" />
-                <element signature="e#58626#58627#0" expanded="true" />
-                <element signature="e#58766#58767#0" expanded="true" />
-                <element signature="e#58795#58796#0" expanded="true" />
-                <element signature="e#58912#58913#0" expanded="true" />
-                <element signature="e#58954#58955#0" expanded="true" />
-                <element signature="e#59075#59076#0" expanded="true" />
-                <element signature="e#59103#59104#0" expanded="true" />
-                <element signature="e#59228#59229#0" expanded="true" />
-                <element signature="e#59257#59258#0" expanded="true" />
-                <element signature="e#59402#59403#0" expanded="true" />
-                <element signature="e#59434#59435#0" expanded="true" />
-                <element signature="e#59575#59576#0" expanded="true" />
-                <element signature="e#59604#59605#0" expanded="true" />
-                <element signature="e#59745#59746#0" expanded="true" />
-                <element signature="e#59778#59779#0" expanded="true" />
-                <element signature="e#59983#59984#0" expanded="true" />
-                <element signature="e#60023#60024#0" expanded="true" />
-                <element signature="e#60305#60306#0" expanded="true" />
-                <element signature="e#60339#60340#0" expanded="true" />
-                <element signature="e#60523#60524#0" expanded="true" />
-                <element signature="e#60569#60570#0" expanded="true" />
-                <element signature="e#60630#60631#0" expanded="true" />
-                <element signature="e#60666#60667#0" expanded="true" />
-                <element signature="e#60723#60724#0" expanded="true" />
-                <element signature="e#60761#60762#0" expanded="true" />
-                <element signature="e#60838#60839#0" expanded="true" />
-                <element signature="e#60892#60893#0" expanded="true" />
-                <element signature="e#60945#60946#0" expanded="true" />
-                <element signature="e#60984#60985#0" expanded="true" />
-                <element signature="e#61058#61059#0" expanded="true" />
-                <element signature="e#61114#61115#0" expanded="true" />
-                <element signature="e#61159#61160#0" expanded="true" />
-                <element signature="e#61190#61191#0" expanded="true" />
-                <element signature="e#61623#61624#0" expanded="true" />
-                <element signature="e#61654#61655#0" expanded="true" />
-                <element signature="e#61698#61699#0" expanded="true" />
-                <element signature="e#61731#61732#0" expanded="true" />
-                <element signature="e#61788#61789#0" expanded="true" />
-                <element signature="e#61822#61823#0" expanded="true" />
-                <element signature="e#61883#61884#0" expanded="true" />
-                <element signature="e#61919#61920#0" expanded="true" />
+                <element signature="e#43013#43014#0" expanded="true" />
+                <element signature="e#43055#43056#0" expanded="true" />
+                <element signature="e#57728#57729#0" expanded="true" />
+                <element signature="e#57758#57759#0" expanded="true" />
+                <element signature="e#57910#57911#0" expanded="true" />
+                <element signature="e#57943#57944#0" expanded="true" />
+                <element signature="e#58108#58109#0" expanded="true" />
+                <element signature="e#58145#58146#0" expanded="true" />
+                <element signature="e#58305#58306#0" expanded="true" />
+                <element signature="e#58339#58340#0" expanded="true" />
+                <element signature="e#58850#58851#0" expanded="true" />
+                <element signature="e#58888#58889#0" expanded="true" />
+                <element signature="e#58951#58952#0" expanded="true" />
+                <element signature="e#59005#59006#0" expanded="true" />
+                <element signature="e#59138#59139#0" expanded="true" />
+                <element signature="e#59170#59171#0" expanded="true" />
+                <element signature="e#59282#59283#0" expanded="true" />
+                <element signature="e#59308#59309#0" expanded="true" />
+                <element signature="e#59448#59449#0" expanded="true" />
+                <element signature="e#59477#59478#0" expanded="true" />
+                <element signature="e#59594#59595#0" expanded="true" />
+                <element signature="e#59636#59637#0" expanded="true" />
+                <element signature="e#59757#59758#0" expanded="true" />
+                <element signature="e#59785#59786#0" expanded="true" />
+                <element signature="e#59910#59911#0" expanded="true" />
+                <element signature="e#59939#59940#0" expanded="true" />
+                <element signature="e#60084#60085#0" expanded="true" />
+                <element signature="e#60116#60117#0" expanded="true" />
+                <element signature="e#60257#60258#0" expanded="true" />
+                <element signature="e#60286#60287#0" expanded="true" />
+                <element signature="e#60427#60428#0" expanded="true" />
+                <element signature="e#60460#60461#0" expanded="true" />
+                <element signature="e#60665#60666#0" expanded="true" />
+                <element signature="e#60705#60706#0" expanded="true" />
+                <element signature="e#60987#60988#0" expanded="true" />
+                <element signature="e#61021#61022#0" expanded="true" />
+                <element signature="e#61205#61206#0" expanded="true" />
+                <element signature="e#61251#61252#0" expanded="true" />
+                <element signature="e#61312#61313#0" expanded="true" />
+                <element signature="e#61348#61349#0" expanded="true" />
+                <element signature="e#61405#61406#0" expanded="true" />
+                <element signature="e#61443#61444#0" expanded="true" />
+                <element signature="e#61520#61521#0" expanded="true" />
+                <element signature="e#61574#61575#0" expanded="true" />
+                <element signature="e#61627#61628#0" expanded="true" />
+                <element signature="e#61666#61667#0" expanded="true" />
+                <element signature="e#61740#61741#0" expanded="true" />
+                <element signature="e#61796#61797#0" expanded="true" />
+                <element signature="e#61841#61842#0" expanded="true" />
+                <element signature="e#61872#61873#0" expanded="true" />
+                <element signature="e#62305#62306#0" expanded="true" />
+                <element signature="e#62336#62337#0" expanded="true" />
+                <element signature="e#62380#62381#0" expanded="true" />
+                <element signature="e#62413#62414#0" expanded="true" />
+                <element signature="e#62470#62471#0" expanded="true" />
+                <element signature="e#62504#62505#0" expanded="true" />
+                <element signature="e#62565#62566#0" expanded="true" />
+                <element signature="e#62601#62602#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MeasureSequenceItem.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java">
+      <file leaf-file-name="SongEditView.ui.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-              <folding>
-                <element signature="method#generateInnerHtml#0;class#MeasureSequenceItem#0" />
-                <element signature="e#4923#4924#0" expanded="true" />
-                <element signature="e#4946#4947#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="946">
+              <caret line="235" column="96" selection-start-line="235" selection-start-column="96" selection-end-line="235" selection-end-column="96" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SongEditView.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SongEditView.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="709">
-              <caret line="727" column="22" lean-forward="true" selection-start-line="727" selection-start-column="22" selection-end-line="727" selection-end-column="22" />
+            <state relative-caret-position="620">
+              <caret line="551" column="77" lean-forward="true" selection-start-line="551" selection-start-column="77" selection-end-line="551" selection-end-column="77" />
               <folding>
-                <element signature="e#27123#27124#0" expanded="true" />
-                <element signature="e#27161#27162#0" expanded="true" />
-                <element signature="e#27202#27203#0" expanded="true" />
-                <element signature="e#27238#27239#0" expanded="true" />
-                <element signature="e#30830#30831#0" expanded="true" />
-                <element signature="e#30886#30887#0" expanded="true" />
-                <element signature="e#30952#30953#0" expanded="true" />
-                <element signature="e#30999#31000#0" expanded="true" />
+                <element signature="e#31076#31077#0" expanded="true" />
+                <element signature="e#31132#31133#0" expanded="true" />
+                <element signature="e#31198#31199#0" expanded="true" />
+                <element signature="e#31245#31246#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Grid.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java">
+      <file leaf-file-name="Measure.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="559">
-              <caret line="114" column="19" selection-start-line="114" selection-start-column="19" selection-end-line="114" selection-end-column="19" />
+            <state relative-caret-position="648">
+              <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
+              <folding>
+                <element signature="e#1295#1296#0" expanded="true" />
+                <element signature="e#1326#1327#0" expanded="true" />
+                <element signature="e#1398#1399#0" expanded="true" />
+                <element signature="e#1448#1449#0" expanded="true" />
+                <element signature="e#4525#4526#0" expanded="true" />
+                <element signature="e#4557#4558#0" expanded="true" />
+                <element signature="e#4701#4702#0" expanded="true" />
+                <element signature="e#4743#4744#0" expanded="true" />
+                <element signature="e#4895#4896#0" expanded="true" />
+                <element signature="e#4924#4925#0" expanded="true" />
+                <element signature="e#5092#5093#0" expanded="true" />
+                <element signature="e#5128#5129#0" expanded="true" />
+                <element signature="e#6023#6024#0" expanded="true" />
+                <element signature="e#6053#6054#0" expanded="true" />
+                <element signature="e#9886#9887#0" expanded="true" />
+                <element signature="e#9940#9941#0" expanded="true" />
+                <element signature="e#9990#9991#0" expanded="true" />
+                <element signature="e#10029#10030#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Chord.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1434">
+              <caret line="59" column="11" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
+              <folding>
+                <element signature="e#1978#1979#0" expanded="true" />
+                <element signature="e#2053#2054#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -163,12 +186,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>NextSongEvent</find>
-      <find>nextSong</find>
-      <find>nextson</find>
-      <find>addToSongList</find>
-      <find>processMeasureEntry</find>
-      <find>chordsIV7</find>
       <find>measureEntry</find>
       <find>chordsTextEntry</find>
       <find>err</find>
@@ -193,6 +210,12 @@
       <find>deleteChordsCell</find>
       <find>replace</find>
       <find>GWT.log(.*grid</find>
+      <find>song.m</find>
+      <find>common0</find>
+      <find>frew</find>
+      <find>if.*a.*g</find>
+      <find>vert</find>
+      <find>^ *GWT.log</find>
     </findStrings>
     <replaceStrings>
       <replace>0,</replace>
@@ -268,16 +291,16 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureNode.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SectionVersion.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordSection.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/SongChordGridSelection.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/resources/css/bsteeleMusicApp.gss" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" />
       </list>
     </option>
   </component>
@@ -311,10 +334,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="374" />
-    <option name="y" value="191" />
-    <option name="width" value="3293" />
-    <option name="height" value="1942" />
+    <option name="x" value="290" />
+    <option name="y" value="244" />
+    <option name="width" value="3535" />
+    <option name="height" value="1894" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -488,6 +511,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -581,6 +605,28 @@
               <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
               <item name="client" type="462c0819:PsiDirectoryNode" />
               <item name="songs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="songs" type="462c0819:PsiDirectoryNode" />
+              <item name="Chord" type="1a9f42e2:ClassTreeNode" />
+            </path>
+            <path>
+              <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bsteeleMusicApp" type="462c0819:PsiDirectoryNode" />
+              <item name="client" type="462c0819:PsiDirectoryNode" />
+              <item name="songs" type="462c0819:PsiDirectoryNode" />
+              <item name="Measure" type="1a9f42e2:ClassTreeNode" />
             </path>
             <path>
               <item name="bsteeleMusicApp" type="b2602c69:ProjectViewProjectNode" />
@@ -758,7 +804,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
       <pane id="PackagesPane">
         <subPane>
           <expand>
@@ -883,7 +928,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Maven.devmode">
+  <component name="RunManager" selected="JUnit.BSteeleMusicAppSuite">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
     </configuration>
@@ -1312,14 +1357,8 @@
       <workItem from="1532140266488" duration="613000" />
       <workItem from="1532202175582" duration="1060000" />
       <workItem from="1532297415234" duration="2109000" />
-      <workItem from="1532368897709" duration="17240000" />
-    </task>
-    <task id="LOCAL-00041" summary="added &quot;other sections&quot;">
-      <created>1523743821665</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1523743821665</updated>
+      <workItem from="1532368897709" duration="17385000" />
+      <workItem from="1532455863455" duration="4667000" />
     </task>
     <task id="LOCAL-00042" summary="songlistView safety, reimplemented play state machine">
       <created>1523806404921</created>
@@ -1657,13 +1696,17 @@
       <option name="project" value="LOCAL" />
       <updated>1532299521147</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="improved song edit">
+      <created>1532395936097</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1532395936098</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="ChordSectionTest_testChordSectionParse - 2018.07.16 at 17h 45m 10s.xml">
-      <configuration name="ChordSectionTest.testChordSectionParse" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="ChordSectionTest_testChordSectionParse - 2018.07.16 at 17h 45m 56s.xml">
       <configuration name="ChordSectionTest.testChordSectionParse" configurationId="JUnit" />
     </history-entry>
@@ -1691,9 +1734,12 @@
     <history-entry file="BSteeleMusicAppSuite - 2018.07.23 at 11h 36m 43s.xml">
       <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="BSteeleMusicAppSuite - 2018.07.24 at 12h 19m 21s.xml">
+      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1146850000" />
+    <option name="totallyTimeSpent" value="1151662000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1705,7 +1751,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="374" y="191" width="3293" height="1942" extended-state="0" />
+    <frame x="290" y="244" width="3535" height="1894" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="PlantUML" order="9" />
@@ -1728,9 +1774,9 @@
       <window_info anchor="bottom" id="Java Enterprise" order="11" show_stripe_button="false" weight="0.32949728" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
-      <window_info anchor="bottom" auto_hide="true" x="0" y="1160" width="3457" height="980" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
+      <window_info anchor="bottom" auto_hide="true" x="0" y="1170" width="3467" height="975" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49855804" weight="0.32931122" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.19826786" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.19079137" />
       <window_info anchor="right" id="Bean Validation" order="10" />
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
       <window_info anchor="bottom" auto_hide="true" id="Find" internal_type="SLIDING" order="1" weight="0.36441648" />
@@ -1764,7 +1810,7 @@
       <window_info anchor="bottom" id="Messages" internal_type="SLIDING" order="13" type="SLIDING" weight="0.2827627" />
       <window_info anchor="bottom" id="TODO" internal_type="SLIDING" order="6" type="SLIDING" weight="0.32949728" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.2498386" />
-      <window_info id="Favorites" order="7" sideWeight="0.5021199" side_tool="true" weight="0.26712328" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info anchor="bottom" id="Java Enterprise" order="11" show_stripe_button="false" weight="0.32949728" />
       <window_info anchor="bottom" id="Dependency Viewer" order="12" weight="0.32952854" />
       <window_info anchor="bottom" id="Version Control" internal_type="SLIDING" order="8" type="SLIDING" weight="0.32949728" />
@@ -1776,7 +1822,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
-      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info id="Favorites" order="7" sideWeight="0.5021199" side_tool="true" weight="0.26712328" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25270367" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" auto_hide="true" id="Find" internal_type="SLIDING" order="1" weight="0.37220845" />
@@ -1793,7 +1839,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="added A4, bass view test for measureNodesToHtml(), equals() and hashcode() to many, fixed major diatonic chord detail," />
     <MESSAGE value="initial cleaning of transposition in song" />
     <MESSAGE value="fixed ChordSectionTest" />
     <MESSAGE value="fixed key changes in bass and player view" />
@@ -1818,7 +1863,8 @@
     <MESSAGE value="start of song editing from MeasureNodes" />
     <MESSAGE value="more correction of song editing from MeasureNodes, remove all" />
     <MESSAGE value="trivial change to chordsText label" />
-    <option name="LAST_COMMIT_MESSAGE" value="trivial change to chordsText label" />
+    <MESSAGE value="improved song edit" />
+    <option name="LAST_COMMIT_MESSAGE" value="improved song edit" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2151,20 +2197,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6129">
-          <caret line="253" column="25" selection-start-line="211" selection-start-column="24" selection-end-line="253" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1434">
-          <caret line="313" column="37" selection-start-line="313" selection-start-column="37" selection-end-line="313" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
@@ -2186,12 +2218,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="621">
           <caret line="24" column="15" selection-start-line="24" selection-start-column="15" selection-end-line="24" selection-end-column="15" />
-          <folding>
-            <element signature="e#668#669#0" expanded="true" />
-            <element signature="e#694#695#0" expanded="true" />
-            <element signature="e#725#726#0" expanded="true" />
-            <element signature="e#751#752#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2218,92 +2244,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
+        <state relative-caret-position="2781">
           <caret line="114" column="19" selection-start-line="114" selection-start-column="19" selection-end-line="114" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="547">
-          <caret line="710" column="10" selection-start-line="710" selection-start-column="10" selection-end-line="710" selection-end-column="10" />
-          <folding>
-            <element signature="e#42331#42332#0" expanded="true" />
-            <element signature="e#42373#42374#0" expanded="true" />
-            <element signature="e#57046#57047#0" expanded="true" />
-            <element signature="e#57076#57077#0" expanded="true" />
-            <element signature="e#57228#57229#0" expanded="true" />
-            <element signature="e#57261#57262#0" expanded="true" />
-            <element signature="e#57426#57427#0" expanded="true" />
-            <element signature="e#57463#57464#0" expanded="true" />
-            <element signature="e#57623#57624#0" expanded="true" />
-            <element signature="e#57657#57658#0" expanded="true" />
-            <element signature="e#58168#58169#0" expanded="true" />
-            <element signature="e#58206#58207#0" expanded="true" />
-            <element signature="e#58269#58270#0" expanded="true" />
-            <element signature="e#58323#58324#0" expanded="true" />
-            <element signature="e#58456#58457#0" expanded="true" />
-            <element signature="e#58488#58489#0" expanded="true" />
-            <element signature="e#58600#58601#0" expanded="true" />
-            <element signature="e#58626#58627#0" expanded="true" />
-            <element signature="e#58766#58767#0" expanded="true" />
-            <element signature="e#58795#58796#0" expanded="true" />
-            <element signature="e#58912#58913#0" expanded="true" />
-            <element signature="e#58954#58955#0" expanded="true" />
-            <element signature="e#59075#59076#0" expanded="true" />
-            <element signature="e#59103#59104#0" expanded="true" />
-            <element signature="e#59228#59229#0" expanded="true" />
-            <element signature="e#59257#59258#0" expanded="true" />
-            <element signature="e#59402#59403#0" expanded="true" />
-            <element signature="e#59434#59435#0" expanded="true" />
-            <element signature="e#59575#59576#0" expanded="true" />
-            <element signature="e#59604#59605#0" expanded="true" />
-            <element signature="e#59745#59746#0" expanded="true" />
-            <element signature="e#59778#59779#0" expanded="true" />
-            <element signature="e#59983#59984#0" expanded="true" />
-            <element signature="e#60023#60024#0" expanded="true" />
-            <element signature="e#60305#60306#0" expanded="true" />
-            <element signature="e#60339#60340#0" expanded="true" />
-            <element signature="e#60523#60524#0" expanded="true" />
-            <element signature="e#60569#60570#0" expanded="true" />
-            <element signature="e#60630#60631#0" expanded="true" />
-            <element signature="e#60666#60667#0" expanded="true" />
-            <element signature="e#60723#60724#0" expanded="true" />
-            <element signature="e#60761#60762#0" expanded="true" />
-            <element signature="e#60838#60839#0" expanded="true" />
-            <element signature="e#60892#60893#0" expanded="true" />
-            <element signature="e#60945#60946#0" expanded="true" />
-            <element signature="e#60984#60985#0" expanded="true" />
-            <element signature="e#61058#61059#0" expanded="true" />
-            <element signature="e#61114#61115#0" expanded="true" />
-            <element signature="e#61159#61160#0" expanded="true" />
-            <element signature="e#61190#61191#0" expanded="true" />
-            <element signature="e#61623#61624#0" expanded="true" />
-            <element signature="e#61654#61655#0" expanded="true" />
-            <element signature="e#61698#61699#0" expanded="true" />
-            <element signature="e#61731#61732#0" expanded="true" />
-            <element signature="e#61788#61789#0" expanded="true" />
-            <element signature="e#61822#61823#0" expanded="true" />
-            <element signature="e#61883#61884#0" expanded="true" />
-            <element signature="e#61919#61920#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="709">
-          <caret line="727" column="22" lean-forward="true" selection-start-line="727" selection-start-column="22" selection-end-line="727" selection-end-column="22" />
-          <folding>
-            <element signature="e#27123#27124#0" expanded="true" />
-            <element signature="e#27161#27162#0" expanded="true" />
-            <element signature="e#27202#27203#0" expanded="true" />
-            <element signature="e#27238#27239#0" expanded="true" />
-            <element signature="e#30830#30831#0" expanded="true" />
-            <element signature="e#30886#30887#0" expanded="true" />
-            <element signature="e#30952#30953#0" expanded="true" />
-            <element signature="e#30999#31000#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2314,25 +2256,143 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="994">
-          <caret line="101" column="48" selection-start-line="101" selection-start-column="43" selection-end-line="101" selection-end-column="53" />
+        <state relative-caret-position="570">
+          <caret line="163" column="45" selection-start-line="163" selection-start-column="45" selection-end-line="163" selection-end-column="45" />
           <folding>
-            <element signature="n#table#0;n#td#1;n#tr#0;n#table#1;n#div#0;n#g:HTMLPanel#0;n#ui:UiBinder#0;n#!!top" />
-            <element signature="n#ul#0;n#td#1;n#tr#0;n#table#1;n#div#0;n#g:HTMLPanel#0;n#ui:UiBinder#0;n#!!top" />
+            <element signature="e#491#492#0" expanded="true" />
+            <element signature="e#522#523#0" expanded="true" />
+            <element signature="method#generateInnerHtml#0;class#MeasureSequenceItem#0" />
+            <element signature="e#4913#4914#0" expanded="true" />
+            <element signature="e#4962#4963#0" expanded="true" />
+            <element signature="e#5797#5798#0" expanded="true" />
+            <element signature="e#5827#5828#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/MeasureSequenceItem.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
+        <state relative-caret-position="297">
+          <caret line="789" column="39" selection-start-line="789" selection-start-column="39" selection-end-line="789" selection-end-column="39" />
           <folding>
-            <element signature="method#generateInnerHtml#0;class#MeasureSequenceItem#0" />
-            <element signature="e#4923#4924#0" expanded="true" />
-            <element signature="e#4946#4947#0" expanded="true" />
+            <element signature="e#43013#43014#0" expanded="true" />
+            <element signature="e#43055#43056#0" expanded="true" />
+            <element signature="e#57728#57729#0" expanded="true" />
+            <element signature="e#57758#57759#0" expanded="true" />
+            <element signature="e#57910#57911#0" expanded="true" />
+            <element signature="e#57943#57944#0" expanded="true" />
+            <element signature="e#58108#58109#0" expanded="true" />
+            <element signature="e#58145#58146#0" expanded="true" />
+            <element signature="e#58305#58306#0" expanded="true" />
+            <element signature="e#58339#58340#0" expanded="true" />
+            <element signature="e#58850#58851#0" expanded="true" />
+            <element signature="e#58888#58889#0" expanded="true" />
+            <element signature="e#58951#58952#0" expanded="true" />
+            <element signature="e#59005#59006#0" expanded="true" />
+            <element signature="e#59138#59139#0" expanded="true" />
+            <element signature="e#59170#59171#0" expanded="true" />
+            <element signature="e#59282#59283#0" expanded="true" />
+            <element signature="e#59308#59309#0" expanded="true" />
+            <element signature="e#59448#59449#0" expanded="true" />
+            <element signature="e#59477#59478#0" expanded="true" />
+            <element signature="e#59594#59595#0" expanded="true" />
+            <element signature="e#59636#59637#0" expanded="true" />
+            <element signature="e#59757#59758#0" expanded="true" />
+            <element signature="e#59785#59786#0" expanded="true" />
+            <element signature="e#59910#59911#0" expanded="true" />
+            <element signature="e#59939#59940#0" expanded="true" />
+            <element signature="e#60084#60085#0" expanded="true" />
+            <element signature="e#60116#60117#0" expanded="true" />
+            <element signature="e#60257#60258#0" expanded="true" />
+            <element signature="e#60286#60287#0" expanded="true" />
+            <element signature="e#60427#60428#0" expanded="true" />
+            <element signature="e#60460#60461#0" expanded="true" />
+            <element signature="e#60665#60666#0" expanded="true" />
+            <element signature="e#60705#60706#0" expanded="true" />
+            <element signature="e#60987#60988#0" expanded="true" />
+            <element signature="e#61021#61022#0" expanded="true" />
+            <element signature="e#61205#61206#0" expanded="true" />
+            <element signature="e#61251#61252#0" expanded="true" />
+            <element signature="e#61312#61313#0" expanded="true" />
+            <element signature="e#61348#61349#0" expanded="true" />
+            <element signature="e#61405#61406#0" expanded="true" />
+            <element signature="e#61443#61444#0" expanded="true" />
+            <element signature="e#61520#61521#0" expanded="true" />
+            <element signature="e#61574#61575#0" expanded="true" />
+            <element signature="e#61627#61628#0" expanded="true" />
+            <element signature="e#61666#61667#0" expanded="true" />
+            <element signature="e#61740#61741#0" expanded="true" />
+            <element signature="e#61796#61797#0" expanded="true" />
+            <element signature="e#61841#61842#0" expanded="true" />
+            <element signature="e#61872#61873#0" expanded="true" />
+            <element signature="e#62305#62306#0" expanded="true" />
+            <element signature="e#62336#62337#0" expanded="true" />
+            <element signature="e#62380#62381#0" expanded="true" />
+            <element signature="e#62413#62414#0" expanded="true" />
+            <element signature="e#62470#62471#0" expanded="true" />
+            <element signature="e#62504#62505#0" expanded="true" />
+            <element signature="e#62565#62566#0" expanded="true" />
+            <element signature="e#62601#62602#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Chord.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1434">
+          <caret line="59" column="11" selection-start-line="59" selection-start-column="11" selection-end-line="59" selection-end-column="11" />
+          <folding>
+            <element signature="e#1978#1979#0" expanded="true" />
+            <element signature="e#2053#2054#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Measure.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="648">
+          <caret line="30" column="11" selection-start-line="30" selection-start-column="11" selection-end-line="30" selection-end-column="11" />
+          <folding>
+            <element signature="e#1295#1296#0" expanded="true" />
+            <element signature="e#1326#1327#0" expanded="true" />
+            <element signature="e#1398#1399#0" expanded="true" />
+            <element signature="e#1448#1449#0" expanded="true" />
+            <element signature="e#4525#4526#0" expanded="true" />
+            <element signature="e#4557#4558#0" expanded="true" />
+            <element signature="e#4701#4702#0" expanded="true" />
+            <element signature="e#4743#4744#0" expanded="true" />
+            <element signature="e#4895#4896#0" expanded="true" />
+            <element signature="e#4924#4925#0" expanded="true" />
+            <element signature="e#5092#5093#0" expanded="true" />
+            <element signature="e#5128#5129#0" expanded="true" />
+            <element signature="e#6023#6024#0" expanded="true" />
+            <element signature="e#6053#6054#0" expanded="true" />
+            <element signature="e#9886#9887#0" expanded="true" />
+            <element signature="e#9940#9941#0" expanded="true" />
+            <element signature="e#9990#9991#0" expanded="true" />
+            <element signature="e#10029#10030#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.ui.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="946">
+          <caret line="235" column="96" selection-start-line="235" selection-start-column="96" selection-end-line="235" selection-end-column="96" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="620">
+          <caret line="551" column="77" lean-forward="true" selection-start-line="551" selection-start-column="77" selection-end-line="551" selection-end-column="77" />
+          <folding>
+            <element signature="e#31076#31077#0" expanded="true" />
+            <element signature="e#31132#31133#0" expanded="true" />
+            <element signature="e#31198#31199#0" expanded="true" />
+            <element signature="e#31245#31246#0" expanded="true" />
           </folding>
         </state>
       </provider>

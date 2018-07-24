@@ -160,8 +160,8 @@ public class MeasureSequenceItem extends MeasureNode
         return true;
     }
 
-    boolean remove(Measure measure ) {
-        return measures.remove(measure);
+    boolean remove(int index ) {
+        return measures.remove(index) != null;
     }
 
 
@@ -200,6 +200,9 @@ public class MeasureSequenceItem extends MeasureNode
         return sb.toString();
     }
 
+    public final int size(){
+        return measures.size();
+    }
 
     protected transient ArrayList<Measure> measures;
 

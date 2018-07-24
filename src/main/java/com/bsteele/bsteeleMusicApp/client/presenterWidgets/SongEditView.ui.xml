@@ -99,7 +99,6 @@
                         <g:Button ui:field="editDelete">Delete</g:Button>
                         <g:RadioButton ui:field="editAppend" name="EditPosition">Append</g:RadioButton>
                         <g:FlexTable ui:field="chordsFlexTable"/>
-                        <g:Label ui:field="chordsText" styleName='{resources.style.chordsTextEntry}'/>
                     </td>
                     <td style="vertical-align:top">
                         <table>
@@ -223,9 +222,6 @@
                                 example,
                                 G..A would be three beats of G followed by a beat or A in the same measure.
                             </li>
-                            <li>Vertical bars (|) on the last measure can be used to group repeats across multiple
-                                lines.
-                            </li>
                             <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
                                 For example A/G would mean a G for the bass, an A chord for the other instruments.
                             </li>
@@ -236,8 +232,13 @@
                                 DC D#Bb G#m7Gm7 Am/G G..A
                             </li>
                             <li>Comments are not allowed in the chord section.
-                                Anything else not recognized as a section identifier is considered lyrics
-                                to the end of the line in the lyrics section.
+                            </li>
+                            <li>Double click a measure to select it for replacement or deletion.
+                            </li>
+                            <li>
+                                In the lyrics section, anything else not recognized as a section identifier is
+                                considered lyrics
+                                to the end of the line. Suggest comments go into parenthesis.
                             </li>
                         </ul>
                     </td>

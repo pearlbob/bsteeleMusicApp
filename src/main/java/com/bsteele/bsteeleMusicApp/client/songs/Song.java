@@ -784,9 +784,11 @@ public class Song implements Comparable<Song>
 
         for (ChordSection chordSection : chordSections) {
             for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
-                for (Measure m : msi.getMeasures())
+                for ( int i =0; i < msi.getMeasures().size(); i++) {
+                    Measure m = msi.getMeasures().get(i);
                     if (m == measure)
-                        return msi.remove(m);
+                        return msi.remove(i);
+                }
             }
         }
         return false;

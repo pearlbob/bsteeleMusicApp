@@ -5,6 +5,7 @@ import com.bsteele.bsteeleMusicApp.client.Grid;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -31,6 +32,20 @@ public class Measure extends MeasureNode implements Comparable<Measure>
     public Measure(int beatCount, ArrayList<Chord> chords)
     {
         setBeatCount(beatCount);
+        setChords(chords);
+    }
+
+    public Measure(Measure measure)
+    {
+        if (measure == null)
+            return;
+        setBeatCount(measure.beatCount);
+
+        //  deep copy
+        ArrayList<Chord> chords = new ArrayList<>(measure.chords.size());
+        for (Chord chord : measure.chords) {
+            chords.add(new Chord(chord));
+        }
         setChords(chords);
     }
 
@@ -209,7 +224,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
             for (Chord chord : chords) {
                 sb.append(chord == lastChord
                         ? chord.transpose(key, halfSteps).toString()
-                        :chord.transpose(key, halfSteps).toStringWithoutInversion());
+                        : chord.transpose(key, halfSteps).toStringWithoutInversion());
             }
         }
         return sb.toString();
