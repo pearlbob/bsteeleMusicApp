@@ -198,7 +198,7 @@ table td.chordTable {
 .chordsTextEntry {
      font-size: large;
      width: 20em;
-     height: 30em;
+     /* height: 30em;   */
      white-space: pre-wrap;
 }
 .lyricsTextEntry {
