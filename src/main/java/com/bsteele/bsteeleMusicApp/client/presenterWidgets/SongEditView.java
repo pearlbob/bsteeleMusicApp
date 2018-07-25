@@ -539,12 +539,16 @@ public class SongEditView
             return;
 
         preProcessMeasureEntry();
-        if (processEntry(entry))
+        if (processEntry(entry)) {
             measureEntry.setValue("");
+            checkSong();
+        }
     }
 
     private boolean processEntry(String entry)
     {
+        errorLabel.setText("");
+
         SectionVersion sectionVersion = Section.parse(entry);
         if (sectionVersion != null) {
             GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
@@ -553,13 +557,34 @@ public class SongEditView
         Measure measure = Measure.parse(entry, song.getBeatsPerBar());
         if (measure != null) {
             //GWT.log("new measure: \"" + measure.toString() + "\"");
-            // entry = entry.substring(measure.getParseLength());
+            entry = entry.substring(measure.getParseLength());
         } else {
-            if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue())
+            if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
                 measure = new Measure(song.findMeasure(lastChordSelection));
+                entry = entry.substring(1);
+            }
+        }
+        if (entry.trim().length() > 0) {
+            errorLabel.setText("Measure entry not understood: \"" + entry + "\"");
+            songEnter.setDisabled(true);
+            return false;
         }
 
-        if (sectionVersion != null) { //  fixme
+        if (sectionVersion != null) {
+            SongChordGridSelection songChordGridSelection = song.findSectionVersionChordGridLocation(sectionVersion);
+            if (songChordGridSelection != null) {
+                //  new section already there, select it
+                displaySong();
+                editAppend.setValue(true);
+                selectChordsCell(songChordGridSelection);
+                return true;
+            }
+            //  add a new section
+            boolean ret = song.addSectionVersion(sectionVersion);
+            displaySong();
+            editAppend.setValue(true);
+            selectChordsCell(song.findSectionVersionChordGridLocation(sectionVersion));
+            return ret;
         }
 
         if (measure != null && lastChordSelection != null) {
@@ -572,7 +597,7 @@ public class SongEditView
 
             if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection), editLocation, measure)) {
                 editAppend.setValue(true);      //  select append for subsequent additions
-                song.transpose(prefix, chordsFlexTable, 0, fontsize);
+                displaySong();
                 lastChordSelection = song.findMeasureChordGridLocation(measure);
 
                 if (lastChordSelection != null) {
@@ -582,6 +607,7 @@ public class SongEditView
                 return true;
             }
         }
+        checkSong();
         return false;
     }
 
@@ -603,7 +629,7 @@ public class SongEditView
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
 
-        song.transpose(prefix, chordsFlexTable, 0, fontsize);
+        displaySong();
         selectLastChordsCell();
 
         lastChordSelection = null;
@@ -626,6 +652,12 @@ public class SongEditView
         });
 
         checkSong();
+    }
+
+    private void displaySong()
+    {
+        song.transpose(prefix, chordsFlexTable, 0, fontsize);
+        GWT.log(song.getStructuralGridAsText());
     }
 
     /**
@@ -787,7 +819,8 @@ public class SongEditView
         }
 
         song = newSong;
-        song.transpose(prefix, chordsFlexTable, 0, fontsize);
+        displaySong();
+
         if (lastChordSelection != null)
             selectChordsCell(lastChordSelection);
         else

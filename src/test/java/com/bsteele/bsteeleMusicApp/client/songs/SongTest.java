@@ -204,7 +204,7 @@ public class SongTest
     {
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
-        MeasureSequenceItem vc2 = a.getChordSections().get(0).getMeasureSequenceItems().get(0);
+        MeasureSequenceItem vc2 = a.getChordSections().first().getMeasureSequenceItems().get(0);
 
         Measure measure = vc2.getMeasures().get(1);
         assertEquals(4, vc2.getMeasures().size());
@@ -232,7 +232,7 @@ public class SongTest
         measure = vc2.getMeasures().get(3);
         assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
 
-        vc2 = a.getChordSections().get(0).getMeasureSequenceItems().get(0);
+        vc2 = a.getChordSections().first().getMeasureSequenceItems().get(0);
         logger.info(a.getChordSections().toString());
         logger.info(vc2.toString());
         logger.info(vc2.getMeasures().toString());
@@ -242,7 +242,7 @@ public class SongTest
     public void testComments()
     {
         Song a;
-        ArrayList<ChordSection> chordSections;
+        TreeSet<ChordSection> chordSections;
         ChordSection chordSection;
         MeasureNode measureNode;
         ArrayList<Measure> measures;
@@ -251,7 +251,7 @@ public class SongTest
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
         chordSections = a.getChordSections();
         assertEquals(1, chordSections.size());
-        chordSection = chordSections.get(0);
+        chordSection = chordSections.first();
         measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
         assertEquals(4, measures.size());
 
@@ -259,7 +259,7 @@ public class SongTest
                 100, 4, 4, "v: A B C D (yo)", "v: bob, bob, bob berand");
         chordSections = a.getChordSections();
         assertEquals(1, chordSections.size());
-        chordSection = chordSections.get(0);
+        chordSection = chordSections.first();
         measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
         assertEquals(5, measures.size());
     }

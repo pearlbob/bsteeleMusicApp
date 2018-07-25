@@ -538,26 +538,10 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    /**
-     * map the section id to it's reduced, common section id
-     *
-     * @param sectionVersion
-     * @return common section version
-     */
-    public final SectionVersion getChordSectionVersion(SectionVersion sectionVersion)
-    {
-        //  map the section to it's reduced, common section
-        SectionVersion v = displaySectionMap.get(sectionVersion);
-        if (v != null) {
-            return v;
-        }
-        return sectionVersion;
-    }
-
     private final void parse()
     {
         measureNodes = new ArrayList<>();
-        chordSections = new ArrayList<>();
+        chordSections = new TreeSet<>();
 
         if (chords != null) {
             String s = chords;
@@ -684,6 +668,18 @@ public class Song implements Comparable<Song>
         return sb.toString();
     }
 
+    public boolean addSectionVersion(SectionVersion sectionVersion)
+    {
+        if (sectionVersion == null)
+            return false;
+        for (ChordSection chordSection : chordSections) {
+            if (chordSection.getSectionVersion().equals(sectionVersion))
+                return false;
+        }
+        chordSections.add(new ChordSection(sectionVersion));
+        return true;
+    }
+
     public boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
                                @Nonnull MeasureSequenceItem.EditLocation editLocation,
                                @Nonnull Measure measure)
@@ -726,6 +722,11 @@ public class Song implements Comparable<Song>
 
     private MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
     {
+        if (chordSection.getMeasureSequenceItems().isEmpty()) {
+            MeasureSequenceItem ret = new MeasureSequenceItem(new ArrayList<>());
+            chordSection.getMeasureSequenceItems().add(ret);
+            return ret;
+        }
         for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
             for (Measure measure : msi.getMeasures())
                 if (measure == measureNode)
@@ -738,6 +739,8 @@ public class Song implements Comparable<Song>
     private ChordSection findChordSection(MeasureNode measureNode)
     {
         for (ChordSection chordSection : chordSections) {
+            if (measureNode == chordSection)
+                return chordSection;
             for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems())
                 if (measureSequenceItem == measureNode)
                     return chordSection;
@@ -766,6 +769,24 @@ public class Song implements Comparable<Song>
         return null;
     }
 
+    public SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion)
+    {
+        Grid<MeasureNode> grid = getStructuralGrid();
+        int rowCount = grid.getRowCount();
+        for (int r = 0; r < rowCount; r++) {
+            ArrayList<MeasureNode> row = grid.getRow(r);
+            if (row.size() > 0) {
+                MeasureNode mn = row.get(0);
+                if ( mn instanceof ChordSection
+                        && sectionVersion.equals(((ChordSection) mn).getSectionVersion())) {
+                    return new SongChordGridSelection(r, 0);
+                }
+            }
+        }
+
+        return null;
+    }
+
     public Measure findMeasure(SongChordGridSelection songChordGridSelection)
     {
         if (songChordGridSelection == null)
@@ -784,7 +805,7 @@ public class Song implements Comparable<Song>
 
         for (ChordSection chordSection : chordSections) {
             for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
-                for ( int i =0; i < msi.getMeasures().size(); i++) {
+                for (int i = 0; i < msi.getMeasures().size(); i++) {
                     Measure m = msi.getMeasures().get(i);
                     if (m == measure)
                         return msi.remove(i);
@@ -1736,16 +1757,6 @@ public class Song implements Comparable<Song>
     }
 
     /**
-     * Return the lyrics in the song's sections as a map.
-     *
-     * @return the displaySectionMap
-     */
-    public final HashMap<SectionVersion, SectionVersion> getDisplaySectionMap()
-    {
-        return displaySectionMap;
-    }
-
-    /**
      * Get the song's default drum section.
      * The section will be played through all of its measures
      * and then repeated as required for the song's duration.
@@ -1767,7 +1778,7 @@ public class Song implements Comparable<Song>
         this.drumSection = drumSection;
     }
 
-    public ArrayList<ChordSection> getChordSections()
+    public TreeSet<ChordSection> getChordSections()
     {
         return chordSections;
     }
@@ -2106,7 +2117,7 @@ public class Song implements Comparable<Song>
     private transient double duration;    //  units of seconds
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
-    private ArrayList<ChordSection> chordSections = new ArrayList<>();
+    private TreeSet<ChordSection> chordSections = new TreeSet<>();
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
     private String chords = "";
     private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
