@@ -551,7 +551,7 @@ public class SongEditView
 
         SectionVersion sectionVersion = Section.parse(entry);
         if (sectionVersion != null) {
-            GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
+            //GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
             entry = entry.substring(sectionVersion.getParseLength());
         }
         Measure measure = Measure.parse(entry, song.getBeatsPerBar());
@@ -657,7 +657,7 @@ public class SongEditView
     private void displaySong()
     {
         song.transpose(prefix, chordsFlexTable, 0, fontsize);
-        GWT.log(song.getStructuralGridAsText());
+        //GWT.log(song.getStructuralGridAsText());
     }
 
     /**
@@ -698,8 +698,10 @@ public class SongEditView
 
     private void selectChordsCell(SongChordGridSelection chordSelection)
     {
-        if (chordSelection == null)
+        if (chordSelection == null) {
+            selectLastChordsCell();
             return;
+        }
 
         FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
         Element e = formatter.getElement(chordSelection.getRow(), chordSelection.getCol());
@@ -755,32 +757,42 @@ public class SongEditView
             return;
 
         Measure measure = song.findMeasure(lastChordSelection);
-        MeasureSequenceItem measureSequenceItem = song.findMeasureSequenceItem(measure);    //fixme: here!  now!
-        int sizeRemaining = measureSequenceItem.size();
-        song.measureDelete(measure);
+        if (measure == null) {
+            if (lastChordSelection.getCol() == 0)      //  safety
+                song.chordSectionDelete(song.findChordSection(lastChordSelection));
+            editAppend.setValue(true);     // no delete section delete
+        } else {
+            MeasureSequenceItem measureSequenceItem = song.findMeasureSequenceItem(measure);    //fixme: here!  now!
+            int sizeRemaining = measureSequenceItem.size();
+            song.measureDelete(measure);
 
-        //  re-select
-        int r = lastChordSelection.getRow();
-        int c = lastChordSelection.getCol();
-        Grid<MeasureNode> grid = song.getStructuralGrid();
-        search:
-        while (r >= 0) {
-            while (c > 0) {
-                lastChordSelection = new SongChordGridSelection(r, c);
-                if (song.findMeasure(lastChordSelection) != null)
-                    break search;
-                c--;
-                sizeRemaining--;
+            //  re-select
+            int r = lastChordSelection.getRow();
+            int c = lastChordSelection.getCol();
+            Grid<MeasureNode> grid = song.getStructuralGrid();
+            search:
+            while (r >= 0) {
+                while (c > 0) {
+                    lastChordSelection = new SongChordGridSelection(r, c);
+                    if (song.findMeasure(lastChordSelection) != null)
+                        break search;
+                    c--;
+                    sizeRemaining--;
+                }
+                r--;
+                if (r < 0 || sizeRemaining <= 0) {
+                    lastChordSelection = null;
+                    break;
+                }
+                c = Math.min(sizeRemaining, Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1));
             }
-            r--;
-            if (r < 0 || sizeRemaining <= 0) {
+            if (r < 0)
                 lastChordSelection = null;
-                break;
-            }
-            c = Math.min(sizeRemaining, Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1));
         }
-        if (r < 0)
-            lastChordSelection = null;
+
+        displaySong();
+        //editAppend.setValue(true);     // delete after delete?
+        selectChordsCell(lastChordSelection);
 
         measureEntry.setFocus(true);
         checkSong();

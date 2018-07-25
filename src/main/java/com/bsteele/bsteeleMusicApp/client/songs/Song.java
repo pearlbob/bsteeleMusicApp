@@ -398,7 +398,7 @@ public class Song implements Comparable<Song>
         //GWT.log(sequence.toString());
     }
 
-    private void computeSongMoments()
+    private  final void computeSongMoments()
     {
         songMoments = new ArrayList<>();
 
@@ -451,7 +451,7 @@ public class Song implements Comparable<Song>
         }
     }
 
-    private ChordSection findChordSection(LyricSection lyricSection)
+    private  final ChordSection findChordSection(LyricSection lyricSection)
     {
         for (ChordSection chordSection : chordSections) {
             if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion())) {
@@ -588,7 +588,7 @@ public class Song implements Comparable<Song>
         computeDuration();
     }
 
-    public Grid<MeasureNode> getStructuralGrid()
+    public  final Grid<MeasureNode> getStructuralGrid()
     {
         Grid<MeasureNode> ret = new Grid<>();
 
@@ -599,7 +599,7 @@ public class Song implements Comparable<Song>
         return ret;
     }
 
-    public String getStructuralGridAsText()
+    public  final String getStructuralGridAsText()
     {
         StringBuilder sb = new StringBuilder();
         Grid<MeasureNode> grid = getStructuralGrid();
@@ -624,7 +624,7 @@ public class Song implements Comparable<Song>
         return sb.toString();
     }
 
-    private SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row)
+    private  final SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row)
     {
         int rowCount = grid.getRowCount();
         if (row >= rowCount)
@@ -637,14 +637,14 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection)
+    public  final MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection)
     {
         if (songChordGridSelection == null)
             return null;
         return getStructuralMeasureNode(songChordGridSelection.getRow(), songChordGridSelection.getCol());
     }
 
-    public MeasureNode getStructuralMeasureNode(int r, int c)
+    public  final MeasureNode getStructuralMeasureNode(int r, int c)
     {
         try {
             Grid<MeasureNode> grid = getStructuralGrid();   //  fixme: cache?
@@ -668,7 +668,7 @@ public class Song implements Comparable<Song>
         return sb.toString();
     }
 
-    public boolean addSectionVersion(SectionVersion sectionVersion)
+    public final  boolean addSectionVersion(SectionVersion sectionVersion)
     {
         if (sectionVersion == null)
             return false;
@@ -680,7 +680,7 @@ public class Song implements Comparable<Song>
         return true;
     }
 
-    public boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
+    public  final boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
                                @Nonnull MeasureSequenceItem.EditLocation editLocation,
                                @Nonnull Measure measure)
     {
@@ -704,7 +704,7 @@ public class Song implements Comparable<Song>
     }
 
 
-    public MeasureSequenceItem findMeasureSequenceItem(Measure measure)
+    public  final MeasureSequenceItem findMeasureSequenceItem(Measure measure)
     {
         if (measure == null)
             return null;
@@ -720,12 +720,17 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    private MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
+    private  final MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
     {
         if (chordSection.getMeasureSequenceItems().isEmpty()) {
             MeasureSequenceItem ret = new MeasureSequenceItem(new ArrayList<>());
             chordSection.getMeasureSequenceItems().add(ret);
             return ret;
+        }
+        if (chordSection.getMeasureSequenceItems().size() == 1
+                && chordSection.getMeasureSequenceItems().get(0).getMeasures().isEmpty())
+        {
+            return chordSection.getMeasureSequenceItems().get(0);
         }
         for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
             for (Measure measure : msi.getMeasures())
@@ -736,7 +741,7 @@ public class Song implements Comparable<Song>
     }
 
 
-    private ChordSection findChordSection(MeasureNode measureNode)
+    private  final ChordSection findChordSection(MeasureNode measureNode)
     {
         for (ChordSection chordSection : chordSections) {
             if (measureNode == chordSection)
@@ -751,7 +756,7 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public SongChordGridSelection findMeasureChordGridLocation(Measure measure)
+    public final  SongChordGridSelection findMeasureChordGridLocation(Measure measure)
     {
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
@@ -769,7 +774,7 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion)
+    public  final SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion)
     {
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
@@ -777,8 +782,9 @@ public class Song implements Comparable<Song>
             ArrayList<MeasureNode> row = grid.getRow(r);
             if (row.size() > 0) {
                 MeasureNode mn = row.get(0);
-                if ( mn instanceof ChordSection
-                        && sectionVersion.equals(((ChordSection) mn).getSectionVersion())) {
+                if (mn instanceof ChordSection
+                        && sectionVersion.equals(((ChordSection) mn).getSectionVersion()))
+                {
                     return new SongChordGridSelection(r, 0);
                 }
             }
@@ -787,7 +793,7 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public Measure findMeasure(SongChordGridSelection songChordGridSelection)
+    public  final Measure findMeasure(SongChordGridSelection songChordGridSelection)
     {
         if (songChordGridSelection == null)
             return null;
@@ -798,7 +804,18 @@ public class Song implements Comparable<Song>
         return null;
     }
 
-    public boolean measureDelete(Measure measure)
+    public  final ChordSection findChordSection(SongChordGridSelection songChordGridSelection)
+    {
+        if (songChordGridSelection == null)
+            return null;
+        Grid<MeasureNode> grid = getStructuralGrid();
+        MeasureNode measureNode = grid.get(songChordGridSelection.getCol(), songChordGridSelection.getRow()); //   x,y!
+        if (measureNode != null && measureNode instanceof ChordSection)
+            return ((ChordSection) measureNode);
+        return null;
+    }
+
+    public final boolean measureDelete(Measure measure)
     {
         if (measure == null)
             return false;
@@ -815,8 +832,15 @@ public class Song implements Comparable<Song>
         return false;
     }
 
+    public final boolean chordSectionDelete(ChordSection chordSection)
+    {
+        if (chordSection == null)
+            return false;
+        return chordSections.remove(chordSection);
+    }
+
     @Deprecated
-    private void parseChordTable(String rawChordTableText)
+    private final void parseChordTable(String rawChordTableText)
     {
 
         chordSectionInnerHtmlMap.clear();
@@ -966,7 +990,7 @@ public class Song implements Comparable<Song>
         computeDuration();
     }
 
-    public String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran)
+    public  final String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -1311,7 +1335,7 @@ public class Song implements Comparable<Song>
         }
     }
 
-    private String transposeMeasure(Key newKey, String m, int halfSteps)
+    private  final String transposeMeasure(Key newKey, String m, int halfSteps)
     {
         if (halfSteps == 0)
             return m;
@@ -1570,7 +1594,7 @@ public class Song implements Comparable<Song>
 
     private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
 
-    private String chordNumberToLetter(int n, int halfSteps)
+    private  final String chordNumberToLetter(int n, int halfSteps)
     {
         return key.getScaleNoteByHalfStep(n + halfSteps).toString();
     }
@@ -1643,7 +1667,7 @@ public class Song implements Comparable<Song>
      *
      * @param beatsPerBar the beatsPerBar to set
      */
-    public void setBeatsPerBar(int beatsPerBar)
+    public  final void setBeatsPerBar(int beatsPerBar)
     {
         this.beatsPerBar = beatsPerBar;
         computeDuration();
@@ -1661,7 +1685,7 @@ public class Song implements Comparable<Song>
         return unitsPerMeasure;
     }
 
-    public void setUnitsPerMeasure(int unitsPerMeasure)
+    public  final void setUnitsPerMeasure(int unitsPerMeasure)
     {
         this.unitsPerMeasure = unitsPerMeasure;
     }
