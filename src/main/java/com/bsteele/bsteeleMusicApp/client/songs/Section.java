@@ -44,6 +44,16 @@ public enum Section
      */
     chorus("C", "ch"),
     /**
+     * A section labeled "A" to be used in contrast the "B" section.
+     * A concept borrowed from jazz.
+     */
+    a("A"),
+    /**
+     * A section labeled "B" to be used in contrast the "A" section.
+     * A concept borrowed from jazz.
+     */
+    b("B"),
+    /**
      * A non-repeating section often used once to break the repeated
      * section patterns prior to the last sections of a song.
      */
@@ -57,16 +67,6 @@ public enum Section
      * of a previous section.  Typically used to end a song.
      */
     tag("T"),
-    /**
-     * A section labeled "A" to be used in contrast the "B" section.
-     * A concept borrowed from jazz.
-     */
-    a("A"),
-    /**
-     * A section labeled "B" to be used in contrast the "A" section.
-     * A concept borrowed from jazz.
-     */
-    b("B"),
     /**
      * The ending section of many songs.
      */

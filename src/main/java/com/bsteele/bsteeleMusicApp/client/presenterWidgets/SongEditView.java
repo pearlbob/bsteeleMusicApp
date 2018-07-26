@@ -463,14 +463,8 @@ public class SongEditView
         Event.sinkEvents(songEntryClear, Event.ONCLICK);
         Event.setEventListener(songEntryClear, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                titleEntry.setText("");
-                artistEntry.setText("");
-                copyrightEntry.setText("");
-                bpmEntry.setText("106");
-                timeSignatureEntry.setValue("4/4");
-                chordsFlexTable.removeAllRows();
-                editAppend.setValue(true);
-                lyricsTextEntry.setValue("");
+                setSongEdit(Song.createEmptySong());
+                displaySong();
                 checkSong();
             }
         });
