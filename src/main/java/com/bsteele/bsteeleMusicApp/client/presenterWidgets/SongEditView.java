@@ -70,6 +70,9 @@ public class SongEditView
     ButtonElement songEntryClear;
 
     @UiField
+    ButtonElement songEntryRemove;
+
+    @UiField
     Label errorLabel;
 
     @UiField
@@ -443,6 +446,14 @@ public class SongEditView
                 checkSong();
             }
         });
+
+        Event.sinkEvents(songEntryRemove, Event.ONCLICK);
+        Event.setEventListener(songEntryRemove,(Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                if ( song != null )
+                GWT.log( "finish songEntryRemove for "+song.toString());
+            }
+        } );
 
         for (ChordDescriptor cd : chordDescriptorMap.keySet()) {
             Button b = chordDescriptorMap.get(cd);

@@ -16,7 +16,15 @@ import com.google.gwt.regexp.shared.RegExp;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /**
  * @author bob
@@ -1604,6 +1612,13 @@ public class Song implements Comparable<Song>
     public final void setFileName(String fileName)
     {
         this.fileName = fileName;
+
+        final RegExp fileVersionRegExp = RegExp.compile(" \\(([0-9]+)\\).songlyrics$");
+        MatchResult mr = fileVersionRegExp.exec(fileName);
+        if (mr != null) {
+            fileVersionNumber = Integer.parseInt(mr.getGroup(1));
+        } else
+            fileVersionNumber = 0;
     }
 
     public final double getDuration()
@@ -1626,13 +1641,19 @@ public class Song implements Comparable<Song>
         return lyricSections;
     }
 
+    public int getFileVersionNumber()
+    {
+        return fileVersionNumber;
+    }
+
 
     public enum ComparatorType
     {
         title,
         artist,
         lastModifiedDate,
-        lastModifiedDateLast;
+        lastModifiedDateLast,
+        versionNumber;
     }
 
     public static final Comparator<Song> getComparatorByType(ComparatorType type)
@@ -1646,6 +1667,8 @@ public class Song implements Comparable<Song>
                 return new ComparatorByLastModifiedDate();
             case lastModifiedDateLast:
                 return new ComparatorByLastModifiedDateLast();
+            case versionNumber:
+                return new ComparatorByVersionNumber();
         }
     }
 
@@ -1754,21 +1777,87 @@ public class Song implements Comparable<Song>
         @Override
         public int compare(Song o1, Song o2)
         {
-            JsDate mod1 = o1.lastModifiedDate;
-            JsDate mod2 = o2.lastModifiedDate;
-            if (mod1 != null) {
-                if (mod2 != null) {
-                    if (mod1.getTime() == mod2.getTime())
-                        return o1.compareTo(o2);
-                    return mod1.getTime() < mod2.getTime() ? -1 : 1;
-                }
-                return 1;
-            }
-            if (mod2 != null) {
-                return -1;
-            }
-            return o1.compareTo(o2);
+            return compareByLastModifiedDate(o1, o2);
         }
+    }
+
+    public static int compareByLastModifiedDate(Song o1, Song o2)
+    {
+        JsDate mod1 = o1.lastModifiedDate;
+        JsDate mod2 = o2.lastModifiedDate;
+        if (mod1 != null) {
+            if (mod2 != null) {
+                if (mod1.getTime() == mod2.getTime())
+                    return o1.compareTo(o2);
+                return mod1.getTime() < mod2.getTime() ? -1 : 1;
+            }
+            return 1;
+        }
+        if (mod2 != null) {
+            return -1;
+        }
+        return o1.compareTo(o2);
+    }
+
+    public static final class ComparatorByVersionNumber implements Comparator<Song>
+    {
+
+        /**
+         * Compares its two arguments for order.
+         *
+         * @param o1 the first object to be compared.
+         * @param o2 the second object to be compared.
+         * @return a negative integer, zero, or a positive integer as the
+         * first argument is less than, equal to, or greater than the
+         * second.
+         * @throws NullPointerException if an argument is null and this
+         *                              comparator does not permit null arguments
+         * @throws ClassCastException   if the arguments' types prevent them from
+         *                              being compared by this comparator.
+         */
+        @Override
+        public int compare(Song o1, Song o2)
+        {
+            return compareByVersionNumber(o1, o2);
+        }
+    }
+
+    public static int compareByVersionNumber(Song o1, Song o2)
+    {
+        logger.finest("o1.fileVersionNumber:" + o1.fileVersionNumber + ", o2.fileVersionNumber: " + o2.fileVersionNumber);
+        int ret = o1.compareTo(o2);
+        if (ret != 0)
+            return ret;
+        if (o1.fileVersionNumber != o2.fileVersionNumber)
+            return o1.fileVersionNumber < o2.fileVersionNumber ? -1 : 1;
+        return compareByLastModifiedDate(o1, o2);
+    }
+
+    /**
+     * Returns a string representation of the object. In general, the
+     * {@code toString} method returns a string that
+     * "textually represents" this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * <p>
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}', and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * <blockquote>
+     * <pre>
+     * getClass().getName() + '@' + Integer.toHexString(hashCode())
+     * </pre></blockquote>
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString()
+    {
+        return title + (fileVersionNumber > 0 ? ":(" + fileVersionNumber + ")" : "") + " by " + artist;
     }
 
     /**
@@ -1859,6 +1948,7 @@ public class Song implements Comparable<Song>
     private String copyright = "Unknown";
     private transient JsDate lastModifiedDate;
     private transient String fileName;
+    private transient int fileVersionNumber = 0;
     private Key key = Key.C;  //  default
     private int defaultBpm = 106;  //  beats per minute
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature numerator
@@ -1888,4 +1978,6 @@ public class Song implements Comparable<Song>
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
+
+    private static final Logger logger = Logger.getLogger(Song.class.getName());
 }

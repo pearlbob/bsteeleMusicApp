@@ -243,6 +243,7 @@ public class SongListView
             if (songs.size() == 1) {
                 Song song = songs.get(0);
                 song.setLastModifiedDate(file.getLastModifiedDate());
+                song.setFileName(file.getName());
                 fireEvent(new SongReadEvent(song));
             } else
                 fireEvent(new SongReadEvent(songs));

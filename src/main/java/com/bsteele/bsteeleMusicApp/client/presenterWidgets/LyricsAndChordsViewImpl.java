@@ -47,7 +47,8 @@ import java.util.logging.Logger;
 public class LyricsAndChordsViewImpl
         extends CommonPlayViewImpl
         implements LyricsAndChordsPresenterWidget.MyView
-        , KeyPressHandler {
+        , KeyPressHandler
+{
 
     @UiField
     Button playStopButton;
@@ -72,6 +73,9 @@ public class LyricsAndChordsViewImpl
 
     @UiField
     SpanElement title;
+
+    @UiField
+    SpanElement fileNumber;
 
     @UiField
     SpanElement artist;
@@ -101,13 +105,15 @@ public class LyricsAndChordsViewImpl
     @UiField
     SpanElement copyright;
 
-    interface Binder extends UiBinder<Widget, LyricsAndChordsViewImpl> {
+    interface Binder extends UiBinder<Widget, LyricsAndChordsViewImpl>
+    {
     }
 
     @Inject
     LyricsAndChordsViewImpl(@Nonnull final EventBus eventBus,
                             @Nonnull Binder binder,
-                            @Nonnull final SongPlayMaster songPlayMaster) {
+                            @Nonnull final SongPlayMaster songPlayMaster)
+    {
         super(eventBus, songPlayMaster);
 
         initWidget(binder.createAndBindUi(this));
@@ -158,7 +164,8 @@ public class LyricsAndChordsViewImpl
     }
 
     @Override
-    public void onKeyPress(KeyPressEvent keyPressEvent) {
+    public void onKeyPress(KeyPressEvent keyPressEvent)
+    {
         GWT.log("onKeyPress: " + keyPressEvent.toDebugString());
         int keyCode = keyPressEvent.getNativeEvent().getKeyCode();
         if (keyCode == KeyCodes.KEY_SPACE) {
@@ -168,7 +175,8 @@ public class LyricsAndChordsViewImpl
 
 
     @Override
-    public void onSongUpdate(SongUpdate songUpdate) {
+    public void onSongUpdate(SongUpdate songUpdate)
+    {
 
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
@@ -211,6 +219,9 @@ public class LyricsAndChordsViewImpl
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());
+        fileNumber.setInnerHTML((song.getFileVersionNumber() > 0
+                ? "(" + Integer.toString(song.getFileVersionNumber()) + ")"
+                : ""));
         artist.setInnerHTML(song.getArtist());
         copyright.setInnerHTML(song.getCopyright());
 
@@ -226,7 +237,8 @@ public class LyricsAndChordsViewImpl
         chordsDirty = true;
     }
 
-    private void setEnables() {
+    private void setEnables()
+    {
         boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
 
         originalKeyButton.setEnabled(enable);
@@ -236,16 +248,19 @@ public class LyricsAndChordsViewImpl
         bpmSelect.setDisabled(!enable);
     }
 
-    private void syncCurrentKey(Key key) {
+    private void syncCurrentKey(Key key)
+    {
         transpose(key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep());
     }
 
-    private void syncCurrentBpm(int bpm) {
+    private void syncCurrentBpm(int bpm)
+    {
         currentBpmEntry.setValue(Integer.toString(bpm));
         bpmSelect.setSelectedIndex(0);
     }
 
-    private void labelPlayStop() {
+    private void labelPlayStop()
+    {
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
@@ -259,7 +274,8 @@ public class LyricsAndChordsViewImpl
     }
 
     @Override
-    public void onMusicAnimationEvent(MusicAnimationEvent event) {
+    public void onMusicAnimationEvent(MusicAnimationEvent event)
+    {
         if (song == null)
             return;
 
@@ -323,9 +339,10 @@ public class LyricsAndChordsViewImpl
         }
     }
 
-    private void transpose(int tran) {
+    private void transpose(int tran)
+    {
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
-        keyLabel.setInnerHTML(currentKey.toString()+ " "+currentKey.sharpsFlatsToString());
+        keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
 
         if (song == null)
             return;
@@ -336,7 +353,8 @@ public class LyricsAndChordsViewImpl
         resizeChords();
     }
 
-    private void resizeChords() {
+    private void resizeChords()
+    {
         //  adjust fontSize so the table fits but is still minimally, if possible
         if (chords != null && chords.getOffsetWidth() > 0 && chords.getOffsetHeight() > 0) {
             {
@@ -361,14 +379,16 @@ public class LyricsAndChordsViewImpl
                         if (forceChordsFontSize
                                 || parentWidth < tableWidth
                                 || parentHeight < tableHeight
-                                || parentWidth > (1 + 4.0 / chordsFontSize) * tableWidth) {
+                                || parentWidth > (1 + 4.0 / chordsFontSize) * tableWidth)
+                        {
                             double ratio = Math.min(parentWidth / tableWidth,
                                     parentHeight / tableHeight);
                             logger.fine("wratio: " + (parentWidth / tableWidth)
                                     + ", hratio: " + (parentHeight / tableHeight));
                             NodeList<Element> cells = e.getElementsByTagName("td");
 
-                            int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio, chordsMaxFontSize)));
+                            int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio,
+                                    chordsMaxFontSize)));
                             if (forceChordsFontSize || chordsFontSize != size) {
                                 //  fixme: demands all chord fonts be the same size
                                 for (int c = 0; c < cells.getLength(); c++) {
@@ -419,7 +439,8 @@ public class LyricsAndChordsViewImpl
                         for (int c = 0; c < cells.getLength(); c++) {
                             Style cellStyle = cells.getItem(c).getStyle();
 
-                            double currentSize = lyricsMaxFontSize;     //  fixme: demands all lyrics fonts be the same size
+                            double currentSize = lyricsMaxFontSize;     //  fixme: demands all lyrics fonts be the
+                            // same size
                             MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
                             if (mr != null)
                                 currentSize = Double.parseDouble(mr.getGroup(1));
@@ -435,7 +456,8 @@ public class LyricsAndChordsViewImpl
         }
     }
 
-    private void sendStatus(String name, String value) {
+    private void sendStatus(String name, String value)
+    {
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 
