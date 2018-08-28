@@ -10,19 +10,8 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ScaleNote.java" line="43" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="mods for file version number support">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/SongRemoveEvent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/application/events/SongRemoveEventHandler.java" afterDir="false" />
+    <list default="true" id="867d8466-96b1-4e35-a32e-eca1355a0cd1" name="Default" comment="song removal, m6, maj, some null protection">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/Grid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/SongPlayMasterImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditPresenterWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditPresenterWidget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListPresenterWidget.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListPresenterWidget.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongListView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/ChordDescriptor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/songs/Song.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/package-info.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -55,7 +44,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JAVA" value="1320" />
-          <entry key="PLAIN_TEXT" value="36" />
+          <entry key="PLAIN_TEXT" value="81" />
           <entry key="RegExp" value="22" />
           <entry key="XML" value="31" />
         </counts>
@@ -64,7 +53,7 @@
       <usages-collector id="statistics.spring.boot.mvc.usages" />
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="2" />
+          <entry key="project.closed" value="3" />
           <entry key="project.open.time.43" value="1" />
           <entry key="project.open.time.9" value="1" />
           <entry key="project.opened" value="2" />
@@ -75,7 +64,7 @@
         <counts>
           <entry key="java" value="1320" />
           <entry key="regexp" value="22" />
-          <entry key="txt" value="36" />
+          <entry key="txt" value="81" />
           <entry key="xml" value="31" />
         </counts>
       </usages-collector>
@@ -837,7 +826,7 @@
     <property name="ToolWindowAnt Build.ShowToolbar" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535472558134" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535472632714" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
     <property name="full.screen.before.presentation.mode" value="false" />
@@ -1244,14 +1233,7 @@
       <workItem from="1529677116967" duration="11280000" />
       <workItem from="1529727351857" duration="4431000" />
       <workItem from="1535422746830" duration="7422000" />
-      <workItem from="1535465829369" duration="3231000" />
-    </task>
-    <task id="LOCAL-00026" summary="package imports fooled with by ide, added Pitch">
-      <created>1522694329955</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1522694329955</updated>
+      <workItem from="1535465829369" duration="3483000" />
     </task>
     <task id="LOCAL-00027" summary="javadoc, small adjustments">
       <created>1522704515077</created>
@@ -1589,13 +1571,17 @@
       <option name="project" value="LOCAL" />
       <updated>1529731650021</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="song removal, m6, maj, some null protection">
+      <created>1535472750378</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1535472750379</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="SongTest_testComparatorByVersionNumber - 2018.08.27 at 19h 32m 40s.xml">
-      <configuration name="SongTest.testComparatorByVersionNumber" configurationId="JUnit" />
-    </history-entry>
     <history-entry file="SongTest_testComparatorByVersionNumber - 2018.08.27 at 19h 32m 59s.xml">
       <configuration name="SongTest.testComparatorByVersionNumber" configurationId="JUnit" />
     </history-entry>
@@ -1623,9 +1609,12 @@
     <history-entry file="SongTest - 2018.08.27 at 19h 39m 20s.xml">
       <configuration name="SongTest" configurationId="JUnit" />
     </history-entry>
+    <history-entry file="BSteeleMusicAppSuite - 2018.08.28 at 09h 09m 48s.xml">
+      <configuration name="BSteeleMusicAppSuite" configurationId="JUnit" />
+    </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="933504000" />
+    <option name="totallyTimeSpent" value="933756000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1638,7 +1627,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="303" y="215" width="3410" height="1945" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4966687" visible="true" weight="0.21313433" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25270367" />
@@ -1651,7 +1639,7 @@
       <window_info id="Web" order="8" sideWeight="0.5033313" side_tool="true" weight="0.24549387" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" auto_hide="true" id="Find" internal_type="SLIDING" order="1" weight="0.3652968" />
-      <window_info anchor="bottom" auto_hide="true" x="0" y="1230" width="3557" height="930" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" visible="true" weight="0.5031591" />
+      <window_info anchor="bottom" auto_hide="true" x="0" y="1230" width="3557" height="930" id="Run" internal_type="SLIDING" order="2" type="WINDOWED" weight="0.5031591" />
       <window_info anchor="bottom" x="34" y="666" width="3772" height="806" id="Debug" internal_type="SLIDING" order="3" weight="0.37073454" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1725,7 +1713,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="found and fixed the duplicate id issue" />
     <MESSAGE value="animation if visible, player scroll position improved, css fixes, player transpose" />
     <MESSAGE value="fixed many play problems, including server play. created CommonPlayViewImpl" />
     <MESSAGE value="fixed auto select after edit" />
@@ -1750,7 +1737,8 @@
     <MESSAGE value="add bass clef to bass song moment display" />
     <MESSAGE value="added Song.checkSong() to edit view" />
     <MESSAGE value="mods for file version number support" />
-    <option name="LAST_COMMIT_MESSAGE" value="mods for file version number support" />
+    <MESSAGE value="song removal, m6, maj, some null protection" />
+    <option name="LAST_COMMIT_MESSAGE" value="song removal, m6, maj, some null protection" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2052,6 +2040,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="19" column="61" lean-forward="true" selection-start-line="19" selection-start-column="61" selection-end-line="19" selection-end-column="61" />
+          <folding>
+            <element signature="e#405#429#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
