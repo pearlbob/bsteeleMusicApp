@@ -1024,8 +1024,6 @@ public class Song implements Comparable<Song>
                 continue;
             }
 
-            Grid<String> grid = map.get(version);
-
             //  section label
             String start = sectionStart;
             if (isSingle) {
@@ -1042,29 +1040,32 @@ public class Song implements Comparable<Song>
             start += "</td>\n";
 
             //  section data
-            for (int r = 0; r < grid.getRowCount(); r++) {
 
-                chordText.append(start);
-                start = rowStart;   //  default to empty row start on subsequent rows
+            Grid<String> grid = map.get(version);
+            if (grid != null)
+                for (int r = 0; r < grid.getRowCount(); r++) {
 
-                ArrayList<String> row = grid.getRow(r);
-                final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
-                for (int col = 0; col < row.size(); col++) {
-                    chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection()
-                            .getAbbreviation())
-                            .append("Class\" ");
-                    String content = row.get(col);
-                    if (endOfChordLineExp.test(content)) {
-                        chordText.append(" style=\"border-right: 0px solid black;\"");
+                    chordText.append(start);
+                    start = rowStart;   //  default to empty row start on subsequent rows
+
+                    ArrayList<String> row = grid.getRow(r);
+                    final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
+                    for (int col = 0; col < row.size(); col++) {
+                        chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection()
+                                .getAbbreviation())
+                                .append("Class\" ");
+                        String content = row.get(col);
+                        if (endOfChordLineExp.test(content)) {
+                            chordText.append(" style=\"border-right: 0px solid black;\"");
+                        }
+                        chordText.append(" id=\"")
+                                .append(prefix)
+                                .append(genChordId(isSingle ? version : displaySectionMap.get(version), r, col))
+                                .append("\" >")
+                                .append(transposeMeasure(newKey, content, trans)).append("</td>\n\t");
                     }
-                    chordText.append(" id=\"")
-                            .append(prefix)
-                            .append(genChordId(isSingle ? version : displaySectionMap.get(version), r, col))
-                            .append("\" >")
-                            .append(transposeMeasure(newKey, content, trans)).append("</td>\n\t");
+                    chordText.append(rowEnd);
                 }
-                chordText.append(rowEnd);
-            }
         }
         String ret = tableStart + chordText + tableEnd;
         return ret;

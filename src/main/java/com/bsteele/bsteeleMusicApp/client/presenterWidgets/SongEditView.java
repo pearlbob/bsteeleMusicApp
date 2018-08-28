@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.DomInputEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.DomInputEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -448,12 +450,12 @@ public class SongEditView
         });
 
         Event.sinkEvents(songEntryRemove, Event.ONCLICK);
-        Event.setEventListener(songEntryRemove,(Event event) -> {
+        Event.setEventListener(songEntryRemove, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                if ( song != null )
-                GWT.log( "finish songEntryRemove for "+song.toString());
+                if (song != null)
+                    fireEvent(new SongRemoveEvent(song));
             }
-        } );
+        });
 
         for (ChordDescriptor cd : chordDescriptorMap.keySet()) {
             Button b = chordDescriptorMap.get(cd);
@@ -497,7 +499,7 @@ public class SongEditView
             return;
 
         this.song = song;
-        
+
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
         copyrightEntry.setText(song.getCopyright());
@@ -713,6 +715,12 @@ public class SongEditView
     public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler)
     {
         return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration SongRemoveEventHandler(SongRemoveEventHandler handler)
+    {
+        return handlerManager.addHandler(SongRemoveEvent.TYPE, handler);
     }
 
 

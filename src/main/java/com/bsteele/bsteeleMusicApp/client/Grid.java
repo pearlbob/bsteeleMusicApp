@@ -26,6 +26,8 @@ public class Grid<T> {
    * @return
    */
   public Grid<T> deepCopy(Grid<T> other) {
+    if ( other == null )
+      return null;
     int rLimit = other.getRowCount();
     for (int r = 0; r < rLimit; r++) {
       ArrayList<T> row = other.getRow(r);

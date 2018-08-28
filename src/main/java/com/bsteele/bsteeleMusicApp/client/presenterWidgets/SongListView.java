@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandle
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.dom.client.NativeEvent;
@@ -46,16 +47,19 @@ import java.util.TreeSet;
 public class SongListView
         extends ViewImpl
         implements SongListPresenterWidget.MyView,
-        HasHandlers {
+        HasHandlers
+{
 
     @Override
-    public void setSongList(Set<Song> songs) {
+    public void setSongList(Set<Song> songs)
+    {
         allSongs.clear();
         allSongs.addAll(songs);
         searchSongs(songSearch.getValue());
     }
 
-    interface Binder extends UiBinder<Widget, SongListView> {
+    interface Binder extends UiBinder<Widget, SongListView>
+    {
     }
 
     @UiField
@@ -76,11 +80,13 @@ public class SongListView
 
     @UiField
     Grid songGrid;
+
     @UiField
     Label listCount;
 
     @Inject
-    SongListView(Binder binder) {
+    SongListView(Binder binder)
+    {
         initWidget(binder.createAndBindUi(this));
 
         handlerManager = new HandlerManager(this);
@@ -135,22 +141,26 @@ public class SongListView
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event) {
+    public void fireEvent(GwtEvent<?> event)
+    {
         handlerManager.fireEvent(event);
     }
 
 
     @Override
-    public HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler) {
+    public HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler)
+    {
         return handlerManager.addHandler(SongUpdateEvent.TYPE, handler);
     }
 
     @Override
-    public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler) {
+    public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler)
+    {
         return handlerManager.addHandler(SongReadEvent.TYPE, handler);
     }
 
-    private void searchSongs(String search) {
+    private void searchSongs(String search)
+    {
         if (search == null) {
             search = "";
         }
@@ -161,7 +171,8 @@ public class SongListView
             for (Song song : allSongs) {
                 if (search.length() == 0
                         || song.getTitle().toLowerCase().contains(search)
-                        || song.getArtist().toLowerCase().contains(search)) {
+                        || song.getArtist().toLowerCase().contains(search))
+                {
                     sortedSongs.add(song);
                 }
             }
@@ -174,7 +185,8 @@ public class SongListView
     /**
      * @param filteredSongs
      */
-    public void displaySongList(ArrayList<Song> filteredSongs) {
+    public void displaySongList(ArrayList<Song> filteredSongs)
+    {
 
         this.filteredSongs = filteredSongs;
         songGrid.resize(filteredSongs.size(), columns);
@@ -189,23 +201,30 @@ public class SongListView
                                 + song.getArtist() + "</div>");
                 songGrid.setHTML(r, 2,
                         "<div class=\"" + CssConstants.style + "songListItemData\">"
-                                + (song.getLastModifiedDate() == null ? "unloved since 2017" : song.getLastModifiedDate().toDateString()) + "</div>");
+                                + (song.getLastModifiedDate() == null ? "unloved since 2017" :
+                                song.getLastModifiedDate().toDateString()) + "</div>");
                 r++;
             }
         }
-        listCount.setText("Count: " + Integer.toString(filteredSongs.size()));
+        listCount.setText("Count: " + Integer.toString(filteredSongs.size()) + " / " + Integer.toString(allSongs.size()));
 
         songSearch.setFocus(true);
     }
 
     @Override
-    public void nextSong(boolean forward) {
-        if (filteredSongs.isEmpty())
+    public void nextSong(boolean forward, boolean force)
+    {
+        //  nothing to move to
+        if (filteredSongs.size() < 2) {
+            if (force)
+                fireEvent(new SongUpdateEvent(new SongUpdate()));  //   empty song
             return;
+        }
 
-        if (selectedSong == null || !filteredSongs.contains(selectedSong))
+        if (selectedSong == null || !filteredSongs.contains(selectedSong)) {
             selectedSong = filteredSongs.get(0);
-        else
+            fireEvent(new SongUpdateEvent(selectedSong));
+        } else
             for (int i = 0; i < filteredSongs.size(); i++)
                 if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
                 {
@@ -233,7 +252,8 @@ public class SongListView
         event.srcElement.value = null;
     }-*/;
 
-    private void asyncReadSongFile(Object entry) {
+    private void asyncReadSongFile(Object entry)
+    {
 
         File file = (File) entry;
 

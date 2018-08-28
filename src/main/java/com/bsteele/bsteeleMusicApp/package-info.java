@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: songs with delta (maj7) don't parse in json?
 fixme: better error messages at parsing
 fixme: broken measure   X X X 
 fixme: written files should update their modification date
