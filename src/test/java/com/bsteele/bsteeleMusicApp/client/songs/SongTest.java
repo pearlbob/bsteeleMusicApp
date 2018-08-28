@@ -38,8 +38,8 @@ public class SongTest
                     songCount++;
                     Song song = Song.fromJsonObject(ja.get(i).isObject());
 
-                    HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(song
-                            .getChordsAsString());
+                    HashMap<ScaleChord, Integer> scaleChordMap =
+                            ScaleChord.findScaleChordsUsed(song.getChordsAsString());
                     for (ScaleChord scaleChord : scaleChordMap.keySet())
                         chordDescriptors.add(scaleChord.getChordDescriptor());
                     assertTrue(song.getTitle() != null);
@@ -136,6 +136,39 @@ public class SongTest
         assertTrue(comparator.compare(bNull, a) > 0);  //  null mods last
         assertTrue(comparator.compare(bNull, b) > 0);  //  null mods last
         assertTrue(comparator.compare(bNull, c) > 0);  //  null mods last
+    }
+
+    @Test
+    public void testComparatorByVersionNumber()
+    {
+        Comparator<Song> comparator = Song.getComparatorByType(Song.ComparatorType.versionNumber);
+
+        Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        Song a1 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        a1.setFileName("a (1).songlyrics");
+        Song a9 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        a9.setFileName("a (9).songlyrics");
+        Song a10 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, Barbara Ann");
+        a10.setFileName("a (10).songlyrics");
+
+        assertTrue(comparator.compare(a, a) == 0);
+        assertTrue(comparator.compare(a1, a1) == 0);
+        assertTrue(comparator.compare(a9, a9) == 0);
+        assertTrue(comparator.compare(a10, a10) == 0);
+
+        assertTrue(comparator.compare(a, a1) < 0);
+        assertTrue(comparator.compare(a1, a9) < 0);
+        assertTrue(comparator.compare(a, a9) < 0);
+        assertTrue(comparator.compare(a9, a10) < 0);
+
+        assertTrue(comparator.compare(a1, a) > 0);
+        assertTrue(comparator.compare(a9, a1) > 0);
+        assertTrue(comparator.compare(a9, a) > 0);
+        assertTrue(comparator.compare(a10, a9) > 0);
     }
 
     @Test

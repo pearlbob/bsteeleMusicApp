@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -78,6 +80,9 @@ public class SongEditView
 
     @UiField
     ButtonElement songEntryClear;
+
+    @UiField
+    ButtonElement songEntryRemove;
 
     @UiField
     Button nextSongButton;
@@ -474,6 +479,14 @@ public class SongEditView
         });
         nextSongButton.addClickHandler((ClickEvent event) -> {
             eventBus.fireEvent(new NextSongEvent());
+        });
+
+        Event.sinkEvents(songEntryRemove, Event.ONCLICK);
+        Event.setEventListener(songEntryRemove, (Event event) -> {
+            if (Event.ONCLICK == event.getTypeInt()) {
+                if (song != null)
+                    fireEvent(new SongRemoveEvent(song));
+            }
         });
 
         for (ChordDescriptor cd : chordDescriptorMap.keySet()) {
@@ -994,6 +1007,12 @@ public class SongEditView
     public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler)
     {
         return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration SongRemoveEventHandler(SongRemoveEventHandler handler)
+    {
+        return handlerManager.addHandler(SongRemoveEvent.TYPE, handler);
     }
 
 

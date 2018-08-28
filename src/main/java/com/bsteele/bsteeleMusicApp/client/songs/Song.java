@@ -18,7 +18,14 @@ import com.google.gwt.user.client.ui.FlexTable;
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /**
@@ -1359,7 +1366,7 @@ public class Song implements Comparable<Song>
                     }
 
                     //  don't generateHtml the section identifiers that happen to look like notes
-                    String toMatch = m.substring(ci, Math.min(m.length() - ci + 1, Section.maxLength));
+                    String toMatch = m.substring(ci, Math.min(m.length() - ci + 2, Section.maxLength));
                     SectionVersion version = Section.parse(toMatch);
                     if (version != null) {
                         sb.append(version.toString());
@@ -1864,6 +1871,11 @@ public class Song implements Comparable<Song>
         return lyricSections;
     }
 
+    public int getFileVersionNumber()
+    {
+        return fileVersionNumber;
+    }
+
 
     public enum ComparatorType
     {
@@ -1999,7 +2011,7 @@ public class Song implements Comparable<Song>
         }
     }
 
-    private static int compareByLastModifiedDate(Song o1, Song o2)
+    public static int compareByLastModifiedDate(Song o1, Song o2)
     {
         JsDate mod1 = o1.lastModifiedDate;
         JsDate mod2 = o2.lastModifiedDate;
@@ -2036,13 +2048,46 @@ public class Song implements Comparable<Song>
         @Override
         public int compare(Song o1, Song o2)
         {
-            int ret = o1.compareTo(o2);
-            if (ret != 0)
-                return ret;
-            if (o1.fileVersionNumber != o2.fileVersionNumber)
-                return o1.fileVersionNumber < o2.fileVersionNumber ? -1 : 1;
-            return compareByLastModifiedDate(o1, o2);
+            return compareByVersionNumber(o1, o2);
         }
+    }
+
+    public static int compareByVersionNumber(Song o1, Song o2)
+    {
+        logger.finest("o1.fileVersionNumber:" + o1.fileVersionNumber + ", o2.fileVersionNumber: " + o2.fileVersionNumber);
+        int ret = o1.compareTo(o2);
+        if (ret != 0)
+            return ret;
+        if (o1.fileVersionNumber != o2.fileVersionNumber)
+            return o1.fileVersionNumber < o2.fileVersionNumber ? -1 : 1;
+        return compareByLastModifiedDate(o1, o2);
+    }
+
+    /**
+     * Returns a string representation of the object. In general, the
+     * {@code toString} method returns a string that
+     * "textually represents" this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * <p>
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}', and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * <blockquote>
+     * <pre>
+     * getClass().getName() + '@' + Integer.toHexString(hashCode())
+     * </pre></blockquote>
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString()
+    {
+        return title + (fileVersionNumber > 0 ? ":(" + fileVersionNumber + ")" : "") + " by " + artist;
     }
 
     /**
@@ -2153,7 +2198,7 @@ public class Song implements Comparable<Song>
     private ArrayList<SectionVersion> sequence;
     private final HashMap<SectionVersion, Grid<String>> chordSectionInnerHtmlMap = new HashMap<>();
     private final HashMap<SectionVersion, SectionVersion> displaySectionMap = new HashMap<>();
-    private static final char js_delta = '\u0394';
+      private static final char js_delta = '\u0394';
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;

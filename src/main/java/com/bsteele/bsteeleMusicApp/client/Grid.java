@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * @param <T>
+ *
  * @author bob
+ * @param <T>
  */
 @JsType
 public class Grid<T>
@@ -28,6 +29,8 @@ public class Grid<T>
      */
     public Grid<T> deepCopy(Grid<T> other)
     {
+        if ( other == null )
+            return null;
         int rLimit = other.getRowCount();
         for (int r = 0; r < rLimit; r++) {
             ArrayList<T> row = other.getRow(r);

@@ -3,6 +3,8 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -19,7 +21,9 @@ import com.gwtplatform.mvp.client.View;
  */
 public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWidget.MyView>
         implements SongUpdateEventHandler,
-        SongSubmissionEventHandler {
+        SongSubmissionEventHandler,
+        SongRemoveEventHandler
+{
 
 
     public interface MyView extends View {
@@ -29,6 +33,9 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
 
         public HandlerRegistration SongSubmissionEventHandler(
                 SongSubmissionEventHandler handler);
+
+        public HandlerRegistration SongRemoveEventHandler(
+                SongRemoveEventHandler handler);
 
         void setSongEdit(Song song);
     }
@@ -49,6 +56,7 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
 
         view.SongUpdateEventHandler(this);
         view.SongSubmissionEventHandler(this);
+        view.SongRemoveEventHandler(this);
     }
 
 
@@ -61,6 +69,13 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
     public void onSongUpdate(SongUpdateEvent event) {
         view.setSongEdit(event.getSongUpdate().getSong());
     }
+
+
+    @Override
+    public void onSongRemove(SongRemoveEvent event) {
+        eventBus.fireEvent(event);
+    }
+
 
     private final EventBus eventBus;
     private final MyView view;

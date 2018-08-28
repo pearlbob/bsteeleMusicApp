@@ -14,6 +14,7 @@
                     </td>
                     <td>
                         <button type="button" ui:field="songEntryClear">Clear</button>
+                        <button type="button" ui:field="songEntryRemove">Remove</button>
                         &nbsp;&nbsp;
                         <!--    note the reverse order due to right justification of the last item  -->
                         <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"

@@ -11,6 +11,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
@@ -77,6 +78,7 @@ public class SongListView
 
     @UiField
     Grid songGrid;
+
     @UiField
     Label listCount;
     @UiField
@@ -278,16 +280,20 @@ public class SongListView
                 r++;
             }
         }
-        listCount.setText("Count: " + Integer.toString(filteredSongs.size()));
+        listCount.setText("Count: " + Integer.toString(filteredSongs.size()) + " / " + Integer.toString(allSongs.size()));
 
         songSearch.setFocus(true);
     }
 
     @Override
-    public void nextSong(boolean forward)
+    public void nextSong(boolean forward, boolean force)
     {
-        if (filteredSongs.isEmpty())
+        //  nothing to move to
+        if (filteredSongs.size() < 2) {
+            if (force)
+                fireEvent(new SongUpdateEvent(new SongUpdate()));  //   empty song
             return;
+        }
 
         if (selectedSong == null || !filteredSongs.contains(selectedSong)) {
             selectedSong = filteredSongs.get(0);

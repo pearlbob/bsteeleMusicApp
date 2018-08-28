@@ -78,6 +78,9 @@ public class LyricsAndChordsViewImpl
     SpanElement title;
 
     @UiField
+    SpanElement fileNumber;
+
+    @UiField
     SpanElement artist;
 
     @UiField
@@ -221,6 +224,9 @@ public class LyricsAndChordsViewImpl
 
         //  load new data even if the identity has not changed
         title.setInnerHTML(song.getTitle());
+        fileNumber.setInnerHTML((song.getFileVersionNumber() > 0
+                ? "(" + Integer.toString(song.getFileVersionNumber()) + ")"
+                : ""));
         artist.setInnerHTML(song.getArtist());
         copyright.setInnerHTML(song.getCopyright());
 
@@ -459,7 +465,6 @@ public class LyricsAndChordsViewImpl
                 audioBeatDisplayCanvas.setWidth((int) Math.floor(chordsParentWidth));
             }
         }
-
     }
 
     private void sendStatus(String name, String value)
