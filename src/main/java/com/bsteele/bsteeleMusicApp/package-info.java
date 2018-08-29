@@ -13,7 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-a bob version change test
+fixme: first read song can't be shown removed even though it is.
 fixme: fill last line of repeat when not a multiple of 4
 fixme: lyrics and chords sizing
 fixme: Black Velvet, Alannah Myles key of B, line 1 of c: DG♯♯ (was EbBb in key of C, became: D#A#),  AA of line 2 doesn't transpose either (was BbA)

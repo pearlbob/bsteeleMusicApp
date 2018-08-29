@@ -139,15 +139,15 @@ public class SongListView
                 SongFile f = new SongFile(files.getItem(i));
                 reducedSongFiles.add(f);
             }
-            SongFile lastSonFile = null;
+//            SongFile lastSongFile = null;
             for (SongFile songFile : reducedSongFiles) {
-                if (lastSonFile != null && lastSonFile.getSongTitle().equals(songFile.getSongTitle()))
-                    eventBus.fireEvent(new StatusEvent("song read skip",
-                            "\"" + songFile.getFile().getName() +
-                                    "\", used \"" + lastSonFile.getFile().getName() + "\""));
-                else
+//                if (lastSongFile != null && lastSongFile.getSongTitle().equals(songFile.getSongTitle()))
+//                    eventBus.fireEvent(new StatusEvent("song read skip",
+//                            "\"" + songFile.getFile().getName() +
+//                                    "\", used \"" + lastSongFile.getFile().getName() + "\""));
+//                else
                     asyncReadSongFile(songFile.getFile());
-                lastSonFile = songFile;
+//                lastSongFile = songFile;
             }
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
         });
@@ -216,15 +216,27 @@ public class SongListView
 
 
     @Override
-    public void addToSongList(Song song)
+    public boolean addToSongList(Song song)
     {
         if (song != null) {
             if (allSongs.contains(song)) {
-                allSongs.remove(song);  //  remove any prior version
+                Song oldSong = allSongs.floor(song);
+                if (Song.compareByVersionNumber(oldSong, song) > 0) {
+                    GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
+                    return false;
+                }
+                allSongs.remove(oldSong);  //  remove any prior version
+                GWT.log("\"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
             }
-            allSongs.add(song);
-
+            return allSongs.add(song);
         }
+        return false;
+    }
+
+    @Override
+    public void removeAll(ArrayList<Song> songs)
+    {
+        allSongs.removeAll(songs);
     }
 
     @Override
@@ -295,9 +307,9 @@ public class SongListView
             return;
         }
 
-        if (selectedSong == null || !filteredSongs.contains(selectedSong)) {
+        if (selectedSong == null || !Song.containsSongTitleAndArtist(filteredSongs,selectedSong)) {
             selectedSong = filteredSongs.get(0);
-            fireEvent(new SongUpdateEvent(selectedSong));
+            fireEvent(new SongUpdateEvent(selectedSong));   //  arbitrary choice of the first
         } else
             for (int i = 0; i < filteredSongs.size(); i++)
                 if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
@@ -306,6 +318,12 @@ public class SongListView
                     fireEvent(new SongUpdateEvent(selectedSong));
                     break;
                 }
+    }
+
+    @Override
+    public Song getSelectedSong()
+    {
+        return selectedSong;
     }
 
     private native FileListImpl getFiles(NativeEvent event)/*-{
