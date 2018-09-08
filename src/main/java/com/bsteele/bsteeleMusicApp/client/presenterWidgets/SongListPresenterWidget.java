@@ -45,12 +45,17 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler);
 
         boolean addToSongList(Song song);
-        void removeAll(ArrayList<Song> songs);
-        void displaySongList();
-        void saveSongAs(String filename, String data);
-        void saveAllSongsAs( String fileName );
 
-        void nextSong(boolean forward, boolean force );
+        void removeAll(ArrayList<Song> songs);
+
+        void displaySongList();
+
+        void saveSongAs(String filename, String data);
+
+        void saveAllSongsAs(String fileName);
+
+        void nextSong(boolean forward, boolean force);
+
         Song getSelectedSong();
     }
 
@@ -68,7 +73,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onBind() {
+    public void onBind()
+    {
         view.addSongUpdateEventHandler(this);
         view.addSongReadEventHandler(this);
 
@@ -131,10 +137,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
-            if (view.getSelectedSong() != null && Song.containsSongTitleAndArtist(songs,view.getSelectedSong()) )
-               view.nextSong(true, true);   //  fixme: not always good enough?
+            if (view.getSelectedSong() != null && Song.containsSongTitleAndArtist(songs, view.getSelectedSong()))
+                view.nextSong(true, true);   //  fixme: not always good enough?
 
-          view.removeAll(songs);
+            view.removeAll(songs);
             view.displaySongList();
         }
     }

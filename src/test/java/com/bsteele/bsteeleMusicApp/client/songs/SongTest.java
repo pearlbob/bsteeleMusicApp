@@ -194,11 +194,13 @@ public class SongTest
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
         assertTrue(!a.equals(b));
         assertTrue(a.hashCode() != b.hashCode());
-        b = Song.createSong("A", "bob", "photos.bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        assertTrue(!a.equals(b));
-        assertTrue(a.hashCode() != b.hashCode());
 
+        //  test differ by date only
+//        b = Song.createSong("A", "bob", "photos.bsteele.com", Key.getDefault(),
+//                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+//        assertTrue(!a.equals(b));
+     //   assertTrue(a.hashCode() != b.hashCode());
+     
         b = Song.createSong("A", "bob", "bsteele.com", Key.Ab,
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
         assertTrue(!a.equals(b));
@@ -214,6 +216,7 @@ public class SongTest
         assertTrue(!a.equals(b));
         //top
         assertTrue(a.hashCode() != b.hashCode());
+
 
         b = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
