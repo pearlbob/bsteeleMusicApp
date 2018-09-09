@@ -1019,7 +1019,7 @@ public class SongEditView
     private void guessTheKey()
     {
         HashMap<ScaleChord, Integer> scaleChordMap =
-                ScaleChord.findScaleChordsUsed(song.getStructuralGridAsText());     //  fime: temp?
+                ScaleChord.findScaleChordsUsed(song.getStructuralGridAsText());     //  fixme: temp?
         TreeSet<ScaleChord> treeSet = new TreeSet<>();
         treeSet.addAll(scaleChordMap.keySet());
         setKey(Key.guessKey(treeSet));

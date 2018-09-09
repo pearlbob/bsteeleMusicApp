@@ -41,10 +41,9 @@ public class SongBase
 {
 
     /**
-     * Not to be used externally but must remain public due to GWT constraints!
+     * Not to be used externally
      */
-    @Deprecated
-    public SongBase()
+    SongBase()
     {
         setTitle("");
         setArtist("");
@@ -361,9 +360,16 @@ public class SongBase
         if (chordSection == null)
             return false;
 
+        if (chordSection.getMeasureSequenceItems().isEmpty()) {
+            chordSection.getMeasureSequenceItems().add(new MeasureSequenceItem(new ArrayList<>()));
+        }
+
         MeasureSequenceItem measureSequenceItem = findMeasureSequenceItem(chordSection, refMeasureNode);
-        if (measureSequenceItem == null)
-            return false;
+        if (measureSequenceItem == null) {
+            if (chordSection.getMeasureSequenceItems().size() != 1)
+                return false;
+            measureSequenceItem = chordSection.getMeasureSequenceItems().get(0);    //  use the default empty list
+        }
 
         switch (editLocation) {
             case insert:
@@ -395,16 +401,16 @@ public class SongBase
 
     private final MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
     {
-        if (chordSection.getMeasureSequenceItems().isEmpty()) {
-            MeasureSequenceItem ret = new MeasureSequenceItem(new ArrayList<>());
-            chordSection.getMeasureSequenceItems().add(ret);
-            return ret;
-        }
-        if (chordSection.getMeasureSequenceItems().size() == 1
-                && chordSection.getMeasureSequenceItems().get(0).getMeasures().isEmpty())
-        {
-            return chordSection.getMeasureSequenceItems().get(0);
-        }
+//        if (chordSection.getMeasureSequenceItems().isEmpty()) {
+//            MeasureSequenceItem ret = new MeasureSequenceItem(new ArrayList<>());
+//            chordSection.getMeasureSequenceItems().add(ret);
+//            return ret;
+//        }
+//        if (chordSection.getMeasureSequenceItems().size() == 1
+//                && chordSection.getMeasureSequenceItems().get(0).getMeasures().isEmpty())
+//        {
+//            return chordSection.getMeasureSequenceItems().get(0);
+//        }
         for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
             for (Measure measure : msi.getMeasures())
                 if (measure == measureNode)
@@ -929,7 +935,12 @@ public class SongBase
 
     public final Measure getMeasure(int row, int col)
     {
-        // songMoments.equ
+        Grid<MeasureNode> grid = getStructuralGrid();
+        MeasureNode mn = grid.get(row, col);
+        if (mn == null)
+            return null;
+        if (mn instanceof Measure)
+            return (Measure) mn;
         return null;
     }
 
@@ -1390,6 +1401,7 @@ public class SongBase
     protected void setChords(String chords)
     {
         this.chords = chords;
+        parse();
     }
 
     public String getRawLyrics()

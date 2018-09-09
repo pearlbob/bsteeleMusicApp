@@ -64,6 +64,12 @@ public class MeasureComment extends Measure
         return ret;
     }
 
+    @Override
+    public String transpose(@Nonnull Key key, int halfSteps)
+    {
+        return comment;
+    }
+
 
     public final String getComment()
     {
