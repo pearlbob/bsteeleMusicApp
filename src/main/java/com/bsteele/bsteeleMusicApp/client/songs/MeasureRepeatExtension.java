@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureRepeatExtension extends Measure
+public class MeasureRepeatExtension extends MeasureComment
 {
     public String getHtmlBlockId() { return  "RE"; }
 

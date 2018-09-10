@@ -20,6 +20,9 @@ public class MeasureComment extends Measure
         this.comment = comment;
     }
 
+    protected MeasureComment()
+    {
+    }
 
     public static final MeasureComment parse(String s)
     {
@@ -48,7 +51,7 @@ public class MeasureComment extends Measure
         //  format what we found
         if (mr != null) {
             String comment = mr.getGroup(2);
-            MeasureComment ret = new MeasureComment( comment);
+            MeasureComment ret = new MeasureComment(comment);
             ret.parseLength = mr.getGroup(0).length();
             return ret;
         }
@@ -59,7 +62,7 @@ public class MeasureComment extends Measure
         if (n <= 0)
             return null;
 
-        MeasureComment ret = new MeasureComment( s.substring(0, n));
+        MeasureComment ret = new MeasureComment(s.substring(0, n));
         ret.parseLength = n;
         return ret;
     }
@@ -94,7 +97,7 @@ public class MeasureComment extends Measure
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        
+
         MeasureComment that = (MeasureComment) o;
         return Objects.equals(comment, that.comment);
     }
@@ -111,5 +114,5 @@ public class MeasureComment extends Measure
         return "( " + comment + ") ";
     }
 
-    private String comment;
+    private String comment = "";
 }

@@ -69,7 +69,8 @@ public class MeasureRepeat extends MeasureSequenceItem
                         lastMeasureNode = null;
                     }
                     if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1 && i < measures
-                            .size() - 1) {
+                            .size() - 1)
+                    {
                         // ret.add("|");
                         ret.add("\n");
                     }
@@ -102,8 +103,9 @@ public class MeasureRepeat extends MeasureSequenceItem
                     ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                     lastMeasureNode = null;
                 }
-                if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1 && i < measures.size()
-                        - 1) {
+                if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1
+                        && i < measures.size() - 1)
+                {
                     ret.add("|");
                     ret.add("\n");
                 }
@@ -125,9 +127,7 @@ public class MeasureRepeat extends MeasureSequenceItem
     public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
     {
         //  fixme: improve repeats.addToGrid()
-        int measureCount = 0;
         for (MeasureNode measureNode : measures) {
-            measureCount++;
             if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1) {
                 if (measures.size() > MusicConstant.measuresPerDisplayRow) {
                     grid.add(new MeasureRepeatExtension());
@@ -137,6 +137,8 @@ public class MeasureRepeat extends MeasureSequenceItem
             measureNode.addToGrid(grid, chordSection);
         }
         if (measures.size() > MusicConstant.measuresPerDisplayRow) {
+            for (int measureCount = measures.size(); measureCount % MusicConstant.measuresPerDisplayRow != 0; measureCount++)
+                grid.add(new MeasureComment());
             grid.add(new MeasureRepeatExtension());
         }
         grid.add(new MeasureRepeatMarker(repeats));

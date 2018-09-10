@@ -998,7 +998,11 @@ public class SongBase
                         break;
                 }
                 //  enforce the - on repeated measures
-                if (c > 0 && c <= MusicConstant.measuresPerDisplayRow && s.equals(lastValue)) {
+                if (c > 0
+                        && c <= MusicConstant.measuresPerDisplayRow
+                        && s.equals(lastValue)
+                        && !(measureNode instanceof MeasureComment))
+                {
                     s = "-";
                     formatter.addStyleName(r + offset, c, CssConstants.style + "textCenter");
                 } else
