@@ -26,7 +26,6 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.client.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -205,6 +204,17 @@ public class SongEditView
     Button common5;
 
     @UiField
+    Button noRepeat;
+    @UiField
+    Button repeat2;
+    @UiField
+    Button repeat3;
+    @UiField
+    Button repeat4;
+    @UiField
+    Button noChord;
+
+    @UiField
     Button major;
     @UiField
     Button minor;
@@ -308,28 +318,22 @@ public class SongEditView
 
         sectionI.addClickHandler((ClickEvent event) -> {
             processEntry(Section.intro.getAbbreviation() + ":");
-            checkSong();
         });
         sectionV.addClickHandler((ClickEvent event) -> {
             processEntry(Section.verse.getAbbreviation() + ":");
-            checkSong();
         });
         sectionPC.addClickHandler((ClickEvent event) -> {
             processEntry(Section.preChorus.getAbbreviation() + ":");
-            checkSong();
         });
         sectionC.addClickHandler((ClickEvent event) -> {
             processEntry(Section.chorus.getAbbreviation() + ":");
-            checkSong();
         });
         sectionBr.addClickHandler((ClickEvent event) -> {
             processEntry(Section.bridge.getAbbreviation() + ":");
-            checkSong();
         });
 
         sectionO.addClickHandler((ClickEvent event) -> {
             processEntry(Section.outro.getAbbreviation() + ":");
-            checkSong();
         });
         {
             // other sections
@@ -339,7 +343,6 @@ public class SongEditView
                     if (sectionOtherSelection.getSelectedIndex() > 0)
                         processEntry(sectionOtherSelection.getValue() + ":");
                     sectionOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
-                    checkSong();
                 }
             });
 
@@ -438,6 +441,23 @@ public class SongEditView
         common5.addClickHandler((ClickEvent event) -> {
             enterChord(event);
         });
+
+        noRepeat.addClickHandler((ClickEvent event) -> {
+            processEntry("x1");
+        });
+        repeat2.addClickHandler((ClickEvent event) -> {
+            processEntry("x2");
+        });
+        repeat3.addClickHandler((ClickEvent event) -> {
+            processEntry("x3");
+        });
+        repeat4.addClickHandler((ClickEvent event) -> {
+            processEntry("x4");
+        });
+        noChord.addClickHandler((ClickEvent event) -> {
+            processEntry("X");
+        });
+
 
         chordsUndo.setEnabled(false);
         chordsUndo.addClickHandler((ClickEvent event) -> {
@@ -548,7 +568,6 @@ public class SongEditView
         preProcessMeasureEntry();
         if (processEntry(entry)) {
             measureEntry.setValue("");
-            checkSong();
         }
     }
 
@@ -565,12 +584,20 @@ public class SongEditView
         if (measure != null) {
             //GWT.log("new measure: \"" + measure.toString() + "\"");
             entry = entry.substring(measure.getParseLength());
+        } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
+            measure = new Measure(song.findMeasure(lastChordSelection));
+            entry = entry.substring(1);
         } else {
-            if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
-                measure = new Measure(song.findMeasure(lastChordSelection));
-                entry = entry.substring(1);
+            final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
+            MatchResult mr = repeatExp.exec(entry);
+            if (mr != null) {
+                int repeats = Integer.parseInt(mr.getGroup(1));
+                song.setRepeat(lastChordSelection, repeats);
+                displaySong();
+                entry = entry.substring(mr.getGroup(0).length());
             }
         }
+
         if (entry.trim().length() > 0) {
             errorLabel.setText("Measure entry not understood: \"" + entry + "\"");
             songEnter.setDisabled(true);
@@ -615,6 +642,7 @@ public class SongEditView
             }
         }
         checkSong();
+        measureEntry.setFocus(true);
         return false;
     }
 
@@ -637,11 +665,13 @@ public class SongEditView
         findMostCommonScaleChords();
 
         displaySong();
+        lastChordSelection = null;
         selectLastChordsCell();
 
-        lastChordSelection = null;
         chordsFlexTable.addClickHandler(clickEvent -> {
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
+            if (cell == null)
+                return;
             selectChordsCell(new SongChordGridSelection(cell));
             measureEntry.setFocus(true);
         });
@@ -694,6 +724,8 @@ public class SongEditView
 
     private void selectLastChordsCell()
     {
+        if (chordsFlexTable == null)
+            return;
         int rows = chordsFlexTable.getRowCount();
         if (rows <= 0)
             return;
@@ -709,6 +741,8 @@ public class SongEditView
             selectLastChordsCell();
             return;
         }
+        if (chordsFlexTable == null)
+            return;
 
         FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
         Element e = formatter.getElement(chordSelection.getRow(), chordSelection.getCol());
@@ -755,7 +789,6 @@ public class SongEditView
 
             lastChordSelection = chordSelection;
         }
-        measureEntry.setFocus(true);
     }
 
     private void deleteChordsCell()
@@ -889,6 +922,7 @@ public class SongEditView
             addRecentMeasure(measure);
             findMostCommonScaleChords();
             checkSong();
+            measureEntry.setFocus(true);
         }
     }
 

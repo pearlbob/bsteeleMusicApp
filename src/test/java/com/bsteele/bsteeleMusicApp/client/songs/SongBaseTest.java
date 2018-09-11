@@ -86,16 +86,18 @@ public class SongBaseTest
 
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "", "I:v: bob, bob, bob berand");
-        assertTrue( a.addSectionVersion(new SectionVersion( Section.intro)));
+        assertTrue(a.addSectionVersion(new SectionVersion(Section.intro)));
         newMeasure = Measure.parse("B", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0,0), MeasureSequenceItem.EditLocation.append, newMeasure));
+        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureSequenceItem.EditLocation.append,
+                newMeasure));
         text = a.getStructuralGridAsText()
                 .replaceAll("\n", " ")
                 .replaceAll("  ", " ")
                 .trim();
         assertEquals("I: B", text);
         newMeasure = Measure.parse("C", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0,1), MeasureSequenceItem.EditLocation.append, newMeasure));
+        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureSequenceItem.EditLocation.append,
+                newMeasure));
         text = a.getStructuralGridAsText()
                 .replaceAll("\n", " ")
                 .replaceAll("  ", " ")
@@ -103,7 +105,8 @@ public class SongBaseTest
         assertEquals("I: B C", text);
         logger.fine(text);
         newMeasure = Measure.parse("A", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0,1), MeasureSequenceItem.EditLocation.insert, newMeasure));
+        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureSequenceItem.EditLocation.insert,
+                newMeasure));
         text = a.getStructuralGridAsText()
                 .replaceAll("\n", " ")
                 .replaceAll("  ", " ")
@@ -111,7 +114,7 @@ public class SongBaseTest
         assertEquals("I: A B C", text);
         logger.fine(text);
 
-        
+
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "I:v: A B C D", "I:v: bob, bob, bob berand");
 
@@ -148,7 +151,7 @@ public class SongBaseTest
 
         String chords = "I: A A♯ B C V: C♯ D D♯ E";
         a.setChords(chords);
-         text = a.getStructuralGridAsText()
+        text = a.getStructuralGridAsText()
                 .replaceAll("\n", " ")
                 .replaceAll("  ", " ")
                 .trim();
@@ -191,6 +194,50 @@ public class SongBaseTest
             }
         }
 
+    }
+
+    @Test
+    public void testSetRepeats()
+    {
+        {
+            SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4, "i: A B C D v: E F G A#",
+                    "i: v: bob, bob, bob berand");
+
+            Measure m = a.findMeasure(new SongChordGridSelection(0, 4));
+            SongChordGridSelection songChordGridSelection = a.findMeasureChordGridLocation(m);
+            a.setRepeat(songChordGridSelection, 2);
+            assertEquals("I:  A B C D x2 V:  E F G A♯",
+                    a.getStructuralGridAsOneTextLine().trim());
+
+            //  remove the repeat
+            songChordGridSelection = a.findMeasureChordGridLocation(m);
+            a.setRepeat(songChordGridSelection, 1);
+            assertEquals("I:  A B C D V:  E F G A♯",
+                    a.getStructuralGridAsOneTextLine().trim());
+        }
+
+        {
+            SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4, "i: A B C D v: E F G A#",
+                    "i: v: bob, bob, bob berand");
+
+            //System.out.println(a.getStructuralGridAsOneTextLine());
+            Grid<MeasureNode> grid = a.getStructuralGrid();
+
+            for (int row = 0; row < grid.getRowCount(); row++) {
+                ArrayList<MeasureNode> cols = grid.getRow(row);
+                for (int col = 1; col < cols.size(); col++)
+                    for (int r = 6; r > 1; r--) {
+                        Measure m = a.findMeasure(new SongChordGridSelection(row, col));
+                        SongChordGridSelection songChordGridSelection = a.findMeasureChordGridLocation(m);
+                        a.setRepeat(songChordGridSelection, r);
+                        assertEquals("I:  A B C D x" + (row > 0 ? 2 : r)
+                                        + " V:  E F G A♯" + (row > 0 ? " x" + r : ""),
+                                a.getStructuralGridAsOneTextLine().trim());
+                    }
+            }
+        }
     }
 
     @Test

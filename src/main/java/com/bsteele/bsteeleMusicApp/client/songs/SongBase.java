@@ -271,6 +271,11 @@ public class SongBase
         return ret;
     }
 
+    public final String getStructuralGridAsOneTextLine()
+    {
+        return getStructuralGridAsText().replaceAll("\\n", " ");
+    }
+
     public final String getStructuralGridAsText()
     {
         StringBuilder sb = new StringBuilder();
@@ -1020,6 +1025,50 @@ public class SongBase
                 formatter.getElement(r + offset, c).setId(prefix + "." + measureNode.getHtmlBlockId() + "." + r + "."
                         + c);
             }
+        }
+    }
+
+    public final void setRepeat(SongChordGridSelection songChordGridSelection, int repeats)
+    {
+        Measure measure = findMeasure(songChordGridSelection);
+        if (measure == null)
+            return;
+
+        MeasureSequenceItem measureSequenceItem = findMeasureSequenceItem(measure);
+        if (measureSequenceItem == null)
+            return;
+
+        if (measureSequenceItem instanceof MeasureRepeat) {
+            MeasureRepeat measureRepeat = ((MeasureRepeat) measureSequenceItem);
+
+            if (repeats <= 1) {
+                //  remove the repeat
+                ChordSection chordSection = findChordSection(measureRepeat);
+                ArrayList<MeasureSequenceItem> measureSequenceItems = chordSection.getMeasureSequenceItems();
+                int i = measureSequenceItems.indexOf(measureRepeat);
+                measureSequenceItems.remove(i);
+                measureSequenceItems.add(i, new MeasureSequenceItem(measureRepeat.getMeasures()));
+
+                chordSectionDelete(chordSection);
+                chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
+                chordSections.add(chordSection);
+            } else {
+                //  change the count
+                measureRepeat.setRepeats(repeats);
+            }
+        } else {
+            //  change sequence items to repeat
+            MeasureRepeat measureRepeat = new MeasureRepeat(measureSequenceItem.getMeasures(), repeats);
+            ChordSection chordSection = findChordSection(measureSequenceItem);
+            ArrayList<MeasureSequenceItem> measureSequenceItems = chordSection.getMeasureSequenceItems();
+            int i = measureSequenceItems.indexOf(measureSequenceItem);
+            measureSequenceItems = new ArrayList<>(measureSequenceItems);
+            measureSequenceItems.remove(i);
+            measureSequenceItems.add(i, measureRepeat);
+
+            chordSectionDelete(chordSection);
+            chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
+            chordSections.add(chordSection);
         }
     }
 

@@ -136,9 +136,10 @@ public class MeasureRepeat extends MeasureSequenceItem
             }
             measureNode.addToGrid(grid, chordSection);
         }
+
+        for (int measureCount = measures.size(); measureCount % MusicConstant.measuresPerDisplayRow != 0; measureCount++)
+            grid.add(new MeasureComment());
         if (measures.size() > MusicConstant.measuresPerDisplayRow) {
-            for (int measureCount = measures.size(); measureCount % MusicConstant.measuresPerDisplayRow != 0; measureCount++)
-                grid.add(new MeasureComment());
             grid.add(new MeasureRepeatExtension());
         }
         grid.add(new MeasureRepeatMarker(repeats));

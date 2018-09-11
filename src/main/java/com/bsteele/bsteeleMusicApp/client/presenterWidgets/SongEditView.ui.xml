@@ -84,9 +84,6 @@
                     </td>
                 </tr>
             </table>
-            <p>
-                For chords and lyrics, mark the sections with the following:
-            </p>
 
             <table>
                 <tr>
@@ -196,6 +193,18 @@
                                     <g:Button ui:field="common3"/>
                                     <g:Button ui:field="common4"/>
                                     <g:Button ui:field="common5"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Control:
+                                </td>
+                                <td>
+                                    <g:Button ui:field="noRepeat">No Repeat</g:Button>
+                                    <g:Button ui:field="repeat2">Repeat x2</g:Button>
+                                    <g:Button ui:field="repeat3">Repeat x3</g:Button>
+                                    <g:Button ui:field="repeat4">Repeat x4</g:Button>
+                                    <g:Button ui:field="noChord">No Chord</g:Button>
                                 </td>
                             </tr>
                             <tr>
