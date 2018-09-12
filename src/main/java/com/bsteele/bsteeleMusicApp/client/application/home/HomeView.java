@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
@@ -143,6 +145,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
                     lastPlayTab = tab;
                     break;
             }
+            fireEvent(new HomeTabEvent(tab));
         });
 
 //        // Listen for keyboard events
@@ -179,6 +182,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @Override
     public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler) {
         return handlerManager.addHandler(AllSongWriteEvent.TYPE, handler);
+    }
+
+    @Override
+    public HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler) {
+        return handlerManager.addHandler(HomeTabEvent.TYPE, handler);
     }
 
     private String generateStatusHtml() {

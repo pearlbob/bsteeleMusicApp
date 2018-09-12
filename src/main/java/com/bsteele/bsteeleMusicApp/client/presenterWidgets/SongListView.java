@@ -266,6 +266,7 @@ public class SongListView
             filteredSongs.addAll(sortedSongs);
         }
         displaySongList(filteredSongs);
+        songSearch.setFocus(true);
     }
 
     /**

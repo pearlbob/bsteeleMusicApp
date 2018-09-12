@@ -5,6 +5,8 @@ import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.LoggedInGatekeeper;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
@@ -19,6 +21,7 @@ import com.bsteele.bsteeleMusicApp.client.presenterWidgets.PlayerPresenterWidget
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SingerPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongEditPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongListPresenterWidget;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -35,15 +38,19 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
  */
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy>
         implements SongUpdateEventHandler, SongSubmissionEventHandler, AllSongWriteEventHandler,
-        StatusEventHandler {
+        StatusEventHandler, HomeTabEventHandler
+{
 
-    interface MyView extends View {
+    interface MyView extends View
+    {
 
         void selectLastPlayTab();
 
         void onStatusEvent(StatusEvent event);
 
         HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler);
+
+        HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler);
     }
 
     public static final SingleSlot<SongListPresenterWidget> SLOT_SONGLIST_CONTENT = new SingleSlot<>();
@@ -66,7 +73,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @ProxyStandard
     @NameToken(NameTokens.HOME)
     @UseGatekeeper(LoggedInGatekeeper.class)
-    interface MyProxy extends ProxyPlace<HomePresenter> {
+    interface MyProxy extends ProxyPlace<HomePresenter>
+    {
     }
 
     @Inject
@@ -82,7 +90,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             SongEditPresenterWidget songEditPresenterWidget,
             DrumOptionsPresenterWidget drumOptionsPresenterWidget,
             BSteeleMusicIO bSteeleMusicIO
-    ) {
+    )
+    {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_MAIN);
 
         this.eventBus = eventBus;
@@ -96,12 +105,14 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
 
         view.addSongReadEventHandler(this);
+        view.addHomeTabEventHandler(this);
 
         this.bSteeleMusicIO = bSteeleMusicIO; //  fixme: do this better: force the presence of the singleton
     }
 
     @Override
-    protected void onBind() {
+    protected void onBind()
+    {
         setInSlot(SLOT_SONGLIST_CONTENT, songListPresenterWidget);
         setInSlot(SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChordsPresenterWidget);
         setInSlot(SLOT_PLAYER_CONTENT, playerPresenterWidget);
@@ -117,24 +128,34 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
 
     @Override
-    public void onSongUpdate(SongUpdateEvent event) {
+    public void onSongUpdate(SongUpdateEvent event)
+    {
         getView().selectLastPlayTab();
     }
 
 
     @Override
-    public void onSongSubmission(SongSubmissionEvent event) {
+    public void onSongSubmission(SongSubmissionEvent event)
+    {
         getView().selectLastPlayTab();
     }
 
 
     @Override
-    public void onStatusEvent(StatusEvent event) {
+    public void onStatusEvent(StatusEvent event)
+    {
         getView().onStatusEvent(event);
     }
 
     @Override
-    public void onAllSongWrite(AllSongWriteEvent event) {
+    public void onAllSongWrite(AllSongWriteEvent event)
+    {
+        eventBus.fireEvent(event);
+    }
+
+    @Override
+    public void onHomeTab(HomeTabEvent event)
+    {
         eventBus.fireEvent(event);
     }
 

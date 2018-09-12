@@ -26,6 +26,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.client.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -35,6 +36,7 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.DragStartEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
@@ -317,23 +319,23 @@ public class SongEditView
         });
 
         sectionI.addClickHandler((ClickEvent event) -> {
-            processEntry(Section.intro.getAbbreviation() + ":");
+            processSectionEntry(Section.intro.getAbbreviation());
         });
         sectionV.addClickHandler((ClickEvent event) -> {
-            processEntry(Section.verse.getAbbreviation() + ":");
+            processSectionEntry(Section.verse.getAbbreviation());
         });
         sectionPC.addClickHandler((ClickEvent event) -> {
-            processEntry(Section.preChorus.getAbbreviation() + ":");
+            processSectionEntry(Section.preChorus.getAbbreviation());
         });
         sectionC.addClickHandler((ClickEvent event) -> {
-            processEntry(Section.chorus.getAbbreviation() + ":");
+            processSectionEntry(Section.chorus.getAbbreviation());
         });
         sectionBr.addClickHandler((ClickEvent event) -> {
-            processEntry(Section.bridge.getAbbreviation() + ":");
+            processSectionEntry(Section.bridge.getAbbreviation());
         });
 
         sectionO.addClickHandler((ClickEvent event) -> {
-            processEntry(Section.outro.getAbbreviation() + ":");
+            processSectionEntry(Section.outro.getAbbreviation());
         });
         {
             // other sections
@@ -341,7 +343,7 @@ public class SongEditView
             Event.setEventListener(sectionOtherSelection, (Event event) -> {
                 if (Event.ONCHANGE == event.getTypeInt()) {
                     if (sectionOtherSelection.getSelectedIndex() > 0)
-                        processEntry(sectionOtherSelection.getValue() + ":");
+                        processSectionEntry(sectionOtherSelection.getValue());
                     sectionOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
                 }
             });
@@ -571,79 +573,100 @@ public class SongEditView
         }
     }
 
+    private boolean processSectionEntry(String entry)
+    {
+        return processEntry(measureEntry.getValue() + " " + entry + ":");
+    }
+
     private boolean processEntry(String entry)
     {
         errorLabel.setText("");
 
-        SectionVersion sectionVersion = Section.parse(entry);
-        if (sectionVersion != null) {
-            //GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
-            entry = entry.substring(sectionVersion.getParseLength());
-        }
-        Measure measure = Measure.parse(entry, song.getBeatsPerBar());
-        if (measure != null) {
-            //GWT.log("new measure: \"" + measure.toString() + "\"");
-            entry = entry.substring(measure.getParseLength());
-        } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
-            measure = new Measure(song.findMeasure(lastChordSelection));
-            entry = entry.substring(1);
-        } else {
-            final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
-            MatchResult mr = repeatExp.exec(entry);
-            if (mr != null) {
-                int repeats = Integer.parseInt(mr.getGroup(1));
-                song.setRepeat(lastChordSelection, repeats);
-                displaySong();
-                entry = entry.substring(mr.getGroup(0).length());
-            }
-        }
+        entry = entry.replaceAll("\\s+", " ");
 
-        if (entry.trim().length() > 0) {
-            errorLabel.setText("Measure entry not understood: \"" + entry + "\"");
-            songEnter.setDisabled(true);
-            return false;
-        }
+        for (; ; ) {
+            entry = entry.trim();
 
-        if (sectionVersion != null) {
-            SongChordGridSelection songChordGridSelection = song.findSectionVersionChordGridLocation(sectionVersion);
-            if (songChordGridSelection != null) {
-                //  new section already there, select it
+            if (entry.isEmpty())
+                break;
+
+            SectionVersion sectionVersion = Section.parse(entry);
+            if (sectionVersion != null) {
+                GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
+                entry = entry.substring(sectionVersion.getParseLength());
+
+                SongChordGridSelection songChordGridSelection =
+                        song.findSectionVersionChordGridLocation(sectionVersion);
+                if (songChordGridSelection != null) {
+                    //  new section already there, select it
+                    displaySong();
+                    editAppend.setValue(true);
+                    selectChordsCell(songChordGridSelection);
+                    continue;
+                }
+                //  add a new section
+                boolean ret = song.addSectionVersion(sectionVersion);
                 displaySong();
                 editAppend.setValue(true);
-                selectChordsCell(songChordGridSelection);
-                return true;
+                selectChordsCell(song.findSectionVersionChordGridLocation(sectionVersion));
+                continue;
             }
-            //  add a new section
-            boolean ret = song.addSectionVersion(sectionVersion);
-            displaySong();
-            editAppend.setValue(true);
-            selectChordsCell(song.findSectionVersionChordGridLocation(sectionVersion));
-            return ret;
+
+            Measure measure = Measure.parse(entry, song.getBeatsPerBar());
+            if (measure != null) {
+                GWT.log("new measure: \"" + measure.toString() + "\"");
+                entry = entry.substring(measure.getParseLength());
+            } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
+                measure = new Measure(song.findMeasure(lastChordSelection));
+                GWT.log("new measure: -");
+                entry = entry.substring(1);
+            } else {
+                final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
+                MatchResult mr = repeatExp.exec(entry);
+                if (mr != null) {
+                    GWT.log("new measure: repeat");
+                    int repeats = Integer.parseInt(mr.getGroup(1));
+                    song.setRepeat(lastChordSelection, repeats);
+                    displaySong();
+                    entry = entry.substring(mr.getGroup(0).length());
+                }
+                continue;
+            }
+
+
+            if (measure != null && lastChordSelection != null) {
+                MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
+                if (editInsert.getValue()) {
+                    editLocation = MeasureSequenceItem.EditLocation.insert;
+                } else if (editReplace.getValue()) {
+                    editLocation = MeasureSequenceItem.EditLocation.replace;
+                }
+
+                if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection), editLocation, measure)) {
+                    editAppend.setValue(true);      //  select append for subsequent additions
+                    displaySong();
+                    lastChordSelection = song.findMeasureChordGridLocation(measure);
+
+                    if (lastChordSelection != null) {
+                        selectChordsCell(lastChordSelection);
+                    } else
+                        selectLastChordsCell();
+                    continue;
+                }
+            }
+
+            if (entry.trim().length() > 0) {
+                errorLabel.setText("Measure entry not understood: \"" + entry + "\"");
+                measureEntry.setValue(entry);
+                songEnter.setDisabled(true);
+                return false;
+            }
+
         }
-
-        if (measure != null && lastChordSelection != null) {
-            MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
-            if (editInsert.getValue()) {
-                editLocation = MeasureSequenceItem.EditLocation.insert;
-            } else if (editReplace.getValue()) {
-                editLocation = MeasureSequenceItem.EditLocation.replace;
-            }
-
-            if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection), editLocation, measure)) {
-                editAppend.setValue(true);      //  select append for subsequent additions
-                displaySong();
-                lastChordSelection = song.findMeasureChordGridLocation(measure);
-
-                if (lastChordSelection != null) {
-                    selectChordsCell(lastChordSelection);
-                } else
-                    selectLastChordsCell();
-                return true;
-            }
-        }
+        measureEntry.setValue(entry);
         checkSong();
         measureEntry.setFocus(true);
-        return false;
+        return true;
     }
 
 
@@ -687,6 +710,13 @@ public class SongEditView
             selectChordsCell(new SongChordGridSelection(row, column));
             measureEntry.setFocus(true);
         });
+
+//        chordsFlexTable.addDragStartHandler(dragStartEvent -> {
+//            GWT.log("dragStartEvent: "+dragStartEvent.toDebugString());
+//        })  ;
+//        chordsFlexTable.addDragEndHandler(dragEndEvent -> {
+//            GWT.log("dragEndEvent: "+dragEndEvent.toDebugString());
+//        })  ;
 
         checkSong();
     }

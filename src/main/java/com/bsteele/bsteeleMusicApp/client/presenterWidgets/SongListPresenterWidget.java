@@ -34,8 +34,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongReadEventHandler,
         SongRemoveEventHandler,
         NextSongEventHandler,
-        AllSongWriteEventHandler
+        AllSongWriteEventHandler,
+        HomeTabEventHandler
 {
+
 
     public interface MyView extends View
     {
@@ -82,6 +84,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         eventBus.addHandler(AllSongWriteEvent.TYPE, this);
         eventBus.addHandler(NextSongEvent.TYPE, this);
         eventBus.addHandler(SongRemoveEvent.TYPE, this);
+        eventBus.addHandler(HomeTabEvent.TYPE, this);
     }
 
     @Override
@@ -143,6 +146,13 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
             view.removeAll(songs);
             view.displaySongList();
         }
+    }
+
+
+    @Override
+    public void onHomeTab(HomeTabEvent event)
+    {
+            view.displaySongList();
     }
 
 
