@@ -629,8 +629,8 @@ public class SongEditView
                     song.setRepeat(lastChordSelection, repeats);
                     displaySong();
                     entry = entry.substring(mr.getGroup(0).length());
+                    continue;
                 }
-                continue;
             }
 
 
