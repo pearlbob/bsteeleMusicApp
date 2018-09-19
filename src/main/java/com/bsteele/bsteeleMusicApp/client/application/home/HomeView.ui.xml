@@ -96,6 +96,9 @@
                                     <g:Button ui:field="showAllTonics">Show all Diatonic chords</g:Button>
                                     <g:HTML ui:field="allTonics"/>
                                     <br/>
+                                    <g:Button ui:field="showFileFormat">Show File Format</g:Button>
+                                    <g:HTML ui:field="fileFormat"/>
+                                    <br/>
                                     <g:Button ui:field="showStatus">Show Status</g:Button>
                                     <g:HTML ui:field="allStatus"/>
                                     <p>

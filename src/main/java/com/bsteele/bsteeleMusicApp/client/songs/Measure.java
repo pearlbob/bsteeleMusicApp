@@ -217,30 +217,30 @@ public class Measure extends MeasureNode implements Comparable<Measure>
     @Override
     public String transpose(@Nonnull Key key, int halfSteps)
     {
-        StringBuilder sb = new StringBuilder();
-
-        if (chords != null) {
+        if (chords != null && !chords.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
             Chord lastChord = chords.get(chords.size() - 1);
             for (Chord chord : chords) {
                 sb.append(chord == lastChord
                         ? chord.transpose(key, halfSteps).toString()
                         : chord.transpose(key, halfSteps).toStringWithoutInversion());
             }
+            return sb.toString();
         }
-        return sb.toString();
+        return "X";  // no chords
     }
 
     private final String chordsToString()
     {
-        StringBuilder sb = new StringBuilder();
-
-        if (chords != null) {
+        if (chords != null && !chords.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
             Chord lastChord = chords.get(chords.size() - 1);
             for (Chord chord : chords) {
                 sb.append(chord == lastChord ? chord.toString() : chord.toStringWithoutInversion());
             }
+            return sb.toString();
         }
-        return sb.toString();
+        return "X";  // no chords
     }
 
     /**

@@ -1198,7 +1198,7 @@ public class SongBase
         this.artist = artist;
     }
 
-    protected final void setCopyright(String artist)
+    protected final void setCopyright(String copyright)
     {
         this.copyright = copyright;
     }

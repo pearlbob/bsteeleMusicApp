@@ -614,17 +614,17 @@ public class SongEditView
 
             Measure measure = Measure.parse(entry, song.getBeatsPerBar());
             if (measure != null) {
-                GWT.log("new measure: \"" + measure.toString() + "\"");
+               // GWT.log("new measure: \"" + measure.toString() + "\"");
                 entry = entry.substring(measure.getParseLength());
             } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
                 measure = new Measure(song.findMeasure(lastChordSelection));
-                GWT.log("new measure: -");
+                //GWT.log("new measure: -");
                 entry = entry.substring(1);
             } else {
                 final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
                 MatchResult mr = repeatExp.exec(entry);
                 if (mr != null) {
-                    GWT.log("new measure: repeat");
+                   // GWT.log("new measure: repeat");
                     int repeats = Integer.parseInt(mr.getGroup(1));
                     song.setRepeat(lastChordSelection, repeats);
                     displaySong();

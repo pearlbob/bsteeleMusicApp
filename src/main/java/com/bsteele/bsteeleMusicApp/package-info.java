@@ -13,6 +13,8 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: newline needed in lyrics section to register the section
+fixme: songs not saved in directory with same song other versions, will not have a proper version number on it
 fixme: first read song can't be shown removed even though it is.
 fixme: fill last line of repeat when not a multiple of 4
 fixme: lyrics and chords sizing

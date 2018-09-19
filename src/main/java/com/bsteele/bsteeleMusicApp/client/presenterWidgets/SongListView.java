@@ -216,12 +216,12 @@ public class SongListView
 
 
     @Override
-    public boolean addToSongList(Song song)
+    public boolean addToSongList(Song song, boolean force)
     {
         if (song != null) {
             if (allSongs.contains(song)) {
                 Song oldSong = allSongs.floor(song);
-                if (Song.compareByVersionNumber(oldSong, song) > 0) {
+                if ( !force && Song.compareByVersionNumber(oldSong, song) > 0) {
                     GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
                     return false;
                 }

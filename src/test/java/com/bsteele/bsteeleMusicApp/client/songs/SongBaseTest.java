@@ -75,6 +75,7 @@ public class SongBaseTest
         assertTrue(!a.equals(b));
         assertTrue(a.hashCode() != b.hashCode());
 
+
     }
 
     @Test
@@ -192,6 +193,12 @@ public class SongBaseTest
                         .trim();
                 assertEquals(chords, text);
             }
+        }
+
+
+        for ( int i = 50; i < 401; i++ ){
+            a.setBeatsPerMinute( i);
+            assertEquals(i, a.getBeatsPerMinute());
         }
 
     }

@@ -30,10 +30,12 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView,
-        HasHandlers {
+        HasHandlers
+{
 
 
-    interface Binder extends UiBinder<Widget, HomeView> {
+    interface Binder extends UiBinder<Widget, HomeView>
+    {
     }
 
     @UiField
@@ -72,6 +74,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     Button showAllTonics;
     @UiField
     HTML allTonics;
+    @UiField
+    Button showFileFormat;
+    @UiField
+    HTML fileFormat;
 
     @UiField
     Button showStatus;
@@ -88,7 +94,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     Button writeAllSongs;
 
     @Inject
-    HomeView(Binder uiBinder) {
+    HomeView(Binder uiBinder)
+    {
         initWidget(uiBinder.createAndBindUi(this));
 
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
@@ -124,6 +131,15 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             if (allTonics.isVisible()) {
                 GenerateSongHtml generateSongHtml = new GenerateSongHtml();
                 allTonics.setHTML(generateSongHtml.generateAllTonicHtml());
+            }
+        });
+
+        fileFormat.setVisible(false);
+        showFileFormat.addClickHandler((ClickEvent event) -> {
+            fileFormat.setVisible(!fileFormat.isVisible());
+            if (fileFormat.isVisible()) {
+                GenerateSongHtml generateSongHtml = new GenerateSongHtml();
+                fileFormat.setHTML(generateSongHtml.generateFileFormat());
             }
         });
 
@@ -165,13 +181,15 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public void selectLastPlayTab() {
+    public void selectLastPlayTab()
+    {
         if (homeTabs.getSelectedIndex() != lastPlayTab)
             homeTabs.selectTab(lastPlayTab);
     }
 
     @Override
-    public void onStatusEvent(StatusEvent event) {
+    public void onStatusEvent(StatusEvent event)
+    {
         statusMap.put(event.getName(), event.getValue());
         if (allStatus.isVisible()) {
             allStatus.setHTML(generateStatusHtml());
@@ -180,16 +198,19 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler) {
+    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler)
+    {
         return handlerManager.addHandler(AllSongWriteEvent.TYPE, handler);
     }
 
     @Override
-    public HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler) {
+    public HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler)
+    {
         return handlerManager.addHandler(HomeTabEvent.TYPE, handler);
     }
 
-    private String generateStatusHtml() {
+    private String generateStatusHtml()
+    {
         StringBuilder sb = new StringBuilder();
         sb.append("<table><tr><th>Name</th><th>Value</th></tr>");
         TreeSet<String> sortedKeys = new TreeSet<>();
@@ -202,7 +223,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event) {
+    public void fireEvent(GwtEvent<?> event)
+    {
         handlerManager.fireEvent(event);
     }
 

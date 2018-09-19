@@ -164,6 +164,7 @@
                                                 <g:Button ui:field="minor">m</g:Button>
                                                 <g:Button ui:field="dominant7">7</g:Button>
                                                 <select ui:field="scaleNoteOtherSelection"/>
+                                                <g:Button ui:field="noChord">X</g:Button>
                                             </td>
                                         </tr>
                                     </table>
@@ -204,7 +205,6 @@
                                     <g:Button ui:field="repeat2">Repeat x2</g:Button>
                                     <g:Button ui:field="repeat3">Repeat x3</g:Button>
                                     <g:Button ui:field="repeat4">Repeat x4</g:Button>
-                                    <g:Button ui:field="noChord">No Chord</g:Button>
                                 </td>
                             </tr>
                             <tr>

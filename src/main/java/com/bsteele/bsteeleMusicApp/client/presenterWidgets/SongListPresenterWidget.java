@@ -46,7 +46,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler);
 
-        boolean addToSongList(Song song);
+        boolean addToSongList(Song song, boolean force);
 
         void removeAll(ArrayList<Song> songs);
 
@@ -101,7 +101,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         view.saveSongAs(filename, song.toJson());
 
-        view.addToSongList(song);
+        view.addToSongList(song, true);
         view.displaySongList();
         fireEvent(new SongUpdateEvent(song));
     }
@@ -117,7 +117,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
             sortedSet.addAll(songs);
             Song lastSong = null;
             for (Song song : sortedSet)
-                if (view.addToSongList(song))
+                if (view.addToSongList(song, false))
                     lastSong = song;
             view.displaySongList();
             if (lastSong != null)
@@ -174,7 +174,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     for (Song song : sortedSet) {
                         //  note: the highest number song will be added last
                         //  replacing any previous from the list
-                        view.addToSongList(song);
+                        view.addToSongList(song,false);
                     }
                     view.displaySongList();
                 }
