@@ -451,6 +451,10 @@ public class GenerateSongHtml
         sb.append(
                 "<p>Capitalization is not significant to section identification.</p>"
         );
+        sb.append(
+                "<p>Section versions can be identified by a single digit immediately following the section." +
+                        "Sections without a version id will be considered an additional section.</p>"
+        );
         sb.append("<h2>Measures</h2>\n");
         sb.append(
                 "<p>Measures are collections of chords meant to be played within the beats defined by" +
@@ -516,14 +520,14 @@ public class GenerateSongHtml
 
         sb.append("<h1>Lyric Markup Language</h1>\n");
         sb.append("<p>The lyric markup language is of the form:</p>\n");
-        sb.append("<p><code>section: lyrics</code></p>\n");
-        sb.append("<p>The section is to be the section name or abbreviated name as defined above. " +
-                "Sections used in the lyrics should be defined in the chords.  All chord sections defined" +
+        sb.append("<p><code>sectionVersion: lyrics</code></p>\n");
+        sb.append("<p>The sectionVersion is to be the sectionVersion name or abbreviated name as defined above. " +
+                "Section versions used in the lyrics should be defined in the chords.  All chord sectionVersions defined" +
                 " should be used in the lyrics.</p>\n");
         sb.append("<p>Note that the parsing makes the use of colon ':' problematic in the general lyrics." +
                 " Typically it will not happen but the word in front of the colon should not match any of the " +
-                "section names.  A space in front of the colon will fix all this.</p>\n");
-        sb.append("<p>Note that the current inmplementation requires the section to be on it's own line.  " +
+                "sectionVersion names.  A space in front of the colon will fix all this.</p>\n");
+        sb.append("<p>Note that the current implementation requires the sectionVersion to be on it's own line.  " +
                 "This restriction will likely be lifted in the future.</p>\n");
 
         sb.append("<h2>Suggestions</h2>\n");
