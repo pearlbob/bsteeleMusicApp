@@ -337,7 +337,7 @@ public class GenerateSongHtml
                 "<p>" +
                         "Song unique identifiers are built from the song's title and artist without concern for " +
                         "capitalization" +
-                        "or white space.  Songs with the same song id will be over written by new songs." +
+                        " or white space.  Songs with the same song id will be over written by new songs." +
                         "</p>\n");
 
         sb.append("<h1>Song Specifications</h1>\n");
@@ -477,9 +477,7 @@ public class GenerateSongHtml
             }
         }
         sb.append(".</p>\n");
-        sb.append(
-                "<p>Capitalization is significant to scaleNote identification.</p>"
-        );
+
         sb.append("<p>A chordDescriptor is one of: ");
         {
             boolean first = true;
@@ -493,6 +491,9 @@ public class GenerateSongHtml
         }
         sb.append(".  A missing chord descriptor will be understood to be a major chord." +
                 " Suggestion: choose the button \"Show All Chords\" above to see all possible chords.</p>\n");
+        sb.append(
+                "<p>Capitalization is significant to scaleNote identification and chord description.</p>"
+        );
         sb.append("<p>A part of the measure where no chord is to be played is noted with a capital X." +
                 "This can also be used to indicate a pause.</p>\n");
         sb.append("<p>Note: Annotations for anticipations (pushes) and delays are planned but not part of the markup " +
@@ -515,7 +516,7 @@ public class GenerateSongHtml
 
         sb.append("<h1>Lyric Markup Language</h1>\n");
         sb.append("<p>The lyric markup language is of the form:</p>\n");
-        sb.append("<p>section: lyrics</p>\n");
+        sb.append("<p><code>section: lyrics</code></p>\n");
         sb.append("<p>The section is to be the section name or abbreviated name as defined above. " +
                 "Sections used in the lyrics should be defined in the chords.  All chord sections defined" +
                 " should be used in the lyrics.</p>\n");
