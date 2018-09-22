@@ -99,7 +99,7 @@ public class Song
     {
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
-                getChordsAsString(), getLyricsAsString());
+                getStructuralGridAsText(), getLyricsAsString());
         ret.setFileName(getFileName());
         ret.setLastModifiedDate(getLastModifiedDate());
         ret.setDuration( getDuration());

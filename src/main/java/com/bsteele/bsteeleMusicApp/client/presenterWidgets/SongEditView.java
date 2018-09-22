@@ -25,6 +25,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.client.songs.SongMoment;
+import com.bsteele.bsteeleMusicApp.client.util.UndoStack;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
@@ -36,7 +37,6 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.DragStartEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
@@ -224,9 +224,9 @@ public class SongEditView
     Button dominant7;
 
     @UiField
-    Button chordsUndo;
+    Button undo;
     @UiField
-    Button chordsRedo;
+    Button redo;
 
     @UiField
     TextArea lyricsTextEntry;
@@ -460,15 +460,16 @@ public class SongEditView
             processEntry("X");
         });
 
-
-        chordsUndo.setEnabled(false);
-        chordsUndo.addClickHandler((ClickEvent event) -> {
-            checkSong();
+        undo.setEnabled(false);
+        undo.addClickHandler((ClickEvent event) -> {
+            if (undoStack.canUndo())
+                setSong(undoStack.undo());
         });
 
-        chordsRedo.setEnabled(false);
-        chordsRedo.addClickHandler((ClickEvent event) -> {
-            checkSong();
+        redo.setEnabled(false);
+        redo.addClickHandler((ClickEvent event) -> {
+            if (undoStack.canRedo())
+                setSong(undoStack.redo());
         });
 
 
@@ -582,6 +583,9 @@ public class SongEditView
     {
         errorLabel.setText("");
 
+        if (song == null)
+            song = Song.createEmptySong();
+
         entry = entry.replaceAll("\\s+", " ");
 
         for (; ; ) {
@@ -614,7 +618,7 @@ public class SongEditView
 
             Measure measure = Measure.parse(entry, song.getBeatsPerBar());
             if (measure != null) {
-               // GWT.log("new measure: \"" + measure.toString() + "\"");
+                // GWT.log("new measure: \"" + measure.toString() + "\"");
                 entry = entry.substring(measure.getParseLength());
             } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
                 measure = new Measure(song.findMeasure(lastChordSelection));
@@ -624,7 +628,7 @@ public class SongEditView
                 final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
                 MatchResult mr = repeatExp.exec(entry);
                 if (mr != null) {
-                   // GWT.log("new measure: repeat");
+                    // GWT.log("new measure: repeat");
                     int repeats = Integer.parseInt(mr.getGroup(1));
                     song.setRepeat(lastChordSelection, repeats);
                     displaySong();
@@ -643,6 +647,7 @@ public class SongEditView
                 }
 
                 if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection), editLocation, measure)) {
+                    undoStackPushSong();
                     editAppend.setValue(true);      //  select append for subsequent additions
                     displaySong();
                     lastChordSelection = song.findMeasureChordGridLocation(measure);
@@ -672,6 +677,15 @@ public class SongEditView
 
     @Override
     public void setSongEdit(Song song)
+    {
+        if (song == null)
+            return;
+
+        setSong(song);
+        undoStackPushSong();
+    }
+
+    private final void setSong(Song song)
     {
         if (song == null)
             return;
@@ -719,12 +733,29 @@ public class SongEditView
 //        })  ;
 
         checkSong();
+
+        setUndoRedoEnables();
     }
 
     private void displaySong()
     {
         song.transpose(prefix, chordsFlexTable, 0, fontsize);
         //GWT.log(song.getStructuralGridAsText());
+    }
+
+    private final void undoStackPushSong()
+    {
+        if (song == null)
+            return;
+        undoStack.push(song.copySong());
+
+        setUndoRedoEnables();
+    }
+
+    private final void setUndoRedoEnables()
+    {
+        undo.setEnabled(undoStack.canUndo());
+        redo.setEnabled(undoStack.canRedo());
     }
 
     /**
@@ -828,13 +859,15 @@ public class SongEditView
 
         Measure measure = song.findMeasure(lastChordSelection);
         if (measure == null) {
-            if (lastChordSelection.getCol() == 0)      //  safety
-                song.chordSectionDelete(song.findChordSection(lastChordSelection));
+            if (lastChordSelection.getCol() == 0      //  safety
+                    && song.chordSectionDelete(song.findChordSection(lastChordSelection)))
+                undoStackPushSong();
             editAppend.setValue(true);     // no delete section delete
         } else {
             MeasureSequenceItem measureSequenceItem = song.findMeasureSequenceItem(measure);    //fixme: here!  now!
             int sizeRemaining = measureSequenceItem.size();
-            song.measureDelete(measure);
+            if (song.measureDelete(measure))
+                undoStackPushSong();
 
             //  re-select
             int r = lastChordSelection.getRow();
@@ -1158,7 +1191,8 @@ public class SongEditView
 
     private ArrayList<Measure> recentMeasures = new ArrayList<>();
     //private ArrayList<ScaleChord> commonScaleChords = new ArrayList<>();
-    HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
+    private HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
+    private UndoStack<Song> undoStack = new UndoStack<>(20);
     private Key key = Key.getDefault();
     private Song song;
     private SongChordGridSelection lastChordSelection;

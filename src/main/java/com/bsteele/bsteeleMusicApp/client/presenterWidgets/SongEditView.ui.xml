@@ -210,8 +210,8 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <g:Button ui:field="chordsUndo">Undo</g:Button>
-                                    <g:Button ui:field="chordsRedo">Redo</g:Button>
+                                    <g:Button ui:field="undo">Undo</g:Button>
+                                    <g:Button ui:field="redo">Redo</g:Button>
                                 </td>
                             </tr>
                         </table>

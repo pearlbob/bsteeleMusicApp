@@ -6,22 +6,14 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
-import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JsDate;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlexTable;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -1593,18 +1585,8 @@ public class SongBase
         return 0;
     }
 
-    @Override
-    public boolean equals(Object obj)
+    public final boolean songBaseSameAs(SongBase o)
     {
-        //  fixme: song equals should include all fields
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof SongBase)) {
-            return false;
-        }
-        SongBase o = (SongBase) obj;
-
         //  song id built from title with reduced whitespace
         if (!getTitle().equals(o.getTitle()))
             return false;
@@ -1625,6 +1607,21 @@ public class SongBase
         if (!metadata.equals(o.metadata))
             return false;
         return true;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        //  fixme: song equals should include all fields
+        if (obj == null) {
+            return false;
+        }
+        if (!(obj instanceof SongBase)) {
+            return false;
+        }
+        SongBase o = (SongBase) obj;
+
+        return songBaseSameAs(o);
     }
 
     @Override

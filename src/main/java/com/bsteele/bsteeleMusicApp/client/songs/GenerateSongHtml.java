@@ -319,7 +319,8 @@ public class GenerateSongHtml
                 "<td>File name of the song's file as it exists in the local operating system.</td>" +
                 "<td></td></tr>\n");
         sb.append("<tr><td><code>lastModifiedDate</code></td><td>JavaScript JSDate</td>\n" +
-                "<td>The number of milliseconds from .</td>" +
+                "<td>The number of milliseconds from since the Unix epoch (00:00:00 UTC on 1 January 1970)." +
+                " See javascript File.lastModified.</td>" +
                 "<td></td></tr>\n");
         sb.append("<tr><td><code>song</code></td><td>JSON object</td>\n" +
                 "<td>The song attributes as described below.</td>" +
@@ -416,7 +417,7 @@ public class GenerateSongHtml
         sb.append(
                 "<p>The chord markup language typically has a format of: " +
                         "</p>\n" +
-                        "<p><code>(section':' measure*)+</code>" +
+                        "<p><code>(section version? ':' measure*)+</code>" +
                         "</p>\n" +
                         "Measures need to be separated from each other by whitespace." +
                         "  There are exceptions for repeats as described below." +
@@ -499,7 +500,7 @@ public class GenerateSongHtml
                 "<p>Capitalization is significant to scaleNote identification and chord description.</p>"
         );
         sb.append("<p>A part of the measure where no chord is to be played is noted with a capital X." +
-                "This can also be used to indicate a pause.</p>\n");
+                " This can also be used to indicate a pause.</p>\n");
         sb.append("<p>Note: Annotations for anticipations (pushes) and delays are planned but not part of the markup " +
                 " language as yet.</p>\n");
         sb.append("<p>A measure followed by a slash '/' and a chord without whitespace " +
@@ -514,7 +515,7 @@ public class GenerateSongHtml
         sb.append("<p>A measure line that ends with a 'x' and a number is a repeat.  The line is to be repeated " +
                 "the number of counts indicated by the number.</p>\n");
         sb.append("<h2>Multiline Repeats</h2>\n");
-        sb.append("<p>If a measure line ends with a vertical bar '|' it will be included with the following" +
+        sb.append("<p>If a measure line ends with a vertical bar '|' it will be included with the following " +
                 "line or lines in a repeat. By convention, the last line of the repeat should also have a " +
                 "vertical bar '|' before the 'x' and a number of the repeat.</p>\n");
 
