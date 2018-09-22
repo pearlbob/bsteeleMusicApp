@@ -11,6 +11,7 @@
                 <tr>
                     <td>
                         <button type="button" ui:field="songEnter">Enter Song</button>
+                        <g:InlineHTML ui:field="errorLabel" styleName="{resources.style.errorLabel}"></g:InlineHTML>
                     </td>
                     <td>
                         <button type="button" ui:field="songEntryClear">Clear</button>
@@ -29,9 +30,6 @@
                 <tr>
                     <td>
                         <p>
-                            <g:Label ui:field="errorLabel" styleName="{resources.style.errorLabel}"/>
-                        </p>
-                        <p>
                             Title:
                             <br/>
                             <g:TextBox ui:field="titleEntry" styleName="{resources.style.entryLine}"/>
@@ -48,8 +46,7 @@
                             <g:TextBox ui:field="copyrightEntry" styleName="{resources.style.entryLine}"/>
                         </p>
                         <p>
-                            Key:
-                            <br/>
+                            &nbsp; Key:
                             <select ui:field="keySelection">
                                 <option value="Gb">G♭ 6♭</option>
                                 <option value="Db">D♭ 5♭</option>
@@ -66,14 +63,9 @@
                                 <option value="Fs">F♯ 6♯</option>
                             </select>
                             <button type="button" ui:field="keyGuess">Guess the key</button>
-                        </p>
-                        <p>
-                            Beats per minute:
-                            <br/>
+                            &nbsp; Beats per minute:
                             <g:TextBox ui:field="bpmEntry" styleName="{resources.style.smallIntEntry}"/>
-                        </p>
-                        <p>
-                            Time Signature:
+                            &nbsp; Time Signature:
                             <select ui:field="timeSignatureEntry">
                                 <option value="2/4">2/4</option>
                                 <option value="3/4">3/4</option>

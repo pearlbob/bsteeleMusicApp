@@ -581,7 +581,7 @@ public class SongEditView
 
     private boolean processEntry(String entry)
     {
-        errorLabel.setText("");
+        errorLabel.setText(null);
 
         if (song == null)
             song = Song.createEmptySong();
@@ -618,8 +618,12 @@ public class SongEditView
 
             Measure measure = Measure.parse(entry, song.getBeatsPerBar());
             if (measure != null) {
-                // GWT.log("new measure: \"" + measure.toString() + "\"");
-                entry = entry.substring(measure.getParseLength());
+                if (entry.length() == measure.getParseLength() || Character.isWhitespace(entry.charAt(measure.getParseLength())))
+                    //  accept the measure
+                    entry = entry.substring(measure.getParseLength());
+                else
+                    //  reject the measure
+                    measure = null;
             } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
                 measure = new Measure(song.findMeasure(lastChordSelection));
                 //GWT.log("new measure: -");
@@ -941,7 +945,7 @@ public class SongEditView
         else
             selectLastChordsCell();      // default
 
-        errorLabel.setText("");
+        errorLabel.setText(null);
         songEnter.setDisabled(false);
 
         return newSong;

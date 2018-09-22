@@ -41,8 +41,8 @@ public class SongBaseTest
         assertTrue(a.hashCode() != b.hashCode());
         b = createSongBase("A", "bob", "photos.bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        assertTrue(a.equals(b));
-        assertTrue(a.hashCode() == b.hashCode());
+        assertTrue(a.getSongId().equals(b.getSongId()));
+        assertTrue(a.hashCode() != b.hashCode());
 
         b = createSongBase("A", "bob", "bsteele.com", Key.Ab,
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");

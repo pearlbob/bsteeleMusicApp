@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.util;
 
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -9,10 +10,11 @@ import static org.junit.Assert.*;
  * User: bob
  */
 public class UndoStackTest
+        extends TestCase
 {
 
     @Test
-    public void pushUndoRedo()
+    public void testPushUndoRedo()
     {
         int max = 4;
 
