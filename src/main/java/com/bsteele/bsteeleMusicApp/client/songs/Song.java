@@ -116,7 +116,7 @@ public class Song implements Comparable<Song>
     {
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
-                getChordsAsString(), getLyricsAsString());
+                getStructuralGridAsText(), getLyricsAsString());
         ret.setFileName(getFileName());
         ret.setLastModifiedDate(getLastModifiedDate());
         ret.duration = duration;
