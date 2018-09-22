@@ -203,6 +203,7 @@ table td.chordTable {
 .errorLabel
 {
     color:red;
+    height: 16px;
 }
 .chords {
 }
