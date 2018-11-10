@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: chords: 69 maug
 fixme: newline needed in lyrics section to register the section
 fixme: songs not saved in directory with same song other versions, will not have a proper version number on it
 fixme: first read song can't be shown removed even though it is.
