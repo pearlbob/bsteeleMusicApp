@@ -1361,7 +1361,7 @@ public class Song implements Comparable<Song>
     {
         //  move the leading "The " to the end
 
-        final RegExp theRegExp = RegExp.compile("^the *", "i");
+        final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(title)) {
             title = theRegExp.replace(title, "") + ", The";
         }
