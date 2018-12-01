@@ -1,0 +1,29 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="bsteeleMusicApp:war exploded">
+    <output-path>$PROJECT_DIR$/target/bsteeleMusicApp</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>bsteeleMusicApp</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="bsteeleMusicApp" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: com.google.gwt:gwt-servlet:2.8.2" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-websocket-api:9.0.5" />
+          <element id="library" level="project" name="Maven: org.vectomatic:lib-gwt-file:0.3.9" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/bsteeleMusicApp/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="bsteeleMusicApp/web/Web" />
+      <element id="gwt-compiler-output" facet="bsteeleMusicApp/gwt/GWT" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact name="bsteeleMusicApp:GWT">
+    <output-path>$PROJECT_DIR$/out/artifacts/bsteeleMusicApp_GWT</output-path>
+    <root id="root">
+      <element id="gwt-compiler-output" facet="bsteeleMusicApp/gwt/GWT" />
+    </root>
+  </artifact>
+</component>
