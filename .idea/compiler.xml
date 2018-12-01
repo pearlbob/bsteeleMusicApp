@@ -11,21 +11,6 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="bsteeleMusicApp" />
-      </profile>
-    </annotationProcessing>
-    <bytecodeTargetLevel target="8">
-      <module name="bsteeleMusicApp" target="1.8" />
-    </bytecodeTargetLevel>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="bsteeleMusicApp" options="-Xlint:unchecked" />
-    </option>
+    <bytecodeTargetLevel target="1.8" />
   </component>
 </project>
