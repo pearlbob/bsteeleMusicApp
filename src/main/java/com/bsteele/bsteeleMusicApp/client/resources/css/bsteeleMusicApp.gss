@@ -54,7 +54,6 @@ h1,
 body {
   background: #f5f0e1;
     margin: 3px;
-    overflow: contain;
 }
 
 iframe {
@@ -239,4 +238,8 @@ td[id*="L."]{
 
 .rightJustifiedClass {
     float: right;
+}
+
+{
+    overscroll-behavior: contain;
 }

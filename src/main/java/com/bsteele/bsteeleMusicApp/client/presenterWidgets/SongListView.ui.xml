@@ -31,7 +31,7 @@
             </g:HTMLPanel>
         </g:north>
         <g:center>
-            <g:ScrollPanel>
+            <g:ScrollPanel     style="overscroll-behavior: contain;">
                 <g:HTMLPanel>
                     <div style="margin: 10px;">
                         <div class="{resources.style.songList}">
