@@ -240,6 +240,3 @@ td[id*="L."]{
     float: right;
 }
 
-{
-    overscroll-behavior: contain;
-}
