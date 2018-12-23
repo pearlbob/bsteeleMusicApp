@@ -63,12 +63,12 @@ public class BassFile {
                                 + (count == 4 && halfSteps <= g3ScaleNoteHalfStep - MusicConstant.halfStepsPerOctave
                                 ? MusicConstant.halfStepsPerOctave : 0)
                         ),
-                                1.0));
+                                NoteDuration.whole));
                         chordComponent = chordComponents.higher(chordComponent);
                     }
                     while (count <= 4) {
                         notes.add(new Note(root.offsetByHalfSteps((count == 4 ? MusicConstant.halfStepsPerOctave : 0)),
-                                1.0));
+                                NoteDuration.whole));
                         count++;
                     }
                     bar.setNotes(notes);

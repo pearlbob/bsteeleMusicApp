@@ -11,6 +11,7 @@ public enum PartType {
     Bb,
     vocal,
     melody,
-    themeRiff
+    themeRiff,
+    harmony,
     ;
 }
