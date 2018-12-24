@@ -3,13 +3,14 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
+import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
+import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsDate;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -18,6 +19,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /**
@@ -27,9 +33,7 @@ import java.util.logging.Logger;
 /**
  * A piece of music to be played according to the structure it contains.
  */
-public class Song
-        extends SongBase
-        implements Comparable<Song>
+public class Song implements Comparable<Song>
 {
 
     /**
@@ -38,6 +42,18 @@ public class Song
     @Deprecated
     public Song()
     {
+        setTitle("");
+        setArtist("");
+        copyright = "";
+        setKey(Key.C);
+        unitsPerMeasure = 4;
+        rawLyrics = "";
+        chords = "";
+        parseChordTable(chords);
+        parseLyricsToSectionSequence("");
+        parseLyrics();
+        setBeatsPerMinute(100);
+        setBeatsPerBar(4);
     }
 
     /**
@@ -74,11 +90,11 @@ public class Song
         Song song = new Song();
         song.setTitle(title);
         song.setArtist(artist);
-        song.setCopyright(copyright);
+        song.copyright = copyright;
         song.setKey(key);
-        song.setUnitsPerMeasure(unitsPerMeasure);
-        song.setRawLyrics ( lyrics);
-        song.setChords (chords);
+        song.unitsPerMeasure = unitsPerMeasure;
+        song.rawLyrics = lyrics;
+        song.chords = chords;
 
         song.parseChordTable(chords);
         song.parseLyricsToSectionSequence(lyrics);
@@ -99,11 +115,11 @@ public class Song
     {
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
-                getStructuralGridAsText(), getLyricsAsString());
+                getChordsAsString(), getLyricsAsString());
         ret.setFileName(getFileName());
         ret.setLastModifiedDate(getLastModifiedDate());
-        ret.setDuration( getDuration());
-        ret.setTotalBeats( getTotalBeats());
+        ret.duration = duration;
+        ret.totalBeats = totalBeats;
         return ret;
     }
 
@@ -209,25 +225,25 @@ public class Song
                     song.setArtist(jv.isString().stringValue());
                     break;
                 case "copyright":
-                    song.setCopyright(jv.isString().stringValue());
+                    song.copyright = jv.isString().stringValue();
                     break;
                 case "key":
-                    song.setKey( Key.valueOf(jv.isString().stringValue()));
+                    song.key = Key.valueOf(jv.isString().stringValue());
                     break;
                 case "defaultBpm":
                     jn = jv.isNumber();
                     if (jn != null) {
-                        song.setDefaultBpm((int) jn.doubleValue());
+                        song.defaultBpm = (int) jn.doubleValue();
                     } else {
-                        song.setDefaultBpm( Integer.parseInt(jv.isString().stringValue()));
+                        song.defaultBpm = Integer.parseInt(jv.isString().stringValue());
                     }
                     break;
                 case "timeSignature":
                     //  most of this is coping with real old events with poor formatting
                     jn = jv.isNumber();
                     if (jn != null) {
-                        song.setBeatsPerBar((int) jn.doubleValue());
-                        song.setUnitsPerMeasure( 4); //  safe default
+                        song.beatsPerBar = (int) jn.doubleValue();
+                        song.unitsPerMeasure = 4; //  safe default
                     } else {
                         String s = jv.isString().stringValue();
 
@@ -235,14 +251,14 @@ public class Song
                         MatchResult mr = timeSignatureExp.exec(s);
                         if (mr != null) {
                             // parse
-                            song.setBeatsPerBar( Integer.parseInt(mr.getGroup(1)));
-                            song.setUnitsPerMeasure( Integer.parseInt(mr.getGroup(2)));
+                            song.beatsPerBar = Integer.parseInt(mr.getGroup(1));
+                            song.unitsPerMeasure = Integer.parseInt(mr.getGroup(2));
                         } else {
                             s = s.replaceAll("/.*", "");    //  fixme: info lost
                             if (s.length() > 0) {
-                                song.setBeatsPerBar( Integer.parseInt(s));
+                                song.beatsPerBar = Integer.parseInt(s);
                             }
-                            song.setUnitsPerMeasure(4); //  safe default
+                            song.unitsPerMeasure = 4; //  safe default
                         }
                     }
                     break;
@@ -255,11 +271,11 @@ public class Song
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
-                        song.setChords( sb.toString());
+                        song.chords = sb.toString();
                     } else {
-                        song.setChords(jv.isString().stringValue());
+                        song.chords = jv.isString().stringValue();
                     }
-                    song.parseChordTable(song.getChords());
+                    song.parseChordTable(song.chords);
                     break;
                 case "lyrics":
                     ja = jv.isArray();
@@ -270,11 +286,11 @@ public class Song
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
-                        song.setRawLyrics( sb.toString());
+                        song.rawLyrics = sb.toString();
                     } else {
-                        song.setRawLyrics( jv.isString().stringValue());
+                        song.rawLyrics = jv.isString().stringValue();
                     }
-                    song.parseLyricsToSectionSequence(song.getRawLyrics());
+                    song.parseLyricsToSectionSequence(song.rawLyrics);
                     song.parseLyrics();
                     break;
             }
@@ -330,7 +346,7 @@ public class Song
                 .append(JsonUtil.encode(getCopyright()))
                 .append("\",\n")
                 .append("\"key\": \"")
-                .append(getKey().name())
+                .append(key.name())
                 .append("\",\n")
                 .append("\"defaultBpm\": ")
                 .append(getDefaultBpm())
@@ -376,14 +392,814 @@ public class Song
         return sb.toString();
     }
 
-
-    public final Song checkSong()
-            throws ParseException
+    @Deprecated
+    private void parseLyricsToSectionSequence(String rawLyrics)
     {
-        return checkSong(getTitle(), getArtist(), getCopyright(),
-                getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
-                Integer.toString(getUnitsPerMeasure()),
-                getChords(), getRawLyrics());
+        sequence = Section.matchAll(rawLyrics);
+
+        if (sequence.isEmpty()) {
+            sequence.add(Section.getDefaultVersion());
+        }
+        //GWT.log(sequence.toString());
+    }
+
+    private void computeSongMoments()
+    {
+        songMoments = new ArrayList<>();
+
+        if (lyricSections == null)
+            return;
+
+        for (LyricSection lyricSection : lyricSections) {
+            ArrayList<MeasureNode> chordSectionNodes = null;
+            for (ChordSection chordSection : chordSections) {
+                if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion())) {
+                    chordSectionNodes = chordSection.getMeasureNodes();
+                    break;
+                }
+            }
+            if (chordSectionNodes != null)
+                for (MeasureNode measureNode : chordSectionNodes) {
+                    if (measureNode.isRepeat()) {
+                        MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
+                        int limit = measureRepeat.getRepeats();
+                        for (int repeat = 0; repeat < limit; repeat++) {
+                            ArrayList<Measure> measures = measureNode.getMeasures();
+                            if (measures != null)
+                                for (Measure measure : measures) {
+                                    songMoments.add(new SongMoment(
+                                            songMoments.size(),  //  size prior to add
+                                            lyricSection, measureNode,
+                                            measure, repeat, limit));
+                                }
+                        }
+                    } else {
+                        ArrayList<Measure> measures = measureNode.getMeasures();
+                        if (measures != null)
+                            for (Measure measure : measures) {
+                                songMoments.add(new SongMoment(
+                                        songMoments.size(),  //  size prior to add
+                                        lyricSection, measureNode,
+                                        measure, 0, 0));
+                            }
+                    }
+                }
+        }
+    }
+
+    private void computeDuration()
+    {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
+
+        duration = 0;
+        totalBeats = 0;
+        if (beatsPerBar == 0 || defaultBpm == 0 || sequence == null)
+            return;
+        if (sequence.isEmpty())
+            return;
+        if (chordSectionMap.isEmpty())
+            return;
+
+        double measureDuration = beatsPerBar * 60.0 / defaultBpm;
+        final RegExp repeatExp = RegExp.compile("^\\w*x(\\d+)", "i");
+        for (SectionVersion sectionVersion : sequence) {
+            Grid<String> sectionGrid = chordSectionMap.get(sectionVersion);
+            if (sectionGrid == null)
+                continue;
+
+            for (int row = 0; row < sectionGrid.getRowCount(); row++) {
+                ArrayList<String> rowCols = sectionGrid.getRow(row);
+                if (rowCols == null)
+                    continue;
+
+                int rowBeats = 0;   //  fixme: not correct for multiline repeats !!!!
+                int rowDuration = 0;   //  fixme: not correct for multiline repeats !!!!!!!!
+                for (int col = 0; col < rowCols.size(); col++) {
+                    //  fixme: verify it's a real measure, not | or comment
+                    duration += measureDuration;
+                    totalBeats += beatsPerBar;
+                    rowDuration += measureDuration;
+                    rowBeats += beatsPerBar;
+
+                    //  extra for repeats
+                    MatchResult mr = repeatExp.exec(rowCols.get(col));
+                    if (mr != null) {
+                        int n = Integer.parseInt(mr.getGroup(1));
+                        n--;
+                        duration += n * rowDuration;
+                        totalBeats += n * rowBeats;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Legacy prep of section sequence for javascript
+     *
+     * @return
+     */
+    @Deprecated
+    public final String[] getSectionSequenceAsStrings()
+    {
+
+        //  dumb down the section sequence list for javascript
+        String ret[] = new String[sequence.size()];
+        for (int i = 0; i < ret.length; i++) {
+            ret[i] = sequence.get(i).toString();
+        }
+        return ret;
+    }
+
+    @Deprecated
+    public final String[][] getJsChordSection(String sectionId)
+    {
+        return jsChordSectionMap.get(sectionId);
+    }
+
+    @Deprecated
+    public final Grid<String> getChordSection(SectionVersion sv)
+    {
+        return chordSectionMap.get(sv);
+    }
+
+    /**
+     * map the section id to it's reduced, common section id
+     *
+     * @param sectionVersion
+     * @return common section version
+     */
+    public final SectionVersion getChordSectionVersion(SectionVersion sectionVersion)
+    {
+        //  map the section to it's reduced, common section
+        SectionVersion v = displaySectionMap.get(sectionVersion);
+        if (v != null) {
+            return v;
+        }
+        return sectionVersion;
+    }
+
+    private final void parse()
+    {
+        measureNodes = new ArrayList<>();
+        chordSections = new ArrayList<>();
+
+        if (chords != null) {
+            String s = chords;
+            ChordSection chordSection;
+            while ((chordSection = ChordSection.parse(s, beatsPerBar)) != null) {
+                s = s.substring(chordSection.getParseLength());
+                measureNodes.add(chordSection);
+                chordSections.add(chordSection);
+            }
+        }
+
+        computeSongMoments();
+        computeDuration();
+    }
+
+    public final String measureNodesToString()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        for (MeasureNode measureNode : measureNodes) {
+            sb.append(measureNode.toString()).append(" ");
+        }
+
+        return sb.toString();
+    }
+
+    @Deprecated
+    private void parseChordTable(String rawChordTableText)
+    {
+
+        chordSectionMap.clear();
+
+        if (rawChordTableText != null && rawChordTableText.length() > 0) {
+            //  repair definitions without a final newline
+            if (rawChordTableText.charAt(rawChordTableText.length() - 1) != '\n')
+                rawChordTableText += "\n";
+
+            //  build the initial chord section map
+            Grid<String> grid = new Grid<>();
+            int row = 0;
+            int col = 0;
+
+            int state = 0;
+            SectionVersion version;
+            TreeSet<SectionVersion> versionsDeclared = new TreeSet<>();
+            String block = "";
+            for (int i = 0; i < rawChordTableText.length(); i++) {
+                char c = rawChordTableText.charAt(i);
+                switch (state) {
+                    default:
+                        state = 0;
+                    case 0:
+                        //  absorb leading white space
+                        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                            break;
+                        }
+                        block = "";
+                        state++;
+
+                        //  fall through
+                    case 1:
+                        String token = rawChordTableText.substring(i);
+                        SectionVersion v = Section.parse(token.substring(0, Math.min(token.length() - 1, 11)));
+                        if (v != null) {
+                            version = v;
+                            i += version.getParseLength() - 1;//   consume the section label
+
+                            if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
+                                for (SectionVersion vd : versionsDeclared) {
+                                    chordSectionMap.put(vd, grid);
+                                }
+                                //  fixme: worry about chords before a section is declared
+                                versionsDeclared.clear();
+                                grid = new Grid<>();
+                            }
+                            versionsDeclared.add(version);
+
+                            row = 0;
+                            col = 0;
+                            block = "";
+                            state = 0;
+                            continue;
+                        }
+                        state++;
+
+                        //  fall through
+                    case 2:
+                        //  absorb characters until newline
+                        switch (c) {
+                            case ' ':
+                            case '\t':
+                                if (block.length() > 0) {
+                                    grid.add(col, row, block);
+                                    col++;
+                                }
+                                block = "";
+                                break;
+                            case '\n':
+                            case '\r':
+                                if (block.length() > 0) {
+                                    grid.add(col, row, block);
+                                    col++;
+                                }
+                                row++;
+                                col = 0;
+                                block = "";
+                                state = 0;
+                                break;
+                            default:
+                                block += c;
+                                break;
+                        }
+
+                        break;
+                }
+            }
+
+            //  put the last grid on the end
+            if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
+                for (SectionVersion vd : versionsDeclared) {
+                    chordSectionMap.put(vd, grid);
+                }
+            }
+
+            //  deal with unformatted events
+            if (chordSectionMap.isEmpty()) {
+                chordSectionMap.put(Section.getDefaultVersion(), grid);
+            }
+        }
+
+        //  collect remap sections with identical declarations
+        {
+            //  build a reverse lookup map
+            HashMap<Grid<String>, TreeSet<SectionVersion>> reverseMap = new HashMap<>();
+            for (SectionVersion version : chordSectionMap.keySet()) {
+                Grid<String> grid = chordSectionMap.get(version);
+                TreeSet<SectionVersion> lookup = reverseMap.get(grid);
+                if (lookup == null) {
+                    TreeSet<SectionVersion> ts = new TreeSet<>();
+                    ts.add(version);
+                    reverseMap.put(grid, ts);
+                } else {
+                    lookup.add(version);
+                }
+            }
+            //  build version mapping to version displayed map
+            displaySectionMap.clear();
+            for (Grid<String> g : reverseMap.keySet()) {
+                TreeSet<SectionVersion> mappedVersions = reverseMap.get(g);
+                SectionVersion first = mappedVersions.first();
+                for (SectionVersion dv : mappedVersions) {
+                    //  more convenient to put idenity mapping in for first
+                    displaySectionMap.put(dv, first);
+                }
+            }
+
+            //GWT.log(displayMap.toString());
+            HashMap<SectionVersion, Grid<String>> reducedChordSectionMap = new HashMap<>();
+            for (SectionVersion version : chordSectionMap.keySet()) {
+                reducedChordSectionMap.put(version, chordSectionMap.get(displaySectionMap.get(version)));
+            }
+
+            //  install the reduced map
+            chordSectionMap.clear();
+            chordSectionMap.putAll(reducedChordSectionMap);
+            //GWT.log(chordSectionMap.toString());
+        }
+
+        //  build map for js
+        for (SectionVersion v : chordSectionMap.keySet()) {
+            jsChordSectionMap.put(v.toString(), chordSectionMap.get(v).getJavasriptCopy());
+        }
+
+//        for (Section.Version v : chordSectionMap.keySet()) {
+//            GWT.log(" ");
+//            GWT.log(v.toString());
+//            GWT.log("    " + chordSectionMap.get(v).toString());
+//        }
+
+        computeDuration();
+    }
+
+    public String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("<table id=\"" + tableName + "\" class=\"" + CssConstants.style + "chordTable\">\n");
+
+        ArrayList<String> innerHtml = null;
+        int sequenceNumber = 0;
+        int rowStartSequenceNumber = 0;
+        int j = 0;
+        LyricSection lyricSection = null;
+        SongMoment songMoment;
+        for (int safety = 0; safety < 10000; safety++) {
+            if (sequenceNumber >= songMoments.size())
+                break;
+
+            songMoment = songMoments.get(sequenceNumber);
+            lyricSection = songMoment.getLyricSection();
+            SectionVersion sectionVersion = lyricSection.getSectionVersion();
+            sb.append("<tr><td class='" + CssConstants.style + "sectionLabel' >").
+                    append(sectionVersion.toString()).append("</td><td class=\"")
+                    .append(CssConstants.style)
+                    .append("lyrics")
+                    .append(sectionVersion.getSection().getAbbreviation())
+                    .append("Class\"")
+                    .append(" colspan=\"10\" >");
+
+            for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
+                sb.append(lyricsLine.getLyrics()).append("\n");
+
+            sb.append("</td></tr><tr><td></td>");
+            for (MeasureNode measureNode : measureNodes) {
+                if (measureNode.getSectionVersion().equals(lyricSection.getSectionVersion())) {
+                    innerHtml = measureNode.generateInnerHtml(key, tran);
+                    rowStartSequenceNumber = sequenceNumber;
+                    j = 0;
+                    break;
+                }
+            }
+
+            //  exhaust the html we've been given
+            while (innerHtml != null) {
+                String s = innerHtml.get(j++);
+                if (j >= innerHtml.size()) {
+                    j = 0;
+                    innerHtml = null;
+                }
+
+                switch (s) {
+                    case "":
+                        sb.append("<td></td>");
+                        break;
+                    case "|":
+                        sb.append("<td>").append(s).append("</td></tr>\n<tr>");
+                        break;
+                    case "\n":
+                        sb.append("</tr>\n<tr><td></td>");
+                        if (rowStartSequenceNumber < sequenceNumber) {
+                            sb.append("<td colspan=\"10\">" +
+                                    "<canvas id=\"bassLine" + rowStartSequenceNumber + "-" + (sequenceNumber - 1)
+                                    + "\" width=\"900\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
+                            rowStartSequenceNumber = sequenceNumber;
+                        }
+                        break;
+                    default:
+                        //  increment for next time
+                        sequenceNumber++;
+                        if (sequenceNumber < songMoments.size())
+                            songMoment = songMoments.get(sequenceNumber);
+                        break;
+                }
+            }
+            sb.append("</tr>\n");
+        }
+        sb.append("</table>\n");
+
+        return sb.toString();
+    }
+
+    @Deprecated
+    public final String generateHtmlChordTable(String prefix)
+    {
+        return generateHtmlChordTableFromMap(chordSectionMap, prefix);
+    }
+
+    @Deprecated
+    public final String generateHtmlLyricsTable(String prefix)
+    {
+        String tableStart = "<table id=\"" + prefix + "LyricsTable\">\n"
+                + "<colgroup>\n"
+                + "   <col style=\"width:2ch;\">\n"
+                + "  <col>\n"
+                + "</colgroup>\n";
+        String rowStart = "<tr><td class='" + CssConstants.style + "sectionLabel' >";
+        String rowEnd = "</td></tr>\n";
+        String tableEnd = "</table>\n";
+
+        String lyrics = ""; //  table formatted
+        int state = 0;
+        int sectionIndex = 0;
+        boolean isSection = false;
+        String whiteSpace = "";
+        for (int i = 0; i < rawLyrics.length(); i++) {
+            char c = rawLyrics.charAt(i);
+            switch (state) {
+                default:
+                    state = 0;
+                case 0:
+                    //  absorb leading white space
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                        break;
+                    }
+                    state++;
+                    //  fall through
+                case 1:
+                    SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
+                    if (version != null) {
+                        i += version.getParseLength() - 1; //  skip the end of the section id
+                        isSection = true;
+
+                        if (lyrics.length() > 0) {
+                            lyrics += rowEnd;
+                        }
+                        lyrics += rowStart + version.toString()
+                                + "</td><td class=\"" + CssConstants.style + "lyrics" + version.getSection()
+                                .getAbbreviation() + "Class\""
+                                + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
+                        sectionIndex++;
+                        whiteSpace = ""; //  ignore white space
+                        state = 0;
+                        continue;
+                    }
+                    state++;
+                    //  fall through
+                case 2:
+                    //  absorb characters to newline
+                    switch (c) {
+                        case ' ':
+                        case '\t':
+                            whiteSpace += c;
+                            break;
+                        case '\n':
+                        case '\r':
+                            lyrics += c;
+                            whiteSpace = ""; //  ignore trailing white space
+                            state = 0;
+                            break;
+                        default:
+                            if (!isSection) {
+                                //  deal with bad formatting
+                                lyrics += rowStart
+                                        + Section.getDefaultVersion().toString()
+                                        + "</td><td class=\"" + CssConstants.style + "lyrics"
+                                        + Section.getDefaultVersion().getSection().getAbbreviation() + "Class\""
+                                        + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
+                                isSection = true;
+                            }
+                            lyrics += whiteSpace + c;
+                            whiteSpace = "";
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        lyrics = tableStart
+                + lyrics
+                + rowEnd
+                + tableEnd;
+        //GWT.log(lyrics);
+        return lyrics;
+    }
+
+    private final void parseLyrics()
+    {
+        int state = 0;
+        String whiteSpace = "";
+        String lyrics = "";
+        LyricSection lyricSection = null;
+
+        lyricSections = new ArrayList<>();
+
+        for (int i = 0; i < rawLyrics.length(); i++) {
+            char c = rawLyrics.charAt(i);
+            switch (state) {
+                default:
+                    state = 0;
+                case 0:
+                    //  absorb leading white space
+                    if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+                        break;
+                    }
+                    state++;
+                    //  fall through
+                case 1:
+                    SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
+                    if (version != null) {
+                        i += version.getParseLength() - 1; //  skip the end of the section id
+
+                        if (lyricSection != null)
+                            lyricSections.add(lyricSection);
+
+                        lyricSection = new LyricSection();
+                        lyricSection.setSectionVersion(version);
+
+                        whiteSpace = ""; //  ignore white space
+                        state = 0;
+                        continue;
+                    }
+                    state++;
+                    //  fall through
+                case 2:
+                    //  absorb all characters to newline
+                    switch (c) {
+                        case ' ':
+                        case '\t':
+                            whiteSpace += c;
+                            break;
+                        case '\n':
+                        case '\r':
+                            if (lyricSection == null) {
+                                //  oops, an old unformatted song, force a lyrics section
+                                lyricSection = new LyricSection();
+                                lyricSection.setSectionVersion(Section.getDefaultVersion());
+                            }
+                            lyricSection.add(new LyricsLine(lyrics));
+                            lyrics = "";
+                            whiteSpace = ""; //  ignore trailing white space
+                            state = 0;
+                            break;
+                        default:
+                            lyrics += whiteSpace + c;
+                            whiteSpace = "";
+                            break;
+                    }
+                    break;
+            }
+        }
+        //  last one is not terminated by another section
+        if (lyricSection != null)
+            lyricSections.add(lyricSection);
+    }
+
+    /**
+     * Utility to generate a lyrics section sequence id
+     *
+     * @param sectionIndex
+     * @return a lyrics section sequence id
+     */
+    public static final String genLyricsId(int sectionIndex)
+    {
+        return "L." + sectionIndex;
+    }
+
+    private String generateHtmlChordTableFromMap(HashMap<SectionVersion, Grid<String>> map, String prefix)
+    {
+
+        if (map.isEmpty()) {
+            return "";
+        }
+        return generateHtmlChordTableFromMap(map, map.keySet(), key, 0, prefix, false);
+    }
+
+    public final String generateHtmlChordTable(SectionVersion sectionVersion, Key newKey, int trans, String prefix)
+    {
+        TreeSet<SectionVersion> sectionVersions = new TreeSet<>();
+        sectionVersions.add(sectionVersion);
+        return generateHtmlChordTableFromMap(chordSectionMap, sectionVersions, newKey, trans, prefix, true);
+    }
+
+    private String generateHtmlChordTableFromMap(
+            HashMap<SectionVersion, Grid<String>> map,
+            Set<SectionVersion> sectionVersions,
+            Key newKey,
+            int trans,
+            String prefix,
+            boolean isSingle)
+    {
+
+        if (map.isEmpty()) {
+            return "";
+        }
+
+        String tableStart = "<table id=\"" + prefix + "ChordTable\" "
+                + "class=\"" + CssConstants.style + "chordTable\" "
+                + ">\n";
+        String sectionStart = "<tr><td class=\"" + CssConstants.style + "sectionLabel\" >";
+        String rowStart = "\t<tr><td class=\"" + CssConstants.style + "sectionLabel\" ></td>";
+        String rowEnd = "</tr>\n";
+        String tableEnd = "</table>\n";
+
+        StringBuilder chordText = new StringBuilder(); //  table formatted
+
+        SortedSet<SectionVersion> sortedSectionVersions = new TreeSet<>(sectionVersions);
+        SortedSet<SectionVersion> displayed = new TreeSet<>();
+        for (SectionVersion version : sortedSectionVersions) {
+            if (displayed.contains(version)) {
+                continue;
+            }
+
+            //  section label
+            String start = sectionStart;
+            if (isSingle) {
+                start += version.toString();
+                displayed.add(version);
+            } else {
+                for (SectionVersion v : displaySectionMap.keySet()) {
+                    if (displaySectionMap.get(v) == version) {
+                        start += v.toString() + "<br/>";
+                        displayed.add(v);
+                    }
+                }
+            }
+            start += "</td>\n";
+
+            //  section data
+
+            Grid<String> grid = map.get(version);
+            if (grid != null)
+                for (int r = 0; r < grid.getRowCount(); r++) {
+
+                    chordText.append(start);
+                    start = rowStart;   //  default to empty row start on subsequent rows
+
+                    ArrayList<String> row = grid.getRow(r);
+                    final RegExp endOfChordLineExp = RegExp.compile("^\\w*(x|\\|)", "i");
+                    for (int col = 0; col < row.size(); col++) {
+                        chordText.append("<td class=\"" + CssConstants.style + "section").append(version.getSection()
+                                .getAbbreviation())
+                                .append("Class\" ");
+                        String content = row.get(col);
+                        if (endOfChordLineExp.test(content)) {
+                            chordText.append(" style=\"border-right: 0px solid black;\"");
+                        }
+                        chordText.append(" id=\"")
+                                .append(prefix)
+                                .append(genChordId(isSingle ? version : displaySectionMap.get(version), r, col))
+                                .append("\" >")
+                                .append(transposeMeasure(newKey, content, trans)).append("</td>\n\t");
+                    }
+                    chordText.append(rowEnd);
+                }
+        }
+        String ret = tableStart + chordText + tableEnd;
+        return ret;
+    }
+
+    /**
+     * Utility to generate a chord section id
+     *
+     * @param displaySectionVersion chord section version
+     * @param row                   cell row
+     * @param col                   cell column
+     * @return the generated chord section id
+     */
+    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col)
+    {
+        if (displaySectionVersion == null)
+            return "";
+        return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
+    }
+
+    /**
+     * Transpose the all chords from their original scale notes by the given number of half steps
+     * requested.
+     *
+     * @param halfSteps half steps for this transcription
+     * @return an HTML representation for the chord sections
+     */
+    @Deprecated
+    public final String transpose(int halfSteps, String prefix)
+    {
+        halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
+        if (halfSteps == 0) {
+            return generateHtmlChordTable(prefix);
+        }
+
+        Key newKey = key.nextKeyByHalfStep(halfSteps);
+
+        //GWT.log("Song.generateHtml()  here: " + halfSteps + " to: " + chords);
+        HashMap<SectionVersion, Grid<String>> tranMap = deepCopy(chordSectionMap);
+
+        for (SectionVersion version : tranMap.keySet()) {
+            Grid<String> grid = tranMap.get(version);
+
+            int rLimit = grid.getRowCount();
+            for (int r = 0; r < rLimit; r++) {
+                ArrayList<String> row = grid.getRow(r);
+                int colLimit = row.size();
+                for (int col = 0; col < colLimit; col++) {
+                    grid.set(col, r, transposeMeasure(newKey, row.get(col), halfSteps));
+                }
+            }
+            //GWT.log(transChords.toString());
+        }
+
+        //GWT.log(tranMap.toString());
+        return generateHtmlChordTableFromMap(tranMap, prefix);
+    }
+
+    private String transposeMeasure(Key newKey, String m, int halfSteps)
+    {
+        if (halfSteps == 0)
+            return m;
+
+        int chordNumber = 0;
+        // String chordLetter;
+        StringBuilder sb = new StringBuilder();
+
+        int state = 0;
+
+        for (int ci = 0; ci < m.length(); ci++) {
+            char c = m.charAt(ci);
+            switch (state) {
+                default:
+                case 0:
+                    //  look for comments
+                    if (c == '(') {
+                        sb.append(c);
+                        state = 11;
+                        break;
+                    }
+
+                    //  don't generateHtml the section identifiers that happen to look like notes
+                    String toMatch = m.substring(ci);
+                    SectionVersion version = Section.parse(toMatch);
+                    if (version != null) {
+                        sb.append(version.toString());
+                        ci += version.getParseLength() - 1; //  skip the end of the section id
+                        break;
+                    }
+
+                    Chord chord = Chord.parse(toMatch, beatsPerBar);
+                    if (chord != null) {
+                        sb.append(chord.transpose(newKey, halfSteps).toString());
+                        ci += chord.getParseLength() - 1; //     watch for the increment in the for loop!
+                        break;
+                    }
+
+                    if (
+                            (c >= '0' && c <= '9')
+                                    || c == 'm'
+                                    || c == ' ' || c == '-' || c == '|' || c == '/'
+                                    || c == '[' || c == ']'
+                                    || c == '{' || c == '}'
+                                    || c == '.'
+                                    || c == '<' || c == '>'
+                                    || c == '\n'
+                                    || c == js_delta)
+                    {
+                        sb.append(c);
+                    } else {    //  don't parse the rest
+                        sb.append(c);
+                        state = 10;
+                    }
+                    break;
+
+                case 10: //	wait for newline
+                    sb.append(c);
+                    break;
+
+                case 11: //	wait for newline or closing paren
+                    sb.append(c);
+                    if (c == ')') {
+                        state = 0;
+                    }
+                    break;
+            }
+        }
+        //  do the last chord
+//        if (state == 1) {
+//            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
+//            sb.append(chordLetter);
+//        }
+
+        return sb.toString();
     }
 
     /**
@@ -425,7 +1241,6 @@ public class Song
             throw new ParseException("no BPM given!", 0);
         }
 
-        //  check bpm
         final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
         if (!twoOrThreeDigitsRegexp.test(bpmEntry)) {
             throw new ParseException("BPM has to be a number from " + minBpm + " to " + maxBpm, 0);
@@ -435,7 +1250,6 @@ public class Song
             throw new ParseException("BPM has to be a number from " + minBpm + " to " + maxBpm, 0);
         }
 
-        //  check beats per bar
         if (beatsPerBarEntry == null || beatsPerBarEntry.length() <= 0) {
             throw new ParseException("no beats per bar given!", 0);
         }
@@ -482,7 +1296,7 @@ public class Song
         Song newSong = Song.createSong(title, artist,
                 copyright, key, bpm, beatsPerBar, unitsPerMeasure,
                 chordsTextEntry, lyricsTextEntry);
-
+        //GWT.log(newSong.toJson());
         //  see that all chord sections have a lyric section
         for (ChordSection chordSection : newSong.getChordSections()) {
             SectionVersion chordSectionVersion = chordSection.getSectionVersion();
@@ -513,30 +1327,273 @@ public class Song
                 throw new ParseException("no chords found for the lyric section " + lyricSectionVersion.toString(), 0);
             }
         }
-
-        //  outlaw comments in the chord section
-        for (ChordSection chordSection : newSong.getChordSections()) {
-            for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems()) {
-                for (Measure measure : measureSequenceItem.getMeasures()) {
-                    if (measure instanceof MeasureComment) {
-                        throw new ParseException("Comments are not allowed in the chord section.  \""
-                                + ((MeasureComment) measure).getComment() + "\" is considered a comment."
-                                , 0);
-                    }
-                }
-            }
-        }
-
-        //  an early song with default (no) structure?
-        if (newSong.getLyricSections().size() == 1 && newSong.getLyricSections().get(0).getSectionVersion().equals
-                (Section.getDefaultVersion()))
-        {
-            throw new ParseException("song looks too simple, is there really no structure?", 0);
-        }
-
         return newSong;
     }
 
+
+    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map)
+    {
+        HashMap<SectionVersion, Grid<String>> ret = new HashMap<>();
+        for (SectionVersion version : map.keySet()) {
+            ret.put(version, new Grid<String>().deepCopy(map.get(version)));
+            //  fixme: worry about version alteration!
+        }
+        return ret;
+    }
+
+    private static int chordLetterToNumber(char letter)
+    {
+        int i = letter - 'A';
+        //                            a  a# b  c  c# d  d# e  f f#  g  g#
+        //                            0  1  2  3  4  5  6  7  8  9  10 11
+
+        return chordLetterToNumber[i];
+    }
+
+    private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
+
+    private String chordNumberToLetter(int n, int halfSteps)
+    {
+        return key.getScaleNoteByHalfStep(n + halfSteps).toString();
+    }
+
+    private final void setTitle(String title)
+    {
+        //  move the leading "The " to the end
+
+        final RegExp theRegExp = RegExp.compile("^the +", "i");
+        if (theRegExp.test(title)) {
+            title = theRegExp.replace(title, "") + ", The";
+        }
+        this.title = title;
+        songId = new SongId("Song" + title.replaceAll("\\W+", ""));
+    }
+
+    private final void setArtist(String artist)
+    {
+        //  move the leading "The " to the end
+        final RegExp theRegExp = RegExp.compile("^the *", "i");
+        if (theRegExp.test(artist)) {
+            artist = theRegExp.replace(artist, "") + ", The";
+        }
+        this.artist = artist;
+    }
+
+    /**
+     * Set the key for this song.
+     *
+     * @param key the given key
+     */
+    public final void setKey(Key key)
+    {
+        this.key = key;
+    }
+
+
+    /**
+     * Return the song default beats per minute.
+     *
+     * @return the default BPM
+     */
+    public final int getBeatsPerMinute()
+    {
+        return defaultBpm;
+    }
+
+    /**
+     * Set the song default beats per minute.
+     *
+     * @param bpm the defaultBpm to set
+     */
+    public final void setBeatsPerMinute(int bpm)
+    {
+        this.defaultBpm = bpm;
+    }
+
+    /**
+     * Return the song's number of beats per bar
+     *
+     * @return the number of beats per bar
+     */
+    public final int getBeatsPerBar()
+    {
+        return beatsPerBar;
+    }
+
+    /**
+     * Set the song's number of beats per bar
+     *
+     * @param beatsPerBar the beatsPerBar to set
+     */
+    public void setBeatsPerBar(int beatsPerBar)
+    {
+        this.beatsPerBar = beatsPerBar;
+        computeDuration();
+    }
+
+
+    /**
+     * Return an integer that represents the number of notes per measure
+     * represented in the sheet music.  Typically this is 4; meaning quarter notes.
+     *
+     * @return the unitsPerMeasure
+     */
+    public final int getUnitsPerMeasure()
+    {
+        return unitsPerMeasure;
+    }
+
+    public void setUnitsPerMeasure(int unitsPerMeasure)
+    {
+        this.unitsPerMeasure = unitsPerMeasure;
+    }
+
+    /**
+     * Return the song's copyright
+     *
+     * @return the copyright
+     */
+    public final String getCopyright()
+    {
+        return copyright;
+    }
+
+    /**
+     * Return the song's key
+     *
+     * @return the key
+     */
+    public final Key getKey()
+    {
+        return key;
+    }
+
+    /**
+     * Return the song's identification string.
+     *
+     * @return the songId
+     */
+    public final SongId getSongId()
+    {
+        return songId;
+    }
+
+    /**
+     * @return the chordLetterToNumber
+     */
+    public static final int[] getChordLetterToNumber()
+    {
+        return chordLetterToNumber;
+    }
+
+    /**
+     * Return the song's title
+     *
+     * @return the title
+     */
+    public final String getTitle()
+    {
+        return title;
+    }
+
+    /**
+     * Return the song's artist.
+     *
+     * @return the artist
+     */
+    public final String getArtist()
+    {
+        return artist;
+    }
+
+    /**
+     * Return the lyrics.
+     *
+     * @return the rawLyrics
+     */
+    @Deprecated
+    public final String getLyricsAsString()
+    {
+        return rawLyrics;
+    }
+
+    /**
+     * Return the chords
+     *
+     * @return the chords
+     */
+    @Deprecated
+    public final String getChordsAsString()
+    {
+        return chords;
+    }
+
+    /**
+     * Return the default beats per minute.
+     *
+     * @return the defaultBpm
+     */
+    public final int getDefaultBpm()
+    {
+        return defaultBpm;
+    }
+
+    /**
+     * Return the chords in the song's sections as a map.
+     *
+     * @return the chordSectionMap
+     */
+    public final HashMap<SectionVersion, Grid<String>> getChordSectionMap()
+    {
+        return chordSectionMap;
+    }
+
+    /**
+     * Return the lyrics in the song's sections as a map.
+     *
+     * @return the displaySectionMap
+     */
+    public final HashMap<SectionVersion, SectionVersion> getDisplaySectionMap()
+    {
+        return displaySectionMap;
+    }
+
+    /**
+     * Get the song's default drum section.
+     * The section will be played through all of its measures
+     * and then repeated as required for the song's duration.
+     *
+     * @return the drum section
+     */
+    public final LegacyDrumSection getDrumSection()
+    {
+        return drumSection;
+    }
+
+    /**
+     * Set the song's default drum section
+     *
+     * @param drumSection the drum section
+     */
+    public final void setDrumSection(LegacyDrumSection drumSection)
+    {
+        this.drumSection = drumSection;
+    }
+
+    public ArrayList<ChordSection> getChordSections()
+    {
+        return chordSections;
+    }
+
+    public final Arrangement getDrumArrangement()
+    {
+        return drumArrangement;
+    }
+
+    public final void setDrumArrangement(Arrangement drumArrangement)
+    {
+        this.drumArrangement = drumArrangement;
+    }
 
     public final JsDate getLastModifiedDate()
     {
@@ -547,6 +1604,49 @@ public class Song
     {
         this.lastModifiedDate = lastModifiedDate;
     }
+
+    public final String getFileName()
+    {
+        return fileName;
+    }
+
+    public final void setFileName(String fileName)
+    {
+        this.fileName = fileName;
+
+        final RegExp fileVersionRegExp = RegExp.compile(" \\(([0-9]+)\\).songlyrics$");
+        MatchResult mr = fileVersionRegExp.exec(fileName);
+        if (mr != null) {
+            fileVersionNumber = Integer.parseInt(mr.getGroup(1));
+        } else
+            fileVersionNumber = 0;
+    }
+
+    public final double getDuration()
+    {
+        return duration;
+    }
+
+    public final int getTotalBeats()
+    {
+        return totalBeats;
+    }
+
+    public ArrayList<SongMoment> getSongMoments()
+    {
+        return songMoments;
+    }
+
+    public ArrayList<LyricSection> getLyricSections()
+    {
+        return lyricSections;
+    }
+
+    public int getFileVersionNumber()
+    {
+        return fileVersionNumber;
+    }
+
 
     public enum ComparatorType
     {
@@ -725,13 +1825,40 @@ public class Song
 
     public static int compareByVersionNumber(Song o1, Song o2)
     {
-        logger.finest("o1.fileVersionNumber:" + o1.getFileVersionNumber() + ", o2.fileVersionNumber: " + o2.getFileVersionNumber());
+        logger.finest("o1.fileVersionNumber:" + o1.fileVersionNumber + ", o2.fileVersionNumber: " + o2.fileVersionNumber);
         int ret = o1.compareTo(o2);
         if (ret != 0)
             return ret;
-        if (o1.getFileVersionNumber() != o2.getFileVersionNumber())
-            return o1.getFileVersionNumber() < o2.getFileVersionNumber() ? -1 : 1;
+        if (o1.fileVersionNumber != o2.fileVersionNumber)
+            return o1.fileVersionNumber < o2.fileVersionNumber ? -1 : 1;
         return compareByLastModifiedDate(o1, o2);
+    }
+
+    /**
+     * Returns a string representation of the object. In general, the
+     * {@code toString} method returns a string that
+     * "textually represents" this object. The result should
+     * be a concise but informative representation that is easy for a
+     * person to read.
+     * It is recommended that all subclasses override this method.
+     * <p>
+     * The {@code toString} method for class {@code Object}
+     * returns a string consisting of the name of the class of which the
+     * object is an instance, the at-sign character `{@code @}', and
+     * the unsigned hexadecimal representation of the hash code of the
+     * object. In other words, this method returns a string equal to the
+     * value of:
+     * <blockquote>
+     * <pre>
+     * getClass().getName() + '@' + Integer.toHexString(hashCode())
+     * </pre></blockquote>
+     *
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString()
+    {
+        return title + (fileVersionNumber > 0 ? ":(" + fileVersionNumber + ")" : "") + " by " + artist;
     }
 
     /**
@@ -744,14 +1871,14 @@ public class Song
     @Override
     public int compareTo(Song o)
     {
-         int ret = getSongId().compareTo(o.getSongId());
-            if (ret != 0) {
-                return ret;
-            }
-            ret = getArtist().compareTo(o.getArtist());
-            if (ret != 0) {
-                return ret;
-            }
+        int ret = getSongId().compareTo(o.getSongId());
+        if (ret != 0) {
+            return ret;
+        }
+        ret = getArtist().compareTo(o.getArtist());
+        if (ret != 0) {
+            return ret;
+        }
 
 //    //  more?  if so, changes in lyrics will be a new "song"
 //    ret = getLyricsAsString().compareTo(o.getLyricsAsString());
@@ -768,26 +1895,90 @@ public class Song
     @Override
     public boolean equals(Object obj)
     {
+        //  fixme: song equals should include all fields
+        if (obj == null) {
+            return false;
+        }
         if (!(obj instanceof Song)) {
             return false;
         }
-        return super.equals(obj);
+        Song o = (Song) obj;
+
+        //  song id built from title with reduced whitespace
+        if (!getTitle().equals(o.getTitle()))
+            return false;
+        if (!getArtist().equals(o.getArtist()))
+            return false;
+        if (!getCopyright().equals(o.getCopyright()))
+            return false;
+        if (!getKey().equals(o.getKey()))
+            return false;
+        if (defaultBpm != o.defaultBpm)
+            return false;
+        if (unitsPerMeasure != o.unitsPerMeasure)
+            return false;
+        if (!chords.equals(o.chords))
+            return false;
+        if (!rawLyrics.equals(o.rawLyrics))
+            return false;
+        if (!metadata.equals(o.metadata))
+            return false;
+        return true;
     }
 
     @Override
     public int hashCode()
     {
         //  fixme: song hashCode should include all fields
-        return super.hashCode();
+        int hash = 7;
+        hash = (79 * hash + Objects.hashCode(this.title)) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.artist)) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.copyright)) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.key)) % (1 << 31);
+        hash = (79 * hash + this.defaultBpm) % (1 << 31);
+        hash = (79 * hash + this.unitsPerMeasure) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.chords)) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.rawLyrics)) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.metadata)) % (1 << 31);
+        return hash;
     }
 
+    private String title = "Unknown";
+    private SongId songId = new SongId();
+    private String artist = "Unknown";
+    private String copyright = "Unknown";
     private transient JsDate lastModifiedDate;
+    private transient String fileName;
+    private transient int fileVersionNumber = 0;
+    private Key key = Key.C;  //  default
+    private int defaultBpm = 106;  //  beats per minute
+    private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature numerator
+    private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature denominator
+    private transient double duration;    //  units of seconds
+    private transient int totalBeats;
+    private ArrayList<LyricSection> lyricSections = new ArrayList<>();
+    private ArrayList<ChordSection> chordSections = new ArrayList<>();
+    private ArrayList<SongMoment> songMoments = new ArrayList<>();
+    private String chords = "";
+    private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
+    private String rawLyrics = "";
+    private LegacyDrumSection drumSection = new LegacyDrumSection();
+    private Arrangement drumArrangement;    //  default
+    private TreeSet<Metadata> metadata = new TreeSet<>();
 
+    private ArrayList<SectionVersion> sequence;
+    private final HashMap<SectionVersion, Grid<String>> chordSectionMap = new HashMap<>();
+    private final HashMap<SectionVersion, SectionVersion> displaySectionMap = new HashMap<>();
+    private final HashMap<String, String[][]> jsChordSectionMap = new HashMap<>();
+    private static final char flat = (char) 9837;
+    private static final char sharp = (char) 9839;
+    private static final char js_flat = '\u266D';
+    private static final char js_natural = '\u266E';
+    private static final char js_sharp = '\u266F';
+    private static final char js_delta = '\u0394';
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;
-
-    private static final char js_delta = '\u0394';
 
     private static final Logger logger = Logger.getLogger(Song.class.getName());
 }
