@@ -14,6 +14,13 @@
     <option name="HEAP_SIZE" value="3000" />
     <option name="OPTION_INCLUDE_LIBS" value="true" />
   </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectResources">
     <resource url="http://gwtproject.org/doctype/2.8.2/gwt-module.dtd" location="$PROJECT_DIR$" />
   </component>
