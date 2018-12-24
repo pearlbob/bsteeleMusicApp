@@ -693,7 +693,7 @@
     </option>
   </component>
   <component name="RunManager" selected="Maven.devmode">
-    <configuration default="true" type="Applet" factoryName="Applet">
+    <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -829,7 +829,7 @@
       </MavenSettings>
       <method v="2" />
     </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
+    <configuration default="true" type="TestNG">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <properties />
       <listeners />
@@ -838,12 +838,12 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Maven.devmode" />
-      <item itemvalue="Maven.local deploy" />
       <item itemvalue="JUnit.BSteeleMusicAppSuite" />
       <item itemvalue="JUnit.SongTest.testEdits" />
       <item itemvalue="JUnit.ChordSectionTest.testChordSectionParse" />
       <item itemvalue="JUnit.SongTest.testGetStructuralGrid" />
+      <item itemvalue="Maven.devmode" />
+      <item itemvalue="Maven.local deploy" />
     </list>
     <recent_temporary>
       <list>
