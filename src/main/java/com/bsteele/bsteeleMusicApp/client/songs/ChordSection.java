@@ -329,7 +329,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sectionVersion;
     }
 
-    public ArrayList<MeasureSequenceItem> getMeasureSequenceItems()
+    ArrayList<MeasureSequenceItem> getMeasureSequenceItems()
     {
         return measureSequenceItems;
     }

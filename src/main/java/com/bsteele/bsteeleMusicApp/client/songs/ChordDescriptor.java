@@ -11,6 +11,8 @@ import java.util.TreeSet;
 /**
  * The modifier to a chord specification that describes the basic type of chord.
  * Typical values are major, minor, dominant7, etc.
+ *
+ * Try:  https://www.scales-chords.com/chord/piano/c
  */
 public enum ChordDescriptor
 {
@@ -27,11 +29,11 @@ public enum ChordDescriptor
     sevenSharp9("7#9", "R m3 5 m7"),
     sevenFlat9("7b9", "R m2 3 5 7"),
     dominant9("9", "R 3 5 m7 9"),
+    six9("69", "R 2 3 5 6" ),
     major6("6", "R 3 5 6"),
     diminished7("dim7", "R m3 b5 6"),
     diminishedAsCircle(""+MusicConstant.diminishedCircle, "R m3 b5"),
     diminished("dim", "R m3 b5"),
-
     augmented5("aug5", "R 3 #5"),
     augmented7("aug7", "R 3 #5 m7"),
     augmented("aug", "R 3 #5"),
@@ -41,7 +43,7 @@ public enum ChordDescriptor
     suspended("sus", "R 5"),
     minor11("m11", "R m3 5 m7 11"),
     minor13("m13", "R m3 5 m7 13"),
-    minor6("m6","R m3 5 6"),
+    minor6("m6", "R m3 5 6"),
     major7("maj7", "R 3 5 7"),
     major7asDelta(""+MusicConstant.greekCapitalDelta, "R 3 5 7"),
     majorSeven("M7", "R 3 5 7"),
@@ -192,6 +194,7 @@ public enum ChordDescriptor
             //  numerically named chords
             power5,
             major6,
+            six9,
             dominant9,
             dominant11,
             dominant13,

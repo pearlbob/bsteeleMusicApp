@@ -32,8 +32,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongUpdateEventHandler,
         SongSubmissionEventHandler,
         SongReadEventHandler,
+        SongRemoveEventHandler,
         NextSongEventHandler,
-        AllSongWriteEventHandler
+        AllSongWriteEventHandler,
+        HomeTabEventHandler
 {
 
 
@@ -44,12 +46,19 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler);
 
-        void addToSongList(Song song);
-        void displaySongList();
-        void saveSongAs(String filename, String data);
-        void saveAllSongsAs( String fileName );
+        boolean addToSongList(Song song, boolean force);
 
-        void nextSong(boolean forward);
+        void removeAll(ArrayList<Song> songs);
+
+        void displaySongList();
+
+        void saveSongAs(String filename, String data);
+
+        void saveAllSongsAs(String fileName);
+
+        void nextSong(boolean forward, boolean force);
+
+        Song getSelectedSong();
     }
 
     @Inject
@@ -74,6 +83,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(AllSongWriteEvent.TYPE, this);
         eventBus.addHandler(NextSongEvent.TYPE, this);
+        eventBus.addHandler(SongRemoveEvent.TYPE, this);
+        eventBus.addHandler(HomeTabEvent.TYPE, this);
     }
 
     @Override
@@ -90,7 +101,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         view.saveSongAs(filename, song.toJson());
 
-        view.addToSongList(song);
+        view.addToSongList(song, true);
         view.displaySongList();
         fireEvent(new SongUpdateEvent(song));
     }
@@ -100,11 +111,17 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
-            for (Song song : songs)
-                view.addToSongList(song);
+            //  order by oldest first
+            TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(
+                    Song.ComparatorType.versionNumber));
+            sortedSet.addAll(songs);
+            Song lastSong = null;
+            for (Song song : sortedSet)
+                if (view.addToSongList(song, false))
+                    lastSong = song;
             view.displaySongList();
-            Song song = songs.get(songs.size() - 1);
-            fireEvent(new SongUpdateEvent(song));
+            if (lastSong != null)
+                fireEvent(new SongUpdateEvent(lastSong));
         }
     }
 
@@ -115,6 +132,27 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
 
         view.saveAllSongsAs("allSongs_" + fmt.format(now) + ".songlyrics");
+    }
+
+
+    @Override
+    public void onSongRemove(SongRemoveEvent event)
+    {
+        ArrayList<Song> songs = event.getSongs();
+        if (!songs.isEmpty()) {
+            if (view.getSelectedSong() != null && Song.containsSongTitleAndArtist(songs, view.getSelectedSong()))
+                view.nextSong(true, true);   //  fixme: not always good enough?
+
+            view.removeAll(songs);
+            view.displaySongList();
+        }
+    }
+
+
+    @Override
+    public void onHomeTab(HomeTabEvent event)
+    {
+            view.displaySongList();
     }
 
 
@@ -134,7 +172,9 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     }
                     //  add to all songs
                     for (Song song : sortedSet) {
-                        view.addToSongList(song);
+                        //  note: the highest number song will be added last
+                        //  replacing any previous from the list
+                        view.addToSongList(song,false);
                     }
                     view.displaySongList();
                 }
@@ -146,9 +186,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     @Override
     public void onNextSong(NextSongEvent event)
     {
-        getView().nextSong(event.isForward());
+        getView().nextSong(event.isForward(), false);
     }
-
 
     private final EventBus eventBus;
     private final MyView view;

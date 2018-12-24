@@ -11,9 +11,11 @@
                 <tr>
                     <td>
                         <button type="button" ui:field="songEnter">Enter Song</button>
+                        <g:InlineHTML ui:field="errorLabel" styleName="{resources.style.errorLabel}"></g:InlineHTML>
                     </td>
                     <td>
                         <button type="button" ui:field="songEntryClear">Clear</button>
+                        <button type="button" ui:field="songEntryRemove">Remove</button>
                         &nbsp;&nbsp;
                         <!--    note the reverse order due to right justification of the last item  -->
                         <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"
@@ -27,9 +29,6 @@
                 </tr>
                 <tr>
                     <td>
-                        <p>
-                            <g:Label ui:field="errorLabel" styleName="{resources.style.errorLabel}"/>
-                        </p>
                         <p>
                             Title:
                             <br/>
@@ -47,8 +46,7 @@
                             <g:TextBox ui:field="copyrightEntry" styleName="{resources.style.entryLine}"/>
                         </p>
                         <p>
-                            Key:
-                            <br/>
+                            &nbsp; Key:
                             <select ui:field="keySelection">
                                 <option value="Gb">G♭ 6♭</option>
                                 <option value="Db">D♭ 5♭</option>
@@ -65,14 +63,9 @@
                                 <option value="Fs">F♯ 6♯</option>
                             </select>
                             <button type="button" ui:field="keyGuess">Guess the key</button>
-                        </p>
-                        <p>
-                            Beats per minute:
-                            <br/>
+                            &nbsp; Beats per minute:
                             <g:TextBox ui:field="bpmEntry" styleName="{resources.style.smallIntEntry}"/>
-                        </p>
-                        <p>
-                            Time Signature:
+                            &nbsp; Time Signature:
                             <select ui:field="timeSignatureEntry">
                                 <option value="2/4">2/4</option>
                                 <option value="3/4">3/4</option>
@@ -83,9 +76,6 @@
                     </td>
                 </tr>
             </table>
-            <p>
-                For chords and lyrics, mark the sections with the following:
-            </p>
 
             <table>
                 <tr>
@@ -166,6 +156,7 @@
                                                 <g:Button ui:field="minor">m</g:Button>
                                                 <g:Button ui:field="dominant7">7</g:Button>
                                                 <select ui:field="scaleNoteOtherSelection"/>
+                                                <g:Button ui:field="noChord">X</g:Button>
                                             </td>
                                         </tr>
                                     </table>
@@ -198,10 +189,21 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>
+                                    Control:
+                                </td>
+                                <td>
+                                    <g:Button ui:field="noRepeat">No Repeat</g:Button>
+                                    <g:Button ui:field="repeat2">Repeat x2</g:Button>
+                                    <g:Button ui:field="repeat3">Repeat x3</g:Button>
+                                    <g:Button ui:field="repeat4">Repeat x4</g:Button>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td></td>
                                 <td>
-                                    <g:Button ui:field="chordsUndo">Undo</g:Button>
-                                    <g:Button ui:field="chordsRedo">Redo</g:Button>
+                                    <g:Button ui:field="undo">Undo</g:Button>
+                                    <g:Button ui:field="redo">Redo</g:Button>
                                 </td>
                             </tr>
                         </table>

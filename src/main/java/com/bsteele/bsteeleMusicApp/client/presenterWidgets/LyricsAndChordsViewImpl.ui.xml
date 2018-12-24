@@ -52,6 +52,7 @@
                 <span ui:field="timeSignature"/>
                 &nbsp;&nbsp;
                 <span ui:field="title" class="{resources.style.songTitle}"/>
+                <span ui:field="fileNumber" class="{resources.style.songTitle}"/>
                 by
                 <span ui:field="artist"/>
                 <!--    note the reverse order due to right justification of the last item  -->

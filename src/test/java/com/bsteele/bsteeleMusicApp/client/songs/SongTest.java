@@ -2,13 +2,16 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
+import org.junit.Assert;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -38,8 +41,8 @@ public class SongTest
                     songCount++;
                     Song song = Song.fromJsonObject(ja.get(i).isObject());
 
-                    HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(song
-                            .getChordsAsString());
+                    HashMap<ScaleChord, Integer> scaleChordMap =
+                            ScaleChord.findScaleChordsUsed(song.getChordsAsString());
                     for (ScaleChord scaleChord : scaleChordMap.keySet())
                         chordDescriptors.add(scaleChord.getChordDescriptor());
                     assertTrue(song.getTitle() != null);
@@ -139,6 +142,39 @@ public class SongTest
     }
 
     @Test
+    public void testComparatorByVersionNumber()
+    {
+        Comparator<Song> comparator = Song.getComparatorByType(Song.ComparatorType.versionNumber);
+
+        Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        Song a1 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        a1.setFileName("a (1).songlyrics");
+        Song a9 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        a9.setFileName("a (9).songlyrics");
+        Song a10 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, Barbara Ann");
+        a10.setFileName("a (10).songlyrics");
+
+        assertTrue(comparator.compare(a, a) == 0);
+        assertTrue(comparator.compare(a1, a1) == 0);
+        assertTrue(comparator.compare(a9, a9) == 0);
+        assertTrue(comparator.compare(a10, a10) == 0);
+
+        assertTrue(comparator.compare(a, a1) < 0);
+        assertTrue(comparator.compare(a1, a9) < 0);
+        assertTrue(comparator.compare(a, a9) < 0);
+        assertTrue(comparator.compare(a9, a10) < 0);
+
+        assertTrue(comparator.compare(a1, a) > 0);
+        assertTrue(comparator.compare(a9, a1) > 0);
+        assertTrue(comparator.compare(a9, a) > 0);
+        assertTrue(comparator.compare(a10, a9) > 0);
+    }
+
+    @Test
     public void testEquals()
     {
 
@@ -161,10 +197,12 @@ public class SongTest
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
         assertTrue(!a.equals(b));
         assertTrue(a.hashCode() != b.hashCode());
-        b = Song.createSong("A", "bob", "photos.bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        assertTrue(!a.equals(b));
-        assertTrue(a.hashCode() != b.hashCode());
+
+        //  test differ by date only
+//        b = Song.createSong("A", "bob", "photos.bsteele.com", Key.getDefault(),
+//                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+//        assertTrue(!a.equals(b));
+        //   assertTrue(a.hashCode() != b.hashCode());
 
         b = Song.createSong("A", "bob", "bsteele.com", Key.Ab,
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
@@ -181,6 +219,7 @@ public class SongTest
         assertTrue(!a.equals(b));
         //top
         assertTrue(a.hashCode() != b.hashCode());
+
 
         b = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
@@ -203,7 +242,7 @@ public class SongTest
     public void testEdits()
     {
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 8, "v: A B C D o: E", "v: bob, bob, bob berand\nO: here");
         MeasureSequenceItem vc2 = a.getChordSections().first().getMeasureSequenceItems().get(0);
 
         Measure measure = vc2.getMeasures().get(1);
@@ -236,6 +275,22 @@ public class SongTest
         logger.info(a.getChordSections().toString());
         logger.info(vc2.toString());
         logger.info(vc2.getMeasures().toString());
+
+        {
+            //logger.info(a.toJson());
+            Song newSong;
+            try {
+                for (int i = 50; i <= 400; i += 5) {
+                    a.setBeatsPerMinute(i);
+                    // logger.info(a.toJson());
+                    newSong = a.checkSong();
+                    assertEquals(a, newSong);
+                }
+            } catch (ParseException pe) {
+                logger.info("oops: " + pe.getMessage());
+                assertTrue(false);
+            }
+        }
     }
 
     @Test
