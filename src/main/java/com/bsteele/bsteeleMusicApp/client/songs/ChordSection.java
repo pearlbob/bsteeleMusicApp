@@ -1,6 +1,5 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -10,24 +9,16 @@ import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordSection extends MeasureNode implements Comparable<ChordSection>
+public class ChordSection extends MeasureSequenceItem
 {
-    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems)
+    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureNode> measureNodes)
     {
-        this.sectionVersion = sectionVersion;
-        this.measureSequenceItems = (measureSequenceItems != null ? measureSequenceItems : new ArrayList<>());
-    }
-
-    public ChordSection(SectionVersion sectionVersion)
-    {
-        this.sectionVersion = sectionVersion;
-        this.measureSequenceItems = new ArrayList<>();
+        super(sectionVersion, measureNodes);
     }
 
     public final static ChordSection parse(String s, int beatsPerBar)
@@ -42,15 +33,16 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         int n = util.getLeadingWhitespaceCount();
 
         SectionVersion sectionVersion = Section.parse(ms);
-        if (sectionVersion == null) {
+        if (sectionVersion == null)
+        {
             //  cope with badly formatted songs
             sectionVersion = new SectionVersion(Section.verse);
         }
         n += sectionVersion.getParseLength();
 
-        ArrayList<MeasureSequenceItem> measureSequenceItems = new ArrayList<>();
-        ArrayList<Measure> measures = new ArrayList<>();
-        ArrayList<Measure> lineMeasures = new ArrayList<>();
+        ArrayList<MeasureNode> measureSequenceItems = new ArrayList<>();
+        ArrayList<MeasureNode> measures = new ArrayList<>();
+        ArrayList<MeasureNode> lineMeasures = new ArrayList<>();
         boolean repeatMarker = false;
         Measure lastMeasure = null;
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
@@ -65,10 +57,12 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 break;
 
             //  look for a repeat marker
-            if (ms.charAt(0) == '|') {
-                if (!measures.isEmpty()) {
+            if (ms.charAt(0) == '|')
+            {
+                if (!measures.isEmpty())
+                {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.add(new MeasureSequenceItem(measures));
+                    measureSequenceItems.addAll(measures);
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -78,7 +72,8 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             }
 
             //  look for a repeat end
-            if (ms.charAt(0) == 'x') {
+            if (ms.charAt(0) == 'x')
+            {
                 repeatMarker = false;
                 n++;
                 ms = s.substring(n);
@@ -89,52 +84,60 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
                 final RegExp oneOrMoreDigitsRegexp = RegExp.compile("^(\\d+)");
                 MatchResult mr = oneOrMoreDigitsRegexp.exec(ms);
-                if (mr != null) {
-                    if (!measures.isEmpty()) {
+                if (mr != null)
+                {
+                    if (!measures.isEmpty())
+                    {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new MeasureSequenceItem(measures));
+                        measureSequenceItems.addAll(measures);
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
                     n += ns.length();
                     int repeatTotal = Integer.parseInt(ns);
-                    measureSequenceItems.add(new MeasureRepeat(lineMeasures, repeatTotal));
+                    measureSequenceItems.add(new MeasureRepeat(sectionVersion, lineMeasures, repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
                 util.clear();
                 continue;
             }
 
-            if (util.wasNewline() && !repeatMarker) {
+            if (util.wasNewline() && !repeatMarker)
+            {
                 //  add line of measures to output collection
-                for (Measure m : lineMeasures)
+                for (MeasureNode m : lineMeasures)
                     measures.add(m);
                 lineMeasures = new ArrayList<>();
                 util.clear();
             }
 
             //  add a measure to the current line measures
-            Measure measure = Measure.parse(ms, beatsPerBar, lastMeasure);
-            if (measure != null) {
+            Measure measure = Measure.parse(sectionVersion, ms, beatsPerBar, lastMeasure);
+            if (measure != null)
+            {
                 n += measure.getParseLength();
                 lineMeasures.add(measure);
                 lastMeasure = measure;
-            } else {
+            } else
+            {
                 //  look for a comment
-                MeasureComment measureComment = MeasureComment.parse(ms);
-                if (measureComment != null) {
+                MeasureComment measureComment = MeasureComment.parse(sectionVersion, ms);
+                if (measureComment != null)
+                {
                     n += measureComment.getParseLength();
                     lineMeasures.add(measureComment);
-                } else
-                    break;      //  fixme: not a measure, we're done
+                }
+
+                break;      //  fixme: not a measure, we're done
             }
         }
 
         //  don't assume every line has an eol
-        for (Measure m : lineMeasures)
-            measures.add(m);
-        if (!measures.isEmpty()) {
-            measureSequenceItems.add(new MeasureSequenceItem(measures));
+        for (MeasureNode mn : lineMeasures)
+            measures.add(mn);
+        if (!measures.isEmpty())
+        {
+            measureSequenceItems.addAll(measures);
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
@@ -142,73 +145,18 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return ret;
     }
 
-
     @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
+    public String generateHtml(@NotNull SongMoment songMoment, Key key, int tran)
     {
-        logger.finest("ChordSection.addToGrid()");
+        StringBuilder sb = new StringBuilder();
 
-        if (measureSequenceItems == null || measureSequenceItems.isEmpty())
-            //  initial editing
-            grid.addTo(0, grid.getRowCount(), this);
-        else
-            for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
-                grid.addTo(0, grid.getRowCount(), this);
-                measureSequenceItem.addToGrid(grid, this);
-            }
-    }
+        sb.append("<tr>");
+        //sb.append("<td class=\"" + CssConstants.style + "sectionLabel\">" + getSectionVersion().toString() + "</td>");
+        sb.append("<td></td>");
+        sb.append(super.generateHtml(songMoment, key, tran));
+        sb.append("</tr>\n");
 
-    @Override
-    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats)
-    {
-        ArrayList<String> ret = new ArrayList<>();
-
-        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
-            ArrayList<Measure> measures = measureSequenceItem.getMeasures();
-            if (measures != null && !measures.isEmpty()) {
-                MeasureNode lastMeasureNode = null;
-                MeasureNode measureNode = null;
-                int measuresOnThisLine = 0;
-                for (int i = 0; i < measures.size(); i++) {
-                    measureNode = measures.get(i);
-
-                    if (measureNode.isSingleItem()) {
-                        if (measureNode.equals(lastMeasureNode))
-                            ret.add("-");
-                        else
-                            ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
-                        lastMeasureNode = measureNode;
-
-                        if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow == MusicConstant
-                                .measuresPerDisplayRow - 1)
-                        {
-
-                            ret.add("\n");
-                            lastMeasureNode = null;
-                            measuresOnThisLine = 0;
-                        } else
-                            measuresOnThisLine++;
-                    } else {
-                        //  a group of measures (typically a repeat)
-                        ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
-                        lastMeasureNode = null;
-                        measuresOnThisLine = 0;
-                    }
-                }
-            }
-            ret.add("\n");
-        }
-
-        return ret;
-    }
-
-    public int getTotalMoments()
-    {
-        int total = 0;
-        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
-            total += measureSequenceItem.getTotalMoments();
-        }
-        return total;
+        return sb.toString();
     }
 
     /**
@@ -252,92 +200,38 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return beatsPerBar;
     }
 
-    /**
-     * Compares this object with the specified object for order.  Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
-     *
-     * <p>The implementor must ensure <tt>sgn(x.compareTo(y)) ==
-     * -sgn(y.compareTo(x))</tt> for all <tt>x</tt> and <tt>y</tt>.  (This
-     * implies that <tt>x.compareTo(y)</tt> must throw an exception iff
-     * <tt>y.compareTo(x)</tt> throws an exception.)
-     *
-     * <p>The implementor must also ensure that the relation is transitive:
-     * <tt>(x.compareTo(y)&gt;0 &amp;&amp; y.compareTo(z)&gt;0)</tt> implies
-     * <tt>x.compareTo(z)&gt;0</tt>.
-     *
-     * <p>Finally, the implementor must ensure that <tt>x.compareTo(y)==0</tt>
-     * implies that <tt>sgn(x.compareTo(z)) == sgn(y.compareTo(z))</tt>, for
-     * all <tt>z</tt>.
-     *
-     * <p>Note: this class has a natural ordering that is
-     * inconsistent with equals.
-     *
-     * <p>In the foregoing description, the notation
-     * <tt>sgn(</tt><i>expression</i><tt>)</tt> designates the mathematical
-     * <i>signum</i> function, which is defined to return one of <tt>-1</tt>,
-     * <tt>0</tt>, or <tt>1</tt> according to whether the value of
-     * <i>expression</i> is negative, zero or positive.
-     *
-     * @param o the object to be compared.
-     * @return a negative integer, zero, or a positive integer as this object
-     * is less than, equal to, or greater than the specified object.
-     * @throws NullPointerException if the specified object is null
-     * @throws ClassCastException   if the specified object's type prevents it
-     *                              from being compared to this object.
-     */
-    @Override
-    public int compareTo(ChordSection o)
-    {
-        return sectionVersion.compareTo(o.sectionVersion);
-    }
-
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         ChordSection that = (ChordSection) o;
-        return Objects.equals(sectionVersion, that.sectionVersion)
-                && Objects.equals(measureSequenceItems, that.measureSequenceItems)
-                && Objects.equals(bpm, that.bpm)
-                && Objects.equals(beatsPerBar, that.beatsPerBar);
+        return Objects.equals(bpm, that.bpm) &&
+                Objects.equals(beatsPerBar, that.beatsPerBar);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(sectionVersion.hashCode(), measureSequenceItems.hashCode(), bpm, beatsPerBar);
-    }
-
-    @Override
-    public String toText()
-    {
-        return getSectionVersion().toString();
+        return Objects.hash(super.hashCode(), bpm, beatsPerBar);
     }
 
     @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.append(getSectionVersion().toString()).append(super.toString());
+        sb.append(getSectionVersion().toString()).append("{");
+
+        if (measureNodes != null)
+            for (MeasureNode measureNode : measureNodes)
+            {
+                sb.append(measureNode.toString()).append(" ");
+            }
+        sb.append("}");
         return sb.toString();
     }
 
-    public final SectionVersion getSectionVersion()
-    {
-        return sectionVersion;
-    }
-
-    ArrayList<MeasureSequenceItem> getMeasureSequenceItems()
-    {
-        return measureSequenceItems;
-    }
-
-    private SectionVersion sectionVersion;
-    private ArrayList<MeasureSequenceItem> measureSequenceItems;
     private Integer bpm;
     private Integer beatsPerBar;
-    private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());
-
 }

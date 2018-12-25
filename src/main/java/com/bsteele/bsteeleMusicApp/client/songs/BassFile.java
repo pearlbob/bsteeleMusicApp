@@ -48,7 +48,7 @@ public class BassFile {
 
                 ArrayList<Chord> chords = new ArrayList<>();
                 chords.add(new Chord(scaleChord));
-                Measure measure = new Measure(beatsPerBar, chords);
+                Measure measure = new Measure(new SectionVersion(Section.verse), beatsPerBar, chords);
                 Bar bar = new Bar();
                 bar.setMeasure(measure);
                 {

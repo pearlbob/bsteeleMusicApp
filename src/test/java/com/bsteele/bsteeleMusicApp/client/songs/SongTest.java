@@ -1,18 +1,13 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -58,8 +53,8 @@ public class SongTest
                         assertTrue(date.getTime() > 1510000000000.0); //    ~6 November 2017
                     }
                     assertTrue(song.getKey() != null);
-                    //logger.info("song.getChordSectionInnerHtmlMap().size() = "+song.getChordSectionInnerHtmlMap()
-                    // .size());
+                    assertTrue(song.getChordSectionMap().size() > 0);
+                    //logger.info("song.getChordSectionMap().size() = "+song.getChordSectionMap().size());
                     assertTrue(song.getLyricsAsString().length() > 0);
 
                     Song song1 = Song.fromJson(song.toJson()).get(0);
@@ -197,12 +192,10 @@ public class SongTest
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
         assertTrue(!a.equals(b));
         assertTrue(a.hashCode() != b.hashCode());
-
-        //  test differ by date only
-//        b = Song.createSong("A", "bob", "photos.bsteele.com", Key.getDefault(),
-//                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-//        assertTrue(!a.equals(b));
-        //   assertTrue(a.hashCode() != b.hashCode());
+        b = Song.createSong("A", "bob", "photos.bsteele.com", Key.getDefault(),
+                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+        assertTrue(!a.equals(b));
+        assertTrue(a.hashCode() != b.hashCode());
 
         b = Song.createSong("A", "bob", "bsteele.com", Key.Ab,
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
@@ -220,7 +213,6 @@ public class SongTest
         //top
         assertTrue(a.hashCode() != b.hashCode());
 
-
         b = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "v: A B C D", "v: bob, bob, bob berand");
         assertTrue(!a.equals(b));
@@ -235,172 +227,6 @@ public class SongTest
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand.");
         assertTrue(!a.equals(b));
         assertTrue(a.hashCode() != b.hashCode());
-
-    }
-
-    @Test
-    public void testEdits()
-    {
-        Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 8, "v: A B C D o: E", "v: bob, bob, bob berand\nO: here");
-        MeasureSequenceItem vc2 = a.getChordSections().first().getMeasureSequenceItems().get(0);
-
-        Measure measure = vc2.getMeasures().get(1);
-        assertEquals(4, vc2.getMeasures().size());
-        assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
-        Measure newMeasure = Measure.parse("G", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
-        assertEquals(4, vc2.getMeasures().size());
-        measure = vc2.getMeasures().get(1);
-        assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
-
-
-        measure = vc2.getMeasures().get(0);
-        assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
-        assertEquals(4, vc2.getMeasures().size());
-        measure = vc2.getMeasures().get(0);
-        assertEquals(ScaleNote.Gb, measure.getChords().get(0).getScaleChord().getScaleNote());
-
-        measure = vc2.getMeasures().get(3);
-        assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("F", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
-        assertEquals(4, vc2.getMeasures().size());
-        measure = vc2.getMeasures().get(3);
-        assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
-
-        vc2 = a.getChordSections().first().getMeasureSequenceItems().get(0);
-        logger.info(a.getChordSections().toString());
-        logger.info(vc2.toString());
-        logger.info(vc2.getMeasures().toString());
-
-        {
-            //logger.info(a.toJson());
-            Song newSong;
-            try {
-                for (int i = 50; i <= 400; i += 5) {
-                    a.setBeatsPerMinute(i);
-                    // logger.info(a.toJson());
-                    newSong = a.checkSong();
-                    assertEquals(a, newSong);
-                }
-            } catch (ParseException pe) {
-                logger.info("oops: " + pe.getMessage());
-                assertTrue(false);
-            }
-        }
-    }
-
-    @Test
-    public void testComments()
-    {
-        Song a;
-        TreeSet<ChordSection> chordSections;
-        ChordSection chordSection;
-        MeasureNode measureNode;
-        ArrayList<Measure> measures;
-
-        a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        chordSections = a.getChordSections();
-        assertEquals(1, chordSections.size());
-        chordSection = chordSections.first();
-        measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
-        assertEquals(4, measures.size());
-
-        a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D (yo)", "v: bob, bob, bob berand");
-        chordSections = a.getChordSections();
-        assertEquals(1, chordSections.size());
-        chordSection = chordSections.first();
-        measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
-        assertEquals(5, measures.size());
-    }
-
-
-    @Test
-    public void testGetStructuralGrid()
-    {
-        Song a;
-        Measure measure;
-
-        a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D E F G A C: D D GD E\n"
-                        + "A B C D x3\n"
-                        + "Ab G Gb F", "v: bob, bob, bob berand");
-        Grid<MeasureNode> grid = a.getStructuralGrid();
-        logger.info(grid.toString());
-        assertEquals(5, grid.getRowCount());
-        for (int r = 0; r < grid.getRowCount(); r++) {
-            ArrayList<MeasureNode> row = grid.getRow(r);
-            for (int c = 0; c < row.size(); c++) {
-                MeasureNode node = row.get(c);
-                switch (r) {
-                    case 0:
-                        switch (c) {
-                            case 0:
-                                assertEquals(ChordSection.class, node.getClass());
-                                assertEquals(Section.verse, ((ChordSection) node).getSectionVersion().getSection());
-                                break;
-                            case 1:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
-                                break;
-                            case 4:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
-                                break;
-                        }
-                        break;
-                    case 2:
-                        switch (c) {
-                            case 0:
-                                assertEquals(ChordSection.class, node.getClass());
-                                assertEquals(Section.chorus, ((ChordSection) node).getSectionVersion().getSection());
-                                break;
-                            case 1:
-                            case 2:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.D, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
-                                break;
-                            case 3:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.G, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
-                                break;
-                            case 4:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.E, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
-                                break;
-                        }
-                        break;
-                    case 3:
-                        switch (c) {
-                            case 0:
-                                assertEquals(ChordSection.class, node.getClass());
-                                assertEquals(Section.chorus, ((ChordSection) node).getSectionVersion().getSection());
-                                break;
-                            case 1:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.A, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
-                                break;
-                            case 4:
-                                measure = (Measure) node;
-                                assertEquals(ScaleNote.D, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
-                                break;
-                        }
-                        break;
-                }
-
-                logger.finest("grid[" + r + "," + c + "]: " + node.toString());
-            }
-        }
 
     }
 
