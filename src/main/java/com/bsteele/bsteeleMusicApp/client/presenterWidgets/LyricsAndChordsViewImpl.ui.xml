@@ -52,6 +52,7 @@
                 <span ui:field="timeSignature"/>
                 &nbsp;&nbsp;
                 <span ui:field="title" class="{resources.style.songTitle}"/>
+                <span ui:field="fileNumber" class="{resources.style.songTitle}"/>
                 by
                 <span ui:field="artist"/>
                 <!--    note the reverse order due to right justification of the last item  -->
@@ -72,7 +73,7 @@
                                     title="Beat display of audio.">
                                 Your browser does not support the HTML5 canvas tag.
                             </canvas>
-                            <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
+                            <g:FlexTable ui:field="chordsFlexTable"/>
                         </g:HTMLPanel>
                     </g:FocusPanel>
                 </g:west>

@@ -58,7 +58,7 @@
     <set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true" />
     <set-configuration-property name="CssResource.enableGss" value="true" />
     <set-configuration-property name="CssResource.conversionMode" value="off" />
-    <resource path="css/bsteeleMusicApp.gss" />
+    <!--<resource path="css/bsteeleMusicApp.gss" />-->
     
     <inherits name='com.google.gwt.inject.Inject' />
     <inherits name="com.google.gwt.resources.Resources" />

@@ -1,53 +1,60 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="images/runningsmall.ico" />
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="images/runningsmall.ico"/>
 
-        <title>bsteele music</title>
-        <meta name="description" content="bsteele.com Music App selection page">
-        <meta name="keywords" content="bass,guitar,sheet music,audio">
-        <meta name="author" content="Robert Steele, bsteele.com">
+    <title>bsteele music</title>
+    <meta name="description" content="bsteele.com Music App selection page">
+    <meta name="keywords" content="bass,guitar,sheet music,audio">
+    <meta name="author" content="Robert Steele, bsteele.com">
 
-        <script src="./js/AudioFilePlayer.js"></script>
+    <script src="./js/AudioFilePlayer.js"></script>
 
-        <!-- If you add any GWT meta tags, they must   -->
-        <!-- be added before this line.                -->
-        <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <script type="text/javascript" src="bsteelemusicapp/bsteelemusicapp.nocache.js"></script>
 
-        <!--<link type="text/css" rel="stylesheet" href="./css/bsteeleMusicApp.css" />-->
-        <script>
-            'use strict';
+    <!--<link type="text/css" rel="stylesheet" href="./css/bsteeleMusicApp.css" />-->
+    <script>
+        'use strict';
 
-            function onNativeTap(event) {
+        function onNativeTap(event) {
 
-                let t = event.timeStamp / 1000; //  in units of seconds
-                window.console.log("native tap timestamp: " + t);
-            }
+            let t = event.timeStamp / 1000; //  in units of seconds
+            window.console.log("native tap timestamp: " + t);
+        }
 
-            function log(arg) {
-                window.console.log(arg);
-            }
+        function log(arg) {
+            window.console.log(arg);
+        }
 
-            function onLoad() {
-                window.AudioFilePlayer = AudioFilePlayer;   //  workaround for new ES6... for some environments, e.g. mac
-            }
+        function onLoad() {
+            window.AudioFilePlayer = AudioFilePlayer;   //  workaround for new ES6... for some environments, e.g. mac
+        }
 
-        </script>
-    </head >
+    </script>
 
-    <body onload="onLoad();">
+    <style>
+        html {
+            /* only disable pull-to-refresh but allow swipe navigations */
+            overscroll-behavior-y: contain;
+        }
+    </style>
+</head>
 
-        <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
-        <noscript>
-        <div>
-            Your web browser must have JavaScript enabled
-            in order for this application to display correctly.
-        </div>
-        </noscript>
+<body onload="onLoad();">
 
-    </body>
+<!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+<noscript>
+    <div>
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+    </div>
+</noscript>
+
+</body>
 </html>

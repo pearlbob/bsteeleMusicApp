@@ -31,6 +31,8 @@ public class MusicConstant {
     public static final int halfStepsPerOctave = 12;
     public static final int notesPerScale = 7;
 
+    public static final int measuresPerDisplayRow = 4;
+
 
     //  has to be ahead of it's use since it's static
     private static final ChordDescriptor majorDiatonicChordModifiers[] =

@@ -33,7 +33,9 @@
             <select ui:field="kickSelect" >
                 <option value="____" selected="true">Off</option>
                 <option value="x___" >1</option>
+                <option value="__x_" >3</option>
                 <option value="x_x_" >1 3</option>
+                <option value="x___xx__" >1 double3</option>
                 <option value="_x_x" >2 4</option>
                 <option value="xxxx" >All 4's</option>
             </select>

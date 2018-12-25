@@ -12,6 +12,7 @@
     <option name="OUTPUT_DIRECTORY" value="$USER_HOME$/junk/bsteeleMusicAppJavaDoc" />
     <option name="OPTION_SCOPE" value="public" />
     <option name="HEAP_SIZE" value="3000" />
+    <option name="OPTION_INCLUDE_LIBS" value="true" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
@@ -23,7 +24,7 @@
   <component name="ProjectResources">
     <resource url="http://gwtproject.org/doctype/2.8.2/gwt-module.dtd" location="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" project-jdk-name="1.8 (1)" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="false" project-jdk-name="1.8 (2)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
 </project>

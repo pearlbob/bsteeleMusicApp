@@ -48,7 +48,7 @@ public class BassFile {
 
                 ArrayList<Chord> chords = new ArrayList<>();
                 chords.add(new Chord(scaleChord));
-                Measure measure = new Measure(new SectionVersion(Section.verse), beatsPerBar, chords);
+                Measure measure = new Measure(beatsPerBar, chords);
                 Bar bar = new Bar();
                 bar.setMeasure(measure);
                 {
@@ -63,12 +63,12 @@ public class BassFile {
                                 + (count == 4 && halfSteps <= g3ScaleNoteHalfStep - MusicConstant.halfStepsPerOctave
                                 ? MusicConstant.halfStepsPerOctave : 0)
                         ),
-                                1.0));
+                                NoteDuration.whole));
                         chordComponent = chordComponents.higher(chordComponent);
                     }
                     while (count <= 4) {
                         notes.add(new Note(root.offsetByHalfSteps((count == 4 ? MusicConstant.halfStepsPerOctave : 0)),
-                                1.0));
+                                NoteDuration.whole));
                         count++;
                     }
                     bar.setNotes(notes);

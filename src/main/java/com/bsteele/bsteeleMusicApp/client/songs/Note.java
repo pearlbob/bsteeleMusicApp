@@ -8,7 +8,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  * @author bob
  */
 public class Note {
-    public Note(Pitch pitch, double duration) {
+    public Note(Pitch pitch, NoteDuration duration) {
         this.pitch = pitch;
         this.duration = duration;
         scaleNote = pitch.getScaleNote();
@@ -16,10 +16,10 @@ public class Note {
 
 
     public final double getDuration() {
-        return duration;
+        return duration.getFractionOfBeat();
     }
 
-    public final void setDuration(double duration) {
+    public final void setDuration(NoteDuration duration) {
         this.duration = duration;
     }
 
@@ -76,7 +76,7 @@ public class Note {
     }
 
     private Pitch pitch;
-    private double duration; // units of beat
+    private NoteDuration duration;
     private boolean isDotted;
     private boolean isTied;
     private boolean isDrum;

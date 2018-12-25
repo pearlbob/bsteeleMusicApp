@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -23,64 +24,71 @@ import java.util.ArrayList;
 public enum Section
 {
     /**
-     * A section the introduces the song.  Typically the tempo is
+     * A section that introduces the song.  Typically the tempo is
      * set here.
      */
-    intro("I", "in"),
+    intro("I", "in", "A section that introduces the song."),
     /**
      * A repeating section of the song that typically has new lyrics
      * for each instance.
      */
-    verse("V"),
+    verse("V", "vs", "A repeating section of the song that typically has new lyrics" +
+            " for each instance."),
     /**
      * A section that precedes the chorus but may not be used
      * to lead all chorus sections.
      */
-    preChorus("PC"),
+    preChorus("PC","A section that precedes the chorus but may not be used to lead all chorus sections."),
     /**
-     * A repeating section of the song that typically has repeats lyrics
+     * A repeating section of the song that typically has lyrics that repeat
      * to enforce the song's theme.
      */
-    chorus("C", "ch"),
-    /**
-     * A non-repeating section often used once to break the repeated
-     * section patterns prior to the last sections of a song.
-     */
-    bridge("Br"),
-    /**
-     * A section used to jump to for an ending or repeat.
-     */
-    coda("Co", "coda"),
-    /**
-     * A short section that repeats or closely resembles a number of measures from the end
-     * of a previous section.  Typically used to end a song.
-     */
-    tag("T"),
+    chorus("C", "ch", "A repeating section of the song that typically has lyrics that repeat" +
+            " to enforce the song's theme."),
     /**
      * A section labeled "A" to be used in contrast the "B" section.
      * A concept borrowed from jazz.
      */
-    a("A"),
+    a("A", "A section labeled \"A\" to be used in contrast the \"B\" section.  A concept borrowed from jazz."),
     /**
      * A section labeled "B" to be used in contrast the "A" section.
      * A concept borrowed from jazz.
      */
-    b("B"),
+    b("B","A section labeled \"B\" to be used in contrast the \"A\" section.  A concept borrowed from jazz."),
+    /**
+     * A non-repeating section often used once to break the repeated
+     * section patterns prior to the last sections of a song.
+     */
+    bridge("Br", "A non-repeating section often used once to break the repeated " +
+            "section patterns prior to the last sections of a song."),
+    /**
+     * A section used to jump to for an ending or repeat.
+     */
+    coda("Co", "coda", "A section used to jump to for an ending or repeat."),
+    /**
+     * A short section that repeats or closely resembles a number of measures from the end
+     * of a previous section.  Typically used to end a song.
+     */
+    tag("T", "A short section that repeats or closely resembles a number of measures from the end " +
+            " of a previous section.  Typically used to end a song."),
     /**
      * The ending section of many songs.
      */
-    outro("O", "out");
+    outro("O", "out", "The ending section of many songs.");
 
-    private Section(String originalAbbreviation)
+    private Section(String originalAbbreviation, String description )
     {
         lowerCaseName = name().toLowerCase();
+        formalName = Util.firstToUpper(lowerCaseName);
         this.originalAbbreviation = originalAbbreviation;
         abbreviation = originalAbbreviation.toLowerCase();
+        this.alternateAbbreviation =null;
+        this.description =    description;
     }
 
-    private Section(String abbreviation, String alternateAbbreviation)
+    private Section(String abbreviation, String alternateAbbreviation, String description)
     {
-        this(abbreviation);
+        this(abbreviation,description);
         this.alternateAbbreviation = alternateAbbreviation.toLowerCase();
     }
 
@@ -169,6 +177,11 @@ public enum Section
         return originalAbbreviation;
     }
 
+    public String getDescription()
+    {
+        return description;
+    }
+
     /**
      * Utility to return the default section.
      *
@@ -203,9 +216,17 @@ public enum Section
         return sb.toString();
     }
 
-    private String lowerCaseName;
-    private String originalAbbreviation;
-    private String abbreviation;
+    public String getFormalName()
+    {
+        return formalName;
+    }
+
+    private final  String lowerCaseName;
+    private final String formalName;
+    private final String originalAbbreviation;
+    private final String abbreviation;
     private String alternateAbbreviation;
+    private String description;
     public static final int maxLength = 10;    //  fixme: compute
+
 }

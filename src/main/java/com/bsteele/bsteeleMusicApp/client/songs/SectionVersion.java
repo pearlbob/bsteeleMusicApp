@@ -1,19 +1,28 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
+
+import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import static java.util.Objects.hash;
 
 /**
  * A version identifier for multiple instances of a given section.
  */
-public class SectionVersion implements Comparable<SectionVersion> {
+public class SectionVersion implements Comparable<SectionVersion>
+{
 
-    SectionVersion(@NotNull  Section section) {
-        this(section,0, 0);
+    public SectionVersion(@NotNull Section section)
+    {
+        this(section, 0, 0);
     }
 
-    SectionVersion(@NotNull Section section, int version, int sourceLength) {
+    SectionVersion(@NotNull Section section, int version, int sourceLength)
+    {
         this.section = section;
         this.version = version;
         this.sourceLength = sourceLength;
@@ -22,50 +31,68 @@ public class SectionVersion implements Comparable<SectionVersion> {
 
     /**
      * Return the generic section for this section version.
+     *
      * @return the generic section
      */
-    public final Section getSection() {
+    public final Section getSection()
+    {
         return section;
     }
 
     /**
-     *  Return the numeric count for this section version.
+     * Return the numeric count for this section version.
+     *
      * @return the numeric count
      */
-    public final int getVersion() {
+    public final int getVersion()
+    {
         return version;
     }
 
     /**
      * The character length used to parse this section version from the original source.
+     *
      * @return the original character length.
      */
-    public final int getParseLength() {
+    public final int getParseLength()
+    {
         return sourceLength;
     }
 
-    public final String getName() {
+
+    public final String getName()
+    {
         return name;
     }
 
     /**
      * The external facing string that represents the section version to the user.
+     *
      * @return the string
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         //  note: designed to go to the user display
-        return getSection().getAbbreviation() + (version > 0 ? Integer.toString(version) : "") + ":";
+        return name + ":";
+    }
+
+    public String getFormalName()
+    {
+        //  note: designed to go to the user display
+        return section.getFormalName() + (version > 0 ? Integer.toString(version) : "")+ ":";
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         //  do not include source length
         return hash(getSection(), version);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -83,7 +110,8 @@ public class SectionVersion implements Comparable<SectionVersion> {
     }
 
     @Override
-    public int compareTo(SectionVersion o) {
+    public int compareTo(SectionVersion o)
+    {
         if (getSection() != o.getSection()) {
             return getSection().compareTo(o.getSection());
         }

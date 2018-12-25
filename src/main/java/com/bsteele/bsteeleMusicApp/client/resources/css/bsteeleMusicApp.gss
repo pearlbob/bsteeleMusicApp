@@ -239,3 +239,4 @@ td[id*="L."]{
 .rightJustifiedClass {
     float: right;
 }
+

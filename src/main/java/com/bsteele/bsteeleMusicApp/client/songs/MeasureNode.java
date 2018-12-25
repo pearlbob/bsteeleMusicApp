@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.client.Grid;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
@@ -10,62 +12,36 @@ import java.util.ArrayList;
  */
 public abstract class MeasureNode
 {
-
-    public MeasureNode(@Nonnull SectionVersion sectionVersion)
-    {
-        this.sectionVersion = sectionVersion;
-    }
-
-    public final SectionVersion getSectionVersion()
-    {
-        return sectionVersion;
-    }
-
-    public final void setSectionVersion(SectionVersion sectionVersion)
-    {
-        this.sectionVersion = sectionVersion;
-    }
-
     public int getParseLength()
     {
         return parseLength;
     }
 
-    public int getTotalMeasures()
-    {
-        return (measures != null ? measures.size() : 0);
-    }
-
-    public ArrayList<MeasureNode> getMeasureNodes()
-    {
-        return null;
-    }
-
-    public ArrayList<Measure> getMeasures()
-    {
-        return measures;
-    }
-
-    public boolean isSingleItem()
+    boolean isSingleItem()
     {
         return true;
     }
 
-    public boolean isRepeat()
+    boolean isRepeat()
     {
         return false;
     }
 
-    public abstract String generateHtml(@Nonnull SongMoment songMoment, @Nonnull Key key, int tran);
+    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats);
 
-    public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran);
+    public abstract void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection);
+
+    public String transpose(@Nonnull Key key, int halfSteps) { return toString(); }     //  default only
+
+    public String toText() { return toString(); }     //  default only
 
     public abstract boolean equals(Object o);
 
     public abstract int hashCode();
 
-    private SectionVersion sectionVersion;
+    public String getHtmlBlockId() { return "C"; }
+
+
+
     protected transient int parseLength;
-    protected transient ArrayList<Measure> measures;
-    protected static final int measuresPerLine = 4;
 }

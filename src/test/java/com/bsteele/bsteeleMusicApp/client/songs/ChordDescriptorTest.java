@@ -33,6 +33,7 @@ public class ChordDescriptorTest extends TestCase //extends GWTTestCase
         assertEquals(ChordDescriptor.sevenSharp9, ChordDescriptor.parse("7#9"));
         assertEquals(ChordDescriptor.sevenFlat9, ChordDescriptor.parse("7b9"));
         assertEquals(ChordDescriptor.major6, ChordDescriptor.parse("6"));
+        assertEquals(ChordDescriptor.six9, ChordDescriptor.parse("69"));
         assertEquals(ChordDescriptor.power5, ChordDescriptor.parse("5"));
         assertEquals(ChordDescriptor.diminished7, ChordDescriptor.parse("dim7"));
         assertEquals(ChordDescriptor.augmented, ChordDescriptor.parse("aug"));
