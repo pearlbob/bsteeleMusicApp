@@ -8,8 +8,6 @@ import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsPresen
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.LyricsAndChordsViewImpl;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.PlayerPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.PlayerViewImpl;
-import com.bsteele.bsteeleMusicApp.client.presenterWidgets.BassPresenterWidget;
-import com.bsteele.bsteeleMusicApp.client.presenterWidgets.BassViewImpl;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SingerPresenterWidget;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SingerView;
 import com.bsteele.bsteeleMusicApp.client.presenterWidgets.SongEditPresenterWidget;

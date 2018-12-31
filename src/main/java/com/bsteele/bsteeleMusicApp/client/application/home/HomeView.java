@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.client.application.home;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
@@ -28,10 +30,12 @@ import java.util.HashMap;
 import java.util.TreeSet;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView,
-        HasHandlers {
+        HasHandlers
+{
 
 
-    interface Binder extends UiBinder<Widget, HomeView> {
+    interface Binder extends UiBinder<Widget, HomeView>
+    {
     }
 
     @UiField
@@ -70,6 +74,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     Button showAllTonics;
     @UiField
     HTML allTonics;
+    @UiField
+    Button showFileFormat;
+    @UiField
+    HTML fileFormat;
 
     @UiField
     Button showStatus;
@@ -86,7 +94,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     Button writeAllSongs;
 
     @Inject
-    HomeView(Binder uiBinder) {
+    HomeView(Binder uiBinder)
+    {
         initWidget(uiBinder.createAndBindUi(this));
 
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
@@ -125,6 +134,15 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             }
         });
 
+        fileFormat.setVisible(false);
+        showFileFormat.addClickHandler((ClickEvent event) -> {
+            fileFormat.setVisible(!fileFormat.isVisible());
+            if (fileFormat.isVisible()) {
+                GenerateSongHtml generateSongHtml = new GenerateSongHtml();
+                fileFormat.setHTML(generateSongHtml.generateFileFormat());
+            }
+        });
+
         allStatus.setVisible(false);
         showStatus.addClickHandler((ClickEvent event) -> {
             allStatus.setVisible(!allStatus.isVisible());
@@ -143,6 +161,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
                     lastPlayTab = tab;
                     break;
             }
+            fireEvent(new HomeTabEvent(tab));
         });
 
 //        // Listen for keyboard events
@@ -162,13 +181,15 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public void selectLastPlayTab() {
+    public void selectLastPlayTab()
+    {
         if (homeTabs.getSelectedIndex() != lastPlayTab)
             homeTabs.selectTab(lastPlayTab);
     }
 
     @Override
-    public void onStatusEvent(StatusEvent event) {
+    public void onStatusEvent(StatusEvent event)
+    {
         statusMap.put(event.getName(), event.getValue());
         if (allStatus.isVisible()) {
             allStatus.setHTML(generateStatusHtml());
@@ -177,11 +198,19 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler) {
+    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler)
+    {
         return handlerManager.addHandler(AllSongWriteEvent.TYPE, handler);
     }
 
-    private String generateStatusHtml() {
+    @Override
+    public HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler)
+    {
+        return handlerManager.addHandler(HomeTabEvent.TYPE, handler);
+    }
+
+    private String generateStatusHtml()
+    {
         StringBuilder sb = new StringBuilder();
         sb.append("<table><tr><th>Name</th><th>Value</th></tr>");
         TreeSet<String> sortedKeys = new TreeSet<>();
@@ -194,7 +223,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event) {
+    public void fireEvent(GwtEvent<?> event)
+    {
         handlerManager.fireEvent(event);
     }
 

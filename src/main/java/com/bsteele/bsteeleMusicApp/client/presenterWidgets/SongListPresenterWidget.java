@@ -32,10 +32,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongUpdateEventHandler,
         SongSubmissionEventHandler,
         SongReadEventHandler,
+        SongRemoveEventHandler,
         NextSongEventHandler,
         AllSongWriteEventHandler
 {
-
 
     public interface MyView extends View
     {
@@ -44,17 +44,15 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler);
 
-        void addToSongList(Song song);
-        void displaySongList();
-        void saveSongAs(String filename, String data);
-        void saveAllSongsAs( String fileName );
+        void setSongList(Set<Song> songs);
 
-        void nextSong(boolean forward);
+        void nextSong(boolean forward, boolean force );
     }
 
     @Inject
     SongListPresenterWidget(final EventBus eventBus,
-                            final MyView view)
+                            final MyView view
+    )
     {
         super(eventBus, view);
 
@@ -74,11 +72,13 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(AllSongWriteEvent.TYPE, this);
         eventBus.addHandler(NextSongEvent.TYPE, this);
+        eventBus.addHandler(SongRemoveEvent.TYPE, this);
     }
 
     @Override
     public void onSongUpdate(SongUpdateEvent event)
     {
+        currentSong = event.getSongUpdate().getSong();
         eventBus.fireEvent(event);
     }
 
@@ -88,10 +88,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         Song song = event.getSong();
         String filename = song.getTitle() + ".songlyrics";
 
-        view.saveSongAs(filename, song.toJson());
+        saveSongAs(filename, song.toJson());
 
-        view.addToSongList(song);
-        view.displaySongList();
+        addToSongList(song);
+        view.setSongList(allSongs);
         fireEvent(new SongUpdateEvent(song));
     }
 
@@ -100,11 +100,17 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
-            for (Song song : songs)
-                view.addToSongList(song);
-            view.displaySongList();
-            Song song = songs.get(songs.size() - 1);
-            fireEvent(new SongUpdateEvent(song));
+            //  order by oldest first
+            TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(
+                    Song.ComparatorType.versionNumber));
+            sortedSet.addAll(songs);
+            Song lastSong = null;
+            for (Song song : sortedSet)
+                if (addToSongList(song))
+                    lastSong = song;
+            view.setSongList(allSongs);
+            if (lastSong != null)
+                fireEvent(new SongUpdateEvent(lastSong));
         }
     }
 
@@ -114,7 +120,23 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         Date now = new Date();
         DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
 
-        view.saveAllSongsAs("allSongs_" + fmt.format(now) + ".songlyrics");
+        String data = Song.toJson(allSongs);
+        saveSongAs("allSongs_" + fmt.format(now) + ".songlyrics", data);
+        //allSongs.clear(); view.setSongList(allSongs);// test only
+    }
+
+
+    @Override
+    public void onSongRemove(SongRemoveEvent event)
+    {
+        ArrayList<Song> songs = event.getSongs();
+        if (!songs.isEmpty()) {
+            if (currentSong != null && songs.contains(currentSong))
+                getView().nextSong(true, true);   //  fixme: not always good enough?
+
+            allSongs.removeAll(songs);
+            view.setSongList(allSongs);
+        }
     }
 
 
@@ -134,22 +156,53 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     }
                     //  add to all songs
                     for (Song song : sortedSet) {
-                        view.addToSongList(song);
+                        //  note: the highest number song will be added last
+                        //  replacing any previous from the list
+                        addToSongList(song);
                     }
-                    view.displaySongList();
                 }
             }
         }
+        view.setSongList(allSongs);
     }
 
+    private boolean addToSongList(Song song)
+    {
+        if (song != null) {
+            if (allSongs.contains(song)) {
+                Song oldSong = allSongs.floor(song);
+                if (Song.compareByVersionNumber(oldSong, song) > 0) {
+                    GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
+                    return false;
+                }
+                allSongs.remove(oldSong);  //  remove any prior version
+                GWT.log("\"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
+            }
+            return allSongs.add(song);
+        }
+        return false;
+    }
 
     @Override
     public void onNextSong(NextSongEvent event)
     {
-        getView().nextSong(event.isForward());
+        getView().nextSong(event.isForward(), false);
     }
 
 
+    /**
+     * Native function to write the song as JSON.
+     *
+     * @param filename
+     * @param data
+     */
+    private void saveSongAs(String filename, String data)
+    {
+        ClientFileIO.saveDataAs(filename, data);
+    }
+
+    private final TreeSet<Song> allSongs = new TreeSet<>();
     private final EventBus eventBus;
     private final MyView view;
+    private Song currentSong;
 }

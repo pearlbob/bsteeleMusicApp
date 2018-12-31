@@ -13,10 +13,16 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: chords: 69 maug
+todo: guitar chord fingerings with/without capo, bar chords?
+fixme: newline needed in lyrics section to register the section
+fixme: songs not saved in directory with same song other versions, will not have a proper version number on it
+fixme: first read song can't be shown removed even though it is.
+fixme: fill last line of repeat when not a multiple of 4
 fixme: lyrics and chords sizing
 fixme: Black Velvet, Alannah Myles key of B, line 1 of c: DG♯♯ (was EbBb in key of C, became: D#A#),  AA of line 2 doesn't transpose either (was BbA)
 
-
+fixme: songs with delta (maj7) don't parse in json?
 fixme: better error messages at parsing
 fixme: broken measure   X X X 
 fixme: written files should update their modification date
