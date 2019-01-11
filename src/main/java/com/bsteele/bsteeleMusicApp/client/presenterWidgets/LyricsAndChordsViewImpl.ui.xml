@@ -73,7 +73,7 @@
                                     title="Beat display of audio.">
                                 Your browser does not support the HTML5 canvas tag.
                             </canvas>
-                            <g:FlexTable ui:field="chordsFlexTable"/>
+                            <g:HTMLPanel ui:field="chords" styleName="{resources.style.chords}"/>
                         </g:HTMLPanel>
                     </g:FocusPanel>
                 </g:west>

@@ -7,14 +7,10 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
-import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -32,7 +28,6 @@ import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewImpl;
 import org.vectomatic.file.File;
 import org.vectomatic.file.FileList;
@@ -40,9 +35,7 @@ import org.vectomatic.file.FileReader;
 import org.vectomatic.file.events.LoadEndEvent;
 import org.vectomatic.file.impl.FileListImpl;
 
-import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
@@ -56,6 +49,15 @@ public class SongListView
         implements SongListPresenterWidget.MyView,
         HasHandlers
 {
+
+    @Override
+    public void setSongList(Set<Song> songs)
+    {
+        allSongs.clear();
+        allSongs.addAll(songs);
+        searchSongs(songSearch.getValue());
+    }
+
     interface Binder extends UiBinder<Widget, SongListView>
     {
     }
@@ -81,19 +83,13 @@ public class SongListView
 
     @UiField
     Label listCount;
-    @UiField
-    Button testParse;
-    @UiField
-    Button removeAll;
 
     @Inject
-    SongListView(@Nonnull final EventBus eventBus, @Nonnull Binder binder)
+    SongListView(Binder binder)
     {
         initWidget(binder.createAndBindUi(this));
 
         handlerManager = new HandlerManager(this);
-
-        this.eventBus = eventBus;
 
         songGrid.addClickHandler(event -> {
             if (filteredSongs != null && songGrid != null) {
@@ -134,45 +130,14 @@ public class SongListView
             FileList files = new FileList(getFiles(event.getNativeEvent()));
 
             int limit = files.getLength();
-            TreeSet<SongFile> reducedSongFiles = new TreeSet<>();
             for (int i = 0; i < limit; i++) {
-                SongFile f = new SongFile(files.getItem(i));
-                reducedSongFiles.add(f);
-            }
-//            SongFile lastSongFile = null;
-            for (SongFile songFile : reducedSongFiles) {
-//                if (lastSongFile != null && lastSongFile.getSongTitle().equals(songFile.getSongTitle()))
-//                    eventBus.fireEvent(new StatusEvent("song read skip",
-//                            "\"" + songFile.getFile().getName() +
-//                                    "\", used \"" + lastSongFile.getFile().getName() + "\""));
-//                else
-                    asyncReadSongFile(songFile.getFile());
-//                lastSongFile = songFile;
+                asyncReadSongFile(files.getItem(i));
             }
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
         });
 
         //  work around GWT to allow multiple files in a selection
         readSongFiles.getElement().setPropertyString("multiple", "multiple");
-
-        testParse.addClickHandler((event) -> {
-            TreeSet<Song> sortedSongs = new TreeSet<>(songComparator);
-            for (Song song : allSongs) {
-                try {
-                    song.checkSong();
-                } catch (ParseException pe) {
-                    sortedSongs.add(song);
-                }
-            }
-            filteredSongs.clear();
-            filteredSongs.addAll(sortedSongs);
-            displaySongList(filteredSongs);
-        });
-
-        removeAll.addClickHandler((event) -> {
-            allSongs.clear();
-            searchSongs(songSearch.getValue());
-        });
     }
 
     @Override
@@ -192,57 +157,6 @@ public class SongListView
     public HandlerRegistration addSongReadEventHandler(SongReadEventHandler handler)
     {
         return handlerManager.addHandler(SongReadEvent.TYPE, handler);
-    }
-
-    @Override
-    public void saveAllSongsAs(String fileName)
-    {
-        String data = Song.toJson(allSongs);
-        saveSongAs(fileName, data);
-    }
-
-
-    /**
-     * Native function to write the song as JSON.
-     *
-     * @param filename
-     * @param data
-     */
-    @Override
-    public void saveSongAs(String filename, String data)
-    {
-        ClientFileIO.saveDataAs(filename, data);
-    }
-
-
-    @Override
-    public boolean addToSongList(Song song, boolean force)
-    {
-        if (song != null) {
-            if (allSongs.contains(song)) {
-                Song oldSong = allSongs.floor(song);
-                if ( !force && Song.compareByVersionNumber(oldSong, song) > 0) {
-                    GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
-                    return false;
-                }
-                allSongs.remove(oldSong);  //  remove any prior version
-                GWT.log("\"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
-            }
-            return allSongs.add(song);
-        }
-        return false;
-    }
-
-    @Override
-    public void removeAll(ArrayList<Song> songs)
-    {
-        allSongs.removeAll(songs);
-    }
-
-    @Override
-    public void displaySongList()
-    {
-        searchSongs(songSearch.getValue());
     }
 
     private void searchSongs(String search)
@@ -266,7 +180,6 @@ public class SongListView
             filteredSongs.addAll(sortedSongs);
         }
         displaySongList(filteredSongs);
-        songSearch.setFocus(true);
     }
 
     /**
@@ -288,8 +201,8 @@ public class SongListView
                                 + song.getArtist() + "</div>");
                 songGrid.setHTML(r, 2,
                         "<div class=\"" + CssConstants.style + "songListItemData\">"
-                                + (song.getLastModifiedDate() == null ? "unloved since 2017" : song
-                                .getLastModifiedDate().toDateString()) + "</div>");
+                                + (song.getLastModifiedDate() == null ? "unloved since 2017" :
+                                song.getLastModifiedDate().toDateString()) + "</div>");
                 r++;
             }
         }
@@ -308,9 +221,9 @@ public class SongListView
             return;
         }
 
-        if (selectedSong == null || !Song.containsSongTitleAndArtist(filteredSongs,selectedSong)) {
+        if (selectedSong == null || !filteredSongs.contains(selectedSong)) {
             selectedSong = filteredSongs.get(0);
-            fireEvent(new SongUpdateEvent(selectedSong));   //  arbitrary choice of the first
+            fireEvent(new SongUpdateEvent(selectedSong));
         } else
             for (int i = 0; i < filteredSongs.size(); i++)
                 if (selectedSong.compareTo(filteredSongs.get(i)) == 0) // title and artist only
@@ -319,12 +232,6 @@ public class SongListView
                     fireEvent(new SongUpdateEvent(selectedSong));
                     break;
                 }
-    }
-
-    @Override
-    public Song getSelectedSong()
-    {
-        return selectedSong;
     }
 
     private native FileListImpl getFiles(NativeEvent event)/*-{
@@ -365,7 +272,6 @@ public class SongListView
     }
 
     private final HandlerManager handlerManager;
-    private final EventBus eventBus;
 
     private static final int columns = 3;
     private ArrayList<Song> filteredSongs = new ArrayList<>();
