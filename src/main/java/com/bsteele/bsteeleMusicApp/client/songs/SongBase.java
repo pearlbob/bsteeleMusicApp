@@ -1406,6 +1406,7 @@ public class SongBase
             fileVersionNumber = Integer.parseInt(mr.getGroup(1));
         } else
             fileVersionNumber = 0;
+        //logger.info("setFileName(): "+fileVersionNumber);
     }
 
     public final double getDuration()

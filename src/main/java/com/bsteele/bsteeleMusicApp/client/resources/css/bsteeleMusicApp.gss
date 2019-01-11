@@ -248,3 +248,7 @@ td[id*="L."]{
     float: right;
 }
 
+.textCenter {
+    float: center;
+}
+
