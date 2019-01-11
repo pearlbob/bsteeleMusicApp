@@ -20,35 +20,27 @@ public class MeasureCommentTest extends TestCase {
     @Test
     public void testParse() {
 
-        Section section = Section.verse;
-        SectionVersion sectionVersion = new SectionVersion(section);
-
         String s = "( this is a comment )";
-        MeasureComment measureComment = MeasureComment.parse(sectionVersion, s);
-        assertEquals(section, measureComment.getSectionVersion().getSection());
-        assertEquals(s.length(), measureComment.getParseLength());
-        assertEquals(s, measureComment.getComment());
+        MeasureComment measureComment = MeasureComment.parse( s);
+         assertEquals(s.length(), measureComment.getParseLength());
+        assertEquals(" this is a comment ", measureComment.getComment());
 
         s = "this is also a comment )";
-        measureComment = MeasureComment.parse(sectionVersion, s);
-        assertEquals(section, measureComment.getSectionVersion().getSection());
-        assertEquals(s.length(), measureComment.getParseLength());
+        measureComment = MeasureComment.parse( s);
+          assertEquals(s.length(), measureComment.getParseLength());
         assertEquals(s, measureComment.getComment());
 
         s = "ABC\nDEF";                  //  not all a comment
-        section = Section.chorus;
-        sectionVersion = new SectionVersion(section);
-        measureComment = MeasureComment.parse(sectionVersion, s);
-        assertEquals(section, measureComment.getSectionVersion().getSection());
-        assertEquals(3, measureComment.getParseLength());
+        measureComment = MeasureComment.parse( s);
+        assertEquals(4, measureComment.getParseLength());
         assertEquals(s.substring(0, 3), measureComment.getComment());
 
         s = "";                  //  not a comment
-        measureComment = MeasureComment.parse(sectionVersion, s);
+        measureComment = MeasureComment.parse( s);
         assertEquals(null, measureComment);
 
         s = null;                  //  not a comment
-        measureComment = MeasureComment.parse(sectionVersion, s);
+        measureComment = MeasureComment.parse( s);
         assertEquals(null, measureComment);
     }
 }

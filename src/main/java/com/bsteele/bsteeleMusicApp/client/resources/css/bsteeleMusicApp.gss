@@ -7,6 +7,17 @@ h1,
   font-size: 28px;
   font-weight: bold;
   color: #777;
+  margin-top: 15px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  text-align: left;
+  vertical-align: text-top;
+}
+h2,
+.gwt-H2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #777;
   margin-top: 5px;
   margin-left: 5px;
   margin-bottom: 10px;
@@ -21,13 +32,13 @@ h1,
     border-bottom: 1px solid black;
 }
 .songListItem:hover {
-    background-color: #f5f2e9;
+    background-color: #fff;
 }
 .songListItemData {
     border-bottom: 1px solid black;
 }
 .songListItemData:hover {
-    background-color: #f5f2e9;
+    background-color: #fff;
 }
 
 .sendButton {
@@ -45,10 +56,6 @@ h1,
 
 .serverResponseLabelError {
   color: red;
-}
-
-#closeButton {
-  margin: 15px 6px 6px;
 }
 
 body {
@@ -134,7 +141,6 @@ iframe {
 .sectionVClass
 {
     font-weight: bold;
-    font-size: 48px;
 }
 
 .lyricsCClass,
@@ -197,13 +203,15 @@ table td.chordTable {
 .errorLabel
 {
     color:red;
+    height: 16px;
 }
 .chords {
 }
 .chordsTextEntry {
      font-size: large;
      width: 20em;
-     height: 30em;
+     /* height: 30em;   */
+     white-space: pre-wrap;
 }
 .lyricsTextEntry {
      font-size: large;

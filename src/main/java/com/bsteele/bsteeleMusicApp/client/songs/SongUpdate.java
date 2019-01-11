@@ -85,7 +85,7 @@ public class SongUpdate
             ArrayList<SongMoment> songMoments = song.getSongMoments();
             songMoment = songMoments.get(sectionNumber);
             sectionVersion = songMoment.getLyricSection().getSectionVersion();
-            Grid<String> chordSection = song.getChordSection(sectionVersion);
+            Grid<String> chordSection = song.getChordSectionStrings(sectionVersion);
             if (chordSection != null && !chordSection.isEmpty())
             {
                 ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
@@ -149,7 +149,7 @@ public class SongUpdate
         //  increment to next the next measure slot
         SongMoment songMoment = songMoments.get(sectionNumber);
         sectionVersion = songMoment.getLyricSection().getSectionVersion();
-        Grid<String> chordSection = song.getChordSection(sectionVersion);
+        Grid<String> chordSection = song.getChordSectionStrings(sectionVersion);
         if (chordSection == null)
             return true;
 
@@ -192,7 +192,7 @@ public class SongUpdate
 
         songMoment = songMoments.get(sectionNumber);
         sectionVersion = songMoment.getLyricSection().getSectionVersion();
-        chordSection = song.getChordSection(sectionVersion);
+        chordSection = song.getChordSectionStrings(sectionVersion);
 
         chordCols = chordSection.getRow(chordSectionRow);
         if (chordCols == null)
