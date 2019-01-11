@@ -1088,7 +1088,8 @@ public class SongBase
                     }
 
                     //  don't generateHtml the section identifiers that happen to look like notes
-                    String toMatch = m.substring(ci, Math.min(m.length() - ci + 2, Section.maxLength));
+                    //String toMatch = m.substring(ci, Math.min(m.length() - ci + 2, Section.maxLength));
+                    String toMatch = m.substring(ci);
                     SectionVersion version = Section.parse(toMatch);
                     if (version != null) {
                         sb.append(version.toString());
