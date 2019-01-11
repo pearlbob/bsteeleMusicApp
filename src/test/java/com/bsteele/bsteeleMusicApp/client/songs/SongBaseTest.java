@@ -156,7 +156,7 @@ public class SongBaseTest
                 .replaceAll("\n", " ")
                 .replaceAll("  ", " ")
                 .trim();
-        logger.info("\"" + text + "\"");
+        //logger.info("\"" + text + "\"");
         assertEquals(chords, text);
         newMeasure = Measure.parse("F", a.getBeatsPerBar());
         for (int i = 0; i < 8; i++) {
@@ -285,7 +285,7 @@ public class SongBaseTest
                         + "A B C D x3\n"
                         + "Ab G Gb F", "v: bob, bob, bob berand");
         Grid<MeasureNode> grid = a.getStructuralGrid();
-        logger.info(grid.toString());
+        //logger.info(grid.toString());
         assertEquals(5, grid.getRowCount());
         for (int r = 0; r < grid.getRowCount(); r++) {
             ArrayList<MeasureNode> row = grid.getRow(r);

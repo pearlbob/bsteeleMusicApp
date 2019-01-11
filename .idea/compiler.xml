@@ -19,7 +19,7 @@
         <module name="bsteeleMusicApp" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8">
+    <bytecodeTargetLevel target="1.8">
       <module name="bsteeleMusicApp" target="1.8" />
     </bytecodeTargetLevel>
   </component>
