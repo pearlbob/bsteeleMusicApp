@@ -1183,7 +1183,7 @@ public class SongBase
     protected final void setArtist(String artist)
     {
         //  move the leading "The " to the end
-        final RegExp theRegExp = RegExp.compile("^the *", "i");
+        final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(artist)) {
             artist = theRegExp.replace(artist, "") + ", The";
         }
