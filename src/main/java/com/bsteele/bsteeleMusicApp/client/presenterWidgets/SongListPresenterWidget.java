@@ -76,7 +76,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.view = view;
 
         String url = GWT.getHostPageBaseURL() + "allSongs.songlyrics";
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         try {
             requestBuilder.sendRequest(null, new RequestCallback()
             {
