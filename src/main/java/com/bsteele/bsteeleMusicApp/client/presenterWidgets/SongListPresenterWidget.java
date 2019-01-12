@@ -75,8 +75,9 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET,
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST,
                 "http://songlyrics.bsteele.com/allSongs.songlyrics");
+        requestBuilder.setIncludeCredentials(true);
         try {
             requestBuilder.sendRequest(null, new RequestCallback()
             {
