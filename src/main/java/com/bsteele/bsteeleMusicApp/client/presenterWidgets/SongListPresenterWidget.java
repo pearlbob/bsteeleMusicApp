@@ -75,9 +75,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST,
-                "http://songlyrics.bsteele.com/allSongs.songlyrics");
-        requestBuilder.setHeader("Access-Control-Allow-Origin","http://songlyrics.bsteele.com");
+        String url = GWT.getHostPageBaseURL() + "allSongs.songlyrics";
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
         try {
             requestBuilder.sendRequest(null, new RequestCallback()
             {
@@ -93,15 +92,15 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
                     if (response.getStatusCode() == 200) {
                         addJsonToSongList(response.getText());
-                        GWT.log("read songs from: "+ requestBuilder.getUrl());
+                        GWT.log("read songs from: " + url);
                     } else {
                         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
-                        GWT.log("failed reading: "+ requestBuilder.getUrl());
+                        GWT.log("failed reading: " + url);
                     }
                 }
             });
         } catch (Exception e) {
-            GWT.log("RequestException for "+requestBuilder.getUrl()+": ", e);
+            GWT.log("RequestException for " + url + ": ", e);
         }
     }
 
