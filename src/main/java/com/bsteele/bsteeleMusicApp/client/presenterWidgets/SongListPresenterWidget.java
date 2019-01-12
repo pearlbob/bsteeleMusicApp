@@ -77,7 +77,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST,
                 "http://songlyrics.bsteele.com/allSongs.songlyrics");
-        requestBuilder.setIncludeCredentials(true);
+        requestBuilder.setHeader("Access-Control-Allow-Origin","http://songlyrics.bsteele.com");
         try {
             requestBuilder.sendRequest(null, new RequestCallback()
             {
