@@ -106,4 +106,6 @@ else
 	echo ... and deploy with bsteele_upload
 endif
 
+cat ./src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt
+
 exit 0
