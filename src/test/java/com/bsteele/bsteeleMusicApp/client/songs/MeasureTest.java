@@ -47,8 +47,8 @@ public class MeasureTest extends TestCase {
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             Chord chord1 = m.getChords().get(1);
-            int beat0 = beatsPerBar / 2;
-            int beat1 = beatsPerBar - beat0;
+             int beat1 = beatsPerBar / 2;
+            int beat0 = beatsPerBar - beat1;
             assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beat0, beatsPerBar), chord0);
             assertEquals(new Chord(new ScaleChord(ScaleNote.Gb, ChordDescriptor.dominant7), beat1, beatsPerBar), chord1);
         }

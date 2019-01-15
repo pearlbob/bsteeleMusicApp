@@ -102,7 +102,7 @@ public class Measure extends MeasureNode
             ret = new Measure(sectionVersion, beatsPerBar, chords);
 
         // allocate the beats
-        if (chords.size() == 2 && chords.get(0).getBeats() == 1 && chords.get(1).getBeats() == 1)
+        if (chords.size() == 2 && chords.get(0).getBeats() + chords.get(1).getBeats() > beatsPerBar)
         {
             //  common case: split the beats even across the two chords
             //  bias to beat 1 on 3 beats to the bar

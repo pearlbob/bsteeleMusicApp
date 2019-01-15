@@ -12,7 +12,7 @@ public class Chord {
     public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
                  ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay) {
         this.scaleChord = scaleChord;
-        this.beats = beatsPerBar;
+        this.beats = beats;
         this.beatsPerBar = beatsPerBar;
         this.slashScaleChord = slashScaleChord;
         this.anticipationOrDelay = anticipationOrDelay;
