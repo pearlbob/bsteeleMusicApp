@@ -81,14 +81,17 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     if (response.getStatusCode() == 200) {
                         addJsonToSongList(response.getText());
                         GWT.log("read songs from: " + url);
+                        sendStatus("read", url);
                     } else {
                         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
                         GWT.log("failed reading: " + url);
+                        sendStatus("failed reading", url);
                     }
                 }
             });
         } catch (Exception e) {
             GWT.log("RequestException for " + url + ": ", e);
+            sendStatus("Exception", e.getMessage());
         }
 
     }
@@ -219,6 +222,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         getView().nextSong(event.isForward(), false);
     }
 
+    private void sendStatus(String name, String value)
+    {
+        eventBus.fireEvent(new StatusEvent(name, value));
+    }
 
     /**
      * Native function to write the song as JSON.
