@@ -9,6 +9,10 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -59,8 +63,34 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        //addJsonToSongList(AppResources.INSTANCE.legacySongsAsJsonString().getText());
-        addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+        String url = GWT.getHostPageBaseURL() + "allSongs.songlyrics";
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        try {
+            requestBuilder.sendRequest(null, new RequestCallback()
+            {
+                public void onError(Request request, Throwable exception)
+                {
+                    GWT.log("failed file reading", exception);
+                    //  default all songs
+                    addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                }
+
+                public void onResponseReceived(Request request, Response response)
+                {
+                    //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
+                    if (response.getStatusCode() == 200) {
+                        addJsonToSongList(response.getText());
+                        GWT.log("read songs from: " + url);
+                    } else {
+                        addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                        GWT.log("failed reading: " + url);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            GWT.log("RequestException for " + url + ": ", e);
+        }
+
     }
 
     @Override

@@ -40,9 +40,6 @@ set lyricsDst=gs://songlyrics.bsteele.com
 set lyricsWar=${app}_`date +%Y%m%d`.war
 echo deploy $app\: $finalWar to $dst
 
-#	get the songlyrics from the cloud
-echo not run $git/bsteeleMusicApp_lyrics_update
-
 #	compile for deployment
 set cwd=`pwd`
 cd $git
