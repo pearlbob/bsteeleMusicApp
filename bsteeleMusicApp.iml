@@ -23,6 +23,9 @@
         <setting name="gwtSdkUrl" value="file://$MAVEN_REPOSITORY$/com/google/gwt/gwt-dev/2.8.2/" />
         <setting name="gwtSdkType" value="maven" />
         <setting name="webFacet" value="Web" />
+        <packaging>
+          <module name="com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit" enabled="false" />
+        </packaging>
       </configuration>
     </facet>
   </component>
