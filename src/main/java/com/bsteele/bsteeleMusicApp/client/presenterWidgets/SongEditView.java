@@ -843,14 +843,14 @@ public class SongEditView
             }
             editDelete.setEnabled(deleteEnable);
 
-//            if (song != null) {
-//                MeasureNode measureNode = song.getStructuralMeasureNode(
-//                        chordSelection.getRow(),
-//                        chordSelection.getCol());
-//                GWT.log("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
-//                        + measureNode.toString()
-//                        + " " + editLocation.name());
-//            }
+            if (song != null) {
+                MeasureNode measureNode = song.getStructuralMeasureNode(
+                        chordSelection.getRow(),
+                        chordSelection.getCol());
+                GWT.log("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
+                        + measureNode.toString()
+                        + " " + editLocation.name());
+            }
 
             lastChordSelection = chordSelection;
         }
