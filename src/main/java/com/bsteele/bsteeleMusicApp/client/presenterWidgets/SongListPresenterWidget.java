@@ -12,7 +12,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
@@ -83,6 +82,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                 public void onError(Request request, Throwable exception)
                 {
                     GWT.log("failed file reading", exception);
+                    sendStatus("failed reading", exception.getMessage());
                     //  default all songs
                     addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
                 }
@@ -93,15 +93,19 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     if (response.getStatusCode() == 200) {
                         addJsonToSongList(response.getText());
                         GWT.log("read songs from: " + url);
+                        sendStatus("read", url);
                     } else {
                         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
                         GWT.log("failed reading: " + url);
+                        sendStatus("failed reading", url);
                     }
                 }
             });
         } catch (Exception e) {
             GWT.log("RequestException for " + url + ": ", e);
+            sendStatus("Exception", e.getMessage());
         }
+
     }
 
     @Override
@@ -217,6 +221,22 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     public void onNextSong(NextSongEvent event)
     {
         getView().nextSong(event.isForward(), false);
+    }
+
+    private void sendStatus(String name, String value)
+    {
+        eventBus.fireEvent(new StatusEvent(name, value));
+    }
+
+    /**
+     * Native function to write the song as JSON.
+     *
+     * @param filename
+     * @param data
+     */
+    private void saveSongAs(String filename, String data)
+    {
+        ClientFileIO.saveDataAs(filename, data);
     }
 
     private final EventBus eventBus;

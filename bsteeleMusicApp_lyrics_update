@@ -1,14 +1,3 @@
 #!/bin/bash 
 
-#	asure we are in the correct place
-appRoot=~/GitHub/bsteeleMusicApp
-cd $appRoot
-
-src=gs://songlyrics.bsteele.com
-allSongs=allSongs.songlyrics
-dst=$appRoot/src/main/java/com/bsteele/bsteeleMusicApp/client/resources
-
-#	a trick to use rsync on a single file
-gsutil rsync -x '(?!^allSongs.songlyrics$)' $src $dst
-
 exit $status
