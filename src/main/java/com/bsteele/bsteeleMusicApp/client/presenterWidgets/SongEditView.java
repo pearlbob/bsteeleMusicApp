@@ -137,6 +137,8 @@ public class SongEditView
     @UiField
     SelectElement sectionOtherSelection;
 
+    @UiField
+    SelectElement sectionVersionSelect;
 
     @UiField
     TextBox measureEntry;
@@ -363,7 +365,6 @@ public class SongEditView
             }
         }
 
-
         //  chord entry
         chordsI.addClickHandler((ClickEvent event) -> {
             enterChord(event);
@@ -576,7 +577,12 @@ public class SongEditView
 
     private boolean processSectionEntry(String entry)
     {
-        return processEntry(measureEntry.getValue() + " " + entry + ":");
+        boolean ret = processEntry(measureEntry.getValue() + " " + entry
+                + sectionVersionSelect.getValue()
+                + ":");
+        if ( ret )
+            sectionVersionSelect.setSelectedIndex(0);
+        return ret;
     }
 
     private boolean processEntry(String entry)
@@ -613,6 +619,7 @@ public class SongEditView
                 displaySong();
                 editAppend.setValue(true);
                 selectChordsCell(song.findSectionVersionChordGridLocation(sectionVersion));
+                undoStackPushSong();
                 continue;
             }
 

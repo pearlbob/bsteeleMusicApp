@@ -13,13 +13,18 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: E..A enters as E.A.
+fixme: dots should not be lost on key change
+fixme: new editing
+fixme: can't edit numbered sections, eg. V2, Ch3, etc.
 fixme: notes not always in the correct key signature (i.e. # instead of b, vise versa)
+todo: colorize the lyrics section in edit
 todo: chords: 69 maug
 todo: https://www.youtube.com/results?search_query=Aint+No+Sunshine+by+Bill+Withers
 todo: guitar chord fingerings with/without capo, bar chords?
 todo: bass finger board for each chord
 todo: option: hide chorus lyrics on subesequent chorus's
-fixme: dots should not be lost on key change
+
 fixme: newline needed in lyrics section to register the section
 fixme: songs not saved in directory with same song other versions, will not have a proper version number on it
 fixme: first read song can't be shown removed even though it is.
