@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: notes not always in the correct key signature (i.e. # instead of b, vise versa)
 todo: chords: 69 maug
 todo: https://www.youtube.com/results?search_query=Aint+No+Sunshine+by+Bill+Withers
 todo: guitar chord fingerings with/without capo, bar chords?
