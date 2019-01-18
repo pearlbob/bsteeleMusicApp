@@ -252,3 +252,14 @@ td[id*="L."]{
     float: center;
 }
 
+td[editSelect=insert] {
+    border-left-width: 5px;
+    border-left-style: solid;
+    border-left-color: red;
+}
+td[editSelect=append] {
+    border-right-width: 5px;
+    border-right-style: solid;
+    border-right-color: red;
+}
+

@@ -32,6 +32,17 @@
         <p>
             <g:Button ui:field="confirm" text="Login"/>
         </p>
+        <ul>
+            <li>
+                Please note that the web application will not store songs on the server but instead they will be files
+                in your local machine with the file extension ".songlyrics".  They can be read later with:
+                Songs, Choose Files.
+            </li>
+            <li>
+                The best functionality will be using the latest Chrome browser on a desktop.  All other environments
+                may be limited in functionality.
+            </li>
+        </ul>
 
     </g:HTMLPanel>
 </ui:UiBinder>
