@@ -40,10 +40,13 @@ set lyricsDst=gs://songlyrics.bsteele.com
 set lyricsWar=${app}_`date +%Y%m%d`.war
 echo deploy $app\: $finalWar to $dst
 
-#	compile for deployment
 set cwd=`pwd`
 cd $git
 
+#	get the songlyrics from Bodhi
+$git/bsteeleMusicApp_lyrics_update
+
+#	compile for deployment
 bsteeleMusicApp_buildId
 mvn \
 	-DgenerateJsInteropExports=false \

@@ -100,10 +100,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         //  maintain order!
         songs,
         lyricsAndChords,
+        edit,
         player,
         bass,
         singer,
-        edit,
         drums,
         options;
     }
@@ -198,10 +198,17 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             if (parameterMap != null) {
                 List<String> list = parameterMap.get("open");
                 if (list != null && list.size() > 0)
-                    switch (list.get(0)) {
-                        case "player":
-                            homeTabs.selectTab(3); // fixme: very weak tab selection mechanism!
-                            break;
+                    try {
+                        AppTab appTab = AppTab.valueOf(list.get(0));
+                        switch (appTab) {
+                            case player:
+                            case lyricsAndChords:
+                            case bass:
+                            case singer:
+                                homeTabs.selectTab(appTab.ordinal()); // fixme: very weak tab selection mechanism!
+                                break;
+                        }
+                    } catch (Exception ex) {
                     }
             }
         }
