@@ -11,26 +11,21 @@ import java.util.logging.Logger;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureSequenceItem extends MeasureNode
-{
-    public MeasureSequenceItem(@Nonnull ArrayList<Measure> measures)
-    {
+public class MeasureSequenceItem extends MeasureNode {
+    public MeasureSequenceItem(@Nonnull ArrayList<Measure> measures) {
         this.measures = measures;
     }
 
-    public ArrayList<Measure> getMeasures()
-    {
+    public ArrayList<Measure> getMeasures() {
         return measures;
     }
 
-    public int getTotalMoments()
-    {
+    public int getTotalMoments() {
         return measures.size();
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats)
-    {
+    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 
         if (measures != null && !measures.isEmpty()) {
@@ -68,8 +63,7 @@ public class MeasureSequenceItem extends MeasureNode
     }
 
     @Override
-    public void addToGrid(Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
-    {
+    public void addToGrid(Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
         logger.finest("MeasureSequenceItem.addToGrid()");
 
         for (Measure measure : measures) {
@@ -80,21 +74,18 @@ public class MeasureSequenceItem extends MeasureNode
     }
 
     @Override
-    public String transpose(@Nonnull Key key, int halfSteps)
-    {
+    public String transpose(@Nonnull Key key, int halfSteps) {
         return "MeasureSequenceItem";   //  error
     }
 
-    public enum EditLocation
-    {
+    public enum EditLocation {
         insert,
         replace,
         append,
         delete;
     }
 
-    boolean insert(MeasureNode measureNode, Measure newMeasure)
-    {
+    boolean insert(MeasureNode measureNode, Measure newMeasure) {
         if (measures == null)
             measures = new ArrayList<>();
         if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
@@ -106,7 +97,7 @@ public class MeasureSequenceItem extends MeasureNode
 
         for (int i = 0; i < measures.size(); i++) {
 
-            if (oldMeasure==measures.get(i)) {
+            if (oldMeasure == measures.get(i)) {
                 measures.add(i, newMeasure);
                 return true;
             }
@@ -115,8 +106,7 @@ public class MeasureSequenceItem extends MeasureNode
         return true;
     }
 
-    boolean replace(MeasureNode measureNode, Measure newMeasure)
-    {
+    boolean replace(MeasureNode measureNode, Measure newMeasure) {
         if (measureNode == null || measures == null || measures.isEmpty())
             return false;
 
@@ -125,7 +115,7 @@ public class MeasureSequenceItem extends MeasureNode
 
         Measure oldMeasure = (Measure) measureNode;
         for (int i = 0; i < measures.size(); i++) {
-            if (oldMeasure==measures.get(i)) {
+            if (oldMeasure == measures.get(i)) {
                 ArrayList<Measure> replacementList = new ArrayList<>();
                 if (i > 0)
                     replacementList.addAll(measures.subList(0, i));
@@ -139,8 +129,7 @@ public class MeasureSequenceItem extends MeasureNode
         return false;
     }
 
-    boolean append(MeasureNode measureNode, Measure newMeasure)
-    {
+    boolean append(MeasureNode measureNode, Measure newMeasure) {
         if (measures == null)
             measures = new ArrayList<>();
         if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
@@ -151,8 +140,8 @@ public class MeasureSequenceItem extends MeasureNode
         Measure oldMeasure = (Measure) measureNode;
 
         for (int i = 0; i < measures.size(); i++) {
-            if (oldMeasure==measures.get(i))  {
-                measures.add(i+1, newMeasure);
+            if (oldMeasure == measures.get(i)) {
+                measures.add(i + 1, newMeasure);
                 return true;
             }
         }
@@ -160,20 +149,18 @@ public class MeasureSequenceItem extends MeasureNode
         return true;
     }
 
-    boolean remove(int index ) {
+    boolean remove(int index) {
         return measures.remove(index) != null;
     }
 
 
     @Override
-    public boolean isSingleItem()
-    {
+    public boolean isSingleItem() {
         return false;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || !(o instanceof MeasureSequenceItem)) return false;
         MeasureSequenceItem that = (MeasureSequenceItem) o;
@@ -181,14 +168,12 @@ public class MeasureSequenceItem extends MeasureNode
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(measures);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
 
@@ -200,7 +185,7 @@ public class MeasureSequenceItem extends MeasureNode
         return sb.toString();
     }
 
-    public final int size(){
+    public final int size() {
         return measures.size();
     }
 

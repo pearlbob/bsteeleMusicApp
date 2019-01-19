@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -28,6 +29,7 @@ import java.util.logging.Logger;
 
 /**
  * A piece of music to be played according to the structure it contains.
+ *
  */
 public class SongBase
 {
@@ -349,6 +351,13 @@ public class SongBase
         return true;
     }
 
+    /**
+     *
+     * @param refMeasureNode
+     * @param editLocation
+     * @param measure
+     * @return
+     */
     public final boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
                                      @Nonnull MeasureSequenceItem.EditLocation editLocation,
                                      @Nonnull Measure measure)
@@ -1064,6 +1073,161 @@ public class SongBase
         }
     }
 
+
+
+    /** Checks a song for completeness.
+     *
+     * @return a new song constructed with the song's current fields.
+     * @throws ParseException exception thrown if the song's fields don't match properly.
+     */
+    public final Song checkSong()
+            throws ParseException
+    {
+        return checkSong(getTitle(), getArtist(), getCopyright(),
+                getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
+                Integer.toString(getUnitsPerMeasure()),
+                getChords(), getRawLyrics());
+    }
+
+    /**
+     * Validate a song entry argument set
+     *
+     * @param title the song's title
+     * @param artist the artist associated with this song or at least this song version
+     * @param copyright the copyright notice associated with the song
+     * @param key the song's musical key
+     * @param bpmEntry the song's number of beats per minute
+     * @param beatsPerBarEntry the song's default number of beats per par
+     * @param unitsPerMeasureEntry the inverse of the note duration fraction per entry, for exmple if each beat is
+     *                             represented by a quarter note, the units per measure would be 4.
+     * @param chordsTextEntry the string transport form of the song's chord sequence description
+     * @param lyricsTextEntry the string transport form of the song's section sequence and lyrics
+     * @return a new song if the fields are valid
+     * @throws ParseException exception thrown if the song's fields don't match properly.
+     */
+    public static final Song checkSong(String title, String artist, String copyright,
+                                       Key key, String bpmEntry, String beatsPerBarEntry, String unitsPerMeasureEntry,
+                                       String chordsTextEntry, String lyricsTextEntry)
+            throws ParseException
+    {
+        if (title == null || title.length() <= 0) {
+            throw new ParseException("no song title given!", 0);
+        }
+
+        if (artist == null || artist.length() <= 0) {
+            throw new ParseException("no artist given!", 0);
+        }
+
+        if (copyright == null || copyright.length() <= 0) {
+            throw new ParseException("no copyright given!", 0);
+        }
+
+        if (key == null)
+            key = Key.C;  //  punt an error
+
+        if (bpmEntry == null || bpmEntry.length() <= 0) {
+            throw new ParseException("no BPM given!", 0);
+        }
+
+        //  check bpm
+        final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
+        if (!twoOrThreeDigitsRegexp.test(bpmEntry)) {
+            throw new ParseException("BPM has to be a number from " + minBpm + " to " + maxBpm, 0);
+        }
+        int bpm = Integer.parseInt(bpmEntry);
+        if (bpm < minBpm || bpm > maxBpm) {
+            throw new ParseException("BPM has to be a number from " + minBpm + " to " + maxBpm, 0);
+        }
+
+        //  check beats per bar
+        if (beatsPerBarEntry == null || beatsPerBarEntry.length() <= 0) {
+            throw new ParseException("no beats per bar given!", 0);
+        }
+        final RegExp oneOrTwoDigitRegexp = RegExp.compile("^\\d{1,2}$");
+        if (!oneOrTwoDigitRegexp.test(beatsPerBarEntry)) {
+            throw new ParseException("Beats per bar has to be 2, 3, 4, 6, or 12", 0);
+        }
+        int beatsPerBar = Integer.parseInt(beatsPerBarEntry);
+        switch (beatsPerBar) {
+            case 2:
+            case 3:
+            case 4:
+            case 6:
+            case 12:
+                break;
+            default:
+                throw new ParseException("Beats per bar has to be 2, 3, 4, 6, or 12", 0);
+        }
+
+
+        if (chordsTextEntry == null || chordsTextEntry.length() <= 0) {
+            throw new ParseException("no chords given!", 0);
+        }
+        if (lyricsTextEntry == null || lyricsTextEntry.length() <= 0) {
+            throw new ParseException("no lyrics given!", 0);
+        }
+
+        if (unitsPerMeasureEntry == null || unitsPerMeasureEntry.length() <= 0) {
+            throw new ParseException("No units per measure given!", 0);
+        }
+        if (!oneOrTwoDigitRegexp.test(unitsPerMeasureEntry)) {
+            throw new ParseException("Units per measure has to be 2, 4, or 8", 0);
+        }
+        int unitsPerMeasure = Integer.parseInt(unitsPerMeasureEntry);
+        switch (unitsPerMeasure) {
+            case 2:
+            case 4:
+            case 8:
+                break;
+            default:
+                throw new ParseException("Units per measure has to be 2, 4, or 8", 0);
+        }
+
+        Song newSong = Song.createSong(title, artist,
+                copyright, key, bpm, beatsPerBar, unitsPerMeasure,
+                chordsTextEntry, lyricsTextEntry);
+
+        //  see that all chord sections have a lyric section
+        for (ChordSection chordSection : newSong.getChordSections()) {
+            SectionVersion chordSectionVersion = chordSection.getSectionVersion();
+            boolean found = false;
+            for (LyricSection lyricSection : newSong.getLyricSections()) {
+                if (chordSectionVersion.equals(lyricSection.getSectionVersion())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new ParseException("no use found for the declared chord section " + chordSectionVersion
+                        .toString(), 0);
+            }
+        }
+
+        //  see that all lyric sections have a chord section
+        for (LyricSection lyricSection : newSong.getLyricSections()) {
+            SectionVersion lyricSectionVersion = lyricSection.getSectionVersion();
+            boolean found = false;
+            for (ChordSection chordSection : newSong.getChordSections()) {
+                if (lyricSectionVersion.equals(chordSection.getSectionVersion())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new ParseException("no chords found for the lyric section " + lyricSectionVersion.toString(), 0);
+            }
+        }
+
+        //  an early song with default (no) structure?
+        if (newSong.getLyricSections().size() == 1 && newSong.getLyricSections().get(0).getSectionVersion().equals
+                (Section.getDefaultVersion()))
+        {
+            throw new ParseException("song looks too simple, is there really no structure?", 0);
+        }
+
+        return newSong;
+    }
+
     private final String transposeMeasure(Key newKey, String m, int halfSteps)
     {
         if (halfSteps == 0)
@@ -1169,10 +1333,14 @@ public class SongBase
         return key.getScaleNoteByHalfStep(n + halfSteps).toString();
     }
 
+    /**
+     * Sets the song's title and song id from the given title. Leading "The " articles are rotated to the title end.
+     *
+     * @param title
+     */
     protected final void setTitle(String title)
     {
         //  move the leading "The " to the end
-
         final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(title)) {
             title = theRegExp.replace(title, "") + ", The";
@@ -1181,6 +1349,10 @@ public class SongBase
         songId = new SongId("Song" + title.replaceAll("\\W+", ""));
     }
 
+    /** Sets the song's artist
+     *
+     * @param artist artist's name
+     */
     protected final void setArtist(String artist)
     {
         //  move the leading "The " to the end
@@ -1191,6 +1363,11 @@ public class SongBase
         this.artist = artist;
     }
 
+    /**
+     * Sets the copyright for the song.  All songs should have a copyright.
+     *
+     * @param copyright copyright for the song
+     */
     protected final void setCopyright(String copyright)
     {
         this.copyright = copyright;
@@ -1286,7 +1463,7 @@ public class SongBase
     }
 
     /**
-     * Return the song's identification string.
+     * Return the song's identification string largely consisting of the title and artist name.
      *
      * @return the songId
      */
@@ -1669,6 +1846,9 @@ public class SongBase
     private final HashMap<SectionVersion, Grid<String>> chordSectionInnerHtmlMap = new HashMap<>();
     private final HashMap<SectionVersion, SectionVersion> displaySectionMap = new HashMap<>();
     private static final char js_delta = '\u0394';
+
+    private static final int minBpm = 50;
+    private static final int maxBpm = 400;
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 }

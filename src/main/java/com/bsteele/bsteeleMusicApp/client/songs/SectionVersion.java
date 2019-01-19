@@ -11,21 +11,32 @@ import java.util.logging.Logger;
 import static java.util.Objects.hash;
 
 /**
- * A version identifier for multiple instances of a given section.
+ * A version identifier for multiple numerical variations of a given section.
  */
-public class SectionVersion implements Comparable<SectionVersion>
-{
+public class SectionVersion implements Comparable<SectionVersion> {
 
-    public SectionVersion(@NotNull Section section)
-    {
+    /**
+     * A convenience constructor for a section without numerical variation.
+     *
+     * @param section the type of {@link Section} for this new section version.
+     */
+    public SectionVersion(@NotNull Section section) {
         this(section, 0, 0);
     }
 
-    SectionVersion(@NotNull Section section, int version, int sourceLength)
-    {
+    /**
+     * A constructor for the section version variation's representation.
+     *
+     * @param section     the type of {@link Section} for this new section version.
+     * @param version     the number used to identify this variation.  By convention,
+     *                   a zero value will not be expressed to the user and thus will be the default variation.
+     * @param parseLength the number of characters used to describe the section version at its parsing from
+     *                    a string value.
+     */
+    SectionVersion(@NotNull Section section, int version, int parseLength) {
         this.section = section;
         this.version = version;
-        this.sourceLength = sourceLength;
+        this.parseLength = parseLength;
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
@@ -34,8 +45,7 @@ public class SectionVersion implements Comparable<SectionVersion>
      *
      * @return the generic section
      */
-    public final Section getSection()
-    {
+    public final Section getSection() {
         return section;
     }
 
@@ -44,8 +54,7 @@ public class SectionVersion implements Comparable<SectionVersion>
      *
      * @return the numeric count
      */
-    public final int getVersion()
-    {
+    public final int getVersion() {
         return version;
     }
 
@@ -54,14 +63,17 @@ public class SectionVersion implements Comparable<SectionVersion>
      *
      * @return the original character length.
      */
-    public final int getParseLength()
-    {
-        return sourceLength;
+    public final int getParseLength() {
+        return parseLength;
     }
 
 
-    public final String getName()
-    {
+    /**
+     * Gets the internal name that will identify this specific section and version
+     *
+     * @return the name of the section version
+     */
+    public final String getName() {
         return name;
     }
 
@@ -71,28 +83,34 @@ public class SectionVersion implements Comparable<SectionVersion>
      * @return the string
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         //  note: designed to go to the user display
         return name + ":";
     }
 
-    public String getFormalName()
-    {
+    /**
+     * Gets a more formal name for the section version that can be presented to the user.
+     *
+     * @return the formal name
+     */
+    public String getFormalName() {
         //  note: designed to go to the user display
-        return section.getFormalName() + (version > 0 ? Integer.toString(version) : "")+ ":";
+        return section.getFormalName() + (version > 0 ? Integer.toString(version) : "") + ":";
     }
 
+    /**
+     * The Java object hash code for this object.
+     *
+     * @return the hashcode
+     */
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         //  do not include source length
         return hash(getSection(), version);
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -110,8 +128,7 @@ public class SectionVersion implements Comparable<SectionVersion>
     }
 
     @Override
-    public int compareTo(SectionVersion o)
-    {
+    public int compareTo(SectionVersion o) {
         if (getSection() != o.getSection()) {
             return getSection().compareTo(o.getSection());
         }
@@ -126,5 +143,5 @@ public class SectionVersion implements Comparable<SectionVersion>
     private final Section section;
     private final int version;
     private final String name;
-    private int sourceLength;
+    private int parseLength;
 }

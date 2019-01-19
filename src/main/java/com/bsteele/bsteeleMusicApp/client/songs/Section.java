@@ -76,6 +76,12 @@ public enum Section
      */
     outro("O", "out", "The ending section of many songs.");
 
+    /**
+     * A private convenience constructor for the enumeration.
+     *
+     * @param originalAbbreviation the default abbreviation for the section
+     * @param description a short description of the section's musical purpose for the user
+     */
     private Section(String originalAbbreviation, String description )
     {
         lowerCaseName = name().toLowerCase();
@@ -86,15 +92,29 @@ public enum Section
         this.description =    description;
     }
 
+    /**
+     * A private convenience constructor for the enumeration.
+     *
+     * @param abbreviation the default abbreviation for the section
+     * @param alternateAbbreviation an alternate abbreviation for the section
+     * @param description a short description of the section's musical purpose for the user
+     */
     private Section(String abbreviation, String alternateAbbreviation, String description)
     {
         this(abbreviation,description);
         this.alternateAbbreviation = alternateAbbreviation.toLowerCase();
     }
 
-    private SectionVersion makeVersion(int v, int sourceLength)
+    /** a private convenience method to create a section version for this section
+     *
+     * @param v the variation identification number.  Zero is the default value.
+     * @param parseLength the number of characters used to describe the section version at its parsing from
+     *                     a string value.
+     * @return
+     */
+    private SectionVersion makeVersion(int v, int parseLength)
     {
-        return new SectionVersion(this, v, sourceLength);
+        return new SectionVersion(this, v, parseLength);
     }
 
     /**
@@ -192,6 +212,10 @@ public enum Section
         return Section.verse.makeVersion(0, 0);
     }
 
+    /**
+     * A tool to generate part of the enum's documentation.
+     * @return a BNF grammar fragment
+     */
     public static final String generateGrammar()
     {
         StringBuilder sb = new StringBuilder();

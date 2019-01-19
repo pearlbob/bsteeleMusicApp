@@ -14,6 +14,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
@@ -24,18 +25,19 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.presenter.slots.IsSingleSlot;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView,
-        HasHandlers
-{
+        HasHandlers {
 
 
-    interface Binder extends UiBinder<Widget, HomeView>
-    {
+    interface Binder extends UiBinder<Widget, HomeView> {
     }
 
     @UiField
@@ -93,9 +95,21 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @UiField
     Button writeAllSongs;
 
+    private enum AppTab {
+        // fixme: very weak tab selection mechanism!
+        //  maintain order!
+        songs,
+        lyricsAndChords,
+        player,
+        bass,
+        singer,
+        edit,
+        drums,
+        options;
+    }
+
     @Inject
-    HomeView(Binder uiBinder)
-    {
+    HomeView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
 
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
@@ -152,16 +166,16 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         });
 
         homeTabs.addSelectionHandler(selectionEvent -> {
-            int tab = homeTabs.getSelectedIndex();
+            AppTab tab = AppTab.values()[homeTabs.getSelectedIndex()];
             switch (tab) {           // fixme: very weak tab selection mechanism!
-                case 1:
-                case 2:     //  fixme: edit tab for now
-                case 3:
-                case 4:
+                case lyricsAndChords:
+                case player:     //  fixme: edit tab for now
+                case bass:
+                case singer:
                     lastPlayTab = tab;
                     break;
             }
-            fireEvent(new HomeTabEvent(tab));
+            fireEvent(new HomeTabEvent(tab.ordinal()));
         });
 
 //        // Listen for keyboard events
@@ -178,18 +192,30 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         });
 
         buildId.setText(AppResources.INSTANCE.buildId().getText());
+
+        {
+            final Map<String, List<String>> parameterMap = Window.Location.getParameterMap();
+            if (parameterMap != null) {
+                List<String> list = parameterMap.get("open");
+                if (list != null && list.size() > 0)
+                    switch (list.get(0)) {
+                        case "player":
+                            homeTabs.selectTab(3); // fixme: very weak tab selection mechanism!
+                            break;
+                    }
+            }
+        }
     }
 
     @Override
-    public void selectLastPlayTab()
-    {
-        if (homeTabs.getSelectedIndex() != lastPlayTab)
-            homeTabs.selectTab(lastPlayTab);
+    public void selectLastPlayTab() {
+        AppTab tab = AppTab.values()[homeTabs.getSelectedIndex()];
+        if (tab != lastPlayTab)
+            homeTabs.selectTab(lastPlayTab.ordinal());
     }
 
     @Override
-    public void onStatusEvent(StatusEvent event)
-    {
+    public void onStatusEvent(StatusEvent event) {
         statusMap.put(event.getName(), event.getValue());
         if (allStatus.isVisible()) {
             allStatus.setHTML(generateStatusHtml());
@@ -198,19 +224,16 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler)
-    {
+    public HandlerRegistration addSongReadEventHandler(AllSongWriteEventHandler handler) {
         return handlerManager.addHandler(AllSongWriteEvent.TYPE, handler);
     }
 
     @Override
-    public HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler)
-    {
+    public HandlerRegistration addHomeTabEventHandler(HomeTabEventHandler handler) {
         return handlerManager.addHandler(HomeTabEvent.TYPE, handler);
     }
 
-    private String generateStatusHtml()
-    {
+    private String generateStatusHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<table><tr><th>Name</th><th>Value</th></tr>");
         TreeSet<String> sortedKeys = new TreeSet<>();
@@ -223,13 +246,12 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event)
-    {
+    public void fireEvent(GwtEvent<?> event) {
         handlerManager.fireEvent(event);
     }
 
     private final HandlerManager handlerManager;
 
     private HashMap<String, String> statusMap = new HashMap<>();
-    private int lastPlayTab = 1;   // fixme: very weak tab selection!
+    private AppTab lastPlayTab = AppTab.lyricsAndChords;
 }

@@ -13,6 +13,9 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /**
+ * A chord section of a song is typically a collection of measures
+ * that constitute a portion of the song that is considered musically a unit.
+ *
  * CopyRight 2018 bsteele.com
  * User: bob
  */
