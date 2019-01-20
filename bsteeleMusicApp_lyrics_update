@@ -1,3 +1,22 @@
-#!/bin/bash 
+#!/bin/tcsh
+#set echo; set verbose
+
+
+set srcDir=/home/bob/google_drive/bass/songlyrics/bodhi
+set f=allSongs.songlyrics
+set svrDst=gs://www.bsteele.com/bsteeleMusicApp/$f
+
+#	expect to be in the root directory of the project
+set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
+
+#	find the most recent
+set src=`ls -tr $srcDir/allSongs*.songlyrics | tail -1`
+
+#	copy to web
+gsutil -h "Cache-Control:public,max-age=20" cp $src $svrDst
+gsutil -q acl ch -u AllUsers:R $svrDst
+
+#	copy to src resource
+cp $src $codeDst
 
 exit $status

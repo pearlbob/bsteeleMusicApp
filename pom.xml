@@ -57,7 +57,7 @@
             <artifactId>gwt-dev</artifactId>
             <scope>provided</scope>
         </dependency>
-       
+
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-websocket-api -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>

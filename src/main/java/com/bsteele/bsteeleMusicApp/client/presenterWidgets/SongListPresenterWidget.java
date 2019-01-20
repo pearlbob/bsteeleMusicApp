@@ -9,10 +9,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.*;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -24,7 +21,6 @@ import com.gwtplatform.mvp.client.View;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -38,11 +34,9 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         SongReadEventHandler,
         SongRemoveEventHandler,
         NextSongEventHandler,
-        AllSongWriteEventHandler
-{
+        AllSongWriteEventHandler {
 
-    public interface MyView extends View
-    {
+    public interface MyView extends View {
 
         HandlerRegistration addSongUpdateEventHandler(SongUpdateEventHandler handler);
 
@@ -50,14 +44,13 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         void setSongList(Set<Song> songs);
 
-        void nextSong(boolean forward, boolean force );
+        void nextSong(boolean forward, boolean force);
     }
 
     @Inject
     SongListPresenterWidget(final EventBus eventBus,
                             final MyView view
-    )
-    {
+    ) {
         super(eventBus, view);
 
         this.eventBus = eventBus;
@@ -66,17 +59,14 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         String url = GWT.getHostPageBaseURL() + "allSongs.songlyrics";
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         try {
-            requestBuilder.sendRequest(null, new RequestCallback()
-            {
-                public void onError(Request request, Throwable exception)
-                {
+            requestBuilder.sendRequest(null, new RequestCallback() {
+                public void onError(Request request, Throwable exception) {
                     GWT.log("failed file reading", exception);
                     //  default all songs
                     addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
                 }
 
-                public void onResponseReceived(Request request, Response response)
-                {
+                public void onResponseReceived(Request request, Response response) {
                     //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
                     if (response.getStatusCode() == 200) {
                         addJsonToSongList(response.getText());
@@ -97,8 +87,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onBind()
-    {
+    public void onBind() {
         view.addSongUpdateEventHandler(this);
         view.addSongReadEventHandler(this);
 
@@ -109,15 +98,13 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onSongUpdate(SongUpdateEvent event)
-    {
+    public void onSongUpdate(SongUpdateEvent event) {
         currentSong = event.getSongUpdate().getSong();
         eventBus.fireEvent(event);
     }
 
     @Override
-    public void onSongSubmission(SongSubmissionEvent event)
-    {
+    public void onSongSubmission(SongSubmissionEvent event) {
         Song song = event.getSong();
         String filename = song.getTitle() + ".songlyrics";
 
@@ -129,8 +116,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onSongRead(SongReadEvent event)
-    {
+    public void onSongRead(SongReadEvent event) {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
             //  order by oldest first
@@ -148,8 +134,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onAllSongWrite(AllSongWriteEvent event)
-    {
+    public void onAllSongWrite(AllSongWriteEvent event) {
         Date now = new Date();
         DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
 
@@ -160,8 +145,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
 
     @Override
-    public void onSongRemove(SongRemoveEvent event)
-    {
+    public void onSongRemove(SongRemoveEvent event) {
         ArrayList<Song> songs = event.getSongs();
         if (!songs.isEmpty()) {
             if (currentSong != null && songs.contains(currentSong))
@@ -173,8 +157,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
 
-    private void addJsonToSongList(String jsonString)
-    {
+    private void addJsonToSongList(String jsonString) {
         if (jsonString != null && jsonString.length() > 0) {
             JSONValue jv = JSONParser.parseStrict(jsonString);
             if (jv != null) {
@@ -199,8 +182,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         view.setSongList(allSongs);
     }
 
-    private boolean addToSongList(Song song)
-    {
+    private boolean addToSongList(Song song) {
         if (song != null) {
             if (allSongs.contains(song)) {
                 Song oldSong = allSongs.floor(song);
@@ -217,13 +199,11 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
     @Override
-    public void onNextSong(NextSongEvent event)
-    {
+    public void onNextSong(NextSongEvent event) {
         getView().nextSong(event.isForward(), false);
     }
 
-    private void sendStatus(String name, String value)
-    {
+    private void sendStatus(String name, String value) {
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 
@@ -233,8 +213,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
      * @param filename
      * @param data
      */
-    private void saveSongAs(String filename, String data)
-    {
+    private void saveSongAs(String filename, String data) {
         ClientFileIO.saveDataAs(filename, data);
     }
 
