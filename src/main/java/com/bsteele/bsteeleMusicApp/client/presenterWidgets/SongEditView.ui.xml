@@ -138,16 +138,16 @@
                                 </td>
                                 <td>I:
                                     <g:Button ui:field="chordsI">I</g:Button>
+                                    ii:
+                                    <g:Button ui:field="chordsii">ii</g:Button>
+                                    iii:
+                                    <g:Button ui:field="chordsiii">iii</g:Button>
                                     IV:
                                     <g:Button ui:field="chordsIV">IV</g:Button>
                                     <g:Button ui:field="chordsIV7">IV7</g:Button>
                                     V:
                                     <g:Button ui:field="chordsV7">V7</g:Button>
                                     <g:Button ui:field="chordsV">V</g:Button>
-                                    ii:
-                                    <g:Button ui:field="chordsii">ii</g:Button>
-                                    iii:
-                                    <g:Button ui:field="chordsiii">iii</g:Button>
                                     vi:
                                     <g:Button ui:field="chordsvi">vi</g:Button>
                                     vii:
@@ -225,7 +225,7 @@
                             <li>Chords must be in upper case!</li>
                             <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                             <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9] and more.
-                                See "Other chord" above.
+                                See "Other chord" selection above.
                             </li>
                             <li>Spaces between chords indicate a new measure. Chords without spaces are within one
                                 measure.
@@ -233,9 +233,9 @@
                             <li>Minus signs (-) can be used to indicate a repeated measure. It must have a space before
                                 and after it.
                             </li>
-                            <li>Periods (.) can be used to repeated chords on another beat within the same meausure. For
+                            <li>Periods (.) can be used to repeat chords on another beat within the same meausure. For
                                 example,
-                                G..A would be three beats of G followed by a beat or A in the same measure.
+                                G..A would be three beats of G followed by one beat of A in the same measure.
                             </li>
                             <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
                                 For example A/G would mean a G for the bass, an A chord for the other instruments.

@@ -9,11 +9,9 @@ import java.util.TreeSet;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class GenerateSongHtml
-{
+public class GenerateSongHtml {
 
-    public String generateAllChordHtml()
-    {
+    public String generateAllChordHtml() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(
@@ -47,8 +45,7 @@ public class GenerateSongHtml
         return sb.toString();
     }
 
-    private String chordComponentsToString(TreeSet<ChordComponent> chordComponents)
-    {
+    private String chordComponentsToString(TreeSet<ChordComponent> chordComponents) {
         StringBuilder sb = new StringBuilder();
         for (ChordComponent chordComponent : chordComponents) {
             if (!chordComponent.equals(chordComponents.first()))
@@ -58,20 +55,22 @@ public class GenerateSongHtml
         return sb.toString();
     }
 
-    private String chordComponentScaleNotesToString(Key key, ScaleChord scaleChord)
-    {
+    private String chordComponentScaleNotesToString(Key key, ScaleChord scaleChord) {
+        return chordComponentScaleNotesToString(key, 0, scaleChord);
+    }
+
+    private String chordComponentScaleNotesToString(Key key, int halfstep, ScaleChord scaleChord) {
         StringBuilder sb = new StringBuilder();
         TreeSet<ChordComponent> chordComponents = scaleChord.getChordComponents();
         for (ChordComponent chordComponent : chordComponents) {
             if (!chordComponent.equals(chordComponents.first()))
                 sb.append(" ");
-            sb.append(key.getScaleNoteByHalfStep(key.getHalfStep() + chordComponent.getHalfSteps()));
+            sb.append(key.getScaleNoteByHalfStep(halfstep + chordComponent.getHalfSteps()));
         }
         return sb.toString();
     }
 
-    public String generateAllScalesHtml()
-    {
+    public String generateAllScalesHtml() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(
@@ -122,8 +121,7 @@ public class GenerateSongHtml
         return sb.toString();
     }
 
-    public String generateAllTonicHtml()
-    {
+    public String generateAllTonicHtml() {
         StringBuilder sb = new StringBuilder();
         sb.append("<p> </p>\n");
 
@@ -193,8 +191,7 @@ public class GenerateSongHtml
                 }
                 sb.append("</td><td" + style + ">\n");
 
-                sb.append(chordComponentScaleNotesToString(key.getKeyByHalfStep(builtScaleChord.getScaleNote()
-                        .getHalfStep()), builtScaleChord));
+                sb.append(chordComponentScaleNotesToString(key, builtScaleChord.getScaleNote().getHalfStep(), builtScaleChord));
                 sb.append("</td></tr>\n");
             }
         }
@@ -270,8 +267,7 @@ public class GenerateSongHtml
                 }
                 sb.append("</td><td" + style + ">\n");
 
-                sb.append(chordComponentScaleNotesToString(key.getKeyByHalfStep(builtScaleChord.getScaleNote()
-                        .getHalfStep()), builtScaleChord));
+                sb.append(chordComponentScaleNotesToString(key, builtScaleChord.getScaleNote().getHalfStep(), builtScaleChord));
                 sb.append("</td></tr>\n");
             }
         }
@@ -281,8 +277,7 @@ public class GenerateSongHtml
     }
 
 
-    public String generateFileFormat()
-    {
+    public String generateFileFormat() {
         StringBuilder sb = new StringBuilder();
         sb.append("<p> </p>\n");
 
