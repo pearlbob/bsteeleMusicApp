@@ -1,10 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
-import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.*;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -15,17 +11,8 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimpleLayoutPanel;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
-import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.ViewImpl;
-import com.gwtplatform.mvp.client.presenter.slots.IsSingleSlot;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -95,19 +82,6 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @UiField
     Button writeAllSongs;
 
-    private enum AppTab {
-        // fixme: very weak tab selection mechanism!
-        //  maintain order!
-        songs,
-        lyricsAndChords,
-        edit,
-        player,
-        bass,
-        singer,
-        drums,
-        options;
-    }
-
     @Inject
     HomeView(Binder uiBinder) {
         initWidget(uiBinder.createAndBindUi(this));
@@ -175,7 +149,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
                     lastPlayTab = tab;
                     break;
             }
-            fireEvent(new HomeTabEvent(tab.ordinal()));
+            fireEvent(new HomeTabEvent(tab));
         });
 
 //        // Listen for keyboard events

@@ -12,8 +12,52 @@ public class MeasureTest extends TestCase {
     @Test
     public void testParse() {
 
+        {
+            //  test beat allocation
+            Measure m = Measure.parse("EAB", 4);
+            assertEquals(3, m.getChords().size());
+            assertEquals(2, m.getChords().get(0).getBeats());
+            assertEquals(1, m.getChords().get(1).getBeats());
+            assertEquals(1, m.getChords().get(2).getBeats());
+
+            m = Measure.parse("EA", 4);
+            assertEquals(2, m.getChords().size());
+            assertEquals(2, m.getChords().get(0).getBeats());
+            assertEquals(2, m.getChords().get(1).getBeats());
+            m = Measure.parse("E..A", 4);
+            assertEquals(2, m.getChords().size());
+            assertEquals(3, m.getChords().get(0).getBeats());
+            assertEquals(1, m.getChords().get(1).getBeats());
+
+            m = Measure.parse("E.A", 4);
+            assertEquals(2, m.getChords().size());
+            assertEquals(2, m.getChords().get(0).getBeats());
+            assertEquals(2, m.getChords().get(1).getBeats());
+            m = Measure.parse("E.A.", 4);
+            assertEquals(2, m.getChords().size());
+            assertEquals(2, m.getChords().get(0).getBeats());
+            assertEquals(2, m.getChords().get(1).getBeats());
+            m = Measure.parse("EA.", 4);
+            assertEquals(2, m.getChords().size());
+            assertEquals(2, m.getChords().get(0).getBeats());
+            assertEquals(2, m.getChords().get(1).getBeats());
+            m = Measure.parse("EA.", 6);
+            assertEquals(2, m.getChords().size());
+            assertEquals(4, m.getChords().get(0).getBeats());
+            assertEquals(2, m.getChords().get(1).getBeats());
+
+
+            //  too many specific beats
+            m = Measure.parse("E..A.", 4);
+            assertNull(m);
+
+            //  too few specific beats
+            m = Measure.parse("E..A.", 6);
+            assertNull(m);
+        }
+
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "A", beatsPerBar);
+            Measure m = Measure.parse("A", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(1, m.getChords().size());
             Chord chord = m.getChords().get(0);
@@ -21,7 +65,7 @@ public class MeasureTest extends TestCase {
         }
 
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "BC", beatsPerBar);
+            Measure m = Measure.parse("BC", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
@@ -33,25 +77,25 @@ public class MeasureTest extends TestCase {
             assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat1, beatsPerBar), chord1);
         }
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "E#m7. ", beatsPerBar);
+            Measure m = Measure.parse("E#m7. ", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(1, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
         }
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "E#m7Gb7", beatsPerBar);
+            Measure m = Measure.parse("E#m7Gb7", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
             Chord chord1 = m.getChords().get(1);
-             int beat1 = beatsPerBar / 2;
+            int beat1 = beatsPerBar / 2;
             int beat0 = beatsPerBar - beat1;
             assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beat0, beatsPerBar), chord0);
             assertEquals(new Chord(new ScaleChord(ScaleNote.Gb, ChordDescriptor.dominant7), beat1, beatsPerBar), chord1);
         }
         for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "F#m7.Asus4", beatsPerBar);
+            Measure m = Measure.parse("F#m7.Asus4", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
@@ -62,7 +106,7 @@ public class MeasureTest extends TestCase {
             assertEquals(new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.suspended4), beat1, beatsPerBar), chord1);
         }
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "A/G#", beatsPerBar);
+            Measure m = Measure.parse("A/G#", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(1, m.getChords().size());
             Chord chord = m.getChords().get(0);
@@ -70,7 +114,7 @@ public class MeasureTest extends TestCase {
                     new ScaleChord(ScaleNote.Gs), ChordAnticipationOrDelay.none), chord);
         }
         for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-            Measure m = Measure.parse( "C/F#.G", beatsPerBar);
+            Measure m = Measure.parse("C/F#.G", beatsPerBar);
             assertEquals(beatsPerBar, m.getBeatCount());
             assertEquals(2, m.getChords().size());
             Chord chord0 = m.getChords().get(0);
@@ -83,8 +127,8 @@ public class MeasureTest extends TestCase {
         }
         {
             for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m0 = Measure.parse( "C", beatsPerBar);
-                Measure m = Measure.parse( "-", beatsPerBar, m0);
+                Measure m0 = Measure.parse("C", beatsPerBar);
+                Measure m = Measure.parse("-", beatsPerBar, m0);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(1, m.getChords().size());
                 assertEquals(m0.getChords(), m.getChords());
@@ -92,7 +136,7 @@ public class MeasureTest extends TestCase {
         }
         {
             for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse( "X", beatsPerBar);
+                Measure m = Measure.parse("X", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(0, m.getChords().size());
             }

@@ -13,14 +13,25 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-fixme: E..A enters as E.A.
-fixme: dots should not be lost on key change
-fixme: new editing
-fixme: can't edit numbered sections, eg. V2, Ch3, etc.
-fixme: notes not always in the correct key signature (i.e. # instead of b, vise versa)
+fixme: last line of lyrics don't display unless ended with new line
+____fixme: call checkSong after edit change delete
+____fixme: E..A enters as E.A.
+____fixme: dots should not be lost on key change
+todo: arrow keys should work on chord edit
+todo: drag selection in chord edit
+fixme: cursor should be remembered in undos
+fixme: chord cursor should not go to end of song at section delete
+fixme: click to the right of the chord edit table should select end of row
+todo: go to top of song on song change
+todo: https://www.youtube.com/results?search_query=Aint+No+Sunshine+by+Bill+Withers
+todo: focus on search on songs tab select
+
+
+____fixme: can't edit numbered sections, eg. V2, Ch3, etc.
+____fixme: notes not always in the correct key signature (i.e. # instead of b, vise versa)
 todo: colorize the lyrics section in edit
 todo: chords: 69 maug
-todo: https://www.youtube.com/results?search_query=Aint+No+Sunshine+by+Bill+Withers
+
 todo: guitar chord fingerings with/without capo, bar chords?
 todo: bass finger board for each chord
 todo: option: hide chorus lyrics on subesequent chorus's

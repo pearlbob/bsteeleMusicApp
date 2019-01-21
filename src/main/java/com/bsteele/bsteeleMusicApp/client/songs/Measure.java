@@ -20,8 +20,7 @@ import java.util.Objects;
  * When added, chord beat durations exceeding the measure beat count will be ignored on playback.
  * </p>
  */
-public class Measure extends MeasureNode implements Comparable<Measure>
-{
+public class Measure extends MeasureNode implements Comparable<Measure> {
 
     /**
      * A convenience constructor to build a typical measure.
@@ -29,14 +28,12 @@ public class Measure extends MeasureNode implements Comparable<Measure>
      * @param beatCount the beat count for the measure
      * @param chords    the chords to be played over this measure
      */
-    public Measure(int beatCount, ArrayList<Chord> chords)
-    {
+    public Measure(int beatCount, ArrayList<Chord> chords) {
         setBeatCount(beatCount);
         setChords(chords);
     }
 
-    public Measure(Measure measure)
-    {
+    public Measure(Measure measure) {
         if (measure == null)
             return;
         setBeatCount(measure.beatCount);
@@ -49,18 +46,15 @@ public class Measure extends MeasureNode implements Comparable<Measure>
         setChords(chords);
     }
 
-    protected Measure()
-    {
+    protected Measure() {
         setBeatCount(0);
     }
 
-    public static final Measure parse(String s, int beatsPerBar)
-    {
+    public static final Measure parse(String s, int beatsPerBar) {
         return parse(s, beatsPerBar, null);
     }
 
-    public static final Measure parse(String s, int beatsPerBar, Measure lastMeasure)
-    {
+    public static final Measure parse(String s, int beatsPerBar, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
             return null;
@@ -115,22 +109,41 @@ public class Measure extends MeasureNode implements Comparable<Measure>
             ret = new Measure(beatsPerBar, chords);
 
         // allocate the beats
-        if (chords.size() == 2 && chords.get(0).getBeats() + chords.get(1).getBeats() > beatsPerBar)
-        {
-            //  common case: split the beats even across the two chords
-            //  bias to beat 1 on 3 beats to the bar
-            int b2 = beatsPerBar / 2;
-            chords.get(1).setBeats(b2);
-            chords.get(0).setBeats(beatsPerBar - b2);
-        }
-        if (!chords.isEmpty()) {    // fill the beat count onto the last chord if required
-            //  works for one chord as well
-            int count = 0;
-            for (Chord chord : chords)
-                count += chord.getBeats();
-            if (count < beatsPerBar) {
-                Chord lastChord = chords.get(chords.size() - 1);
-                lastChord.setBeats(lastChord.getBeats() + (beatsPerBar - count));
+        //  try to deal with over-specified beats: eg. in 4/4:  E....A...
+        if (chords.size() > 1) {
+            //  find the total count of beats explicitly specified
+            int explicitChords = 0;
+            int explicitBeats = 0;
+            for (Chord c : chords) {
+                if (c.getBeats() < beatsPerBar) {
+                    explicitChords++;
+                    explicitBeats += c.getBeats();
+                }
+            }
+            //  verify not over specified
+            if (explicitBeats + (chords.size() - explicitChords) > beatsPerBar)
+                return null;    //  too many beats!  even if the unspecified chords only got 1
+
+            //  verify not under specified
+            if (chords.size() == explicitChords && explicitBeats < beatsPerBar)
+                return null;    //  too few beats and no unspecified chords to put them on
+
+            //  allocate the remaining beats to the unspecified chords
+            //  give left over beats to the first unspecified
+            if (chords.size() > explicitChords) {
+                Chord firstUnspecifiedChord = null;
+                int beatsPerUnspecifiedChord = Math.max(1,(beatsPerBar - explicitBeats) / (chords.size() - explicitChords));
+                for (Chord c : chords) {
+                    if (c.getBeats() == beatsPerBar) {
+                        if (firstUnspecifiedChord == null)
+                            firstUnspecifiedChord = c;
+                        c.setBeats(beatsPerUnspecifiedChord);
+                        explicitBeats += beatsPerUnspecifiedChord;
+                    }
+                }
+                //  dump all the remaining beats on the first unspecified
+                if (firstUnspecifiedChord != null && explicitBeats < beatsPerBar)
+                    firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord+(beatsPerBar-explicitBeats));
             }
         }
 
@@ -145,8 +158,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
      *
      * @return the beat count for the measure
      */
-    public final int getBeatCount()
-    {
+    public final int getBeatCount() {
         return beatCount;
     }
 
@@ -155,8 +167,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
      *
      * @param beatCount
      */
-    public final void setBeatCount(int beatCount)
-    {
+    public final void setBeatCount(int beatCount) {
         this.beatCount = beatCount;
     }
 
@@ -165,8 +176,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
      *
      * @return the chords
      */
-    public final ArrayList<Chord> getChords()
-    {
+    public final ArrayList<Chord> getChords() {
         return chords;
     }
 
@@ -175,13 +185,11 @@ public class Measure extends MeasureNode implements Comparable<Measure>
      *
      * @param chords the chords
      */
-    public final void setChords(ArrayList<Chord> chords)
-    {
+    public final void setChords(ArrayList<Chord> chords) {
         this.chords = chords;
     }
 
-    public final Chord getChordAtBeat(double beat)
-    {
+    public final Chord getChordAtBeat(double beat) {
         if (chords == null || chords.isEmpty())
             return null;
 
@@ -195,8 +203,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats)
-    {
+    public ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 
         StringBuilder sb = new StringBuilder();
@@ -210,14 +217,12 @@ public class Measure extends MeasureNode implements Comparable<Measure>
     }
 
     @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
-    {
+    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
         grid.add(this);
     }
 
     @Override
-    public String transpose(@Nonnull Key key, int halfSteps)
-    {
+    public String transpose(@Nonnull Key key, int halfSteps) {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             Chord lastChord = chords.get(chords.size() - 1);
@@ -231,8 +236,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
         return "X";  // no chords
     }
 
-    private final String chordsToString()
-    {
+    private final String chordsToString() {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             Chord lastChord = chords.get(chords.size() - 1);
@@ -283,8 +287,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
      *                              from being compared to this object.
      */
     @Override
-    public int compareTo(Measure o)
-    {
+    public int compareTo(Measure o) {
         int limit = Math.min(chords.size(), o.chords.size());
         for (int i = 0; i < limit; i++) {
             int ret = chords.get(i).compareTo(o.chords.get(i));
@@ -299,8 +302,7 @@ public class Measure extends MeasureNode implements Comparable<Measure>
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Measure measure = (Measure) o;
@@ -309,14 +311,12 @@ public class Measure extends MeasureNode implements Comparable<Measure>
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(beatCount, chords);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return chordsToString();
     }
 

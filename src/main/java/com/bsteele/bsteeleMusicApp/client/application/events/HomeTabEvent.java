@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.application.events;
 
+import com.bsteele.bsteeleMusicApp.client.application.home.AppTab;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -15,12 +16,12 @@ public class HomeTabEvent extends GwtEvent<HomeTabEventHandler> {
     public HomeTabEvent() {
     }
 
-    public HomeTabEvent(int number) {
-        this.number = number;
+    public HomeTabEvent(AppTab tab) {
+        this.tab = tab;
     }
 
-    public int getNumber() {
-        return number;
+    public AppTab getTab() {
+        return tab;
     }
 
     @Override
@@ -33,5 +34,5 @@ public class HomeTabEvent extends GwtEvent<HomeTabEventHandler> {
         handler.onHomeTab(this);
     }
 
-    private int number = 0;
+    private AppTab tab = AppTab.songs;
 }

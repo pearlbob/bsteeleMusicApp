@@ -15,6 +15,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.shared.GwtEvent;
@@ -106,7 +107,7 @@ public class SongListView
         });
 
         songSearch.addKeyUpHandler((event) -> {
-            searchSongs(songSearch.getValue());
+            searchSongs();
         });
 
         /**
@@ -114,8 +115,7 @@ public class SongListView
          */
         clearSearch.addClickHandler((event) -> {
             songSearch.setText("");
-            searchSongs(songSearch.getValue());
-            songSearch.setFocus(true);
+            searchSongs();
         });
 
         //  list by selection
@@ -123,7 +123,7 @@ public class SongListView
         Event.setEventListener(listBySelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
                 songComparator = Song.getComparatorByType(Song.ComparatorType.valueOf(listBySelect.getValue()));
-                searchSongs(songSearch.getValue());
+                searchSongs();
             }
         });
 
@@ -171,7 +171,7 @@ public class SongListView
 
         removeAll.addClickHandler((event) -> {
             allSongs.clear();
-            searchSongs(songSearch.getValue());
+            searchSongs();
         });
     }
 
@@ -242,11 +242,12 @@ public class SongListView
     @Override
     public void displaySongList()
     {
-        searchSongs(songSearch.getValue());
+        searchSongs();
     }
 
-    private void searchSongs(String search)
+    private void searchSongs()
     {
+        String search = songSearch.getValue();
         if (search == null) {
             search = "";
         }
@@ -266,7 +267,6 @@ public class SongListView
             filteredSongs.addAll(sortedSongs);
         }
         displaySongList(filteredSongs);
-        songSearch.setFocus(true);
     }
 
     /**
@@ -295,7 +295,18 @@ public class SongListView
         }
         listCount.setText("Count: " + Integer.toString(filteredSongs.size()) + " / " + Integer.toString(allSongs.size()));
 
-        songSearch.setFocus(true);
+        songSearchFocus();
+    }
+
+    private void songSearchFocus(){
+
+        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
+
+            @Override
+            public void execute() {
+                songSearch.setFocus(true);
+            }
+        });
     }
 
     @Override
