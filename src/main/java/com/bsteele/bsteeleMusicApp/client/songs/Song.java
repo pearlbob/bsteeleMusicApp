@@ -3,28 +3,20 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.Grid;
-import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
-import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
-import com.bsteele.bsteeleMusicApp.shared.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JsDate;
-import com.google.gwt.json.client.*;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONNumber;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.ui.FlexTable;
 
 import javax.validation.constraints.NotNull;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.logging.Logger;
 
 /** A song is a wrapper class for {@link SongBase} that provides

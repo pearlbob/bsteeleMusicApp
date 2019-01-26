@@ -826,11 +826,15 @@ public class SongEditView
                 else {
                     //  try end of previous row
                     row--;
-                    if (row < 0)
+                    if (row < 0) {
+                        row = 0;
+                        cols=0;
                         break;
+                    }
                     cols = chordsFlexTable.getCellCount(row) - 1;
                 }
             }
+            chordSelection = new SongChordGridSelection(row, cols);
         }
 
 
@@ -879,6 +883,10 @@ public class SongEditView
         }
     }
 
+    /**
+     * Delete the last selected chords cell.
+     * This will delete the entire chord section if the section header is selected.
+     */
     private void deleteChordsCell() {
         if (lastChordSelection == null)
             return;
@@ -895,28 +903,28 @@ public class SongEditView
             if (song.measureDelete(measure))
                 undoStackPushSong();
 
-            //  re-select
-            int r = lastChordSelection.getRow();
-            int c = lastChordSelection.getCol();
-            Grid<MeasureNode> grid = song.getStructuralGrid();
-            search:
-            while (r >= 0) {
-                while (c > 0) {
-                    lastChordSelection = new SongChordGridSelection(r, c);
-                    if (song.findMeasure(lastChordSelection) != null)
-                        break search;
-                    c--;
-                    sizeRemaining--;
-                }
-                r--;
-                if (r < 0 || sizeRemaining <= 0) {
-                    lastChordSelection = null;
-                    break;
-                }
-                c = Math.min(sizeRemaining, Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1));
-            }
-            if (r < 0)
-                lastChordSelection = null;
+//            //  re-select
+//            int r = lastChordSelection.getRow();
+//            int c = lastChordSelection.getCol();
+//            Grid<MeasureNode> grid = song.getStructuralGrid();
+//            search:
+//            while (r >= 0) {
+//                while (c > 0) {
+//                    lastChordSelection = new SongChordGridSelection(r, c);
+//                    if (song.findMeasure(lastChordSelection) != null)
+//                        break search;
+//                    c--;
+//                    sizeRemaining--;
+//                }
+//                r--;
+//                if (r < 0 || sizeRemaining <= 0) {
+//                    lastChordSelection = null;
+//                    break;
+//                }
+//                c = Math.min(sizeRemaining, Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1));
+//            }
+//            if (r < 0)
+//                lastChordSelection = null;
         }
 
         displaySong();

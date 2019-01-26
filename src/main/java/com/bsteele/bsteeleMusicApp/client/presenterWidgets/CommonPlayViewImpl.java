@@ -7,6 +7,8 @@ import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.web.bindery.event.shared.EventBus;
@@ -19,8 +21,7 @@ import javax.annotation.Nonnull;
  * User: bob
  */
 class CommonPlayViewImpl
-        extends ViewImpl
-{
+        extends ViewImpl {
     protected CommonPlayViewImpl(
             @Nonnull final EventBus eventBus,
             @Nonnull final SongPlayMaster songPlayMaster) {
@@ -123,6 +124,21 @@ class CommonPlayViewImpl
         scrollDelay = 0;
     }
 
+    /** set the anchors for title and artist
+     *
+     * @param title the child viewImpl's title anchor
+     * @param artist the child viewImpl's artist anchor
+     */
+    protected void setAnchors(Anchor title, Anchor artist) {
+        title.setText(song.getTitle()
+        + (song.getFileVersionNumber() > 0
+                ? " (" + Integer.toString(song.getFileVersionNumber()) + ")"
+                : ""));
+        title.setHref(anchorUrlStart + URL.encode(song.getTitle()+" "+song.getArtist()));
+        artist.setText(song.getArtist());
+        artist.setHref(anchorUrlStart + URL.encode(song.getArtist()));
+    }
+
     protected Element lastChordElement;
     protected Element lastLyricsElement;
     protected Song song;
@@ -134,6 +150,7 @@ class CommonPlayViewImpl
     protected SongUpdate.State lastState = SongUpdate.State.idle;
     protected final EventBus eventBus;
     protected final SongPlayMaster songPlayMaster;
+    protected static final String anchorUrlStart = "https://www.youtube.com/results?search_query=";
 
     private int lastScrollPosition = 0;
     private double scrollPosition = 0;

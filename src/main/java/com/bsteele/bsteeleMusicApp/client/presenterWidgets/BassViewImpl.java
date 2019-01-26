@@ -33,6 +33,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -49,8 +50,7 @@ import java.util.logging.Logger;
  */
 public class BassViewImpl
         extends CommonPlayViewImpl
-        implements BassPresenterWidget.MyView
-{
+        implements BassPresenterWidget.MyView {
 
     @UiField
     Button playStopButton;
@@ -74,10 +74,10 @@ public class BassViewImpl
     SpanElement timeSignature;
 
     @UiField
-    SpanElement title;
+    Anchor title;
 
     @UiField
-    SpanElement artist;
+    Anchor artist;
 
     @UiField
     Button nextSongButton;
@@ -100,13 +100,11 @@ public class BassViewImpl
     Button saveButton;
 
 
-    interface Binder extends UiBinder<Widget, BassViewImpl>
-    {
+    interface Binder extends UiBinder<Widget, BassViewImpl> {
     }
 
     @Inject
-    BassViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster)
-    {
+    BassViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
@@ -169,8 +167,7 @@ public class BassViewImpl
     }
 
     @Override
-    public void onSongUpdate(SongUpdate songUpdate)
-    {
+    public void onSongUpdate(SongUpdate songUpdate) {
 
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
@@ -219,8 +216,7 @@ public class BassViewImpl
         song = songUpdate.getSong();
 
         //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        artist.setInnerHTML(song.getArtist());
+        setAnchors(title,artist);
         copyright.setInnerHTML(song.getCopyright());
 
         timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
@@ -236,8 +232,7 @@ public class BassViewImpl
         chordsDirty = true;   //  done by syncKey()
     }
 
-    private void setEnables()
-    {
+    private void setEnables() {
         boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
 
         originalKeyButton.setEnabled(enable);
@@ -247,19 +242,16 @@ public class BassViewImpl
         bpmSelect.setDisabled(!enable);
     }
 
-    private void syncCurrentKey(Key key)
-    {
+    private void syncCurrentKey(Key key) {
         keyLabel.setInnerHTML(key.toString());
     }
 
-    private void syncCurrentBpm(int bpm)
-    {
+    private void syncCurrentBpm(int bpm) {
         currentBpmEntry.setValue(Integer.toString(bpm));
         bpmSelect.setSelectedIndex(0);
     }
 
-    private void labelPlayStop()
-    {
+    private void labelPlayStop() {
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
@@ -273,8 +265,7 @@ public class BassViewImpl
     }
 
     @Override
-    public void onMusicAnimationEvent(MusicAnimationEvent event)
-    {
+    public void onMusicAnimationEvent(MusicAnimationEvent event) {
         if (song == null)
             return;
 
@@ -344,14 +335,12 @@ public class BassViewImpl
 
     }
 
-    private void syncKey(Key key)
-    {
+    private void syncKey(Key key) {
         int tran = key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
         syncKey(tran);
     }
 
-    private void syncKey(int tran)
-    {
+    private void syncKey(int tran) {
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
         keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
 
@@ -432,8 +421,7 @@ public class BassViewImpl
         }
     }
 
-    private double scoreLines(double y)
-    {
+    private double scoreLines(double y) {
         scoreCtx.setStrokeStyle(black);
         scoreCtx.setLineWidth(1);
         double scoreLength = barStart + bars * barWidth;

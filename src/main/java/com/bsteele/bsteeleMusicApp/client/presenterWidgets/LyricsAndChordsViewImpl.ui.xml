@@ -51,10 +51,10 @@
                 Time:
                 <span ui:field="timeSignature"/>
                 &nbsp;&nbsp;
-                <span ui:field="title" class="{resources.style.songTitle}"/>
-                <span ui:field="fileNumber" class="{resources.style.songTitle}"/>
+                <g:Anchor ui:field="title" styleName="{resources.style.songTitle}" target="_blank"/>
                 by
-                <span ui:field="artist"/>
+                <g:Anchor ui:field="artist" target="_blank"/>
+
                 <!--    note the reverse order due to right justification of the last item  -->
                 <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"
                           title="Click for next song in filtered song list.">&#x25B6;

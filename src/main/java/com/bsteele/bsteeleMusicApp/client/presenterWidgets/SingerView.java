@@ -18,6 +18,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -45,10 +46,10 @@ public class SingerView
     SpanElement timeSignature;
 
     @UiField
-    SpanElement title;
+    Anchor title;
 
     @UiField
-    SpanElement artist;
+    Anchor  artist;
 
     @UiField
     Button nextSongButton;
@@ -120,9 +121,8 @@ public class SingerView
             resetScroll(lyricsScrollPanel);
 
             song = songUpdate.getSong();
-            
-            title.setInnerHTML(song.getTitle());
-            artist.setInnerHTML(song.getArtist());
+
+            setAnchors(title,artist);
             copyright.setInnerHTML(song.getCopyright());
 
             timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());

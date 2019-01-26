@@ -4,7 +4,11 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
-import com.bsteele.bsteeleMusicApp.client.application.events.*;
+import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;

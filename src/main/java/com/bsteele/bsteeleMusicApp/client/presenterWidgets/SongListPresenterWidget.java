@@ -3,7 +3,21 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.events.*;
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.application.home.AppTab;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
@@ -25,8 +39,6 @@ import com.gwtplatform.mvp.client.View;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.NavigableSet;
-import java.util.Set;
 import java.util.TreeSet;
 
 /**

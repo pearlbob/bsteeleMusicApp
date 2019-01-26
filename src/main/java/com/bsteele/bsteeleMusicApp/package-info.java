@@ -13,10 +13,18 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: player view on born to run
+fixme: layla sharps and flats
+todo: Song diff/merge display for versions of same file, a write that guarantees biggest version number
+fixme: always move to top of song on song change
+todo: cursor off screen when in play, all mouse wheels go to scroll
+todo: keep key after edit
+todo: select display key when editing
 fixme: last line of lyrics don't display unless ended with new line
 ____fixme: call checkSong after edit change delete
 ____fixme: E..A enters as E.A.
 ____fixme: dots should not be lost on key change
+todo: even the horizontal spacing of mesure display widths... if there is room
 todo: arrow keys should work on chord edit
 todo: drag selection in chord edit
 fixme: cursor should be remembered in undos

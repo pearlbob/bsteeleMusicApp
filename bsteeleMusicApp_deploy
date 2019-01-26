@@ -19,7 +19,7 @@ cp -r $localbeta/* $localdst
 gsutil cp $localbeta/${app}.war $lyricsDst/$lyricsWar
 
 #	copy local deploy to the web server
-gsutil -m rsync -d -R $localdst/ $dst 	#	source needs the /
+gsutil -m rsync -d -R -x ".*\.songlyrics$" $localdst/ $dst 	#	source needs the /
 gsutil -m -q acl -r ch -u AllUsers:R $dst
 
 

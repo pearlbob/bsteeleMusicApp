@@ -29,6 +29,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FocusPanel;
@@ -75,13 +76,10 @@ public class LyricsAndChordsViewImpl
     SpanElement timeSignature;
 
     @UiField
-    SpanElement title;
+    Anchor title;
 
     @UiField
-    SpanElement fileNumber;
-
-    @UiField
-    SpanElement artist;
+    Anchor  artist;
 
     @UiField
     Button nextSongButton;
@@ -223,11 +221,7 @@ public class LyricsAndChordsViewImpl
         updateCount++;
 
         //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        fileNumber.setInnerHTML((song.getFileVersionNumber() > 0
-                ? "(" + Integer.toString(song.getFileVersionNumber()) + ")"
-                : ""));
-        artist.setInnerHTML(song.getArtist());
+        setAnchors(title, artist);
         copyright.setInnerHTML(song.getCopyright());
 
         timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());

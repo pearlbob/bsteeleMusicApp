@@ -4,7 +4,9 @@
 
 set srcDir=/home/bob/google_drive/bass/songlyrics/bodhi
 set f=allSongs.songlyrics
-set svrDst=gs://www.bsteele.com/bsteeleMusicApp/$f
+set svrDst=gs://www.bsteele.com/bsteeleMusicApp
+set svrBeta=gs://www.bsteele.com/beta/bsteeleMusicApp
+set localBeta=/var/www/html/public_html/beta
 
 #	expect to be in the root directory of the project
 set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
@@ -13,8 +15,15 @@ set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
 set src=`ls -tr $srcDir/allSongs*.songlyrics | tail -1`
 
 #	copy to web
-gsutil -h "Cache-Control:public,max-age=20" cp $src $svrDst
-gsutil -q acl ch -u AllUsers:R $svrDst
+gsutil -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
+gsutil -q acl ch -u AllUsers:R $svrDst/$f
+
+#	copy to web beta
+gsutil -h "Cache-Control:public,max-age=20" cp $src $svrBeta/$f
+gsutil -q acl ch -u AllUsers:R $svrBeta/$f
+
+#	copy to local beta
+cp $src $localBeta/$f
 
 #	copy to src resource
 cp $src $codeDst

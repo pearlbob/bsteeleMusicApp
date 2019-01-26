@@ -2,7 +2,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * CopyRight 2018 bsteele.com

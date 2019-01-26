@@ -6,8 +6,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-import static org.junit.Assert.*;
-
 /**
  * CopyRight 2018 bsteele.com
  * User: bob

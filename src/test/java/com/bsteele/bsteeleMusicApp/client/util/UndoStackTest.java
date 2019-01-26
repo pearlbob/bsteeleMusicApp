@@ -3,8 +3,6 @@ package com.bsteele.bsteeleMusicApp.client.util;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * CopyRight 2018 bsteele.com
  * User: bob

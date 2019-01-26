@@ -20,9 +20,11 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -40,8 +42,7 @@ import java.util.logging.Logger;
  */
 public class PlayerViewImpl
         extends CommonPlayViewImpl
-        implements PlayerPresenterWidget.MyView
-{
+        implements PlayerPresenterWidget.MyView {
 
     @UiField
     Button playStopButton;
@@ -65,10 +66,10 @@ public class PlayerViewImpl
     SpanElement timeSignature;
 
     @UiField
-    SpanElement title;
+    Anchor title;
 
     @UiField
-    SpanElement artist;
+    Anchor  artist;
 
     @UiField
     Button nextSongButton;
@@ -88,13 +89,11 @@ public class PlayerViewImpl
     SpanElement copyright;
 
 
-    interface Binder extends UiBinder<Widget, PlayerViewImpl>
-    {
+    interface Binder extends UiBinder<Widget, PlayerViewImpl> {
     }
 
     @Inject
-    PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster)
-    {
+    PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
@@ -152,8 +151,7 @@ public class PlayerViewImpl
     }
 
     @Override
-    public void onSongUpdate(SongUpdate songUpdate)
-    {
+    public void onSongUpdate(SongUpdate songUpdate) {
 
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
@@ -202,8 +200,7 @@ public class PlayerViewImpl
         song = songUpdate.getSong();
 
         //  load new data even if the identity has not changed
-        title.setInnerHTML(song.getTitle());
-        artist.setInnerHTML(song.getArtist());
+        setAnchors(title,artist);
         copyright.setInnerHTML(song.getCopyright());
 
         timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
@@ -219,8 +216,7 @@ public class PlayerViewImpl
         chordsDirty = true;   //  done by syncKey()
     }
 
-    private void setEnables()
-    {
+    private void setEnables() {
         boolean enable = (songUpdate.getState() == SongUpdate.State.idle);
 
         originalKeyButton.setEnabled(enable);
@@ -230,19 +226,16 @@ public class PlayerViewImpl
         bpmSelect.setDisabled(!enable);
     }
 
-    private void syncCurrentKey(Key key)
-    {
+    private void syncCurrentKey(Key key) {
         keyLabel.setInnerHTML(key.toString());
     }
 
-    private void syncCurrentBpm(int bpm)
-    {
+    private void syncCurrentBpm(int bpm) {
         currentBpmEntry.setValue(Integer.toString(bpm));
         bpmSelect.setSelectedIndex(0);
     }
 
-    private void labelPlayStop()
-    {
+    private void labelPlayStop() {
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
@@ -256,8 +249,7 @@ public class PlayerViewImpl
     }
 
     @Override
-    public void onMusicAnimationEvent(MusicAnimationEvent event)
-    {
+    public void onMusicAnimationEvent(MusicAnimationEvent event) {
         if (song == null)
             return;
 
@@ -327,14 +319,12 @@ public class PlayerViewImpl
 
     }
 
-    private void syncKey(Key key)
-    {
+    private void syncKey(Key key) {
         int tran = key.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
         syncKey(tran);
     }
 
-    private void syncKey(int tran)
-    {
+    private void syncKey(int tran) {
 
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
         keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
@@ -361,7 +351,7 @@ public class PlayerViewImpl
                 flexTable.setHTML(firstRow, lyricsCol, sb.toString());
                 formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
                         .getSectionVersion().getSection().getAbbreviation() + "Class");
-                formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount()-firstRow);
+                formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
             }
             player.add(flexTable);
         }
