@@ -4,55 +4,55 @@ package com.bsteele.bsteeleMusicApp.client.songs;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class SongMoment
-{
-    SongMoment(int sequenceNumber, LyricSection lyricSection, MeasureNode measureNode, Measure measure,
-               int repeat, int repeatMax)
-    {
+public class SongMoment {
+    SongMoment(int sequenceNumber, LyricSection lyricSection,
+               ChordSection chordSection, MeasureSequenceItem measureSequenceItem, Measure measure,
+               int repeat, int repeatMax) {
         this.sequenceNumber = sequenceNumber;
         this.lyricSection = lyricSection;
-        this.measureNode = measureNode;
+        this.chordSection = chordSection;
+        this.measureSequenceItem = measureSequenceItem;
         this.measure = measure;
         this.repeat = repeat;
         this.repeatMax = repeatMax;
     }
 
-    public int getSequenceNumber()
-    {
+    public int getSequenceNumber() {
         return sequenceNumber;
     }
 
-    public LyricSection getLyricSection()
-    {
+    public LyricSection getLyricSection() {
         return lyricSection;
     }
 
-    public Measure getMeasure()
-    {
+    public ChordSection getChordSection() {
+        return chordSection;
+    }
+
+    public MeasureNode getMeasureSequenceItem() {
+        return measureSequenceItem;
+    }
+
+    public Measure getMeasure() {
         return measure;
     }
 
-    public MeasureNode getMeasureNode()
-    {
-        return measureNode;
-    }
-
-    public int getRepeat()
-    {
+    public int getRepeat() {
         return repeat;
     }
 
-    public int getRepeatMax()
-    {
+    public int getRepeatMax() {
         return repeatMax;
     }
 
-    private int sequenceNumber;
+    private final int sequenceNumber;
 
-    private int repeat;
-    private int repeatMax;
+    private final int repeat;
+    private final int repeatMax;
 
-    private LyricSection lyricSection;
-    private MeasureNode measureNode;
-    private Measure measure;
+    private final LyricSection lyricSection;
+    private final ChordSection chordSection;
+    private final MeasureSequenceItem measureSequenceItem;
+    private final Measure measure;
+
 }

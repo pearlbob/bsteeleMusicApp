@@ -1,13 +1,11 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.Grid;
-import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -15,26 +13,22 @@ import java.util.logging.Logger;
 /**
  * A chord section of a song is typically a collection of measures
  * that constitute a portion of the song that is considered musically a unit.
- *
+ * <p>
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordSection extends MeasureNode implements Comparable<ChordSection>
-{
-    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems)
-    {
+public class ChordSection extends MeasureNode implements Comparable<ChordSection> {
+    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems) {
         this.sectionVersion = sectionVersion;
         this.measureSequenceItems = (measureSequenceItems != null ? measureSequenceItems : new ArrayList<>());
     }
 
-    public ChordSection(SectionVersion sectionVersion)
-    {
+    public ChordSection(SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
         this.measureSequenceItems = new ArrayList<>();
     }
 
-    public final static ChordSection parse(String s, int beatsPerBar)
-    {
+    public final static ChordSection parse(String s, int beatsPerBar) {
         if (s == null || s.length() <= 0)
             return null;
 
@@ -147,8 +141,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
 
     @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
-    {
+    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
         logger.finest("ChordSection.addToGrid()");
 
         if (measureSequenceItems == null || measureSequenceItems.isEmpty())
@@ -162,8 +155,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats)
-    {
+    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 
         for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
@@ -182,10 +174,8 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                             ret.addAll(measureNode.generateInnerHtml(key, tran, expandRepeats));
                         lastMeasureNode = measureNode;
 
-                        if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow == MusicConstant
-                                .measuresPerDisplayRow - 1)
-                        {
-
+                        if (measuresOnThisLine % MusicConstant.measuresPerDisplayRow ==
+                                MusicConstant.measuresPerDisplayRow - 1) {
                             ret.add("\n");
                             lastMeasureNode = null;
                             measuresOnThisLine = 0;
@@ -205,8 +195,38 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return ret;
     }
 
-    public int getTotalMoments()
-    {
+    public MeasureNode findMeasureNode(MeasureNode measureNode) {
+        for (MeasureSequenceItem measureSequenceItem : getMeasureSequenceItems()) {
+            if (measureSequenceItem == measureNode)
+                return measureSequenceItem;
+            MeasureNode mn = measureSequenceItem.findMeasureNode(measureNode);
+            if (mn != null)
+                return mn;
+        }
+        return null;
+    }
+
+    public MeasureSequenceItem findMeasureSequenceItem(MeasureNode measureNode) {
+        for (MeasureSequenceItem msi : getMeasureSequenceItems()) {
+            if (measureNode == msi)
+                return msi;
+            MeasureNode mn = msi.findMeasureNode(measureNode);
+            if (mn != null)
+                return msi;
+        }
+        return null;
+    }
+
+    public int indexOf(MeasureSequenceItem measureSequenceItem) {
+        for (int i = 0; i < getMeasureSequenceItems().size(); i++) {
+            MeasureSequenceItem msi = getMeasureSequenceItems().get(i);
+            if (measureSequenceItem == msi)
+                return i;
+        }
+        return -1;
+    }
+
+    public int getTotalMoments() {
         int total = 0;
         for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
             total += measureSequenceItem.getTotalMoments();
@@ -219,8 +239,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      *
      * @param bpm the defaultBpm to set
      */
-    public final void setBeatsPerMinute(int bpm)
-    {
+    public final void setBeatsPerMinute(int bpm) {
         this.bpm = bpm;
     }
 
@@ -230,8 +249,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      *
      * @return the sectionVersion BPM or null
      */
-    public final Integer getBeatsPerMinute()
-    {
+    public final Integer getBeatsPerMinute() {
         return bpm;
     }
 
@@ -240,8 +258,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      *
      * @param beatsPerBar the beats per bar to set
      */
-    private final void setBeatsPerBar(int beatsPerBar)
-    {
+    private final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
     }
 
@@ -250,8 +267,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      *
      * @return the number of beats per bar
      */
-    public final Integer getBeatsPerBar()
-    {
+    public final Integer getBeatsPerBar() {
         return beatsPerBar;
     }
 
@@ -290,14 +306,12 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      *                              from being compared to this object.
      */
     @Override
-    public int compareTo(ChordSection o)
-    {
+    public int compareTo(ChordSection o) {
         return sectionVersion.compareTo(o.sectionVersion);
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChordSection that = (ChordSection) o;
@@ -308,32 +322,28 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(sectionVersion.hashCode(), measureSequenceItems.hashCode(), bpm, beatsPerBar);
     }
 
     @Override
-    public String toText()
-    {
+    public String toText() {
         return getSectionVersion().toString();
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getSectionVersion().toString()).append(super.toString());
+        sb.append(getSectionVersion().toString())
+                .append(measureSequenceItems == null ? "" : measureSequenceItems.toString());
         return sb.toString();
     }
 
-    public final SectionVersion getSectionVersion()
-    {
+    public final SectionVersion getSectionVersion() {
         return sectionVersion;
     }
 
-    ArrayList<MeasureSequenceItem> getMeasureSequenceItems()
-    {
+    ArrayList<MeasureSequenceItem> getMeasureSequenceItems() {
         return measureSequenceItems;
     }
 

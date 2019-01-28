@@ -3,7 +3,6 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.Grid;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
@@ -28,7 +27,6 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.client.util.UndoStack;
 import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -643,6 +641,7 @@ public class SongEditView
             }
 
 
+            //  if we found something valid in the input, edit the song
             if (measure != null && lastChordSelection != null) {
                 MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
                 if (editInsert.getValue()) {
@@ -693,7 +692,7 @@ public class SongEditView
         if (song == null)
             return;
 
-        this.song = song;
+        this.song = song.copySong();
 
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
@@ -764,8 +763,8 @@ public class SongEditView
      * @param event
      * @return
      */
-    protected com.google.gwt.user.client.Element getEventTargetCell(Event event) {
-        for (com.google.gwt.user.client.Element td = DOM.eventGetTarget(event); td != null; td = DOM.getParent(td)) {
+    protected com.google.gwt.dom.client.Element getEventTargetCell(Event event) {
+        for (com.google.gwt.dom.client.Element td = DOM.eventGetTarget(event); td != null; td = DOM.getParent(td)) {
             if (td.getPropertyString("tagName").equalsIgnoreCase("td")) {
 //                Element tr = DOM.getParent(td);
 //                Element body = DOM.getParent(tr);
@@ -813,8 +812,18 @@ public class SongEditView
         String text = null;
         Element e = null;
         {
-            int row = Math.min(chordSelection.getRow(), chordsFlexTable.getRowCount() - 1);    //  might have changed
-            int cols = Math.min(chordSelection.getCol(), chordsFlexTable.getCellCount(row) - 1);
+            int row = chordSelection.getRow();
+            int cols = chordSelection.getCol();
+
+            //  limit to current conditions
+            if (row >= chordsFlexTable.getRowCount()) {
+                //  row might have changed
+                row = chordsFlexTable.getRowCount() - 1;
+                cols = chordsFlexTable.getCellCount(row) - 1;
+            } else if (cols >= chordsFlexTable.getCellCount(row))
+                cols = chordsFlexTable.getCellCount(row) - 1;
+
+
             for (; row >= 0 && cols >= 0; ) {
                 e = formatter.getElement(row, cols);
                 text = e.getInnerText();
@@ -828,7 +837,7 @@ public class SongEditView
                     row--;
                     if (row < 0) {
                         row = 0;
-                        cols=0;
+                        cols = 0;
                         break;
                     }
                     cols = chordsFlexTable.getCellCount(row) - 1;
@@ -898,33 +907,9 @@ public class SongEditView
                 undoStackPushSong();
             editAppend.setValue(true);     // no delete section delete
         } else {
-            MeasureSequenceItem measureSequenceItem = song.findMeasureSequenceItem(measure);    //fixme: here!  now!
-            int sizeRemaining = measureSequenceItem.size();
             if (song.measureDelete(measure))
                 undoStackPushSong();
-
-//            //  re-select
-//            int r = lastChordSelection.getRow();
-//            int c = lastChordSelection.getCol();
-//            Grid<MeasureNode> grid = song.getStructuralGrid();
-//            search:
-//            while (r >= 0) {
-//                while (c > 0) {
-//                    lastChordSelection = new SongChordGridSelection(r, c);
-//                    if (song.findMeasure(lastChordSelection) != null)
-//                        break search;
-//                    c--;
-//                    sizeRemaining--;
-//                }
-//                r--;
-//                if (r < 0 || sizeRemaining <= 0) {
-//                    lastChordSelection = null;
-//                    break;
-//                }
-//                c = Math.min(sizeRemaining, Math.min(grid.getRow(r).size(), MusicConstant.measuresPerDisplayRow + 1));
-//            }
-//            if (r < 0)
-//                lastChordSelection = null;
+            else GWT.log("didn't find in song: " + measure.toString());
         }
 
         displaySong();
@@ -934,6 +919,7 @@ public class SongEditView
         measureFocus();
         checkSong();
     }
+
 
     private static final String selectedBorderColorValueString = "#f88";
 

@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**
- * Base class for measure node trees.
+ * Base class for all measure node trees, i.e. the song chords.
  * Designed to simplify the walk of the song's sequence of measures and sequences of measures.
  * <p>
  * CopyRight 2018 bsteele.com
@@ -101,7 +101,8 @@ public abstract class MeasureNode {
         return "C";
     }
 
-    /** the number characters used when the measure node was parsed from an input string.
+    /** The number characters used when the measure node was parsed from an input string.
+     * Used internally only.
      *
      */
     protected transient int parseLength;

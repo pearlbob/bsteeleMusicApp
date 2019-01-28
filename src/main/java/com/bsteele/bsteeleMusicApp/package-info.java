@@ -13,6 +13,9 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+____fixme: double delete => "  ) (  "
+fixme: how to delete a repeat marker?... and a repeat?
+todo: edit view, click to the right of chord table should select last in row
 fixme: player view on born to run
 fixme: layla sharps and flats
 todo: Song diff/merge display for versions of same file, a write that guarantees biggest version number

@@ -78,6 +78,15 @@ public class MeasureSequenceItem extends MeasureNode {
         return "MeasureSequenceItem";   //  error
     }
 
+
+    public MeasureNode findMeasureNode(MeasureNode measureNode) {
+        for (Measure m : measures) {
+            if (m == measureNode)
+                return m;
+        }
+        return null;
+    }
+
     public enum EditLocation {
         insert,
         replace,
@@ -149,10 +158,17 @@ public class MeasureSequenceItem extends MeasureNode {
         return true;
     }
 
-    boolean remove(int index) {
-        return measures.remove(index) != null;
+    /**
+     * Delete the given measure if it belongs in the sequence item.
+     *
+     * @param measure the measure to be deleted
+     * @return true if the measure was found and deleted.
+     */
+    public boolean delete(Measure measure) {
+        if (measures == null)
+            return false;
+        return measures.remove(measure);
     }
-
 
     @Override
     public boolean isSingleItem() {

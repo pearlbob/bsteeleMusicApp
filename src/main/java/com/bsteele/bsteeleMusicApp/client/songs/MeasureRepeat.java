@@ -13,28 +13,51 @@ import java.util.Objects;
 public class MeasureRepeat extends MeasureSequenceItem
 {
 
-    MeasureRepeat(/*@Nonnull SectionVersion sectionVersion, */@Nonnull ArrayList<Measure> measures, int repeats)
+    MeasureRepeat(@Nonnull ArrayList<Measure> measures, int repeats)
     {
         super(measures);
-        this.repeats = repeats;
+        this.repeatMarker = new MeasureRepeatMarker(repeats);
     }
 
     @Override
     public int getTotalMoments()
     {
-        return repeats * super.getTotalMoments();
+        return getRepeatMarker().getRepeats() * super.getTotalMoments();
     }
 
 
     public final int getRepeats()
     {
-        return repeats;
+        return getRepeatMarker().getRepeats();
     }
 
 
     public final void setRepeats(int repeats)
     {
-        this.repeats = repeats;
+        getRepeatMarker().setRepeats(repeats);
+    }
+
+    @Override
+    public MeasureNode findMeasureNode(MeasureNode measureNode) {
+        MeasureNode ret = super.findMeasureNode(measureNode);
+        if (ret != null)
+            return ret;
+        if (measureNode == repeatMarker)
+            return repeatMarker;
+        return null;
+    }
+
+    @Override
+    public boolean delete(Measure measure) {
+        if (measure == null)
+            return false;
+        if (measure == getRepeatMarker()) {
+            //  fixme: improve delete repeat marker
+            //  fake it
+            getRepeatMarker().setRepeats(1);
+            return true;
+        }
+        return super.delete(measure);
     }
 
     @Override
@@ -46,7 +69,7 @@ public class MeasureRepeat extends MeasureSequenceItem
             return ret;
 
         if (expandRepeats) {
-            for (int r = 0; r < repeats; r++) {
+            for (int r = 0; r < getRepeatMarker().getRepeats(); r++) {
                 MeasureNode lastMeasureNode = null;
                 MeasureNode measureNode = null;
                 int i = 0;
@@ -116,7 +139,7 @@ public class MeasureRepeat extends MeasureSequenceItem
             }
             if (measures.size() > MusicConstant.measuresPerDisplayRow)
                 ret.add("|");
-            ret.add("x" + repeats);
+            ret.add("x" + getRepeatMarker().getRepeats());
             ret.add("\n");
         }
 
@@ -142,7 +165,11 @@ public class MeasureRepeat extends MeasureSequenceItem
         if (measures.size() > MusicConstant.measuresPerDisplayRow) {
             grid.add(new MeasureRepeatExtension());
         }
-        grid.add(new MeasureRepeatMarker(repeats));
+        grid.add(getRepeatMarker());
+    }
+
+    public final MeasureRepeatMarker getRepeatMarker() {
+        return repeatMarker;
     }
 
     @Override
@@ -162,21 +189,23 @@ public class MeasureRepeat extends MeasureSequenceItem
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MeasureRepeat that = (MeasureRepeat) o;
-        return repeats == that.repeats && super.equals(o);
+        MeasureRepeat other = (MeasureRepeat) o;
+        return getRepeats() == other.getRepeats() && super.equals(o);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(super.hashCode(), repeats);
+        return Objects.hash(super.hashCode(), getRepeats());
     }
 
     @Override
     public String toString()
     {
-        return super.toString() + "x" + repeats + " ";
+        return super.toString() + "x" + getRepeats() + " ";
     }
 
-    private int repeats;
+    private MeasureRepeatMarker repeatMarker;
+
+
 }

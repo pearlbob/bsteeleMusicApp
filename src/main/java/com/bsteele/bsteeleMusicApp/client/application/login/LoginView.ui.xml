@@ -42,6 +42,9 @@
                 The best functionality will be using the latest Chrome browser on a desktop.  All other environments
                 may be limited in functionality.
             </li>
+            <li>
+                Android trick: try forcing the desktop site. See options, "Desktop site" check box.
+            </li>
         </ul>
 
     </g:HTMLPanel>

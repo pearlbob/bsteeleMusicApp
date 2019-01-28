@@ -23,22 +23,22 @@ import java.util.Objects;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
+import static com.google.gwt.user.client.ui.HasVerticalAlignment.ALIGN_BOTTOM;
+
 /**
  * @author bob
  */
 
 /**
  * A piece of music to be played according to the structure it contains.
- *
  */
-public class SongBase
-{
+public class SongBase {
 
     /**
      * Not to be used externally
      */
-    SongBase()
-    {
+    SongBase() {
         setTitle("");
         setArtist("");
         copyright = "";
@@ -54,8 +54,7 @@ public class SongBase
     }
 
     @Deprecated
-    protected void parseLyricsToSectionSequence(String rawLyrics)
-    {
+    protected void parseLyricsToSectionSequence(String rawLyrics) {
         sequence = Section.matchAll(rawLyrics);
 
         if (sequence.isEmpty()) {
@@ -64,8 +63,7 @@ public class SongBase
         //GWT.log(sequence.toString());
     }
 
-    private final void computeSongMoments()
-    {
+    private final void computeSongMoments() {
         songMoments = new ArrayList<>();
 
         if (lyricSections == null)
@@ -86,7 +84,7 @@ public class SongBase
                                     for (Measure measure : measures) {
                                         songMoments.add(new SongMoment(
                                                 songMoments.size(),  //  size prior to add
-                                                lyricSection, measureSequenceItem,
+                                                lyricSection, chordSection, measureSequenceItem,
                                                 measure, repeat, limit));
                                     }
                             }
@@ -96,7 +94,7 @@ public class SongBase
                                 for (Measure measure : measures) {
                                     songMoments.add(new SongMoment(
                                             songMoments.size(),  //  size prior to add
-                                            lyricSection, measureSequenceItem,
+                                            lyricSection, chordSection, measureSequenceItem,
                                             measure, 0, 0));
                                 }
                         }
@@ -117,8 +115,7 @@ public class SongBase
         }
     }
 
-    private final ChordSection findChordSection(LyricSection lyricSection)
-    {
+    private final ChordSection findChordSection(LyricSection lyricSection) {
         for (ChordSection chordSection : chordSections) {
             if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion())) {
                 return chordSection;
@@ -127,8 +124,7 @@ public class SongBase
         return null;
     }
 
-    private void computeDuration()
-    {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
+    private void computeDuration() {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
 
         duration = 0;
         totalBeats = 0;
@@ -179,8 +175,7 @@ public class SongBase
      * @return
      */
     @Deprecated
-    public final String[] getSectionSequenceAsStrings()
-    {
+    public final String[] getSectionSequenceAsStrings() {
 
         //  dumb down the section sequence list for javascript
         String ret[] = new String[sequence.size()];
@@ -191,21 +186,18 @@ public class SongBase
     }
 
     @Deprecated
-    public final Grid<String> getChordSectionStrings(SectionVersion sv)
-    {
+    public final Grid<String> getChordSectionStrings(SectionVersion sv) {
         return chordSectionInnerHtmlMap.get(sv);
     }
 
-    public final ChordSection getChordSection(SectionVersion sv)
-    {
+    public final ChordSection getChordSection(SectionVersion sv) {
         for (ChordSection chordSection : chordSections)
             if (chordSection.getSectionVersion().equals(sv))
                 return chordSection;
         return null;
     }
 
-    protected final void parse()
-    {
+    protected final void parse() {
         measureNodes = new ArrayList<>();
         chordSections = new TreeSet<>();
 
@@ -254,8 +246,7 @@ public class SongBase
         computeDuration();
     }
 
-    public final Grid<MeasureNode> getStructuralGrid()
-    {
+    public final Grid<MeasureNode> getStructuralGrid() {
         Grid<MeasureNode> ret = new Grid<>();
 
         for (ChordSection chordSection : chordSections) {
@@ -265,13 +256,11 @@ public class SongBase
         return ret;
     }
 
-    public final String getStructuralGridAsOneTextLine()
-    {
+    public final String getStructuralGridAsOneTextLine() {
         return getStructuralGridAsText().replaceAll("\\n", " ");
     }
 
-    public final String getStructuralGridAsText()
-    {
+    public final String getStructuralGridAsText() {
         StringBuilder sb = new StringBuilder();
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
@@ -295,8 +284,7 @@ public class SongBase
         return sb.toString();
     }
 
-    private final SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row)
-    {
+    private final SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row) {
         int rowCount = grid.getRowCount();
         if (row >= rowCount)
             return null;
@@ -308,17 +296,15 @@ public class SongBase
         return null;
     }
 
-    public final MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection)
-    {
+    public final MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection) {
         if (songChordGridSelection == null)
             return null;
         return getStructuralMeasureNode(songChordGridSelection.getRow(), songChordGridSelection.getCol());
     }
 
-    public final MeasureNode getStructuralMeasureNode(int r, int c)
-    {
+    public final MeasureNode getStructuralMeasureNode(int r, int c) {
         try {
-            Grid<MeasureNode> grid = getStructuralGrid();   //  fixme: cache?
+            Grid<MeasureNode> grid = getStructuralGrid();   //  fixme: cache
             ArrayList<MeasureNode> row = grid.getRow(r);
             if (row == null)
                 return null;
@@ -328,8 +314,7 @@ public class SongBase
         }
     }
 
-    public final String measureNodesToString()
-    {
+    public final String measureNodesToString() {
         StringBuilder sb = new StringBuilder();
 
         for (MeasureNode measureNode : measureNodes) {
@@ -339,8 +324,7 @@ public class SongBase
         return sb.toString();
     }
 
-    public final boolean addSectionVersion(SectionVersion sectionVersion)
-    {
+    public final boolean addSectionVersion(SectionVersion sectionVersion) {
         if (sectionVersion == null)
             return false;
         for (ChordSection chordSection : chordSections) {
@@ -352,16 +336,16 @@ public class SongBase
     }
 
     /**
+     * Edit the given measure in or out of the song based on the data from the edit location.
      *
-     * @param refMeasureNode
-     * @param editLocation
-     * @param measure
+     * @param refMeasureNode the referenced location in the song
+     * @param editLocation   the type of edit to be made: insert, append, delete, etc.
+     * @param measure        the measure in question
      * @return
      */
     public final boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
                                      @Nonnull MeasureSequenceItem.EditLocation editLocation,
-                                     @Nonnull Measure measure)
-    {
+                                     @Nonnull Measure measure) {
         ChordSection chordSection = findChordSection(refMeasureNode);
         if (chordSection == null)
             return false;
@@ -370,10 +354,11 @@ public class SongBase
             chordSection.getMeasureSequenceItems().add(new MeasureSequenceItem(new ArrayList<>()));
         }
 
-        MeasureSequenceItem measureSequenceItem = findMeasureSequenceItem(chordSection, refMeasureNode);
+        MeasureSequenceItem measureSequenceItem = chordSection.findMeasureSequenceItem(refMeasureNode);
         if (measureSequenceItem == null) {
             if (chordSection.getMeasureSequenceItems().size() != 1)
                 return false;
+            //  deal with empty section
             measureSequenceItem = chordSection.getMeasureSequenceItems().get(0);    //  use the default empty list
         }
 
@@ -383,14 +368,22 @@ public class SongBase
             case replace:
                 return measureSequenceItem.replace(refMeasureNode, measure);
             case append:
+                if (refMeasureNode instanceof MeasureRepeatMarker) {
+                    MeasureRepeat measureRepeat = (MeasureRepeat) measureSequenceItem;
+                    if (refMeasureNode == measureRepeat.getRepeatMarker()) {
+                        //  appending at the repeat marker forces the section to add a sequenceItem list after the repeat
+                        MeasureSequenceItem newMeasureSequenceItem = new MeasureSequenceItem(new ArrayList<>());
+                        chordSection.getMeasureSequenceItems().add(chordSection.indexOf(measureRepeat) + 1, newMeasureSequenceItem);
+                        measureSequenceItem = newMeasureSequenceItem;
+                    }
+                }
                 return measureSequenceItem.append(refMeasureNode, measure);
         }
         return false;
     }
 
 
-    public final MeasureSequenceItem findMeasureSequenceItem(Measure measure)
-    {
+    public final MeasureSequenceItem findMeasureSequenceItem(Measure measure) {
         if (measure == null)
             return null;
 
@@ -405,44 +398,19 @@ public class SongBase
         return null;
     }
 
-    private final MeasureSequenceItem findMeasureSequenceItem(ChordSection chordSection, MeasureNode measureNode)
-    {
-//        if (chordSection.getMeasureSequenceItems().isEmpty()) {
-//            MeasureSequenceItem ret = new MeasureSequenceItem(new ArrayList<>());
-//            chordSection.getMeasureSequenceItems().add(ret);
-//            return ret;
-//        }
-//        if (chordSection.getMeasureSequenceItems().size() == 1
-//                && chordSection.getMeasureSequenceItems().get(0).getMeasures().isEmpty())
-//        {
-//            return chordSection.getMeasureSequenceItems().get(0);
-//        }
-        for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
-            for (Measure measure : msi.getMeasures())
-                if (measure == measureNode)
-                    return msi;
-        }
-        return null;
-    }
 
-
-    private final ChordSection findChordSection(MeasureNode measureNode)
-    {
+    private final ChordSection findChordSection(MeasureNode measureNode) {
         for (ChordSection chordSection : chordSections) {
             if (measureNode == chordSection)
                 return chordSection;
-            for (MeasureSequenceItem measureSequenceItem : chordSection.getMeasureSequenceItems())
-                if (measureSequenceItem == measureNode)
-                    return chordSection;
-            MeasureNode mn = findMeasureSequenceItem(chordSection, measureNode);
+            MeasureNode mn = chordSection.findMeasureNode(measureNode);
             if (mn != null)
                 return chordSection;
         }
         return null;
     }
 
-    public final SongChordGridSelection findMeasureChordGridLocation(Measure measure)
-    {
+    public final SongChordGridSelection findMeasureChordGridLocation(Measure measure) {
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
         for (int r = 0; r < rowCount; r++) {
@@ -459,8 +427,7 @@ public class SongBase
         return null;
     }
 
-    public final SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion)
-    {
+    public final SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion) {
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
         for (int r = 0; r < rowCount; r++) {
@@ -468,8 +435,7 @@ public class SongBase
             if (row.size() > 0) {
                 MeasureNode mn = row.get(0);
                 if (mn instanceof ChordSection
-                        && sectionVersion.equals(((ChordSection) mn).getSectionVersion()))
-                {
+                        && sectionVersion.equals(((ChordSection) mn).getSectionVersion())) {
                     return new SongChordGridSelection(r, 0);
                 }
             }
@@ -478,8 +444,7 @@ public class SongBase
         return null;
     }
 
-    public final Measure findMeasure(SongChordGridSelection songChordGridSelection)
-    {
+    public final Measure findMeasure(SongChordGridSelection songChordGridSelection) {
         if (songChordGridSelection == null)
             return null;
         Grid<MeasureNode> grid = getStructuralGrid();
@@ -489,8 +454,7 @@ public class SongBase
         return null;
     }
 
-    public final ChordSection findChordSection(SongChordGridSelection songChordGridSelection)
-    {
+    public final ChordSection findChordSection(SongChordGridSelection songChordGridSelection) {
         if (songChordGridSelection == null)
             return null;
         Grid<MeasureNode> grid = getStructuralGrid();
@@ -500,33 +464,27 @@ public class SongBase
         return null;
     }
 
-    public final boolean measureDelete(Measure measure)
-    {
+    public final boolean measureDelete(Measure measure) {
         if (measure == null)
             return false;
 
         for (ChordSection chordSection : chordSections) {
             for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
-                for (int i = 0; i < msi.getMeasures().size(); i++) {
-                    Measure m = msi.getMeasures().get(i);
-                    if (m == measure)
-                        return msi.remove(i);
-                }
+                if (msi.delete(measure))
+                    return true;
             }
         }
         return false;
     }
 
-    public final boolean chordSectionDelete(ChordSection chordSection)
-    {
+    public final boolean chordSectionDelete(ChordSection chordSection) {
         if (chordSection == null)
             return false;
         return chordSections.remove(chordSection);
     }
 
     @Deprecated
-    protected final void parseChordTable(String rawChordTableText)
-    {
+    protected final void parseChordTable(String rawChordTableText) {
 
         chordSectionInnerHtmlMap.clear();
 
@@ -675,8 +633,7 @@ public class SongBase
         computeDuration();
     }
 
-    public final String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran)
-    {
+    public final String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<table id=\"" + tableName + "\" class=\"" + CssConstants.style + "chordTable\">\n");
@@ -756,8 +713,7 @@ public class SongBase
     }
 
 
-    public final String generateHtmlLyricsTable(String prefix)
-    {
+    public final String generateHtmlLyricsTable(String prefix) {
         String tableStart = "<table id=\"" + prefix + "LyricsTable\">\n"
                 + "<colgroup>\n"
                 + "   <col style=\"width:2ch;\">\n"
@@ -843,8 +799,7 @@ public class SongBase
         return lyrics;
     }
 
-    protected final void parseLyrics()
-    {
+    protected final void parseLyrics() {
         int state = 0;
         String whiteSpace = "";
         String lyrics = "";
@@ -919,8 +874,7 @@ public class SongBase
      * @param sectionIndex
      * @return a lyrics section sequence id
      */
-    public static final String genLyricsId(int sectionIndex)
-    {
+    public static final String genLyricsId(int sectionIndex) {
         return "L." + sectionIndex;
     }
 
@@ -932,15 +886,13 @@ public class SongBase
      * @param col                   cell column
      * @return the generated chord section id
      */
-    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col)
-    {
+    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col) {
         if (displaySectionVersion == null)
             return "";
         return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
     }
 
-    public final Measure getMeasure(int row, int col)
-    {
+    public final Measure getMeasure(int row, int col) {
         Grid<MeasureNode> grid = getStructuralGrid();
         MeasureNode mn = grid.get(row, col);
         if (mn == null)
@@ -950,14 +902,12 @@ public class SongBase
         return null;
     }
 
-    public final void transpose(String prefix, FlexTable flexTable, int halfSteps, int fontSize)
-    {
+    public final void transpose(String prefix, FlexTable flexTable, int halfSteps, int fontSize) {
         transpose(getStructuralGrid(), prefix, flexTable, halfSteps, fontSize, false);
     }
 
     public final void transpose(ChordSection chordSection, String prefix, FlexTable flexTable, int halfSteps,
-                                int fontSize, boolean append)
-    {
+                                int fontSize, boolean append) {
         if (chordSection == null || flexTable == null || fontSize <= 0)
             return;
         Grid<MeasureNode> grid = new Grid<>();
@@ -965,9 +915,8 @@ public class SongBase
         transpose(grid, prefix, flexTable, halfSteps, fontSize, append);
     }
 
-    public final void transpose(Grid<MeasureNode> grid, String prefix, FlexTable flexTable, int halfSteps,
-                                int fontSize, boolean append)
-    {
+    private final void transpose(Grid<MeasureNode> grid, String prefix, FlexTable flexTable, int halfSteps,
+                                 int fontSize, boolean append) {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
@@ -1007,13 +956,13 @@ public class SongBase
                 if (c > 0
                         && c <= MusicConstant.measuresPerDisplayRow
                         && s.equals(lastValue)
-                        && !(measureNode instanceof MeasureComment))
-                {
+                        && !(measureNode instanceof MeasureComment)) {
                     s = "-";
                     formatter.addStyleName(r + offset, c, CssConstants.style + "textCenter");
                 } else
                     lastValue = s;
 
+                formatter.setAlignment(r + offset, c, ALIGN_CENTER, ALIGN_BOTTOM);
                 flexTable.setHTML(r + offset, c,
                         "<span style=\"font-size: " + fontSize + "px;\">"
                                 + s
@@ -1029,8 +978,7 @@ public class SongBase
         }
     }
 
-    public final void setRepeat(SongChordGridSelection songChordGridSelection, int repeats)
-    {
+    public final void setRepeat(SongChordGridSelection songChordGridSelection, int repeats) {
         Measure measure = findMeasure(songChordGridSelection);
         if (measure == null)
             return;
@@ -1074,15 +1022,14 @@ public class SongBase
     }
 
 
-
-    /** Checks a song for completeness.
+    /**
+     * Checks a song for completeness.
      *
      * @return a new song constructed with the song's current fields.
      * @throws ParseException exception thrown if the song's fields don't match properly.
      */
     public final Song checkSong()
-            throws ParseException
-    {
+            throws ParseException {
         return checkSong(getTitle(), getArtist(), getCopyright(),
                 getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
                 Integer.toString(getUnitsPerMeasure()),
@@ -1092,24 +1039,23 @@ public class SongBase
     /**
      * Validate a song entry argument set
      *
-     * @param title the song's title
-     * @param artist the artist associated with this song or at least this song version
-     * @param copyright the copyright notice associated with the song
-     * @param key the song's musical key
-     * @param bpmEntry the song's number of beats per minute
-     * @param beatsPerBarEntry the song's default number of beats per par
+     * @param title                the song's title
+     * @param artist               the artist associated with this song or at least this song version
+     * @param copyright            the copyright notice associated with the song
+     * @param key                  the song's musical key
+     * @param bpmEntry             the song's number of beats per minute
+     * @param beatsPerBarEntry     the song's default number of beats per par
      * @param unitsPerMeasureEntry the inverse of the note duration fraction per entry, for exmple if each beat is
      *                             represented by a quarter note, the units per measure would be 4.
-     * @param chordsTextEntry the string transport form of the song's chord sequence description
-     * @param lyricsTextEntry the string transport form of the song's section sequence and lyrics
+     * @param chordsTextEntry      the string transport form of the song's chord sequence description
+     * @param lyricsTextEntry      the string transport form of the song's section sequence and lyrics
      * @return a new song if the fields are valid
      * @throws ParseException exception thrown if the song's fields don't match properly.
      */
     public static final Song checkSong(String title, String artist, String copyright,
                                        Key key, String bpmEntry, String beatsPerBarEntry, String unitsPerMeasureEntry,
                                        String chordsTextEntry, String lyricsTextEntry)
-            throws ParseException
-    {
+            throws ParseException {
         if (title == null || title.length() <= 0) {
             throw new ParseException("no song title given!", 0);
         }
@@ -1220,16 +1166,14 @@ public class SongBase
 
         //  an early song with default (no) structure?
         if (newSong.getLyricSections().size() == 1 && newSong.getLyricSections().get(0).getSectionVersion().equals
-                (Section.getDefaultVersion()))
-        {
+                (Section.getDefaultVersion())) {
             throw new ParseException("song looks too simple, is there really no structure?", 0);
         }
 
         return newSong;
     }
 
-    private final String transposeMeasure(Key newKey, String m, int halfSteps)
-    {
+    private final String transposeMeasure(Key newKey, String m, int halfSteps) {
         if (halfSteps == 0)
             return m;
 
@@ -1277,8 +1221,7 @@ public class SongBase
                                     || c == '.'
                                     || c == '<' || c == '>'
                                     || c == '\n'
-                                    || c == js_delta)
-                    {
+                                    || c == js_delta) {
                         sb.append(c);
                     } else {    //  don't parse the rest
                         sb.append(c);
@@ -1307,8 +1250,7 @@ public class SongBase
         return sb.toString();
     }
 
-    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map)
-    {
+    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {
         HashMap<SectionVersion, Grid<String>> ret = new HashMap<>();
         for (SectionVersion version : map.keySet()) {
             ret.put(version, new Grid<String>().deepCopy(map.get(version)));
@@ -1317,8 +1259,7 @@ public class SongBase
         return ret;
     }
 
-    private static int chordLetterToNumber(char letter)
-    {
+    private static int chordLetterToNumber(char letter) {
         int i = letter - 'A';
         //                            a  a# b  c  c# d  d# e  f f#  g  g#
         //                            0  1  2  3  4  5  6  7  8  9  10 11
@@ -1328,8 +1269,7 @@ public class SongBase
 
     private static final int chordLetterToNumber[] = new int[]{0, 2, 3, 5, 7, 8, 10};
 
-    private final String chordNumberToLetter(int n, int halfSteps)
-    {
+    private final String chordNumberToLetter(int n, int halfSteps) {
         return key.getScaleNoteByHalfStep(n + halfSteps).toString();
     }
 
@@ -1338,8 +1278,7 @@ public class SongBase
      *
      * @param title
      */
-    protected final void setTitle(String title)
-    {
+    protected final void setTitle(String title) {
         //  move the leading "The " to the end
         final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(title)) {
@@ -1349,12 +1288,12 @@ public class SongBase
         songId = new SongId("Song" + title.replaceAll("\\W+", ""));
     }
 
-    /** Sets the song's artist
+    /**
+     * Sets the song's artist
      *
      * @param artist artist's name
      */
-    protected final void setArtist(String artist)
-    {
+    protected final void setArtist(String artist) {
         //  move the leading "The " to the end
         final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(artist)) {
@@ -1368,8 +1307,7 @@ public class SongBase
      *
      * @param copyright copyright for the song
      */
-    protected final void setCopyright(String copyright)
-    {
+    protected final void setCopyright(String copyright) {
         this.copyright = copyright;
     }
 
@@ -1378,8 +1316,7 @@ public class SongBase
      *
      * @param key the given key
      */
-    public final void setKey(Key key)
-    {
+    public final void setKey(Key key) {
         this.key = key;
     }
 
@@ -1389,8 +1326,7 @@ public class SongBase
      *
      * @return the default BPM
      */
-    public final int getBeatsPerMinute()
-    {
+    public final int getBeatsPerMinute() {
         return defaultBpm;
     }
 
@@ -1399,8 +1335,7 @@ public class SongBase
      *
      * @param bpm the defaultBpm to set
      */
-    public final void setBeatsPerMinute(int bpm)
-    {
+    public final void setBeatsPerMinute(int bpm) {
         this.defaultBpm = bpm;
     }
 
@@ -1409,8 +1344,7 @@ public class SongBase
      *
      * @return the number of beats per bar
      */
-    public final int getBeatsPerBar()
-    {
+    public final int getBeatsPerBar() {
         return beatsPerBar;
     }
 
@@ -1419,8 +1353,7 @@ public class SongBase
      *
      * @param beatsPerBar the beatsPerBar to set
      */
-    public final void setBeatsPerBar(int beatsPerBar)
-    {
+    public final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
         computeDuration();
     }
@@ -1432,13 +1365,11 @@ public class SongBase
      *
      * @return the unitsPerMeasure
      */
-    public final int getUnitsPerMeasure()
-    {
+    public final int getUnitsPerMeasure() {
         return unitsPerMeasure;
     }
 
-    protected final void setUnitsPerMeasure(int unitsPerMeasure)
-    {
+    protected final void setUnitsPerMeasure(int unitsPerMeasure) {
         this.unitsPerMeasure = unitsPerMeasure;
     }
 
@@ -1447,8 +1378,7 @@ public class SongBase
      *
      * @return the copyright
      */
-    public final String getCopyright()
-    {
+    public final String getCopyright() {
         return copyright;
     }
 
@@ -1457,8 +1387,7 @@ public class SongBase
      *
      * @return the key
      */
-    public final Key getKey()
-    {
+    public final Key getKey() {
         return key;
     }
 
@@ -1467,16 +1396,14 @@ public class SongBase
      *
      * @return the songId
      */
-    public final SongId getSongId()
-    {
+    public final SongId getSongId() {
         return songId;
     }
 
     /**
      * @return the chordLetterToNumber
      */
-    public static final int[] getChordLetterToNumber()
-    {
+    public static final int[] getChordLetterToNumber() {
         return chordLetterToNumber;
     }
 
@@ -1485,8 +1412,7 @@ public class SongBase
      *
      * @return the title
      */
-    public final String getTitle()
-    {
+    public final String getTitle() {
         return title;
     }
 
@@ -1495,8 +1421,7 @@ public class SongBase
      *
      * @return the artist
      */
-    public final String getArtist()
-    {
+    public final String getArtist() {
         return artist;
     }
 
@@ -1506,8 +1431,7 @@ public class SongBase
      * @return the rawLyrics
      */
     @Deprecated
-    public final String getLyricsAsString()
-    {
+    public final String getLyricsAsString() {
         return rawLyrics;
     }
 
@@ -1517,8 +1441,7 @@ public class SongBase
      * @return the chords
      */
     @Deprecated
-    public final String getChordsAsString()
-    {
+    public final String getChordsAsString() {
         return chords;
     }
 
@@ -1527,8 +1450,7 @@ public class SongBase
      *
      * @return the defaultBpm
      */
-    public final int getDefaultBpm()
-    {
+    public final int getDefaultBpm() {
         return defaultBpm;
     }
 
@@ -1539,8 +1461,7 @@ public class SongBase
      *
      * @return the drum section
      */
-    public final LegacyDrumSection getDrumSection()
-    {
+    public final LegacyDrumSection getDrumSection() {
         return drumSection;
     }
 
@@ -1549,33 +1470,27 @@ public class SongBase
      *
      * @param drumSection the drum section
      */
-    public final void setDrumSection(LegacyDrumSection drumSection)
-    {
+    public final void setDrumSection(LegacyDrumSection drumSection) {
         this.drumSection = drumSection;
     }
 
-    public TreeSet<ChordSection> getChordSections()
-    {
+    public TreeSet<ChordSection> getChordSections() {
         return chordSections;
     }
 
-    public final Arrangement getDrumArrangement()
-    {
+    public final Arrangement getDrumArrangement() {
         return drumArrangement;
     }
 
-    public final void setDrumArrangement(Arrangement drumArrangement)
-    {
+    public final void setDrumArrangement(Arrangement drumArrangement) {
         this.drumArrangement = drumArrangement;
     }
 
-    public final String getFileName()
-    {
+    public final String getFileName() {
         return fileName;
     }
 
-    public final void setFileName(String fileName)
-    {
+    public final void setFileName(String fileName) {
         this.fileName = fileName;
 
         final RegExp fileVersionRegExp = RegExp.compile(" \\(([0-9]+)\\).songlyrics$");
@@ -1587,69 +1502,56 @@ public class SongBase
         //logger.info("setFileName(): "+fileVersionNumber);
     }
 
-    public final double getDuration()
-    {
+    public final double getDuration() {
         return duration;
     }
 
-    public final int getTotalBeats()
-    {
+    public final int getTotalBeats() {
         return totalBeats;
     }
 
-    public ArrayList<SongMoment> getSongMoments()
-    {
+    public ArrayList<SongMoment> getSongMoments() {
         return songMoments;
     }
 
-    public ArrayList<LyricSection> getLyricSections()
-    {
+    public ArrayList<LyricSection> getLyricSections() {
         return lyricSections;
     }
 
-    public int getFileVersionNumber()
-    {
+    public int getFileVersionNumber() {
         return fileVersionNumber;
     }
 
-    protected void setDuration(double duration)
-    {
+    protected void setDuration(double duration) {
         this.duration = duration;
     }
 
-    public String getChords()
-    {
+    public String getChords() {
         return chords;
     }
 
-    protected void setChords(String chords)
-    {
+    protected void setChords(String chords) {
         this.chords = chords;
         parse();
     }
 
-    public String getRawLyrics()
-    {
+    public String getRawLyrics() {
         return rawLyrics;
     }
 
-    protected void setRawLyrics(String rawLyrics)
-    {
+    protected void setRawLyrics(String rawLyrics) {
         this.rawLyrics = rawLyrics;
     }
 
-    public void setTotalBeats(int totalBeats)
-    {
+    public void setTotalBeats(int totalBeats) {
         this.totalBeats = totalBeats;
     }
 
-    public void setDefaultBpm(int defaultBpm)
-    {
+    public void setDefaultBpm(int defaultBpm) {
         this.defaultBpm = defaultBpm;
     }
 
-    public static final class ComparatorByTitle implements Comparator<SongBase>
-    {
+    public static final class ComparatorByTitle implements Comparator<SongBase> {
 
         /**
          * Compares its two arguments for order.
@@ -1665,14 +1567,12 @@ public class SongBase
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(SongBase o1, SongBase o2)
-        {
+        public int compare(SongBase o1, SongBase o2) {
             return o1.defaultCompareTo(o2);
         }
     }
 
-    public static final class ComparatorByArtist implements Comparator<SongBase>
-    {
+    public static final class ComparatorByArtist implements Comparator<SongBase> {
 
         /**
          * Compares its two arguments for order.
@@ -1688,8 +1588,7 @@ public class SongBase
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(SongBase o1, SongBase o2)
-        {
+        public int compare(SongBase o1, SongBase o2) {
             int ret = o1.getArtist().compareTo(o2.getArtist());
             if (ret != 0) {
                 return ret;
@@ -1720,13 +1619,11 @@ public class SongBase
      * @return a string representation of the object.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return title + (fileVersionNumber > 0 ? ":(" + fileVersionNumber + ")" : "") + " by " + artist;
     }
 
-    public static final boolean containsSongTitleAndArtist(Collection<? extends SongBase> collection, SongBase song)
-    {
+    public static final boolean containsSongTitleAndArtist(Collection<? extends SongBase> collection, SongBase song) {
         for (SongBase collectionSong : collection) {
             if (song.defaultCompareTo(collectionSong) == 0)
                 return true;
@@ -1741,8 +1638,7 @@ public class SongBase
      * @param o
      * @return
      */
-    private int defaultCompareTo(SongBase o)
-    {
+    private int defaultCompareTo(SongBase o) {
         int ret = getSongId().compareTo(o.getSongId());
         if (ret != 0) {
             return ret;
@@ -1764,8 +1660,7 @@ public class SongBase
         return 0;
     }
 
-    public final boolean songBaseSameAs(SongBase o)
-    {
+    public final boolean songBaseSameAs(SongBase o) {
         //  song id built from title with reduced whitespace
         if (!getTitle().equals(o.getTitle()))
             return false;
@@ -1789,8 +1684,7 @@ public class SongBase
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         //  fixme: song equals should include all fields
         if (obj == null) {
             return false;
@@ -1804,8 +1698,7 @@ public class SongBase
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         //  fixme: song hashCode should include all fields
         int hash = 7;
         hash = (79 * hash + Objects.hashCode(this.title)) % (1 << 31);
@@ -1834,6 +1727,7 @@ public class SongBase
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private TreeSet<ChordSection> chordSections = new TreeSet<>();
+    private MeasureNode currentMeasureNode;
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
     private String chords = "";
     private ArrayList<MeasureNode> measureNodes = new ArrayList<>();

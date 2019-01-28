@@ -8,8 +8,15 @@ import javax.annotation.Nonnull;
  */
 public class MeasureRepeatMarker extends MeasureComment
 {
-    public MeasureRepeatMarker(int repeats)
-    {
+    public MeasureRepeatMarker(int repeats) {
+        this.setRepeats(repeats);
+    }
+
+    public final int getRepeats() {
+        return repeats;
+    }
+
+    public final void setRepeats(int repeats) {
         this.repeats = repeats;
     }
 
@@ -19,13 +26,16 @@ public class MeasureRepeatMarker extends MeasureComment
         return toString();
     }
 
-    public String getHtmlBlockId() { return "RX"; }
+    public final String getHtmlBlockId() {
+        return "RX";
+    }
 
     @Override
     public String toString()
     {
-        return "x" + repeats;
+        return "x" + getRepeats();
     }
 
     private int repeats;
+
 }
