@@ -95,7 +95,7 @@ cp $finalWar /opt/tomcat/webapps
 
 #	deploy on web
 set gs=gs://www.bsteele.com/beta/$app
-gsutil -m rsync -d -R -x ".*\.songlyrics$" $dst/$app/ $gs 	#	source needs the /
+gsutil -m rsync -d -R -x ".*\.songlyrics\$" $dst/$app/ $gs 	#	source needs the /
 gsutil -m -q acl -r ch -u AllUsers:R $gs
 
 if ( $isBeta != 0 ) then
