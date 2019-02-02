@@ -59,6 +59,11 @@ public class Chord implements Comparable<Chord>
                     break;
             }
         }
+
+        if (beats > beatsPerBar)
+            //  whoops, too many beats
+            return null;
+
         Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord,
                 ChordAnticipationOrDelay.none);      //  fixme
         ret.parseLength = parseLength;

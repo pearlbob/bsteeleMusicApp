@@ -1,17 +1,13 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import junit.framework.TestCase;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ScaleNoteTest  extends GWTTestCase
- {
+public class ScaleNoteTest extends TestCase {
 
     @Test
     public void testParseMarkupString() {
@@ -28,9 +24,4 @@ public class ScaleNoteTest  extends GWTTestCase
         assertEquals(ScaleNote.Ab, ScaleNote.parse("Ab"));
         assertEquals(ScaleNote.Gb, ScaleNote.parse("Gb"));
     }
-
-     @Override
-     public String getModuleName() {
-         return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
-     }
 }

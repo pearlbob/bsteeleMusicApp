@@ -269,7 +269,6 @@ public class SongListView
         }
         displaySongList(filteredSongs);
 
-
         {
             //  roll the songs on an empty select
             int scrollPosition = 0;

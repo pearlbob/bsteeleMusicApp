@@ -249,7 +249,7 @@ public class SongEditView
         Event.sinkEvents(keySelection, Event.ONCHANGE);
         Event.setEventListener(keySelection, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
-                setKey(Key.valueOf(keySelection.getValue()));
+                setKey(Key.parse(keySelection.getValue()));
                 checkSong();
             }
         });
@@ -924,7 +924,7 @@ public class SongEditView
     private static final String selectedBorderColorValueString = "#f88";
 
     public Song checkSong() {
-        Key newKey = Key.valueOf(keySelection.getValue());
+        Key newKey = Key.parse(keySelection.getValue());
         if (newKey == null)
             newKey = Key.C;  //  punt an error
         if (key != newKey)   // avoid unnecessary changes

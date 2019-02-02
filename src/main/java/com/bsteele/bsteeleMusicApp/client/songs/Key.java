@@ -38,6 +38,11 @@ public enum Key {
         keyScaleNote = ScaleNote.valueOf(name());
     }
 
+    public static Key parse(String s) {
+        s = s.replaceAll("♭", "b").replaceAll("[♯#]", "s");
+        return valueOf(s);
+    }
+
     /**
      * Return the next key that is one half step higher.
      * Of course the keys are cyclic in their relationship.
@@ -133,9 +138,9 @@ public enum Key {
         return Key.values()[0];     //  default, expected to be C
     }
 
-    public final Key getMinorKey(){
-             // the key's tonic
-        return getKeyByHalfStep(getHalfStep() + majorScale[6-1]);
+    public final Key getMinorKey() {
+        // the key's tonic
+        return getKeyByHalfStep(getHalfStep() + majorScale[6 - 1]);
     }
 
     /**

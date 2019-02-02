@@ -7,11 +7,8 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -35,7 +32,7 @@ public class SongTest
         if (jv != null) {
             JSONArray ja = jv.isArray();
             if (ja != null) {
-                int jaLimit = ja.size();
+                int jaLimit = Math.min(250, ja.size());
                 for (int i = 0; i < jaLimit; i++) {
                     songCount++;
                     Song song = Song.fromJsonObject(ja.get(i).isObject());

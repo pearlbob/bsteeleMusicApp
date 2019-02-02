@@ -1,18 +1,16 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ScaleChordTest extends GWTTestCase
+public class ScaleChordTest extends TestCase
 {
 
     @Test
@@ -100,10 +98,5 @@ public class ScaleChordTest extends GWTTestCase
         assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
         assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.parse("Ddim/G"));
         assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.parse("Adim/G"));
-    }
-
-    @Override
-    public String getModuleName() {
-        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }

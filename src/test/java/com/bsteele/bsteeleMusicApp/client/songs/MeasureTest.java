@@ -11,6 +11,15 @@ public class MeasureTest extends TestCase {
 
     @Test
     public void testParse() {
+        {
+            int beatsPerBar = 3;
+            //System.out.println("beatsPerBar: " + beatsPerBar);
+            Measure m;
+            m = Measure.parse("E#m7... ", beatsPerBar);
+            assertNull(m);
+            m = Measure.parse("E#m7. ", beatsPerBar);
+            assertNull(m);
+        }
 
         {
             //  test beat allocation
@@ -77,11 +86,28 @@ public class MeasureTest extends TestCase {
             assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat1, beatsPerBar), chord1);
         }
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            // System.out.println("beatsPerBar: " + beatsPerBar);
             Measure m = Measure.parse("E#m7. ", beatsPerBar);
-            assertEquals(beatsPerBar, m.getBeatCount());
-            assertEquals(1, m.getChords().size());
-            Chord chord0 = m.getChords().get(0);
-            assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
+            if (beatsPerBar > 2)
+                assertNull(m);  //  over specified, doesn't cover the beats per bar
+            else {
+                assertEquals(beatsPerBar, m.getBeatCount());
+                assertEquals(1, m.getChords().size());
+                Chord chord0 = m.getChords().get(0);
+                assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
+            }
+        }
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            //System.out.println("beatsPerBar: " + beatsPerBar);
+            Measure m = Measure.parse("E#m7.. ", beatsPerBar);
+            if (beatsPerBar != 3)
+                assertNull(m);  //  too many beats or over specified, doesn't cover the beats per bar
+            else {
+                assertEquals(beatsPerBar, m.getBeatCount());
+                assertEquals(1, m.getChords().size());
+                Chord chord0 = m.getChords().get(0);
+                assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
+            }
         }
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
             Measure m = Measure.parse("E#m7Gb7", beatsPerBar);

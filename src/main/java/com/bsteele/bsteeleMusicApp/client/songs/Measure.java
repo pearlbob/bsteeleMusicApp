@@ -3,9 +3,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 import com.bsteele.bsteeleMusicApp.client.Grid;
 
 import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -54,6 +52,14 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return parse(s, beatsPerBar, null);
     }
 
+    /**
+     * Parse a measure from the input string
+     *
+     * @param s           input string
+     * @param beatsPerBar beats per bar
+     * @param lastMeasure the prior measure, in case of -
+     * @return
+     */
     public static final Measure parse(String s, int beatsPerBar, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
         if (s == null || s.length() <= 0)
@@ -110,7 +116,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
         // allocate the beats
         //  try to deal with over-specified beats: eg. in 4/4:  E....A...
-        if (chords.size() > 1) {
+        if (chords.size() > 0) {
             //  find the total count of beats explicitly specified
             int explicitChords = 0;
             int explicitBeats = 0;

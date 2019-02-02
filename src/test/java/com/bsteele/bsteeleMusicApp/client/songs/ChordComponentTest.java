@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.TreeSet;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordComponentTest  extends GWTTestCase {
+public class ChordComponentTest extends TestCase {
 
     @Test
     public void testParse() {
@@ -45,10 +45,5 @@ public class ChordComponentTest  extends GWTTestCase {
         assertFalse(set.contains(ChordComponent.fourth));
         assertFalse(set.contains(ChordComponent.sixth));
         assertFalse(set.contains(ChordComponent.minorSeventh));
-    }
-
-    @Override
-    public String getModuleName() {
-        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 }

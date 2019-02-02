@@ -213,7 +213,7 @@ public class Song extends SongBase implements Comparable<Song>
                     song.setCopyright(jv.isString().stringValue());
                     break;
                 case "key":
-                    song.setKey(Key.valueOf(jv.isString().stringValue()));
+                    song.setKey(Key.parse(jv.isString().stringValue()));
                     break;
                 case "defaultBpm":
                     jn = jv.isNumber();

@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.junit.client.GWTTestCase;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.TreeSet;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class KeyTest extends GWTTestCase {
+public class KeyTest extends TestCase {
 
     @Test
     public void testGetKeyByValue() {
@@ -190,7 +190,7 @@ public class KeyTest extends GWTTestCase {
     @Test
     public void testMinorKey() {
 
-        assertEquals(Key.A,Key.C.getMinorKey());
+        assertEquals(Key.A, Key.C.getMinorKey());
 
     }
 
@@ -414,9 +414,16 @@ public class KeyTest extends GWTTestCase {
         assertEquals(MusicConstant.halfStepsPerOctave, set.size());
     }
 
-    @Override
-    public String getModuleName() {
-        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
+    @Test
+    public void testKeyParse() {
+        assertEquals(Key.Bb, Key.parse("B♭"));
+        assertEquals(Key.Bb, Key.parse("Bb"));
+        assertEquals(Key.Fs, Key.parse("F#"));
+        assertEquals(Key.Fs, Key.parse("F♯"));
+        assertEquals(Key.Fs, Key.parse("Fs"));
+        assertEquals(Key.F, Key.parse("F"));
+        assertEquals(Key.Eb, Key.parse("E♭"));
+        assertEquals(Key.Eb, Key.parse("Eb"));
     }
 }
 

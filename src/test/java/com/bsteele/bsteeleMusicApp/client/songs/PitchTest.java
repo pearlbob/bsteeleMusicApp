@@ -3,15 +3,12 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
 public class PitchTest
     extends TestCase
-        //extends GWTTestCase
 {
 
     @Test
@@ -106,11 +103,6 @@ public class PitchTest
         assertEquals(80, naturals);
         assertEquals(49, flats);
     }
-
-//    @Override
-//    public String getModuleName() {
-//        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
-//    }
 }
 /*
 A0   0 27.5

@@ -1,6 +1,5 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.google.gwt.junit.client.GWTTestCase;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -8,7 +7,7 @@ import org.junit.Test;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ChordDescriptorTest extends TestCase //extends GWTTestCase
+public class ChordDescriptorTest extends TestCase
 {
 
     @Test
@@ -74,9 +73,4 @@ public class ChordDescriptorTest extends TestCase //extends GWTTestCase
                 System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
             }
     }
-
-//    @Override
-//    public String getModuleName() {
-//        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
-//    }
 }

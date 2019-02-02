@@ -535,7 +535,7 @@ public class SongUpdate
                     songUpdate.setState(State.valueOf(jv.isString().stringValue()));
                     break;
                 case "currentKey":
-                    songUpdate.setCurrentKey(Key.valueOf(jv.isString().stringValue()));
+                    songUpdate.setCurrentKey(Key.parse(jv.isString().stringValue()));
                     break;
                 case "eventTime":
                     songUpdate.setEventTime(JsonUtil.toDouble(jv));
