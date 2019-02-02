@@ -67,6 +67,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         void displaySongList();
 
+        void selectAllSearch();
+
         void saveSongAs(String filename, String data);
 
         void saveAllSongsAs(String fileName);
@@ -186,7 +188,10 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     @Override
     public void onHomeTab(HomeTabEvent event) {
-        if (event.getTab() == AppTab.songs) view.displaySongList();
+        if (event.getTab() == AppTab.songs) {
+            view.displaySongList();
+            view.selectAllSearch();
+        }
     }
 
 

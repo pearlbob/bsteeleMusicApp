@@ -396,15 +396,16 @@ public class GenerateSongHtml {
         sb.append("<tr><td><code>chords</code></td><td>JSON array of strings</td>\n" +
                 "<td>The song's chord structure written in the chord markup language described below.</td>" +
                 "<td>Generally speaking, each string represents the section identifiers and chords as they " +
-                "are to be presented to the user. Do not include the carriage return or newline character." +
+                " are to be presented to the user. Do not include the carriage return or newline character" +
+                " within the quoted JSON lines." +
                 "  The application may" +
-                "adjust their presentation.</td></tr>\n");
+                " adjust their presentation.</td></tr>\n");
 
         sb.append("<tr><td><code>lyrics</code></td><td>JSON array of strings</td>\n" +
                 "<td>The song's lyric sections written in temporal order and" +
                 " in the lyric markup language described below.</td>" +
                 "<td>Do not include the carriage return or newline character. The application may" +
-                "adjust their presentation</td></tr>\n");
+                " adjust their presentation</td></tr>\n");
 
         sb.append("</table>\n");
 

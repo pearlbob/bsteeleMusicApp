@@ -248,6 +248,12 @@ public class SongListView
         searchSongs();
     }
 
+    @Override
+    public void selectAllSearch() {
+        songSearch.selectAll();
+        songSearch.setFocus(true);
+    }
+
     private void searchSongs() {
         String search = songSearch.getValue();
         if (search == null) {

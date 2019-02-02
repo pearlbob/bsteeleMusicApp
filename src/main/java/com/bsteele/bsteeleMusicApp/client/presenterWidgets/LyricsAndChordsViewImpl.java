@@ -353,109 +353,106 @@ public class LyricsAndChordsViewImpl
 
     private void resizeChords() {
 
-        {
-            //  adjust fontSize so the table fits but is still minimally, if possible
-            if (chordsFlexTable != null
-                    && chordsFlexTable.getOffsetWidth() > 0
-                    && chordsFlexTable.getOffsetHeight() > 0) {
-                Widget parent = chordsFocus;
-                double parentWidth = parent.getOffsetWidth();
-                double parentHeight = parent.getOffsetHeight();
+        //  adjust fontSize so the table fits but is still minimally, if possible
+        if (chordsFlexTable != null
+                && chordsFlexTable.getOffsetWidth() > 0
+                && chordsFlexTable.getOffsetHeight() > 0) {
+            Widget parent = chordsFocus;
+            double parentWidth = parent.getOffsetWidth();
+            double parentHeight = parent.getOffsetHeight();
 
-                int tableWidth = chordsFlexTable.getOffsetWidth();
-                int tableHeight = chordsFlexTable.getOffsetHeight();
-                FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
+            int tableWidth = chordsFlexTable.getOffsetWidth();
+            int tableHeight = chordsFlexTable.getOffsetHeight();
+            FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
 
-                if (forceChordsFontSize
-                        || parentWidth < tableWidth
-                        || parentHeight < tableHeight
-                        || parentWidth > (1 + 8.0 / chordsFontSize) * tableWidth) {
-                    double ratio = Math.min(parentWidth / tableWidth,
-                            parentHeight / tableHeight);
-                    logger.fine("wratio: " + (parentWidth / tableWidth)
-                            + ", hratio: " + (parentHeight / tableHeight));
+            if (forceChordsFontSize
+                    || parentWidth < tableWidth
+                    || parentHeight < tableHeight
+                    || parentWidth > (1 + 8.0 / chordsFontSize) * tableWidth) {
+                double ratio = Math.min(parentWidth / tableWidth,
+                        parentHeight / tableHeight);
+                logger.fine("wratio: " + (parentWidth / tableWidth)
+                        + ", hratio: " + (parentHeight / tableHeight));
 
-                    int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio,
-                            chordsMaxFontSize)));
-                    Grid<MeasureNode> grid = song.getStructuralGrid();
-                    int rLimit = grid.getRowCount();
-                    if (forceChordsFontSize || chordsFontSize != size) {
-                        //  fixme: demands all chord fonts be the same size
-                        song.transpose(prefix, chordsFlexTable, halfStepOffset, chordsFontSize);
+                int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio,
+                        chordsMaxFontSize)));
+                Grid<MeasureNode> grid = song.getStructuralGrid();
+                int rLimit = grid.getRowCount();
+                if (forceChordsFontSize || chordsFontSize != size) {
+                    //  fixme: demands all chord fonts be the same size
+                    song.transpose(prefix, chordsFlexTable, halfStepOffset, chordsFontSize);
 
-                        for (int r = 0; r < rLimit; r++) {
-                            ArrayList<MeasureNode> row = grid.getRow(r);
-                            int colLimit = row.size();
-                            for (int c = 0; c < colLimit; c++) {
-                                Element e = formatter.getElement(r, c);
-                                Style cellStyle = e.getStyle();
-                                //cellStyle.setFontSize(size, Style.Unit.PX);
-                                cellStyle.setPaddingTop(size / 6, Style.Unit.PX);
-                                cellStyle.setPaddingBottom(size / 6, Style.Unit.PX);
-                                cellStyle.setPaddingLeft(size / 6, Style.Unit.PX);
-                                cellStyle.setPaddingRight(size / 3, Style.Unit.PX);
-                            }
-                        }
-                        chordsFontSize = size;
-                    }
-                    //sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
-
-                    chordsDirty = !((ratio >= 1 && ratio <= (1 + 20.0 / chordsFontSize))
-                            || chordsFontSize == chordsMinFontSize
-                            || chordsFontSize == chordsMaxFontSize)
-                            || forceChordsFontSize;
-                    forceChordsFontSize = false;
-                    //sendStatus("chordsDirty", Boolean.toString(chordsDirty));
-                } else
-                    chordsDirty = false;
-            }
-
-
-            //  optimize the lyrics fontSize
-            if (!chordsDirty) {
-                //  last pass
-
-                int tableWidth = chordsFlexTable.getOffsetWidth();
-                int tableHeight = chordsFlexTable.getOffsetHeight();
-
-                logger.fine("lyrics panel: (" + lyrics.getOffsetWidth() + ","
-                        + lyrics.getOffsetHeight() + ") for (" + tableWidth + ","
-                        + tableHeight + ")  = " + ((double) lyrics.getOffsetWidth() / tableWidth));
-
-                if (lyrics.getOffsetWidth() < 1.05 * tableWidth
-                        || lyrics.getOffsetWidth() > 1.1 * tableWidth)          //  try to use the extra width
-                {
-                    final double ratio = 0.95 * (double) lyrics.getOffsetWidth() / tableWidth;
-                    //sendStatus("lyrics ratio: ", Double.toString((double) lyrics.getOffsetWidth() / tableWidth));
-                    final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
-                    FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
-
-                    Grid<MeasureNode> grid = song.getStructuralGrid();
-                    int rLimit = grid.getRowCount();
                     for (int r = 0; r < rLimit; r++) {
                         ArrayList<MeasureNode> row = grid.getRow(r);
                         int colLimit = row.size();
                         for (int c = 0; c < colLimit; c++) {
                             Element e = formatter.getElement(r, c);
                             Style cellStyle = e.getStyle();
-
-                            double currentSize = lyricsMaxFontSize;     //  fixme: demands all lyrics fonts be the
-                            // same size
-                            MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
-                            if (mr != null)
-                                currentSize = Double.parseDouble(mr.getGroup(1));
-                            double size = Math.min(Math.max(lyricsMinFontSize, ratio * currentSize),
-                                    lyricsMaxFontSize);
-                            if (currentSize != size)
-                                cellStyle.setFontSize(size, Style.Unit.PX);
+                            //cellStyle.setFontSize(size, Style.Unit.PX);
+                            cellStyle.setPaddingTop(size / 6, Style.Unit.PX);
+                            cellStyle.setPaddingBottom(size / 6, Style.Unit.PX);
+                            cellStyle.setPaddingLeft(size / 6, Style.Unit.PX);
+                            cellStyle.setPaddingRight(size / 3, Style.Unit.PX);
                         }
                     }
+                    chordsFontSize = size;
                 }
+                //sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
 
-                audioBeatDisplayCanvas.setWidth((int) Math.floor(chordsParentWidth));
-            }
+                chordsDirty = !((ratio >= 1 && ratio <= (1 + 20.0 / chordsFontSize))
+                        || chordsFontSize == chordsMinFontSize
+                        || chordsFontSize == chordsMaxFontSize)
+                        || forceChordsFontSize;
+                forceChordsFontSize = false;
+                //sendStatus("chordsDirty", Boolean.toString(chordsDirty));
+            } else
+                chordsDirty = false;
         }
 
+
+        //  optimize the lyrics fontSize
+        if (!chordsDirty) {
+            //  last pass
+
+            int tableWidth = chordsFlexTable.getOffsetWidth();
+            int tableHeight = chordsFlexTable.getOffsetHeight();
+
+            logger.fine("lyrics panel: (" + lyrics.getOffsetWidth() + ","
+                    + lyrics.getOffsetHeight() + ") for (" + tableWidth + ","
+                    + tableHeight + ")  = " + ((double) lyrics.getOffsetWidth() / tableWidth));
+
+            if (lyrics.getOffsetWidth() < 1.05 * tableWidth
+                    || lyrics.getOffsetWidth() > 1.1 * tableWidth)          //  try to use the extra width
+            {
+                final double ratio = 0.95 * (double) lyrics.getOffsetWidth() / tableWidth;
+                //sendStatus("lyrics ratio: ", Double.toString((double) lyrics.getOffsetWidth() / tableWidth));
+                final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
+                FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
+
+                Grid<MeasureNode> grid = song.getStructuralGrid();
+                int rLimit = grid.getRowCount();
+                for (int r = 0; r < rLimit; r++) {
+                    ArrayList<MeasureNode> row = grid.getRow(r);
+                    int colLimit = row.size();
+                    for (int c = 0; c < colLimit; c++) {
+                        Element e = formatter.getElement(r, c);
+                        Style cellStyle = e.getStyle();
+
+                        double currentSize = lyricsMaxFontSize;     //  fixme: demands all lyrics fonts be the
+                        // same size
+                        MatchResult mr = fontSizeRegexp.exec(cellStyle.getFontSize());
+                        if (mr != null)
+                            currentSize = Double.parseDouble(mr.getGroup(1));
+                        double size = Math.min(Math.max(lyricsMinFontSize, ratio * currentSize),
+                                lyricsMaxFontSize);
+                        if (currentSize != size)
+                            cellStyle.setFontSize(size, Style.Unit.PX);
+                    }
+                }
+            }
+
+            audioBeatDisplayCanvas.setWidth((int) Math.floor(chordsParentWidth));
+        }
     }
 
     private void sendStatus(String name, String value) {
