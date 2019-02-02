@@ -20,6 +20,20 @@ public class ChordSectionTest extends TestCase
         ArrayList<Measure> measures;
 
         {
+            //  failure to parse a leading dot
+            ChordSection chordSection = ChordSection.parse("I: G .G Bm Bm  x2", 4);
+            assertTrue(chordSection != null);
+            SectionVersion intro = new SectionVersion(Section.intro);
+            assertTrue(chordSection.getSectionVersion().equals(intro));
+            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            assertTrue(measureSequenceItems != null);
+            assertEquals(1, measureSequenceItems.size());
+            measures = measureSequenceItems.get(0).getMeasures();
+            assertTrue(measures != null);
+            assertEquals(2, measures.size());
+            assertEquals("(.G Bm Bm  x2)", measures.get(1).toString());
+        }
+        {
             ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
                     "AbBb/G# Am7 Ebsus4 C7/Bb", 4);
             assertTrue(chordSection != null);

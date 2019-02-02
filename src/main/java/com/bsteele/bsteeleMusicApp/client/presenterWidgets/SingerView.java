@@ -5,11 +5,12 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -118,7 +119,12 @@ public class SingerView
         syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
         
         if (song == null || !song.equals(songUpdate.getSong())) {
-            resetScroll(lyricsScrollPanel);
+            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    resetScroll(lyricsScrollPanel);
+                }
+            });
 
             song = songUpdate.getSong();
 
@@ -188,6 +194,7 @@ public class SingerView
 
     public static final String highlightColor = "#e4c9ff";
     private static String prefix = "singer";
+    private static final Scheduler scheduler = Scheduler.get();
     private static final Document document = Document.get();
     private static final Logger logger = Logger.getLogger(SingerView.class.getName());
 }

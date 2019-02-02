@@ -78,7 +78,7 @@
                     </g:FocusPanel>
                 </g:west>
                 <g:center>
-                    <g:ScrollPanel>
+                    <g:ScrollPanel ui:field="lyricsScrollPanel">
                         <g:FocusPanel ui:field="lyricsFocus">
                             <g:HTMLPanel>
                                 <g:HTMLPanel ui:field="lyrics"/>

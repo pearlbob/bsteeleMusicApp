@@ -6,7 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.application.login;
 import com.bsteele.bsteeleMusicApp.client.application.ApplicationPresenter;
 import com.bsteele.bsteeleMusicApp.client.application.CurrentUser;
 import com.bsteele.bsteeleMusicApp.client.place.NameTokens;
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -83,6 +83,14 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
     }
 
     private boolean validateCredentials(String username, String password) {
+        if (username == null || username.length() <= 0) {
+            return false;
+        }
+
+        Storage localStorage = Storage.getLocalStorageIfSupported();
+        if (localStorage == null)
+            return false;
+        localStorage.setItem("username", username);
         return true;  //  fixme!   username.equals(USERNAME) && password.equals(PASSWORD);
     }
 }

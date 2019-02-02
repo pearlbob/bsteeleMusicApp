@@ -13,8 +13,11 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: comments in chords!
+todo: use webstorage for user name
 ____fixme: double delete => "  ) (  "
 fixme: how to delete a repeat marker?... and a repeat?
+fixme: chords shouldn't stretch vertically to match lyrics
 todo: edit view, click to the right of chord table should select last in row
 fixme: player view on born to run
 fixme: layla sharps and flats

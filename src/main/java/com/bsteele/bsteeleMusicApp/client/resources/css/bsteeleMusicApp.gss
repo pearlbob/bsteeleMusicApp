@@ -193,7 +193,7 @@ table.chordTable  {
 }
 table th.chordTable, 
 table td.chordTable {
-    border-right: 1.5px solid black;
+    border-right: 1px solid black;
     border-collapse: separate;
     border-spacing: 4px;
     font-size: 44px;

@@ -10,17 +10,16 @@ import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.client.songs.LyricsLine;
-import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
@@ -69,7 +68,7 @@ public class PlayerViewImpl
     Anchor title;
 
     @UiField
-    Anchor  artist;
+    Anchor artist;
 
     @UiField
     Button nextSongButton;
@@ -195,12 +194,17 @@ public class PlayerViewImpl
         }
 
         if (song != null && !song.equals(songUpdate.getSong())) {
-            resetScroll(chordsScrollPanel);
+            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    resetScroll(chordsScrollPanel);
+                }
+            });
         }
         song = songUpdate.getSong();
 
         //  load new data even if the identity has not changed
-        setAnchors(title,artist);
+        setAnchors(title, artist);
         copyright.setInnerHTML(song.getCopyright());
 
         timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
@@ -336,13 +340,15 @@ public class PlayerViewImpl
         {
             FlexTable flexTable = new FlexTable();
             FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
-            final int lyricsCol = 1 + MusicConstant.measuresPerDisplayRow + 1 + 1;
+            final int chordCol = 0;
+            final int lyricsCol = 1;
             for (LyricSection lyricSection : lyricSections) {
 
                 int firstRow = flexTable.getRowCount();
+                FlexTable sectionTable = new FlexTable();
                 song.transpose(song.getChordSection(lyricSection.getSectionVersion()), prefix + sectionIndex++,
-                        flexTable, tran, lyricsDefaultFontSize, true);
-                int vSpan = flexTable.getRowCount() - firstRow;
+                        sectionTable, tran, lyricsDefaultFontSize, true);
+                flexTable.setWidget(firstRow, chordCol, sectionTable);
 
                 StringBuilder sb = new StringBuilder();
                 for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
@@ -405,6 +411,7 @@ public class PlayerViewImpl
     private static final int lyricsMaxFontSize = 28;
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
     private static final String prefix = "player";
+    private static final Scheduler scheduler = Scheduler.get();
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
 }

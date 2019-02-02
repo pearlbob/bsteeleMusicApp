@@ -10,7 +10,7 @@
                     Login:
                 </td>
                 <td>
-                    <g:TextBox ui:field="username">guest</g:TextBox>
+                    <g:TextBox ui:field="username"></g:TextBox>
                 </td>
             </tr>
             <tr>
@@ -18,13 +18,12 @@
                     Password:
                 </td>
                 <td>
-                    <!--requires ssh!   <g:PasswordTextBox ui:field="password"/> -->
-                    <g:TextBox ui:field="password"/>
+                    <g:PasswordTextBox ui:field="password"/>
                 </td>
             </tr>
         </table>
         <p>
-            No password currently required, just click login.
+            No password currently required, just supply a user name and click login.
         </p>
         <p>By logging in, you are giving app permission to play
             audio output on your device.
@@ -35,17 +34,20 @@
         <ul>
             <li>
                 Please note that the web application will not store songs on the server but instead they will be files
-                in your local machine with the file extension ".songlyrics".  They can be read later with:
+                in your local machine with the file extension ".songlyrics". They can be read later with:
                 Songs, Choose Files.
             </li>
             <li>
-                The best functionality will be using the latest Chrome browser on a desktop.  All other environments
+                The best functionality will be using the latest Chrome browser on a desktop. All other environments
                 may be limited in functionality.
             </li>
             <li>
                 Android trick: try forcing the desktop site. See options, "Desktop site" check box.
             </li>
         </ul>
+        <span style="color:red;">
+            <g:Label ui:field="errorLabel"></g:Label>
+        </span>
 
     </g:HTMLPanel>
 </ui:UiBinder>
