@@ -87,7 +87,7 @@ public class SongBaseTest
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "", "I:v: bob, bob, bob berand");
         assertTrue(a.addSectionVersion(new SectionVersion(Section.intro)));
-        newMeasure = Measure.parse("B", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("B", a.getBeatsPerBar());
         assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureSequenceItem.EditLocation.append,
                 newMeasure));
         text = a.getStructuralGridAsText()
@@ -95,7 +95,7 @@ public class SongBaseTest
                 .replaceAll("  ", " ")
                 .trim();
         assertEquals("I: B", text);
-        newMeasure = Measure.parse("C", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("C", a.getBeatsPerBar());
         assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureSequenceItem.EditLocation.append,
                 newMeasure));
         text = a.getStructuralGridAsText()
@@ -104,7 +104,7 @@ public class SongBaseTest
                 .trim();
         assertEquals("I: B C", text);
         logger.fine(text);
-        newMeasure = Measure.parse("A", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("A", a.getBeatsPerBar());
         assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureSequenceItem.EditLocation.insert,
                 newMeasure));
         text = a.getStructuralGridAsText()
@@ -125,7 +125,7 @@ public class SongBaseTest
         Measure measure = vc2.getMeasures().get(1);
         assertEquals(4, vc2.getMeasures().size());
         assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("G", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("G", a.getBeatsPerBar());
         assertTrue(a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure));
         assertEquals(4, vc2.getMeasures().size());
         vc2 = chordSections.higher(chordSections.first()).getMeasureSequenceItems().get(0);
@@ -135,7 +135,7 @@ public class SongBaseTest
 
         measure = vc2.getMeasures().get(0);
         assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("Gb", a.getBeatsPerBar());
         a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(0);
@@ -143,7 +143,7 @@ public class SongBaseTest
 
         measure = vc2.getMeasures().get(3);
         assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("F", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("F", a.getBeatsPerBar());
         a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(3);
@@ -158,7 +158,7 @@ public class SongBaseTest
                 .trim();
         //logger.info("\"" + text + "\"");
         assertEquals(chords, text);
-        newMeasure = Measure.parse("F", a.getBeatsPerBar());
+        newMeasure = Measure.testParse("F", a.getBeatsPerBar());
         for (int i = 0; i < 8; i++) {
             //System.out.println();
 
@@ -210,11 +210,18 @@ public class SongBaseTest
                     100, 4, 4, "i: A B C D v: E F G A# t: Gm Gm",
                     "i: dude v: bob, bob, bob berand");
 
-            System.out.println(a.findChordSection("ch:"));
-            System.out.println(a.findChordSection("i:"));
-            System.out.println(a.findChordSection("v:"));
+            assertNull(a.findChordSection(new StringBuffer("ch:")));
+            System.out.println(a.findChordSection(new StringBuffer("i:")));
+            System.out.println(a.findChordSection(new StringBuffer("v:")));
+            System.out.println(a.findChordSection(new StringBuffer("t:")));
 
-            System.out.println(a.findChordSection("t:"));
+            StringBuffer sb = new StringBuffer("abcdefg");
+            sb.delete(0, 1);
+            sb.delete(0, sb.length());
+            System.out.println("<" + sb.toString() + ">");
+
+//            System.out.println(a.findMeasure("i:1"));
+//            System.out.println(a.findMeasure("i:3"));
         }
     }
 
@@ -402,7 +409,6 @@ public class SongBaseTest
         song.setChords(chords);
 
         song.parseChordTable(chords);
-        song.parseLyricsToSectionSequence(lyrics);
         song.parseLyrics();
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);

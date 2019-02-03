@@ -7,8 +7,6 @@ import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
-import java.util.ArrayList;
-
 /**
  * @author bob
  */
@@ -21,8 +19,7 @@ import java.util.ArrayList;
  * will aid in song structure readability.
  * </p>
  */
-public enum Section
-{
+public enum Section {
     /**
      * A section that introduces the song.  Typically the tempo is
      * set here.
@@ -38,7 +35,7 @@ public enum Section
      * A section that precedes the chorus but may not be used
      * to lead all chorus sections.
      */
-    preChorus("PC","A section that precedes the chorus but may not be used to lead all chorus sections."),
+    preChorus("PC", "A section that precedes the chorus but may not be used to lead all chorus sections."),
     /**
      * A repeating section of the song that typically has lyrics that repeat
      * to enforce the song's theme.
@@ -54,7 +51,7 @@ public enum Section
      * A section labeled "B" to be used in contrast the "A" section.
      * A concept borrowed from jazz.
      */
-    b("B","A section labeled \"B\" to be used in contrast the \"A\" section.  A concept borrowed from jazz."),
+    b("B", "A section labeled \"B\" to be used in contrast the \"A\" section.  A concept borrowed from jazz."),
     /**
      * A non-repeating section often used once to break the repeated
      * section patterns prior to the last sections of a song.
@@ -80,41 +77,45 @@ public enum Section
      * A private convenience constructor for the enumeration.
      *
      * @param originalAbbreviation the default abbreviation for the section
-     * @param description a short description of the section's musical purpose for the user
+     * @param description          a short description of the section's musical purpose for the user
      */
-    private Section(String originalAbbreviation, String description )
-    {
+    private Section(String originalAbbreviation, String description) {
         lowerCaseName = name().toLowerCase();
         formalName = Util.firstToUpper(lowerCaseName);
         this.originalAbbreviation = originalAbbreviation;
         abbreviation = originalAbbreviation.toLowerCase();
-        this.alternateAbbreviation =null;
-        this.description =    description;
+        this.alternateAbbreviation = null;
+        this.description = description;
     }
 
     /**
      * A private convenience constructor for the enumeration.
      *
-     * @param abbreviation the default abbreviation for the section
+     * @param abbreviation          the default abbreviation for the section
      * @param alternateAbbreviation an alternate abbreviation for the section
-     * @param description a short description of the section's musical purpose for the user
+     * @param description           a short description of the section's musical purpose for the user
      */
-    private Section(String abbreviation, String alternateAbbreviation, String description)
-    {
-        this(abbreviation,description);
+    private Section(String abbreviation, String alternateAbbreviation, String description) {
+        this(abbreviation, description);
         this.alternateAbbreviation = alternateAbbreviation.toLowerCase();
     }
 
-    /** a private convenience method to create a section version for this section
+    /**
+     * a private convenience method to create a section version for this section
      *
      * @param v the variation identification number.  Zero is the default value.
-     * @param parseLength the number of characters used to describe the section version at its parsing from
-     *                     a string value.
      * @return
      */
-    private SectionVersion makeVersion(int v, int parseLength)
-    {
-        return new SectionVersion(this, v, parseLength);
+    private SectionVersion makeVersion(int v) {
+        return new SectionVersion(this, v);
+    }
+
+    static final boolean lookahead(StringBuffer sb) {
+        final RegExp sectionRegexp = RegExp.compile(sectionRegexpPattern);
+        MatchResult m = sectionRegexp.exec(sb.substring(0, Math.min(sb.length(), maxLength)));
+        if (m == null)
+            return false;
+        return getSection(m.getGroup(1)) != null;
     }
 
     /**
@@ -123,67 +124,42 @@ public enum Section
      * Use the returned version.getParseLength() to find how many characters were
      * used in the id.
      *
-     * @param s the string to parse
+     * @param sb the string to parse
      * @return the length of the parse. Zero if no parse
      */
-    public static final SectionVersion parse(String s)
-    {
-        if (s == null) {
-            return null;
-        }
-        s = s.substring(0, Math.min(s.length(), maxLength + 1));
-        s = s.toLowerCase();
+    public static final SectionVersion parse(StringBuffer sb) {
 
-        final RegExp sectionRegexp = RegExp.compile("^([a-zA-Z]+)([0-9]?):");
-        MatchResult m = sectionRegexp.exec(s);
+        final RegExp sectionRegexp = RegExp.compile(sectionRegexpPattern);
+        MatchResult m = sectionRegexp.exec(sb.toString());
         if (m != null) {
-            String sectionId = m.getGroup(1);      //  already lowercase
+            String sectionId = m.getGroup(1);
             String versionId = (m.getGroupCount() >= 2 ? m.getGroup(2) : null);
             int version = 0;
             if (versionId != null && versionId.length() > 0) {
                 version = Integer.parseInt(versionId);
             }
-            for (Section sec : Section.values()) {
-                if (sectionId.equals(sec.lowerCaseName)
-                        || sectionId.equals(sec.abbreviation)
-                        || (sec.alternateAbbreviation != null && sectionId.equals(sec.alternateAbbreviation)))
-                {
-                    return sec.makeVersion(version, m.getGroup(0).length());
-                }
+            Section section = getSection(sectionId);
+            if (section != null) {
+                //   consume the section label
+                sb.delete(0, sectionId.length()
+                        + 1  //  include the :
+                );
+                return section.makeVersion(version);
             }
         }
         return null;
     }
 
-    /**
-     * Parse the given string for section version's and report all matches in order.
-     *
-     * @param s the string to parse
-     * @return the section versions found
-     */
-    public static final ArrayList<SectionVersion> matchAll(String s)
-    {
-        ArrayList<SectionVersion> ret = new ArrayList<>();
-
-        //  look for possible candidates
-        final RegExp allSectionsRegexp = RegExp.compile("([a-zA-Z]+[0-9]?:)", "gmi");
-        MatchResult m;
-        for (int i = 0; i < 1000; i++) //  don't blow up too badly
-        {
-            m = allSectionsRegexp.exec(s);
-            if (m == null) {
-                break;
-            }
-            if (m.getGroupCount() > 1) {
-                //  validate the candidates
-                SectionVersion v = parse(m.getGroup(1));
-                if (v != null) {
-                    ret.add(v);
-                }
+    private static final Section getSection(String sectionId) {
+        sectionId = sectionId.toLowerCase();
+        for (Section section : Section.values()) {
+            if (sectionId.equals(section.lowerCaseName)
+                    || sectionId.equals(section.abbreviation)
+                    || (section.alternateAbbreviation != null && sectionId.equals(section.alternateAbbreviation))) {
+                return section;
             }
         }
-
-        return ret;
+        return null;
     }
 
 
@@ -192,13 +168,11 @@ public enum Section
      *
      * @return
      */
-    public final String getAbbreviation()
-    {
+    public final String getAbbreviation() {
         return originalAbbreviation;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return description;
     }
 
@@ -207,17 +181,16 @@ public enum Section
      *
      * @return the default section
      */
-    public static final SectionVersion getDefaultVersion()
-    {
-        return Section.verse.makeVersion(0, 0);
+    public static final SectionVersion getDefaultVersion() {
+        return Section.verse.makeVersion(0);
     }
 
     /**
      * A tool to generate part of the enum's documentation.
+     *
      * @return a BNF grammar fragment
      */
-    public static final String generateGrammar()
-    {
+    public static final String generateGrammar() {
         StringBuilder sb = new StringBuilder();
         sb.append("<Section: (");
         boolean first = true;
@@ -240,12 +213,11 @@ public enum Section
         return sb.toString();
     }
 
-    public String getFormalName()
-    {
+    public String getFormalName() {
         return formalName;
     }
 
-    private final  String lowerCaseName;
+    private final String lowerCaseName;
     private final String formalName;
     private final String originalAbbreviation;
     private final String abbreviation;
@@ -253,4 +225,5 @@ public enum Section
     private String description;
     public static final int maxLength = 10;    //  fixme: compute
 
+    public static final String sectionRegexpPattern = "^([a-zA-Z]+)([\\d]?):";  //  has to include the :
 }

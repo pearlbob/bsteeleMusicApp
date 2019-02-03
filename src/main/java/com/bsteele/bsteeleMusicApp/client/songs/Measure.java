@@ -48,54 +48,62 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         setBeatCount(0);
     }
 
-    public static final Measure parse(String s, int beatsPerBar) {
-        return parse(s, beatsPerBar, null);
+    /**
+     * Convenience method for testing only
+     *
+     * @param s
+     * @param beatsPerBar
+     * @return
+     */
+    static final Measure testParse(String s, int beatsPerBar) {
+        return parse(new StringBuffer(s), beatsPerBar, null);
+    }
+
+    public static final Measure parse(StringBuffer sb, int beatsPerBar) {
+        return parse(sb, beatsPerBar, null);
     }
 
     /**
      * Parse a measure from the input string
      *
-     * @param s           input string
+     * @param sb          input string buffer
      * @param beatsPerBar beats per bar
      * @param lastMeasure the prior measure, in case of -
      * @return
      */
-    public static final Measure parse(String s, int beatsPerBar, Measure lastMeasure) {
+    public static final Measure parse(StringBuffer sb, int beatsPerBar, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
-        if (s == null || s.length() <= 0)
+        if (sb == null || sb.length() <= 0)
             return null;
 
         ArrayList<Chord> chords = new ArrayList<>();
-        int parseLength = 0;
         Measure ret = null;
         for (int i = 0; i < 8; i++)    //  safety
         {
-            if (s.length() <= 0)
+            if (sb.length() <= 0)
                 break;
 
             //  assure this is not a section
-            if (Section.parse(s) != null)
+            if (Section.lookahead(sb))
                 break;
 
-            Chord chord = Chord.parse(s, beatsPerBar);
+            Chord chord = Chord.parse(sb, beatsPerBar);
             if (chord == null) {
                 //  see if this is a chord less measure
-                if (s.charAt(0) == 'X') {
+                if (sb.charAt(0) == 'X') {
                     ret = new Measure(beatsPerBar, emptyChordList);
-                    parseLength += 1;
+                    sb.delete(0, 1);
                     break;
                 }
                 //  see if this is a repeat measure
-                if (s.charAt(0) == '-' && lastMeasure != null) {
+                if (sb.charAt(0) == '-' && lastMeasure != null) {
                     ret = new Measure(beatsPerBar, lastMeasure.getChords());
-                    parseLength += 1;
+                    sb.delete(0, 1);
                     break;
                 }
                 break;
             }
-            s = s.substring(chord.getParseLength());
 
-            parseLength += chord.getParseLength();
             chords.add(chord);
         }
         if (ret == null && chords.isEmpty())
@@ -127,18 +135,18 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 }
             }
             //  verify not over specified
-            if (explicitBeats + (chords.size() - explicitChords) > beatsPerBar)
-                return null;    //  too many beats!  even if the unspecified chords only got 1
+            if (explicitBeats + (chords.size() - explicitChords) > beatsPerBar) // fixme: better failure
+                return ret;    //  too many beats!  even if the unspecified chords only got 1
 
             //  verify not under specified
-            if (chords.size() == explicitChords && explicitBeats < beatsPerBar)
-                return null;    //  too few beats and no unspecified chords to put them on
+            if (chords.size() == explicitChords && explicitBeats < beatsPerBar) // fixme: better failure
+                return ret;    //  too few beats and no unspecified chords to put them on
 
             //  allocate the remaining beats to the unspecified chords
             //  give left over beats to the first unspecified
             if (chords.size() > explicitChords) {
                 Chord firstUnspecifiedChord = null;
-                int beatsPerUnspecifiedChord = Math.max(1,(beatsPerBar - explicitBeats) / (chords.size() - explicitChords));
+                int beatsPerUnspecifiedChord = Math.max(1, (beatsPerBar - explicitBeats) / (chords.size() - explicitChords));
                 for (Chord c : chords) {
                     if (c.getBeats() == beatsPerBar) {
                         if (firstUnspecifiedChord == null)
@@ -149,11 +157,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 }
                 //  dump all the remaining beats on the first unspecified
                 if (firstUnspecifiedChord != null && explicitBeats < beatsPerBar)
-                    firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord+(beatsPerBar-explicitBeats));
+                    firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatsPerBar - explicitBeats));
             }
         }
 
-        ret.parseLength = parseLength;
         return ret;
     }
 

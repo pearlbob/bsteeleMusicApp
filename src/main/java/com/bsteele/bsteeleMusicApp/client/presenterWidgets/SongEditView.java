@@ -480,7 +480,7 @@ public class SongEditView
         Event.sinkEvents(keyGuess, Event.ONCLICK);
         Event.setEventListener(keyGuess, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                guessTheKey();
+                song.guessTheKey();
                 checkSong();
             }
         });
@@ -578,24 +578,23 @@ public class SongEditView
         return ret;
     }
 
-    private boolean processChordEntry(String entry) {
+    private boolean processChordEntry(String input) {
         errorLabel.setText(null);
 
         if (song == null)
             song = Song.createEmptySong();
 
-        entry = entry.replaceAll("\\s+", " ");
+        StringBuffer sb = new StringBuffer(input.replaceAll("\\s+", " "));
 
-        for (; ; ) {
-            entry = entry.trim();
-
-            if (entry.isEmpty())
+        for (int i = 0; i < 10e4; i++)      //  safety
+        {
+            Util.stripLeadingSpaces(sb);
+            if (sb.length() <= 0)
                 break;
 
-            SectionVersion sectionVersion = Section.parse(entry);
+            SectionVersion sectionVersion = Section.parse(sb);
             if (sectionVersion != null) {
                 GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
-                entry = entry.substring(sectionVersion.getParseLength());
 
                 SongChordGridSelection songChordGridSelection =
                         song.findSectionVersionChordGridLocation(sectionVersion);
@@ -615,31 +614,30 @@ public class SongEditView
                 continue;
             }
 
-            Measure measure = Measure.parse(entry, song.getBeatsPerBar());
+            String backup = sb.toString();  //  backup for a measure followed by non-whitespace
+            Measure measure = Measure.parse(sb, song.getBeatsPerBar());
             if (measure != null) {
-                if (entry.length() == measure.getParseLength() || Character.isWhitespace(entry.charAt(measure.getParseLength())))
-                    //  accept the measure
-                    entry = entry.substring(measure.getParseLength());
-                else
+                if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(0))) {
                     //  reject the measure
                     measure = null;
-            } else if (entry.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
+                    sb = new StringBuffer(backup);
+                }
+            } else if (backup.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
                 measure = new Measure(song.findMeasure(lastChordSelection));
                 //GWT.log("new measure: -");
-                entry = entry.substring(1);
+                sb.delete(0, 1);
             } else {
                 final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
-                MatchResult mr = repeatExp.exec(entry);
+                MatchResult mr = repeatExp.exec(backup);
                 if (mr != null) {
                     // GWT.log("new measure: repeat");
                     int repeats = Integer.parseInt(mr.getGroup(1));
                     song.setRepeat(lastChordSelection, repeats);
                     displaySong();
-                    entry = entry.substring(mr.getGroup(0).length());
+                    sb.delete(0, mr.getGroup(0).length());
                     continue;
                 }
             }
-
 
             //  if we found something valid in the input, edit the song
             if (measure != null && lastChordSelection != null) {
@@ -664,15 +662,15 @@ public class SongEditView
                 }
             }
 
-            if (entry.trim().length() > 0) {
-                errorLabel.setText("Measure entry not understood: \"" + entry + "\"");
-                measureEntry.setValue(entry);
+            if (sb.length() > 0) {
+                errorLabel.setText("Measure entry not understood: \"" + sb.toString() + "\"");
+                measureEntry.setValue(sb.toString());
                 songEnter.setDisabled(true);
                 return false;
             }
 
         }
-        measureEntry.setValue(entry);
+        measureEntry.setValue(sb.toString());
         checkSong();
         measureFocus();
         return true;
@@ -992,7 +990,8 @@ public class SongEditView
     }
 
     private void enterChord(String name) {
-        Measure measure = Measure.parse(name, song.getBeatsPerBar());
+
+        Measure measure = Measure.parse(new StringBuffer(name), song.getBeatsPerBar());
         if (measure == null)
             return; //  fixme: shouldn't happen
 
@@ -1114,16 +1113,6 @@ public class SongEditView
     public HandlerRegistration SongRemoveEventHandler(SongRemoveEventHandler handler) {
         return handlerManager.addHandler(SongRemoveEvent.TYPE, handler);
     }
-
-
-    private void guessTheKey() {
-        HashMap<ScaleChord, Integer> scaleChordMap =
-                ScaleChord.findScaleChordsUsed(song.getStructuralGridAsText());     //  fixme: temp?
-        TreeSet<ScaleChord> treeSet = new TreeSet<>();
-        treeSet.addAll(scaleChordMap.keySet());
-        setKey(Key.guessKey(treeSet));
-    }
-
 
     private void titleChordSelections() {
 

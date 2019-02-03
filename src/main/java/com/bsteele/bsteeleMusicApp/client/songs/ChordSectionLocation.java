@@ -10,10 +10,10 @@ public class ChordSectionLocation {
     }
 
     public static final ChordSectionLocation parseLocation(String s) {
-        SectionVersion sectionVersion = Section.parse(s);
+        StringBuffer sb = new StringBuffer(s);
+        SectionVersion sectionVersion = Section.parse(sb);
         if (sectionVersion == null)
             return null;
-        s = s.substring(sectionVersion.getParseLength());
         try {
             int index = Integer.parseInt(s);
             return new ChordSectionLocation(new ChordSection(sectionVersion), index);

@@ -28,7 +28,6 @@ public class UtilTest {
         assertEquals(3,util.getLeadingWhitespaceCount());
         assertEquals(null, util.stripLeadingWhitespace(""));
         assertEquals(0,util.getLeadingWhitespaceCount());
-        assertEquals(null, util.stripLeadingWhitespace(null));
         assertEquals(0,util.getLeadingWhitespaceCount());
     }
 }

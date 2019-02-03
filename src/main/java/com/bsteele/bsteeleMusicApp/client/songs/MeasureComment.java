@@ -21,35 +21,44 @@ public class MeasureComment extends Measure {
         comment = "";
     }
 
-    public static final MeasureComment parse(String s) {
-        if (s == null || s.length() <= 0)
+    /**
+     * Trash can of measure parsing.  Will consume all that it sees to the end of line.
+     *
+     * @param sb
+     * @return
+     */
+    public static final MeasureComment parse(StringBuffer sb) {
+        if (sb == null || sb.length() <= 0)
             return null;
 
-
-        int n = s.indexOf('\n');    //  all comments end at the end of the line
+        //  prep a sub string to look for the comment
+        int n = sb.indexOf("\n");    //  all comments end at the end of the line
+        String s = "";
         if (n > 0)
-            s = s.substring(0, n);
-        int parseLength = s.length();   //  original length to the end of the line
+            s = sb.substring(0, n);
+        else
+            s = sb.toString();
 
         //  properly formatted comment
-        final RegExp commentRegExp = RegExp.compile("^(\\s*\\(\\s*(.*?)\\s*\\)\\s*)$");
+        final RegExp commentRegExp = RegExp.compile("^\\s*\\(\\s*(.*?)\\s*\\)\\s*$");
         MatchResult mr = commentRegExp.exec(s);
 
-        //  format what we found if it's not proper
+        //  consume the comment
         if (mr != null) {
-            s = mr.getGroup(2);
-            parseLength = mr.getGroup(0).length();
+            s = mr.getGroup(1);
+            sb.delete(0, mr.getGroup(0).length());
         } else {
+            //  format what we found if it's not proper
             //  note: consume any non-whitespace string as a comment if you have to
+            sb.delete(0, s.length());
             s = s.trim();
             if (s.length() <= 0)
-                return null;
+                return null;    //  all whitespace
         }
 
-        //  fixme: cope with odd leading ('s and trailing )'s
+        //  fixme: cope with unbalanced leading ('s and trailing )'s
 
         MeasureComment ret = new MeasureComment(s);
-        ret.parseLength = parseLength;
         return ret;
     }
 

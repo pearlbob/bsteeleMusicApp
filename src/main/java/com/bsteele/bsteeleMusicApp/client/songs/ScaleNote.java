@@ -9,8 +9,6 @@ import com.bsteele.bsteeleMusicApp.shared.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
-import java.util.TreeSet;
-
 /**
  * A note in a scale has no duration or pitch but represents
  * the relative scale position within the given key scale.
@@ -119,41 +117,49 @@ public enum ScaleNote {
         return flats[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
 
+    final static ScaleNote testParse(String s) {
+        return parse(new StringBuffer(s));
+    }
+
+
     /**
      * Return the ScaleNote represented by the given string.
      * Is case sensitive.
      * <p>Ultimately, the markup language will disappear.</p>
      *
-     * @param s string to be parsed
+     * @param sb string buffer to be parsed
      * @return ScaleNote represented by the string.  Can be null.
      */
-    public final static ScaleNote parse(String s) {
-        if (s == null || s.length() < 1)
+    public final static ScaleNote parse(StringBuffer sb) {
+        if (sb == null || sb.length() < 1)
             return null;
-        char c = s.charAt(0);
+        char c = sb.charAt(0);
         if (c < 'A' || c > 'G')
             return null;
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(c);
+        StringBuilder scaleNoteString = new StringBuilder();
+        scaleNoteString.append(c);
+        sb.delete(0, 1);
 
         //  look for modifier
-        if (s.length() > 1) {
-            c = s.charAt(1);
+        if (sb.length() > 0) {
+            c = sb.charAt(0);
             switch (c) {
                 case 'b':
                 case MusicConstant.flatChar:
-                    sb.append('b');
+                    scaleNoteString.append('b');
+                    sb.delete(0, 1);
                     break;
 
                 case '#':
                 case MusicConstant.sharpChar:
-                    sb.append('s');
+                    scaleNoteString.append('s');
+                    sb.delete(0, 1);
                     break;
             }
         }
 
-        return ScaleNote.valueOf(sb.toString());
+        return ScaleNote.valueOf(scaleNoteString.toString());
     }
 
     public final ScaleNote transpose( Key key, int steps ){

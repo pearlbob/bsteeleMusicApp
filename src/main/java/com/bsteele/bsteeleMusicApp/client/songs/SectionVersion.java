@@ -15,7 +15,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
      * @param section the type of {@link Section} for this new section version.
      */
     public SectionVersion(@NotNull Section section) {
-        this(section, 0, 0);
+        this(section, 0);
     }
 
     /**
@@ -24,13 +24,10 @@ public class SectionVersion implements Comparable<SectionVersion> {
      * @param section     the type of {@link Section} for this new section version.
      * @param version     the number used to identify this variation.  By convention,
      *                   a zero value will not be expressed to the user and thus will be the default variation.
-     * @param parseLength the number of characters used to describe the section version at its parsing from
-     *                    a string value.
      */
-    SectionVersion(@NotNull Section section, int version, int parseLength) {
+    SectionVersion(@NotNull Section section, int version) {
         this.section = section;
         this.version = version;
-        this.parseLength = parseLength;
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
@@ -50,15 +47,6 @@ public class SectionVersion implements Comparable<SectionVersion> {
      */
     public final int getVersion() {
         return version;
-    }
-
-    /**
-     * The character length used to parse this section version from the original source.
-     *
-     * @return the original character length.
-     */
-    public final int getParseLength() {
-        return parseLength;
     }
 
 
@@ -137,5 +125,4 @@ public class SectionVersion implements Comparable<SectionVersion> {
     private final Section section;
     private final int version;
     private final String name;
-    private int parseLength;
 }

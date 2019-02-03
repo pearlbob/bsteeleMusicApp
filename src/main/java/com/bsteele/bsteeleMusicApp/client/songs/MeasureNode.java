@@ -13,15 +13,6 @@ import java.util.ArrayList;
  * User: bob
  */
 public abstract class MeasureNode {
-    /**
-     * Returns the number characters used to parse this measure node from the input stream.
-     * See the measure node's parse routine.
-     *
-     * @return
-     */
-    public int getParseLength() {
-        return parseLength;
-    }
 
     /**
      * Returns true if the node is a single item and not a collection or measures.
@@ -107,10 +98,4 @@ public abstract class MeasureNode {
      * @return the id
      */
     public abstract String getId();
-
-    /** The number characters used when the measure node was parsed from an input string.
-     * Used internally only.
-     *
-     */
-    protected transient int parseLength;
 }

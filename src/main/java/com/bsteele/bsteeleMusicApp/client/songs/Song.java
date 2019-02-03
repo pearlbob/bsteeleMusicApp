@@ -82,7 +82,6 @@ public class Song extends SongBase implements Comparable<Song>
         song.setChords(chords);
 
         song.parseChordTable(chords);
-        song.parseLyricsToSectionSequence(lyrics);
         song.parseLyrics();
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
@@ -260,7 +259,6 @@ public class Song extends SongBase implements Comparable<Song>
                     } else {
                         song.setChords( jv.isString().stringValue());
                     }
-                    song.parseChordTable(song.getChords());
                     break;
                 case "lyrics":
                     ja = jv.isArray();
@@ -275,12 +273,10 @@ public class Song extends SongBase implements Comparable<Song>
                     } else {
                         song.setRawLyrics( jv.isString().stringValue());
                     }
-                    song.parseLyricsToSectionSequence(song.getRawLyrics());
                     song.parseLyrics();
                     break;
             }
         }
-        song.parse();
         return song;
     }
 

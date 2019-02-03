@@ -13,6 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: Measure.parse() behavior on errors
 todo: comments in chords!  make them more obvious, horizontal spacing
 
 todo: use webstorage for user name

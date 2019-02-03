@@ -50,6 +50,50 @@ public class Util
         return s;
     }
 
+    /**
+     * Strip leading space and tabs but newline is not considered a space!
+     *
+     * @param sb
+     */
+    public static final void stripLeadingWhitespace(StringBuffer sb) {
+        if (sb == null)
+            return;
+
+        while (sb.length() > 0) {
+            switch (sb.charAt(0)) {
+                case ' ':
+                case '\t':
+                case '\r':
+                case '\n':
+                    sb.delete(0, 1);
+                    continue;
+            }
+            break;
+        }
+    }
+
+    /**
+     * Strip leading space and tabs but newline is not considered a space!
+     *
+     * @param sb
+     */
+    public static final void stripLeadingSpaces(StringBuffer sb) {
+        if (sb == null)
+            return;
+
+        while (sb.length() > 0) {
+            switch (sb.charAt(0)) {
+                case ' ':
+                case '\t':
+                case '\r':
+                    sb.delete(0, 1);
+                    continue;
+            }
+            break;
+        }
+    }
+
+
     public final int getLeadingWhitespaceCount()
     {
         return leadingWhitespaceCount;

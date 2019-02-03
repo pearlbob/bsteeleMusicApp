@@ -29,22 +29,23 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         this.measureSequenceItems = new ArrayList<>();
     }
 
-    public final static ChordSection parse(String s, int beatsPerBar) {
-        if (s == null || s.length() <= 0)
+    final static ChordSection testParse(String s, int beatsPerBar) {
+        return parse(new StringBuffer(s), beatsPerBar);
+    }
+
+    public final static ChordSection parse(StringBuffer sb, int beatsPerBar) {
+        if (sb == null || sb.length() <= 0)
             return null;
 
-        Util util = new Util();
-        String ms;
-        if ((ms = util.stripLeadingWhitespace(s)) == null)
+        Util.stripLeadingWhitespace(sb);    //  includes newline
+        if (sb.length() <= 0)
             return null;
-        int n = util.getLeadingWhitespaceCount();
 
-        SectionVersion sectionVersion = Section.parse(ms);
+        SectionVersion sectionVersion = Section.parse(sb);
         if (sectionVersion == null) {
             //  cope with badly formatted songs
             sectionVersion = new SectionVersion(Section.verse);
         }
-        n += sectionVersion.getParseLength();
 
         ArrayList<MeasureSequenceItem> measureSequenceItems = new ArrayList<>();
         ArrayList<Measure> measures = new ArrayList<>();
@@ -53,40 +54,39 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         Measure lastMeasure = null;
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
         {
-            ms = s.substring(n);
-            if ((ms = util.stripLeadingWhitespace(ms)) == null)
+
+            Util.stripLeadingSpaces(sb);
+            if (sb.length() <= 0)
                 break;
-            n += util.getLeadingWhitespaceCount();
 
             //  quit if next section found
-            if (Section.parse(ms) != null)
+            if (Section.lookahead(sb))
                 break;
 
             //  look for a repeat marker
-            if (ms.charAt(0) == '|') {
+            if (sb.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
                     measureSequenceItems.add(new MeasureSequenceItem(measures));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
-                n++;
-                util.clear();
+                sb.delete(0, 1);
                 continue;
             }
 
             //  look for a repeat end
-            if (ms.charAt(0) == 'x') {
+            if (sb.charAt(0) == 'x') {
                 repeatMarker = false;
-                n++;
-                ms = s.substring(n);
+                sb.delete(0, 1);
+
                 //  look for repeat count
-                if ((ms = util.stripLeadingWhitespace(ms)) == null)
+                Util.stripLeadingSpaces(sb);
+                if (sb.length() <= 0)
                     break;
-                n += util.getLeadingWhitespaceCount();
 
                 final RegExp oneOrMoreDigitsRegexp = RegExp.compile("^(\\d+)");
-                MatchResult mr = oneOrMoreDigitsRegexp.exec(ms);
+                MatchResult mr = oneOrMoreDigitsRegexp.exec(sb.toString());
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
@@ -94,34 +94,36 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
-                    n += ns.length();
+                    sb.delete(0, ns.length());
                     int repeatTotal = Integer.parseInt(ns);
                     measureSequenceItems.add(new MeasureRepeat(lineMeasures, repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
-                util.clear();
                 continue;
             }
 
-            if (util.wasNewline() && !repeatMarker) {
-                //  add line of measures to output collection
-                for (Measure m : lineMeasures)
-                    measures.add(m);
-                lineMeasures = new ArrayList<>();
-                util.clear();
+            //  use a newline as the default repeat marker
+            if (sb.charAt(0) == '\n') {
+                if (!repeatMarker) {
+                    //  add line of measures to output collection
+                    for (Measure m : lineMeasures)
+                        measures.add(m);
+                    lineMeasures = new ArrayList<>();
+                }
+                //  consume the newline
+                sb.delete(0, 1);
+                continue;
             }
 
             //  add a measure to the current line measures
-            Measure measure = Measure.parse(ms, beatsPerBar, lastMeasure);
+            Measure measure = Measure.parse(sb, beatsPerBar, lastMeasure);
             if (measure != null) {
-                n += measure.getParseLength();
                 lineMeasures.add(measure);
                 lastMeasure = measure;
             } else {
                 //  look for a comment
-                MeasureComment measureComment = MeasureComment.parse(ms);
+                MeasureComment measureComment = MeasureComment.parse(sb);
                 if (measureComment != null) {
-                    n += measureComment.getParseLength();
                     lineMeasures.add(measureComment);
                 } else
                     break;      //  fixme: not a measure, we're done
@@ -136,7 +138,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
-        ret.parseLength = n;
         return ret;
     }
 
@@ -225,6 +226,27 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 return i;
         }
         return -1;
+    }
+
+    public final Measure findMeasure(StringBuffer sb) {
+        if (sb == null)
+            return null;
+        return findMeasure(Integer.parseInt(sb.toString()));
+    }
+
+    public final Measure findMeasure(int n) {
+        if (n < 0)
+            return null;
+
+        Measure ret;
+        for (MeasureSequenceItem msi : measureSequenceItems) {
+            if ((ret = msi.findMeasure(n)) != null)
+                return ret;
+            n -= msi.getMeasures().size();
+            if (n < 0)
+                return null;
+        }
+        return null;
     }
 
     public int getTotalMoments() {

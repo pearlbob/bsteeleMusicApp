@@ -38,7 +38,7 @@ public class SongTest
                     Song song = Song.fromJsonObject(ja.get(i).isObject());
 
                     HashMap<ScaleChord, Integer> scaleChordMap =
-                            ScaleChord.findScaleChordsUsed(song.getChordsAsString());
+                            song.findScaleChordsUsed();
                     for (ScaleChord scaleChord : scaleChordMap.keySet())
                         chordDescriptors.add(scaleChord.getChordDescriptor());
                     assertTrue(song.getTitle() != null);

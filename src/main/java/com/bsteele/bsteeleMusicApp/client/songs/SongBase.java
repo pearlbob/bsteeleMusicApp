@@ -44,21 +44,11 @@ public class SongBase {
         rawLyrics = "";
         chords = "";
         parseChordTable(chords);
-        parseLyricsToSectionSequence("");
         parseLyrics();
         setBeatsPerMinute(100);
         setBeatsPerBar(4);
     }
 
-    @Deprecated
-    protected void parseLyricsToSectionSequence(String rawLyrics) {
-        sequence = Section.matchAll(rawLyrics);
-
-        if (sequence.isEmpty()) {
-            sequence.add(Section.getDefaultVersion());
-        }
-        //GWT.log(sequence.toString());
-    }
 
     private final void computeSongMoments() {
         songMoments = new ArrayList<>();
@@ -161,21 +151,6 @@ public class SongBase {
         }
     }
 
-    /**
-     * Legacy prep of section sequence for javascript
-     *
-     * @return
-     */
-    @Deprecated
-    public final String[] getSectionSequenceAsStrings() {
-
-        //  dumb down the section sequence list for javascript
-        String ret[] = new String[sequence.size()];
-        for (int i = 0; i < ret.length; i++) {
-            ret[i] = sequence.get(i).toString();
-        }
-        return ret;
-    }
 
     @Deprecated
     public final Grid<String> getChordSectionStrings(SectionVersion sv) {
@@ -190,11 +165,12 @@ public class SongBase {
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
 
+        //GWT.log( "title: "+getTitle());
+
         if (chords != null) {
-            String s = chords;
+            StringBuffer sb = new StringBuffer(chords);
             ChordSection chordSection;
-            while ((chordSection = ChordSection.parse(s, beatsPerBar)) != null) {
-                s = s.substring(chordSection.getParseLength());
+            while ((chordSection = ChordSection.parse(sb, beatsPerBar)) != null) {
                 measureNodes.add(chordSection);
                 chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
             }
@@ -439,6 +415,13 @@ public class SongBase {
         return null;
     }
 
+    public final Measure findMeasure(StringBuffer sb) {
+        ChordSection chordSection = findChordSection(sb);
+        if (chordSection == null)
+            return null;
+        return chordSection.findMeasure(sb);
+    }
+
     public final ChordSection findChordSection(SongChordGridSelection songChordGridSelection) {
         if (songChordGridSelection == null)
             return null;
@@ -449,11 +432,8 @@ public class SongBase {
         return null;
     }
 
-    public final ChordSection findChordSection(String locString) {
-        if (locString == null)
-            return null;
-
-        SectionVersion sectionVersion = Section.parse(locString);
+    public final ChordSection findChordSection(StringBuffer sb) {
+        SectionVersion sectionVersion = Section.parse(sb);
         if (sectionVersion == null)
             return null;
         return chordSectionMap.get(sectionVersion);
@@ -479,14 +459,16 @@ public class SongBase {
     }
 
     @Deprecated
-    protected final void parseChordTable(String rawChordTableText) {
+    protected final void parseChordTable(String rawChords) {
 
         chordSectionInnerHtmlMap.clear();
 
-        if (rawChordTableText != null && rawChordTableText.length() > 0) {
+        if (rawChords != null && rawChords.length() > 0) {
+            StringBuffer sb = new StringBuffer(rawChords);
+
             //  repair definitions without a final newline
-            if (rawChordTableText.charAt(rawChordTableText.length() - 1) != '\n')
-                rawChordTableText += "\n";
+            if (sb.charAt(sb.length() - 1) != '\n')
+                sb.append("\n");
 
             //  build the initial chord section map
             Grid<String> grid = new Grid<>();
@@ -497,8 +479,8 @@ public class SongBase {
             SectionVersion version;
             TreeSet<SectionVersion> versionsDeclared = new TreeSet<>();
             String block = "";
-            for (int i = 0; i < rawChordTableText.length(); i++) {
-                char c = rawChordTableText.charAt(i);
+            while (sb.length() > 0) {
+                char c = sb.charAt(0);
                 switch (state) {
                     default:
                         state = 0;
@@ -512,11 +494,9 @@ public class SongBase {
 
                         //  fall through
                     case 1:
-                        String token = rawChordTableText.substring(i);
-                        SectionVersion v = Section.parse(token.substring(0, Math.min(token.length() - 1, 11)));
+                        SectionVersion v = Section.parse(sb);
                         if (v != null) {
                             version = v;
-                            i += version.getParseLength() - 1;//   consume the section label
 
                             if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
                                 for (SectionVersion vd : versionsDeclared) {
@@ -566,6 +546,7 @@ public class SongBase {
 
                         break;
                 }
+                sb.delete(0, 1);     //  consume the character
             }
 
             //  put the last grid on the end
@@ -707,6 +688,32 @@ public class SongBase {
         return sb.toString();
     }
 
+    public final void guessTheKey() {
+
+        //  fixme: key guess based on chords section or lyrics?
+        TreeSet<ScaleChord> treeSet = new TreeSet<>();
+        treeSet.addAll(findScaleChordsUsed().keySet());
+
+        setKey(Key.guessKey(treeSet));
+    }
+
+
+    public final HashMap<ScaleChord, Integer> findScaleChordsUsed() {
+        HashMap<ScaleChord, Integer> ret = new HashMap<>();
+        for (ChordSection chordSection : chordSectionMap.values()) {
+            for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
+                for (Measure m : msi.getMeasures()) {
+                    for (Chord chord : m.getChords()) {
+                        ScaleChord scaleChord = chord.getScaleChord();
+                        Integer chordCount = ret.get(scaleChord);
+                        ret.put(scaleChord, chordCount == null ? 1 : chordCount + 1);
+                    }
+                }
+            }
+        }
+        return ret;
+    }
+
 
     public final String generateHtmlLyricsTable(String prefix) {
         String tableStart = "<table id=\"" + prefix + "LyricsTable\">\n"
@@ -723,8 +730,9 @@ public class SongBase {
         int sectionIndex = 0;
         boolean isSection = false;
         String whiteSpace = "";
-        for (int i = 0; i < rawLyrics.length(); i++) {
-            char c = rawLyrics.charAt(i);
+        StringBuffer sb = new StringBuffer(rawLyrics);
+        while (sb.length() > 0) {
+            char c = sb.charAt(0);
             switch (state) {
                 default:
                     state = 0;
@@ -736,9 +744,8 @@ public class SongBase {
                     state++;
                     //  fall through
                 case 1:
-                    SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
+                    SectionVersion version = Section.parse(sb);
                     if (version != null) {
-                        i += version.getParseLength() - 1; //  skip the end of the section id
                         isSection = true;
 
                         if (lyrics.length() > 0) {
@@ -784,6 +791,7 @@ public class SongBase {
                     }
                     break;
             }
+            sb.delete(0, 1);     //  consume parsed character
         }
 
         lyrics = tableStart
@@ -802,8 +810,9 @@ public class SongBase {
 
         lyricSections = new ArrayList<>();
 
-        for (int i = 0; i < rawLyrics.length(); i++) {
-            char c = rawLyrics.charAt(i);
+        StringBuffer sb = new StringBuffer(rawLyrics);
+        while (sb.length() > 0) {
+            char c = sb.charAt(0);
             switch (state) {
                 default:
                     state = 0;
@@ -815,10 +824,8 @@ public class SongBase {
                     state++;
                     //  fall through
                 case 1:
-                    SectionVersion version = Section.parse(rawLyrics.substring(i, i + 11));
+                    SectionVersion version = Section.parse(sb);
                     if (version != null) {
-                        i += version.getParseLength() - 1; //  skip the end of the section id
-
                         if (lyricSection != null)
                             lyricSections.add(lyricSection);
 
@@ -857,6 +864,8 @@ public class SongBase {
                     }
                     break;
             }
+
+            sb.delete(0, 1);
         }
         //  last one is not terminated by another section
         if (lyricSection != null)
@@ -1166,83 +1175,6 @@ public class SongBase {
         }
 
         return newSong;
-    }
-
-    private final String transposeMeasure(Key newKey, String m, int halfSteps) {
-        if (halfSteps == 0)
-            return m;
-
-        int chordNumber = 0;
-        // String chordLetter;
-        StringBuilder sb = new StringBuilder();
-
-        int state = 0;
-
-        for (int ci = 0; ci < m.length(); ci++) {
-            char c = m.charAt(ci);
-            switch (state) {
-                default:
-                case 0:
-                    //  look for comments
-                    if (c == '(') {
-                        sb.append(c);
-                        state = 11;
-                        break;
-                    }
-
-                    //  don't generateHtml the section identifiers that happen to look like notes
-                    //String toMatch = m.substring(ci, Math.min(m.length() - ci + 2, Section.maxLength));
-                    String toMatch = m.substring(ci);
-                    SectionVersion version = Section.parse(toMatch);
-                    if (version != null) {
-                        sb.append(version.toString());
-                        ci += version.getParseLength() - 1; //  skip the end of the section id
-                        break;
-                    }
-
-                    Chord chord = Chord.parse(toMatch, beatsPerBar);
-                    if (chord != null) {
-                        sb.append(chord.transpose(newKey, halfSteps).toString());
-                        ci += chord.getParseLength() - 1; //     watch for the increment in the for loop!
-                        break;
-                    }
-
-                    if (
-                            (c >= '0' && c <= '9')
-                                    || c == 'm'
-                                    || c == ' ' || c == '-' || c == '|' || c == '/'
-                                    || c == '[' || c == ']'
-                                    || c == '{' || c == '}'
-                                    || c == '.'
-                                    || c == '<' || c == '>'
-                                    || c == '\n'
-                                    || c == js_delta) {
-                        sb.append(c);
-                    } else {    //  don't parse the rest
-                        sb.append(c);
-                        state = 10;
-                    }
-                    break;
-
-                case 10: //	wait for newline
-                    sb.append(c);
-                    break;
-
-                case 11: //	wait for newline or closing paren
-                    sb.append(c);
-                    if (c == ')') {
-                        state = 0;
-                    }
-                    break;
-            }
-        }
-        //  do the last chord
-//        if (state == 1) {
-//            chordLetter = chordNumberToLetter(chordNumber, halfSteps);
-//            sb.append(chordLetter);
-//        }
-
-        return sb.toString();
     }
 
     private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {
@@ -1590,6 +1522,7 @@ public class SongBase {
             }
             return o1.defaultCompareTo(o2);
         }
+
     }
 
     /**

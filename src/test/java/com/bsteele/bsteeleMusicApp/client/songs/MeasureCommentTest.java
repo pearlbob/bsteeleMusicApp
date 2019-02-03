@@ -11,63 +11,58 @@ public class MeasureCommentTest extends TestCase {
 
     @Test
     public void testParse() {
-        String s;
-        MeasureComment measureComment;
 
-        s = "(123)";
-        measureComment = MeasureComment.parse(s);
+        parse("(123)");
         assertEquals("123", measureComment.getComment());
-        s = "   (   abc 123   )   ";
-        measureComment = MeasureComment.parse(s);
+
+        parse("   (   abc 123   )   ");
         assertEquals("abc 123", measureComment.getComment());
 
-        s = " ";                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
-        s = "\n";                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
-        s = " \t";                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
-        s = "\t";                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
-        s = "\t\t  \t\t   ";                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
+        parse(" "); //  not a comment
+        assertNull(measureComment);
+        parse("\n"); //  not a comment
+        assertNull(measureComment);
+        parse(" \t"); //  not a comment
+        assertNull(measureComment);
+        parse("\t"); //  not a comment
+        assertNull(measureComment);
+        parse("\t\t  \t\t   "); //  not a comment
+        assertNull(measureComment);
+        parse(" "); //  not a comment
+        assertNull(measureComment);
 
-        s = "( this is a comment )";
-        measureComment = MeasureComment.parse(s);
-        assertEquals(s.length(), measureComment.getParseLength());
+        //  initial and final spaces not included
+        parse("( this is a comment )");
+        assertEquals(rawComment.length() - 2, measureComment.toString().length());
         assertEquals("this is a comment", measureComment.getComment());
 
-        s = "this is also a comment )";
-        measureComment = MeasureComment.parse(s);
-        assertEquals(s.length(), measureComment.getParseLength());
-        assertEquals(s, measureComment.getComment());
+        parse("this is also a comment )");
+        assertEquals(rawComment.length() + 2, measureComment.toString().length());
+        assertEquals(rawComment, measureComment.getComment());
 
-        s = "( this is also a bad comment";
-        measureComment = MeasureComment.parse(s);
-        assertEquals(s.length(), measureComment.getParseLength());
-        assertEquals(s, measureComment.getComment());
+        parse("( this is also a bad comment");
+        assertEquals(rawComment.length() + 2, measureComment.toString().length());
+        assertEquals(rawComment, measureComment.getComment());
 
-        s = "this is also has to be a comment";
-        measureComment = MeasureComment.parse(s);
-        assertEquals(s.length(), measureComment.getParseLength());
-        assertEquals(s, measureComment.getComment());
+        parse("this is also has to be a comment");
+        assertEquals(rawComment.length() + 2, measureComment.toString().length());
+        assertEquals(rawComment, measureComment.getComment());
 
-        s = "ABC\nDEF";                  //  not all a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(3, measureComment.getParseLength());
-        assertEquals(s.substring(0, 3), measureComment.getComment());
+        parse("ABC\nDEF");//  not all a comment
+        assertEquals(3 + 2, measureComment.toString().length());
+        assertEquals(rawComment.substring(0, 3), measureComment.getComment());
 
-        s = "";                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
+        parse("");//  not a comment
+        assertNull(measureComment);
 
-        s = null;                  //  not a comment
-        measureComment = MeasureComment.parse(s);
-        assertEquals(null, measureComment);
+        assertNull(MeasureComment.parse(null));
     }
+
+    private void parse(String s) {
+        rawComment = s;
+        measureComment = MeasureComment.parse(new StringBuffer(s));
+    }
+
+    private String rawComment;
+    private MeasureComment measureComment;
 }

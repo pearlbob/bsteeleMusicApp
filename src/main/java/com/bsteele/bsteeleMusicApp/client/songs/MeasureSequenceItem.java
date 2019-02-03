@@ -87,6 +87,14 @@ public class MeasureSequenceItem extends MeasureNode {
         return null;
     }
 
+    public final Measure findMeasure(int n) {
+        try {
+            return measures.get(n);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public enum EditLocation {
         insert,
         replace,

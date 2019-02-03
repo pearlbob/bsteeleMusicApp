@@ -7,12 +7,10 @@ import java.util.Objects;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class Chord implements Comparable<Chord>
-{
+public class Chord implements Comparable<Chord> {
 
     public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
-                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay)
-    {
+                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay) {
         this.scaleChord = scaleChord;
         this.beats = beats;
         this.beatsPerBar = beatsPerBar;
@@ -20,7 +18,7 @@ public class Chord implements Comparable<Chord>
         this.anticipationOrDelay = anticipationOrDelay;
     }
 
-    public Chord(@NotNull Chord chord){
+    public Chord(@NotNull Chord chord) {
         this.scaleChord = chord.scaleChord;
         this.beats = chord.beatsPerBar;
         this.beatsPerBar = chord.beatsPerBar;
@@ -28,60 +26,52 @@ public class Chord implements Comparable<Chord>
         this.anticipationOrDelay = chord.anticipationOrDelay;
     }
 
-    public static final Chord parse(String s, int beatsPerBar)
-    {
-        if (s == null || s.length() <= 0)
+    static final Chord testParse(String s, int beatsPerBar) {
+        return parse(new StringBuffer(s), beatsPerBar);
+    }
+
+    public static final Chord parse(StringBuffer sb, int beatsPerBar) {
+        if (sb == null || sb.length() <= 0)
             return null;
 
         int beats = beatsPerBar;  //  default only
-        ScaleChord scaleChord = ScaleChord.parse(s);
+        ScaleChord scaleChord = ScaleChord.parse(sb);
         if (scaleChord == null)
             return null;
-        int parseLength = scaleChord.getParseLength();
-        s = s.substring(parseLength);
+
         ScaleChord slashScaleChord = null;
-        if (s.length() > 0 && s.charAt(0) == '/') {
-            s = s.substring(1);
-            parseLength++;
-            slashScaleChord = ScaleChord.parse(s);
-            if (slashScaleChord != null) {
-                parseLength += slashScaleChord.getParseLength();
-                s = s.substring(slashScaleChord.getParseLength());
-            }
+        if (sb.length() > 0 && sb.charAt(0) == '/') {
+            sb.delete(0, 1);
+            slashScaleChord = ScaleChord.parse(sb);
         }
-        if (s.length() > 0 && s.charAt(0) == '.') {
+        if (sb.length() > 0 && sb.charAt(0) == '.') {
             beats = 1;
-            while (s.length() > 0 && s.charAt(0) == '.') {
-                s = s.substring(1);
-                parseLength++;
+            while (sb.length() > 0 && sb.charAt(0) == '.') {
+                sb.delete(0, 1);
                 beats++;
-                if (beats >= 8)
+                if (beats >= 12)
                     break;
             }
         }
 
         if (beats > beatsPerBar)
             //  whoops, too many beats
-            return null;
+            ;    //  fixme: notify user
 
         Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord,
                 ChordAnticipationOrDelay.none);      //  fixme
-        ret.parseLength = parseLength;
         return ret;
     }
 
-    public Chord(ScaleChord scaleChord)
-    {
+    public Chord(ScaleChord scaleChord) {
         this(scaleChord, 4, 4, null, ChordAnticipationOrDelay.none);
     }
 
-    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar)
-    {
+    public Chord(ScaleChord scaleChord, int beats, int beatsPerBar) {
         this(scaleChord, beats, beatsPerBar, null, ChordAnticipationOrDelay.none);
     }
 
-    public Chord transpose(Key key, int halfSteps)
-    {
+    public Chord transpose(Key key, int halfSteps) {
         return new Chord(scaleChord.transpose(key, halfSteps), beats, beatsPerBar,
                 slashScaleChord == null ? null : slashScaleChord.transpose(key, halfSteps), anticipationOrDelay);
     }
@@ -91,8 +81,7 @@ public class Chord implements Comparable<Chord>
      *
      * @return the scale chord
      */
-    public ScaleChord getScaleChord()
-    {
+    public ScaleChord getScaleChord() {
         return scaleChord;
     }
 
@@ -110,8 +99,7 @@ public class Chord implements Comparable<Chord>
      *
      * @return the beat count
      */
-    public final int getBeats()
-    {
+    public final int getBeats() {
         return beats;
     }
 
@@ -120,8 +108,7 @@ public class Chord implements Comparable<Chord>
      *
      * @param beats the beat count
      */
-    public final void setBeats(int beats)
-    {
+    public final void setBeats(int beats) {
         this.beats = beats;
     }
 
@@ -131,8 +118,7 @@ public class Chord implements Comparable<Chord>
      *
      * @return
      */
-    public final ScaleChord getSlashScaleChord()
-    {
+    public final ScaleChord getSlashScaleChord() {
         return slashScaleChord;
     }
 
@@ -142,8 +128,7 @@ public class Chord implements Comparable<Chord>
      *
      * @param slashScaleChord
      */
-    final void setSlashScaleChord(ScaleChord slashScaleChord)
-    {
+    final void setSlashScaleChord(ScaleChord slashScaleChord) {
         this.slashScaleChord = slashScaleChord;
     }
 
@@ -152,8 +137,7 @@ public class Chord implements Comparable<Chord>
      *
      * @return the timing adjustment
      */
-    public final ChordAnticipationOrDelay getAnticipationOrDelay()
-    {
+    public final ChordAnticipationOrDelay getAnticipationOrDelay() {
         return anticipationOrDelay;
     }
 
@@ -162,15 +146,8 @@ public class Chord implements Comparable<Chord>
      *
      * @param anticipationOrDelay the timing adjustment
      */
-    public final void setAnticipationOrDelay(ChordAnticipationOrDelay anticipationOrDelay)
-    {
+    public final void setAnticipationOrDelay(ChordAnticipationOrDelay anticipationOrDelay) {
         this.anticipationOrDelay = anticipationOrDelay;
-    }
-
-
-    public final int getParseLength()
-    {
-        return parseLength;
     }
 
 
@@ -213,8 +190,7 @@ public class Chord implements Comparable<Chord>
      *                              from being compared to this object.
      */
     @Override
-    public int compareTo(Chord o)
-    {
+    public int compareTo(Chord o) {
         int ret = scaleChord.compareTo(o.scaleChord);
         if (ret != 0)
             return ret;
@@ -259,8 +235,7 @@ public class Chord implements Comparable<Chord>
      * @return a string representation of the object.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         String ret = scaleChord.toString()
                 + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
@@ -272,8 +247,7 @@ public class Chord implements Comparable<Chord>
         return ret;
     }
 
-    public String toStringWithoutInversion()
-    {
+    public String toStringWithoutInversion() {
         String ret = scaleChord.toString()
                 //+ (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
@@ -287,8 +261,7 @@ public class Chord implements Comparable<Chord>
 
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (!(o instanceof Chord))
             return false;
         Chord oc = (Chord) o;
@@ -305,18 +278,15 @@ public class Chord implements Comparable<Chord>
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay);
     }
 
-    public final int getBeatsPerBar()
-    {
+    public final int getBeatsPerBar() {
         return beatsPerBar;
     }
 
-    public final void setBeatsPerBar(int beatsPerBar)
-    {
+    public final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
     }
 
@@ -325,5 +295,4 @@ public class Chord implements Comparable<Chord>
     private int beatsPerBar = beats;
     private ScaleChord slashScaleChord;
     private ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.none;
-    private transient int parseLength;
 }
