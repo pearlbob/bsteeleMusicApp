@@ -13,12 +13,13 @@ import java.util.logging.Logger;
 /**
  * A chord section of a song is typically a collection of measures
  * that constitute a portion of the song that is considered musically a unit.
+ * Immutable.
  * <p>
  * CopyRight 2018 bsteele.com
  * User: bob
  */
 public class ChordSection extends MeasureNode implements Comparable<ChordSection> {
-    public ChordSection(SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems) {
+    public ChordSection(@Nonnull SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems) {
         this.sectionVersion = sectionVersion;
         this.measureSequenceItems = (measureSequenceItems != null ? measureSequenceItems : new ArrayList<>());
     }
@@ -235,41 +236,23 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     /**
-     * Set the sectionVersion beats per minute.
-     *
-     * @param bpm the defaultBpm to set
-     */
-    public final void setBeatsPerMinute(int bpm) {
-        this.bpm = bpm;
-    }
-
-    /**
      * Return the sectionVersion beats per minute
      * or null to default to the song BPM.
      *
      * @return the sectionVersion BPM or null
      */
-    public final Integer getBeatsPerMinute() {
-        return bpm;
-    }
-
-    /**
-     * Set the sections's number of beats per bar
-     *
-     * @param beatsPerBar the beats per bar to set
-     */
-    private final void setBeatsPerBar(int beatsPerBar) {
-        this.beatsPerBar = beatsPerBar;
-    }
+    //public final Integer getBeatsPerMinute() {
+    //    return bpm;
+    //}
 
     /**
      * Return the sections's number of beats per bar or null to default to the song's number of beats per bar
      *
      * @return the number of beats per bar
      */
-    public final Integer getBeatsPerBar() {
-        return beatsPerBar;
-    }
+//    public final Integer getBeatsPerBar() {
+//        return beatsPerBar;
+//    }
 
     /**
      * Compares this object with the specified object for order.  Returns a
@@ -317,13 +300,21 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         ChordSection that = (ChordSection) o;
         return Objects.equals(sectionVersion, that.sectionVersion)
                 && Objects.equals(measureSequenceItems, that.measureSequenceItems)
-                && Objects.equals(bpm, that.bpm)
-                && Objects.equals(beatsPerBar, that.beatsPerBar);
+                //&& Objects.equals(bpm, that.bpm)
+                //&& Objects.equals(beatsPerBar, that.beatsPerBar)
+                ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sectionVersion.hashCode(), measureSequenceItems.hashCode(), bpm, beatsPerBar);
+        return Objects.hash(sectionVersion.hashCode(), measureSequenceItems.hashCode()
+                //, bpm, beatsPerBar
+        );
+    }
+
+    @Override
+    public String getId() {
+        return sectionVersion.getId();
     }
 
     @Override
@@ -347,10 +338,10 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return measureSequenceItems;
     }
 
-    private SectionVersion sectionVersion;
+    private final SectionVersion sectionVersion;
     private ArrayList<MeasureSequenceItem> measureSequenceItems;
-    private Integer bpm;
-    private Integer beatsPerBar;
+    //private Integer bpm;
+    //private Integer beatsPerBar;
     private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());
 
 }

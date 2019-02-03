@@ -101,6 +101,13 @@ public abstract class MeasureNode {
         return "C";
     }
 
+    /**
+     * The id to uniquely identify this measureNode in the song.
+     *
+     * @return the id
+     */
+    public abstract String getId();
+
     /** The number characters used when the measure node was parsed from an input string.
      * Used internally only.
      *

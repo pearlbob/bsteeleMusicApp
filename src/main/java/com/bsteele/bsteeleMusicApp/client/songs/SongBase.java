@@ -23,9 +23,6 @@ import java.util.Objects;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
-import static com.google.gwt.user.client.ui.HasHorizontalAlignment.ALIGN_CENTER;
-import static com.google.gwt.user.client.ui.HasVerticalAlignment.ALIGN_BOTTOM;
-
 /**
  * @author bob
  */
@@ -116,12 +113,7 @@ public class SongBase {
     }
 
     private final ChordSection findChordSection(LyricSection lyricSection) {
-        for (ChordSection chordSection : chordSections) {
-            if (lyricSection.getSectionVersion().equals(chordSection.getSectionVersion())) {
-                return chordSection;
-            }
-        }
-        return null;
+        return chordSectionMap.get(lyricSection.getSectionVersion());
     }
 
     private void computeDuration() {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
@@ -191,15 +183,12 @@ public class SongBase {
     }
 
     public final ChordSection getChordSection(SectionVersion sv) {
-        for (ChordSection chordSection : chordSections)
-            if (chordSection.getSectionVersion().equals(sv))
-                return chordSection;
-        return null;
+        return chordSectionMap.get(sv);
     }
 
     protected final void parse() {
         measureNodes = new ArrayList<>();
-        chordSections = new TreeSet<>();
+        chordSectionMap = new HashMap<>();
 
         if (chords != null) {
             String s = chords;
@@ -207,13 +196,13 @@ public class SongBase {
             while ((chordSection = ChordSection.parse(s, beatsPerBar)) != null) {
                 s = s.substring(chordSection.getParseLength());
                 measureNodes.add(chordSection);
-                chordSections.add(chordSection);
+                chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
             }
         }
 
         //  fixme: temp transform from chordSections to chordSectionInnerHtmlMap
         chordSectionInnerHtmlMap.clear();
-        for (ChordSection chordSection : chordSections) {
+        for (ChordSection chordSection : new TreeSet<ChordSection>(chordSectionMap.values())) {
             //GWT.log(chordSection.toString());
 
             //  build the chord section map value
@@ -249,7 +238,7 @@ public class SongBase {
     public final Grid<MeasureNode> getStructuralGrid() {
         Grid<MeasureNode> ret = new Grid<>();
 
-        for (ChordSection chordSection : chordSections) {
+        for (ChordSection chordSection : new TreeSet<ChordSection>(chordSectionMap.values())) {
             chordSection.addToGrid(ret, chordSection);
         }
 
@@ -325,13 +314,9 @@ public class SongBase {
     }
 
     public final boolean addSectionVersion(SectionVersion sectionVersion) {
-        if (sectionVersion == null)
+        if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
             return false;
-        for (ChordSection chordSection : chordSections) {
-            if (chordSection.getSectionVersion().equals(sectionVersion))
-                return false;
-        }
-        chordSections.add(new ChordSection(sectionVersion));
+        chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
         return true;
     }
 
@@ -400,7 +385,7 @@ public class SongBase {
 
 
     private final ChordSection findChordSection(MeasureNode measureNode) {
-        for (ChordSection chordSection : chordSections) {
+        for (ChordSection chordSection : chordSectionMap.values()) {
             if (measureNode == chordSection)
                 return chordSection;
             MeasureNode mn = chordSection.findMeasureNode(measureNode);
@@ -464,11 +449,21 @@ public class SongBase {
         return null;
     }
 
+    public final ChordSection findChordSection(String locString) {
+        if (locString == null)
+            return null;
+
+        SectionVersion sectionVersion = Section.parse(locString);
+        if (sectionVersion == null)
+            return null;
+        return chordSectionMap.get(sectionVersion);
+    }
+
     public final boolean measureDelete(Measure measure) {
         if (measure == null)
             return false;
 
-        for (ChordSection chordSection : chordSections) {
+        for (ChordSection chordSection : chordSectionMap.values()) {
             for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
                 if (msi.delete(measure))
                     return true;
@@ -480,7 +475,7 @@ public class SongBase {
     public final boolean chordSectionDelete(ChordSection chordSection) {
         if (chordSection == null)
             return false;
-        return chordSections.remove(chordSection);
+        return chordSectionMap.remove(chordSection) != null;
     }
 
     @Deprecated
@@ -664,7 +659,7 @@ public class SongBase {
 
             sb.append("</td></tr><tr><td></td>");
 
-            for (ChordSection chordSection : chordSections) {
+            for (ChordSection chordSection : new TreeSet<ChordSection>(chordSectionMap.values())) {
                 if (chordSection.getSectionVersion().equals(lyricSection.getSectionVersion())) {
                     innerHtml = chordSection.generateInnerHtml(key, tran, true);
                     rowStartSequenceNumber = sequenceNumber;
@@ -962,7 +957,7 @@ public class SongBase {
                 } else
                     lastValue = s;
 
-                formatter.setAlignment(r + offset, c, ALIGN_CENTER, ALIGN_BOTTOM);
+                //formatter.setAlignment(r + offset, c, ALIGN_CENTER, ALIGN_BOTTOM);
                 flexTable.setHTML(r + offset, c,
                         "<span style=\"font-size: " + fontSize + "px;\">"
                                 + s
@@ -1000,7 +995,7 @@ public class SongBase {
 
                 chordSectionDelete(chordSection);
                 chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
-                chordSections.add(chordSection);
+                chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
             } else {
                 //  change the count
                 measureRepeat.setRepeats(repeats);
@@ -1017,7 +1012,7 @@ public class SongBase {
 
             chordSectionDelete(chordSection);
             chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
-            chordSections.add(chordSection);
+            chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
         }
     }
 
@@ -1474,8 +1469,8 @@ public class SongBase {
         this.drumSection = drumSection;
     }
 
-    public TreeSet<ChordSection> getChordSections() {
-        return chordSections;
+    Collection<ChordSection> getChordSections() {
+        return chordSectionMap.values();
     }
 
     public final Arrangement getDrumArrangement() {
@@ -1726,7 +1721,7 @@ public class SongBase {
     private transient double duration;    //  units of seconds
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
-    private TreeSet<ChordSection> chordSections = new TreeSet<>();
+    private HashMap<SectionVersion, ChordSection> chordSectionMap = new HashMap<>();
     private MeasureNode currentMeasureNode;
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
     private String chords = "";

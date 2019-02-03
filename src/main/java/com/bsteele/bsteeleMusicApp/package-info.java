@@ -13,7 +13,8 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-todo: comments in chords!
+todo: comments in chords!  make them more obvious, horizontal spacing
+
 todo: use webstorage for user name
 ____fixme: double delete => "  ) (  "
 fixme: how to delete a repeat marker?... and a repeat?
@@ -39,6 +40,7 @@ fixme: click to the right of the chord edit table should select end of row
 todo: go to top of song on song change
 todo: https://www.youtube.com/results?search_query=Aint+No+Sunshine+by+Bill+Withers
 todo: focus on search on songs tab select
+todo: add a newline to chords for things like repetition in 5 measures: africa
 
 
 ____fixme: can't edit numbered sections, eg. V2, Ch3, etc.

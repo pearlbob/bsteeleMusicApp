@@ -189,6 +189,11 @@ public class MeasureSequenceItem extends MeasureNode {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("{");

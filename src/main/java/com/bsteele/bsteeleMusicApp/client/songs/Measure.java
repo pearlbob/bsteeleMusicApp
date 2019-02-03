@@ -322,6 +322,11 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
     @Override
+    public String getId() {
+        return null;
+    }
+
+    @Override
     public String toString() {
         return chordsToString();
     }

@@ -12,9 +12,16 @@ public class MeasureTest extends TestCase {
     @Test
     public void testParse() {
         {
+            int beatsPerBar = 4;
+            Measure m = Measure.parse(" .G ", beatsPerBar);
+            assertNull(m);
+        }
+        {
             int beatsPerBar = 3;
             //System.out.println("beatsPerBar: " + beatsPerBar);
             Measure m;
+            m = Measure.parse(" .G ", beatsPerBar);
+            assertNull(m);
             m = Measure.parse("E#m7... ", beatsPerBar);
             assertNull(m);
             m = Measure.parse("E#m7. ", beatsPerBar);

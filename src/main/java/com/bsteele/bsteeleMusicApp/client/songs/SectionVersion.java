@@ -1,12 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.Grid;
-
-import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
-
-import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import static java.util.Objects.hash;
 
@@ -73,7 +67,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
      *
      * @return the name of the section version
      */
-    public final String getName() {
+    public final String getId() {
         return name;
     }
 

@@ -118,8 +118,9 @@ public class SongBaseTest
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 8, "I:v: A B C D", "I:v: bob, bob, bob berand");
 
+        TreeSet<ChordSection> chordSections = new TreeSet<ChordSection>(a.getChordSections());
         MeasureSequenceItem vc2 =
-                a.getChordSections().higher(a.getChordSections().first()).getMeasureSequenceItems().get(0);
+                chordSections.higher(chordSections.first()).getMeasureSequenceItems().get(0);
 
         Measure measure = vc2.getMeasures().get(1);
         assertEquals(4, vc2.getMeasures().size());
@@ -127,7 +128,7 @@ public class SongBaseTest
         newMeasure = Measure.parse("G", a.getBeatsPerBar());
         assertTrue(a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure));
         assertEquals(4, vc2.getMeasures().size());
-        vc2 = a.getChordSections().higher(a.getChordSections().first()).getMeasureSequenceItems().get(0);
+        vc2 = chordSections.higher(chordSections.first()).getMeasureSequenceItems().get(0);
         measure = vc2.getMeasures().get(1);
         assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
 
@@ -203,6 +204,21 @@ public class SongBaseTest
     }
 
     @Test
+    public void testFind() {
+        {
+            SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4, "i: A B C D v: E F G A# t: Gm Gm",
+                    "i: dude v: bob, bob, bob berand");
+
+            System.out.println(a.findChordSection("ch:"));
+            System.out.println(a.findChordSection("i:"));
+            System.out.println(a.findChordSection("v:"));
+
+            System.out.println(a.findChordSection("t:"));
+        }
+    }
+
+    @Test
     public void testSetRepeats()
     {
         {
@@ -257,7 +273,7 @@ public class SongBaseTest
 
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        chordSections = a.getChordSections();
+        chordSections = new TreeSet<ChordSection>(a.getChordSections());
         assertEquals(1, chordSections.size());
         chordSection = chordSections.first();
         measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
@@ -265,7 +281,7 @@ public class SongBaseTest
 
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D (yo)", "v: bob, bob, bob berand");
-        chordSections = a.getChordSections();
+        chordSections = new TreeSet<ChordSection>(a.getChordSections());
         assertEquals(1, chordSections.size());
         chordSection = chordSections.first();
         measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
