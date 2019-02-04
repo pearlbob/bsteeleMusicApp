@@ -18,6 +18,19 @@ public class ChordSectionTest extends TestCase {
         ArrayList<Measure> measures;
 
         {
+            //  lost : ?
+            ChordSection chordSection = ChordSection.testParse(
+                    "V: \n"
+                    +"A C#m F#m F#m/E\n"
+                    +"G Bm F#m G GBm  x3\n"
+                    +"A C#m F#m F#m/E\n"
+                    +"G G Bm Bm\n"
+                    , 4);
+            assertNotNull(chordSection);
+            Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);
+            assert (m instanceof Measure);
+        }
+        {
             //  invented garbage is comment
             ChordSection chordSection = ChordSection.testParse(
                     "ia: EDCBA (single notes rapid)", 4);

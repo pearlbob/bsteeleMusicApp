@@ -81,11 +81,9 @@ public class Song extends SongBase implements Comparable<Song>
         song.setRawLyrics(lyrics);
         song.setChords(chords);
 
-        song.parseChordTable(chords);
         song.parseLyrics();
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
-        song.parse();
 
         return song;
     }

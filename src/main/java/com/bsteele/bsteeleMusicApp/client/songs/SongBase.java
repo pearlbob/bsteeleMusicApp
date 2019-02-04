@@ -43,7 +43,7 @@ public class SongBase {
         unitsPerMeasure = 4;
         rawLyrics = "";
         chords = "";
-        parseChordTable(chords);
+        parse();
         parseLyrics();
         setBeatsPerMinute(100);
         setBeatsPerBar(4);
@@ -161,7 +161,7 @@ public class SongBase {
         return chordSectionMap.get(sv);
     }
 
-    protected final void parse() {
+    private final void parse() {
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
 
@@ -456,157 +456,6 @@ public class SongBase {
         if (chordSection == null)
             return false;
         return chordSectionMap.remove(chordSection) != null;
-    }
-
-    @Deprecated
-    protected final void parseChordTable(String rawChords) {
-
-        chordSectionInnerHtmlMap.clear();
-
-        if (rawChords != null && rawChords.length() > 0) {
-            StringBuffer sb = new StringBuffer(rawChords);
-
-            //  repair definitions without a final newline
-            if (sb.charAt(sb.length() - 1) != '\n')
-                sb.append("\n");
-
-            //  build the initial chord section map
-            Grid<String> grid = new Grid<>();
-            int row = 0;
-            int col = 0;
-
-            int state = 0;
-            SectionVersion version;
-            TreeSet<SectionVersion> versionsDeclared = new TreeSet<>();
-            String block = "";
-            while (sb.length() > 0) {
-                char c = sb.charAt(0);
-                switch (state) {
-                    default:
-                        state = 0;
-                    case 0:
-                        //  absorb leading white space
-                        if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
-                            break;
-                        }
-                        block = "";
-                        state++;
-
-                        //  fall through
-                    case 1:
-                        SectionVersion v = Section.parse(sb);
-                        if (v != null) {
-                            version = v;
-
-                            if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
-                                for (SectionVersion vd : versionsDeclared) {
-                                    chordSectionInnerHtmlMap.put(vd, grid);
-                                }
-                                //  fixme: worry about chords before a section is declared
-                                versionsDeclared.clear();
-                                grid = new Grid<>();
-                            }
-                            versionsDeclared.add(version);
-
-                            row = 0;
-                            col = 0;
-                            block = "";
-                            state = 0;
-                            continue;
-                        }
-                        state++;
-
-                        //  fall through
-                    case 2:
-                        //  absorb characters until newline
-                        switch (c) {
-                            case ' ':
-                            case '\t':
-                                if (block.length() > 0) {
-                                    grid.addTo(col, row, block);
-                                    col++;
-                                }
-                                block = "";
-                                break;
-                            case '\n':
-                            case '\r':
-                                if (block.length() > 0) {
-                                    grid.addTo(col, row, block);
-                                    col++;
-                                }
-                                row++;
-                                col = 0;
-                                block = "";
-                                state = 0;
-                                break;
-                            default:
-                                block += c;
-                                break;
-                        }
-
-                        break;
-                }
-                sb.delete(0, 1);     //  consume the character
-            }
-
-            //  put the last grid on the end
-            if (!versionsDeclared.isEmpty() && !grid.isEmpty()) {
-                for (SectionVersion vd : versionsDeclared) {
-                    chordSectionInnerHtmlMap.put(vd, grid);
-                }
-            }
-
-            //  deal with unformatted events
-            if (chordSectionInnerHtmlMap.isEmpty()) {
-                chordSectionInnerHtmlMap.put(Section.getDefaultVersion(), grid);
-            }
-        }
-
-        //  collect remap sections with identical declarations
-        {
-            //  build a reverse lookup map
-            HashMap<Grid<String>, TreeSet<SectionVersion>> reverseMap = new HashMap<>();
-            for (SectionVersion version : chordSectionInnerHtmlMap.keySet()) {
-                Grid<String> grid = chordSectionInnerHtmlMap.get(version);
-                TreeSet<SectionVersion> lookup = reverseMap.get(grid);
-                if (lookup == null) {
-                    TreeSet<SectionVersion> ts = new TreeSet<>();
-                    ts.add(version);
-                    reverseMap.put(grid, ts);
-                } else {
-                    lookup.add(version);
-                }
-            }
-            //  build version mapping to version displayed map
-            displaySectionMap.clear();
-            for (Grid<String> g : reverseMap.keySet()) {
-                TreeSet<SectionVersion> mappedVersions = reverseMap.get(g);
-                SectionVersion first = mappedVersions.first();
-                for (SectionVersion dv : mappedVersions) {
-                    //  more convenient to put idenity mapping in for first
-                    displaySectionMap.put(dv, first);
-                }
-            }
-
-            //GWT.log(displayMap.toString());
-            HashMap<SectionVersion, Grid<String>> reducedChordSectionMap = new HashMap<>();
-            for (SectionVersion version : chordSectionInnerHtmlMap.keySet()) {
-                reducedChordSectionMap.put(version, chordSectionInnerHtmlMap.get(displaySectionMap.get(version)));
-            }
-
-            //  install the reduced map
-            chordSectionInnerHtmlMap.clear();
-            chordSectionInnerHtmlMap.putAll(reducedChordSectionMap);
-            //GWT.log(chordSectionInnerHtmlMap.toString());
-        }
-
-//        for (Section.Version v : chordSectionInnerHtmlMap.keySet()) {
-//            GWT.log(" ");
-//            GWT.log(v.toString());
-//            GWT.log("    " + chordSectionInnerHtmlMap.get(v).toString());
-//        }
-
-        computeDuration();
     }
 
     public final String measureNodesToHtml(@NotNull String tableName, @NotNull Key key, int tran) {

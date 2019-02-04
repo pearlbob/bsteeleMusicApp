@@ -14,6 +14,7 @@ public class ChordSectionLocation {
         SectionVersion sectionVersion = Section.parse(sb);
         if (sectionVersion == null)
             return null;
+
         try {
             int index = Integer.parseInt(s);
             return new ChordSectionLocation(new ChordSection(sectionVersion), index);
@@ -22,16 +23,20 @@ public class ChordSectionLocation {
         }
     }
 
+    @Override
+    public String toString() {
+        return getId();
+    }
 
-    public String getId() {
+    public final String getId() {
         return chordSection.getId() + "#" + index;
     }
 
-    public ChordSection getChordSection() {
+    public final ChordSection getChordSection() {
         return chordSection;
     }
 
-    public int getIndex() {
+    public final int getIndex() {
         return index;
     }
 

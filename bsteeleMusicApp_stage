@@ -84,6 +84,7 @@ rm -rf $dst/$app	#	wow!
 mkdir -p $dst/$app
 cd $dst/$app
 jar -xf $finalWar
+cp $finalWar .		#	include the war itself so servers can auto update
 cd $cwd
 
 #	leave the war on local dst for distribution to archive

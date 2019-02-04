@@ -13,6 +13,11 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+todo: eliminate dots if they follow the default pattern eg. "E.A." in 4/4 becomes "EA"
+todo: user select of 2,3,4,5 or 6 measures per line?
+todo: x2 and x3 exploded
+todo: dashes automatically enforced?
+fixme: africa display
 fixme: Measure.parse() behavior on errors
 todo: comments in chords!  make them more obvious, horizontal spacing
 

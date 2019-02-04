@@ -68,7 +68,7 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers> implements Lo
         else {
             username.setFocus(true);
             username.selectAll();
-            errorLabel.setText("We need a login name to identify your contributions to the song list.");
+            errorLabel.setText("We need a login name to identify your contributions to the song list.  You can only use letters, numbers and underscores.");
         }
     }
 
