@@ -28,7 +28,6 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
@@ -38,7 +37,6 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.TreeSet;
 
 /**
@@ -166,10 +164,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     @Override
     public void onAllSongWrite(AllSongWriteEvent event) {
-        Date now = new Date();
-        DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
-
-        view.saveAllSongsAs("allSongs_" + fmt.format(now) + ".songlyrics");
+        view.saveAllSongsAs("allSongs.songlyrics");
     }
 
 

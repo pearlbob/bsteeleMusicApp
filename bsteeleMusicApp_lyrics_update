@@ -1,20 +1,26 @@
 #!/bin/tcsh
-#set echo; set verbose
+set echo; set verbose
 
+set bsteeleMusicAppHome=/home/bob/GitHub/bsteeleMusicApp
 
-set srcDir=/home/bob/google_drive/bass/songlyrics/bodhi
 set f=allSongs.songlyrics
+set bodhiDir=/home/bob/google_drive/bass/songlyrics/bodhi
 set svrDst=gs://www.bsteele.com/bsteeleMusicApp
 set svrBeta=gs://www.bsteele.com/beta/bsteeleMusicApp
 set localBeta=/var/www/html/public_html/beta
 
-#	expect to be in the root directory of the project
-set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
+#	from Bodhi
+curl -G -o $bodhiDir/$f \
+        https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
 
-#	find the most recent
-set src=`ls -tr $srcDir/allSongs*.songlyrics | tail -1`
+#	sanity check
+echo create a sanity check for $f
+
+#	expect to be in the root directory of the project
+cd $bsteeleMusicAppHome
 
 #	copy to web
+set src=$bodhiDir/$f
 gsutil -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
 gsutil -q acl ch -u AllUsers:R $svrDst/$f
 
@@ -26,7 +32,19 @@ gsutil -q acl ch -u AllUsers:R $svrBeta/$f
 cp $src $localBeta/$f
 
 #	copy to src resource
+set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
 cp $src $codeDst
+
+#	copy to github project, if different
+cmp -s $bsteeleMusicAppHome/../allSongs.songlyrics/$f $src
+if ( $status ) then
+	cd $bsteeleMusicAppHome/../allSongs.songlyrics
+	set date=`date -Iseconds`
+	echo $date
+	git commit -a -m "commit for new lyrics $date"
+	git push 	#  ssh configured
+endif
+
 
 exit $status
 

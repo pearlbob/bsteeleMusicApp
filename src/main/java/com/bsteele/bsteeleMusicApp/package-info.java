@@ -13,6 +13,13 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+____todo: cron job for bsteeleMusicApp_lyrics_update
+todo: implement local storage songs... and their removal
+todo: write allSongs.songlyrics sanity check for download from Bodhi
+fixme: eliminate date on allSongs.songlyrics
+fixme: redo key guess
+todo: add minor keys
+todo: song complexity index
 todo: eliminate dots if they follow the default pattern eg. "E.A." in 4/4 becomes "EA"
 todo: user select of 2,3,4,5 or 6 measures per line?
 todo: x2 and x3 exploded
@@ -54,7 +61,8 @@ ____fixme: notes not always in the correct key signature (i.e. # instead of b, v
 todo: colorize the lyrics section in edit
 todo: chords: 69 maug
 
-todo: guitar chord fingerings with/without capo, bar chords?
+todo: guitar chord fingerings with/without capo, bar chords?  with bass notes for chords
+todo: piano chords (different from guitar)
 todo: bass finger board for each chord
 todo: option: hide chorus lyrics on subesequent chorus's
 
