@@ -1,0 +1,49 @@
+#!/bin/tcsh
+set echo; set verbose
+
+#	update the beta and bsteeleMusicApp on a pi
+
+#	WARNING:  this file is run once a morning by crontab so...
+#	it should always be left operational every evening
+#	or the crontab should be shutdown.
+
+set project=/home/pi/bsteeleMusicApp
+set tomcat=/opt/tomcat
+set beta=beta/bsteeleMusicApp
+
+set webapps=$tomcat/webapps
+set localRelease=$webapps/bsteeleMusicApp
+set localBeta=$webapps/beta
+set betaWar=$webapps/beta.war
+
+set f=bsteeleMusicApp.war
+set date=`date -Iseconds`
+
+#	from beta at bsteele.com to source location
+echo 'BETA ONLY'
+
+mkdir -p $project/$beta
+set src=$beta/$f
+curl -s -G -o $project/$src \
+        https://storage.googleapis.com/www.bsteele.com/$src
+if ( $status != 0 ) then
+	set stat=$status
+	echo read of $storage failed $date\: $stat
+	exit $stat
+endif
+
+#	copy to required locations, if different
+cmp -s $project/$src $localBeta/$f
+if ( $status ) then
+	#	copy to local beta
+	sudo chmod g+w $localBeta
+	cp $project/$src $betaWar
+
+	echo copies done $date
+else
+	echo No copy required $date
+endif
+
+
+exit $status
+

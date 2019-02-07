@@ -1,5 +1,9 @@
 #!/bin/tcsh
-set echo; set verbose
+#set echo; set verbose
+
+#	WARNING:  this file is run once a morning by crontab so...
+#	it should always be left operational every evening
+#	or the crontab should be shutdown.
 
 set bsteeleMusicAppHome=/home/bob/GitHub/bsteeleMusicApp
 
@@ -8,41 +12,49 @@ set bodhiDir=/home/bob/google_drive/bass/songlyrics/bodhi
 set svrDst=gs://www.bsteele.com/bsteeleMusicApp
 set svrBeta=gs://www.bsteele.com/beta/bsteeleMusicApp
 set localBeta=/var/www/html/public_html/beta
+set date=`date -Iseconds`
 
 #	from Bodhi
-curl -G -o $bodhiDir/$f \
+curl -s -G -o $bodhiDir/$f \
         https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
+if ( $status != 0 ) then
+	set stat=$status
+	echo read of $storage failed $date\: $stat
+	exit $stat
+endif
 
 #	sanity check
-echo create a sanity check for $f
+echo "Todo: create a sanity check for $f"
 
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
 
-#	copy to web
+#	copy to required locations, if different
 set src=$bodhiDir/$f
-gsutil -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
-gsutil -q acl ch -u AllUsers:R $svrDst/$f
-
-#	copy to web beta
-gsutil -h "Cache-Control:public,max-age=20" cp $src $svrBeta/$f
-gsutil -q acl ch -u AllUsers:R $svrBeta/$f
-
-#	copy to local beta
-cp $src $localBeta/$f
-
-#	copy to src resource
-set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
-cp $src $codeDst
-
-#	copy to github project, if different
-cmp -s $bsteeleMusicAppHome/../allSongs.songlyrics/$f $src
+cmp -s $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 if ( $status ) then
+	gsutil -q -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
+	gsutil -q acl ch -u AllUsers:R $svrDst/$f
+
+	#	copy to web beta
+	gsutil -q -h "Cache-Control:public,max-age=20" cp $src $svrBeta/$f
+	gsutil -q acl ch -u AllUsers:R $svrBeta/$f
+
+	#	copy to local beta
+	cp $src $localBeta/$f
+
+	#	copy to src resource
+	set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
+	cp $src $codeDst
+
+	cp $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 	cd $bsteeleMusicAppHome/../allSongs.songlyrics
-	set date=`date -Iseconds`
-	echo $date
-	git commit -a -m "commit for new lyrics $date"
-	git push 	#  ssh configured
+	git commit -q -a -m "commit for new lyrics $date"
+	git push -q 	#  ssh configured
+
+	echo copies done $date
+else
+	echo No copy required $date
 endif
 
 

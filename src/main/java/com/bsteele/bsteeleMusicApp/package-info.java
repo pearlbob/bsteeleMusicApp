@@ -14,6 +14,8 @@ package com.bsteele.bsteeleMusicApp;
 
 /*
 ____todo: cron job for bsteeleMusicApp_lyrics_update
+todo: complete chord addressing
+todo: do measure addressing
 todo: implement local storage songs... and their removal
 todo: write allSongs.songlyrics sanity check for download from Bodhi
 fixme: eliminate date on allSongs.songlyrics

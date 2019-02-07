@@ -1,0 +1,47 @@
+#!/bin/tcsh
+set echo; set verbose
+
+#	WARNING:  this file is run once a morning by crontab so...
+#	it should always be left operational every evening
+#	or the crontab should be shutdown.
+
+set project=/home/pi/bsteeleMusicApp
+set tomcat=/opt/tomcat
+
+set webapps=$tomcat/webapps
+set localRelease=$webapps/bsteeleMusicApp
+set localBeta=$webapps/beta
+
+set f=allSongs.songlyrics
+set date=`date -Iseconds`
+
+#	from Bodhi to source location
+mkdir -p $project
+set src=$project/$f
+curl -s -G -o $src \
+        https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
+if ( $status != 0 ) then
+	set stat=$status
+	echo read of $storage failed $date\: $stat
+	exit $stat
+endif
+
+#	copy to required locations, if different
+cmp -s $src $localRelease/$f
+if ( $status ) then
+	#	copy to local beta
+	sudo chmod g+w $localBeta
+	cp $src $localBeta/$f
+
+	#	copy to release
+	sudo chmod g+w $localRelease
+	cp $src $localRelease/$f
+
+	echo copies done $date
+else
+	echo No copy required $date
+endif
+
+
+exit $status
+
