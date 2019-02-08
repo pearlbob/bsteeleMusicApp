@@ -75,7 +75,7 @@
     <!--    GWT mapping of client file upload javascript    -->
     <inherits name="org.vectomatic.libgwtfile"/>
 
-    <!--<define-property name="user.agent" values="safari" /> &lt;!&ndash; Webkit based browsers, usually Safari&Chrome&ndash;&gt;-->
+    <set-property name="user.agent" value="safari" /> <!-- Webkit based browsers, usually Safari&Chrome-->
     <!--<extend-property name="user.agent" values="gecko1_8" /> &lt;!&ndash; Firefox 3.0+ &ndash;&gt;-->
 
 </module>

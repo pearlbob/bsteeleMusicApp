@@ -24,7 +24,7 @@ if ( $status != 0 ) then
 endif
 
 #	sanity check
-echo "Todo: create a sanity check for $f"
+echo "Todo: create a sanity check for imported allSongs.songlyrics"
 
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
