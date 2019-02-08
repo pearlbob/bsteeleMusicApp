@@ -1,5 +1,5 @@
 #!/bin/tcsh
-set echo; set verbose
+#set echo; set verbose
 
 #	WARNING:  this file is run once a morning by crontab so...
 #	it should always be left operational every evening
@@ -37,10 +37,11 @@ if ( $status ) then
 	sudo chmod g+w $localRelease
 	cp $src $localRelease/$f
 
-	echo copies done $date
+	echo copies done $src to $localRelease/$f
 else
-	echo No copy required $date
+	echo No copy required for $src to $localRelease/$f
 endif
+echo $date
 
 
 exit $status
