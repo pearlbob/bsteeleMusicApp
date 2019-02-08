@@ -12,7 +12,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
-import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;

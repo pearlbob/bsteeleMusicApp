@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.legacy;
 
-import com.bsteele.bsteeleMusicApp.client.songs.DrumType;
+import com.bsteele.bsteeleMusicApp.shared.songs.DrumType;
 
 import java.util.EnumMap;
 import java.util.Map;

@@ -3,7 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
-import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.CanvasElement;
 

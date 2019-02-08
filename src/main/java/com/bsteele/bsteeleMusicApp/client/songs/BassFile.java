@@ -1,7 +1,19 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
-import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.bsteele.bsteeleMusicApp.shared.songs.Bar;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
+import com.bsteele.bsteeleMusicApp.shared.songs.Chord;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
+import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
+import com.bsteele.bsteeleMusicApp.shared.songs.Note;
+import com.bsteele.bsteeleMusicApp.shared.songs.NoteDuration;
+import com.bsteele.bsteeleMusicApp.shared.songs.Pitch;
+import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
+import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 
 import java.util.ArrayList;
 import java.util.TreeSet;

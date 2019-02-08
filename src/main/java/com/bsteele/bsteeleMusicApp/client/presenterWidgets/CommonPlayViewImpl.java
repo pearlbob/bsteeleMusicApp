@@ -1,11 +1,11 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.songs.Key;
-import com.bsteele.bsteeleMusicApp.client.songs.MusicConstant;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
-import com.bsteele.bsteeleMusicApp.shared.Util;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.ui.Anchor;

@@ -4,6 +4,8 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONNumber;

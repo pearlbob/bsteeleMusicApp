@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 

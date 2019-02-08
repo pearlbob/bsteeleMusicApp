@@ -1,5 +1,8 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordAnticipationOrDelay;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
+import com.bsteele.bsteeleMusicApp.shared.songs.Section;
 import junit.framework.TestCase;
 import org.junit.Test;
 

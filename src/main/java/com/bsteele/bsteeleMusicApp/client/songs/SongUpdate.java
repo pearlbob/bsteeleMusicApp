@@ -3,8 +3,12 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.Grid;
+import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.Section;
+import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;

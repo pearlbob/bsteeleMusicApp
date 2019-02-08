@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.util;
 
+import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
 import junit.framework.TestCase;
 import org.junit.Test;
 
