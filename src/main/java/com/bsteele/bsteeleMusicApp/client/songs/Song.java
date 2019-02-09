@@ -120,21 +120,28 @@ public class Song extends SongBase implements Comparable<Song>
             return ret;
         }
 
-        JSONValue jv = JSONParser.parseStrict(jsonString);
-        if (jv == null) {
-            return ret;
+        if (jsonString.startsWith("<")) {
+            logger.warning("this can't be good: " + jsonString.substring(0, Math.min(25, jsonString.length())));
         }
 
-        JSONArray ja = jv.isArray();
-        if (ja != null) {
-            int jaLimit = ja.size();
-            for (int i = 0; i < jaLimit; i++) {
-                ret.add(Song.fromJsonObject(ja.get(i).isObject()));
+        try {
+            JSONValue jv = JSONParser.parseStrict(jsonString);
+
+            JSONArray ja = jv.isArray();
+            if (ja != null) {
+                int jaLimit = ja.size();
+                for (int i = 0; i < jaLimit; i++) {
+                    ret.add(Song.fromJsonObject(ja.get(i).isObject()));
+                }
+            } else {
+                JSONObject jo = jv.isObject();
+                ret.add(fromJsonObject(jo));
             }
-        } else {
-            JSONObject jo = jv.isObject();
-            ret.add(fromJsonObject(jo));
+        } catch (Exception e) {
+            return null;
         }
+
+        logger.fine("fromJson(): " + ret.get(ret.size() - 1));
 
         return ret;
 

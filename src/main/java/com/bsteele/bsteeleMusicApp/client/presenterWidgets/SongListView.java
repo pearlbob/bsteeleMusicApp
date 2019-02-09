@@ -7,13 +7,13 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
@@ -48,6 +48,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.TreeSet;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * @author bob
@@ -227,11 +230,11 @@ public class SongListView
             if (allSongs.contains(song)) {
                 Song oldSong = allSongs.floor(song);
                 if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
-                    GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
+                    logger.info("song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
                     return false;
                 }
                 allSongs.remove(oldSong);  //  remove any prior version
-                GWT.log("\"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
+                logger.info("song parse: \"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
             }
             return allSongs.add(song);
         }
@@ -349,6 +352,10 @@ public class SongListView
                 }
     }
 
+    private void sendStatus(String name, String value) {
+        eventBus.fireEvent(new StatusEvent(name, value));
+    }
+
     @Override
     public Song getSelectedSong() {
         return selectedSong;
@@ -379,7 +386,9 @@ public class SongListView
         FileReader reader = new FileReader();
         reader.addLoadEndHandler((LoadEndEvent event) -> {
             ArrayList<Song> songs = Song.fromJson(reader.getStringResult());
-            if (songs.size() == 1) {
+            if (songs == null)
+                logger.warning("file parse failure on: " + file.getName());
+            else if (songs.size() == 1) {
                 Song song = songs.get(0);
                 song.setLastModifiedDate(file.getLastModifiedDate());
                 song.setFileName(file.getName());
@@ -399,4 +408,6 @@ public class SongListView
     private Song selectedSong;
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
     private int songListScrollOffset = 0;
+
+    private static final Logger logger = getLogger(SongListView.class.getName());
 }
