@@ -1,10 +1,17 @@
 package com.bsteele.bsteeleMusicApp.client.util;
 
+import com.bsteele.bsteeleMusicApp.shared.FileWriter;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ClientFileIO {
+public class ClientFileIO implements FileWriter {
+
+    @Override
+    public void write(String fileName, String contents) {
+        saveDataAs( fileName,  contents);
+    }
 
     /**
      * Native function to write the data to the local file system
@@ -31,4 +38,6 @@ public class ClientFileIO {
         downloadlink.href = textFile;
         downloadlink.click();
     }-*/;
+
+
 }

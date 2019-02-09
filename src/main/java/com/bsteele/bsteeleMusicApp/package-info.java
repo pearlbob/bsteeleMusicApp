@@ -13,7 +13,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-____todo: cron job for bsteeleMusicApp_lyrics_update
+fixme: bass view is damaged and old design
 todo: complete chord addressing
 todo: do measure addressing
 todo: implement local storage songs... and their removal

@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  * User: bob
  */
 
+import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+
 import javax.annotation.Nonnull;
 
 /**
@@ -29,6 +31,10 @@ public class Metadata implements Comparable<Metadata> {
         this.name = name;
         this.value = value;
         this.type = type;
+    }
+
+    public final String toJson(){
+        return "\""+ JsonUtil.encode(name)+"\"=\""+ JsonUtil.encode(value)+"\"";
     }
 
     /**

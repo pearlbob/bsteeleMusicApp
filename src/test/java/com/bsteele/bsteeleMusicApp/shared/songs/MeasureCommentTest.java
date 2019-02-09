@@ -1,4 +1,4 @@
-package com.bsteele.bsteeleMusicApp.client.songs;
+package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
 import junit.framework.TestCase;
