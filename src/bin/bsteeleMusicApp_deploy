@@ -1,9 +1,10 @@
 #!/bin/tcsh
-#set echo; set verbose
+set echo; set verbose
 
 set www=/var/www/html/public_html
 set app=bsteeleMusicApp
-set beta=beta/$app
+set betaDir=beta
+set beta=$betaDir/$app
 set dst=gs://www.bsteele.com/$app
 set lyricsDst=gs://songlyrics.bsteele.com/wars
 set lyricsWar=${app}_`date +%Y%m%d`.war
@@ -16,10 +17,10 @@ set localbeta=$www/$beta
 rm -rf $localdst
 mkdir $localdst
 cp -r $localbeta/* $localdst
-gsutil cp $localbeta/${app}.war $lyricsDst/$lyricsWar
+gsutil cp $www/$betaDir/${app}.war $lyricsDst/$lyricsWar
 
 #	copy local deploy to the web server
-gsutil -m rsync -d -R -x ".*\.songlyrics$" $localdst/ $dst 	#	source needs the /
+gsutil -m rsync -d -R -x '.*\.songlyrics\$' $localdst/ $dst 	#	source needs the /
 gsutil -m -q acl -r ch -u AllUsers:R $dst
 
 
