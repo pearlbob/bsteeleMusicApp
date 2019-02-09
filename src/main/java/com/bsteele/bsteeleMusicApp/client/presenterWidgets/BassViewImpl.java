@@ -42,6 +42,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 /**
@@ -372,6 +373,9 @@ public class BassViewImpl
             }
             int firstMoment = Integer.parseInt(mr.getGroup(1));
             int lastMoment = Integer.parseInt(mr.getGroup(2));
+            ArrayList<SongMoment> moments = song.getSongMoments();  //  fixme: a temp fix
+            firstMoment = Math.min(Math.max(0,firstMoment),moments.size()-1);
+            lastMoment = Math.min(Math.max(0,lastMoment),moments.size());
 
 //            gridCanvas.setCoordinateSpaceWidth(3000);
 //            gridCanvas.setCoordinateSpaceHeight(2000);
@@ -414,7 +418,7 @@ public class BassViewImpl
                 scoreCtx.setFillStyle("#000000");
                 scoreCtx.setFont("12px sans-serif");
                 for (int m = firstMoment; m < lastMoment; m++) {
-                    SongMoment songMoment = song.getSongMoments().get(m);
+                    SongMoment songMoment = moments.get(m);
                     scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber()+1),
                             barStart + (m - firstMoment) * barWidth+hSpace, scoreTop-hSpace/2 );
                 }
