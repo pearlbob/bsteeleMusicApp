@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="40747cf6-96ed-4f20-8473-91e03aeab37e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bsteeleMusicApp.iml" beforeDir="false" afterPath="$PROJECT_DIR$/bsteeleMusicApp.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java" afterDir="false" />
-    </list>
+    <list default="true" id="40747cf6-96ed-4f20-8473-91e03aeab37e" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -629,7 +624,14 @@
       <option name="project" value="LOCAL" />
       <updated>1549719185828</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fixed bass view array overflow exception, again... temp.">
+      <created>1549746686535</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1549746686535</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -641,7 +643,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17751000" />
+    <option name="totallyTimeSpent" value="17806000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -667,7 +669,7 @@
       <window_info id="Web" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3295063" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.28071183" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.28071183" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -742,7 +744,8 @@
     <MESSAGE value="workspace.xml git foo, bodhi songs" />
     <MESSAGE value="song parse error warnings" />
     <MESSAGE value="cleared edit view on remove, fixed bass view array overflow exception... temp." />
-    <option name="LAST_COMMIT_MESSAGE" value="cleared edit view on remove, fixed bass view array overflow exception... temp." />
+    <MESSAGE value="fixed bass view array overflow exception, again... temp." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bass view array overflow exception, again... temp." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/logging.properties">
