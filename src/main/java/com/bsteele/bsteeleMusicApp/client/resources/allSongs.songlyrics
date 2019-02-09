@@ -9276,85 +9276,9 @@
     ]
 }
 },
-{ "file": "Cat in the Well, The.songlyrics", "lastModifiedDate": 1541983064430, "song": 
+{ "file": "Cat in the Well, The.songlyrics", "lastModifiedDate": 1542249694473, "song":
 {
 "title": "Cat in the Well, The",
-"artist": "Merry Macs, The",
-"copyright": "Shapiro Bernstein & Co. Inc.",
-"key": "C",
-"defaultBpm": 80,
-"timeSignature": "2/4",
-"chords": 
-    [
-	"I: Cdim - - -",
-	"F G",
-	"",
-	"V: C - FG C",
-	"C - D G",
-	"CF C FG C",
-	"CC7 FFm G C",
-	"",
-	"C: F - G -  2x",
-	"F F7 Bb Bbm",
-	"C - F -",
-	"",
-	"V2: Cm - Fm Cm",
-	"Cm Fm Cm G",
-	"CmFm - - Cm",
-	"Cm Fm G C",
-	"",
-	"O: XX XX Cdim -",
-	"Cdim - CX"
-    ],
-"lyrics": 
-    [
-	"I: (instrumental)",
-	"",
-	"V: I woke up this morning with a feeling of despair",
-	"I looked for my pussy but my pussy wasn't there",
-	"Well, well, well",
-	"My cat fell in the well",
-	"Oh puss puss puss poor kitty kitty kitty",
-	"My cat fell in the well",
-	"",
-	"V: I got out a ladder and I climbed down to my pet",
-	"I saw in a jiffy that my puss was soakin' wet",
-	"Well, well, well",
-	"My cat fell in the well",
-	"Oh pussy pussy pussy poor kitty kitty kitty",
-	"My cat fell in the well",
-	"",
-	"C: The doggone hole by the pump",
-	"Was she pushed, or did she jump",
-	"There never was a kitty half as pretty",
-	"As the pussy that fell in the well",
-	"",
-	"V: There never was a pussy that could quite compare with her",
-	"Pretty as a picture with her long and silky fur -",
-	"Well, well, well, well my cat fell in the well, well",
-	"Oh oh oh pussy pussy pussy poor kitty kitty kitty",
-	"My cat fell in the well",
-	"",
-	"V2: Tears I shed were useless when that fatal day arrived",
-	"Still I thought my pussy had at least a dozen lives",
-	"Well, well, well, well, my cat fell in the well",
-	"Oh pussy pussy pussy poor kitty kitty kitty",
-	"My cat fell in the well.",
-	"",
-	"V: If you have a pussy that you wouldn't trade or sell",
-	"Never let her wander or she might fall in a well",
-	"Well, well, well",
-	"My cat fell in the well",
-	"Oh puss puss puss poor kitty kitty kitty",
-	"My cat fell in the well.",
-	"",
-	"O: Fell in the ... [instrumental Cdim] ... well!"
-    ]
-}
-},
-{ "file": "Cat in the Well, The - CORRECTED AGAIN.songlyrics", "lastModifiedDate": 1542249694473, "song": 
-{
-"title": "Cat in the Well, The - CORRECTED AGAIN",
 "artist": "Manhattan Transfer",
 "copyright": "Shapiro Bernstein & Co. Inc.",
 "key": "C",
@@ -9362,24 +9286,29 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"I: Cdim - - -",
+	"I:",
+       	" Cdim - - -",
 	"F G",
 	"",
-	"V: C - FG C",
+	"V:",
+       	" C - FG C",
 	"C - D G",
 	"CF C FG C",
 	"CC7 FG# G C",
 	"",
-	"C: F BbC F BbC",
+	"C:",
+       	" F BbC F BbC",
 	"F F7 Bb Bbm",
 	"C - F -",
 	"",
-	"V2: Cm - Fm Cm",
+	"V2:",
+	"Cm - Fm Cm",
 	"Cm Fm Cm G",
 	"CmFm - - Cm",
 	"Cm Fm G C",
 	"",
-	"O: XX XX Cdim -",
+	"O:",
+       	" X X Cdim -",
 	"Cdim - CX"
     ],
 "lyrics": 
@@ -17819,7 +17748,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 1528831999058, "song": 
+{ "file": "Gentle On My Mind.songlyrics", "lastModifiedDate": 1529435703183, "song":
 {
 "title": "Gentle On My Mind",
 "artist": "Glen Campbell",
@@ -17830,159 +17759,7 @@
 "chords": 
     [
 	"",
-	"I: ",
-	"C - Dm7 G7",
-	"",
-	"V: ",
-	"C Cmaj7 C6 Cmaj7 ",
-	"Dm - - -",
-	"Dm Dmaj7 Dm7 G7",
-	"C - - -",
-	"",
-	"C Cmaj7 C6 Cmaj7",
-	"C Cmaj7 Dm -",
-	"Dm - - Dm7",
-	"Dm Dm7 Dmaj7 G7",
-	"C - - -"
-    ],
-"lyrics": 
-    [
-	"",
-	"I: (instrumental)",
-	"V: It's knowing that your door is always open",
-	"And your path is free to walk",
-	"That makes me tend to leave my sleeping bag",
-	"Rolled up and stashed behind your couch",
-	"And it's knowing I'm not shackled",
-	"By forgotten words and bonds",
-	"And the ink stains that are dried upon some line",
-	"That keeps you in the backroads",
-	"By the rivers of my memory",
-	"That keeps you ever gentle on my mind",
-	"",
-	"V: It's not clinging to the rocks and ivy",
-	"Planted on their columns now that bind me",
-	"Or something that somebody said",
-	"Because they thought we fit together walking",
-	"It's just knowing that the world will not be cursing",
-	"Or forgiving when I walk along some railroad track and find",
-	"That you're moving on the backroads",
-	"By the rivers of my memory",
-	"And for hours you're just gentle on my mind",
-	"",
-	"V: Though the wheat fields and the clothes lines",
-	"And the junkyards and the highways come between us",
-	"And some other woman's cryin' to her mother",
-	"'Cause she turned and I was gone",
-	"I still might run in silence tears of joy might stain my face",
-	"And the summer sun might burn me 'til I'm blind",
-	"But not to where I cannot see",
-	"You walkin' on the backroads",
-	"By the rivers flowing gentle on my mind",
-	"",
-	"V: I dip my cup of soup back from a gurglin'",
-	"Cracklin' caldron in some train yard",
-	"My beard a roughening coal pile,",
-	"And a dirty hat pulled low across my face",
-	"Through cupped hands 'round the tin can",
-	"I pretend to hold you to my breast and find",
-	"That you're waiting from the backroads",
-	"By the rivers of my memories",
-	"Ever smilin' ever gentle on my mind"
-    ]
-}
-},
-{ "file": "Gentle On My Mind Vers. 4.songlyrics", "lastModifiedDate": 1534385071755, "song": 
-{
-"title": "Gentle On My Mind Vers. 4",
-"artist": "Glen Campbell",
-"copyright": "John Hartford",
-"key": "C",
-"defaultBpm": 90,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"",
-	"I: ",
-	"C -",
-	"",
-	"V1: ",
-	"C - Dm -",
-	"Dm DmG7 C - ",
-	"",
-	"V2:",
-	"C - - Dm -",
-	"Dm - DmG7 C -",
-	"",
-	"",
-	"O:",
-	"C - - -   "
-    ],
-"lyrics": 
-    [
-	"",
-	"I: (instrumental)",
-	"V1: It's knowing that your door is always open",
-	"And your path is free to walk",
-	"That makes me tend to leave my sleeping bag",
-	"Rolled up and stashed behind your couch",
-	"",
-	"V2: And it's knowing I'm not shackled",
-	"By forgotten words and bonds",
-	"And the ink stains that are dried upon some line",
-	"That keeps you in the backroads",
-	"By the rivers of my memory",
-	"That keeps you ever gentle on my mind",
-	"",
-	"V1: It's not clinging to the rocks and ivy",
-	"Planted on their columns now that bind me",
-	"Or something that somebody said",
-	"Because they thought we fit together walking",
-	"",
-	"V2: It's just knowing that the world will not be cursing",
-	"Or forgiving when I walk along some railroad track and find",
-	"That you're moving on the backroads",
-	"By the rivers of my memory",
-	"And for hours you're just gentle on my mind",
-	"",
-	"V1: Though the wheat fields and the clothes lines",
-	"And the junkyards and the highways come between us",
-	"And some other woman's cryin' to her mother",
-	"'Cause she turned and I was gone",
-	"",
-	"V2: I still might run in silence, tears of joy might stain my face",
-	"And the summer sun might burn me 'til I'm blind",
-	"But not to where I cannot see",
-	"You walkin' on the backroads",
-	"By the rivers flowing gentle on my mind",
-	"",
-	"V1: I dip my cup of soup back from a gurglin'",
-	"Cracklin' cauldron in some train yard",
-	"My beard a roughening coal pile,",
-	"And a dirty hat pulled low across my face",
-	"",
-	"V2: Through cupped hands 'round the tin can",
-	"I pretend to hold you to my breast and find",
-	"That you're waiting from the backroads",
-	"By the rivers of my memories",
-	"Ever smilin' ever gentle on my mind",
-	"",
-	"O:  (instrumental)"
-    ]
-}
-},
-{ "file": "Gentle On My Mind corr.songlyrics", "lastModifiedDate": 1529435703183, "song": 
-{
-"title": "Gentle On My Mind corr",
-"artist": "Glen Campbell",
-"copyright": "John Hartford",
-"key": "C",
-"defaultBpm": 106,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"",
-	"I: ",
+	"I:",
 	"C - - -",
 	"",
 	"V1: ",
@@ -18000,7 +17777,7 @@
 	"C -",
 	"",
 	"O:",
-	"C - - -   (x2)"
+	"C - - -   x2"
     ],
 "lyrics": 
     [
@@ -23810,63 +23587,9 @@
     ]
 }
 },
-{ "file": "I Just Fall In Love Again.songlyrics", "lastModifiedDate": 1534873281522, "song": 
+{ "file": "I Just Fall In Love Again.songlyrics", "lastModifiedDate": 1535598469382, "song":
 {
 "title": "I Just Fall In Love Again",
-"artist": "Anne Murray",
-"copyright": "Universal Music Publishing Group",
-"key": "C",
-"defaultBpm": 80,
-"timeSignature": "2/4",
-"chords": 
-    [
-	"I: C - D7 -",
-	"F G7 C G7",
-	"",
-	"V: C - D7 -",
-	"F G7 C G7",
-	"C - D7 -",
-	"F D7 F G7",
-	"",
-	"C: Em Am F G7",
-	"C Am D7 G7",
-	"Em Am F E ",
-	"Am D7   (hold last chord)",
-	"C FG C -",
-	"",
-	"T: C FG C -"
-    ],
-"lyrics": 
-    [
-	"I: (instrumental)",
-	"",
-	"V: Dreamin', I must be dreamin'",
-	"Or am I really lying here with you?",
-	"Baby, you take me in your arms",
-	"And though I'm wide awake, I know my dream is comin' true",
-	"",
-	"C: And oh I just fall in love again",
-	"Just one touch and then it happens every time",
-	"There I go I, just fall in love again and when I do",
-	"I can't help myself, I fall in love with you",
-	"",
-	"V: Magic, it must be magic",
-	"I hold you and the night just seems to fly",
-	"Easy for you to take me to a star",
-	"Heaven is that moment when I look into your eyes.",
-	"",
-	"C: And oh I just fall in love again",
-	"Just one touch and then it happens every time",
-	"There I go I, just fall in love again and when I do",
-	"I can't help myself, I fall in love with you.",
-	"",
-	"T: Can't help myself, I fall in love with you"
-    ]
-}
-},
-{ "file": "I Just Fall In Love Again - CORRECTED.songlyrics", "lastModifiedDate": 1535598469382, "song": 
-{
-"title": "I Just Fall In Love Again - CORRECTED",
 "artist": "Anne Murray",
 "copyright": "Universal Music Publishing Group",
 "key": "D",
@@ -23874,21 +23597,25 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"I: C - D7 -",
+	"I:",
+       	" C - D7 -",
 	"F G7 C G7",
 	"",
-	"V: C - D7 -",
+	"V:",
+       	" C - D7 -",
 	"F G7 C G7",
 	"C - D7 -",
 	"F D7 F G7",
 	"",
-	"C: Em Am F G7",
+	"C:",
+       	" Em Am F G7",
 	"C Am D7 G7",
 	"Em Am F E ",
 	"Am D7   (hold last chord)",
 	"C FG C -",
 	"",
-	"O: C FG C -",
+	"O:",
+       	" C FG C -",
 	"D7 - F G",
 	"C CX"
     ],
@@ -25147,64 +24874,9 @@
     ]
 }
 },
-{ "file": "I'm Looking Through You.songlyrics", "lastModifiedDate": 1545006254854, "song": 
+{ "file": "I'm Looking Through You.songlyrics", "lastModifiedDate": 1545006278317, "song":
 {
 "title": "I'm Looking Through You",
-"artist": "Beatles, The",
-"copyright": "Sony/ATV",
-"key": "C",
-"defaultBpm": 100,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"V: C Am Em D  2x",
-	"Em Am Em D",
-	"Em D C G",
-	"G - -",
-	"",
-	"C: C G D -",
-	"C G Dsus4 D",
-	"",
-	"O: C Am Em D  2x",
-	"Em Am Em D",
-	"Em D C G",
-	"G - - -   2x"
-    ],
-"lyrics": 
-    [
-	"V: I'm looking through you, where did you go",
-	"I thought I knew you, what did I know",
-	"You don't look different, but you have changed",
-	"I'm looking through you, you're not the same",
-	"",
-	"V: Your lips are moving, I cannot hear",
-	"Your voice is soothing, but the words aren't clear",
-	"You don't sound different, I've learned the game",
-	"I'm looking through you, you're not the same",
-	"",
-	"C: Why, tell me why, did you not treat me right?",
-	"Love has a nasty habit of disappearing overnight",
-	"",
-	"V: You're thinking of me the same old way",
-	"You were above me, but not today",
-	"The only difference is you're down there",
-	"I'm looking through you and you're nowhere",
-	"",
-	"C: Why, tell me why, did you not treat me right?",
-	"Love has a nasty habit of disappearing overnight",
-	"",
-	"O: I'm looking through you, where did you go",
-	"I thought I knew you, what did I know",
-	"You don't look different, but you have changed",
-	"I'm looking through you, you're not the same",
-	"Baby, you've changed, ah, I'm looking through you",
-	"You're not the same, I'm looking through you ..."
-    ]
-}
-},
-{ "file": "I'm Looking Through You - CORRECTED.songlyrics", "lastModifiedDate": 1545006278317, "song": 
-{
-"title": "I'm Looking Through You - CORRECTED",
 "artist": "Beatles, The",
 "copyright": "Sony/ATV",
 "key": "C",
@@ -25212,15 +24884,18 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: CF Dm7 Am G  2x",
+	"V:",
+       	" CF Dm7 Am G  x2",
 	"Am GDm7 CF G",
 	"CF Dm7 F7 CF",
 	"CF CF CF ",
 	"",
-	"C: F C G -",
+	"C:",
+       	" F C G -",
 	"F C Gsus4 G",
 	"",
-	"O: CF CF CF CF 2x"
+	"O:",
+       	" CF CF CF CF x2"
     ],
 "lyrics": 
     [
@@ -25255,7 +24930,8 @@
     ]
 }
 },
-{ "file": "I'm Your Puppet.songlyrics", "lastModifiedDate": 1536807063805, "song": 
+
+{ "file": "I'm Your Puppet.songlyrics", "lastModifiedDate": 1538351004784, "song":
 {
 "title": "I'm Your Puppet",
 "artist": "Purify Brothers",
@@ -25265,71 +24941,22 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: BbCm DmCm BbCm DmCm",
+	"I:",
+       	" BbCm DmCm BbCm DmCm",
 	"",
-	"V: BbCm DmCm BbCm DmCm  2x",
-	"",
-	"C: Dm Eb Dm Cm",
-	"F Eb Dm CmF",
-	"BbCm DmCm BbCm DmCm",
-	"",
-	"O: BbCm DmCm BbCm DmCm 2x",
-	"Bb"
-    ],
-"lyrics": 
-    [
-	"I: (instrumental)",
-	"",
-	"V: Pull the string and I'll wink at you, I'm your puppet",
-	"I'll do funny things if you want me to, I'm your puppet",
-	"I'm yours to have and to hold",
-	"Darling you've got full control of your puppet",
-	"",
-	"V:Pull another string and I'll kiss your lips, I'm your puppet",
-	"Snap your finger and I'll turn you some flips, I'm your puppet",
-	"Listen, your every wish is my command",
-	"All you gotta do is wiggle your little hand",
-	"I'm your puppet, I'm your puppet",
-	"",
-	"C: I'm just a toy, just a funny boy",
-	"That makes you laugh when you're blue",
-	"I'll be wonderful, do just what I'm told",
-	"I'll do anything for you",
-	"I'm your puppet, I'm your puppet",
-	"",
-	"V: Pull them little strings and I'll sing you a song, I'm your puppet",
-	"Make me do right or make me do wrong, I'm your puppet",
-	"Treat me good and I'll do anything",
-	"I'm just a puppet and you hold my string, I'm your puppet",
-	"",
-	"O: I'm your walking, talking, kissing, loving puppet",
-	"I'm hanging on a string, girl I'll do anything,",
-	"I'll love and kiss you ... whoa, whoa, yeah ..."
-    ]
-}
-},
-{ "file": "I'm Your Puppet - CORRECTED.songlyrics", "lastModifiedDate": 1538351004784, "song": 
-{
-"title": "I'm Your Puppet - CORRECTED",
-"artist": "Purify Brothers",
-"copyright": "Sony/ATV",
-"key": "Bb",
-"defaultBpm": 80,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"I: BbCm DmCm BbCm DmCm",
-	"",
-	"V: BbCm DmCm BbCm DmCm  2x",
+	"V:",
+       	" BbCm DmCm BbCm DmCm  x2",
 	"Dm Eb Dm EbF",
 	"BbCm DmCm BbCm DmCm",
 	"",
 	"",
-	"C: Dm Eb Dm Cm",
+	"C:",
+       	" Dm Eb Dm Cm",
 	"F Eb Dm CmF",
 	"BbCm DmCm BbCm DmCm",
 	"",
-	"O: BbCm DmCm BbCm DmCm 2x",
+	"O:",
+       	" BbCm DmCm BbCm DmCm x2",
 	"Bb"
     ],
 "lyrics": 
@@ -26610,7 +26237,8 @@
     ]
 }
 },
-{ "file": "It's All In The Game.songlyrics", "lastModifiedDate": 1540344546089, "song": 
+
+{ "file": "It's All In The Game.songlyrics", "lastModifiedDate": 1540941530674, "song":
 {
 "title": "It's All In The Game",
 "artist": "Tommy Edwards",
@@ -26620,55 +26248,18 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: CAm FG CF C  2x",
+	"V:",
+       	" CAm FG CF C  2x",
 	"C Am CD G",
 	"G D G G7.XX",
 	"",
-	"V1: CAm FG CF C  2x",
+	"V1:",
+        	" CAm FG CF C  2x",
 	"C Am EmAm D",
 	"CAm FG CF C",
 	"",
-	"O: CF - -"
-    ],
-"lyrics": 
-    [
-	"V: Many a tear has to fall but it's all in the game",
-	"All in the wonderful game that we know as love",
-	"You have words with him and your future's looking dim",
-	"But these things your hearts can rise above",
-	"",
-	"V1: Once in a while he won't call but it's all in the game",
-	"Soon he'll be there at your side with a sweet bouquet",
-	"And he'll kiss your lips and caress your waiting fingertips",
-	"And your hearts will fly away",
-	"",
-	"V1: (instrumental + lyrics below)",
-	"Then he'll kiss your lips and caress your waiting fingertips",
-	"And your hearts will fly away",
-	"",
-	"O: doo-doo, n-doo-doo-doo, n-doo"
-    ]
-}
-},
-{ "file": "It's All In The Game - CORRECTED.songlyrics", "lastModifiedDate": 1540941530674, "song": 
-{
-"title": "It's All In The Game - CORRECTED",
-"artist": "Tommy Edwards",
-"copyright": "Music Sales Corporation",
-"key": "C",
-"defaultBpm": 80,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"V: CAm FG CF C  2x",
-	"C Am CD G",
-	"G D G G7.XX",
-	"",
-	"V1: CAm FG CF C  2x",
-	"C Am EmAm D",
-	"CAm FG CF C",
-	"",
-	"O: CF - C"
+	"O:",
+       	" CF - C"
     ],
 "lyrics": 
     [
@@ -26994,7 +26585,7 @@
     ]
 }
 },
-{ "file": "Java Jive.songlyrics", "lastModifiedDate": 1530036598502, "song": 
+{ "file": "Java Jive (1).songlyrics", "lastModifiedDate": 1533520638126, "song":
 {
 "title": "Java Jive",
 "artist": "Manhattan Transfer",
@@ -27004,178 +26595,8 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: C Cdim G -   x2",
-	"",
-	"",
-	"V:",
-	"C Cdim G -",
-	"F G C -",
-	"C C7 F Fm",
-	"C G C ",
-	"V1: G",
-	"V2: C7",
-	"",
-	"C:",
-	"F7 - - -",
-	"F7 - C C",
-	"X X X X",
-	"Gdim G X X",
-	"",
-	"O: C7 - - -"
-    ],
-"lyrics": 
-    [
-	"",
-	"I: (instrumental)",
-	"",
-	"V: I love coffee, I love tea",
-	"I love the java jive and it loves me",
-	"Coffee and tea and the java and me",
-	"A cup, a cup, a cup, a cup, a cup ",
-	"V1: boy!",
-	"",
-	"V: I love java, sweet and hot",
-	"Whoops mr. moto, I'm a coffee pot",
-	"Shoot me the pot and I'll pour me a shot",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V2: ooh!",
-	"",
-	"C: Slip me a slug from that wonderful mug",
-	"And I'll cut a rug just snug in a jug",
-	"(vocal only) A sliced up onion and a raw one",
-	"Draw one -",
-	"(vocal only) Waiter, waiter, percolator",
-	"",
-	"V: I love coffee, I love tea",
-	"I love the java jive and it loves me",
-	"Coffee and tea and the java and me",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V1: yeah!",
-	"",
-	"V: Boston bean (soy beans)",
-	"Green bean (cabbage and greens)",
-	"I'm not keen about a bean",
-	"Unless it is a chili chili bean ",
-	"V1: boy!",
-	"",
-	"V: I love java sweet and hot",
-	"Whoops mr. moto I'm a coffee pot (yeah)",
-	"Shoot me the pot and I'll pour me a shot",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V2: (yeah)",
-	"",
-	"C: Slip me a slug of the wonderful mug",
-	"'an I'll cut a rug just as snug in a jug",
-	"(vocal only) Drop a nickel in the pot joe",
-	"Takin' it slow",
-	"(vocal only) Waiter, waiter, percolator",
-	"",
-	"V: I love coffee, I love tea",
-	"I love the java jive and it loves me",
-	"Coffee and tea and the java and me",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V2: oh",
-	"",
-	"O: bo-o-o-o-o-oy!"
-    ]
-}
-},
-{ "file": "Java Jive - Corrected.songlyrics", "lastModifiedDate": 1534385097303, "song": 
-{
-"title": "Java Jive - Corrected",
-"artist": "Manhattan Transfer",
-"copyright": "Milton Drake & Ben Oakland",
-"key": "C",
-"defaultBpm": 106,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"I: C Cdim G -   x2",
-	"",
-	"",
-	"V:",
-	"C Cdim G -",
-	"F G C -",
-	"C C7 F Fm",
-	"C G C ",
-	"V1: G",
-	"V2: C7",
-	"",
-	"C:",
-	"F7 - - -",
-	"F7 - C C",
-	"X X X X",
-	"Gdim G7 X X",
-	"",
-	"O: C - - -"
-    ],
-"lyrics": 
-    [
-	"",
-	"I: (instrumental)",
-	"",
-	"V: I love coffee, I love tea",
-	"I love the java jive and it loves me",
-	"Coffee and tea and the java and me",
-	"A cup, a cup, a cup, a cup, a cup ",
-	"V1: boy!",
-	"",
-	"V: I love java, sweet and hot",
-	"Whoops mr. moto, I'm a coffee pot",
-	"Shoot me the pot and I'll pour me a shot",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V2: ooh!",
-	"",
-	"C: Slip me a slug from that wonderful mug",
-	"And I'll cut a rug just snug in a jug",
-	"(vocal only) A sliced up onion and a raw one",
-	"Draw one -",
-	"(vocal only) Waiter, waiter, percolator",
-	"",
-	"V: I love coffee, I love tea",
-	"I love the java jive and it loves me",
-	"Coffee and tea and the java and me",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V1: yeah!",
-	"",
-	"V: Boston bean (soy beans)",
-	"Green bean (cabbage and greens)",
-	"I'm not keen about a bean",
-	"Unless it is a chili chili bean ",
-	"V1: boy!",
-	"",
-	"V: I love java sweet and hot",
-	"Whoops mr. moto I'm a coffee pot (yeah)",
-	"Shoot me the pot and I'll pour me a shot",
-	"A cup, a cup, a cup, a cup, a cup",
-	"V2: (yeah)",
-	"",
-	"C: Slip me a slug of the wonderful mug",
-	"'an I'll cut a rug just as snug in a jug",
-	"(vocal only) Drop a nickel in the pot joe",
-	"Takin' it slow",
-	"(vocal only) Waiter, waiter, percolator",
-	"",
-	"V: I love coffee, I love tea",
-	"I love the java jive and it loves me",
-	"Coffee and tea and the java and me",
-	"A cup, a cup, a cup, a cup, a cup",
-	"",
-	"O: bo-o-o-o-o-oy!"
-    ]
-}
-},
-{ "file": "Java Jive - Corrected Again! (1).songlyrics", "lastModifiedDate": 1533520638126, "song": 
-{
-"title": "Java Jive - Corrected Again!",
-"artist": "Manhattan Transfer",
-"copyright": "Milton Drake & Ben Oakland",
-"key": "C",
-"defaultBpm": 106,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"I: C Cdim G -   x2",
+	"I:",
+       	" C Cdim G -   x2",
 	"",
 	"",
 	"V:",
@@ -37162,7 +36583,7 @@
     ]
 }
 },
-{ "file": "Only Love Can Break A Heart.songlyrics", "lastModifiedDate": 1536693158526, "song": 
+{ "file": "Only Love Can Break A Heart.songlyrics", "lastModifiedDate": 1536607879699, "song":
 {
 "title": "Only Love Can Break A Heart",
 "artist": "Gene Pitney",
@@ -37172,55 +36593,8 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: Bm E Bm EE7",
-	"A C#m D EX",
-	"D E AG F#",
-	"Bm E Bm EE7",
-	"A C#m D EX",
-	"D E AG F#",
-	"D E D EE7",
-	"AC#m A7X",
-	"",
-	"C: D Bm C#m A7",
-	"D B7 EB7 E7",
-	"E7X",
-	"",
-	"O: D E AG F#",
-	"D E D E",
-	"E7 A C#m D ",
-	"E DE A -",
-	" "
-    ],
-"lyrics": 
-    [
-	"V: Only love can break a heart, only love can mend it again",
-	"",
-	"Last night I hurt you but darlin' remember this",
-	"Only love can break a heart, only love can mend it again, mm, mm",
-	"",
-	"You know I'm sorry, I'll prove it with just one kiss",
-	"Only love can break a heart, only love can mend it agai-ain",
-	"",
-	"C: Give me a chance to make up for the harm I've done",
-	"Try to forgive me and let's keep the two of us one.",
-	"",
-	"O: Please let me hold you and love you for always and always",
-	"Only love can break a heart only love can mend ... it ... again",
-	"(+ 4 measures instrumental)"
-    ]
-}
-},
-{ "file": "Only Love Can Break A Heart - CORRECTED.songlyrics", "lastModifiedDate": 1536607879699, "song": 
-{
-"title": "Only Love Can Break A Heart - CORRECTED",
-"artist": "Gene Pitney",
-"copyright": "TBD",
-"key": "A",
-"defaultBpm": 106,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"V: Bm E Bm EE7",
+	"V:",
+       	" Bm E Bm EE7",
 	"A C#m D EX",
 	"D E AG F#",
 	"Bm E Bm EE7",
@@ -37229,11 +36603,13 @@
 	"Bm E Bm EE7",
 	"AC#m A7X",
 	"",
-	"C: D Bm C#m A7",
+	"C:",
+       	" D Bm C#m A7",
 	"D B7 EB7 -",
 	"E7X",
 	"",
-	"O: D E AG F#",
+	"O:",
+       	" D E AG F#",
 	"Bm E Bm E",
 	"E7 A C#m D ",
 	"E DE A -",
@@ -55621,7 +54997,7 @@
     ]
 }
 },
-{ "file": "You Always Hurt The One You Love - Mills Bros.songlyrics", "lastModifiedDate": 1536193320779, "song": 
+{ "file": "You Always Hurt The One You Love - Mills Bros..songlyrics", "lastModifiedDate": 1545874555081, "song":
 {
 "title": "You Always Hurt The One You Love - Mills Bros.",
 "artist": "Mills Brothers",
@@ -55631,60 +55007,8 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: C CM7 - AM7 ",
-	"C Em Dm G7",
-	"Dm F Dm7 D6",
-	"G Gaug C G7",
-	"C C7 FM7 Dm",
-	"D7 - Dm7 G7",
-	"C - CM7 A7",
-	"Dm7 G7 C G7",
-	"",
-	"O: C CM7 - AM7 ",
-	"C Em Dm G7",
-	"Dm F Dm7 D6",
-	"G Gaug C G7",
-	"C C7 FM7 Dm",
-	"D7 - Dm7 G7",
-	"C - CM7 A7",
-	"Dm7 G7 C -",
-	"C "
-    ],
-"lyrics": 
-    [
-	"V: You always hurt the one you love",
-	"The one you shouldn't hurt at all",
-	"You always take the sweetest rose",
-	"And crush it till the petals fall",
-	"You always break the kindest heart",
-	"With a hasty word you can't recall, so",
-	"If I broke your heart last night",
-	"It's because I love you most of all",
-	"",
-	"V: (instrumental)",
-	"",
-	"O: You always hurt the one you love",
-	"The one you shouldn't hurt at all",
-	"You always take the sweetest rose",
-	"Crush it, till the petals fall",
-	"You always break the kindest heart",
-	"With a hasty word you can't recall, so",
-	"If I broke your heart last night",
-	"It's because I love you most of all"
-    ]
-}
-},
-{ "file": "You Always Hurt The One You Love - Mills Bros. - RECORRECTED.songlyrics", "lastModifiedDate": 1545874555081, "song": 
-{
-"title": "You Always Hurt The One You Love - Mills Bros. - CORRECTED",
-"artist": "Mills Brothers",
-"copyright": "Sony/ATV",
-"key": "C",
-"defaultBpm": 80,
-"timeSignature": "4/4",
-"chords": 
-    [
-	"V: C Cmaj7 - Am7 ",
+	"V:",
+       	" C Cmaj7 - Am7 ",
 	"C Em Dm G7",
 	"Dm F Dm7 Dm6",
 	"G Gaug C G7",
@@ -55693,7 +55017,8 @@
 	"C Cmaj7 - A7",
 	"Dm7 G7 C G7",
 	"",
-	"O: C Cmaj7 - Am7 ",
+	"O:",
+       	" C Cmaj7 - Am7 ",
 	"C Em Dm G7",
 	"Dm F Dm7 Dm6",
 	"G Gaug C G7",
