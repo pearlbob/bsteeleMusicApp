@@ -413,7 +413,7 @@ public class BassViewImpl
             {
                 scoreCtx.setFillStyle("#000000");
                 scoreCtx.setFont("12px sans-serif");
-                for (int m = firstMoment; m <= lastMoment; m++) {
+                for (int m = firstMoment; m < lastMoment; m++) {
                     SongMoment songMoment = song.getSongMoments().get(m);
                     scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber()+1),
                             barStart + (m - firstMoment) * barWidth+hSpace, scoreTop-hSpace/2 );
@@ -424,7 +424,7 @@ public class BassViewImpl
             //  fixme: preliminary measure chords
             scoreCtx.setFillStyle("#000000");
             scoreCtx.setFont("bold 15px sans-serif");
-            for (int m = firstMoment; m <= lastMoment; m++) {
+            for (int m = firstMoment; m < lastMoment; m++) {
                 SongMoment songMoment = song.getSongMoments().get(m);
                 scoreCtx.fillText(songMoment.getMeasure().toString(), barStart + (m - firstMoment) * barWidth,
                         scoreLineHeight);

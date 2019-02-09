@@ -62,8 +62,7 @@ import java.util.TreeSet;
 public class SongEditView
         extends ViewImpl
         implements SongEditPresenterWidget.MyView,
-        HasHandlers
-{
+        HasHandlers {
 
     @UiField
     ButtonElement songEnter;
@@ -188,13 +187,11 @@ public class SongEditView
     @UiField
     TextArea lyricsTextEntry;
 
-    interface Binder extends UiBinder<Widget, SongEditView>
-    {
+    interface Binder extends UiBinder<Widget, SongEditView> {
     }
 
     @Inject
-    SongEditView(Binder binder)
-    {
+    SongEditView(Binder binder) {
         initWidget(binder.createAndBindUi(this));
 
         handlerManager = new HandlerManager(this);
@@ -438,22 +435,17 @@ public class SongEditView
         Event.sinkEvents(songEntryClear, Event.ONCLICK);
         Event.setEventListener(songEntryClear, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                titleEntry.setText("");
-                artistEntry.setText("");
-                copyrightEntry.setText("");
-                bpmEntry.setText("106");
-                timeSignatureEntry.setValue("4/4");
-                chordsTextEntry.setValue("");
-                lyricsTextEntry.setValue("");
-                checkSong();
+                clearSong();
             }
         });
 
         Event.sinkEvents(songEntryRemove, Event.ONCLICK);
         Event.setEventListener(songEntryRemove, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                if (song != null)
+                if (song != null) {
                     fireEvent(new SongRemoveEvent(song));
+                    clearSong();
+                }
             }
         });
 
@@ -492,9 +484,19 @@ public class SongEditView
     }
 
 
+    private final void clearSong() {
+        titleEntry.setText("");
+        artistEntry.setText("");
+        copyrightEntry.setText("");
+        bpmEntry.setText("106");
+        timeSignatureEntry.setValue("4/4");
+        chordsTextEntry.setValue("");
+        lyricsTextEntry.setValue("");
+        checkSong();
+    }
+
     @Override
-    public void setSongEdit(Song song)
-    {
+    public void setSongEdit(Song song) {
         if (song == null)
             return;
 
@@ -514,8 +516,7 @@ public class SongEditView
         checkSong();
     }
 
-    public Song checkSong()
-    {
+    public Song checkSong() {
         Key key = Key.valueOf(keySelection.getValue());
         if (key == null)
             key = Key.C;  //  punt an error
@@ -549,15 +550,13 @@ public class SongEditView
         return newSong;
     }
 
-    public void enterSong()
-    {
+    public void enterSong() {
         Song newSong = checkSong();
         if (newSong != null)
             fireSongSubmission(newSong);
     }
 
-    private void setKey(Key key)
-    {
+    private void setKey(Key key) {
         this.key = key;
 
         titleChordButtons();
@@ -570,15 +569,13 @@ public class SongEditView
         }
     }
 
-    private void enterChord(ClickEvent event)
-    {
+    private void enterChord(ClickEvent event) {
         String s = event.getRelativeElement().getInnerText();
         if (s.length() > 0)
             enterChord(s);
     }
 
-    private void enterChord(String name)
-    {
+    private void enterChord(String name) {
         ScaleChord scaleChord = ScaleChord.parse(name);
         if (scaleChord == null)
             return; //  fixme: shouldn't happen
@@ -588,8 +585,7 @@ public class SongEditView
         checkSong();
     }
 
-    private void addRecentScaleChord(ScaleChord scaleChord)
-    {
+    private void addRecentScaleChord(ScaleChord scaleChord) {
         if (recentScaleChords.contains(scaleChord))
             return; //  leave well enough alone
 
@@ -616,27 +612,22 @@ public class SongEditView
         }
     }
 
-    private class CommonScaleChordItem implements Comparable<CommonScaleChordItem>
-    {
-        CommonScaleChordItem(ScaleChord scaleChord, int count)
-        {
+    private class CommonScaleChordItem implements Comparable<CommonScaleChordItem> {
+        CommonScaleChordItem(ScaleChord scaleChord, int count) {
             this.scaleChord = scaleChord;
             this.count = count;
         }
 
-        public ScaleChord getScaleChord()
-        {
+        public ScaleChord getScaleChord() {
             return scaleChord;
         }
 
-        public int getCount()
-        {
+        public int getCount() {
             return count;
         }
 
         @Override
-        public int compareTo(CommonScaleChordItem o)
-        {
+        public int compareTo(CommonScaleChordItem o) {
             if (count != o.count)
                 return count < o.count ? 1 : -1;   //  note reverse order
             return scaleChord.compareTo(o.scaleChord);
@@ -646,8 +637,7 @@ public class SongEditView
         private final int count;
     }
 
-    private void findMostCommonScaleChords()
-    {
+    private void findMostCommonScaleChords() {
         final Button commons[] = {
                 common0,
                 common1,
@@ -679,8 +669,7 @@ public class SongEditView
         }
     }
 
-    private void chordsTextAdd(String addition)
-    {
+    private void chordsTextAdd(String addition) {
         if (addition == null || addition.length() == 0)
             return;
         addition += " ";
@@ -694,38 +683,32 @@ public class SongEditView
     }
 
 
-    private void fireSongSubmission(Song song)
-    {
+    private void fireSongSubmission(Song song) {
         fireEvent(new SongSubmissionEvent(song));
     }
 
     @Override
-    public void fireEvent(GwtEvent<?> event)
-    {
+    public void fireEvent(GwtEvent<?> event) {
         handlerManager.fireEvent(event);
     }
 
     @Override
-    public HandlerRegistration SongUpdateEventHandler(SongUpdateEventHandler handler)
-    {
+    public HandlerRegistration SongUpdateEventHandler(SongUpdateEventHandler handler) {
         return handlerManager.addHandler(SongUpdateEvent.TYPE, handler);
     }
 
     @Override
-    public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler)
-    {
+    public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler) {
         return handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
     }
 
     @Override
-    public HandlerRegistration SongRemoveEventHandler(SongRemoveEventHandler handler)
-    {
+    public HandlerRegistration SongRemoveEventHandler(SongRemoveEventHandler handler) {
         return handlerManager.addHandler(SongRemoveEvent.TYPE, handler);
     }
 
 
-    private void guessTheKey()
-    {
+    private void guessTheKey() {
         HashMap<ScaleChord, Integer> scaleChordMap = ScaleChord.findScaleChordsUsed(chordsTextEntry.getValue());
         TreeSet<ScaleChord> treeSet = new TreeSet<>();
         treeSet.addAll(scaleChordMap.keySet());
@@ -733,8 +716,7 @@ public class SongEditView
     }
 
 
-    private void titleChordSelections()
-    {
+    private void titleChordSelections() {
 
         ScaleNote scaleNote = ScaleNote.valueOf(scaleNoteSelection.getValue());
 
@@ -760,8 +742,7 @@ public class SongEditView
         }
     }
 
-    private void titleChordButtons()
-    {
+    private void titleChordButtons() {
         ScaleChord keyScaleChord = key.getMajorDiatonicByDegree(1 - 1);
         chordsI.setHTML(keyScaleChord.toString());
         ScaleChord iv = key.getMajorDiatonicByDegree(4 - 1);
