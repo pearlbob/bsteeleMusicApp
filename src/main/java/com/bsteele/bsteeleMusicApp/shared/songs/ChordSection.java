@@ -82,7 +82,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
                 //  look for repeat count
                 Util.stripLeadingSpaces(sb);
-                if (sb.length() <= 0)
+                if (sb == null || sb.length() <= 0)
                     break;
 
                 final RegExp oneOrMoreDigitsRegexp = RegExp.compile("^(\\d+)");
