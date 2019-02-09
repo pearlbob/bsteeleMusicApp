@@ -23,6 +23,9 @@ import java.util.Date;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * @author bob
@@ -172,11 +175,11 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
             if (allSongs.contains(song)) {
                 Song oldSong = allSongs.floor(song);
                 if (Song.compareByVersionNumber(oldSong, song) > 0) {
-                    GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
+                    logger.info("song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
                     return false;
                 }
                 allSongs.remove(oldSong);  //  remove any prior version
-                GWT.log("\"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
+                logger.info("song parse: \"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
             }
             return allSongs.add(song);
         }
@@ -205,4 +208,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private final EventBus eventBus;
     private final MyView view;
     private Song currentSong;
+
+    private static final Logger logger = getLogger(SongListView.class.getName());
 }
