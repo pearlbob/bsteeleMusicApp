@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="40747cf6-96ed-4f20-8473-91e03aeab37e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/SongEditView.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,8 +52,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="678">
-              <caret line="426" column="41" selection-start-line="426" selection-start-column="41" selection-end-line="426" selection-end-column="41" />
+            <state relative-caret-position="414">
+              <caret line="415" column="45" selection-start-line="415" selection-start-column="45" selection-end-line="415" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -649,7 +647,14 @@
       <option name="project" value="LOCAL" />
       <updated>1549693168827</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="cleared edit view on remove, fixed bass view array overflow exception... temp.">
+      <created>1549719185828</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1549719185828</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -661,7 +666,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="16306000" />
+    <option name="totallyTimeSpent" value="16598000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -687,7 +692,7 @@
       <window_info id="Web" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3295063" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.28071183" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.28071183" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -761,7 +766,8 @@
     <MESSAGE value="wrestled with idea 2018.3 install" />
     <MESSAGE value="workspace.xml git foo, bodhi songs" />
     <MESSAGE value="song parse error warnings" />
-    <option name="LAST_COMMIT_MESSAGE" value="song parse error warnings" />
+    <MESSAGE value="cleared edit view on remove, fixed bass view array overflow exception... temp." />
+    <option name="LAST_COMMIT_MESSAGE" value="cleared edit view on remove, fixed bass view array overflow exception... temp." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/logging.properties">
@@ -938,8 +944,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/bsteele/bsteeleMusicApp/client/presenterWidgets/BassViewImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="678">
-          <caret line="426" column="41" selection-start-line="426" selection-start-column="41" selection-end-line="426" selection-end-column="41" />
+        <state relative-caret-position="414">
+          <caret line="415" column="45" selection-start-line="415" selection-start-column="45" selection-end-line="415" selection-end-column="45" />
         </state>
       </provider>
     </entry>
