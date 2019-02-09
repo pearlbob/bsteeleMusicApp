@@ -36,10 +36,14 @@ import org.vectomatic.file.events.LoadEndEvent;
 import org.vectomatic.file.impl.FileListImpl;
 
 import javax.inject.Inject;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * @author bob
@@ -260,7 +264,9 @@ public class SongListView
         FileReader reader = new FileReader();
         reader.addLoadEndHandler((LoadEndEvent event) -> {
             ArrayList<Song> songs = Song.fromJson(reader.getStringResult());
-            if (songs.size() == 1) {
+            if (songs == null)
+                logger.warning("file parse failure on: " + file.getName());
+            else if (songs.size() == 1) {
                 Song song = songs.get(0);
                 song.setLastModifiedDate(file.getLastModifiedDate());
                 song.setFileName(file.getName());
@@ -278,4 +284,7 @@ public class SongListView
     private final TreeSet<Song> allSongs = new TreeSet<>();
     private Song selectedSong;
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
+    private int songListScrollOffset = 0;
+
+    private static final Logger logger = getLogger(SongListView.class.getName());
 }
