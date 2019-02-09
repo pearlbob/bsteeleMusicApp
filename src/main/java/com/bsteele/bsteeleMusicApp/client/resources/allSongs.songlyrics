@@ -856,7 +856,7 @@
 	"G - D -",
 	"",
 	"",
-	"O: D - - - 3x"
+	"O: D - - - x3"
     ],
 "lyrics": 
     [
@@ -1043,15 +1043,15 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: D FG  D -    2x",
+	"I: D FG  D -    x2",
 	"",
 	"V:  ",
-	"D FG D -    2x",
+	"D FG D -    x2",
 	"D G - A ",
 	"A",
 	"",
 	"",
-	"O: D FG D -   3x   "
+	"O: D FG D -   x3   "
     ],
 "lyrics": 
     [
@@ -3522,8 +3522,8 @@
 	" F C F.Em. Dm.G.",
 	"O:",
 	" C C7 A Dm",
-	" F C F C",
-	" ((3x) C)"
+	" F C F C x3",
+	" C"
     ],
 "lyrics": 
     [
@@ -5621,7 +5621,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: Em - D -  2x",
+	"I: Em - D -  x2",
 	"",
 	"V: Em - D -",
 	"Em - A A7",
@@ -7370,16 +7370,16 @@
 "chords": 
     [
 	"v:D#m D#m B B",
-	"C# C# B B 2x ",
+	"C# C# B B x2 ",
 	"",
 	"C: F# F# C# C#",
-	"C# C# B B 2x ",
+	"C# C# B B x2 ",
 	"",
 	"i1: D#m D#m B B",
 	"C# C# B B",
 	"",
 	"i2:",
-	"B  BC# B B  2x"
+	"B  BC# B B  x2"
     ],
 "lyrics": 
     [
@@ -7418,7 +7418,7 @@
 	"And I can tell you my love for you will still be strong",
 	"After the boys of summer have gone.",
 	"",
-	"i2: B  BC# B B 2x",
+	"i2: B  BC# B B x2",
 	"",
 	"v:Out on the road today I saw a Deadhead sticker on a Cadillac.",
 	"A little voice inside my head said:",
@@ -11131,7 +11131,7 @@
 	"B7 - - E7",
 	"E7 D7 B7 -",
 	"",
-	"O: E7 D7 B7 - 2x"
+	"O: E7 D7 B7 - x2"
     ],
 "lyrics": 
     [
@@ -11406,7 +11406,7 @@
 	"F F G G7",
 	"C  C G G7",
 	"",
-	"C: F - C -  2x",
+	"C: F - C -  x2",
 	"EmAm - Em7 Fm",
 	"C A7 Dm7 G7",
 	"",
@@ -11525,19 +11525,19 @@
 	"",
 	"I: A Asus4 G D A",
 	"",
-	"V: A Asus4 G D A -  4x",
+	"V: A Asus4 G D A -  x4",
 	"",
 	"Br: ",
-	"F#m A -  3x",
+	"F#m A -  x3",
 	"F#m G E7",
 	"",
-	"V: A Asus4 G D A -  2x",
+	"V: A Asus4 G D A -  x2",
 	"",
-	"V: A Asus4 G D A -  8x",
+	"V: A Asus4 G D A -  x8",
 	"",
-	"V: A Asus4 G D A -  4x",
+	"V: A Asus4 G D A -  x4",
 	"",
-	"O: A Asus4 G D A -  8x"
+	"O: A Asus4 G D A -  x8"
     ],
 "lyrics": 
     [
@@ -11849,7 +11849,7 @@
 	"Dm G7 C -",
 	"",
 	"O: F - CBb A",
-	"Dm G7 CCBBb A7  2x",
+	"Dm G7 CCBBb A7  x2",
 	"Dm G7 C.C. F.F. ",
 	"C"
     ],
@@ -11919,7 +11919,7 @@
 	"Gm7 C7 F D7",
 	"",
 	"O: Gm Bbm F D7",
-	"Gm C7 F D7  2x",
+	"Gm C7 F D7  x2",
 	"Gm D7 F -"
     ],
 "lyrics": 
@@ -12547,10 +12547,10 @@
     [
 	"i: Gm Gm7 Gm Gm7",
 	"",
-	"v:Gm Gm7  Gm Gm7 4x",
+	"v:Gm Gm7  Gm Gm7 x4",
 	"",
 	"c: |Cm7 Dm7 Ebmaj7 Dm7",
-	"Gm7 - - - | 2x"
+	"Gm7 - - - | x2"
     ],
 "lyrics": 
     [
@@ -13016,13 +13016,13 @@
 "timeSignature": "6/8",
 "chords": 
     [
-	"V: C Em Bm F G7  2x",
+	"V: C Em Bm F G7  x2",
 	"C Am - - F - ",
 	"G G7",
 	"",
 	"C: C Em F F#dim",
 	"C Am7 F - G -",
-	"C Am C Am   2x",
+	"C Am C Am   x2",
 	"",
 	"O: C"
     ],
@@ -13901,14 +13901,14 @@
 	"F - Fm -",
 	"C G#G C E7",
 	"",
-	"C: A F#m Bm E 3x",
+	"C: A F#m Bm E x3",
 	"A F#m G# G",
 	"",
 	"O: C B7 G# G",
 	"C B7 A A7",
 	"F - Fm -",
 	"C G#G ",
-	"C B7 G# G 3x",
+	"C B7 G# G x3",
 	"C fade"
     ],
 "lyrics": 
@@ -13959,8 +13959,8 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"i: E A B E 2x",
-	"v:E A B E 2x",
+	"i: E A B E x2",
+	"v:E A B E x2",
 	"br: G G C C ",
 	"G G C C..B "
     ],
@@ -14298,7 +14298,7 @@
 	"I: Am - - -",
 	"",
 	"V: Am G Am - - -",
-	"Am - G - Am -  2x",
+	"Am - G - Am -  x2",
 	"Am - G C Am G ",
 	"F - - E -",
 	"",
@@ -14307,7 +14307,7 @@
 	"Am - G -",
 	"F E Am -",
 	"",
-	"O: Am - - -  2x",
+	"O: Am - - -  x2",
 	"AmXX"
     ],
 "lyrics": 
@@ -14415,7 +14415,7 @@
 	"Em Gaug G -",
 	"A A7 D ",
 	"",
-	"O: D - F#m A7  2x",
+	"O: D - F#m A7  x2",
 	"D"
     ],
 "lyrics": 
@@ -15791,7 +15791,7 @@
     [
 	"I: ED - - -",
 	"",
-	"V: ED - - - 2x",
+	"V: ED - - - x2",
 	"",
 	"C: AD - - -",
 	"AD - - AB",
@@ -15936,7 +15936,7 @@
 "chords": 
     [
 	"V: C - Am -",
-	"D7 - G7 - | 2x",
+	"D7 - G7 - x2",
 	"",
 	"C: Am - - -",
 	"Am",
@@ -16191,7 +16191,7 @@
 	"V: C Em Am C",
 	"F Bb C -",
 	"",
-	"C: Dm A7 Dm A7  2x",
+	"C: Dm A7 Dm A7  x2",
 	"Dm Gsus4G"
     ],
 "lyrics": 
@@ -17314,12 +17314,12 @@
 	"  Am  Em  D - ",
 	"D  F  G  C",
 	"",
-	"v: C G F G7 2x",
+	"v: C G F G7 x2",
 	"C G F G",
 	"Am Em F G7",
 	"",
 	"",
-	"c:C G F G 2x",
+	"c:C G F G x2",
 	"Am Em Am D",
 	"F G C -",
 	"",
@@ -17329,7 +17329,7 @@
 	"",
 	"",
 	"",
-	"o:C G F G 3x"
+	"o:C G F G x3"
     ],
 "lyrics": 
     [
@@ -18097,7 +18097,7 @@
 	"C: Fm Eb Fm Eb",
 	"Fm Eb Fm Eb",
 	"",
-	"O: Fm Eb Fm Eb  2x",
+	"O: Fm Eb Fm Eb  x2",
 	"Ab"
     ],
 "lyrics": 
@@ -18135,7 +18135,7 @@
 	"All right",
 	"",
 	"V: (instrumental) single notes: ",
-	"    F Ab Bb Ab G - C Bb 3x",
+	"    F Ab Bb Ab G - C Bb x3",
 	"    F Ab Bb Ab G - Bb G Ab C Ab C Bb ----",
 	"",
 	"C: Just gimme some kind of sign girl",
@@ -18274,16 +18274,16 @@
 "chords": 
     [
 	"I: ",
-	"E7 E7A7 E7 -  2x",
+	"E7 E7A7 E7 -  x2",
 	"",
-	"V: E A E A  5x",
+	"V: E A E A  x5",
 	"",
 	"C: E G A C",
 	"E A E A",
 	"E A E -",
 	"",
 	"O: E G A C",
-	"E A E A  3x",
+	"E A E A  x3",
 	"E"
     ],
 "lyrics": 
@@ -18420,7 +18420,7 @@
 	"Cm G7 Fm EbG7",
 	"Cm G7 Fm CmG7",
 	"",
-	"ch: Eb Gm/D Fm/C Bb 2x",
+	"ch: Eb Gm/D Fm/C Bb x2",
 	"",
 	"Br:",
 	"Fm C Fm C ",
@@ -19250,11 +19250,11 @@
 "chords": 
     [
 	"V: C#m G#7 C#m X    ",
-	"E B E X | 2x",
+	"E B E X | x2",
 	"",
-	"C: E A B -  4x  ",
+	"C: E A B -  x4  ",
 	"",
-	"C1: E A B - 3x   ",
+	"C1: E A B - x3   ",
 	"E A E A",
 	"E A E A",
 	"EX X",
@@ -19264,7 +19264,7 @@
 	"X X",
 	"",
 	"V: C#m G#7 C#m X    ",
-	"E B E X | 3x"
+	"E B E X | x3"
     ],
 "lyrics": 
     [
@@ -19530,7 +19530,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: G C D -  2x",
+	"V: G C D -  x2",
 	"",
 	"C: Em - C -",
 	"Em - A -",
@@ -19542,7 +19542,7 @@
 	"Am E C D",
 	"E -",
 	"",
-	"Coda: G C D CD  2x",
+	"Coda: G C D CD  x2",
 	"",
 	"O: C - E -"
     ],
@@ -20849,14 +20849,14 @@
 	"I: C Em D# -",
 	" Dm G7",
 	"",
-	"V: C Dm Em F  2x",
+	"V: C Dm Em F  x2",
 	"Am E7 Am E7",
 	"Am - Dm G7",
 	"",
 	"C: D# Cm Fm G7",
 	"Cm - Fm G7 ",
 	"",
-	"O: C Dm Em F  2x",
+	"O: C Dm Em F  x2",
 	"C"
     ],
 "lyrics": 
@@ -21566,11 +21566,11 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"V: C Am F G   2x",
+	"V: C Am F G   x2",
 	"Am - Dm G ",
 	"C Am F G",
 	"",
-	"V1: C Am F G   2x",
+	"V1: C Am F G   x2",
 	"Am - Dm G ",
 	"C F C C7",
 	"",
@@ -21579,7 +21579,7 @@
 	"B7 - Em -",
 	"D D7 G G7",
 	"",
-	"O: C Am F G   3x",
+	"O: C Am F G   x3",
 	"C"
     ],
 "lyrics": 
@@ -21853,7 +21853,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: E - C -  2x",
+	"V: E - C -  x2",
 	"B7 - E -  ",
 	"E - - -",
 	"A7 - E - ",
@@ -22158,7 +22158,7 @@
 "chords": 
     [
 	"I: D - - -",
-	"C - D -  3x",
+	"C - D -  x3",
 	"F Em D -",
 	"D -",
 	"",
@@ -22166,18 +22166,18 @@
 	"Gm6 A7 Gm6 A7",
 	"Dm Dm7 Dm6 -",
 	"Gm6 A7 Gm6 A7",
-	"F#m7 Bm7 Em7 A7  2x",
-	"F Dm7 Gm7 C7    2x",
+	"F#m7 Bm7 Em7 A7  x2",
+	"F Dm7 Gm7 C7    x2",
 	"D - - -",
 	"",
-	"Br: C - D -  3x",
+	"Br: C - D -  x3",
 	"Dm Dm7 Dm6 -",
 	"Gm6 A7 Gm6 A7",
 	"Dm Dm7 Dm6 -",
 	"Gm6 A7 Gm6 A7",
 	"",
 	"",
-	"C: F#m7 Bm7 Em7 A7  2x",
+	"C: F#m7 Bm7 Em7 A7  x2",
 	"F Dm7 Gm7 C7",
 	"F Dm7 Gm7 C7",
 	"D - - -",
@@ -23279,11 +23279,11 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: D7 - - -  2x",
+	"V: D7 - - -  x2",
 	"Bm G Bm G",
 	"Bm E A A7",
 	"",
-	"O: D7 - - - 3x"
+	"O: D7 - - - x3"
     ],
 "lyrics": 
     [
@@ -25303,14 +25303,14 @@
 	"i:Eb - Eb -",
 	"AbBb CmBb Eb Eb",
 	"",
-	"i2:Eb Eb AbBb CmBb 2x",
-	"Cm Gm Ab Bb 2x",
+	"i2:Eb Eb AbBb CmBb x2",
+	"Cm Gm Ab Bb x2",
 	" ",
-	"v: Ab Bb Ab Bb 2x",
+	"v: Ab Bb Ab Bb x2",
 	"",
 	"",
-	"c:Cm Gm Ab Bb  2x",
-	"Cm [4x]"
+	"c:Cm Gm Ab Bb  x2",
+	"Cm x4"
     ],
 "lyrics": 
     [
@@ -25369,10 +25369,10 @@
 	"i: Am Am Am Am",
 	"",
 	"v:Am Am Am AmDm",
-	"Dm Dm Dm DmAm 2x",
+	"Dm Dm Dm DmAm x2",
 	"",
 	"v1:Am Am Am AmDm",
-	"DmE E E Am 2x",
+	"DmE E E Am x2",
 	"",
 	"c:Dm Dm Am Am",
 	"AmE E E7 E7",
@@ -26247,12 +26247,12 @@
 "chords": 
     [
 	"V:",
-	" CAm FG CF C  2x",
+	" CAm FG CF C  x2",
 	"C Am CD G",
 	"G D G G7.XX",
 	"",
 	"V1:",
-	" CAm FG CF C  2x",
+	" CAm FG CF C  x2",
 	"C Am EmAm D",
 	"CAm FG CF C",
 	"",
@@ -27697,7 +27697,7 @@
     [
 	"I: D Am D Am",
 	"",
-	"V: D Am D Am  2x",
+	"V: D Am D Am  x2",
 	"F - AmCaug CD",
 	"F - E -",
 	"",
@@ -28707,7 +28707,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: Dm - A7 -  2x",
+	"I: Dm - A7 -  x2",
 	"",
 	"V: Dm C F C",
 	"A7 - Dm C",
@@ -30541,7 +30541,7 @@
 	"GC GC GC GC ",
 	"",
 	"o:",
-	"G D G GC [3x]",
+	"G D G GC x3",
 	"G D G"
     ],
 "lyrics": 
@@ -32923,7 +32923,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"v: D G D G 3x",
+	"v: D G D G x3",
 	"DG DGA7. GDA7. D",
 	"",
 	"c:D G D G ",
@@ -34360,7 +34360,7 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"I: D Dm G D  2x",
+	"I: D Dm G D  x2",
 	"",
 	"V: D G - D ",
 	"Bm D E -",
@@ -34370,7 +34370,7 @@
 	"Br: D Dm G D",
 	"",
 	"",
-	"C: D G D D 2x",
+	"C: D G D D x2",
 	"Dmaj7 D7 - G",
 	"Gm D -",
 	"",
@@ -35055,7 +35055,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: Dmaj7 G Dmaj7 G  2x",
+	"V: Dmaj7 G Dmaj7 G  x2",
 	"G F#7 Em7 A7",
 	"Dmaj7 G Dmaj7 G",
 	"",
@@ -35553,7 +35553,7 @@
 "chords": 
     [
 	"i: D  Bm  F#m G ",
-	"v:D  Bm  F#m G..D 4x"
+	"v:D  Bm  F#m G..D x4"
     ],
 "lyrics": 
     [
@@ -36421,7 +36421,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: Em G A CB  2x",
+	"V: Em G A CB  x2",
 	"",
 	"C:  G Bm G7 -",
 	"C Cm Em -",
@@ -36823,15 +36823,15 @@
     [
 	"I: C G7 C G7",
 	"",
-	"V: C Eb7 Dm7 G7  2x",
+	"V: C Eb7 Dm7 G7  x2",
 	"Gm7 C7Gm7 Fmaj7 -",
 	"Fm6 - Em7Eb7 Dm7G7",
 	"",
-	"V1: C Eb7 Dm7 G7  2x",
+	"V1: C Eb7 Dm7 G7  x2",
 	"Gm7 C7Gm7 Fmaj7 Fm6",
 	"CAm Dm7G7 CGm Dm7G7",
 	"",
-	"O: C Eb7 Dm7 G7  2x",
+	"O: C Eb7 Dm7 G7  x2",
 	"Gm7 C7Gm7 Fmaj7 Fm6",
 	"CAm Dm7G7 C G7  ",
 	"CAm Dm7G7 C G7",
@@ -37070,11 +37070,11 @@
     [
 	"I: Dm - - -",
 	"",
-	"V: Dm - A -  2x",
+	"V: Dm - A -  x2",
 	"FC FC Dm -",
 	"FC FC G A",
 	"",
-	"O: Dm - A -  6x",
+	"O: Dm - A -  x6",
 	"Dm "
     ],
 "lyrics": 
@@ -37903,9 +37903,9 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: Dmaj7 - Em -  2x",
+	"I: Dmaj7 - Em -  x2",
 	"",
-	"V: Dmaj7 - Em -  2x",
+	"V: Dmaj7 - Em -  x2",
 	"G F#m Em G",
 	"D G D -",
 	"",
@@ -37913,7 +37913,7 @@
 	"Bb Am Gm F",
 	"AA7",
 	"",
-	"O: Dmaj - Em -  3x"
+	"O: Dmaj - Em -  x3"
     ],
 "lyrics": 
     [
@@ -38325,16 +38325,17 @@
 	"We made a vow we'd always be friends.",
 	"How could we know that promises end?",
 	"",
-	"[Bridge]",
+	"Bridge:",
 	"",
 	"I tried to love you for years upon years,",
 	"You refuse to take me for real.",
 	"It's time you saw what I want you to see,",
 	"And I'd still love you if you'd just love me.",
 	"",
-	"[Chorus]",
+	"Chorus:",
 	"",
-	"[Bridge 2x]"
+	"Bridge:",
+	"Bridge:"
     ]
 }
 },
@@ -39550,7 +39551,7 @@
     [
 	"i:EmBm EmBm EmBm EmBm",
 	"",
-	"v:D A E C#B 3x",
+	"v:D A E C#B x3",
 	"F#m A B -",
 	"",
 	"c:E Em G -",
@@ -39936,7 +39937,7 @@
 	"v:",
 	"G G G G",
 	"C C G G",
-	"D C G D/[GD..]"
+	"D C G D"
     ],
 "lyrics": 
     [
@@ -39966,18 +39967,18 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: Em7 - A -  2x",
+	"V: Em7 - A -  x2",
 	"CG AmC D -",
-	"Em7 - A -  2x",
+	"Em7 - A -  x2",
 	"CG AmC D -",
 	"D - ",
 	"",
 	"C: G - C -",
 	"G - C G",
 	"A - C -",
-	"G - C -  2x",
+	"G - C -  x2",
 	"",
-	"O: C - G -  4x",
+	"O: C - G -  x4",
 	"G"
     ],
 "lyrics": 
@@ -40566,7 +40567,7 @@
 	"",
 	"v:",
 	"Gm F Eb Dm ",
-	"Cm F Gm - 2x",
+	"Cm F Gm - x2",
 	"",
 	"pc:",
 	"Cm F Gm Gm/F",
@@ -43657,10 +43658,10 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"V: C Am Fm G7  3x",
+	"V: C Am Fm G7  x3",
 	"Dm - G G7",
 	"",
-	"V1: C Am Fm G7  3x",
+	"V1: C Am Fm G7  x3",
 	"Dm G C C7",
 	"",
 	"C: Dm Dm7 C -",
@@ -43668,9 +43669,9 @@
 	"Dm - C -",
 	"Dm F G G7",
 	"",
-	"O: C Am Fm G7  3x",
+	"O: C Am Fm G7  x3",
 	"Dm - G -",
-	"C Am F G  2x",
+	"C Am F G  x2",
 	"C - - -"
     ],
 "lyrics": 
@@ -45202,9 +45203,9 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"i:Am D Am Bm 2x",
+	"i:Am D Am Bm x2",
 	"v:",
-	"Am D Am7 D7 2x",
+	"Am D Am7 D7 x2",
 	"Am Bm7 Bm D7",
 	" Am D Am7 D7",
 	"br:Am7 Bm7 Am7 Bm7"
@@ -45366,7 +45367,7 @@
 "chords": 
     [
 	"V: G - Am -",
-	"C D7 G - | 2x",
+	"C D7 G - | x2",
 	"",
 	"C: Am D7 G Em",
 	"Am D7 Em -",
@@ -46040,9 +46041,9 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"I: CmBb AbG7 CmBb AbG7  3x",
+	"I: CmBb AbG7 CmBb AbG7  x3",
 	"",
-	"V: CmBb AbG7 CmBb AbG7  2x",
+	"V: CmBb AbG7 CmBb AbG7  x2",
 	"CmBb AbG7 CmX X",
 	"",
 	"V1: FmEb C#C7 FmEb C#C7   ",
@@ -46491,9 +46492,9 @@
 	"i: E  G DA -EAm7 ",
 	"",
 	"v: E  G  D  A",
-	"    EAm7 - - -  2x",
+	"    EAm7 - - -  x2",
 	"",
-	"c: Am7  Bm7 Am7 G  2x",
+	"c: Am7  Bm7 Am7 G  x2",
 	"",
 	" ",
 	"",
@@ -46547,17 +46548,17 @@
 	"I: Am DXXX Am DXXX ",
 	"Am DXXX",
 	"",
-	"V: Am C D F..E   2x",
+	"V: Am C D F..E   x2",
 	"F E7 Am A",
 	"A",
 	"",
-	"C: D G D G  2x",
-	"Bm E Bm E  2x",
+	"C: D G D G  x2",
+	"Bm E Bm E  x2",
 	"",
-	"Br: Am - D -  2x",
+	"Br: Am - D -  x2",
 	"D ",
 	"",
-	"O: D G D G   2x",
+	"O: D G D G   x2",
 	"D G (fade)"
     ],
 "lyrics": 
@@ -46784,7 +46785,7 @@
 	"Bm7-5 E7 - Am ",
 	" ",
 	"o:",
-	"Bm7-5 E7 Am -  3x"
+	"Bm7-5 E7 Am -  x3"
     ],
 "lyrics": 
     [
@@ -49050,7 +49051,7 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"I: D - G -  2x",
+	"I: D - G -  x2",
 	"",
 	"V: D D7 G -",
 	"D D7 Em D",
@@ -49374,12 +49375,12 @@
 	"BmEm AmC D -",
 	"D7",
 	"",
-	"Br: GC D GC D   2x",
+	"Br: GC D GC D   x2",
 	"",
 	"O: BmEm AmD BmEm AmD",
 	"BmEm AmC D -",
 	"D7 D D7 D",
-	"D7 G D7 G  2x"
+	"D7 G D7 G  x2"
     ],
 "lyrics": 
     [
@@ -50650,7 +50651,7 @@
 "chords": 
     [
 	"V: G - - - |",
-	"A7 D  | 2x",
+	"A7 D  | x2",
 	"",
 	"C: C - Am -",
 	"C - Am -",
@@ -52219,14 +52220,14 @@
 "timeSignature": "2/4",
 "chords": 
     [
-	"I: C Am Dm G   2x",
+	"I: C Am Dm G   x2",
 	"",
 	"V: C Am Dm G",
 	"Em A7 Dm G ",
 	"C C7 Dm G",
 	"C Am Dm G",
 	"",
-	"C: D# Cm Fm Bb  3x",
+	"C: D# Cm Fm Bb  x3",
 	"D# Cm Dm G",
 	"",
 	"O: C"
@@ -52450,17 +52451,17 @@
 	"",
 	"v: Em7 - - - ",
 	"F#m7 - - - ",
-	"A A7 A6  Em7  2x",
+	"A A7 A6  Em7  x2",
 	"",
 	"br:A/C# - - - ",
-	"- Bm - - - 2x",
+	"- Bm - - - x2",
 	"- A - - ",
 	"- Dmaj7  Gmaj7 G",
 	"",
 	"i: Bm C5 Bm A G7M ",
 	"",
 	"o: Bm - C5 -",
-	"- Bm - A  2x"
+	"- Bm - A  x2"
     ],
 "lyrics": 
     [
@@ -52927,7 +52928,7 @@
 	"Dm7 - Em Am",
 	"F - C -",
 	"",
-	"O: Em Am Em Am  3x",
+	"O: Em Am Em Am  x3",
 	"C"
     ],
 "lyrics": 
@@ -52975,7 +52976,7 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: C A7 Dm7 G  2x",
+	"V: C A7 Dm7 G  x2",
 	"",
 	"C: FD7 CA7 FD7 CA7 ",
 	"FD7 CA7 Dm7 G ",
@@ -53243,7 +53244,7 @@
 "chords": 
     [
 	"V: Em - Am Em",
-	"Am Em B Em 2x",
+	"Am Em B Em x2",
 	"",
 	"C: G - - -",
 	"B7 - - -",
@@ -54480,12 +54481,12 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"V: G D C D  2x",
+	"V: G D C D  x2",
 	"C D GBm Em",
 	"C D G D",
 	"C D",
 	"",
-	"V1: G D C D  2x",
+	"V1: G D C D  x2",
 	"C D GBm Em",
 	"C D G D",
 	"",
@@ -54494,7 +54495,7 @@
 	"G D C D",
 	"G D",
 	"",
-	"O: G D C D  2x",
+	"O: G D C D  x2",
 	"C D GBm Em",
 	"C D G D",
 	"C D G"
@@ -56271,9 +56272,9 @@
     [
 	"I: XXXX",
 	"",
-	"C: D A E A   2x",
+	"C: D A E A   x2",
 	"",
-	"V: D A E A   3x ",
+	"V: D A E A   x3 ",
 	"",
 	"Br: A"
     ],
