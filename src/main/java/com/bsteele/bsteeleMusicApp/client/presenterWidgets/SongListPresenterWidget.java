@@ -92,27 +92,29 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         try {
             requestBuilder.sendRequest(null, new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
-                    GWT.log("failed file reading", exception);
+                    logger.info("failed file reading: "+ exception.getMessage());
                     sendStatus("failed reading", exception.getMessage());
                     //  default all songs
                     addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                    logger.info("Used internal copy instead.");
                 }
 
                 public void onResponseReceived(Request request, Response response) {
                     //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
                     if (response.getStatusCode() == 200) {
                         addJsonToSongList(response.getText());
-                        GWT.log("read songs from: " + url);
+                        logger.info("read songs from: " + url);
                         sendStatus("read", url);
                     } else {
                         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
-                        GWT.log("failed reading: " + url);
+                        logger.info("failed reading: " + url);
+                        logger.info("Used internal copy instead.");
                         sendStatus("failed reading", url);
                     }
                 }
             });
         } catch (Exception e) {
-            GWT.log("RequestException for " + url + ": ", e);
+            logger.info("RequestException for " + url + ": "+ e.getMessage());
             sendStatus("Exception", e.getMessage());
         }
 
@@ -241,5 +243,5 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private final EventBus eventBus;
     private final MyView view;
 
-    private static final Logger logger = getLogger(SongListView.class.getName());
+    private static final Logger logger = Logger.getLogger(SongListPresenterWidget.class.getName());
 }

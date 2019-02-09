@@ -141,9 +141,7 @@ public enum Section {
             Section section = getSection(sectionId);
             if (section != null) {
                 //   consume the section label
-                sb.delete(0, sectionId.length()
-                        + 1  //  include the :
-                );
+                sb.delete(0, m.getGroup(0).length()); //  includes the :
                 return section.makeVersion(version);
             }
         }
