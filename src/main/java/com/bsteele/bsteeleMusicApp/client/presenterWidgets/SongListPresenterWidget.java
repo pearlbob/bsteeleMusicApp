@@ -38,6 +38,9 @@ import com.gwtplatform.mvp.client.View;
 
 import java.util.ArrayList;
 import java.util.TreeSet;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * @author bob
@@ -237,4 +240,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     private final EventBus eventBus;
     private final MyView view;
+
+    private static final Logger logger = getLogger(SongListView.class.getName());
 }

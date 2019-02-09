@@ -488,9 +488,7 @@ public class SongEditView
         Event.sinkEvents(songEntryClear, Event.ONCLICK);
         Event.setEventListener(songEntryClear, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                setSongEdit(Song.createEmptySong());
-                displaySong();
-                checkSong();
+                clearSong();
             }
         });
 
@@ -504,8 +502,10 @@ public class SongEditView
         Event.sinkEvents(songEntryRemove, Event.ONCLICK);
         Event.setEventListener(songEntryRemove, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                if (song != null)
+                if (song != null) {
                     fireEvent(new SongRemoveEvent(song));
+                    clearSong();
+                }
             }
         });
 
@@ -676,6 +676,12 @@ public class SongEditView
         return true;
     }
 
+
+    private final void clearSong() {
+        setSongEdit(Song.createEmptySong());
+        displaySong();
+        checkSong();
+    }
 
     @Override
     public void setSongEdit(Song song) {
