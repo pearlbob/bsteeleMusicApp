@@ -101,54 +101,24 @@ public enum Section {
     }
 
     /**
-     * a private convenience method to create a section version for this section
+     * a convenience method to create a section version for this section
      *
      * @param v the variation identification number.  Zero is the default value.
      * @return
      */
-    private SectionVersion makeVersion(int v) {
+    SectionVersion makeVersion(int v) {
         return new SectionVersion(this, v);
     }
 
     static final boolean lookahead(StringBuffer sb) {
-        final RegExp sectionRegexp = RegExp.compile(sectionRegexpPattern);
+        final RegExp sectionRegexp = RegExp.compile(SectionVersion.sectionVersionRegexpPattern );  //  has to include the :
         MatchResult m = sectionRegexp.exec(sb.substring(0, Math.min(sb.length(), maxLength)));
         if (m == null)
             return false;
         return getSection(m.getGroup(1)) != null;
     }
 
-    /**
-     * Return the section from the found id. Match will ignore case. String has to
-     * include the : delimiter and it will be considered part of the section id.
-     * Use the returned version.getParseLength() to find how many characters were
-     * used in the id.
-     *
-     * @param sb the string to parse
-     * @return the length of the parse. Zero if no parse
-     */
-    public static final SectionVersion parse(StringBuffer sb) {
-
-        final RegExp sectionRegexp = RegExp.compile(sectionRegexpPattern);
-        MatchResult m = sectionRegexp.exec(sb.toString());
-        if (m != null) {
-            String sectionId = m.getGroup(1);
-            String versionId = (m.getGroupCount() >= 2 ? m.getGroup(2) : null);
-            int version = 0;
-            if (versionId != null && versionId.length() > 0) {
-                version = Integer.parseInt(versionId);
-            }
-            Section section = getSection(sectionId);
-            if (section != null) {
-                //   consume the section label
-                sb.delete(0, m.getGroup(0).length()); //  includes the :
-                return section.makeVersion(version);
-            }
-        }
-        return null;
-    }
-
-    private static final Section getSection(String sectionId) {
+    static final Section getSection(String sectionId) {
         sectionId = sectionId.toLowerCase();
         for (Section section : Section.values()) {
             if (sectionId.equals(section.lowerCaseName)
@@ -222,6 +192,4 @@ public enum Section {
     private String alternateAbbreviation;
     private String description;
     public static final int maxLength = 10;    //  fixme: compute
-
-    public static final String sectionRegexpPattern = "^([a-zA-Z]+)([\\d]?):";  //  has to include the :
 }

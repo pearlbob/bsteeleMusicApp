@@ -3,11 +3,12 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.bsteele.bsteeleMusicApp.client.util.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONException;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -21,25 +22,25 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.logging.Logger;
 
-/** A song is a wrapper class for {@link SongBase} that provides
+/**
+ * A song is a wrapper class for {@link SongBase} that provides
  * file I/O routines and comparators for various sortings.
  * This is the class most all song interactions should reference.
  * <p>
- *     The class is designed to provide all the GWT dependencies
- *     away from SongBase so SongBase can be tested without a browser environment.
- *     All the musical functions happen in SongBase.
+ * The class is designed to provide all the GWT dependencies
+ * away from SongBase so SongBase can be tested without a browser environment.
+ * All the musical functions happen in SongBase.
  * </p>
+ *
  * @author bob
  */
-public class Song extends SongBase implements Comparable<Song>
-{
+public class Song extends SongBase implements Comparable<Song> {
 
     /**
      * Not to be used externally but must remain public due to GWT constraints!
      */
     @Deprecated
-    public Song()
-    {
+    public Song() {
         super();
     }
 
@@ -48,8 +49,7 @@ public class Song extends SongBase implements Comparable<Song>
      *
      * @return a minimal song
      */
-    public static final Song createEmptySong()
-    {
+    public static final Song createEmptySong() {
         return createSong("", "",
                 "", Key.C, 100, 4, 4,
                 "", "");
@@ -72,8 +72,7 @@ public class Song extends SongBase implements Comparable<Song>
     public static final Song createSong(@NotNull String title, @NotNull String artist,
                                         @NotNull String copyright,
                                         @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
-                                        @NotNull String chords, @NotNull String lyrics)
-    {
+                                        @NotNull String chords, @NotNull String lyrics) {
         Song song = new Song();
         song.setTitle(title);
         song.setArtist(artist);
@@ -95,8 +94,7 @@ public class Song extends SongBase implements Comparable<Song>
      *
      * @return the new song
      */
-    public final Song copySong()
-    {
+    public final Song copySong() {
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getStructuralGridAsText(), getLyricsAsString());
@@ -113,8 +111,7 @@ public class Song extends SongBase implements Comparable<Song>
      * @param jsonString
      * @return the song. Can be null.
      */
-    public static final ArrayList<Song> fromJson(String jsonString)
-    {
+    public static final ArrayList<Song> fromJson(String jsonString) {
         ArrayList<Song> ret = new ArrayList<>();
         if (jsonString == null || jsonString.length() <= 0) {
             return ret;
@@ -137,7 +134,15 @@ public class Song extends SongBase implements Comparable<Song>
                 JSONObject jo = jv.isObject();
                 ret.add(fromJsonObject(jo));
             }
-        } catch (Exception e) {
+        } catch (JSONException e) {
+            logger.warning(jsonString);
+            logger.warning("JSONException: "+e.getMessage());
+            return null;
+        }
+        catch (Exception e) {
+            logger.warning("exception: "+e.getClass().getName());
+            logger.warning(jsonString);
+            logger.warning(e.getMessage());
             return null;
         }
 
@@ -153,8 +158,7 @@ public class Song extends SongBase implements Comparable<Song>
      * @param jsonObject
      * @return the song. Can be null.
      */
-    public static final Song fromJsonObject(JSONObject jsonObject)
-    {
+    public static final Song fromJsonObject(JSONObject jsonObject) {
         if (jsonObject == null) {
             return null;
         }
@@ -166,8 +170,7 @@ public class Song extends SongBase implements Comparable<Song>
         return songFromJsonObject(jsonObject);
     }
 
-    private static final Song songFromJsonFileObject(JSONObject jsonObject)
-    {
+    private static final Song songFromJsonFileObject(JSONObject jsonObject) {
         Song song = null;
         double lastModifiedDate = 0;
         String fileName = null;
@@ -200,8 +203,7 @@ public class Song extends SongBase implements Comparable<Song>
         return song;
     }
 
-    private static final Song songFromJsonObject(JSONObject jsonObject)
-    {
+    private static final Song songFromJsonObject(JSONObject jsonObject) {
         Song song = Song.createEmptySong();
         JSONNumber jn;
         JSONArray ja;
@@ -262,9 +264,9 @@ public class Song extends SongBase implements Comparable<Song>
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
-                        song.setChords( sb.toString());
+                        song.setChords(sb.toString());
                     } else {
-                        song.setChords( jv.isString().stringValue());
+                        song.setChords(jv.isString().stringValue());
                     }
                     break;
                 case "lyrics":
@@ -276,9 +278,9 @@ public class Song extends SongBase implements Comparable<Song>
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
-                        song.setRawLyrics( sb.toString());
+                        song.setRawLyrics(sb.toString());
                     } else {
-                        song.setRawLyrics( jv.isString().stringValue());
+                        song.setRawLyrics(jv.isString().stringValue());
                     }
                     song.parseLyrics();
                     break;
@@ -287,8 +289,7 @@ public class Song extends SongBase implements Comparable<Song>
         return song;
     }
 
-    public static final String toJson(Collection<Song> songs)
-    {
+    public static final String toJson(Collection<Song> songs) {
         if (songs == null || songs.isEmpty()) {
             return null;
         }
@@ -306,8 +307,7 @@ public class Song extends SongBase implements Comparable<Song>
         return sb.toString();
     }
 
-    private String toJsonAsFile()
-    {
+    private String toJsonAsFile() {
         double time = lastModifiedDate == null ? 0 : lastModifiedDate.getTime();
         return "{ \"file\": \"" + JsonUtil.encode(getFileName()) + "\", \"lastModifiedDate\": " + time + ", \"song\":" +
                 " \n"
@@ -320,19 +320,18 @@ public class Song extends SongBase implements Comparable<Song>
      *
      * @return the JSON expression of this song
      */
-    public final String toJson()
-    {
+    public final String toJson() {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n")
-                .append("\"title\": \"")
+                .append("\"title\": ")
                 .append(JsonUtil.encode(getTitle()))
-                .append("\",\n")
-                .append("\"artist\": \"")
+                .append(",\n")
+                .append("\"artist\": ")
                 .append(JsonUtil.encode(getArtist()))
-                .append("\",\n")
-                .append("\"copyright\": \"")
+                .append(",\n")
+                .append("\"copyright\": ")
                 .append(JsonUtil.encode(getCopyright()))
-                .append("\",\n")
+                .append(",\n")
                 .append("\"key\": \"")
                 .append(getKey().name())
                 .append("\",\n")
@@ -350,14 +349,16 @@ public class Song extends SongBase implements Comparable<Song>
         //  chord content
         boolean first = true;
         for (String s : getChordsAsString().split("\n")) {
+            if (s.length() == 0)  //  json is not happy with empty array elements
+                continue;
             if (first) {
                 first = false;
             } else {
                 sb.append(",\n");
             }
-            sb.append("\t\"");
+            sb.append("\t");
             sb.append(JsonUtil.encode(s));
-            sb.append("\"");
+            sb.append("");
         }
         sb.append("\n    ],\n")
                 .append("\"lyrics\": \n")
@@ -370,9 +371,9 @@ public class Song extends SongBase implements Comparable<Song>
             } else {
                 sb.append(",\n");
             }
-            sb.append("\t\"");
+            sb.append("\t");
+
             sb.append(JsonUtil.encode(s));
-            sb.append("\"");
         }
         sb.append("\n    ]\n")
                 .append("}\n");
@@ -380,18 +381,15 @@ public class Song extends SongBase implements Comparable<Song>
         return sb.toString();
     }
 
-    public JsDate getLastModifiedDate()
-    {
+    public JsDate getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(JsDate lastModifiedDate)
-    {
+    public void setLastModifiedDate(JsDate lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public enum ComparatorType
-    {
+    public enum ComparatorType {
         title,
         artist,
         lastModifiedDate,
@@ -399,8 +397,7 @@ public class Song extends SongBase implements Comparable<Song>
         versionNumber;
     }
 
-    public static final Comparator<Song> getComparatorByType(ComparatorType type)
-    {
+    public static final Comparator<Song> getComparatorByType(ComparatorType type) {
         switch (type) {
             default:
                 return new ComparatorByTitle();
@@ -419,8 +416,7 @@ public class Song extends SongBase implements Comparable<Song>
      * A comparator that sorts by song title and then artist.
      * Note the title order implied by {@link #compareTo(Song)}.
      */
-    public static final class ComparatorByTitle implements Comparator<Song>
-    {
+    public static final class ComparatorByTitle implements Comparator<Song> {
 
         /**
          * Compares its two arguments for order.
@@ -436,8 +432,7 @@ public class Song extends SongBase implements Comparable<Song>
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2)
-        {
+        public int compare(Song o1, Song o2) {
             return o1.compareTo(o2);
         }
     }
@@ -445,8 +440,7 @@ public class Song extends SongBase implements Comparable<Song>
     /**
      * A comparator that sorts on the artist.
      */
-    public static final class ComparatorByArtist implements Comparator<Song>
-    {
+    public static final class ComparatorByArtist implements Comparator<Song> {
 
         /**
          * Compares its two arguments for order.
@@ -462,8 +456,7 @@ public class Song extends SongBase implements Comparable<Song>
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2)
-        {
+        public int compare(Song o1, Song o2) {
             int ret = o1.getArtist().compareTo(o2.getArtist());
             if (ret != 0) {
                 return ret;
@@ -472,8 +465,7 @@ public class Song extends SongBase implements Comparable<Song>
         }
     }
 
-    public static final class ComparatorByLastModifiedDate implements Comparator<Song>
-    {
+    public static final class ComparatorByLastModifiedDate implements Comparator<Song> {
 
         /**
          * Compares its two arguments for order my most recent modification date.
@@ -489,8 +481,7 @@ public class Song extends SongBase implements Comparable<Song>
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2)
-        {
+        public int compare(Song o1, Song o2) {
             JsDate mod1 = o1.lastModifiedDate;
             JsDate mod2 = o2.lastModifiedDate;
             if (mod1 != null) {
@@ -508,8 +499,7 @@ public class Song extends SongBase implements Comparable<Song>
         }
     }
 
-    public static final class ComparatorByLastModifiedDateLast implements Comparator<Song>
-    {
+    public static final class ComparatorByLastModifiedDateLast implements Comparator<Song> {
 
         /**
          * Compares its two arguments for order my most recent modification date.
@@ -525,14 +515,12 @@ public class Song extends SongBase implements Comparable<Song>
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2)
-        {
+        public int compare(Song o1, Song o2) {
             return compareByLastModifiedDate(o1, o2);
         }
     }
 
-    public static int compareByLastModifiedDate(Song o1, Song o2)
-    {
+    public static int compareByLastModifiedDate(Song o1, Song o2) {
         JsDate mod1 = o1.lastModifiedDate;
         JsDate mod2 = o2.lastModifiedDate;
         if (mod1 != null) {
@@ -549,8 +537,7 @@ public class Song extends SongBase implements Comparable<Song>
         return o1.compareTo(o2);
     }
 
-    public static final class ComparatorByVersionNumber implements Comparator<Song>
-    {
+    public static final class ComparatorByVersionNumber implements Comparator<Song> {
 
         /**
          * Compares its two arguments for order.
@@ -566,14 +553,12 @@ public class Song extends SongBase implements Comparable<Song>
          *                              being compared by this comparator.
          */
         @Override
-        public int compare(Song o1, Song o2)
-        {
+        public int compare(Song o1, Song o2) {
             return compareByVersionNumber(o1, o2);
         }
     }
 
-    public static int compareByVersionNumber(Song o1, Song o2)
-    {
+    public static int compareByVersionNumber(Song o1, Song o2) {
         logger.finest("o1.fileVersionNumber:" + o1.getFileVersionNumber() + ", o2.fileVersionNumber: " + o2.getFileVersionNumber());
         int ret = o1.compareTo(o2);
         if (ret != 0)
@@ -593,8 +578,7 @@ public class Song extends SongBase implements Comparable<Song>
      * @return
      */
     @Override
-    public int compareTo(Song o)
-    {
+    public int compareTo(Song o) {
         int ret = getSongId().compareTo(o.getSongId());
         if (ret != 0) {
             return ret;

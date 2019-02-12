@@ -592,7 +592,7 @@ public class SongEditView
             if (sb.length() <= 0)
                 break;
 
-            SectionVersion sectionVersion = Section.parse(sb);
+            SectionVersion sectionVersion = SectionVersion.parse(sb);
             if (sectionVersion != null) {
                 GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
 

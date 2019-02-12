@@ -1,9 +1,6 @@
-package com.bsteele.bsteeleMusicApp.client.songs;
+package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordSection;
-import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureSequenceItem;
 
 public class SongMeasureSelection {
 

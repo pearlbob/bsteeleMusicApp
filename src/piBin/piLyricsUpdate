@@ -6,11 +6,15 @@
 #	or the crontab should be shutdown.
 
 set project=/home/pi/bsteeleMusicApp
-set tomcat=/opt/tomcat
+
+#	fish for tomcat
+if ( $tomcat == "" ) then
+	set tomcat=/opt/tomcat
+endif
 
 set webapps=$tomcat/webapps
 set localRelease=$webapps/bsteeleMusicApp
-set localBeta=$webapps/beta
+set localBeta=$localRelease/beta
 
 set f=allSongs.songlyrics
 set date=`date -Iseconds`
@@ -18,8 +22,10 @@ set date=`date -Iseconds`
 #	from Bodhi to source location
 mkdir -p $project
 set src=$project/$f
-curl -s -G -o $src \
-        https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
+echo curl -s -G -o $src https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
+echo temp: from bsteele.com
+curl -s -G -o $src https://storage.googleapis.com/songlyrics.bsteele.com/$f
+
 if ( $status != 0 ) then
 	set stat=$status
 	echo read of $storage failed $date\: $stat
@@ -30,18 +36,17 @@ endif
 cmp -s $src $localRelease/$f
 if ( $status ) then
 	#	copy to local beta
-	sudo chmod g+w $localBeta
-	cp $src $localBeta/$f
+ls $localBeta/$f
+echo cp $src $localBeta/$f
 
 	#	copy to release
 	sudo chmod g+w $localRelease
 	cp $src $localRelease/$f
 
-	echo copies done $src to $localRelease/$f
+	echo copies done $date
 else
-	echo No copy required for $src to $localRelease/$f
+	echo No copy required $date
 endif
-echo $date
 
 
 exit $status

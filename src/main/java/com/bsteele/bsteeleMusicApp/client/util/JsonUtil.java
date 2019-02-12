@@ -1,11 +1,10 @@
 /*
  * Copyright 2018 Robert Steele at bsteele.com
  */
-package com.bsteele.bsteeleMusicApp.shared;
+package com.bsteele.bsteeleMusicApp.client.util;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 
 /**
@@ -48,9 +47,8 @@ public class JsonUtil {
      */
     public static final String encode(String s) {
         if (s == null || s.length() == 0)
-            return "";
-        JSONString jsonString = new JSONString(s);
-        return jsonString.toString();
+            return "\"\"";
+        return JsonUtils.escapeValue(s);
     }
 
 }

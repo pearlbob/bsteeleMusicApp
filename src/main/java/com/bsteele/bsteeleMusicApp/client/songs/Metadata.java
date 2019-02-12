@@ -1,11 +1,11 @@
-package com.bsteele.bsteeleMusicApp.shared.songs;
+package com.bsteele.bsteeleMusicApp.client.songs;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
 
-import com.bsteele.bsteeleMusicApp.shared.JsonUtil;
+import com.bsteele.bsteeleMusicApp.client.util.JsonUtil;
 
 import javax.annotation.Nonnull;
 
@@ -34,7 +34,7 @@ public class Metadata implements Comparable<Metadata> {
     }
 
     public final String toJson(){
-        return "\""+ JsonUtil.encode(name)+"\"=\""+ JsonUtil.encode(value)+"\"";
+        return  JsonUtil.encode(name)+"="+ JsonUtil.encode(value);
     }
 
     /**

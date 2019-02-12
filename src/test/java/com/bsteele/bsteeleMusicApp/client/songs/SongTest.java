@@ -2,6 +2,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 
 
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
+import com.bsteele.bsteeleMusicApp.client.util.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
@@ -12,6 +13,7 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -28,14 +30,20 @@ public class SongTest
     @Test
     public void testFromJson()
     {
+//        logger.info("null: <"+JsonUtil.encode(null)+">");
+//        logger.info("\"\": <"+JsonUtil.encode("")+">");
+//        logger.info("\" \": <"+JsonUtil.encode(" ")+">");
+
         int songCount = 0;
         String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
         JSONValue jv = JSONParser.parseStrict(jsonString);
+        logger.fine("jv: "+jv.toString().length());
         TreeSet<ChordDescriptor> chordDescriptors = new TreeSet<>();
         if (jv != null) {
             JSONArray ja = jv.isArray();
+            logger.fine("ja: "+ja.size());
             if (ja != null) {
-                int jaLimit = Math.min(250, ja.size());
+                int jaLimit = Math.min(2500, ja.size());
                 for (int i = 0; i < jaLimit; i++) {
                     songCount++;
                     Song song = Song.fromJsonObject(ja.get(i).isObject());
@@ -45,7 +53,7 @@ public class SongTest
                     for (ScaleChord scaleChord : scaleChordMap.keySet())
                         chordDescriptors.add(scaleChord.getChordDescriptor());
                     assertTrue(song.getTitle() != null);
-                    //logger.info(song.getTitle());
+                    logger.fine(song.getTitle());
                     assertTrue(song.getArtist() != null);
                     assertTrue(song.getBeatsPerBar() >= 2);
                     assertTrue(song.getBeatsPerBar() <= 12);
@@ -57,11 +65,16 @@ public class SongTest
                         assertTrue(date.getTime() > 1510000000000.0); //    ~6 November 2017
                     }
                     assertTrue(song.getKey() != null);
-                    //logger.info("song.getChordSectionInnerHtmlMap().size() = "+song.getChordSectionInnerHtmlMap()
-                    // .size());
-                    assertTrue(song.getLyricsAsString().length() > 0);
+//                    //logger.info("song.getChordSectionInnerHtmlMap().size() = "+song.getChordSectionInnerHtmlMap()
+//                    // .size());
+                    assertTrue(song.getRawLyrics().length() > 0);
 
-                    Song song1 = Song.fromJson(song.toJson()).get(0);
+                    logger.finest(song.toJson());
+                    //logger.info("songtest: copyright: <"+song.getCopyright()+">");
+                    ArrayList<Song> jsonList = Song.fromJson(song.toJson());
+                    assertNotNull(jsonList);
+                    assertTrue(!jsonList.isEmpty());
+                    Song song1 = jsonList.get(0);
 //                    if ( !song.equals(song1)) {
                     //  fixme:      SongTest.testFromJson() fails on chord whitespace
 //                        logger.info("equals error ref: " + song.toJson());
@@ -180,5 +193,5 @@ public class SongTest
         return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 
-    private static Logger logger = Logger.getLogger("");
+    private static Logger logger = Logger.getLogger(SongTest.class.getName());
 }

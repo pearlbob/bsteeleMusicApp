@@ -15,12 +15,10 @@ import java.util.logging.Logger;
  * User: bob
  */
 public class SongBaseTest
-        extends TestCase
-{
+        extends TestCase {
 
     @Test
-    public void testEquals()
-    {
+    public void testEquals() {
 
         SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
@@ -79,8 +77,7 @@ public class SongBaseTest
     }
 
     @Test
-    public void testEdits()
-    {
+    public void testEdits() {
         SongBase a;
         Measure newMeasure;
         String text;
@@ -197,8 +194,8 @@ public class SongBaseTest
         }
 
 
-        for ( int i = 50; i < 401; i++ ){
-            a.setBeatsPerMinute( i);
+        for (int i = 50; i < 401; i++) {
+            a.setBeatsPerMinute(i);
             assertEquals(i, a.getBeatsPerMinute());
         }
 
@@ -227,8 +224,7 @@ public class SongBaseTest
     }
 
     @Test
-    public void testSetRepeats()
-    {
+    public void testSetRepeats() {
         {
             SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, 4, 4, "i: A B C D v: E F G A#",
@@ -271,8 +267,7 @@ public class SongBaseTest
     }
 
     @Test
-    public void testComments()
-    {
+    public void testComments() {
         SongBase a;
         TreeSet<ChordSection> chordSections;
         ChordSection chordSection;
@@ -298,8 +293,7 @@ public class SongBaseTest
 
 
     @Test
-    public void testGetStructuralGrid()
-    {
+    public void testGetStructuralGrid() {
         SongBase a;
         Measure measure;
 
@@ -381,6 +375,44 @@ public class SongBaseTest
 
     }
 
+    @Test
+    public void testFindChordSectionLocation() {
+        SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4,
+                "i: A B C D V: D E F F# " +
+                        "v1:    Em7 E E G \n" +
+                        "       C D E Eb7 x2\n" +
+                        "       D C GB GbB \n" +
+                        "C: F F# G G# Ab A O: C C C C B",
+                "i:\nv: bob, bob, bob berand\nc: sing chorus here \no:");
+        logger.info(a.getSongId().toString());
+        logger.fine("\t" + a.getChords());
+        logger.fine(a.getRawLyrics());
+
+        Measure m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v:1")));
+        assertEquals(Measure.testParse("D",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v:4")));
+        assertEquals(Measure.testParse("F#",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v:5")));
+        assertNull(m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:0")));
+        assertNull(m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:1")));
+        assertEquals(Measure.testParse("Em7",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:4")));
+        assertEquals(Measure.testParse("G",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:5")));
+        assertEquals(Measure.testParse("C",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:12")));//    repeats don't count here
+        assertEquals(Measure.testParse("GbB",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:13")));
+        assertNull(m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("o:5")));
+        assertEquals(Measure.testParse("B",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("i:1")));
+        assertEquals(Measure.testParse("A",a.getBeatsPerBar()),m);
+    }
+
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *
@@ -398,8 +430,7 @@ public class SongBaseTest
     private static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
                                                  @NotNull String copyright,
                                                  @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
-                                                 @NotNull String chords, @NotNull String lyrics)
-    {
+                                                 @NotNull String chords, @NotNull String lyrics) {
         SongBase song = new SongBase();
         song.setTitle(title);
         song.setArtist(artist);
@@ -422,5 +453,5 @@ public class SongBaseTest
 //        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
 //    }
 
-    private static Logger logger = Logger.getLogger("");
+    private static Logger logger = Logger.getLogger(SongBaseTest.class.getName());
 }

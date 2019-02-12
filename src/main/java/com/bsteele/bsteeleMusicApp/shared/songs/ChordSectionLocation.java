@@ -1,5 +1,8 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
+
 import javax.annotation.Nonnull;
 
 public class ChordSectionLocation {
@@ -9,18 +12,31 @@ public class ChordSectionLocation {
         this.index = index;
     }
 
-    public static final ChordSectionLocation parseLocation(String s) {
-        StringBuffer sb = new StringBuffer(s);
-        SectionVersion sectionVersion = Section.parse(sb);
+    /**
+     * @param sb string buffer
+     * @return
+     */
+    public static final ChordSectionLocation parse(StringBuffer sb) {
+
+        SectionVersion sectionVersion = SectionVersion.parse(sb);
         if (sectionVersion == null)
             return null;
 
-        try {
-            int index = Integer.parseInt(s);
-            return new ChordSectionLocation(new ChordSection(sectionVersion), index);
-        } catch (NumberFormatException nfe) {
+        if (sb.length() < 1)
             return null;
+
+        final RegExp numberRegexp = RegExp.compile("^(\\d+)");  //  workaround for RegExp is not serializable.
+        MatchResult mr = numberRegexp.exec(sb.substring(0, Math.min(sb.length(), 4)));
+        if (mr != null) {
+            try {
+                int index = Integer.parseInt(mr.getGroup(1));
+                sb.delete(0, mr.getGroup(0).length());
+                return new ChordSectionLocation(new ChordSection(sectionVersion), index);
+            } catch (NumberFormatException nfe) {
+                return null;
+            }
         }
+        return null;
     }
 
     @Override
@@ -29,7 +45,7 @@ public class ChordSectionLocation {
     }
 
     public final String getId() {
-        return chordSection.getId() + "#" + index;
+        return chordSection.getId() + ":" + index;
     }
 
     public final ChordSection getChordSection() {
@@ -40,7 +56,15 @@ public class ChordSectionLocation {
         return index;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof ChordSectionLocation))
+            return false;
+        ChordSectionLocation o = (ChordSectionLocation) obj;
+        return chordSection.equals(o.chordSection)
+                && index == o.index;
+    }
+
     private final ChordSection chordSection;
     private final int index;
-
 }

@@ -41,7 +41,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         if (sb.length() <= 0)
             return null;
 
-        SectionVersion sectionVersion = Section.parse(sb);
+        SectionVersion sectionVersion = SectionVersion.parse(sb);
         if (sectionVersion == null) {
             //  cope with badly formatted songs
             sectionVersion = new SectionVersion(Section.verse);

@@ -47,6 +47,10 @@ if ( $status ) then
 	set codeDst=src/main/java/com/bsteele/bsteeleMusicApp/client/resources/$f
 	cp $src $codeDst
 
+	#	copy to test resource
+	set testDst=src/test/java/com/bsteele/bsteeleMusicApp/client/resources/$f
+	cp $src $testDst
+
 	cp $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 	cd $bsteeleMusicAppHome/../allSongs.songlyrics
 	git commit -q -a -m "commit for new lyrics $date"

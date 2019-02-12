@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Metadata;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
@@ -363,8 +364,9 @@ public class SongBase {
 
 
     private final ChordSection findChordSection(MeasureNode measureNode) {
+        String id = measureNode.getId();
         for (ChordSection chordSection : chordSectionMap.values()) {
-            if (measureNode == chordSection)
+            if (id != null && id.equals(chordSection.getId()))
                 return chordSection;
             MeasureNode mn = chordSection.findMeasureNode(measureNode);
             if (mn != null)
@@ -435,10 +437,28 @@ public class SongBase {
     }
 
     public final ChordSection findChordSection(StringBuffer sb) {
-        SectionVersion sectionVersion = Section.parse(sb);
+        SectionVersion sectionVersion = SectionVersion.parse(sb);
         if (sectionVersion == null)
             return null;
         return chordSectionMap.get(sectionVersion);
+    }
+
+    public final Measure findChordSectionLocation(ChordSectionLocation chordSectionLocation) {
+        ChordSection chordSection = findChordSection(chordSectionLocation.getChordSection());
+        if (chordSection == null)
+            return null;
+
+        int count = chordSectionLocation.getIndex() - 1;
+        if (count < 0)
+            return null;
+        for (MeasureSequenceItem msi : chordSection.getMeasureSequenceItems()) {
+            if (count < msi.getMeasures().size()) {
+                return msi.getMeasures().get(count);
+            }
+            count -= msi.getMeasures().size();
+        }
+
+        return null;
     }
 
     public final boolean measureDelete(Measure measure) {
@@ -595,7 +615,7 @@ public class SongBase {
                     state++;
                     //  fall through
                 case 1:
-                    SectionVersion version = Section.parse(sb);
+                    SectionVersion version = SectionVersion.parse(sb);
                     if (version != null) {
                         isSection = true;
 
@@ -675,7 +695,7 @@ public class SongBase {
                     state++;
                     //  fall through
                 case 1:
-                    SectionVersion version = Section.parse(sb);
+                    SectionVersion version = SectionVersion.parse(sb);
                     if (version != null) {
                         if (lyricSection != null)
                             lyricSections.add(lyricSection);
@@ -1056,14 +1076,14 @@ public class SongBase {
      *
      * @param title
      */
-    protected final void setTitle(String title) {
+    protected final void setTitle(@Nonnull String title) {
         //  move the leading "The " to the end
         final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(title)) {
             title = theRegExp.replace(title, "") + ", The";
         }
         this.title = title;
-        songId = new SongId("Song" + title.replaceAll("\\W+", ""));
+        computeSongId();
     }
 
     /**
@@ -1071,13 +1091,19 @@ public class SongBase {
      *
      * @param artist artist's name
      */
-    protected final void setArtist(String artist) {
+    protected final void setArtist(@Nonnull String artist) {
         //  move the leading "The " to the end
         final RegExp theRegExp = RegExp.compile("^the +", "i");
         if (theRegExp.test(artist)) {
             artist = theRegExp.replace(artist, "") + ", The";
         }
         this.artist = artist;
+        computeSongId();
+    }
+
+    private void computeSongId() {
+        songId = new SongId("Song" + title.replaceAll("\\W+", "")
+                + "_by_" + artist.replaceAll("\\W+", ""));
     }
 
     /**
@@ -1252,7 +1278,7 @@ public class SongBase {
         this.drumSection = drumSection;
     }
 
-   protected Collection<ChordSection> getChordSections() {
+    protected Collection<ChordSection> getChordSections() {
         return chordSectionMap.values();
     }
 
