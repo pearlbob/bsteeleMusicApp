@@ -5,6 +5,21 @@
 #	it should always be left operational every evening
 #	or the crontab should be shutdown.
 
+
+set force=0
+while ( $#argv > 0 )
+	switch ( $1:q )
+	case '-f':	#	by time
+		set force=1
+		shift
+		continue;
+	default:
+		echo unknown arg: $1
+		exit -1
+	endsw
+end
+
+
 set bsteeleMusicAppHome=/home/bob/GitHub/bsteeleMusicApp
 
 set f=allSongs.songlyrics
@@ -26,13 +41,20 @@ endif
 #	sanity check
 echo "Todo: create a sanity check for imported allSongs.songlyrics"
 
+jsonlint-php -q $bodhiDir/$f
+if ( $status != 0 ) then
+	set stat=$status
+	echo JSON parse of $bodhiDir/$f failed $date\: $stat
+	exit $stat
+endif
+
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
 
 #	copy to required locations, if different
 set src=$bodhiDir/$f
 cmp -s $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
-if ( $status ) then
+if ( $status || $force != 0 ) then
 	gsutil -q -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
 	gsutil -q acl ch -u AllUsers:R $svrDst/$f
 
