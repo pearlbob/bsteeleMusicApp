@@ -928,6 +928,7 @@ public class SongEditView
     private static final String selectedBorderColorValueString = "#f88";
 
     public Song checkSong() {
+        //  fixme: move checkSong() functionality to SongBase
         Key newKey = Key.parse(keySelection.getValue());
         if (newKey == null)
             newKey = Key.C;  //  punt an error

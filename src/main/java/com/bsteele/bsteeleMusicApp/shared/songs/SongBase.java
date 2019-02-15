@@ -32,6 +32,8 @@ import java.util.logging.Logger;
 
 /**
  * A piece of music to be played according to the structure it contains.
+ * The song base class has been separated from the song class to allow most of the song
+ * mechanics to be tested in the shared code environment where debugging is easier.
  */
 public class SongBase {
 
@@ -52,7 +54,12 @@ public class SongBase {
         setBeatsPerBar(4);
     }
 
-
+    /**
+     * Compute the song moments list given the song's current state.
+     * Moments are the temporal sequence of measures as the song is to be played.
+     * All repeats are expanded.  Measure node such as comments,
+     * repeat ends, repeat counts, section headers, etc. are ignored.
+     */
     private final void computeSongMoments() {
         songMoments = new ArrayList<>();
 
@@ -105,10 +112,18 @@ public class SongBase {
         }
     }
 
+    /** Find the corrsesponding chord section for the given lyrics section
+     *
+     * @param lyricSection
+     * @return
+     */
     private final ChordSection findChordSection(LyricSection lyricSection) {
         return chordSectionMap.get(lyricSection.getSectionVersion());
     }
 
+    /**
+     * Compute the duration and total beat count for the song.
+     */
     private void computeDuration() {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
 
         duration = 0;
@@ -160,10 +175,18 @@ public class SongBase {
         return chordSectionInnerHtmlMap.get(sv);
     }
 
+    /** Find the chord section for the given section version.
+     *
+     * @param sv
+     * @return
+     */
     public final ChordSection getChordSection(SectionVersion sv) {
         return chordSectionMap.get(sv);
     }
 
+    /**
+     * Parse the current string representation of the song's chords into the song internal strucutures.
+     */
     private final void parse() {
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
@@ -214,7 +237,13 @@ public class SongBase {
         computeDuration();
     }
 
+    /**
+     * Compute the nominal display structural grid from the current chord section.
+     *
+     * @return
+     */
     public final Grid<MeasureNode> getStructuralGrid() {
+        //  fixme: getStructuralGrid() use should be minimized with caching
         Grid<MeasureNode> ret = new Grid<>();
 
         for (ChordSection chordSection : new TreeSet<ChordSection>(chordSectionMap.values())) {
@@ -224,10 +253,15 @@ public class SongBase {
         return ret;
     }
 
-    public final String getStructuralGridAsOneTextLine() {
+    /** Make a single text line from the structural grid
+     *
+     * @return
+     */
+     final String getStructuralGridAsOneTextLine() {
         return getStructuralGridAsText().replaceAll("\\n", " ");
     }
 
+    @Deprecated
     public final String getStructuralGridAsText() {
         StringBuilder sb = new StringBuilder();
         Grid<MeasureNode> grid = getStructuralGrid();
@@ -252,6 +286,7 @@ public class SongBase {
         return sb.toString();
     }
 
+    @Deprecated
     private final SectionVersion getStructuralGridSectionVersionAtRow(Grid<MeasureNode> grid, int row) {
         int rowCount = grid.getRowCount();
         if (row >= rowCount)
@@ -264,12 +299,24 @@ public class SongBase {
         return null;
     }
 
+    /**
+     *
+     * @param songChordGridSelection
+     * @return
+     */
+    @Deprecated
     public final MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection) {
         if (songChordGridSelection == null)
             return null;
         return getStructuralMeasureNode(songChordGridSelection.getRow(), songChordGridSelection.getCol());
     }
 
+    /** Find the measure node for the given row and column in the structural grid
+     *
+     * @param r
+     * @param c
+     * @return
+     */
     public final MeasureNode getStructuralMeasureNode(int r, int c) {
         try {
             Grid<MeasureNode> grid = getStructuralGrid();   //  fixme: cache
@@ -282,16 +329,11 @@ public class SongBase {
         }
     }
 
-    public final String measureNodesToString() {
-        StringBuilder sb = new StringBuilder();
-
-        for (MeasureNode measureNode : measureNodes) {
-            sb.append(measureNode.toString()).append(" ");
-        }
-
-        return sb.toString();
-    }
-
+    /** Add the given section version to the song chords
+     *
+     * @param sectionVersion
+     * @return
+     */
     public final boolean addSectionVersion(SectionVersion sectionVersion) {
         if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
             return false;
@@ -346,7 +388,11 @@ public class SongBase {
         return false;
     }
 
-
+    /** Find the measure sequence item for the given measure (i.e. the measure's parent container).
+     *
+     * @param measure
+     * @return
+     */
     public final MeasureSequenceItem findMeasureSequenceItem(Measure measure) {
         if (measure == null)
             return null;
@@ -362,7 +408,11 @@ public class SongBase {
         return null;
     }
 
-
+    /**
+     * Find the chord section for the given measure node.
+     * @param measureNode
+     * @return
+     */
     private final ChordSection findChordSection(MeasureNode measureNode) {
         String id = measureNode.getId();
         for (ChordSection chordSection : chordSectionMap.values()) {
@@ -375,6 +425,11 @@ public class SongBase {
         return null;
     }
 
+    /** Find the structural grid location for the given measure
+     *
+     * @param measure
+     * @return
+     */
     public final SongChordGridSelection findMeasureChordGridLocation(Measure measure) {
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
@@ -392,6 +447,11 @@ public class SongBase {
         return null;
     }
 
+    /**
+     * Find the structural grid location for the given section version.
+     * @param sectionVersion
+     * @return
+     */
     public final SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion) {
         Grid<MeasureNode> grid = getStructuralGrid();
         int rowCount = grid.getRowCount();
