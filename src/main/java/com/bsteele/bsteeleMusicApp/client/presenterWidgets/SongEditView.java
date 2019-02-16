@@ -504,7 +504,7 @@ public class SongEditView
         if (song == null)
             return;
 
-        this.song = song;
+        this.song = song.copySong();
 
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());

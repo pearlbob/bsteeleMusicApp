@@ -97,7 +97,8 @@ gsutil -m -q acl -r ch -u AllUsers:R $gs
 
 
 #	get the songlyrics from the cloud
-$git/bsteeleMusicApp_lyrics_update
+cd $git
+bsteeleMusicApp_lyrics_update
 
 
 if ( $isBeta != 0 ) then

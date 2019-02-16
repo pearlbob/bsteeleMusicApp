@@ -120,7 +120,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
         saveSongAs(filename, song.toJson());
 
-        addToSongList(song);
+        addToSongList(song, true);
         view.setSongList(allSongs);
         fireEvent(new SongUpdateEvent(song));
     }
@@ -135,7 +135,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
             sortedSet.addAll(songs);
             Song lastSong = null;
             for (Song song : sortedSet)
-                if (addToSongList(song))
+                if (addToSongList(song, false))
                     lastSong = song;
             view.setSongList(allSongs);
             if (lastSong != null)
@@ -184,7 +184,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     for (Song song : sortedSet) {
                         //  note: the highest number song will be added last
                         //  replacing any previous from the list
-                        addToSongList(song);
+                        addToSongList(song,false);
                     }
                 }
             }
@@ -192,11 +192,11 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         view.setSongList(allSongs);
     }
 
-    private boolean addToSongList(Song song) {
+    private boolean addToSongList(Song song, boolean force) {
         if (song != null) {
             if (allSongs.contains(song)) {
                 Song oldSong = allSongs.floor(song);
-                if (Song.compareByVersionNumber(oldSong, song) > 0) {
+                if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
                     logger.info("song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
                     return false;
                 }
@@ -207,6 +207,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         }
         return false;
     }
+
 
     @Override
     public void onNextSong(NextSongEvent event) {
