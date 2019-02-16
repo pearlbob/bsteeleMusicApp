@@ -136,6 +136,11 @@ public class Song implements Comparable<Song>
             return ret;
         }
 
+        if (jsonString.startsWith("<")) {
+            logger.warning("this can't be good: " + jsonString.substring(0, Math.min(25, jsonString.length())));
+        }
+
+        try {
         JSONValue jv = JSONParser.parseStrict(jsonString);
         if (jv == null) {
             return ret;
@@ -150,6 +155,9 @@ public class Song implements Comparable<Song>
         } else {
             JSONObject jo = jv.isObject();
             ret.add(fromJsonObject(jo));
+        }
+        } catch (Exception e) {
+            return null;
         }
 
         return ret;

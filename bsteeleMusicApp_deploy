@@ -5,6 +5,8 @@ set www=/var/www/html/public_html
 set app=bsteeleMusicApp
 set beta=beta/$app
 set dst=gs://www.bsteele.com/$app
+set lyricsDst=gs://songlyrics.bsteele.com/wars
+set lyricsWar=${app}.war
 
 set localdst=$www/$app
 set localbeta=$www/$beta
@@ -14,6 +16,7 @@ set localbeta=$www/$beta
 rm -rf $localdst
 mkdir $localdst
 cp -r $localbeta/* $localdst
+gsutil cp $localbeta/${app}.war $lyricsDst/$lyricsWar
 
 #	copy local deploy to the web server
 gsutil -m rsync -d -R $localdst/ $dst 	#	source needs the /

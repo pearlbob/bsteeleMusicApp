@@ -438,22 +438,17 @@ public class SongEditView
         Event.sinkEvents(songEntryClear, Event.ONCLICK);
         Event.setEventListener(songEntryClear, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                titleEntry.setText("");
-                artistEntry.setText("");
-                copyrightEntry.setText("");
-                bpmEntry.setText("106");
-                timeSignatureEntry.setValue("4/4");
-                chordsTextEntry.setValue("");
-                lyricsTextEntry.setValue("");
-                checkSong();
+                clearSong();
             }
         });
 
         Event.sinkEvents(songEntryRemove, Event.ONCLICK);
         Event.setEventListener(songEntryRemove, (Event event) -> {
             if (Event.ONCLICK == event.getTypeInt()) {
-                if (song != null)
+                if (song != null) {
                     fireEvent(new SongRemoveEvent(song));
+                    clearSong();
+                }
             }
         });
 
@@ -491,6 +486,17 @@ public class SongEditView
 
     }
 
+
+    private final void clearSong() {
+        titleEntry.setText("");
+        artistEntry.setText("");
+        copyrightEntry.setText("");
+        bpmEntry.setText("106");
+        timeSignatureEntry.setValue("4/4");
+        chordsTextEntry.setValue("");
+        lyricsTextEntry.setValue("");
+        checkSong();
+    }
 
     @Override
     public void setSongEdit(Song song)

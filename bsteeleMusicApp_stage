@@ -95,6 +95,11 @@ set gs=gs://www.bsteele.com/beta/$app
 gsutil -m rsync -d -R $dst/$app/ $gs 	#	source needs the /
 gsutil -m -q acl -r ch -u AllUsers:R $gs
 
+
+#	get the songlyrics from the cloud
+$git/bsteeleMusicApp_lyrics_update
+
+
 if ( $isBeta != 0 ) then
 	echo test local version of $app at:
 	echo	http://localhost/public_html/beta/$app

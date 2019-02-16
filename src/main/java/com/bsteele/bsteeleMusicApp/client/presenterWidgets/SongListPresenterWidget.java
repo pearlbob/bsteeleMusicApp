@@ -9,7 +9,10 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.*;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
@@ -21,8 +24,12 @@ import com.gwtplatform.mvp.client.View;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
 
 /**
  * @author bob
@@ -61,26 +68,29 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         try {
             requestBuilder.sendRequest(null, new RequestCallback() {
                 public void onError(Request request, Throwable exception) {
-                    GWT.log("failed file reading", exception);
+                    logger.info("failed file reading: "+ exception.getMessage());
+                    sendStatus("failed reading", exception.getMessage());
                     //  default all songs
                     addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                    logger.info("Used internal copy instead.");
                 }
 
                 public void onResponseReceived(Request request, Response response) {
                     //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
                     if (response.getStatusCode() == 200) {
                         addJsonToSongList(response.getText());
-                        GWT.log("read songs from: " + url);
+                        logger.info("read songs from: " + url);
                         sendStatus("read", url);
                     } else {
                         addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
-                        GWT.log("failed reading: " + url);
+                        logger.info("failed reading: " + url);
+                        logger.info("Used internal copy instead.");
                         sendStatus("failed reading", url);
                     }
                 }
             });
         } catch (Exception e) {
-            GWT.log("RequestException for " + url + ": ", e);
+            logger.info("RequestException for " + url + ": "+ e.getMessage());
             sendStatus("Exception", e.getMessage());
         }
 
@@ -187,11 +197,11 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
             if (allSongs.contains(song)) {
                 Song oldSong = allSongs.floor(song);
                 if (Song.compareByVersionNumber(oldSong, song) > 0) {
-                    GWT.log("\"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
+                    logger.info("song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
                     return false;
                 }
                 allSongs.remove(oldSong);  //  remove any prior version
-                GWT.log("\"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
+                logger.info("song parse: \"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
             }
             return allSongs.add(song);
         }
@@ -221,4 +231,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     private final EventBus eventBus;
     private final MyView view;
     private Song currentSong;
+
+    private static final Logger logger = getLogger(SongListView.class.getName());
 }
