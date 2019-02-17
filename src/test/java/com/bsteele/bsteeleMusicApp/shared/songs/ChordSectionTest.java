@@ -26,13 +26,26 @@ public class ChordSectionTest extends TestCase {
         ArrayList<Measure> measures;
 
         {
+            //  comment only
+            ChordSection chordSection = ChordSection.testParse(
+                    "V: (comment) A C#m F#m F#m/E\n"
+                    , 4);
+            assertNotNull(chordSection);
+            Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);
+            assert (m.isSingleItem());
+            assert (m.isComment());
+            assertEquals("(comment)", m.toString());
+            m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(1);
+            assertEquals(Measure.testParse("A", 4), m);
+        }
+        {
             //  lost : ?
             ChordSection chordSection = ChordSection.testParse(
                     "V: \n"
-                    +"A C#m F#m F#m/E\n"
-                    +"G Bm F#m G GBm  x3\n"
-                    +"A C#m F#m F#m/E\n"
-                    +"G G Bm Bm\n"
+                            + "A C#m F#m F#m/E\n"
+                            + "G Bm F#m G GBm  x3\n"
+                            + "A C#m F#m F#m/E\n"
+                            + "G G Bm Bm\n"
                     , 4);
             assertNotNull(chordSection);
             Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);

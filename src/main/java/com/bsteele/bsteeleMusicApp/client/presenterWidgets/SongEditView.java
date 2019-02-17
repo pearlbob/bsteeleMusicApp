@@ -10,10 +10,13 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
+import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureSequenceItem;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
@@ -21,12 +24,9 @@ import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.shared.songs.Section;
 import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -65,6 +65,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /**
  * @author bob
@@ -274,11 +275,11 @@ public class SongEditView
 
 
         measureEntry.addValueChangeHandler((ValueChangeEvent<String> event) -> {
-            //GWT.log("measure change: \"" + event.getValue() + "\"");
+            //logger.info("measure change: \"" + event.getValue() + "\"");
             processMeasureEntry();
         });
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
-            //GWT.log("measure KeyUp: \"" + measureEntry.getValue() + "\"");
+            //logger.info("measure KeyUp: \"" + measureEntry.getValue() + "\"");
             String entry = measureEntry.getValue();
             if (entry.isEmpty())
                 return;
@@ -592,9 +593,10 @@ public class SongEditView
             if (sb.length() <= 0)
                 break;
 
+            //  look for a section
             SectionVersion sectionVersion = SectionVersion.parse(sb);
             if (sectionVersion != null) {
-                GWT.log("new SectionVersion: \"" + sectionVersion.toString() + "\"");
+                logger.info("new SectionVersion: \"" + sectionVersion.toString() + "\"");
 
                 SongChordGridSelection songChordGridSelection =
                         song.findSectionVersionChordGridLocation(sectionVersion);
@@ -614,30 +616,36 @@ public class SongEditView
                 continue;
             }
 
+            //  look for a measure
             String backup = sb.toString();  //  backup for a measure followed by non-whitespace
             Measure measure = Measure.parse(sb, song.getBeatsPerBar());
             if (measure != null) {
                 if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(0))) {
-                    //  reject the measure
+                    //  reject the measure for not ending correctly:  end of input or in white space
                     measure = null;
                     sb = new StringBuffer(backup);
                 }
             } else if (backup.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
                 measure = new Measure(song.findMeasure(lastChordSelection));
-                //GWT.log("new measure: -");
+                //logger.info("new measure: -");
                 sb.delete(0, 1);
             } else {
                 final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
                 MatchResult mr = repeatExp.exec(backup);
                 if (mr != null) {
-                    // GWT.log("new measure: repeat");
+                    // logger.info("new measure: repeat");
                     int repeats = Integer.parseInt(mr.getGroup(1));
                     song.setRepeat(lastChordSelection, repeats);
                     displaySong();
                     sb.delete(0, mr.getGroup(0).length());
                     continue;
                 }
+
+                //  desperation: make the unknown input a comment
+                measure = MeasureComment.parse(sb);
             }
+
+
 
             //  if we found something valid in the input, edit the song
             if (measure != null && lastChordSelection != null) {
@@ -732,10 +740,10 @@ public class SongEditView
         });
 
         chordsFlexTable.addDragStartHandler(dragStartEvent -> {
-            GWT.log("dragStartEvent: " + dragStartEvent.toDebugString());
+            logger.info("dragStartEvent: " + dragStartEvent.toDebugString());
         });
         chordsFlexTable.addDragEndHandler(dragEndEvent -> {
-            GWT.log("dragEndEvent: " + dragEndEvent.toDebugString());
+            logger.info("dragEndEvent: " + dragEndEvent.toDebugString());
         });
 
         checkSong();
@@ -745,12 +753,14 @@ public class SongEditView
 
     private void displaySong() {
         song.transpose(prefix, chordsFlexTable, 0, fontsize);
-        //GWT.log(song.getStructuralGridAsText());
+        //logger.info(song.getStructuralGridAsText());
     }
 
     private final void undoStackPushSong() {
         if (song == null)
             return;
+        logger.info(song.getStructuralGridAsText());
+        logger.info(song.copySong().getStructuralGridAsText());
         undoStack.push(song.copySong());
 
         setUndoRedoEnables();
@@ -887,7 +897,7 @@ public class SongEditView
                 MeasureNode measureNode = song.getStructuralMeasureNode(
                         chordSelection.getRow(),
                         chordSelection.getCol());
-                GWT.log("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
+                logger.info("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
                         + measureNode.toString()
                         + " " + editLocation.name());
             }
@@ -913,7 +923,7 @@ public class SongEditView
         } else {
             if (song.measureDelete(measure))
                 undoStackPushSong();
-            else GWT.log("didn't find in song: " + measure.toString());
+            else logger.info("didn't find in song: " + measure.toString());
         }
 
         displaySong();
@@ -1190,17 +1200,17 @@ public class SongEditView
     }
 
     private ArrayList<Measure> recentMeasures = new ArrayList<>();
-    //private ArrayList<ScaleChord> commonScaleChords = new ArrayList<>();
     private HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
     private UndoStack<Song> undoStack = new UndoStack<>(20);
     private Key key = Key.getDefault();
     private Song song;
     private SongChordGridSelection lastChordSelection;
-    private static final int minBpm = 50;
-    private static final int maxBpm = 400;
     private static final int fontsize = 32;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
-    private final EventBus eventBus;
+    private final EventBus eventBus;    //  is actually used
     private static String prefix = "songEdit";
+
+
+    private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
 }

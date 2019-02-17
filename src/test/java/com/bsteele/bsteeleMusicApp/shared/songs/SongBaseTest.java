@@ -382,6 +382,8 @@ public class SongBaseTest
                 "i: A B C D V: D E F F# " +
                         "v1:    Em7 E E G \n" +
                         "       C D E Eb7 x2\n" +
+                        "v2:    A B C D |\n" +
+                        "       E F G7 G#m | x2\n" +
                         "       D C GB GbB \n" +
                         "C: F F# G G# Ab A O: C C C C B",
                 "i:\nv: bob, bob, bob berand\nc: sing chorus here \no:");
@@ -403,12 +405,22 @@ public class SongBaseTest
         assertEquals(Measure.testParse("G",a.getBeatsPerBar()),m);
         m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:5")));
         assertEquals(Measure.testParse("C",a.getBeatsPerBar()),m);
-        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:12")));//    repeats don't count here
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:9")));//    repeats don't count here
+        assertNull(m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v2:1")));
+        assertEquals(Measure.testParse("A",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v2:4")));
+        assertEquals(Measure.testParse("D",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v2:5")));
+        assertEquals(Measure.testParse("E",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v2:12")));
         assertEquals(Measure.testParse("GbB",a.getBeatsPerBar()),m);
-        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v1:13")));
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("v2:13")));
         assertNull(m);
         m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("o:5")));
         assertEquals(Measure.testParse("B",a.getBeatsPerBar()),m);
+        m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("c:6")));
+        assertEquals(Measure.testParse("A",a.getBeatsPerBar()),m);
         m = a.findChordSectionLocation(ChordSectionLocation.parse(new StringBuffer("i:1")));
         assertEquals(Measure.testParse("A",a.getBeatsPerBar()),m);
     }

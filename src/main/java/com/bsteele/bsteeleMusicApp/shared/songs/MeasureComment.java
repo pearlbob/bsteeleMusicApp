@@ -21,6 +21,11 @@ public class MeasureComment extends Measure {
         comment = "";
     }
 
+    @Override
+    boolean isComment() {
+        return true;
+    }
+
     /**
      * Trash can of measure parsing.  Will consume all that it sees to the end of line.
      *
@@ -40,7 +45,7 @@ public class MeasureComment extends Measure {
             s = sb.toString();
 
         //  properly formatted comment
-        final RegExp commentRegExp = RegExp.compile("^\\s*\\(\\s*(.*?)\\s*\\)\\s*$");
+        final RegExp commentRegExp = RegExp.compile("^\\s*\\(\\s*(.*?)\\s*\\)\\s*");
         MatchResult mr = commentRegExp.exec(s);
 
         //  consume the comment
@@ -56,7 +61,9 @@ public class MeasureComment extends Measure {
                 return null;    //  all whitespace
         }
 
-        //  fixme: cope with unbalanced leading ('s and trailing )'s
+        //  cope with unbalanced leading ('s and trailing )'s
+        s = s.replaceAll("^\\(","").replaceAll("\\)$","");
+        s = s.trim();   //  in case there is white space inside unbalanced parens
 
         MeasureComment ret = new MeasureComment(s);
         return ret;
@@ -64,7 +71,7 @@ public class MeasureComment extends Measure {
 
     @Override
     public String transpose(@Nonnull Key key, int halfSteps) {
-        return comment;
+        return toString();
     }
 
 

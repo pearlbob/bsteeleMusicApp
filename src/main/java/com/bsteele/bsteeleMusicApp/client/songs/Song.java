@@ -95,9 +95,11 @@ public class Song extends SongBase implements Comparable<Song> {
      * @return the new song
      */
     public final Song copySong() {
+        logger.info("Before createSong(): "+getStructuralGridAsText());
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 getStructuralGridAsText(), getLyricsAsString());
+        logger.info("After createSong(): "+ret.getStructuralGridAsText());
         ret.setFileName(getFileName());
         ret.lastModifiedDate = lastModifiedDate;
         ret.setDuration(getDuration());

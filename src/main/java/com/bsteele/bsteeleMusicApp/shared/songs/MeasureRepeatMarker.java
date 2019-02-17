@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureRepeatMarker extends MeasureComment
+public class MeasureRepeatMarker extends Measure
 {
     public MeasureRepeatMarker(int repeats) {
         this.setRepeats(repeats);

@@ -125,6 +125,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 MeasureComment measureComment = MeasureComment.parse(sb);
                 if (measureComment != null) {
                     lineMeasures.add(measureComment);
+                    continue;
                 } else
                     break;      //  fixme: not a measure, we're done
             }

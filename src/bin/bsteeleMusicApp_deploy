@@ -1,5 +1,5 @@
 #!/bin/tcsh
-set echo; set verbose
+#set echo; set verbose
 
 set www=/var/www/html/public_html
 set app=bsteeleMusicApp

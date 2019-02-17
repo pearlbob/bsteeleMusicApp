@@ -43,6 +43,7 @@ public class SongBase {
     protected SongBase() {
         setTitle("");
         setArtist("");
+        setCoverArtist(null);
         copyright = "";
         setKey(Key.C);
         unitsPerMeasure = 4;
@@ -112,7 +113,8 @@ public class SongBase {
         }
     }
 
-    /** Find the corrsesponding chord section for the given lyrics section
+    /**
+     * Find the corrsesponding chord section for the given lyrics section
      *
      * @param lyricSection
      * @return
@@ -175,7 +177,8 @@ public class SongBase {
         return chordSectionInnerHtmlMap.get(sv);
     }
 
-    /** Find the chord section for the given section version.
+    /**
+     * Find the chord section for the given section version.
      *
      * @param sv
      * @return
@@ -246,18 +249,19 @@ public class SongBase {
         //  fixme: getStructuralGrid() use should be minimized with caching
         Grid<MeasureNode> ret = new Grid<>();
 
-        for (ChordSection chordSection : new TreeSet<ChordSection>(chordSectionMap.values())) {
+        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
             chordSection.addToGrid(ret, chordSection);
         }
 
         return ret;
     }
 
-    /** Make a single text line from the structural grid
+    /**
+     * Make a single text line from the structural grid
      *
      * @return
      */
-     final String getStructuralGridAsOneTextLine() {
+    final String getStructuralGridAsOneTextLine() {
         return getStructuralGridAsText().replaceAll("\\n", " ");
     }
 
@@ -300,7 +304,6 @@ public class SongBase {
     }
 
     /**
-     *
      * @param songChordGridSelection
      * @return
      */
@@ -311,7 +314,8 @@ public class SongBase {
         return getStructuralMeasureNode(songChordGridSelection.getRow(), songChordGridSelection.getCol());
     }
 
-    /** Find the measure node for the given row and column in the structural grid
+    /**
+     * Find the measure node for the given row and column in the structural grid
      *
      * @param r
      * @param c
@@ -329,7 +333,8 @@ public class SongBase {
         }
     }
 
-    /** Add the given section version to the song chords
+    /**
+     * Add the given section version to the song chords
      *
      * @param sectionVersion
      * @return
@@ -388,7 +393,8 @@ public class SongBase {
         return false;
     }
 
-    /** Find the measure sequence item for the given measure (i.e. the measure's parent container).
+    /**
+     * Find the measure sequence item for the given measure (i.e. the measure's parent container).
      *
      * @param measure
      * @return
@@ -410,6 +416,7 @@ public class SongBase {
 
     /**
      * Find the chord section for the given measure node.
+     *
      * @param measureNode
      * @return
      */
@@ -425,7 +432,8 @@ public class SongBase {
         return null;
     }
 
-    /** Find the structural grid location for the given measure
+    /**
+     * Find the structural grid location for the given measure
      *
      * @param measure
      * @return
@@ -449,6 +457,7 @@ public class SongBase {
 
     /**
      * Find the structural grid location for the given section version.
+     *
      * @param sectionVersion
      * @return
      */
@@ -904,11 +913,9 @@ public class SongBase {
                                 + "</span>"
                 );
                 formatter.addStyleName(r + offset, c, CssConstants.style
-                        + "section"
-                        + sectionVersion.getSection().getAbbreviation()
-                        + "Class");
-                formatter.getElement(r + offset, c).setId(prefix + "." + measureNode.getHtmlBlockId() + "." + r + "."
-                        + c);
+                        + (measureNode.isComment()
+                        ? "sectionCommentClass"
+                        : "section" + sectionVersion.getSection().getAbbreviation() + "Class"));
             }
         }
     }
@@ -1161,9 +1168,23 @@ public class SongBase {
         computeSongId();
     }
 
+
+    public void setCoverArtist(String coverArtist) {
+        if (coverArtist != null) {
+            //  move the leading "The " to the end
+            final RegExp theRegExp = RegExp.compile("^the +", "i");
+            if (theRegExp.test(coverArtist)) {
+                coverArtist = theRegExp.replace(coverArtist, "") + ", The";
+            }
+        }
+        this.coverArtist = coverArtist;
+        computeSongId();
+    }
+
     private void computeSongId() {
-        songId = new SongId("Song" + title.replaceAll("\\W+", "")
-                + "_by_" + artist.replaceAll("\\W+", ""));
+        songId = new SongId("Song_" + title.replaceAll("\\W+", "")
+                + "_by_" + artist.replaceAll("\\W+", "")
+                + (coverArtist == null ? "" : "_coverBy_" + coverArtist));
     }
 
     /**
@@ -1415,6 +1436,11 @@ public class SongBase {
         this.defaultBpm = defaultBpm;
     }
 
+    public String getCoverArtist() {
+        return coverArtist;
+    }
+
+
     public static final class ComparatorByTitle implements Comparator<SongBase> {
 
         /**
@@ -1568,6 +1594,7 @@ public class SongBase {
         int hash = 7;
         hash = (79 * hash + Objects.hashCode(this.title)) % (1 << 31);
         hash = (79 * hash + Objects.hashCode(this.artist)) % (1 << 31);
+        hash = (79 * hash + Objects.hashCode(this.coverArtist)) % (1 << 31);
         hash = (79 * hash + Objects.hashCode(this.copyright)) % (1 << 31);
         hash = (79 * hash + Objects.hashCode(this.key)) % (1 << 31);
         hash = (79 * hash + this.defaultBpm) % (1 << 31);
@@ -1581,6 +1608,7 @@ public class SongBase {
     private String title = "Unknown";
     private SongId songId = new SongId();
     private String artist = "Unknown";
+    private String coverArtist;
     private String copyright = "Unknown";
     private transient String fileName;
     private transient int fileVersionNumber = 0;

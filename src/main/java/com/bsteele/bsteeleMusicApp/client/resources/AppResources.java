@@ -101,6 +101,8 @@ public interface AppResources extends ClientBundle
         String errorLabel();
 
         String textCenter();
+
+        String sectionCommentClass();
     }
 
     @Source("css/bsteeleMusicApp.gss")

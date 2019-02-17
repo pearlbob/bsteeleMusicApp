@@ -34,6 +34,15 @@ public abstract class MeasureNode {
     }
 
     /**
+     * Return true if the node is a comment.  This is typically false.
+     *
+     * @return
+     */
+    boolean isComment() {
+        return false;
+    }
+
+    /**
      * Generate inner HTML for the node representation in the key and transform offet.
      *
      * @param key

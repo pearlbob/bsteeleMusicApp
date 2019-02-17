@@ -13,7 +13,16 @@ public class MeasureCommentTest extends TestCase {
     @Test
     public void testParse() {
 
+        parse("  (  123  )   A\n");
+        assertTrue(measureComment.isComment());
+        assertTrue(measureComment.isSingleItem());
+        assertFalse( measureComment.isRepeat());
+        assertEquals("123", measureComment.getComment());
+
         parse("(123)");
+        assertTrue(measureComment.isComment());
+        assertTrue(measureComment.isSingleItem());
+        assertFalse( measureComment.isRepeat());
         assertEquals("123", measureComment.getComment());
 
         parse("   (   abc 123   )   ");
@@ -38,15 +47,15 @@ public class MeasureCommentTest extends TestCase {
         assertEquals("this is a comment", measureComment.getComment());
 
         parse("this is also a comment )");
-        assertEquals(rawComment.length() + 2, measureComment.toString().length());
-        assertEquals(rawComment, measureComment.getComment());
+        assertEquals(rawComment.length() - 2, measureComment.getComment().length());
+        assertEquals(rawComment.substring(0,rawComment.length()-2), measureComment.getComment());
 
         parse("( this is also a bad comment");
-        assertEquals(rawComment.length() + 2, measureComment.toString().length());
-        assertEquals(rawComment, measureComment.getComment());
+        assertEquals(rawComment.length() - 2, measureComment.getComment().length());    //  parens no
+        assertEquals(rawComment.substring(2), measureComment.getComment());
 
         parse("this is also has to be a comment");
-        assertEquals(rawComment.length() + 2, measureComment.toString().length());
+        assertEquals(rawComment.length() + 2, measureComment.toString().length());      //  parens yes
         assertEquals(rawComment, measureComment.getComment());
 
         parse("ABC\nDEF");//  not all a comment

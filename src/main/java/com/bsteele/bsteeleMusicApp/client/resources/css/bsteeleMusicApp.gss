@@ -95,9 +95,14 @@ iframe {
 
 .sectionCClass,
 .lyricsCClass,
+.sectionCommentClass,
 .sectionBClass,
 .lyricsBClass {
   background-color: #fff;
+}
+
+.sectionCommentClass {
+    color: green;
 }
 
 .sectionVClass,
@@ -136,6 +141,7 @@ iframe {
 .sectionBClass,
 .sectionBrClass,
 .sectionCClass,
+.sectionCommentClass,
 .sectionCoClass,
 .sectionIClass,
 .sectionOClass,
@@ -171,6 +177,7 @@ iframe {
 
 table {
     margin: 5px;
+    border-spacing: 12px;
 }
 
 th, td {
