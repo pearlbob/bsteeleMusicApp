@@ -12,6 +12,72 @@ public class MeasureTest extends TestCase {
     @Test
     public void testParse() {
         {
+            String s = "F.";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "F.";
+            Measure m = Measure.parse(s, 2);
+            assertNotNull(m);
+            assertEquals("F", m.toMarkup());
+        }
+        {
+            String s = "F..";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "F...";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals("F", m.toMarkup());
+        }
+        {
+            String s = "A..B";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "AB..";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "ABC.";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "A.BC";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "A.B.";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals("AB", m.toMarkup());
+        }
+        {
+            String s = "E♭F";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "E♭F";
+            Measure m = Measure.parse(s, 3);
+            assertNotNull(m);
+            assertEquals("E♭.F", m.toMarkup());
+        }
+        {
             Measure m = Measure.parse("E#m7.. ", 2);
             //  too many beats or over specified, doesn't cover the beats per bar
             assertNotNull(m);  //  fixme: Measure.parse() on errors

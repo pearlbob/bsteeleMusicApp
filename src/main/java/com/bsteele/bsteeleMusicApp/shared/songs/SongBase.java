@@ -911,6 +911,35 @@ public class SongBase {
         }
     }
 
+
+    public final void addRepeat(@Nonnull SongChordGridSelection songChordGridSelection, @Nonnull MeasureRepeat repeat) {
+        Measure measure = findMeasure(songChordGridSelection);
+        if (measure == null)
+            return;
+
+        MeasureSequenceItem measureSequenceItem = findMeasureSequenceItem(measure);
+        if (measureSequenceItem == null)
+            return;
+
+        ChordSection chordSection = findChordSection(measure);
+        ArrayList<MeasureSequenceItem> measureSequenceItems = chordSection.getMeasureSequenceItems();
+        int i = measureSequenceItems.indexOf(measureSequenceItem);
+        if (i >= 0) {
+            measureSequenceItems = new ArrayList<>(measureSequenceItems);
+            measureSequenceItems.remove(i);
+            measureSequenceItems.add(i, repeat);
+        } else {
+            measureSequenceItems.add(repeat);
+        }
+
+
+        chordSectionDelete(chordSection);
+        chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
+        chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
+        clearStructuralGrid();
+    }
+
+
     public final void setRepeat(SongChordGridSelection songChordGridSelection, int repeats) {
         Measure measure = findMeasure(songChordGridSelection);
         if (measure == null)

@@ -115,12 +115,32 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 continue;
             }
 
-            //  add a measure to the current line measures
-            Measure measure = Measure.parse(sb, beatsPerBar, lastMeasure);
-            if (measure != null) {
-                lineMeasures.add(measure);
-                lastMeasure = measure;
-            } else {
+            {
+                //  add a measure to the current line measures
+                Measure measure = Measure.parse(sb, beatsPerBar, lastMeasure);
+                if (measure != null) {
+                    lineMeasures.add(measure);
+                    lastMeasure = measure;
+                    continue;
+                }
+            }
+            {
+                //  look for a block repeat
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb,beatsPerBar);
+                if (measureRepeat != null) {
+                    //  don't assume every line has an eol
+                    for (Measure m : lineMeasures)
+                        measures.add(m);
+                    lineMeasures = new ArrayList<>();
+                    if (!measures.isEmpty()) {
+                        measureSequenceItems.add(new MeasureSequenceItem(measures));
+                    }
+                    measures = new ArrayList<>();
+                    measureSequenceItems.add(measureRepeat);
+                    continue;
+                }
+            }
+            {
                 //  look for a comment
                 MeasureComment measureComment = MeasureComment.parse(sb);
                 if (measureComment != null) {

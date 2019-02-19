@@ -18,6 +18,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
+import com.bsteele.bsteeleMusicApp.shared.songs.MeasureRepeat;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureSequenceItem;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
@@ -658,6 +659,14 @@ public class SongEditView
                     continue;
                 }
 
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb,song.getBeatsPerBar());
+                if ( measureRepeat != null ){
+                    song.addRepeat(lastChordSelection, measureRepeat);
+                    undoStackPushSong();
+                    displaySong();
+                    continue;
+                }
+
                 //  desperation: make the unknown input a comment
                 measure = MeasureComment.parse(sb);
             }
@@ -909,6 +918,10 @@ public class SongEditView
                 deleteEnable = true;
             }
             editDelete.setEnabled(deleteEnable);
+
+            measureEntry.setText(text);
+            measureEntry.selectAll();
+            measureEntry.setFocus(true);
 
             //  debug
             if (false)

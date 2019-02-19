@@ -151,6 +151,15 @@ public class Chord implements Comparable<Chord> {
     }
 
 
+    public boolean isImplicitBeats() {
+        return implicitBeats;
+    }
+
+    public void setImplicitBeats(boolean implicitBeats) {
+        this.implicitBeats = implicitBeats;
+    }
+
+
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
@@ -239,7 +248,7 @@ public class Chord implements Comparable<Chord> {
         String ret = scaleChord.toString()
                 + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
-        if (beats < beatsPerBar) {
+        if (!implicitBeats && beats < beatsPerBar) {
             int b = 1;
             while (b++ < beats && b < 8)
                 ret += ".";
@@ -251,7 +260,7 @@ public class Chord implements Comparable<Chord> {
         String ret = scaleChord.toString()
                 //+ (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
                 + anticipationOrDelay.toString();
-        if (beats < beatsPerBar) {
+        if (!implicitBeats && beats < beatsPerBar) {
             int b = 1;
             while (b++ < beats && b < 8)
                 ret += ".";
@@ -291,8 +300,10 @@ public class Chord implements Comparable<Chord> {
     }
 
     private ScaleChord scaleChord;
-    private int beats = 4;    //  default only, a typical full measure
-    private int beatsPerBar = beats;
+    private int beats;
+    private int beatsPerBar;
+    private boolean implicitBeats = true;
     private ScaleChord slashScaleChord;
-    private ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.none;
+    private ChordAnticipationOrDelay anticipationOrDelay;
+
 }

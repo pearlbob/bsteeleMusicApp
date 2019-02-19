@@ -139,25 +139,40 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 return ret;    //  too many beats!  even if the unspecified chords only got 1
 
             //  verify not under specified
-            if (chords.size() == explicitChords && explicitBeats < beatsPerBar) // fixme: better failure
-                return ret;    //  too few beats and no unspecified chords to put them on
-
-            //  allocate the remaining beats to the unspecified chords
-            //  give left over beats to the first unspecified
-            if (chords.size() > explicitChords) {
-                Chord firstUnspecifiedChord = null;
-                int beatsPerUnspecifiedChord = Math.max(1, (beatsPerBar - explicitBeats) / (chords.size() - explicitChords));
+            if (chords.size() == explicitChords && explicitBeats < beatsPerBar) {
+                //  a short measure
                 for (Chord c : chords) {
-                    if (c.getBeats() == beatsPerBar) {
-                        if (firstUnspecifiedChord == null)
-                            firstUnspecifiedChord = c;
-                        c.setBeats(beatsPerUnspecifiedChord);
-                        explicitBeats += beatsPerUnspecifiedChord;
-                    }
+                    c.setImplicitBeats(false);
                 }
-                //  dump all the remaining beats on the first unspecified
-                if (firstUnspecifiedChord != null && explicitBeats < beatsPerBar)
-                    firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatsPerBar - explicitBeats));
+                return ret;
+            }
+
+            if ( explicitBeats == 0 && explicitChords ==0 && beatsPerBar % chords.size() == 0){
+                //  spread the implicit beats evenly
+                int implicitBeats = beatsPerBar / chords.size();
+                for (Chord c : chords) {
+                    c.setBeats(implicitBeats);
+                    c.setImplicitBeats(true);
+                }
+            } else {
+                //  allocate the remaining beats to the unspecified chords
+                //  give left over beats to the first unspecified
+                if (chords.size() > explicitChords) {
+                    Chord firstUnspecifiedChord = null;
+                    int beatsPerUnspecifiedChord = Math.max(1, (beatsPerBar - explicitBeats) / (chords.size() - explicitChords));
+                    for (Chord c : chords) {
+                        c.setImplicitBeats(false);
+                        if (c.getBeats() == beatsPerBar) {
+                            if (firstUnspecifiedChord == null)
+                                firstUnspecifiedChord = c;
+                            c.setBeats(beatsPerUnspecifiedChord);
+                            explicitBeats += beatsPerUnspecifiedChord;
+                        }
+                    }
+                    //  dump all the remaining beats on the first unspecified
+                    if (firstUnspecifiedChord != null && explicitBeats < beatsPerBar)
+                        firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatsPerBar - explicitBeats));
+                }
             }
         }
 
