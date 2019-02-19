@@ -67,17 +67,13 @@ public abstract class MeasureNode {
      * @param halfSteps
      * @return
      */
-    public String transpose(@Nonnull Key key, int halfSteps) {
-        return toString();
-    }     //  default only
+    public abstract String transpose(@Nonnull Key key, int halfSteps);
 
-    /** Represent the measure node to the user in a string form.
+    /** Represent the measure node to the user in a string form and from storage encoding.
      *
      * @return the string form created from the measure node's contents.
      */
-    public String toText() {
-        return toString();
-    }     //  default only
+    abstract  public String toMarkup();
 
     /**
      * Override of the Java Object class equals() member.

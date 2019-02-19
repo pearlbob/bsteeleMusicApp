@@ -1,10 +1,5 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
-import com.bsteele.bsteeleMusicApp.shared.songs.Key;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -34,17 +29,17 @@ public class ScaleChordTest extends TestCase
 
         for (ScaleNote sn : ScaleNote.values()) {
             String s = sn.toString();
-            ScaleChord sc = ScaleChord.testParse(s);
+            ScaleChord sc = ScaleChord.parse(s);
             assertEquals(sn, sc.getScaleNote());
 
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 s = sn.toString() + cd.getShortName();
-                sc = ScaleChord.testParse(s);
+                sc = ScaleChord.parse(s);
                 assertEquals(sn, sc.getScaleNote());
                 assertEquals(cd, sc.getChordDescriptor());
 
                 s = sn.toString() + cd.getShortName();
-                sc = ScaleChord.testParse(s);
+                sc = ScaleChord.parse(s);
 
                 ScaleChord builtScaleChord = new ScaleChord(sn, cd);
 
@@ -96,13 +91,13 @@ public class ScaleChordTest extends TestCase
 
     @Test
     public void testScaleChordParse() {
-        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.dominant13), ScaleChord.testParse("A13"));
-        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.testParse("F"));
-        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.testParse("FGm"));
-        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.testParse("Fm"));
-        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.testParse("F#m"));
-        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.testParse("F#mGm"));
-        assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.testParse("Ddim/G"));
-        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.testParse("Adim/G"));
+        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.dominant13), ScaleChord.parse("A13"));
+        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("F"));
+        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("FGm"));
+        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.parse("Fm"));
+        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#m"));
+        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
+        assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.parse("Ddim/G"));
+        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.parse("Adim/G"));
     }
 }

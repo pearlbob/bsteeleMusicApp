@@ -26,7 +26,7 @@ public class Chord implements Comparable<Chord> {
         this.anticipationOrDelay = chord.anticipationOrDelay;
     }
 
-    static final Chord testParse(String s, int beatsPerBar) {
+    static final Chord parse(String s, int beatsPerBar) {
         return parse(new StringBuffer(s), beatsPerBar);
     }
 

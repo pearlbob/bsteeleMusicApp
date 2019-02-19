@@ -1,39 +1,92 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureRepeat extends MeasureSequenceItem
-{
+public class MeasureRepeat extends MeasureSequenceItem {
 
-    MeasureRepeat(@Nonnull ArrayList<Measure> measures, int repeats)
-    {
+    MeasureRepeat(@Nonnull ArrayList<Measure> measures, int repeats) {
         super(measures);
         this.repeatMarker = new MeasureRepeatMarker(repeats);
     }
 
+    static final MeasureRepeat parse(String s, int beatsPerBar) {
+        return parse(new StringBuffer(s), beatsPerBar);
+    }
+
+    public static final MeasureRepeat parse(StringBuffer sb, int beatsPerBar) {
+        if (sb == null || sb.length() < 1)
+            return null;
+
+        ArrayList<Measure> measures = new ArrayList<>();
+
+        Util.stripLeadingWhitespace(sb);
+
+        StringBuffer lookaheadSb = new StringBuffer(sb);//  fixme: limit size?
+        boolean hasBracket = lookaheadSb.charAt(0) == '[';
+
+        if (hasBracket)
+            lookaheadSb.delete(0, 1);
+
+
+        //  look for a set of measures and comments
+        for (int i = 0; i < 1e4; i++) {   //  safety
+            Util.stripLeadingWhitespace(lookaheadSb);
+            if (lookaheadSb.length() == 0)
+                return null;
+
+            Measure measure = Measure.parse(lookaheadSb, beatsPerBar);
+            if (measure != null) {
+                measures.add(measure);
+                continue;
+            }
+            if (lookaheadSb.charAt(0) != ']' && lookaheadSb.charAt(0) != 'x') {
+                MeasureComment measureComment = MeasureComment.parse(lookaheadSb);
+                if (measureComment != null) {
+                    measures.add(measureComment);
+                    continue;
+                }
+            }
+            break;
+        }
+
+        final RegExp repeatExp = RegExp.compile("^"+(hasBracket?"\\s*]":"")+"\\s*x\\s*(\\d+)\\s*");
+        MatchResult mr = repeatExp.exec(lookaheadSb.toString());
+        if (mr != null) {
+            int repeats = Integer.parseInt(mr.getGroup(1));
+            MeasureRepeat ret = new MeasureRepeat(measures, repeats);
+            logger.finer("new measure repeat: " + ret.toMarkup());
+            sb.delete(0, sb.length() - lookaheadSb.length() + mr.getGroup(0).length());
+            return ret;
+        }
+
+
+        return null;
+    }
+
     @Override
-    public int getTotalMoments()
-    {
+    public int getTotalMoments() {
         return getRepeatMarker().getRepeats() * super.getTotalMoments();
     }
 
 
-    public final int getRepeats()
-    {
+    public final int getRepeats() {
         return getRepeatMarker().getRepeats();
     }
 
 
-    public final void setRepeats(int repeats)
-    {
+    public final void setRepeats(int repeats) {
         getRepeatMarker().setRepeats(repeats);
     }
 
@@ -61,8 +114,7 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats)
-    {
+    public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 
         if (measures == null || measures.isEmpty())
@@ -92,8 +144,7 @@ public class MeasureRepeat extends MeasureSequenceItem
                         lastMeasureNode = null;
                     }
                     if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1 && i < measures
-                            .size() - 1)
-                    {
+                            .size() - 1) {
                         // ret.add("|");
                         ret.add("\n");
                     }
@@ -127,8 +178,7 @@ public class MeasureRepeat extends MeasureSequenceItem
                     lastMeasureNode = null;
                 }
                 if (i % MusicConstant.measuresPerDisplayRow == MusicConstant.measuresPerDisplayRow - 1
-                        && i < measures.size() - 1)
-                {
+                        && i < measures.size() - 1) {
                     ret.add("|");
                     ret.add("\n");
                 }
@@ -147,8 +197,7 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection)
-    {
+    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
         //  fixme: improve repeats.addToGrid()
         for (MeasureNode measureNode : measures) {
             if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1) {
@@ -173,20 +222,17 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public boolean isSingleItem()
-    {
+    public boolean isSingleItem() {
         return false;
     }
 
     @Override
-    public boolean isRepeat()
-    {
+    public boolean isRepeat() {
         return true;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MeasureRepeat other = (MeasureRepeat) o;
@@ -194,18 +240,22 @@ public class MeasureRepeat extends MeasureSequenceItem
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(super.hashCode(), getRepeats());
     }
 
     @Override
-    public String toString()
-    {
-        return super.toString() + "x" + getRepeats() + " ";
+    public String toMarkup() {
+        return "[" + super.toMarkup() + "] x" + getRepeats() + " ";
+    }
+
+    @Override
+    public String toString() {
+        return toMarkup();
     }
 
     private MeasureRepeatMarker repeatMarker;
 
 
+    private static final Logger logger = Logger.getLogger(MeasureRepeat.class.getName());
 }

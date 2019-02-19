@@ -63,7 +63,7 @@ public enum ChordDescriptor {
         this.chordComponents = ChordComponent.parse(structure);
     }
 
-    static final ChordDescriptor testParse(String s) {
+    static final ChordDescriptor parse(String s) {
         return parse(new StringBuffer(s));
     }
 

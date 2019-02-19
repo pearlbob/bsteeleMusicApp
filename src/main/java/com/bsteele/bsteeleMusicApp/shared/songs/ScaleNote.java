@@ -117,7 +117,7 @@ public enum ScaleNote {
         return flats[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
 
-    final static ScaleNote testParse(String s) {
+    final static ScaleNote parse(String s) {
         return parse(new StringBuffer(s));
     }
 

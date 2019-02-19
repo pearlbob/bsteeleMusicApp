@@ -135,6 +135,13 @@ public class SingerView
 
             singer.clear();
             singer.add(new HTML(song.generateHtmlLyricsTable(prefix)));
+
+            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    resetScroll(lyricsScrollPanel);
+                }
+            });
         }
     }
 

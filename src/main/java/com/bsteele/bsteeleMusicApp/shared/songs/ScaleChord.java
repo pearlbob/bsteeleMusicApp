@@ -31,7 +31,7 @@ public class ScaleChord implements Comparable<ScaleChord> {
         this(scaleNote, ChordDescriptor.major);
     }
 
-    static final ScaleChord testParse(String s) {
+    static final ScaleChord parse(String s) {
         return parse(new StringBuffer(s));
     }
 

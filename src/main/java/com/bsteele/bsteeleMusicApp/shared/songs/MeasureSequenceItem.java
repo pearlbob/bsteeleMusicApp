@@ -201,17 +201,20 @@ public class MeasureSequenceItem extends MeasureNode {
         return null;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
 
+    @Override
+    public String toMarkup() {
+        StringBuilder sb = new StringBuilder();
         if (measures != null)
             for (Measure measure : measures) {
                 sb.append(measure.toString()).append(" ");
             }
-        sb.append("} ");
         return sb.toString();
+    }
+
+    @Override
+    public String toString() {
+       return toMarkup();
     }
 
     public final int size() {

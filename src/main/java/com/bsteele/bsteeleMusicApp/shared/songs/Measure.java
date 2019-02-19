@@ -55,7 +55,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param beatsPerBar
      * @return
      */
-    static final Measure testParse(String s, int beatsPerBar) {
+    static final Measure parse(String s, int beatsPerBar) {
         return parse(new StringBuffer(s), beatsPerBar, null);
     }
 
@@ -249,7 +249,9 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return "X";  // no chords
     }
 
-    private final String chordsToString() {
+
+    @Override
+    public String toMarkup() {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             Chord lastChord = chords.get(chords.size() - 1);
@@ -335,7 +337,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
     @Override
     public String toString() {
-        return chordsToString();
+        return toMarkup();
     }
 
     private int beatCount = 4;  //  default only

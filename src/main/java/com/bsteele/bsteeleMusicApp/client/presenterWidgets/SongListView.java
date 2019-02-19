@@ -320,14 +320,7 @@ public class SongListView
     }
 
     private void songSearchFocus() {
-
-        Scheduler.get().scheduleFinally(new Scheduler.ScheduledCommand() {
-
-            @Override
-            public void execute() {
-                songSearch.setFocus(true);
-            }
-        });
+        Scheduler.get().scheduleFinally(() -> songSearch.setFocus(true));
     }
 
     @Override

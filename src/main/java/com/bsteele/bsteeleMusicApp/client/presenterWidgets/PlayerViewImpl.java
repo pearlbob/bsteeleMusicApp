@@ -203,6 +203,13 @@ public class PlayerViewImpl
         }
         song = songUpdate.getSong();
 
+        scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                resetScroll(chordsScrollPanel);
+            }
+        });
+
         //  load new data even if the identity has not changed
         setAnchors(title, artist);
         copyright.setInnerHTML(song.getCopyright());

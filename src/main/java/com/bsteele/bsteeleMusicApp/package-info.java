@@ -35,7 +35,6 @@ todo: comments in chords!  make them more obvious, horizontal spacing
 todo: use webstorage for user name
 ____fixme: double delete => "  ) (  "
 fixme: how to delete a repeat marker?... and a repeat?
-fixme: chords shouldn't stretch vertically to match lyrics
 todo: edit view, click to the right of chord table should select last in row
 fixme: player view on born to run
 fixme: layla sharps and flats
@@ -94,12 +93,7 @@ fixme: section progress indicator
 fixme: training options
 fixme: sync audio context clocks across multiple machines
 
-fixme: add exercise to bass tab: R 8 5 10, etc
-fixme: validate song before entry: all lyrics sections should have matching chord sections
-fixme: bass clef, notes above top line don't have partial lines above
-fixme:  chords and lyrics can jiggle chords at some sizes
 fixme: x1/3 doesn't work, allow proper space for it
-fixme: chords jiggle in play on chordsAndLyrics
 fixme: in play, no chord indicator on multiple sections of same chords on chordsAndLyrics
 
 ____: fix last chord not shown if no ending newline for the file
@@ -117,12 +111,8 @@ todo: arrangement display in song display as comment
 todo: arrangements can be part of song, e.g. drums
 todo: option list on/off
 todo: a default, catch all, section
-todo: finish transposition
-todo: add drums to the edit page, store by song
 todo: move the lyrics highlight color to the section id
-todo: keep current lyrics section in view: i.e. autoscroll
 fixme: map sections from multiple sections to a single findable section id for play indicators
-fixme: change colors for  multiple sections during play
 
 todo: arrangement window in song display
 todo: add log on server side
@@ -133,7 +123,6 @@ todo: worry about legal copyright notice of file sharing
 
 todo: edit should offer BPM & Key from lyrics & chords
 todo: chord colors should always parse lyrics in play
-todo: delta shape == major7
 todo: play youtube video
 fixme: WebSocket connection to 'wss://fit-union-164517.appspot.com/bsteeleMusicApp/bsteeleMusic' failed: Error during WebSocket handshake: Unexpected response code: 400
 fixme: standard google app engine deployment includes client .class files
@@ -148,11 +137,8 @@ e. root, 3rd, 5th and 6th of a sixth chord (major, minor).
 fixme: drum   sound from remotely started song
 todo: drums: open TH, closed TH,  snare, kick
 todo: improve leadin count down
-todo: write song.comparatorByTitleAndArtist()
-todo: write song.equals (hashcode, etc) for all fields
-todo: broadcast song selection: conflicts?
 
-todo: metronome clicks
+
 todo: pop the colors on beat transitions
 todo: fix ctl-key on mac
 
@@ -164,36 +150,21 @@ todo: mp3 recording and playback (including start offsets, non-integer bpm)
 todo: align tabs to enum
 todo: tooltips, many tooltips
 
-todo: control s to legacy when editing a song
 
-todo: fix multiple section id's on a single chord section with vertical span
-todo: fix multiple section id's on a single chord section with color selection
-
-todo: add lastModified to song metadata on file read, add size?
-    file location as well
-todo: markup language aids (buttons)
 todo: search for text in song
 
 todo: select start by sections
 todo: loop by section
-todo: to dynamically change font size for chords to fit
-todo: set an indicator for added events, font color change?
-
 
 todo: comments in chords?
-
-todo: optionChoicesDiv with a css class
 
 todo: screen control screen
 todo: logging screen
 todo: accelerated sub-beat indicator
-todo: hash by song name not list index
 
 todo: section alterations imply: ch1 ch2 etc
 todo: Beat vs measure resolution on a section basis
 
-
-todo: datagrid for events
 todo: get focus on songlist search, keep it there
 todo: visual screen-warning that we're about to change sections
 todo: think about fullscreen use, particularly when playing

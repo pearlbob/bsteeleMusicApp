@@ -29,7 +29,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         this.measureSequenceItems = new ArrayList<>();
     }
 
-    final static ChordSection testParse(String s, int beatsPerBar) {
+    final static ChordSection parse(String s, int beatsPerBar) {
         return parse(new StringBuffer(s), beatsPerBar);
     }
 
@@ -341,16 +341,28 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     @Override
-    public String toText() {
-        return getSectionVersion().toString();
+    public String transpose(@Nonnull Key key, int halfSteps) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSectionVersion().toString());
+        if (measureSequenceItems != null)
+            for (MeasureSequenceItem msi : measureSequenceItems)
+                sb.append(msi.transpose(key, halfSteps));
+        return sb.toString();
+    }
+
+    @Override
+    public String toMarkup() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSectionVersion().toString()).append(" ");
+        if (measureSequenceItems != null)
+            for (MeasureSequenceItem msi : measureSequenceItems)
+                sb.append(msi.toMarkup());
+        return sb.toString();
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getSectionVersion().toString())
-                .append(measureSequenceItems == null ? "" : measureSequenceItems.toString());
-        return sb.toString();
+        return toMarkup();
     }
 
     public final SectionVersion getSectionVersion() {

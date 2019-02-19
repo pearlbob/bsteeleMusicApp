@@ -1,13 +1,5 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordSection;
-import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureSequenceItem;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
-import com.bsteele.bsteeleMusicApp.shared.songs.Section;
-import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -27,7 +19,7 @@ public class ChordSectionTest extends TestCase {
 
         {
             //  comment only
-            ChordSection chordSection = ChordSection.testParse(
+            ChordSection chordSection = ChordSection.parse(
                     "V: (comment) A C#m F#m F#m/E\n"
                     , 4);
             assertNotNull(chordSection);
@@ -36,11 +28,11 @@ public class ChordSectionTest extends TestCase {
             assert (m.isComment());
             assertEquals("(comment)", m.toString());
             m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(1);
-            assertEquals(Measure.testParse("A", 4), m);
+            assertEquals(Measure.parse("A", 4), m);
         }
         {
             //  lost : ?
-            ChordSection chordSection = ChordSection.testParse(
+            ChordSection chordSection = ChordSection.parse(
                     "V: \n"
                             + "A C#m F#m F#m/E\n"
                             + "G Bm F#m G GBm  x3\n"
@@ -53,14 +45,14 @@ public class ChordSectionTest extends TestCase {
         }
         {
             //  invented garbage is comment
-            ChordSection chordSection = ChordSection.testParse(
+            ChordSection chordSection = ChordSection.parse(
                     "ia: EDCBA (single notes rapid)", 4);
             assertNotNull(chordSection);
             Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);
             assert (m instanceof MeasureComment);
         }
         {
-            ChordSection chordSection = ChordSection.testParse(
+            ChordSection chordSection = ChordSection.parse(
                     "v:Am Am Am AmDm\n"
                             + "Dm Dm Dm DmAm 2x\n"
                             + "\n", 4);
@@ -73,7 +65,7 @@ public class ChordSectionTest extends TestCase {
         }
         {
             //  infinite loop?
-            ChordSection chordSection = ChordSection.testParse("o:AGEDCAGEDCAGA (organ descending scale)", 4);
+            ChordSection chordSection = ChordSection.parse("o:AGEDCAGEDCAGA (organ descending scale)", 4);
             assertTrue(chordSection != null);
             SectionVersion outro = new SectionVersion(Section.outro);
             assertTrue(chordSection.getSectionVersion().equals(outro));
@@ -81,7 +73,7 @@ public class ChordSectionTest extends TestCase {
 
         {
             //  failure to parse a leading dot
-            ChordSection chordSection = ChordSection.testParse("I: G .G Bm Bm  x2", 4);
+            ChordSection chordSection = ChordSection.parse("I: G .G Bm Bm  x2", 4);
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
@@ -94,7 +86,7 @@ public class ChordSectionTest extends TestCase {
             assertEquals("(.G Bm Bm  x2)", measures.get(1).toString());
         }
         {
-            ChordSection chordSection = ChordSection.testParse("I: A B C D\n" +
+            ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
                     "AbBb/G# Am7 Ebsus4 C7/Bb", 4);
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
@@ -119,7 +111,7 @@ public class ChordSectionTest extends TestCase {
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 7, 0);
         }
         {
-            ChordSection chordSection = ChordSection.testParse("I: A - - -\n" +
+            ChordSection chordSection = ChordSection.parse("I: A - - -\n" +
                     "Ab - - G ", 4);
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
@@ -140,7 +132,7 @@ public class ChordSectionTest extends TestCase {
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.G, measures, 7, 0);
         }
         {
-            ChordSection chordSection = ChordSection.testParse("I: A - - -\n" +
+            ChordSection chordSection = ChordSection.parse("I: A - - -\n" +
                     "Ab - - X ", 4);
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
@@ -165,7 +157,7 @@ public class ChordSectionTest extends TestCase {
             assertEquals(4, measure.getBeatCount());
         }
         {
-            ChordSection chordSection = ChordSection.testParse("I: A B C D\n" +
+            ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
                     "AbBb/G# Am7 Ebsus4 C7/Bb x4", 4);
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
@@ -197,7 +189,7 @@ public class ChordSectionTest extends TestCase {
             assertEquals(4 + 4 * 4, chordSection.getTotalMoments());
         }
         {
-            ChordSection chordSection = ChordSection.testParse("V:\n" +
+            ChordSection chordSection = ChordSection.parse("V:\n" +
                     "            Am Bm7 Em Dsus2 x4\n" +
                     "T:\n" +                //  note: tag should be ignored on a single chord section parse
                     "D C AG D\n", 4);
@@ -248,23 +240,23 @@ public class ChordSectionTest extends TestCase {
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measures, 3, 0);
         }
         {
-            ChordSection chordSection = ChordSection.testParse("I:       A B C D\n\n", 4);
+            ChordSection chordSection = ChordSection.parse("I:       A B C D\n\n", 4);
             assertEquals(4, chordSection.getTotalMoments());
-            chordSection = ChordSection.testParse("\n\tI:\n       A B C D\n\n", 4);
+            chordSection = ChordSection.parse("\n\tI:\n       A B C D\n\n", 4);
             assertEquals(4, chordSection.getTotalMoments());
-            chordSection = ChordSection.testParse("v: A B C D\n"
+            chordSection = ChordSection.parse("v: A B C D\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb\n", 4);
             assertEquals(8, chordSection.getTotalMoments());
-            chordSection = ChordSection.testParse("v: A B C D\n"
+            chordSection = ChordSection.parse("v: A B C D\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
             assertEquals(4 + 4 * 4, chordSection.getTotalMoments());
-            chordSection = ChordSection.testParse("v: \n"
+            chordSection = ChordSection.parse("v: \n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
             assertEquals(4 * 4, chordSection.getTotalMoments());
-            chordSection = ChordSection.testParse("v: A B C D\n\n"
+            chordSection = ChordSection.parse("v: A B C D\n\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n", 4);
             assertEquals(4 + 4 * 4, chordSection.getTotalMoments());
-            chordSection = ChordSection.testParse("v: A B C D\n\n"
+            chordSection = ChordSection.parse("v: A B C D\n\n"
                     + "AbBb/G# Am7 Ebsus4 C7/Bb x4\n" +
                     "G F F# E", 4);
             assertEquals(4 + 4 * 4 + 4, chordSection.getTotalMoments());

@@ -1,10 +1,5 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
-import com.bsteele.bsteeleMusicApp.shared.songs.Key;
-import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -211,9 +206,9 @@ public class KeyTest extends TestCase {
         assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
 
         scaleChords.clear();
-        scaleChords.add(ScaleChord.testParse("Gb"));
-        scaleChords.add(ScaleChord.testParse("Cb"));
-        scaleChords.add(ScaleChord.testParse("Db7"));
+        scaleChords.add(ScaleChord.parse("Gb"));
+        scaleChords.add(ScaleChord.parse("Cb"));
+        scaleChords.add(ScaleChord.parse("Db7"));
         key = Key.guessKey(scaleChords);
         assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
 
@@ -237,7 +232,7 @@ public class KeyTest extends TestCase {
         //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
         scaleChords.clear();
         scaleChords.add(new ScaleChord(ScaleNote.Cs));
-        scaleChords.add(ScaleChord.testParse("F#"));
+        scaleChords.add(ScaleChord.parse("F#"));
         scaleChords.add(new ScaleChord(ScaleNote.Gs, ChordDescriptor.dominant7));
         key = Key.guessKey(scaleChords);
         assertEquals(ScaleNote.Db, key.getKeyScaleNote());
