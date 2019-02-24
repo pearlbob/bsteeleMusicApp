@@ -8,13 +8,11 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.TextResource;
 
-public interface AppResources extends ClientBundle
-{
+public interface AppResources extends ClientBundle {
 
     public static final AppResources INSTANCE = GWT.create(AppResources.class);
 
-    interface Style extends CssResource
-    {
+    interface Style extends CssResource {
 
         String sectionAClass();
 
@@ -87,6 +85,8 @@ public interface AppResources extends ClientBundle
         String entryLine();
 
         String smallIntEntry();
+
+        String longEntryLine();
 
         String lyricsAClass();
 

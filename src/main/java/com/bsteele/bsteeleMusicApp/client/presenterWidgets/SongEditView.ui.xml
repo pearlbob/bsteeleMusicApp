@@ -79,11 +79,13 @@
 
             <table>
                 <tr>
-                    <td style="vertical-align:top">
+                    <td style="vertical-align:top" colspan="2">
                         Chords:
                         <br/>
-                        <g:TextBox ui:field="measureEntry" styleName="{resources.style.entryLine}"/>
-                        <br/>
+                        <g:TextBox ui:field="measureEntry" styleName="{resources.style.longEntryLine}"/>
+                    </td>
+                </tr>
+                <tr><td style="vertical-align:top">
                         <g:RadioButton ui:field="editInsert" name="EditPosition">Insert</g:RadioButton>
                         <g:RadioButton ui:field="editReplace" name="EditPosition">Replace</g:RadioButton>
                         <g:Button ui:field="editDelete">Delete</g:Button>

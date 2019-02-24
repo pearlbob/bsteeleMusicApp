@@ -408,6 +408,24 @@ public class SongBaseTest
         assertEquals(Measure.parse("A", a.getBeatsPerBar()), m);
     }
 
+    @Test
+    public void testLastLineWithoutNewline() {
+        SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4,
+                "i: A B C D V: D E F F# ",
+                "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro\n");
+        String lyrics = "i:\n" +
+                "v: bob, bob, bob berand\n" +
+                "c: sing chorus here \n" +
+                "o: last line of outro";
+        //System.out.println(    a.getRawLyrics());
+         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4,
+                "i: A B C D V: D E F F# ",
+                "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
+        assertEquals(lyrics, a.getRawLyrics());
+    }
+
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *

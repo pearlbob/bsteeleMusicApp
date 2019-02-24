@@ -238,6 +238,7 @@ td[id*="L."]{
     border-bottom: 1px solid black;
 }
 .entryLine { width: 30em; font-size: 24px; }
+.longEntryLine { width: 100%; font-size: 24px; }
 .smallIntEntry { width: 3em; font-size: medium; }
 
 .gwt-FileUpload {

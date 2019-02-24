@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -57,8 +58,49 @@ public class ChordTest extends TestCase {
         assertEquals(chord, Chord.parse("Gadd9A", 4));
     }
 
-//    @Override
-//    public String getModuleName() {
-//        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
-//    }
+    @Test
+    public void testChordTranspose() {
+
+        int count = 0;
+        for (Key key : Key.values())
+            for (ScaleNote sn : ScaleNote.values())
+                for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++)
+                    for (int halfSteps = -15; halfSteps < 15; halfSteps++)
+                        for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+
+                            ScaleNote snHalfSteps = sn.transpose(key, halfSteps);
+
+                            logger.fine(sn + chordDescriptor.getShortName() + " " + halfSteps
+                                    + " in key " + key + " " + beatsPerBar + " beats");
+                            assertEquals(Chord.parse(snHalfSteps + chordDescriptor.getShortName(), beatsPerBar),
+                                    Chord.parse(sn + chordDescriptor.getShortName(), beatsPerBar)
+                                            .transpose(key, halfSteps));
+                            count++;
+                        }
+        logger.fine("transpose count: " + count);
+
+        count = 0;
+        for (Key key : Key.values())
+            for (ScaleNote sn : ScaleNote.values())
+                for (ScaleNote slashSn : ScaleNote.values())
+                    for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++)
+                        for (int halfSteps = -15; halfSteps < 15; halfSteps++)
+                            for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+
+                                ScaleNote snHalfSteps = sn.transpose(key, halfSteps);
+                                ScaleNote slashSnHalfSteps = slashSn.transpose(key, halfSteps);
+
+                                logger.fine(sn + chordDescriptor.getShortName() + "/" + slashSn + " " + halfSteps
+                                        + " in key " + key + " " + beatsPerBar + " beats");
+                                assertEquals(Chord.parse(snHalfSteps + chordDescriptor.getShortName()
+                                                + "/" + slashSnHalfSteps, beatsPerBar),
+                                        Chord.parse(sn + chordDescriptor.getShortName()
+                                                + "/" + slashSn, beatsPerBar).transpose(key, halfSteps));
+                                count++;
+                            }
+        logger.fine("transpose slash count: " + count);
+
+    }
+
+    private Logger logger = Logger.getLogger(ChordTest.class.getName());
 }
