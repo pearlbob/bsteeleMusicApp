@@ -79,10 +79,9 @@ public class Song extends SongBase implements Comparable<Song> {
         song.setCopyright(copyright);
         song.setKey(key);
         song.setUnitsPerMeasure(unitsPerMeasure);
-        song.setRawLyrics(lyrics);
         song.setChords(chords);
+        song.setRawLyrics(lyrics);
 
-        song.parseLyrics();
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
 
@@ -282,7 +281,6 @@ public class Song extends SongBase implements Comparable<Song> {
                     } else {
                         song.setRawLyrics(jv.isString().stringValue());
                     }
-                    song.parseLyrics();
                     break;
             }
         }

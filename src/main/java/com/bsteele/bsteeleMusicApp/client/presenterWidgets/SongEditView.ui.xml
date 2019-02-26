@@ -12,6 +12,7 @@
                     <td>
                         <button type="button" ui:field="songEnter">Enter Song</button>
                         <g:InlineHTML ui:field="errorLabel" styleName="{resources.style.errorLabel}"></g:InlineHTML>
+                        <g:InlineHTML ui:field="debugLabel" styleName="{resources.style.errorLabel}"></g:InlineHTML>
                     </td>
                     <td>
                         <button type="button" ui:field="songEntryClear">Clear</button>

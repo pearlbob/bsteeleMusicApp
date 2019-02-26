@@ -126,7 +126,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             }
             {
                 //  look for a block repeat
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb,beatsPerBar);
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, beatsPerBar);
                 if (measureRepeat != null) {
                     //  don't assume every line has an eol
                     for (Measure m : lineMeasures)
@@ -360,6 +360,16 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sectionVersion.getId();
     }
 
+    public MeasureNode lastMeasureNode() {
+        if (measureSequenceItems == null || measureSequenceItems.isEmpty())
+            return this;
+        MeasureSequenceItem measureSequenceItem = measureSequenceItems.get(measureSequenceItems.size() - 1);
+        ArrayList<Measure> measures = measureSequenceItem.getMeasures();
+        if (measures == null || measures.isEmpty())
+            return measureSequenceItem;
+        return measures.get(measures.size() - 1);
+    }
+
     @Override
     public String transpose(@Nonnull Key key, int halfSteps) {
         StringBuilder sb = new StringBuilder();
@@ -391,6 +401,12 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     ArrayList<MeasureSequenceItem> getMeasureSequenceItems() {
         return measureSequenceItems;
+    }
+
+    public int size() {
+        if (measureSequenceItems == null)
+            return 0;
+        return measureSequenceItems.size();
     }
 
     private final SectionVersion sectionVersion;

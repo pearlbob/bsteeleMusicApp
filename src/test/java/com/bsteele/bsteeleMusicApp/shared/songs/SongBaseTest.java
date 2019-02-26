@@ -77,6 +77,14 @@ public class SongBaseTest
     }
 
     @Test
+    public void testCurrentLocation() {
+        SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 8, "I:v: A B C D", "I:v: bob, bob, bob berand");
+        assertEquals(MeasureEditLocation.append, a.getCurrentMeasureEditLocation());
+        assertEquals(Measure.parse("D", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+    }
+
+    @Test
     public void testEdits() {
         SongBase a;
         Measure newMeasure;
@@ -86,19 +94,19 @@ public class SongBaseTest
                 100, 4, 8, "", "I:v: bob, bob, bob berand");
         assertTrue(a.addSectionVersion(new SectionVersion(Section.intro)));
         newMeasure = Measure.parse("B", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureSequenceItem.EditLocation.append,
+        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureEditLocation.append,
                 newMeasure));
         text = a.toMarkup();
         logger.info(a.getChords());
         assertEquals("I: B ", text);
         newMeasure = Measure.parse("C", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureSequenceItem.EditLocation.append,
+        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureEditLocation.append,
                 newMeasure));
         text = a.toMarkup();
         assertEquals("I: B C ", text);
         logger.fine(text);
         newMeasure = Measure.parse("A", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureSequenceItem.EditLocation.insert,
+        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureEditLocation.insert,
                 newMeasure));
         text = a.toMarkup();
         assertEquals("I: A B C ", text);
@@ -116,7 +124,7 @@ public class SongBaseTest
         assertEquals(4, vc2.getMeasures().size());
         assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
         newMeasure = Measure.parse("G", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure));
+        assertTrue(a.measureEdit(measure, MeasureEditLocation.replace, newMeasure));
         assertEquals(4, vc2.getMeasures().size());
         vc2 = chordSections.higher(chordSections.first()).getMeasureSequenceItems().get(0);
         measure = vc2.getMeasures().get(1);
@@ -126,7 +134,7 @@ public class SongBaseTest
         measure = vc2.getMeasures().get(0);
         assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
         newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
+        a.measureEdit(measure, MeasureEditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(0);
         assertEquals(ScaleNote.Gb, measure.getChords().get(0).getScaleChord().getScaleNote());
@@ -134,7 +142,7 @@ public class SongBaseTest
         measure = vc2.getMeasures().get(3);
         assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
         newMeasure = Measure.parse("F", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureSequenceItem.EditLocation.replace, newMeasure);
+        a.measureEdit(measure, MeasureEditLocation.replace, newMeasure);
         assertEquals(4, vc2.getMeasures().size());
         measure = vc2.getMeasures().get(3);
         assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
@@ -154,7 +162,7 @@ public class SongBaseTest
             //System.out.println("chords: " + chords);
 
             Measure m = a.getSongMoments().get(i).getMeasure();
-            assertTrue(a.measureEdit(m, MeasureSequenceItem.EditLocation.replace, newMeasure));
+            assertTrue(a.measureEdit(m, MeasureEditLocation.replace, newMeasure));
             text = a.toMarkup().trim();
             //System.out.println("text  : " + text);
             assertEquals(chords, text);
@@ -170,7 +178,7 @@ public class SongBaseTest
                 chords = chords.replaceFirst(s, "F");
 
                 Measure m = a.getSongMoments().get(i).getMeasure();
-                assertTrue(a.measureEdit(m, MeasureSequenceItem.EditLocation.replace, newMeasure));
+                assertTrue(a.measureEdit(m, MeasureEditLocation.replace, newMeasure));
                 text = a.toMarkup().trim();
                 assertEquals(chords, text);
             }
@@ -419,7 +427,7 @@ public class SongBaseTest
                 "c: sing chorus here \n" +
                 "o: last line of outro";
         //System.out.println(    a.getRawLyrics());
-         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4,
                 "i: A B C D V: D E F F# ",
                 "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
@@ -440,20 +448,19 @@ public class SongBaseTest
      * @param lyrics
      * @return
      */
-    private static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
-                                                 @NotNull String copyright,
-                                                 @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
-                                                 @NotNull String chords, @NotNull String lyrics) {
+    public static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
+                                                @NotNull String copyright,
+                                                @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                                @NotNull String chords, @NotNull String lyrics) {
         SongBase song = new SongBase();
         song.setTitle(title);
         song.setArtist(artist);
         song.setCopyright(copyright);
         song.setKey(key);
         song.setUnitsPerMeasure(unitsPerMeasure);
-        song.setRawLyrics(lyrics);
         song.setChords(chords);
+        song.setRawLyrics(lyrics);
 
-        song.parseLyrics();
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
 

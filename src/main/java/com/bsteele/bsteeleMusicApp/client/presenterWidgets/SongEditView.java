@@ -17,9 +17,9 @@ import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
+import com.bsteele.bsteeleMusicApp.shared.songs.MeasureEditLocation;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureRepeat;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureSequenceItem;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
@@ -67,6 +67,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -93,6 +94,8 @@ public class SongEditView
 
     @UiField
     Label errorLabel;
+    @UiField
+    Label debugLabel;
 
     @UiField
     TextBox titleEntry;
@@ -559,6 +562,11 @@ public class SongEditView
 
         setKey(Key.getDefault());
 
+        logger.info("songEditview info");
+        logger.fine("songEditview fine");
+        logger.finer("songEditview finer");
+        logger.finest("songEditview finest");
+
     }
 
     private void preProcessMeasureEntry() {
@@ -659,8 +667,8 @@ public class SongEditView
                     continue;
                 }
 
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb,song.getBeatsPerBar());
-                if ( measureRepeat != null ){
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, song.getBeatsPerBar());
+                if (measureRepeat != null) {
                     song.addRepeat(lastChordSelection, measureRepeat);
                     undoStackPushSong();
                     displaySong();
@@ -674,11 +682,11 @@ public class SongEditView
 
             //  if we found something valid in the input, edit the song
             if (measure != null && lastChordSelection != null) {
-                MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
+                MeasureEditLocation editLocation = MeasureEditLocation.append;
                 if (editInsert.getValue()) {
-                    editLocation = MeasureSequenceItem.EditLocation.insert;
+                    editLocation = MeasureEditLocation.insert;
                 } else if (editReplace.getValue()) {
-                    editLocation = MeasureSequenceItem.EditLocation.replace;
+                    editLocation = MeasureEditLocation.replace;
                 }
 
                 if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection), editLocation, measure)) {
@@ -904,17 +912,17 @@ public class SongEditView
             }
 
             //  indicate the current selection
-            MeasureSequenceItem.EditLocation editLocation = MeasureSequenceItem.EditLocation.append;
+            MeasureEditLocation editLocation = MeasureEditLocation.append;
             boolean deleteEnable = false;
             if (editInsert.getValue()) {
                 e.setAttribute("editSelect", "insert");
-                editLocation = MeasureSequenceItem.EditLocation.insert;
+                editLocation = MeasureEditLocation.insert;
             } else if (editAppend.getValue()) {
                 e.setAttribute("editSelect", "append");
             } else {
                 e.setAttribute("editSelect", "replace");
                 e.getStyle().setBackgroundColor(selectedBorderColorValueString);
-                editLocation = MeasureSequenceItem.EditLocation.replace;
+                editLocation = MeasureEditLocation.replace;
                 deleteEnable = true;
             }
             editDelete.setEnabled(deleteEnable);
@@ -924,7 +932,7 @@ public class SongEditView
             measureEntry.setFocus(true);
 
             //  debug
-            if (false)
+            if (logger.isLoggable(Level.FINER))
                 if (song != null) {
                     MeasureNode measureNode = song.getStructuralMeasureNode(
                             chordSelection.getRow(),
@@ -1011,6 +1019,8 @@ public class SongEditView
 
         songEnter.setDisabled(false);
 
+        debug("current: " + song.getCurrentMeasureNode() + " " + song.getCurrentMeasureEditLocation());
+
         return newSong;
     }
 
@@ -1022,6 +1032,13 @@ public class SongEditView
     private void error(String message) {
         errorLabel.setText(message);
         errorLabel.getElement().getStyle().setColor("red");
+    }
+
+    private void debug(String message) {
+        if (logger.isLoggable(Level.FINE)) {
+            debugLabel.setText(message);
+            debugLabel.getElement().getStyle().setColor("gray");
+        }
     }
 
     public void enterSong() {

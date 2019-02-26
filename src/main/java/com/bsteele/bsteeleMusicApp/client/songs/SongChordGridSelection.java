@@ -1,25 +1,38 @@
 package com.bsteele.bsteeleMusicApp.client.songs;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HTMLTable;
 
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class SongChordGridSelection
-{
+public class SongChordGridSelection {
 
-    public SongChordGridSelection(int row, int col)
-    {
+    public SongChordGridSelection(int row, int col) {
         this.row = row;
         this.col = col;
     }
 
-    public SongChordGridSelection(HTMLTable.Cell cell)
-    {
+    public SongChordGridSelection(HTMLTable.Cell cell) {
         this.row = cell.getRowIndex();
         this.col = cell.getCellIndex();
+    }
+
+    public static SongChordGridSelection parse(String s) {
+        if (s == null || s.length() <= 0)
+            return null;
+        final RegExp timeSignatureExp = RegExp.compile("^\\w*" + mark + "\\((\\d+),(\\d+)\\)");
+        MatchResult mr = timeSignatureExp.exec(s);
+        if (mr != null) {
+            // parse
+            return new SongChordGridSelection(
+                    Integer.parseInt(mr.getGroup(1)),
+                    Integer.parseInt(mr.getGroup(2)));
+        }
+        return null;
     }
 
     /**
@@ -44,21 +57,19 @@ public class SongChordGridSelection
      * @return a string representation of the object.
      */
     @Override
-    public String toString()
-    {
-        return "SongChordGridSelection("+row+","+col+")";
+    public String toString() {
+        return mark + "(" + row + "," + col + ")";
     }
 
-    public int getRow()
-    {
+    public int getRow() {
         return row;
     }
 
-    public int getCol()
-    {
+    public int getCol() {
         return col;
     }
-    
+
+    private static final String mark = "chords";
     private int row;
     private int col;
 }

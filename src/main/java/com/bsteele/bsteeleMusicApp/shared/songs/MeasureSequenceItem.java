@@ -95,13 +95,6 @@ public class MeasureSequenceItem extends MeasureNode {
         }
     }
 
-    public enum EditLocation {
-        insert,
-        replace,
-        append,
-        delete;
-    }
-
     boolean insert(MeasureNode measureNode, Measure newMeasure) {
         if (measures == null)
             measures = new ArrayList<>();

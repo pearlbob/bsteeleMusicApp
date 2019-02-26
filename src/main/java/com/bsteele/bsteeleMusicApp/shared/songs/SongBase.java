@@ -47,10 +47,8 @@ public class SongBase {
         copyright = "";
         setKey(Key.C);
         unitsPerMeasure = 4;
-        rawLyrics = "";
-        chords = "";
-        parse();
-        parseLyrics();
+        setRawLyrics("");
+        setChords("");
         setBeatsPerMinute(100);
         setBeatsPerBar(4);
     }
@@ -190,7 +188,7 @@ public class SongBase {
     /**
      * Parse the current string representation of the song's chords into the song internal strucutures.
      */
-    private final void parse() {
+    private final void parseChords() {
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
         clearStructuralGrid();  //  force lazy eval
@@ -240,6 +238,20 @@ public class SongBase {
 
         computeSongMoments();
         computeDuration();
+        setDefaultCurrentChordLocation();
+    }
+
+    private void setDefaultCurrentChordLocation() {
+        currentMeasureNode = null;
+        currentMeasureEditLocation = MeasureEditLocation.append;
+
+        TreeSet<ChordSection> sortedChordSections = new TreeSet<>(chordSectionMap.values());
+        if (sortedChordSections.isEmpty())
+            return;
+
+        ChordSection chordSection = sortedChordSections.last();
+        if (chordSection != null)
+            currentMeasureNode = chordSection.lastMeasureNode();
     }
 
     /**
@@ -339,7 +351,7 @@ public class SongBase {
      * @return
      */
     public final boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
-                                     @Nonnull MeasureSequenceItem.EditLocation editLocation,
+                                     @Nonnull MeasureEditLocation editLocation,
                                      @Nonnull Measure measure) {
         ChordSection chordSection = findChordSection(refMeasureNode);
         if (chordSection == null)
@@ -732,7 +744,7 @@ public class SongBase {
         return lyrics;
     }
 
-    protected final void parseLyrics() {
+    private final void parseLyrics() {
         int state = 0;
         String whiteSpace = "";
         String lyrics = "";
@@ -1418,7 +1430,7 @@ public class SongBase {
 
     protected void setChords(String chords) {
         this.chords = chords;
-        parse();
+        parseChords();
     }
 
     public String getRawLyrics() {
@@ -1427,6 +1439,7 @@ public class SongBase {
 
     protected void setRawLyrics(String rawLyrics) {
         this.rawLyrics = rawLyrics;
+        parseLyrics();
     }
 
     public void setTotalBeats(int totalBeats) {
@@ -1447,6 +1460,14 @@ public class SongBase {
 
     protected void setMessage(String message) {
         this.message = message;
+    }
+
+    public MeasureNode getCurrentMeasureNode() {
+        return currentMeasureNode;
+    }
+
+    public MeasureEditLocation getCurrentMeasureEditLocation() {
+        return currentMeasureEditLocation;
     }
 
 
@@ -1630,6 +1651,7 @@ public class SongBase {
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private HashMap<SectionVersion, ChordSection> chordSectionMap = new HashMap<>();
     private MeasureNode currentMeasureNode;
+    private MeasureEditLocation currentMeasureEditLocation = MeasureEditLocation.append;
     private Grid<MeasureNode> structuralGrid = null;
     private transient String message;
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
