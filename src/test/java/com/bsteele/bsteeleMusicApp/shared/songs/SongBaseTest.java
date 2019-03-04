@@ -79,9 +79,44 @@ public class SongBaseTest
     @Test
     public void testCurrentLocation() {
         SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 8, "I:v: A B C D", "I:v: bob, bob, bob berand");
+                100, 4, 8, "I:v: A BCm7/ADE C D", "I:v: bob, bob, bob berand");
         assertEquals(MeasureEditLocation.append, a.getCurrentMeasureEditLocation());
         assertEquals(Measure.parse("D", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("i:1"));
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("i:2"));
+        assertEquals(Measure.parse("BCm7/ADE", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("i:4"));    //  move to end
+        assertEquals(Measure.parse("D", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("v:1"));
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("v:0"));    //  refuse to move before start
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("v:5"));    //  refuse to move past end
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("v:4"));    //  move to end
+        assertEquals(Measure.parse("D", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 8, "I:v: A B C D ch3: [ E F G A ] x4 A# C D# F", "I:v: bob, bob, bob berand");
+        assertEquals(MeasureEditLocation.append, a.getCurrentMeasureEditLocation());
+        assertEquals(Measure.parse("F", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("i:1"));
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("i:4"));    //  move to end
+        assertEquals(Measure.parse("D", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("v:1"));
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("v:0"));    //  refuse to move before start
+        assertEquals(Measure.parse("A", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("c3:5"));
+        assertEquals(Measure.parse("A#", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        a.setCurrentMeasureNode(ChordSectionLocation.parse("c3:7"));    //  move to end
+        assertEquals(Measure.parse("D#", a.getBeatsPerBar()), a.getCurrentMeasureNode());
+        ChordSection cs = ChordSection.parse("c3:", a.getBeatsPerBar());
+        ChordSection chordSection = a.findChordSection(cs);
+        assertNotNull(chordSection);
+        assertEquals(cs.getSectionVersion(), chordSection.getSectionVersion());
     }
 
     @Test

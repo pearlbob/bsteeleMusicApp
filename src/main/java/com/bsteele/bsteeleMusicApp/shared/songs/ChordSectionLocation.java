@@ -12,6 +12,10 @@ public class ChordSectionLocation {
         this.index = index;
     }
 
+    static final ChordSectionLocation parse(String s) {
+        return parse(new StringBuffer(s));
+    }
+
     /**
      * @param sb string buffer
      * @return

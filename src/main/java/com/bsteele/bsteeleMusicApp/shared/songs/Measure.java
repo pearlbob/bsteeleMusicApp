@@ -109,16 +109,6 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         if (ret == null && chords.isEmpty())
             return null;
 
-        //  distribute the slash chord to all
-        if (chords.size() > 1) {
-            ScaleChord slashScaleChord = chords.get(chords.size() - 1).getSlashScaleChord();
-            if (slashScaleChord != null) {
-                for (Chord chord : chords) {
-                    chord.setSlashScaleChord(slashScaleChord);
-                }
-            }
-        }
-
         if (ret == null)
             ret = new Measure(beatsPerBar, chords);
 
@@ -144,10 +134,12 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 for (Chord c : chords) {
                     c.setImplicitBeats(false);
                 }
+                ret.setBeatCount(explicitBeats);
                 return ret;
             }
 
-            if ( explicitBeats == 0 && explicitChords ==0 && beatsPerBar % chords.size() == 0){
+
+            if (explicitBeats == 0 && explicitChords == 0 && beatsPerBar % chords.size() == 0) {
                 //  spread the implicit beats evenly
                 int implicitBeats = beatsPerBar / chords.size();
                 for (Chord c : chords) {
@@ -172,6 +164,15 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                     //  dump all the remaining beats on the first unspecified
                     if (firstUnspecifiedChord != null && explicitBeats < beatsPerBar)
                         firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatsPerBar - explicitBeats));
+                } else if (explicitBeats == beatsPerBar && explicitChords == chords.size()) {
+                    int b = chords.get(0).getBeats();
+                    boolean allMatch = true;
+                    for (Chord c : chords)
+                        allMatch &= (c.getBeats() == b);
+                    if (allMatch)
+                        //  reduce the over specification
+                        for (Chord c : chords)
+                            c.setImplicitBeats(true);
                 }
             }
         }
@@ -195,7 +196,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      *
      * @param beatCount
      */
-    public final void setBeatCount(int beatCount) {
+    private void setBeatCount(int beatCount) {
         this.beatCount = beatCount;
     }
 
@@ -253,11 +254,8 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     public String transpose(@Nonnull Key key, int halfSteps) {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            Chord lastChord = chords.get(chords.size() - 1);
             for (Chord chord : chords) {
-                sb.append(chord == lastChord
-                        ? chord.transpose(key, halfSteps).toString()
-                        : chord.transpose(key, halfSteps).toStringWithoutInversion());
+                sb.append(chord.transpose(key, halfSteps).toString());
             }
             return sb.toString();
         }
@@ -269,9 +267,8 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     public String toMarkup() {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();
-            Chord lastChord = chords.get(chords.size() - 1);
             for (Chord chord : chords) {
-                sb.append(chord == lastChord ? chord.toString() : chord.toStringWithoutInversion());
+                sb.append(chord.toString());
             }
             return sb.toString();
         }

@@ -104,8 +104,8 @@ public class ChordSectionTest extends TestCase {
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measures, 3, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 4, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.Bb, measures, 4, 1);
-            checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote.Gs, measures, 4, 0);
-            checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote.Gs, measures, 4, 0);
+            checkMeasureNodesSlashScaleNoteByMeasure(null, measures, 4, 0);
+            checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote.Gs, measures, 4, 1);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 5, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.Eb, measures, 6, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 7, 0);
@@ -270,7 +270,11 @@ public class ChordSectionTest extends TestCase {
 
     private void checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote scaleNote, ArrayList<Measure> measures,
                                                           int measureN, int chordN) {
-        assertEquals(scaleNote, measures.get(measureN).getChords().get(chordN).getSlashScaleChord().getScaleNote());
+        ScaleChord slashChord = measures.get(measureN).getChords().get(chordN).getSlashScaleChord();
+        if (slashChord == null)
+            assertNull(scaleNote);
+        else
+            assertEquals(scaleNote, slashChord.getScaleNote());
     }
 
 }

@@ -16,14 +16,16 @@ public class Chord implements Comparable<Chord> {
         this.beatsPerBar = beatsPerBar;
         this.slashScaleChord = slashScaleChord;
         this.anticipationOrDelay = anticipationOrDelay;
+        implicitBeats = (beats == beatsPerBar);
     }
 
     public Chord(@NotNull Chord chord) {
-        this.scaleChord = chord.scaleChord;
-        this.beats = chord.beatsPerBar;
-        this.beatsPerBar = chord.beatsPerBar;
-        this.slashScaleChord = chord.slashScaleChord;
-        this.anticipationOrDelay = chord.anticipationOrDelay;
+        scaleChord = chord.scaleChord;
+        beats = chord.beatsPerBar;
+        beatsPerBar = chord.beatsPerBar;
+        slashScaleChord = chord.slashScaleChord;
+        anticipationOrDelay = chord.anticipationOrDelay;
+        implicitBeats = chord.implicitBeats;
     }
 
     static final Chord parse(String s, int beatsPerBar) {

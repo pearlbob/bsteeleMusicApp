@@ -193,12 +193,23 @@ public class SongBase {
         chordSectionMap = new HashMap<>();
         clearStructuralGrid();  //  force lazy eval
 
-        //GWT.log( "title: "+getTitle());
+        logger.fine("parseChords for: " + getTitle());
 
         if (chords != null) {
+            TreeSet<ChordSection> emptyChordSections = new TreeSet<>();
             StringBuffer sb = new StringBuffer(chords);
             ChordSection chordSection;
             while ((chordSection = ChordSection.parse(sb, beatsPerBar)) != null) {
+                if (chordSection.getMeasureSequenceItems().isEmpty())
+                    emptyChordSections.add(chordSection);
+                else if (!emptyChordSections.isEmpty()) {
+                    //  share the common measure sequence items
+                    for (ChordSection wasEmptyChordSection : emptyChordSections) {
+                        wasEmptyChordSection.setMeasureSequenceItems(chordSection.getMeasureSequenceItems());
+                        chordSectionMap.put(wasEmptyChordSection.getSectionVersion(), wasEmptyChordSection);
+                    }
+                    emptyChordSections.clear();
+                }
                 measureNodes.add(chordSection);
                 chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
                 clearStructuralGrid();
@@ -455,6 +466,18 @@ public class SongBase {
         }
 
         return null;
+    }
+
+    /**
+     * Find the chord section for the given type of chord section
+     *
+     * @param chordSection
+     * @return
+     */
+    public final ChordSection findChordSection(ChordSection chordSection) {
+        if (chordSection == null)
+            return null;
+        return chordSectionMap.get(chordSection.getSectionVersion());   //  get not type safe!!!!
     }
 
     /**
@@ -1464,6 +1487,12 @@ public class SongBase {
 
     public MeasureNode getCurrentMeasureNode() {
         return currentMeasureNode;
+    }
+
+    public void setCurrentMeasureNode(ChordSectionLocation chordSectionLocation) {
+        Measure measure = findChordSectionLocation(chordSectionLocation);
+        if (measure != null)
+            currentMeasureNode = measure;
     }
 
     public MeasureEditLocation getCurrentMeasureEditLocation() {

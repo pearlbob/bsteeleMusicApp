@@ -11,6 +11,40 @@ public class MeasureTest extends TestCase {
 
     @Test
     public void testParse() {
+
+        {
+            String s = "A.B.";
+            Measure m = Measure.parse(s, 5);
+            assertNotNull(m);
+            //  explicit measure short of beats is left as specified
+            assertEquals("A.B.", m.toMarkup());
+        }
+        {
+            String s = "AB";
+            Measure m = Measure.parse(s, 5);
+            assertNotNull(m);
+            //  5/4 split across two chords, first one gets the extra beat
+            assertEquals("A..B.", m.toMarkup());
+        }
+        {
+            String s = "A.B.";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            //  default to simplest expression
+            assertEquals("AB", m.toMarkup());
+        }
+        {
+            String s = "A/GA/F♯";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
+        {
+            String s = "A/G";
+            Measure m = Measure.parse(s, 4);
+            assertNotNull(m);
+            assertEquals(s, m.toMarkup());
+        }
         {
             String s = "F.";
             Measure m = Measure.parse(s, 4);
@@ -59,12 +93,7 @@ public class MeasureTest extends TestCase {
             assertNotNull(m);
             assertEquals(s, m.toMarkup());
         }
-        {
-            String s = "A.B.";
-            Measure m = Measure.parse(s, 4);
-            assertNotNull(m);
-            assertEquals("AB", m.toMarkup());
-        }
+
         {
             String s = "E♭F";
             Measure m = Measure.parse(s, 4);

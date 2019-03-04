@@ -403,6 +403,10 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return measureSequenceItems;
     }
 
+    void setMeasureSequenceItems(ArrayList<MeasureSequenceItem> measureSequenceItems) {
+        this.measureSequenceItems = measureSequenceItems;
+    }
+
     public int size() {
         if (measureSequenceItems == null)
             return 0;
