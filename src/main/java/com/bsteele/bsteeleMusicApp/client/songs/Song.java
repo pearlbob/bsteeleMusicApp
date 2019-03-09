@@ -58,16 +58,16 @@ public class Song extends SongBase implements Comparable<Song> {
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *
-     * @param title
-     * @param artist
-     * @param copyright
-     * @param key
-     * @param bpm
-     * @param beatsPerBar
-     * @param unitsPerMeasure
-     * @param chords
-     * @param lyrics
-     * @return
+     * @param title title
+     * @param artist artist
+     * @param copyright copyright
+     * @param key key
+     * @param bpm bpm
+     * @param beatsPerBar beatsPerBar
+     * @param unitsPerMeasure unitsPerMeasure
+     * @param chords chords
+     * @param lyrics lyrics
+     * @return the song created
      */
     public static final Song createSong(@NotNull String title, @NotNull String artist,
                                         @NotNull String copyright,
@@ -107,7 +107,7 @@ public class Song extends SongBase implements Comparable<Song> {
     /**
      * Parse a song from a JSON string.
      *
-     * @param jsonString
+     * @param jsonString the json string to parse
      * @return the song. Can be null.
      */
     public static final ArrayList<Song> fromJson(String jsonString) {
@@ -154,7 +154,7 @@ public class Song extends SongBase implements Comparable<Song> {
     /**
      * Parse a song from a JSON object.
      *
-     * @param jsonObject
+     * @param jsonObject the json object to parse
      * @return the song. Can be null.
      */
     public static final Song fromJsonObject(JSONObject jsonObject) {
@@ -573,7 +573,7 @@ public class Song extends SongBase implements Comparable<Song> {
      * <p>Note that leading articles will be rotated to the end.</p>
      *
      * @param o the other song to be compared with this one
-     * @return
+     * @return the comparison: -1 implies this &lt; o, 1 implies this &gt; o, 0 implies equal
      */
     @Override
     public int compareTo(Song o) {

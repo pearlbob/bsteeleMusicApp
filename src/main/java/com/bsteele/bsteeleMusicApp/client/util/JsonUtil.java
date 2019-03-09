@@ -20,10 +20,7 @@ public class JsonUtil {
         return Integer.parseInt(jv.isString().stringValue());
     }
 
-    /** no longs!
-     *
-     * @param jv
-     * @return
+    /* no longs!
      */
 //    public static final long toLong(JSONValue jv) {
 //        if (jv == null)
@@ -42,8 +39,8 @@ public class JsonUtil {
     /**
      * Encode a given string in JSON.
      *
-     * @param s
-     * @return
+     * @param s the string to encode
+     * @return the encoded string
      */
     public static final String encode(String s) {
         if (s == null || s.length() == 0)

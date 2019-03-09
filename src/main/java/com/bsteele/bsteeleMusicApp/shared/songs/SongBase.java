@@ -114,8 +114,8 @@ public class SongBase {
     /**
      * Find the corrsesponding chord section for the given lyrics section
      *
-     * @param lyricSection
-     * @return
+     * @param lyricSection the given lyrics section
+     * @return the corrsesponding chord section
      */
     private final ChordSection findChordSection(LyricSection lyricSection) {
         return chordSectionMap.get(lyricSection.getSectionVersion());
@@ -178,11 +178,11 @@ public class SongBase {
     /**
      * Find the chord section for the given section version.
      *
-     * @param sv
-     * @return
+     * @param sectionVersion the given section version
+     * @return the chord section
      */
-    public final ChordSection getChordSection(SectionVersion sv) {
-        return chordSectionMap.get(sv);
+    public final ChordSection getChordSection(SectionVersion sectionVersion) {
+        return chordSectionMap.get(sectionVersion);
     }
 
     /**
@@ -267,7 +267,7 @@ public class SongBase {
     /**
      * Compute the nominal display structural grid from the current chord section.
      *
-     * @return
+     * @return the nominal display structural grid
      */
     public final Grid<MeasureNode> getStructuralGrid() {
         if (structuralGrid != null)
@@ -309,8 +309,9 @@ public class SongBase {
     }
 
     /**
-     * @param songChordGridSelection
-     * @return
+     * Given a song chord selection, return it's measure node
+     * @param songChordGridSelection the song chord selection
+     * @return the measure node
      */
     @Deprecated
     public final MeasureNode getStructuralMeasureNode(SongChordGridSelection songChordGridSelection) {
@@ -322,9 +323,9 @@ public class SongBase {
     /**
      * Find the measure node for the given row and column in the structural grid
      *
-     * @param r
-     * @param c
-     * @return
+     * @param r row index
+     * @param c column index
+     * @return the measure node at this location
      */
     public final MeasureNode getStructuralMeasureNode(int r, int c) {
         try {
@@ -341,8 +342,8 @@ public class SongBase {
     /**
      * Add the given section version to the song chords
      *
-     * @param sectionVersion
-     * @return
+     * @param sectionVersion the given section to add
+     * @return true if the section version was added
      */
     public final boolean addSectionVersion(SectionVersion sectionVersion) {
         if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
@@ -358,7 +359,7 @@ public class SongBase {
      * @param refMeasureNode the referenced location in the song
      * @param editLocation   the type of edit to be made: insert, append, delete, etc.
      * @param measure        the measure in question
-     * @return
+     * @return true if the edit was performed
      */
     public final boolean measureEdit(@Nonnull MeasureNode refMeasureNode,
                                      @Nonnull MeasureEditLocation editLocation,
@@ -410,8 +411,8 @@ public class SongBase {
     /**
      * Find the measure sequence item for the given measure (i.e. the measure's parent container).
      *
-     * @param measure
-     * @return
+     * @param measure the measure referenced
+     * @return the measure's sequence item
      */
     public final MeasureSequenceItem findMeasureSequenceItem(Measure measure) {
         if (measure == null)
@@ -431,8 +432,8 @@ public class SongBase {
     /**
      * Find the chord section for the given measure node.
      *
-     * @param measureNode
-     * @return
+     * @param measureNode he given measure node
+     * @return the chord section found
      */
     private final ChordSection findChordSection(MeasureNode measureNode) {
         if (measureNode == null)
@@ -452,8 +453,8 @@ public class SongBase {
     /**
      * Find the structural grid location for the given measure
      *
-     * @param measureNode
-     * @return
+     * @param measureNode the given measure
+     * @return the structural grid location
      */
     public final SongChordGridSelection findChordGridLocationForMeasureNode(MeasureNode measureNode) {
         if (measureNode != null) {
@@ -488,8 +489,8 @@ public class SongBase {
     /**
      * Find the chord section for the given type of chord section
      *
-     * @param chordSection
-     * @return
+     * @param chordSection the chord section to find
+     * @return the chord section to found
      */
     public final ChordSection findChordSection(ChordSection chordSection) {
         if (chordSection == null)
@@ -500,8 +501,8 @@ public class SongBase {
     /**
      * Find the structural grid location for the given section version.
      *
-     * @param sectionVersion
-     * @return
+     * @param sectionVersion the section version to find
+     * @return the section version to found
      */
     public final SongChordGridSelection findSectionVersionChordGridLocation(SectionVersion sectionVersion) {
         Grid<MeasureNode> grid = getStructuralGrid();
@@ -857,7 +858,7 @@ public class SongBase {
     /**
      * Utility to generate a lyrics section sequence id
      *
-     * @param sectionIndex
+     * @param sectionIndex the lyrics section index
      * @return a lyrics section sequence id
      */
     public static final String genLyricsId(int sectionIndex) {
@@ -1201,7 +1202,7 @@ public class SongBase {
     /**
      * Sets the song's title and song id from the given title. Leading "The " articles are rotated to the title end.
      *
-     * @param title
+     * @param title new title
      */
     protected final void setTitle(@Nonnull String title) {
         //  move the leading "The " to the end
@@ -1611,8 +1612,8 @@ public class SongBase {
      * Compare only the title and artist.
      * To be used for listing purposes only.
      *
-     * @param o
-     * @return
+     * @param o the other song base to compare with
+     * @return true if title and artist are equal
      */
     private int defaultCompareTo(SongBase o) {
         int ret = getSongId().compareTo(o.getSongId());

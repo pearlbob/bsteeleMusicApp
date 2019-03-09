@@ -29,8 +29,8 @@ public class MeasureComment extends Measure {
     /**
      * Trash can of measure parsing.  Will consume all that it sees to the end of line.
      *
-     * @param sb
-     * @return
+     * @param sb the input line to parse
+     * @return the comment made of the input
      */
     public static final MeasureComment parse(StringBuffer sb) {
         if (sb == null || sb.length() <= 0)

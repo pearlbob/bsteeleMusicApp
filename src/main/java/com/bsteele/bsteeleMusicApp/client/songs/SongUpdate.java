@@ -248,7 +248,7 @@ public class SongUpdate
     /**
      * return event time in seconds
      *
-     * @return
+     * @return event time
      */
     public final double getEventTime()
     {
@@ -273,7 +273,7 @@ public class SongUpdate
     /**
      * Id of the current sectionNumber to be used by the chords display.
      *
-     * @return
+     * @return the current section version
      */
     public final SectionVersion getSectionVersion()
     {
@@ -283,7 +283,7 @@ public class SongUpdate
     /**
      * Current row number in the sectionNumber
      *
-     * @return
+     * @return the current row number of the section
      */
     public final int getChordSectionRow()
     {
@@ -298,7 +298,7 @@ public class SongUpdate
     /**
      * Current repeat count if the row(s) repeat
      *
-     * @return
+     * @return the current repetition count
      */
     public final int getRepeatCurrent()
     {
@@ -308,7 +308,7 @@ public class SongUpdate
     /**
      * Measure number from start of song Starts at zero.
      *
-     * @return
+     * @return the index of the current measure in time
      */
     public final int getMeasure()
     {
@@ -327,7 +327,7 @@ public class SongUpdate
      * Beat number from start of the current measure. Starts at zero and goes to
      * beatsPerBar - 1
      *
-     * @return
+     * @return the current beat
      */
     public final int getBeat()
     {

@@ -18,6 +18,7 @@ import static jsinterop.annotations.JsPackage.GLOBAL;
 public class BSteeleMusicIO {
     /**
      *
+     * @param songPlayMaster the song play master to transport
      */
     @Inject
     public BSteeleMusicIO(SongPlayMaster songPlayMaster) {

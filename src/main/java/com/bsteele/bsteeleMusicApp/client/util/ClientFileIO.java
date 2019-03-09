@@ -16,8 +16,8 @@ public class ClientFileIO implements FileWriter {
     /**
      * Native function to write the data to the local file system
      *
-     * @param filename
-     * @param data
+     * @param filename filename to be written
+     * @param data the data to be written
      */
     public static final native void saveDataAs(String filename, String data) /*-{
         var data = new Blob([data], {type: 'text/plain'});

@@ -53,7 +53,7 @@ public class Util
     /**
      * Strip leading space and tabs but newline is not considered a space!
      *
-     * @param sb
+     * @param sb the string buffer to clip
      */
     public static final void stripLeadingWhitespace(StringBuffer sb) {
         if (sb == null)
@@ -75,7 +75,7 @@ public class Util
     /**
      * Strip leading space and tabs but newline is not considered a space!
      *
-     * @param sb
+     * @param sb  the string buffer to clip
      */
     public static final void stripLeadingSpaces(StringBuffer sb) {
         if (sb == null)

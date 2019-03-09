@@ -27,7 +27,7 @@ public abstract class MeasureNode {
     /**
      * Return true if the node represents a collection of measures that are to be repeated a prescribed number of repeats.
      *
-     * @return
+     * @return true if is a repeat
      */
     boolean isRepeat() {
         return false;
@@ -36,7 +36,7 @@ public abstract class MeasureNode {
     /**
      * Return true if the node is a comment.  This is typically false.
      *
-     * @return
+     * @return true if a comment
      */
     boolean isComment() {
         return false;
@@ -45,27 +45,28 @@ public abstract class MeasureNode {
     /**
      * Generate inner HTML for the node representation in the key and transform offet.
      *
-     * @param key
-     * @param tran
-     * @param expandRepeats
-     * @return
+     * @param key the key the measure is in
+     * @param tran the number of transposition steps to take
+     * @param expandRepeats true if repeats are to be expanded
+     * @return the generated HTML
      */
     public abstract ArrayList<String> generateInnerHtml(@Nonnull Key key, int tran, boolean expandRepeats);
 
 
     /**
-     * Add the given chord section to the measure node.  Only makes sense if the node is a chord section or a measure sequence item.
+     * Add the given chord section to the measure node.
+     * Only makes sense if the node is a chord section or a measure sequence item.
      *
-     * @param grid
-     * @param chordSection
+     * @param grid the grid to be added to
+     * @param chordSection the chord section to add
      */
     public abstract void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection);
 
     /**
      * Transpose the measure node the given number of half steps from the given key.
-     * @param key
-     * @param halfSteps
-     * @return
+     * @param key the original key
+     * @param halfSteps the number of halfsteps to be transposed
+     * @return a string representation of the transpositions
      */
     public abstract String transpose(@Nonnull Key key, int halfSteps);
 
@@ -84,7 +85,7 @@ public abstract class MeasureNode {
 
     /**
      * Override of the Java Object class hashCode() member.
-     * @return
+     * @return the hashcode
      */
     public abstract int hashCode();
 

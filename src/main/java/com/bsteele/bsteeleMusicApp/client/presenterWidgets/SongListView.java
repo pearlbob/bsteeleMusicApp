@@ -215,8 +215,8 @@ public class SongListView
     /**
      * Native function to write the song as JSON.
      *
-     * @param filename
-     * @param data
+     * @param filename the file name to write
+     * @param data the json data to write
      */
     @Override
     public void saveSongAs(String filename, String data) {
@@ -292,7 +292,7 @@ public class SongListView
     }
 
     /**
-     * @param filteredSongs
+     * @param filteredSongs the songs to display
      */
     public void displaySongList(ArrayList<Song> filteredSongs) {
 
@@ -366,7 +366,7 @@ public class SongListView
      * JS hack to allow the same file or files to be reloaded
      * if selected again.  Otherwise there is no change event.
      *
-     * @param event
+     * @param event the event to hack
      */
     private native void clearFiles(NativeEvent event)/*-{
         event.srcElement.value = null;

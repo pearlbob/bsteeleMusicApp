@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
+ * A generic grid used to store data presenations to the user.
  *
  * @author bob
- * @param <T>
+ * @param <T> the type of data stored in the grid
  */
 public class Grid<T>
 {
@@ -21,8 +22,8 @@ public class Grid<T>
     /**
      * Deep copy not as a constructor or hide if from javascript.
      *
-     * @param other
-     * @return
+     * @param other the grid to copy
+     * @return the copy
      */
     public Grid<T> deepCopy(Grid<T> other)
     {
@@ -37,20 +38,6 @@ public class Grid<T>
             }
         }
         return this;
-    }
-
-    /**
-     * Generate a string array equivalent for javascript
-     *
-     * @return
-     */
-    public String[][] getJavascriptCopy()
-    {
-        String[][] ret = new String[grid.size()][0];
-        for (int i = 0; i < grid.size(); i++) {
-            ret[i] = grid.get(i).toArray(emptyStringArray);
-        }
-        return ret;
     }
 
     public boolean isEmpty()

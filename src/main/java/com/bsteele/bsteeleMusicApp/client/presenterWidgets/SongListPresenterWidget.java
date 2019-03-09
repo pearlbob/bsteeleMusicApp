@@ -233,8 +233,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     /**
      * Native function to write the song as JSON.
      *
-     * @param filename
-     * @param data
+     * @param filename the file to be written to
+     * @param data the json data to write
      */
     private void saveSongAs(String filename, String data) {
         ClientFileIO.saveDataAs(filename, data);

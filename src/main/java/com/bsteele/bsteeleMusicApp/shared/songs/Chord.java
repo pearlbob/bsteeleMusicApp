@@ -118,7 +118,7 @@ public class Chord implements Comparable<Chord> {
      * The matching slash chord for this chord.
      * Typically is is the bass inversion.
      *
-     * @return
+     * @return the matching slash chord if one exists
      */
     public final ScaleChord getSlashScaleChord() {
         return slashScaleChord;
@@ -128,7 +128,7 @@ public class Chord implements Comparable<Chord> {
      * The matching slash chord for this chord.
      * Typically is is the bass inversion.
      *
-     * @param slashScaleChord
+     * @param slashScaleChord the slash chord to set
      */
     final void setSlashScaleChord(ScaleChord slashScaleChord) {
         this.slashScaleChord = slashScaleChord;

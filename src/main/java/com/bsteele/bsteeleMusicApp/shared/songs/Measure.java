@@ -51,9 +51,9 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     /**
      * Convenience method for testing only
      *
-     * @param s
-     * @param beatsPerBar
-     * @return
+     * @param s     input string
+     * @param beatsPerBar beats per bar
+     * @return the measure for the parsing
      */
     static final Measure parse(String s, int beatsPerBar) {
         return parse(new StringBuffer(s), beatsPerBar, null);
@@ -69,7 +69,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param sb          input string buffer
      * @param beatsPerBar beats per bar
      * @param lastMeasure the prior measure, in case of -
-     * @return
+     * @return the measure for the parsing
      */
     public static final Measure parse(StringBuffer sb, int beatsPerBar, Measure lastMeasure) {
         //  should not be white space, even leading, in a measure
@@ -194,7 +194,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     /**
      * The beat count for this measure.
      *
-     * @param beatCount
+     * @param beatCount the beat count
      */
     private void setBeatCount(int beatCount) {
         this.beatCount = beatCount;

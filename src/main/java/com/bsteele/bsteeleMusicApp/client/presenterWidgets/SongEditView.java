@@ -621,11 +621,22 @@ public class SongEditView
 
         StringBuffer sb = new StringBuffer(input.replaceAll("\\s+", " "));
 
+        boolean inComment = false;
         for (int i = 0; i < 1e4; i++)      //  safety
         {
             Util.stripLeadingSpaces(sb);
             if (sb.length() <= 0)
                 break;
+
+            Measure measure = null;
+
+            //  look for a comment
+            if (sb.charAt(0) == '(') {
+                int index = sb.indexOf(")");
+                if (index > 0) {
+                    measure = MeasureComment.parse(sb);
+                }
+            }
 
             //  look for a section
             SectionVersion sectionVersion = SectionVersion.parse(sb);
@@ -651,41 +662,43 @@ public class SongEditView
             }
 
             //  look for a measure
-            String backup = sb.toString();  //  backup for a measure followed by non-whitespace
-            Measure measure = Measure.parse(sb, song.getBeatsPerBar());
-            if (measure != null) {
-                if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(0))) {
-                    //  reject the measure for not ending correctly:  end of input or in white space
-                    measure = null;
-                    sb = new StringBuffer(backup);
-                }
-            } else if (backup.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
-                measure = new Measure(song.findMeasure(lastChordSelection));
-                //logger.info("new measure: -");
-                sb.delete(0, 1);
-            } else {
-                final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
-                MatchResult mr = repeatExp.exec(backup);
-                if (mr != null) {
-                    // logger.info("new measure: repeat");
-                    int repeats = Integer.parseInt(mr.getGroup(1));
-                    song.setRepeat(lastChordSelection, repeats);
-                    undoStackPushSong();
-                    displaySong();
-                    sb.delete(0, mr.getGroup(0).length());
-                    continue;
-                }
+            if (measure == null) {
+                String backup = sb.toString();  //  backup for a measure followed by non-whitespace
+                measure = Measure.parse(sb, song.getBeatsPerBar());
+                if (measure != null) {
+                    if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(0))) {
+                        //  reject the measure for not ending correctly:  end of input or in white space
+                        measure = null;
+                        sb = new StringBuffer(backup);
+                    }
+                } else if (backup.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
+                    measure = new Measure(song.findMeasure(lastChordSelection));
+                    //logger.info("new measure: -");
+                    sb.delete(0, 1);
+                } else {
+                    final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
+                    MatchResult mr = repeatExp.exec(backup);
+                    if (mr != null) {
+                        // logger.info("new measure: repeat");
+                        int repeats = Integer.parseInt(mr.getGroup(1));
+                        song.setRepeat(lastChordSelection, repeats);
+                        undoStackPushSong();
+                        displaySong();
+                        sb.delete(0, mr.getGroup(0).length());
+                        continue;
+                    }
 
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, song.getBeatsPerBar());
-                if (measureRepeat != null) {
-                    song.addRepeat(lastChordSelection, measureRepeat);
-                    undoStackPushSong();
-                    displaySong();
-                    continue;
-                }
+                    MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, song.getBeatsPerBar());
+                    if (measureRepeat != null) {
+                        song.addRepeat(lastChordSelection, measureRepeat);
+                        undoStackPushSong();
+                        displaySong();
+                        continue;
+                    }
 
-                //  desperation: make the unknown input a comment
-                measure = MeasureComment.parse(sb);
+                    //  desperation: force the unknown input into a comment
+                    measure = MeasureComment.parse(sb);
+                }
             }
 
 
@@ -819,8 +832,8 @@ public class SongEditView
     /**
      * Terrible workaround for missing  FlexTable.getCellForEvent(doubleClickEvent);
      *
-     * @param event
-     * @return
+     * @param event the event to look into
+     * @return the element clicked
      */
     protected com.google.gwt.dom.client.Element getEventTargetCell(Event event) {
         for (com.google.gwt.dom.client.Element td = DOM.eventGetTarget(event); td != null; td = DOM.getParent(td)) {

@@ -89,7 +89,7 @@ public enum Key {
     /**
      * Return an integer value that represents the key.
      *
-     * @return
+     * @return an integer value that represents the key
      */
     public final int getKeyValue() {
         return keyValue;
@@ -98,7 +98,7 @@ public enum Key {
     /**
      * Return the scale note of the key, i.e. the musician's label for the key.
      *
-     * @return
+     * @return the scale note of the key
      */
     public final ScaleNote getKeyScaleNote() {
         return keyScaleNote;
@@ -111,7 +111,7 @@ public enum Key {
     /**
      * Return an integer value that represents the key's number of half steps from A.
      *
-     * @return
+     * @return the count of half steps from A
      */
     public final int getHalfStep() {
         return keyScaleNote.getHalfStep();
@@ -120,8 +120,8 @@ public enum Key {
     /**
      * Return the key represented by the given integer value.
      *
-     * @param keyValue
-     * @return
+     * @param keyValue the given integer value
+     * @return the key
      */
     public static final Key getKeyByValue(int keyValue) {
         for (Key key : Key.values())
@@ -146,7 +146,7 @@ public enum Key {
     /**
      * Return a representation of the key in HTML.
      *
-     * @return
+     * @return the HTML
      */
     public final String toHtml() {
         return keyScaleNote.toHtml();
@@ -155,7 +155,7 @@ public enum Key {
     /**
      * Guess the key from the collection of scale notes in a given song.
      *
-     * @param scaleChords
+     * @param scaleChords the scale chords to guess from
      * @return the roughly calculated key of the given scale notes.
      */
     public static final Key guessKey(AbstractCollection<ScaleChord> scaleChords) {
@@ -217,8 +217,8 @@ public enum Key {
      * Return the requested diatonic chord by degree.
      * Counts from zero. For example, 0 represents the I chord, 3 represents the IV chord.
      *
-     * @param note
-     * @return
+     * @param note diatonic note/chord count
+     * @return the diatonic scale chord
      */
     public final ScaleChord getMajorDiatonicByDegree(int note) {
         note = Util.mod(note, majorDiatonics.size());
@@ -255,8 +255,8 @@ public enum Key {
     /**
      * Counts from zero.
      *
-     * @param halfStep
-     * @return
+     * @param halfStep the half step offset count
+     * @return the scale note at the offset
      */
     private ScaleNote getKeyScaleNoteByHalfStep(int halfStep) {
 

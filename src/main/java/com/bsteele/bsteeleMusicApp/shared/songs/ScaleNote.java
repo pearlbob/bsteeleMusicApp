@@ -169,14 +169,14 @@ public enum ScaleNote {
     /**
      * Return the halfStep offset from A.
      *
-     * @return
+     * @return the halfStep offset from A
      */
     public final int getHalfStep() {
         return halfStep;
     }
 
     /**
-     * Returns the name of this key in a user friendly text format,
+     * Returns the name of this scale note in a user friendly text format,
      * i.e. as UTF-8
      *
      * @return the name of this enum constant
@@ -187,19 +187,19 @@ public enum ScaleNote {
     }
 
     /**
-     * Returns the name of this key in an HTML format.
+     * Returns the name of this scale note in an HTML format.
      *
-     * @return
+     * @return the scale note as HTML
      */
     public final String toHtml() {
         return scaleNoteHtml;
     }
 
     /**
-     * Return the key as markup.
+     * Return the scale note as markup.
      * <p>Ultimately, the markup language will disappear.</p>
      *
-     * @return
+     * @return the scale note as markup
      */
     @Deprecated
     public final String toMarkup() {
@@ -222,7 +222,7 @@ public enum ScaleNote {
     /**
      * Return the scale note's flat alias if it is a sharp
      * or the sharp alias if the scale note is a flat.
-     * White key notes will return null.
+     * White scale notes will return null.
      *
      * @return the scale note's alias or null if there is none
      */

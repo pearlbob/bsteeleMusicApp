@@ -104,7 +104,7 @@ public enum Section {
      * a convenience method to create a section version for this section
      *
      * @param v the variation identification number.  Zero is the default value.
-     * @return
+     * @return the section version
      */
     SectionVersion makeVersion(int v) {
         return new SectionVersion(this, v);
@@ -134,7 +134,7 @@ public enum Section {
     /**
      * Return the abbreviation for the section
      *
-     * @return
+     * @return the abbreviation for the section
      */
     public final String getAbbreviation() {
         return originalAbbreviation;

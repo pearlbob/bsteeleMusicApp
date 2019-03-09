@@ -14,7 +14,7 @@ public class SongMomentLocation {
 
     /**
      * @param sb string buffer
-     * @return
+     * @return the song moment location parsed
      */
     public static final SongMomentLocation parse(StringBuffer sb) {
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * An undo stack utility that assumes the contents are immutable.
  *
- * @param <T>
+ * @param <T> stack class
  */
 public class UndoStack<T>
 {

@@ -17,8 +17,9 @@ public class ChordSectionLocation {
     }
 
     /**
-     * @param sb string buffer
-     * @return
+     * Parse a chord section location from the given string input
+     * @param sb the given string input
+     * @return the chord section location, can be null
      */
     public static final ChordSectionLocation parse(StringBuffer sb) {
 
