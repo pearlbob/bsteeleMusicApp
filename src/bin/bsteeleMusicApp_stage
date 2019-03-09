@@ -44,7 +44,7 @@ set cwd=`pwd`
 cd $git
 
 #	get the songlyrics from Bodhi
-$git/bsteeleMusicApp_lyrics_update
+$git/src/bin/bsteeleMusicApp_lyrics_update
 
 #	compile for deployment
 bsteeleMusicApp_buildId

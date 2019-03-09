@@ -23,7 +23,7 @@
         <!-- Don't let your Mac use a crazy non-standard encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        
+
         <compiler.style>DETAILED</compiler.style>
     </properties>
 
@@ -39,7 +39,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-  
+
     <dependencies>
         <!-- GWT dependencies -->
         <dependency>
@@ -57,14 +57,14 @@
             <artifactId>gwt-dev</artifactId>
             <scope>provided</scope>
         </dependency>
-       
+
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-websocket-api -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-websocket-api</artifactId>
             <version>9.0.5</version>
         </dependency>
-        
+
         <!-- GWTP -->
         <!-- https://mvnrepository.com/artifact/com.gwtplatform/gwtp-mvp-client -->
         <dependency>
@@ -80,7 +80,7 @@
             <artifactId>lib-gwt-file</artifactId>
             <version>0.3.9</version>
         </dependency>
-        
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -93,7 +93,7 @@
         <!-- Output classes directly into the webapp, so that IDEs and "mvn process-classes" update them in DevMode -->
         <outputDirectory>${project.build.directory}/${project.build.finalName}/WEB-INF/classes</outputDirectory>
         <finalName>${project.artifactId}</finalName>
-        
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -114,7 +114,7 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
-            
+
             <!-- GWT Maven Plugin-->
             <plugin>
                 <groupId>net.ltgt.gwt.maven</groupId>
@@ -156,7 +156,7 @@
                     </codeserverArgs>
                 </configuration>
             </plugin>
-            
+
             <!-- Skip normal test execution, we use gwt:test instead -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -165,7 +165,7 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-        
+
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
                 <!--    works for tomcat 8 as well  http://www.baeldung.com/tomcat-deploy-war -->
@@ -206,7 +206,7 @@
                     <show>private</show>
                 </configuration>
             </plugin>
-            
+
         </plugins>
     </build>
 </project>
