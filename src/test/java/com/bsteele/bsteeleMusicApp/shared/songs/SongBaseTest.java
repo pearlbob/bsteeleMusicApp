@@ -1,7 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
-import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongChordGridSelection;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -322,6 +322,7 @@ public class SongBaseTest
     public void testGetStructuralGrid() {
         SongBase a;
         Measure measure;
+        Section section;
 
         a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D E F G A C: D D GD E\n"
@@ -333,6 +334,8 @@ public class SongBaseTest
         for (int r = 0; r < grid.getRowCount(); r++) {
             ArrayList<MeasureNode> row = grid.getRow(r);
             for (int c = 0; c < row.size(); c++) {
+                measure = null;
+                section = null;
                 MeasureNode node = row.get(c);
                 switch (r) {
                     case 0:
@@ -360,18 +363,15 @@ public class SongBaseTest
                             case 1:
                             case 2:
                                 measure = (Measure) node;
-                                assertEquals(ScaleNote.D, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                             case 3:
                                 measure = (Measure) node;
-                                assertEquals(ScaleNote.G, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                             case 4:
                                 measure = (Measure) node;
-                                assertEquals(ScaleNote.E, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                assertEquals(ScaleNote.E, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                         }
                         break;
@@ -383,18 +383,21 @@ public class SongBaseTest
                                 break;
                             case 1:
                                 measure = (Measure) node;
-                                assertEquals(ScaleNote.A, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                             case 4:
                                 measure = (Measure) node;
-                                assertEquals(ScaleNote.D, measure.getChords().get(0)
-                                        .getScaleChord().getScaleNote());
+                                assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
                                 break;
                         }
                         break;
                 }
 
+                if (measure != null) {
+                    assertEquals(measure, a.getStructuralGrid().get(c, r));
+                    a.setCurrentMeasureNode(a.findChordSectionLocation(measure));
+                    assertEquals(measure, a.getCurrentMeasureNode());
+                }
                 logger.finest("grid[" + r + "," + c + "]: " + node.toString());
             }
         }

@@ -7,7 +7,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.Metadata;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
@@ -193,9 +193,8 @@ public class SongBase {
         chordSectionMap = new HashMap<>();
         clearStructuralGrid();  //  force lazy eval
 
-        logger.fine("parseChords for: " + getTitle());
-
         if (chords != null) {
+            logger.fine("parseChords for: " + getTitle());
             TreeSet<ChordSection> emptyChordSections = new TreeSet<>();
             StringBuffer sb = new StringBuffer(chords);
             ChordSection chordSection;
@@ -380,11 +379,14 @@ public class SongBase {
             measureSequenceItem = chordSection.getMeasureSequenceItems().get(0);    //  use the default empty list
         }
 
+        boolean ret = false;
         switch (editLocation) {
             case insert:
-                return measureSequenceItem.insert(refMeasureNode, measure);
+                ret = measureSequenceItem.insert(refMeasureNode, measure);
+                break;
             case replace:
-                return measureSequenceItem.replace(refMeasureNode, measure);
+                ret = measureSequenceItem.replace(refMeasureNode, measure);
+                break;
             case append:
                 if (refMeasureNode instanceof MeasureRepeatMarker) {
                     MeasureRepeat measureRepeat = (MeasureRepeat) measureSequenceItem;
@@ -395,12 +397,14 @@ public class SongBase {
                         measureSequenceItem = newMeasureSequenceItem;
                     }
                 }
-                boolean ret = measureSequenceItem.append(refMeasureNode, measure);
-                if (ret)
-                    clearStructuralGrid();
-                return ret;
+                ret = measureSequenceItem.append(refMeasureNode, measure);
+                break;
         }
-        return false;
+        if (ret) {
+            setCurrentMeasureNode(measure);
+            clearStructuralGrid();
+        }
+        return ret;
     }
 
     /**
@@ -452,20 +456,33 @@ public class SongBase {
      * @return
      */
     public final SongChordGridSelection findChordGridLocationForMeasureNode(MeasureNode measureNode) {
-        Grid<MeasureNode> grid = getStructuralGrid();
-        int rowCount = grid.getRowCount();
-        for (int r = 0; r < rowCount; r++) {
-            ArrayList<MeasureNode> row = grid.getRow(r);
-            int colCount = row.size();
-            for (int c = 0; c < colCount; c++) {
-                MeasureNode mn = row.get(c);
-                if (mn == measureNode) {
-                    return new SongChordGridSelection(r, c);
+        if (measureNode != null) {
+            Grid<MeasureNode> grid = getStructuralGrid();
+            int rowCount = grid.getRowCount();
+            for (int r = 0; r < rowCount; r++) {
+                ArrayList<MeasureNode> row = grid.getRow(r);
+                int colCount = row.size();
+                for (int c = 0; c < colCount; c++) {
+                    MeasureNode mn = row.get(c);
+                    if (mn == measureNode) {
+                        return new SongChordGridSelection(r, c);
+                    }
                 }
             }
         }
 
         return null;
+    }
+
+    public final ChordSectionLocation findChordSectionLocation(MeasureNode measureNode) {
+
+        ChordSection chordSection = findChordSection(measureNode);
+        if (chordSection == null)
+            return null;
+        int index = chordSection.findMeasureNodeIndex(measureNode);
+        if (index < 0)
+            return null;
+        return new ChordSectionLocation(chordSection, index + 1);
     }
 
     /**
@@ -1489,8 +1506,17 @@ public class SongBase {
         return currentMeasureNode;
     }
 
+    public SongChordGridSelection getCurrentSongChordGridSelection() {
+        return findChordGridLocationForMeasureNode(currentMeasureNode);
+    }
+
     public void setCurrentMeasureNode(ChordSectionLocation chordSectionLocation) {
-        Measure measure = findChordSectionLocation(chordSectionLocation);
+        if (chordSectionLocation == null)
+            return;
+        setCurrentMeasureNode(findChordSectionLocation(chordSectionLocation));
+    }
+
+    private void setCurrentMeasureNode(Measure measure) {
         if (measure != null)
             currentMeasureNode = measure;
     }

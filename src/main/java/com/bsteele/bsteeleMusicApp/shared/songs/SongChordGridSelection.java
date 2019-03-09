@@ -1,9 +1,8 @@
-package com.bsteele.bsteeleMusicApp.client.songs;
+package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.ui.HTMLTable;
+
 
 /**
  * CopyRight 2018 bsteele.com
@@ -11,14 +10,10 @@ import com.google.gwt.user.client.ui.HTMLTable;
  */
 public class SongChordGridSelection {
 
+
     public SongChordGridSelection(int row, int col) {
         this.row = row;
         this.col = col;
-    }
-
-    public SongChordGridSelection(HTMLTable.Cell cell) {
-        this.row = cell.getRowIndex();
-        this.col = cell.getCellIndex();
     }
 
     public static SongChordGridSelection parse(String s) {

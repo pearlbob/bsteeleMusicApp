@@ -10,8 +10,9 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.songs.ClientSongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.client.songs.SongChordGridSelection;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
@@ -25,6 +26,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.shared.songs.Section;
 import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
@@ -279,7 +281,7 @@ public class SongEditView
         });
 
         measureEntry.addValueChangeHandler((ValueChangeEvent<String> event) -> {
-            //logger.info("measure change: \"" + event.getValue() + "\"");
+            logger.info("measure change: \"" + event.getValue() + "\"");
             processMeasureEntry();
         });
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
@@ -306,7 +308,7 @@ public class SongEditView
 
             char lastChar = entry.charAt(entry.length() - 1);
             switch (lastChar) {
-                case ' ':
+                //              case ' ':
                 case '\n':
                 case '\r':
                     processMeasureEntry();
@@ -575,10 +577,17 @@ public class SongEditView
             return;
 
         //  speed entry enhancement: first chord char is always upper case
-        if (entry.length() >= 1) {
+        if (entry.length() == 1) {
             char c = entry.charAt(0);
             if (c >= 'a' && c <= 'g') {
                 entry = Util.firstToUpper(entry);
+                measureEntry.setValue(entry);
+            }
+        } else if (entry.length() >= 3 && entry.charAt(entry.length() - 2) == ' ') {
+            int len = entry.length() - 1;
+            char c = entry.charAt(len);
+            if (c >= 'a' && c <= 'g') {
+                entry = entry.substring(0, len) + Character.toUpperCase(c);
                 measureEntry.setValue(entry);
             }
         }
@@ -693,7 +702,7 @@ public class SongEditView
                     undoStackPushSong();
                     editAppend.setValue(true);      //  select append for subsequent additions
                     displaySong();
-                    lastChordSelection = song.findChordGridLocationForMeasureNode(measure);
+                    lastChordSelection = song.getCurrentSongChordGridSelection();
 
                     if (lastChordSelection != null) {
                         selectChordsCell(lastChordSelection);
@@ -712,6 +721,7 @@ public class SongEditView
 
         }
         measureEntry.setValue(sb.toString());
+
         checkSong();
         measureFocus();
         return true;
@@ -758,7 +768,7 @@ public class SongEditView
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
             if (cell == null)
                 return;
-            selectChordsCell(new SongChordGridSelection(cell));
+            selectChordsCell(ClientSongChordGridSelection.getSongChordGridSelection(cell));
         });
         chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
             measureFocus();

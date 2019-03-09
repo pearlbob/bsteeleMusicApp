@@ -229,6 +229,17 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return null;
     }
 
+    public int findMeasureNodeIndex(MeasureNode measureNode) {
+        int index = 0;
+        for (MeasureSequenceItem measureSequenceItem : getMeasureSequenceItems()) {
+            int i = measureSequenceItem.findMeasureNodeIndex(measureNode);
+            if (i >= 0)
+                return index + i;
+            index += measureSequenceItem.size();
+        }
+        return -1;
+    }
+
     public MeasureSequenceItem findMeasureSequenceItem(MeasureNode measureNode) {
         for (MeasureSequenceItem msi : getMeasureSequenceItems()) {
             if (measureNode == msi)

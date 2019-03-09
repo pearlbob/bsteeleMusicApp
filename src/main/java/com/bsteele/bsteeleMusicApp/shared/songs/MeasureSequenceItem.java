@@ -87,6 +87,16 @@ public class MeasureSequenceItem extends MeasureNode {
         return null;
     }
 
+    public int findMeasureNodeIndex(MeasureNode measureNode) {
+        int i = 0;
+        for (Measure m : measures) {
+            if (m == measureNode)
+                return i;
+            i++;
+        }
+        return -1;
+    }
+
     public final Measure findMeasure(int n) {
         try {
             return measures.get(n);

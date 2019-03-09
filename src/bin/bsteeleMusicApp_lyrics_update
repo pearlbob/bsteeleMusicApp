@@ -48,6 +48,10 @@ if ( $status != 0 ) then
 	exit $stat
 endif
 
+
+echo fix me now, when file is good from windoze
+exit -1
+
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
 
