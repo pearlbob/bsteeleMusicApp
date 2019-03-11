@@ -45,6 +45,10 @@ public class Chord implements Comparable<Chord> {
         if (sb.length() > 0 && sb.charAt(0) == '/') {
             sb.delete(0, 1);
             slashScaleChord = ScaleChord.parse(sb);
+            //  force the slash chord to be major
+            if (slashScaleChord != null && slashScaleChord.getChordDescriptor() != ChordDescriptor.major) {
+                slashScaleChord = new ScaleChord(slashScaleChord.getScaleNote(), ChordDescriptor.major);
+            }
         }
         if (sb.length() > 0 && sb.charAt(0) == '.') {
             beats = 1;

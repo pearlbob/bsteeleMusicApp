@@ -34,6 +34,11 @@ public class SectionVersion implements Comparable<SectionVersion> {
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
+    public static final SectionVersion parse(String s) {
+        return parse(new StringBuffer(s));
+    }
+
+
     /**
      * Return the section from the found id. Match will ignore case. String has to
      * include the : delimiter and it will be considered part of the section id.

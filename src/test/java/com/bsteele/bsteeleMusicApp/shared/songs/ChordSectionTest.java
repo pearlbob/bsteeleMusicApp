@@ -13,8 +13,8 @@ public class ChordSectionTest extends TestCase {
 
     @Test
     public void testChordSectionParse() {
-        ArrayList<MeasureSequenceItem> measureSequenceItems;
-        MeasureSequenceItem measureSequenceItem;
+        ArrayList<Phrase> measureSequenceItems;
+        Phrase measureSequenceItem;
         ArrayList<Measure> measures;
 
         {
@@ -23,11 +23,11 @@ public class ChordSectionTest extends TestCase {
                     "V: (comment) A C#m F#m F#m/E\n"
                     , 4);
             assertNotNull(chordSection);
-            Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);
+            Measure m = chordSection.getPhrases().get(0).getMeasures().get(0);
             assert (m.isSingleItem());
             assert (m.isComment());
             assertEquals("(comment)", m.toString());
-            m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(1);
+            m = chordSection.getPhrases().get(0).getMeasures().get(1);
             assertEquals(Measure.parse("A", 4), m);
         }
         {
@@ -40,7 +40,7 @@ public class ChordSectionTest extends TestCase {
                             + "G G Bm Bm\n"
                     , 4);
             assertNotNull(chordSection);
-            Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);
+            Measure m = chordSection.getPhrases().get(0).getMeasures().get(0);
             assert (m instanceof Measure);
         }
         {
@@ -48,7 +48,7 @@ public class ChordSectionTest extends TestCase {
             ChordSection chordSection = ChordSection.parse(
                     "ia: EDCBA (single notes rapid)", 4);
             assertNotNull(chordSection);
-            Measure m = chordSection.getMeasureSequenceItems().get(0).getMeasures().get(0);
+            Measure m = chordSection.getPhrases().get(0).getMeasures().get(0);
             assert (m instanceof MeasureComment);
         }
         {
@@ -57,7 +57,7 @@ public class ChordSectionTest extends TestCase {
                             + "Dm Dm Dm DmAm 2x\n"
                             + "\n", 4);
             assertNotNull(chordSection);
-            measures = chordSection.getMeasureSequenceItems().get(0).getMeasures();
+            measures = chordSection.getPhrases().get(0).getMeasures();
             assertNotNull(measures);
             assert (!measures.isEmpty());
             Measure m = measures.get(measures.size() - 1);
@@ -77,7 +77,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             assertTrue(measureSequenceItems != null);
             assertEquals(1, measureSequenceItems.size());
             measures = measureSequenceItems.get(0).getMeasures();
@@ -91,7 +91,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             assertTrue(measureSequenceItems != null);
             assertEquals(1, measureSequenceItems.size());
             measures = measureSequenceItems.get(0).getMeasures();
@@ -116,7 +116,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             assertTrue(measureSequenceItems != null);
             assertEquals(1, measureSequenceItems.size());
             measures = measureSequenceItems.get(0).getMeasures();
@@ -137,7 +137,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             assertTrue(measureSequenceItems != null);
             assertEquals(1, measureSequenceItems.size());
             measures = measureSequenceItems.get(0).getMeasures();
@@ -162,7 +162,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion intro = new SectionVersion(Section.intro);
             assertTrue(chordSection.getSectionVersion().equals(intro));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             assertTrue(measureSequenceItems != null);
             assertEquals(2, measureSequenceItems.size());
             measures = measureSequenceItems.get(0).getMeasures();
@@ -174,7 +174,7 @@ public class ChordSectionTest extends TestCase {
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 2, 0);
             checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measures, 3, 0);
 
-            measureSequenceItem = chordSection.getMeasureSequenceItems().get(1);//    the repeat
+            measureSequenceItem = chordSection.getPhrases().get(1);//    the repeat
             assertEquals(16, measureSequenceItem.getTotalMoments());
             measures = measureSequenceItem.getMeasures();
             assertEquals(4, measures.size());
@@ -196,7 +196,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion verse = new SectionVersion(Section.verse);
             assertTrue(chordSection.getSectionVersion().equals(verse));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             measureSequenceItem = measureSequenceItems.get(0);
             measures = measureSequenceItem.getMeasures();
             assertTrue(measures != null);
@@ -223,7 +223,7 @@ public class ChordSectionTest extends TestCase {
             assertTrue(chordSection != null);
             SectionVersion sectionVersion = new SectionVersion(Section.tag);
             assertTrue(chordSection.getSectionVersion().equals(sectionVersion));
-            measureSequenceItems = chordSection.getMeasureSequenceItems();
+            measureSequenceItems = chordSection.getPhrases();
             assertTrue(measureSequenceItems != null);
             assertEquals(1, measureSequenceItems.size());
             measureSequenceItem = measureSequenceItems.get(0);

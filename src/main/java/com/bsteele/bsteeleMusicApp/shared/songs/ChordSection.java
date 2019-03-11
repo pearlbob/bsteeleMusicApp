@@ -19,14 +19,14 @@ import java.util.logging.Logger;
  * User: bob
  */
 public class ChordSection extends MeasureNode implements Comparable<ChordSection> {
-    public ChordSection(@Nonnull SectionVersion sectionVersion, ArrayList<MeasureSequenceItem> measureSequenceItems) {
+    public ChordSection(@Nonnull SectionVersion sectionVersion, ArrayList<Phrase> measureSequenceItems) {
         this.sectionVersion = sectionVersion;
-        this.measureSequenceItems = (measureSequenceItems != null ? measureSequenceItems : new ArrayList<>());
+        this.phrases = (measureSequenceItems != null ? measureSequenceItems : new ArrayList<>());
     }
 
     public ChordSection(SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
-        this.measureSequenceItems = new ArrayList<>();
+        this.phrases = new ArrayList<>();
     }
 
     final static ChordSection parse(String s, int beatsPerBar) {
@@ -47,7 +47,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             sectionVersion = new SectionVersion(Section.verse);
         }
 
-        ArrayList<MeasureSequenceItem> measureSequenceItems = new ArrayList<>();
+        ArrayList<Phrase> measureSequenceItems = new ArrayList<>();
         ArrayList<Measure> measures = new ArrayList<>();
         ArrayList<Measure> lineMeasures = new ArrayList<>();
         boolean repeatMarker = false;
@@ -67,7 +67,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             if (sb.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.add(new MeasureSequenceItem(measures));
+                    measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -90,13 +90,13 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new MeasureSequenceItem(measures));
+                        measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
                     sb.delete(0, ns.length());
                     int repeatTotal = Integer.parseInt(ns);
-                    measureSequenceItems.add(new MeasureRepeat(lineMeasures, repeatTotal));
+                    measureSequenceItems.add(new MeasureRepeat(lineMeasures, measureSequenceItems.size(), repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
                 continue;
@@ -126,14 +126,14 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             }
             {
                 //  look for a block repeat
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, beatsPerBar);
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, measureSequenceItems.size(), beatsPerBar);
                 if (measureRepeat != null) {
                     //  don't assume every line has an eol
                     for (Measure m : lineMeasures)
                         measures.add(m);
                     lineMeasures = new ArrayList<>();
                     if (!measures.isEmpty()) {
-                        measureSequenceItems.add(new MeasureSequenceItem(measures));
+                        measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
                     }
                     measures = new ArrayList<>();
                     measureSequenceItems.add(measureRepeat);
@@ -155,7 +155,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         for (Measure m : lineMeasures)
             measures.add(m);
         if (!measures.isEmpty()) {
-            measureSequenceItems.add(new MeasureSequenceItem(measures));
+            measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
         }
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
@@ -167,11 +167,11 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
         logger.finest("ChordSection.addToGrid()");
 
-        if (measureSequenceItems == null || measureSequenceItems.isEmpty())
+        if (phrases == null || phrases.isEmpty())
             //  initial editing
             grid.addTo(0, grid.getRowCount(), this);
         else
-            for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+            for (Phrase measureSequenceItem : phrases) {
                 grid.addTo(0, grid.getRowCount(), this);
                 measureSequenceItem.addToGrid(grid, this);
             }
@@ -181,7 +181,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 
-        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+        for (Phrase measureSequenceItem : phrases) {
             ArrayList<Measure> measures = measureSequenceItem.getMeasures();
             if (measures != null && !measures.isEmpty()) {
                 MeasureNode lastMeasureNode = null;
@@ -219,7 +219,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     public MeasureNode findMeasureNode(MeasureNode measureNode) {
-        for (MeasureSequenceItem measureSequenceItem : getMeasureSequenceItems()) {
+        for (Phrase measureSequenceItem : getPhrases()) {
             if (measureSequenceItem == measureNode)
                 return measureSequenceItem;
             MeasureNode mn = measureSequenceItem.findMeasureNode(measureNode);
@@ -231,7 +231,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     public int findMeasureNodeIndex(MeasureNode measureNode) {
         int index = 0;
-        for (MeasureSequenceItem measureSequenceItem : getMeasureSequenceItems()) {
+        for (Phrase measureSequenceItem : getPhrases()) {
             int i = measureSequenceItem.findMeasureNodeIndex(measureNode);
             if (i >= 0)
                 return index + i;
@@ -240,8 +240,16 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return -1;
     }
 
-    public MeasureSequenceItem findMeasureSequenceItem(MeasureNode measureNode) {
-        for (MeasureSequenceItem msi : getMeasureSequenceItems()) {
+    public Phrase findPhrase(MeasureNode measureNode) {
+        for (Phrase phrase : getPhrases()) {
+            if (phrase.contains(measureNode))
+                return phrase;
+        }
+        return null;
+    }
+
+    public Phrase findMeasureSequenceItem(MeasureNode measureNode) {
+        for (Phrase msi : getPhrases()) {
             if (measureNode == msi)
                 return msi;
             MeasureNode mn = msi.findMeasureNode(measureNode);
@@ -251,39 +259,36 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return null;
     }
 
-    public int indexOf(MeasureSequenceItem measureSequenceItem) {
-        for (int i = 0; i < getMeasureSequenceItems().size(); i++) {
-            MeasureSequenceItem msi = getMeasureSequenceItems().get(i);
+    public int indexOf(Phrase measureSequenceItem) {
+        for (int i = 0; i < getPhrases().size(); i++) {
+            Phrase msi = getPhrases().get(i);
             if (measureSequenceItem == msi)
                 return i;
         }
         return -1;
     }
 
-    public final Measure findMeasure(StringBuffer sb) {
-        if (sb == null)
+    public final Measure getMeasure(int phraseIndex, int measureIndex) {
+        try {
+            Phrase phrase = getPhrase(phraseIndex);
+            return phrase.getMeasure(measureIndex);
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
             return null;
-        return findMeasure(Integer.parseInt(sb.toString()));
-    }
-
-    public final Measure findMeasure(int n) {
-        if (n < 0)
-            return null;
-
-        Measure ret;
-        for (MeasureSequenceItem msi : measureSequenceItems) {
-            if ((ret = msi.findMeasure(n)) != null)
-                return ret;
-            n -= msi.getMeasures().size();
-            if (n < 0)
-                return null;
         }
-        return null;
     }
+
+    public final boolean deleteMeasure(int phraseIndex, int measureIndex) {
+        try {
+            return getPhrase(phraseIndex).delete(measureIndex) != null;
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+            return false;
+        }
+    }
+
 
     public int getTotalMoments() {
         int total = 0;
-        for (MeasureSequenceItem measureSequenceItem : measureSequenceItems) {
+        for (Phrase measureSequenceItem : phrases) {
             total += measureSequenceItem.getTotalMoments();
         }
         return total;
@@ -313,7 +318,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
      *
-     *
      * @param o the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object
      * is less than, equal to, or greater than the specified object.
@@ -332,7 +336,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         if (o == null || getClass() != o.getClass()) return false;
         ChordSection that = (ChordSection) o;
         return Objects.equals(sectionVersion, that.sectionVersion)
-                && Objects.equals(measureSequenceItems, that.measureSequenceItems)
+                && Objects.equals(phrases, that.phrases)
                 //&& Objects.equals(bpm, that.bpm)
                 //&& Objects.equals(beatsPerBar, that.beatsPerBar)
                 ;
@@ -340,7 +344,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     @Override
     public int hashCode() {
-        return Objects.hash(sectionVersion.hashCode(), measureSequenceItems.hashCode()
+        return Objects.hash(sectionVersion.hashCode(), phrases.hashCode()
                 //, bpm, beatsPerBar
         );
     }
@@ -351,9 +355,9 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     public MeasureNode lastMeasureNode() {
-        if (measureSequenceItems == null || measureSequenceItems.isEmpty())
+        if (phrases == null || phrases.isEmpty())
             return this;
-        MeasureSequenceItem measureSequenceItem = measureSequenceItems.get(measureSequenceItems.size() - 1);
+        Phrase measureSequenceItem = phrases.get(phrases.size() - 1);
         ArrayList<Measure> measures = measureSequenceItem.getMeasures();
         if (measures == null || measures.isEmpty())
             return measureSequenceItem;
@@ -364,8 +368,8 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     public String transpose(@Nonnull Key key, int halfSteps) {
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString());
-        if (measureSequenceItems != null)
-            for (MeasureSequenceItem msi : measureSequenceItems)
+        if (phrases != null)
+            for (Phrase msi : phrases)
                 sb.append(msi.transpose(key, halfSteps));
         return sb.toString();
     }
@@ -374,8 +378,8 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     public String toMarkup() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString()).append(" ");
-        if (measureSequenceItems != null)
-            for (MeasureSequenceItem msi : measureSequenceItems)
+        if (phrases != null)
+            for (Phrase msi : phrases)
                 sb.append(msi.toMarkup());
         return sb.toString();
     }
@@ -389,22 +393,37 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sectionVersion;
     }
 
-    ArrayList<MeasureSequenceItem> getMeasureSequenceItems() {
-        return measureSequenceItems;
+    final ArrayList<Phrase> getPhrases() {
+        return phrases;
     }
 
-    void setMeasureSequenceItems(ArrayList<MeasureSequenceItem> measureSequenceItems) {
-        this.measureSequenceItems = measureSequenceItems;
+    final Phrase getPhrase(int index) throws IndexOutOfBoundsException {
+        return phrases.get(index);
     }
 
-    public int size() {
-        if (measureSequenceItems == null)
+    void setPhrases(ArrayList<Phrase> phrases) {
+        this.phrases = phrases;
+    }
+
+    final public int getPhraseCount() {
+        if (phrases == null)
             return 0;
-        return measureSequenceItems.size();
+        return phrases.size();
+    }
+
+    final public Phrase lastPhrase() {
+        if (phrases == null)
+            return null;
+        return phrases.get(phrases.size() - 1);
+    }
+
+    @Override
+    boolean isEmpty() {
+        return phrases == null || phrases.isEmpty();
     }
 
     private final SectionVersion sectionVersion;
-    private ArrayList<MeasureSequenceItem> measureSequenceItems;
+    private ArrayList<Phrase> phrases;
     //private Integer bpm;
     //private Integer beatsPerBar;
     private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());

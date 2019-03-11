@@ -11,9 +11,10 @@ import java.util.logging.Logger;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureSequenceItem extends MeasureNode {
-    public MeasureSequenceItem(@Nonnull ArrayList<Measure> measures) {
+public class Phrase extends MeasureNode {
+    public Phrase(@Nonnull ArrayList<Measure> measures, int phraseIndex) {
         this.measures = measures;
+        this.phraseIndex = phraseIndex;
     }
 
     public ArrayList<Measure> getMeasures() {
@@ -22,7 +23,7 @@ public class MeasureSequenceItem extends MeasureNode {
 
     public int getTotalMoments() {
         return measures.size();
-    }
+    }   //  fixme
 
     @Override
     public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
@@ -64,7 +65,7 @@ public class MeasureSequenceItem extends MeasureNode {
 
     @Override
     public void addToGrid(Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
-        logger.finest("MeasureSequenceItem.addToGrid()");
+        logger.finest("Phrase.addToGrid()");
 
         for (Measure measure : measures) {
             if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1)
@@ -75,7 +76,7 @@ public class MeasureSequenceItem extends MeasureNode {
 
     @Override
     public String transpose(@Nonnull Key key, int halfSteps) {
-        return "MeasureSequenceItem";   //  error
+        return "Phrase";   //  error
     }
 
 
@@ -87,14 +88,15 @@ public class MeasureSequenceItem extends MeasureNode {
         return null;
     }
 
-    public int findMeasureNodeIndex(MeasureNode measureNode) {
-        int i = 0;
-        for (Measure m : measures) {
-            if (m == measureNode)
-                return i;
-            i++;
-        }
-        return -1;
+    public int findMeasureNodeIndex(MeasureNode measureNode) throws IndexOutOfBoundsException {
+        if (measureNode == null)
+            throw new IndexOutOfBoundsException("measureNode null");
+
+        int ret = measures.indexOf(measureNode);
+        if (ret < 0)
+            throw new IndexOutOfBoundsException("measureNode not found: " + measureNode.toMarkup());
+
+        return ret;
     }
 
     public final Measure findMeasure(int n) {
@@ -169,16 +171,29 @@ public class MeasureSequenceItem extends MeasureNode {
         return true;
     }
 
+    final boolean contains(MeasureNode measureNode) {
+        return measures.contains(measureNode);
+    }
+
+    final Measure getMeasure(int measureIndex) throws NullPointerException, IndexOutOfBoundsException {
+        return measures.get(measureIndex);
+    }
+
     /**
      * Delete the given measure if it belongs in the sequence item.
      *
      * @param measure the measure to be deleted
      * @return true if the measure was found and deleted.
      */
+    @Deprecated
     public boolean delete(Measure measure) {
         if (measures == null)
             return false;
         return measures.remove(measure);
+    }
+
+    final Measure delete(int measureIindex) throws IndexOutOfBoundsException {
+        return measures.remove(measureIindex);
     }
 
     @Override
@@ -189,8 +204,8 @@ public class MeasureSequenceItem extends MeasureNode {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof MeasureSequenceItem)) return false;
-        MeasureSequenceItem that = (MeasureSequenceItem) o;
+        if (o == null || !(o instanceof Phrase)) return false;
+        Phrase that = (Phrase) o;
         return Objects.equals(measures, that.measures);
     }
 
@@ -204,6 +219,10 @@ public class MeasureSequenceItem extends MeasureNode {
         return null;
     }
 
+    @Override
+    boolean isEmpty() {
+        return measures == null || measures.isEmpty();
+    }
 
     @Override
     public String toMarkup() {
@@ -217,14 +236,24 @@ public class MeasureSequenceItem extends MeasureNode {
 
     @Override
     public String toString() {
-       return toMarkup();
+        return toMarkup();
     }
 
     public final int size() {
         return measures.size();
     }
 
-    protected transient ArrayList<Measure> measures;
+    public final int getPhraseIndex() {
+        return phraseIndex;
+    }
 
-    private static final Logger logger = Logger.getLogger(MeasureSequenceItem.class.getName());
+    final void setPhraseIndex(int phraseIndex) {
+        this.phraseIndex = phraseIndex;
+    }
+
+    protected transient ArrayList<Measure> measures;
+    private int phraseIndex;
+
+    private static final Logger logger = Logger.getLogger(Phrase.class.getName());
+
 }

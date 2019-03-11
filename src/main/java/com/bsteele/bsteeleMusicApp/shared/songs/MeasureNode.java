@@ -43,6 +43,15 @@ public abstract class MeasureNode {
     }
 
     /**
+     * Return true if the measure node is a collection and it's empty
+     *
+     * @return
+     */
+    boolean isEmpty() {
+        return false;
+    }
+
+    /**
      * Generate inner HTML for the node representation in the key and transform offet.
      *
      * @param key the key the measure is in

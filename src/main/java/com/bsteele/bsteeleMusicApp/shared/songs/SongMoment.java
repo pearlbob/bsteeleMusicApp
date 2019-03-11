@@ -6,7 +6,7 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  */
 public class SongMoment {
     SongMoment(int sequenceNumber, LyricSection lyricSection,
-               ChordSection chordSection, MeasureSequenceItem measureSequenceItem, Measure measure,
+               ChordSection chordSection, Phrase measureSequenceItem, Measure measure,
                int repeat, int repeatMax) {
         this.sequenceNumber = sequenceNumber;
         this.lyricSection = lyricSection;
@@ -52,7 +52,7 @@ public class SongMoment {
 
     private final LyricSection lyricSection;
     private final ChordSection chordSection;
-    private final MeasureSequenceItem measureSequenceItem;
+    private final Phrase measureSequenceItem;
     private final Measure measure;
 
 }

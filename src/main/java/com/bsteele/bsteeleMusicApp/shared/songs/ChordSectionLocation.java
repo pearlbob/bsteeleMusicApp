@@ -7,9 +7,10 @@ import javax.annotation.Nonnull;
 
 public class ChordSectionLocation {
 
-    ChordSectionLocation(@Nonnull ChordSection chordSection, int index) {
+    ChordSectionLocation(@Nonnull ChordSection chordSection, int phraseIndex, int measureIndex) {
         this.chordSection = chordSection;
-        this.index = index;
+        this.phraseIndex = phraseIndex;
+        this.measureIndex = measureIndex;
     }
 
     static final ChordSectionLocation parse(String s) {
@@ -18,6 +19,7 @@ public class ChordSectionLocation {
 
     /**
      * Parse a chord section location from the given string input
+     *
      * @param sb the given string input
      * @return the chord section location, can be null
      */
@@ -30,13 +32,14 @@ public class ChordSectionLocation {
         if (sb.length() < 1)
             return null;
 
-        final RegExp numberRegexp = RegExp.compile("^(\\d+)");  //  workaround for RegExp is not serializable.
+        final RegExp numberRegexp = RegExp.compile("^(\\d+):(\\d+)");  //  workaround for RegExp is not serializable.
         MatchResult mr = numberRegexp.exec(sb.substring(0, Math.min(sb.length(), 4)));
         if (mr != null) {
             try {
-                int index = Integer.parseInt(mr.getGroup(1));
+                int phraseIndex = Integer.parseInt(mr.getGroup(1));
+                int measureIndex = Integer.parseInt(mr.getGroup(2));
                 sb.delete(0, mr.getGroup(0).length());
-                return new ChordSectionLocation(new ChordSection(sectionVersion), index);
+                return new ChordSectionLocation(new ChordSection(sectionVersion), phraseIndex, measureIndex);
             } catch (NumberFormatException nfe) {
                 return null;
             }
@@ -50,15 +53,19 @@ public class ChordSectionLocation {
     }
 
     public final String getId() {
-        return chordSection.getId() + ":" + index;
+        return chordSection.getId() + ":" + phraseIndex + ":" + measureIndex;
     }
 
     public final ChordSection getChordSection() {
         return chordSection;
     }
 
-    public final int getIndex() {
-        return index;
+    public final int getPhraseIndex() {
+        return phraseIndex;
+    }
+
+    public final int getMeasureIndex() {
+        return measureIndex;
     }
 
     @Override
@@ -67,9 +74,11 @@ public class ChordSectionLocation {
             return false;
         ChordSectionLocation o = (ChordSectionLocation) obj;
         return chordSection.equals(o.chordSection)
-                && index == o.index;
+                && phraseIndex == o.phraseIndex
+                && measureIndex == o.measureIndex;
     }
 
     private final ChordSection chordSection;
-    private final int index;
+    private final int phraseIndex;
+    private final int measureIndex;
 }

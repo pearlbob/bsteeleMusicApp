@@ -14,18 +14,18 @@ import java.util.logging.Logger;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureRepeat extends MeasureSequenceItem {
+public class MeasureRepeat extends Phrase {
 
-    MeasureRepeat(@Nonnull ArrayList<Measure> measures, int repeats) {
-        super(measures);
+    MeasureRepeat(@Nonnull ArrayList<Measure> measures, int phraseIndex, int repeats) {
+        super(measures, phraseIndex);
         this.repeatMarker = new MeasureRepeatMarker(repeats);
     }
 
-    static final MeasureRepeat parse(String s, int beatsPerBar) {
-        return parse(new StringBuffer(s), beatsPerBar);
+    static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar) {
+        return parse(new StringBuffer(s), phraseIndex, beatsPerBar);
     }
 
-    public static final MeasureRepeat parse(StringBuffer sb, int beatsPerBar) {
+    public static final MeasureRepeat parse(StringBuffer sb, int phraseIndex, int beatsPerBar) {
         if (sb == null || sb.length() < 1)
             return null;
 
@@ -61,11 +61,11 @@ public class MeasureRepeat extends MeasureSequenceItem {
             break;
         }
 
-        final RegExp repeatExp = RegExp.compile("^"+(hasBracket?"\\s*]":"")+"\\s*x\\s*(\\d+)\\s*");
+        final RegExp repeatExp = RegExp.compile("^" + (hasBracket ? "\\s*]" : "") + "\\s*x\\s*(\\d+)\\s*");
         MatchResult mr = repeatExp.exec(lookaheadSb.toString());
         if (mr != null) {
             int repeats = Integer.parseInt(mr.getGroup(1));
-            MeasureRepeat ret = new MeasureRepeat(measures, repeats);
+            MeasureRepeat ret = new MeasureRepeat(measures, phraseIndex, repeats);
             logger.finer("new measure repeat: " + ret.toMarkup());
             sb.delete(0, sb.length() - lookaheadSb.length() + mr.getGroup(0).length());
             return ret;

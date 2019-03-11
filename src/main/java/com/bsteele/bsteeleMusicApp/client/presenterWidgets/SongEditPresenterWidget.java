@@ -3,12 +3,15 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.home.AppTab;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
@@ -22,8 +25,8 @@ import com.gwtplatform.mvp.client.View;
 public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWidget.MyView>
         implements SongUpdateEventHandler,
         SongSubmissionEventHandler,
-        SongRemoveEventHandler
-{
+        SongRemoveEventHandler,
+        HomeTabEventHandler {
 
 
     public interface MyView extends View {
@@ -38,6 +41,8 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
                 SongRemoveEventHandler handler);
 
         void setSongEdit(Song song);
+
+        public void measureFocus();
     }
 
     @Inject
@@ -57,6 +62,7 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
         view.SongUpdateEventHandler(this);
         view.SongSubmissionEventHandler(this);
         view.SongRemoveEventHandler(this);
+        eventBus.addHandler(HomeTabEvent.TYPE, this);
     }
 
 
@@ -74,6 +80,14 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
     @Override
     public void onSongRemove(SongRemoveEvent event) {
         eventBus.fireEvent(event);
+    }
+
+
+    @Override
+    public void onHomeTab(HomeTabEvent event) {
+        if (event.getTab() == AppTab.edit) {
+            view.measureFocus();
+        }
     }
 
 

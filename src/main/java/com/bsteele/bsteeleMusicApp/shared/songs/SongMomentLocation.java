@@ -52,7 +52,8 @@ public class SongMomentLocation {
             return false;
         SongMomentLocation o = (SongMomentLocation) obj;
         return chordSectionLocation.equals(o.chordSectionLocation)
-                && index == o.index;
+                && index == o.index
+                ;
     }
     public String getId() {
         return chordSectionLocation.getId() + separator + index;

@@ -12,7 +12,7 @@ public class SongMeasureSelection {
      * @param measureSequenceItem measureSequenceItem section the selection is in
      * @param measure             measure selection
      */
-    SongMeasureSelection(Song song, ChordSection chordSection, MeasureSequenceItem measureSequenceItem, Measure measure) {
+    SongMeasureSelection(Song song, ChordSection chordSection, Phrase measureSequenceItem, Measure measure) {
         this.song = song;
         this.chordSection = chordSection;
         this.measureSequenceItem = measureSequenceItem;
@@ -35,11 +35,11 @@ public class SongMeasureSelection {
         this.chordSection = chordSection;
     }
 
-    public MeasureSequenceItem getMeasureSequenceItem() {
+    public Phrase getMeasureSequenceItem() {
         return measureSequenceItem;
     }
 
-    void setMeasureSequenceItem(MeasureSequenceItem measureSequenceItem) {
+    void setMeasureSequenceItem(Phrase measureSequenceItem) {
         this.measureSequenceItem = measureSequenceItem;
     }
 
@@ -53,6 +53,6 @@ public class SongMeasureSelection {
 
     private Song song;
     private ChordSection chordSection;
-    private MeasureSequenceItem measureSequenceItem;
+    private Phrase measureSequenceItem;
     private Measure measure;
 }

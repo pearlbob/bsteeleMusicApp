@@ -14,7 +14,7 @@ package com.bsteele.bsteeleMusicApp;
 
 /*
 fixme: elminate com.google.gwt.json.client.JSON*
-fixme: multiple sections on a single MeasureSequenceItem
+fixme: multiple sections on a single Phrase
 fixme: bass view is damaged and old design
 todo: complete chord addressing
 todo: do measure addressing

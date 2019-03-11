@@ -371,7 +371,7 @@ public class LyricsAndChordsViewImpl
                     || parentWidth > (1 + 8.0 / chordsFontSize) * tableWidth) {
                 double ratio = Math.min(parentWidth / tableWidth,
                         parentHeight / tableHeight);
-                logger.fine("wratio: " + (parentWidth / tableWidth)
+                logger.finer("wratio: " + (parentWidth / tableWidth)
                         + ", hratio: " + (parentHeight / tableHeight));
 
                 int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio,
@@ -417,7 +417,7 @@ public class LyricsAndChordsViewImpl
             int tableWidth = chordsFlexTable.getOffsetWidth();
             int tableHeight = chordsFlexTable.getOffsetHeight();
 
-            logger.fine("lyrics panel: (" + lyrics.getOffsetWidth() + ","
+            logger.finer("lyrics panel: (" + lyrics.getOffsetWidth() + ","
                     + lyrics.getOffsetHeight() + ") for (" + tableWidth + ","
                     + tableHeight + ")  = " + ((double) lyrics.getOffsetWidth() / tableWidth));
 

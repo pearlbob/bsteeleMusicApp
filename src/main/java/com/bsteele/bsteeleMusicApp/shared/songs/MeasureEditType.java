@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-public enum MeasureEditLocation {
+public enum MeasureEditType {
     insert,
     replace,
     append,
