@@ -39,8 +39,9 @@ if ( $status != 0 ) then
 endif
 
 #	sanity check
-echo "Todo: create a sanity check for imported allSongs.songlyrics"
+echo "Todo: create a sanity check for imported allSongs.songlyrics, more than JSON parse"
 
+#	json parse the file
 jsonlint-php -q $bodhiDir/$f
 if ( $status != 0 ) then
 	set stat=$status
@@ -48,9 +49,6 @@ if ( $status != 0 ) then
 	exit $stat
 endif
 
-
-echo fix me now, when file is good from windoze
-exit -1
 
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
@@ -77,6 +75,7 @@ if ( $status || $force != 0 ) then
 	set testDst=src/test/java/com/bsteele/bsteeleMusicApp/client/resources/$f
 	cp $src $testDst
 
+	#	copy to github project, commit and push
 	cp $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 	cd $bsteeleMusicAppHome/../allSongs.songlyrics
 	git commit -q -a -m "commit for new lyrics $date"

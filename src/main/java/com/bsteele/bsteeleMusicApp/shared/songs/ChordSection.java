@@ -29,6 +29,11 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         this.phrases = new ArrayList<>();
     }
 
+    @Override
+    public boolean isSingleItem() {
+        return false;
+    }
+
     final static ChordSection parse(String s, int beatsPerBar) {
         return parse(new StringBuffer(s), beatsPerBar);
     }

@@ -194,7 +194,7 @@ public class SongBase {
     private final void parseChords() {
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
-        clearStructuralGrid();  //  force lazy eval
+        clearGrids();  //  force lazy eval
 
         if (chords != null) {
             logger.finer("parseChords for: " + getTitle());
@@ -214,7 +214,7 @@ public class SongBase {
                 }
                 measureNodes.add(chordSection);
                 chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
-                clearStructuralGrid();
+                clearGrids();
             }
         }
 
@@ -279,6 +279,7 @@ public class SongBase {
      * @return the nominal display structural grid
      */
     public final Grid<MeasureNode> getStructuralGrid() {
+        getChordSectionLocationGrid();//fixme: debug only!!!!!!!!!!!!!!!!!
         if (structuralGrid != null)
             return structuralGrid;
 
@@ -294,6 +295,59 @@ public class SongBase {
     private final void clearStructuralGrid() {
         structuralGrid = null;
     }
+
+    public final Grid<ChordSectionLocation> getChordSectionLocationGrid() {
+        if (chordSectionLocationGrid != null)
+            return chordSectionLocationGrid;
+
+        Grid<ChordSectionLocation> grid = new Grid<>();
+
+        int row = 0;
+        int col = 0;
+        int measuresPerline = 4;
+        final int offset = 1;
+        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            if (col != 0) {
+                row++;
+                col = 0;
+            }
+            grid.addTo(col++, row, new ChordSectionLocation(chordSection));
+
+            for (int phraseIndex = 0; phraseIndex < chordSection.getPhrases().size(); phraseIndex++) {
+                Phrase phrase = chordSection.getPhrase(phraseIndex);
+
+                //  start the phrase on a new line
+                if (col > offset) {
+                    row++;
+                    col = 0;
+                    grid.addTo(col++, row, null);
+                }
+
+                for (int measureIndex = 0; measureIndex < phrase.getMeasures().size(); measureIndex++) {
+                    grid.addTo(col++, row, new ChordSectionLocation(chordSection, phraseIndex, measureIndex));
+                    if (col >= measuresPerline + offset) {
+                        row++;
+                        col = 0;
+                        grid.addTo(col++, row, null);
+                    }
+                }
+            }
+        }
+
+        chordSectionLocationGrid = grid;
+        logger.info(grid.toString());
+        return chordSectionLocationGrid;
+    }
+
+    private final void clearChordSectionLocationGrid() {
+        chordSectionLocationGrid = null;
+    }
+
+    private final void clearGrids() {
+        clearStructuralGrid();
+        clearChordSectionLocationGrid();
+    }
+
 
     public final String toMarkup() {
         StringBuilder sb = new StringBuilder();
@@ -359,7 +413,7 @@ public class SongBase {
         if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
             return false;
         chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
-        clearStructuralGrid();
+        clearGrids();
         return true;
     }
 
@@ -414,7 +468,7 @@ public class SongBase {
         }
         if (ret) {
             setCurrentChordSectionLocation(findChordSectionLocationForMeasure(measure));
-            clearStructuralGrid();
+            clearGrids();
         }
         return ret;
     }
@@ -546,6 +600,22 @@ public class SongBase {
             return chordSectionMap.get(chordSectionLocation.getChordSection().getSectionVersion())
                     .getPhrase(chordSectionLocation.getPhraseIndex())
                     .getMeasure(chordSectionLocation.getMeasureIndex());
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+            return null;
+        }
+    }
+
+    final MeasureNode findMeasureNode(ChordSectionLocation chordSectionLocation) {
+        try {
+            ChordSection chordSection = chordSectionMap.get(chordSectionLocation.getChordSection().getSectionVersion());
+            if (!chordSectionLocation.hasPhraseIndex())
+                return chordSection;
+
+            Phrase phrase = chordSection.getPhrase(chordSectionLocation.getPhraseIndex());
+            if (!chordSectionLocation.hasMeasureIndex())
+                return phrase;
+
+            return phrase.getMeasure(chordSectionLocation.getMeasureIndex());
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
             return null;
         }
@@ -993,7 +1063,7 @@ public class SongBase {
         chordSectionDelete(chordSection);
         chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
         chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
-        clearStructuralGrid();
+        clearGrids();
     }
 
 
@@ -1020,7 +1090,7 @@ public class SongBase {
                 chordSectionDelete(chordSection);
                 chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
                 chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
-                clearStructuralGrid();
+                clearGrids();
             } else {
                 //  change the count
                 measureRepeat.setRepeats(repeats);
@@ -1038,7 +1108,7 @@ public class SongBase {
             chordSectionDelete(chordSection);
             chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
             chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
-            clearStructuralGrid();
+            clearGrids();
         }
     }
 
@@ -1737,6 +1807,7 @@ public class SongBase {
     private ChordSectionLocation currentChordSectionLocation;
     private MeasureEditType currentMeasureEditType = MeasureEditType.append;
     private transient Grid<MeasureNode> structuralGrid = null;
+    private transient Grid<ChordSectionLocation> chordSectionLocationGrid = null;
     private transient String message;
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
     private String chords = "";

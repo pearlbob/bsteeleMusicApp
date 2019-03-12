@@ -307,7 +307,7 @@ public class Song extends SongBase implements Comparable<Song> {
 
     private String toJsonAsFile() {
         double time = lastModifiedDate == null ? 0 : lastModifiedDate.getTime();
-        return "{ \"file\": \"" + JsonUtil.encode(getFileName()) + "\", \"lastModifiedDate\": " + time + ", \"song\":" +
+        return "{ \"file\": " + JsonUtil.encode(getFileName()) + ", \"lastModifiedDate\": " + time + ", \"song\":" +
                 " \n"
                 + toJson()
                 + "}";

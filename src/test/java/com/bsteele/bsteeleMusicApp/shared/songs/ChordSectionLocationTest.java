@@ -5,11 +5,36 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class ChordSectionLocationTest {
 
     @Test
     public void parse() {
+        int beatsPerBar = 4;
+        {
+            assertEquals(ChordSection.parse("i:", beatsPerBar).toString().trim(), ChordSectionLocation.parse("i:").toString());
+            ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse("i:");
+            assertEquals("I:", chordSectionLocation.toString());
+            assertFalse(chordSectionLocation.hasPhraseIndex());
+            assertFalse(chordSectionLocation.hasMeasureIndex());
+
+            chordSectionLocation = ChordSectionLocation.parse("verse2:");
+            assertEquals("V2:", chordSectionLocation.toString());
+            assertFalse(chordSectionLocation.hasPhraseIndex());
+            assertFalse(chordSectionLocation.hasMeasureIndex());
+
+            chordSectionLocation = ChordSectionLocation.parse("verse2:0");
+            assertEquals("V2:0", chordSectionLocation.toString());
+            assertTrue(chordSectionLocation.hasPhraseIndex());
+            assertFalse(chordSectionLocation.hasMeasureIndex());
+
+            chordSectionLocation = ChordSectionLocation.parse("verse2:0:12");
+            assertEquals("V2:0:12", chordSectionLocation.toString());
+            assertTrue(chordSectionLocation.hasPhraseIndex());
+            assertTrue(chordSectionLocation.hasMeasureIndex());
+        }
+
         for (Section section : Section.values()) {
             for (int v = 1; v <= 4; v++) {
                 for (int phraseIndex = 1; phraseIndex <= 3; phraseIndex++) {
@@ -79,7 +104,9 @@ public class ChordSectionLocationTest {
                 a.findMeasure(new ChordSectionLocation(chordSection, 0, 7)));
         assertEquals(Measure.parse("GbB", beatsPerBar),
                 a.findMeasure(new ChordSectionLocation(chordSection, 1, 3)));
+        assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 1, 4)));
         assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 1, 4234)));
+
 
         //  no Ch2:
         section = Section.chorus;
