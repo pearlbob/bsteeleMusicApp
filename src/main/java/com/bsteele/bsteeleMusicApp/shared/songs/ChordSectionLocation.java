@@ -13,6 +13,7 @@ public class ChordSectionLocation {
         hasPhraseIndex = true;
         this.measureIndex = measureIndex;
         hasMeasureIndex = true;
+        marker = Marker.none;
     }
 
     ChordSectionLocation(@Nonnull ChordSection chordSection, int phraseIndex) {
@@ -21,6 +22,16 @@ public class ChordSectionLocation {
         hasPhraseIndex = true;
         this.measureIndex = 0;
         hasMeasureIndex = false;
+        marker = Marker.none;
+    }
+
+    ChordSectionLocation(@Nonnull ChordSection chordSection, int phraseIndex, Marker marker) {
+        this.chordSection = chordSection;
+        this.phraseIndex = phraseIndex;
+        hasPhraseIndex = true;
+        this.measureIndex = 0;
+        hasMeasureIndex = false;
+        this.marker = marker;
     }
 
     ChordSectionLocation(@Nonnull ChordSection chordSection) {
@@ -29,6 +40,12 @@ public class ChordSectionLocation {
         hasPhraseIndex = false;
         this.measureIndex = 0;
         hasMeasureIndex = false;
+        marker = Marker.none;
+    }
+
+    enum Marker {
+        none,
+        repeat
     }
 
     static final ChordSectionLocation parse(String s) {
@@ -106,6 +123,11 @@ public class ChordSectionLocation {
         return hasMeasureIndex;
     }
 
+
+    public Marker getMarker() {
+        return marker;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof ChordSectionLocation))
@@ -121,5 +143,6 @@ public class ChordSectionLocation {
     private final boolean hasPhraseIndex;
     private final int measureIndex;
     private final boolean hasMeasureIndex;
+    private final Marker marker;
 
 }

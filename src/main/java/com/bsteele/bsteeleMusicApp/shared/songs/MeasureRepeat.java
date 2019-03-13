@@ -232,6 +232,11 @@ public class MeasureRepeat extends Phrase {
     }
 
     @Override
+    public String transpose(@Nonnull Key key, int halfSteps) {
+        return "x"+getRepeats();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

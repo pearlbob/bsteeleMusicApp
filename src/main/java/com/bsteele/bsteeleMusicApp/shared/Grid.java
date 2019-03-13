@@ -9,14 +9,12 @@ import java.util.Objects;
 /**
  * A generic grid used to store data presenations to the user.
  *
- * @author bob
  * @param <T> the type of data stored in the grid
+ * @author bob
  */
-public class Grid<T>
-{
+public class Grid<T> {
 
-    public Grid()
-    {
+    public Grid() {
     }
 
     /**
@@ -25,9 +23,8 @@ public class Grid<T>
      * @param other the grid to copy
      * @return the copy
      */
-    public Grid<T> deepCopy(Grid<T> other)
-    {
-        if ( other == null )
+    public Grid<T> deepCopy(Grid<T> other) {
+        if (other == null)
             return null;
         int rLimit = other.getRowCount();
         for (int r = 0; r < rLimit; r++) {
@@ -40,13 +37,11 @@ public class Grid<T>
         return this;
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return grid.isEmpty();
     }
 
-    public final void addTo(int x, int y, T t)
-    {
+    public final void addTo(int x, int y, T t) {
         if (y > grid.size()) {
             throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
         }
@@ -65,8 +60,7 @@ public class Grid<T>
             row.add(x, t);
     }
 
-    public final void add(T t)
-    {
+    public final void add(T t) {
         if (grid.isEmpty())
             addTo(0, 0, t);
         else {
@@ -76,8 +70,7 @@ public class Grid<T>
         }
     }
 
-    public final void set(int x, int y, T t)
-    {
+    public final void set(int x, int y, T t) {
         if (y >= grid.size()) {
             throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
         }
@@ -86,21 +79,18 @@ public class Grid<T>
         row.set(x, t);
     }
 
-    public final int lastRowSize()
-    {
+    public final int lastRowSize() {
         if (grid.isEmpty())
             return 0;
         return getRow(grid.size() - 1).size();
     }
 
     @Override
-    public String toString()
-    {
-        return "Grid{" + "grid=" + grid + '}';
+    public String toString() {
+        return "Grid{" + grid + '}';
     }
 
-    public final T get(int x, int y)
-    {
+    public final T get(int x, int y) {
         try {
             ArrayList<T> row = grid.get(y);
             if (row == null) {
@@ -112,13 +102,11 @@ public class Grid<T>
         }
     }
 
-    public int getRowCount()
-    {
+    public int getRowCount() {
         return grid.size();
     }
 
-    public ArrayList<T> getRow(int y)
-    {
+    public ArrayList<T> getRow(int y) {
         try {
             return grid.get(y);
         } catch (IndexOutOfBoundsException ex) {
@@ -126,20 +114,17 @@ public class Grid<T>
         }
     }
 
-    public void clear()
-    {
+    public void clear() {
         grid.clear();
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hashCode(this.grid);
     }
 
     @Override
-    public boolean equals(Object obj)
-    {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }

@@ -279,7 +279,6 @@ public class SongBase {
      * @return the nominal display structural grid
      */
     public final Grid<MeasureNode> getStructuralGrid() {
-        getChordSectionLocationGrid();//fixme: debug only!!!!!!!!!!!!!!!!!
         if (structuralGrid != null)
             return structuralGrid;
 
@@ -304,7 +303,7 @@ public class SongBase {
 
         int row = 0;
         int col = 0;
-        int measuresPerline = 4;
+        int measuresPerline = 4;    //  fixme: should be dynamic
         final int offset = 1;
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
             if (col != 0) {
@@ -312,6 +311,7 @@ public class SongBase {
                 col = 0;
             }
             grid.addTo(col++, row, new ChordSectionLocation(chordSection));
+
 
             for (int phraseIndex = 0; phraseIndex < chordSection.getPhrases().size(); phraseIndex++) {
                 Phrase phrase = chordSection.getPhrase(phraseIndex);
@@ -323,9 +323,33 @@ public class SongBase {
                     grid.addTo(col++, row, null);
                 }
 
-                for (int measureIndex = 0; measureIndex < phrase.getMeasures().size(); measureIndex++) {
+                boolean repeatExtensionUsed = false;
+                int size = phrase.getMeasures().size();
+                for (int measureIndex = 0; measureIndex < size; measureIndex++) {
                     grid.addTo(col++, row, new ChordSectionLocation(chordSection, phraseIndex, measureIndex));
-                    if (col >= measuresPerline + offset) {
+                    //  put the repeat on the end of the last line
+                    if (phrase.isRepeat() && measureIndex == size - 1) {
+                        //  fill row to measures per line
+                        while (col < offset + measuresPerline)
+                            grid.addTo(col++, row, null);
+
+                        if (repeatExtensionUsed)
+                            grid.addTo(col++, row, new ChordSectionLocation(chordSection, phraseIndex,
+                                    ChordSectionLocation.Marker.repeat));
+                        grid.addTo(col++, row, new ChordSectionLocation(chordSection, phraseIndex));
+                        row++;
+                        col = 0;
+                        grid.addTo(col++, row, null);
+                        repeatExtensionUsed = false;
+                    }
+                    //  limit line to the measures per line
+                    else if (col >= offset + measuresPerline) {
+                        //  put an end marker on multiline repeats
+                        if (phrase.isRepeat()) {
+                            grid.addTo(col++, row, new ChordSectionLocation(chordSection, phraseIndex,
+                                    ChordSectionLocation.Marker.repeat));
+                            repeatExtensionUsed = true;
+                        }
                         row++;
                         col = 0;
                         grid.addTo(col++, row, null);
@@ -335,9 +359,10 @@ public class SongBase {
         }
 
         chordSectionLocationGrid = grid;
-        logger.info(grid.toString());
+        logger.finer(grid.toString());
         return chordSectionLocationGrid;
     }
+
 
     private final void clearChordSectionLocationGrid() {
         chordSectionLocationGrid = null;
@@ -612,8 +637,14 @@ public class SongBase {
                 return chordSection;
 
             Phrase phrase = chordSection.getPhrase(chordSectionLocation.getPhraseIndex());
-            if (!chordSectionLocation.hasMeasureIndex())
-                return phrase;
+            if (!chordSectionLocation.hasMeasureIndex()) {
+                switch (chordSectionLocation.getMarker()) {
+                    case repeat:
+                        return MeasureRepeatExtension.defaultInstance();
+                    default:
+                        return phrase;
+                }
+            }
 
             return phrase.getMeasure(chordSectionLocation.getMeasureIndex());
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
@@ -963,7 +994,7 @@ public class SongBase {
     }
 
     public final void transpose(String prefix, FlexTable flexTable, int halfSteps, int fontSize) {
-        transpose(getStructuralGrid(), prefix, flexTable, halfSteps, fontSize, false);
+        transpose(flexTable, halfSteps, fontSize, false);
     }
 
     public final void transpose(ChordSection chordSection, String prefix, FlexTable flexTable, int halfSteps,
@@ -1033,6 +1064,88 @@ public class SongBase {
                         + (measureNode.isComment()
                         ? "sectionCommentClass"
                         : "section" + sectionVersion.getSection().getAbbreviation() + "Class"));
+            }
+        }
+    }
+
+
+    private final void transpose(FlexTable flexTable, int halfSteps,
+                                 int fontSize, boolean append) {
+        halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
+
+        Key newKey = key.nextKeyByHalfStep(halfSteps);
+
+        int offset = 0;
+        if (append)
+            offset = flexTable.getRowCount();
+        else
+            flexTable.removeAllRows();
+        flexTable.getFlexCellFormatter();
+        FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+
+        SectionVersion lastSectionVersion = null;
+        Grid<ChordSectionLocation> grid = getChordSectionLocationGrid();
+        int rLimit = grid.getRowCount();
+        for (int r = 0; r < rLimit; r++) {
+            formatter.addStyleName(r + offset, 0, CssConstants.style + "sectionLabel");
+
+            ArrayList<ChordSectionLocation> row = grid.getRow(r);
+            int colLimit = row.size();
+            String lastValue = "";
+            for (int c = 0; c < colLimit; c++) {
+                ChordSectionLocation loc = row.get(c);
+                if (loc == null)
+                    continue;
+
+                MeasureNode measureNode = findMeasureNode(loc);
+                SectionVersion sectionVersion = loc.getChordSection().getSectionVersion();
+
+                String s = "";
+                switch (c) {
+                    case 0:
+                        if (!sectionVersion.equals(lastSectionVersion))
+                            s = sectionVersion.toString();
+                        lastSectionVersion = sectionVersion;
+                        break;
+                    default:
+                        s = measureNode.transpose(newKey, halfSteps);
+                        break;
+                }
+                //  enforce the - on repeated measures
+                if (c > 0
+                        && c <= MusicConstant.measuresPerDisplayRow
+                        && s.equals(lastValue)
+                        && !(measureNode instanceof MeasureComment)) {
+                    s = "-";
+                    formatter.addStyleName(r + offset, c, CssConstants.style + "textCenter");
+                } else
+                    lastValue = s;
+
+                //formatter.setAlignment(r + offset, c, ALIGN_CENTER, ALIGN_BOTTOM);
+                flexTable.setHTML(r + offset, c,
+                        "<span style=\"font-size: " + fontSize + "px;\"" +
+                                " id=\"" + loc.toString() + "\">"
+                                + s
+                                + "</span>"
+                );
+                formatter.addStyleName(r + offset, c, CssConstants.style
+                        + (measureNode.isComment()
+                        ? "sectionCommentClass"
+                        : "section" + sectionVersion.getSection().getAbbreviation() + "Class"));
+            }
+        }
+    }
+
+
+    private final void logGrid() {
+        for (int r = 0; r < chordSectionLocationGrid.getRowCount(); r++) {
+            ArrayList<ChordSectionLocation> row = chordSectionLocationGrid.getRow(r);
+            for (int c = 0; c < row.size(); c++) {
+                ChordSectionLocation loc = row.get(c);
+                if (loc == null)
+                    continue;
+                logger.info((loc.hasPhraseIndex() ? (loc.hasMeasureIndex() ? "        " : "    ") : "") + loc.toString()
+                        + "  " + findMeasureNode(loc).toMarkup());
             }
         }
     }

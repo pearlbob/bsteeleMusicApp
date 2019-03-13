@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import org.junit.Test;
 
+import java.util.logging.Logger;
+
 import static org.junit.Assert.*;
 
 public class MeasureRepeatTest {
@@ -10,6 +12,7 @@ public class MeasureRepeatTest {
     public void parseMarkup() {
         MeasureRepeat measureRepeat;
 
+        //  bad input means this is not a repeat
         measureRepeat = MeasureRepeat.parse("[A B C D [ x2 E F", 0, 4);
         assertNull(measureRepeat);
 
@@ -51,4 +54,23 @@ public class MeasureRepeatTest {
         assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
         assertEquals(refRepeat, measureRepeat);
     }
+
+    @Test
+    public void testMultilineInput() {
+        MeasureRepeat measureRepeat;
+
+        ChordSection chordSection = ChordSection.parse(
+                "v3: A B C D | \n E F G G#|x2\n"
+                , 4);
+        assertNotNull(chordSection);
+        Phrase phrase = chordSection.getPhrase(0);
+        assertTrue(phrase instanceof MeasureRepeat);
+        measureRepeat = (MeasureRepeat) phrase;
+        logger.fine(measureRepeat.toMarkup());
+        ChordSectionLocation loc = new ChordSectionLocation(chordSection, 0);
+        logger.fine(loc.toString());
+        assertEquals( "V3:0", loc.toString());
+    }
+
+    private static Logger logger = Logger.getLogger(MeasureRepeatTest.class.getName());
 }

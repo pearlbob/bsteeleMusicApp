@@ -368,36 +368,6 @@ public class PlayerViewImpl
             }
             player.add(flexTable);
         }
-
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("<table class=\"" + CssConstants.style + "lyricsTable\" >");
-//
-//        for (LyricSection lyricSection : lyricSections) {
-//            sb.append("<tr>");
-//            sb.append("<td>")
-//                    .append(song.generateHtmlChordTable(lyricSection.getSectionVersion(), currentKey, tran, prefix +
-//                            sectionIndex));
-//            sb.append("<td class=\"")
-//                    .append(CssConstants.style)
-//                    .append("sectionLabel \">")
-//                    .append(lyricSection.getSectionVersion().toString())
-//                    .append("</td>");
-//            sb.append("<td")
-//                    .append(" class=\"")
-//                    .append(CssConstants.style)
-//                    .append("lyrics")
-//                    .append(lyricSection.getSectionVersion().getSection().getAbbreviation())
-//                    .append("Class\"")
-//                    .append(" id=\"" + prefix)
-//                    .append(Song.genLyricsId(sectionIndex)).append("\">");
-//            for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
-//                sb.append(lyricsLine.getLyrics()).append("\n");
-//            sb.append("</td>");
-//            sb.append("</tr>\n");
-//            sectionIndex++;
-//        }
-//        sb.append("</table>");
-//        player.add(new HTMLPanel(sb.toString()));
     }
 
     private AudioBeatDisplay audioBeatDisplay;
