@@ -163,7 +163,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
 
     private final Section section;
     private final int version;
-    private final String name;
+    private final transient String name;
 
     static final String sectionVersionRegexpPattern = "^([a-zA-Z]+)([\\d]?):";
 }

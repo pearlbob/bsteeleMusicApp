@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
+import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -296,10 +297,12 @@ public class SongBase {
     }
 
     public final Grid<ChordSectionLocation> getChordSectionLocationGrid() {
+        //  support lazy eval
         if (chordSectionLocationGrid != null)
             return chordSectionLocationGrid;
 
         Grid<ChordSectionLocation> grid = new Grid<>();
+        chordSectionGridCoorinateMap = new HashMap<>();
 
         int row = 0;
         int col = 0;
@@ -310,8 +313,9 @@ public class SongBase {
                 row++;
                 col = 0;
             }
-            grid.addTo(col++, row, new ChordSectionLocation(chordSection));
-
+            ChordSectionLocation chordSectionLocation = new ChordSectionLocation(chordSection);
+            chordSectionGridCoorinateMap.put(chordSection.getSectionVersion(), new GridCoordinate(row, col));
+            grid.addTo(col++, row, chordSectionLocation);
 
             for (int phraseIndex = 0; phraseIndex < chordSection.getPhrases().size(); phraseIndex++) {
                 Phrase phrase = chordSection.getPhrase(phraseIndex);
@@ -363,6 +367,12 @@ public class SongBase {
         return chordSectionLocationGrid;
     }
 
+    private HashMap<SectionVersion, GridCoordinate> getChordSectionGridCoorinateMap() {
+        // force grid population from lazy eval
+        if (chordSectionLocationGrid == null)
+            getChordSectionLocationGrid();
+        return chordSectionGridCoorinateMap;
+    }
 
     private final void clearChordSectionLocationGrid() {
         chordSectionLocationGrid = null;
@@ -1068,19 +1078,49 @@ public class SongBase {
         }
     }
 
+    /**
+     * Install whole chord section transposed into the given flex table
+     * @param flexTable the flex table to populate
+     * @param halfSteps the number of tranposition halfSteps to apply
+     * @param fontSize the pixel size of the font
+     * @param append true if the chord sections are to be added to an existing flex table data
+     */
+    private final void transpose(FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
+        halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
-    private final void transpose(FlexTable flexTable, int halfSteps,
-                                 int fontSize, boolean append) {
+        if (!append)
+            flexTable.removeAllRows();
+
+        //  install all chord sections
+        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            transpose(chordSection, flexTable, halfSteps, fontSize, true);
+        }
+    }
+
+    /**
+     * Install the given chord section into the given flex table
+     * @param chordSection the given chord section
+     * @param flexTable the flex table to populate
+     * @param halfSteps the number of tranposition halfSteps to apply
+     * @param fontSize the pixel size of the font
+     * @param append true if the chord section is to be added to an existing flex table data
+     */
+    private final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
+
+        SectionVersion sectionVersion = chordSection.getSectionVersion();
+        GridCoordinate coordinate = getChordSectionGridCoorinateMap().get(sectionVersion);
+        if (coordinate == null)
+            return;
 
         int offset = 0;
         if (append)
             offset = flexTable.getRowCount();
         else
             flexTable.removeAllRows();
-        flexTable.getFlexCellFormatter();
+
         FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
 
         SectionVersion lastSectionVersion = null;
@@ -1098,7 +1138,6 @@ public class SongBase {
                     continue;
 
                 MeasureNode measureNode = findMeasureNode(loc);
-                SectionVersion sectionVersion = loc.getChordSection().getSectionVersion();
 
                 String s = "";
                 switch (c) {
@@ -1916,6 +1955,7 @@ public class SongBase {
     private transient int totalBeats;
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private HashMap<SectionVersion, ChordSection> chordSectionMap = new HashMap<>();
+    private HashMap<SectionVersion, GridCoordinate> chordSectionGridCoorinateMap = new HashMap<>();
 
     private ChordSectionLocation currentChordSectionLocation;
     private MeasureEditType currentMeasureEditType = MeasureEditType.append;

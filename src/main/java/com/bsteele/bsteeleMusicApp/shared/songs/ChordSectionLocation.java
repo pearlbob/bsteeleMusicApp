@@ -134,8 +134,11 @@ public class ChordSectionLocation {
             return false;
         ChordSectionLocation o = (ChordSectionLocation) obj;
         return chordSection.equals(o.chordSection)
-                && phraseIndex == o.phraseIndex
-                && measureIndex == o.measureIndex;
+                && hasPhraseIndex == o.hasPhraseIndex
+                && hasMeasureIndex == o.hasMeasureIndex
+                && (hasPhraseIndex ? phraseIndex == o.phraseIndex : true)
+                && (hasMeasureIndex ? measureIndex == o.measureIndex : true)
+                ;
     }
 
     private final ChordSection chordSection;
