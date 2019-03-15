@@ -58,15 +58,15 @@ public class Song extends SongBase implements Comparable<Song> {
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *
-     * @param title title
-     * @param artist artist
-     * @param copyright copyright
-     * @param key key
-     * @param bpm bpm
-     * @param beatsPerBar beatsPerBar
+     * @param title           title
+     * @param artist          artist
+     * @param copyright       copyright
+     * @param key             key
+     * @param bpm             bpm
+     * @param beatsPerBar     beatsPerBar
      * @param unitsPerMeasure unitsPerMeasure
-     * @param chords chords
-     * @param lyrics lyrics
+     * @param chords          chords
+     * @param lyrics          lyrics
      * @return the song created
      */
     public static final Song createSong(@NotNull String title, @NotNull String artist,
@@ -135,11 +135,10 @@ public class Song extends SongBase implements Comparable<Song> {
             }
         } catch (JSONException e) {
             logger.warning(jsonString);
-            logger.warning("JSONException: "+e.getMessage());
+            logger.warning("JSONException: " + e.getMessage());
             return null;
-        }
-        catch (Exception e) {
-            logger.warning("exception: "+e.getClass().getName());
+        } catch (Exception e) {
+            logger.warning("exception: " + e.getClass().getName());
             logger.warning(jsonString);
             logger.warning(e.getMessage());
             return null;
@@ -392,7 +391,8 @@ public class Song extends SongBase implements Comparable<Song> {
         artist,
         lastModifiedDate,
         lastModifiedDateLast,
-        versionNumber;
+        versionNumber,
+        complexity;
     }
 
     public static final Comparator<Song> getComparatorByType(ComparatorType type) {
@@ -407,6 +407,8 @@ public class Song extends SongBase implements Comparable<Song> {
                 return new ComparatorByLastModifiedDateLast();
             case versionNumber:
                 return new ComparatorByVersionNumber();
+            case complexity:
+                return new ComparatorByComplexity();
         }
     }
 
@@ -564,6 +566,33 @@ public class Song extends SongBase implements Comparable<Song> {
         if (o1.getFileVersionNumber() != o2.getFileVersionNumber())
             return o1.getFileVersionNumber() < o2.getFileVersionNumber() ? -1 : 1;
         return compareByLastModifiedDate(o1, o2);
+    }
+
+    public static final class ComparatorByComplexity implements Comparator<Song> {
+
+        /**
+         * Compares its two arguments for order.
+         *
+         * @param o1 the first object to be compared.
+         * @param o2 the second object to be compared.
+         * @return a negative integer, zero, or a positive integer as the
+         * first argument is less than, equal to, or greater than the
+         * second.
+         * @throws NullPointerException if an argument is null and this
+         *                              comparator does not permit null arguments
+         * @throws ClassCastException   if the arguments' types prevent them from
+         *                              being compared by this comparator.
+         */
+        @Override
+        public int compare(Song o1, Song o2) {
+            return compareByComplexity(o1, o2);
+        }
+    }
+
+    public static int compareByComplexity(Song o1, Song o2) {
+        if (o1.getComplexity() != o2.getComplexity())
+            return o1.getComplexity() < o2.getComplexity() ? -1 : 1;
+        return o1.compareTo(o2);
     }
 
 

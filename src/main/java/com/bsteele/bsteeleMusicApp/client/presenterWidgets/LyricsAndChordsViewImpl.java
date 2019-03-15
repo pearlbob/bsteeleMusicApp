@@ -324,14 +324,14 @@ public class LyricsAndChordsViewImpl
 //                        if (ce != null) {
 //                            ce.getStyle().setBackgroundColor(highlightColor);
 //                            lastChordElement = ce;
-//                        }
+//            }
 //                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
 //                        Element le = lyrics.getElementById(lyricsCellId);
 //                        if (le != null) {
 //                            le.getStyle().setBackgroundColor(highlightColor);
 //                            lastLyricsElement = le;
-//                        }
-//                    }
+//            }
+//            }
                     break;
             }
 

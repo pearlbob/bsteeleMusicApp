@@ -125,91 +125,98 @@ public class SongBaseTest
                 100, 4, 8, "", "I:v: bob, bob, bob berand");
         assertTrue(a.addSectionVersion(new SectionVersion(Section.intro)));
         newMeasure = Measure.parse("B", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureEditType.append,
+        assertTrue(a.measureEdit(ChordSectionLocation.parse("I:0"), MeasureEditType.append,
                 newMeasure));
         text = a.toMarkup();
         logger.fine(a.getChords());
         assertEquals("I: B ", text);
         newMeasure = Measure.parse("C", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 0), MeasureEditType.append,
+        assertTrue(a.measureEdit(ChordSectionLocation.parse("I:0"), MeasureEditType.append,
                 newMeasure));
         text = a.toMarkup();
         assertEquals("I: B C ", text);
         logger.fine(text);
         newMeasure = Measure.parse("A", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(a.getStructuralMeasureNode(0, 1), MeasureEditType.insert,
+        assertTrue(a.measureEdit(ChordSectionLocation.parse("I:1"), MeasureEditType.insert,
                 newMeasure));
         text = a.toMarkup();
         assertEquals("I: A B C ", text);
         logger.fine(text);
 
+        {
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 8, "I:v: A B C D", "I:v: bob, bob, bob berand");
 
-        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 8, "I:v: A B C D", "I:v: bob, bob, bob berand");
+            TreeSet<ChordSection> chordSections = new TreeSet<ChordSection>(a.getChordSections());
+            ChordSection chordSection = chordSections.higher(chordSections.first());
+            Phrase phrase = chordSection.getPhrases().get(0);
 
-        TreeSet<ChordSection> chordSections = new TreeSet<ChordSection>(a.getChordSections());
-        Phrase vc2 =
-                chordSections.higher(chordSections.first()).getPhrases().get(0);
-
-        Measure measure = vc2.getMeasures().get(1);
-        assertEquals(4, vc2.getMeasures().size());
-        assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("G", a.getBeatsPerBar());
-        assertTrue(a.measureEdit(measure, MeasureEditType.replace, newMeasure));
-        assertEquals(4, vc2.getMeasures().size());
-        vc2 = chordSections.higher(chordSections.first()).getPhrases().get(0);
-        measure = vc2.getMeasures().get(1);
-        assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
-
-
-        measure = vc2.getMeasures().get(0);
-        assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureEditType.replace, newMeasure);
-        assertEquals(4, vc2.getMeasures().size());
-        measure = vc2.getMeasures().get(0);
-        assertEquals(ScaleNote.Gb, measure.getChords().get(0).getScaleChord().getScaleNote());
-
-        measure = vc2.getMeasures().get(3);
-        assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
-        newMeasure = Measure.parse("F", a.getBeatsPerBar());
-        a.measureEdit(measure, MeasureEditType.replace, newMeasure);
-        assertEquals(4, vc2.getMeasures().size());
-        measure = vc2.getMeasures().get(3);
-        assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
+            Measure measure = phrase.getMeasures().get(1);
+            assertEquals(4, phrase.getMeasures().size());
+            assertEquals(ScaleNote.B, measure.getChords().get(0).getScaleChord().getScaleNote());
+            newMeasure = Measure.parse("G", a.getBeatsPerBar());
+            assertTrue(a.measureEdit(new ChordSectionLocation(chordSection, 0, 1 ), MeasureEditType.replace, newMeasure));
+            assertEquals(4, phrase.getMeasures().size());
+            phrase = chordSections.higher(chordSections.first()).getPhrases().get(0);
+            measure = phrase.getMeasures().get(1);
+            assertEquals(ScaleNote.G, measure.getChords().get(0).getScaleChord().getScaleNote());
 
 
-        String chords = "I: A A♯ B C V: C♯ D D♯ E";
-        a.setChords(chords);
-        text = a.toMarkup().trim();
-        //logger.info("\"" + text + "\"");
-        assertEquals(chords, text);
-        newMeasure = Measure.parse("F", a.getBeatsPerBar());
-        for (int i = 0; i < 8; i++) {
-            //logger.fine();
+            measure = phrase.getMeasures().get(0);
+            assertEquals(ScaleNote.A, measure.getChords().get(0).getScaleChord().getScaleNote());
+            newMeasure = Measure.parse("Gb", a.getBeatsPerBar());
+            a.measureEdit(new ChordSectionLocation(chordSection, 0, 0 ), MeasureEditType.replace, newMeasure);
+            assertEquals(4, phrase.getMeasures().size());
+            measure = phrase.getMeasures().get(0);
+            assertEquals(ScaleNote.Gb, measure.getChords().get(0).getScaleChord().getScaleNote());
 
-            String s = a.getKey().getScaleNoteByHalfStep(i).toString().substring(0, 1) + "♯?";
-            chords = chords.replaceFirst(s, "F");
-            //logger.fine("chords: " + chords);
+            measure = phrase.getMeasures().get(3);
+            assertEquals(ScaleNote.D, measure.getChords().get(0).getScaleChord().getScaleNote());
+            newMeasure = Measure.parse("F", a.getBeatsPerBar());
+            a.measureEdit(new ChordSectionLocation(chordSection, 0, 3 ), MeasureEditType.replace, newMeasure);
+            assertEquals(4, phrase.getMeasures().size());
+            measure = phrase.getMeasures().get(3);
+            assertEquals(ScaleNote.F, measure.getChords().get(0).getScaleChord().getScaleNote());
+        }
 
-            Measure m = a.getSongMoments().get(i).getMeasure();
-            assertTrue(a.measureEdit(m, MeasureEditType.replace, newMeasure));
+        {
+            String chords = "I: A A♯ B C V: C♯ D D♯ E";
+            a.setChords(chords);
             text = a.toMarkup().trim();
-            //logger.fine("text  : " + text);
+            //logger.info("\"" + text + "\"");
             assertEquals(chords, text);
+            newMeasure = Measure.parse("F", a.getBeatsPerBar());
+            for (int i = 0; i < 8; i++) {
+                //logger.fine();
+
+                String s = a.getKey().getScaleNoteByHalfStep(i).toString().substring(0, 1) + "♯?";
+                chords = chords.replaceFirst(s, "F");
+                //logger.fine("chords: " + chords);
+
+                assertTrue(a.measureEdit(a.getSongMoments().get(i).getChordSectionLocation(), MeasureEditType.replace, newMeasure));
+                text = a.toMarkup().trim();
+                //logger.fine("text  : " + text);
+                assertEquals(chords, text);
+            }
         }
 
         {
             //  backwards
-            chords = "I: A A A A V: B♯ C D♯ E";
+            String chords = "I: A A A A V: B♯ C D♯ E";
             String chordSequence = "AAAABCDE";
             a.setChords(chords);
+            newMeasure = Measure.parse("F", 4);
             for (int i = 7; i >= 4; i--) {
                 String s = chordSequence.substring(i, i + 1) + "♯?";
+                logger.fine("s: " + s);
                 chords = chords.replaceFirst(s, "F");
 
-                Measure m = a.getSongMoments().get(i).getMeasure();
-                assertTrue(a.measureEdit(m, MeasureEditType.replace, newMeasure));
+                logger.fine("chords: " + chords);
+
+                SongMoment songMoment = a.getSongMoments().get(i);
+                logger.fine("songMoment: " + songMoment.toString());
+                logger.finest("ChordSectionLocation: " + songMoment.getChordSectionLocation().toString());
+                assertTrue(a.measureEdit(songMoment.getChordSectionLocation(), MeasureEditType.replace, newMeasure));
                 text = a.toMarkup().trim();
                 assertEquals(chords, text);
             }
@@ -551,6 +558,37 @@ public class SongBaseTest
                 "i: A B C D V: D E F F# ",
                 "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
         assertEquals(lyrics, a.getRawLyrics());
+    }
+
+    @Test
+    public void testSongWithoutStartingSection() {
+
+        SongBase a = createSongBase("Rio", "Duran Duran", "Sony/ATV Music Publishing LLC", Key.getDefault(),
+                100, 4, 4,
+                //  not much of this chord chart is correct!
+                "Verse\n" +
+                        "C#m A♭ FE A♭  x4\n" +
+                        "Prechorus\n" +
+                        "C C/\n" +
+                        "chorus\n" +
+                        "C G B♭ F  x4\n" +
+                        "Tag Chorus\n",
+                "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro\n");
+
+        a.logGrid();
+        Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+        assertEquals(5, grid.getRowCount());
+        ArrayList<ChordSectionLocation> row = grid.getRow(0);
+        assertEquals(6, row.size());
+        row = grid.getRow(1);
+        assertEquals(7, row.size());
+        row = grid.getRow(2);
+        assertEquals(6, row.size());
+        row = grid.getRow(3);
+        assertEquals(7, row.size());
+        row = grid.getRow(4);
+        assertEquals(2, row.size());
+
     }
 
     /**

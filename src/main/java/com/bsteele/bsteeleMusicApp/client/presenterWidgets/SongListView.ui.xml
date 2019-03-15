@@ -14,7 +14,8 @@
                     <select ui:field="listBySelect" >
                         <option value="title" selected="selected">by Title</option>
                         <option value="artist" >by Artist</option>
-                        <option value="lastModifiedDate" >by Mod Date</option>
+                        <option value="lastModifiedDate" >by Modification Date</option>
+                        <option value="complexity" >by Complexity</option>
                     </select>
                     <span class="{resources.style.tooltip}">
                         <span style="font-weight: bold;">Read Song Files:</span>

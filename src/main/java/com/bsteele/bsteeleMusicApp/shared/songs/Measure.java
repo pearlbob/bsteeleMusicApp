@@ -29,6 +29,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     public Measure(int beatCount, ArrayList<Chord> chords) {
         setBeatCount(beatCount);
         setChords(chords);
+        allocateTheBeats();
     }
 
     public Measure(Measure measure) {
@@ -51,7 +52,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     /**
      * Convenience method for testing only
      *
-     * @param s     input string
+     * @param s           input string
      * @param beatsPerBar beats per bar
      * @return the measure for the parsing
      */
@@ -112,6 +113,11 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         if (ret == null)
             ret = new Measure(beatsPerBar, chords);
 
+        return ret;
+    }
+
+    private void allocateTheBeats()
+    {
         // allocate the beats
         //  try to deal with over-specified beats: eg. in 4/4:  E....A...
         if (chords.size() > 0) {
@@ -119,29 +125,29 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             int explicitChords = 0;
             int explicitBeats = 0;
             for (Chord c : chords) {
-                if (c.getBeats() < beatsPerBar) {
+                if (c.getBeats() < beatCount) {
                     explicitChords++;
                     explicitBeats += c.getBeats();
                 }
             }
             //  verify not over specified
-            if (explicitBeats + (chords.size() - explicitChords) > beatsPerBar) // fixme: better failure
-                return ret;    //  too many beats!  even if the unspecified chords only got 1
+            if (explicitBeats + (chords.size() - explicitChords) > beatCount) // fixme: better failure
+                return;    //  too many beats!  even if the unspecified chords only got 1
 
             //  verify not under specified
-            if (chords.size() == explicitChords && explicitBeats < beatsPerBar) {
+            if (chords.size() == explicitChords && explicitBeats < beatCount) {
                 //  a short measure
                 for (Chord c : chords) {
                     c.setImplicitBeats(false);
                 }
-                ret.setBeatCount(explicitBeats);
-                return ret;
+                setBeatCount(explicitBeats);
+                return;
             }
 
 
-            if (explicitBeats == 0 && explicitChords == 0 && beatsPerBar % chords.size() == 0) {
+            if (explicitBeats == 0 && explicitChords == 0 && beatCount % chords.size() == 0) {
                 //  spread the implicit beats evenly
-                int implicitBeats = beatsPerBar / chords.size();
+                int implicitBeats = beatCount / chords.size();
                 for (Chord c : chords) {
                     c.setBeats(implicitBeats);
                     c.setImplicitBeats(true);
@@ -151,10 +157,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 //  give left over beats to the first unspecified
                 if (chords.size() > explicitChords) {
                     Chord firstUnspecifiedChord = null;
-                    int beatsPerUnspecifiedChord = Math.max(1, (beatsPerBar - explicitBeats) / (chords.size() - explicitChords));
+                    int beatsPerUnspecifiedChord = Math.max(1, (beatCount - explicitBeats) / (chords.size() - explicitChords));
                     for (Chord c : chords) {
                         c.setImplicitBeats(false);
-                        if (c.getBeats() == beatsPerBar) {
+                        if (c.getBeats() == beatCount) {
                             if (firstUnspecifiedChord == null)
                                 firstUnspecifiedChord = c;
                             c.setBeats(beatsPerUnspecifiedChord);
@@ -162,9 +168,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                         }
                     }
                     //  dump all the remaining beats on the first unspecified
-                    if (firstUnspecifiedChord != null && explicitBeats < beatsPerBar)
-                        firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatsPerBar - explicitBeats));
-                } else if (explicitBeats == beatsPerBar && explicitChords == chords.size()) {
+                    if (firstUnspecifiedChord != null && explicitBeats < beatCount)
+                        firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatCount - explicitBeats));
+                }
+                if (explicitBeats == beatCount && explicitChords == chords.size()) {
                     int b = chords.get(0).getBeats();
                     boolean allMatch = true;
                     for (Chord c : chords)
@@ -176,8 +183,6 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 }
             }
         }
-
-        return ret;
     }
 
     /**
@@ -262,6 +267,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return "X";  // no chords
     }
 
+    public final boolean isEasyGuitarMeasure() {
+        return chords != null && chords.size() == 1 && chords.get(0).getScaleChord().isEasyGuitarChord();
+    }
+
 
     @Override
     public String toMarkup() {
@@ -279,7 +288,6 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
-     *
      *
      * @param o the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object

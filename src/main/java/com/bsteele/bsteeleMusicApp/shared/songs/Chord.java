@@ -10,13 +10,13 @@ import java.util.Objects;
 public class Chord implements Comparable<Chord> {
 
     public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
-                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay) {
+                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay, boolean implicitBeats) {
         this.scaleChord = scaleChord;
         this.beats = beats;
         this.beatsPerBar = beatsPerBar;
         this.slashScaleChord = slashScaleChord;
         this.anticipationOrDelay = anticipationOrDelay;
-        implicitBeats = (beats == beatsPerBar);
+        this.implicitBeats = implicitBeats;
     }
 
     public Chord(@NotNull Chord chord) {
@@ -41,6 +41,9 @@ public class Chord implements Comparable<Chord> {
         if (scaleChord == null)
             return null;
 
+        ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.parse(sb);
+
+
         ScaleChord slashScaleChord = null;
         if (sb.length() > 0 && sb.charAt(0) == '/') {
             sb.delete(0, 1);
@@ -64,22 +67,22 @@ public class Chord implements Comparable<Chord> {
             //  whoops, too many beats
             ;    //  fixme: notify user
 
-        Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord,
-                ChordAnticipationOrDelay.none);      //  fixme
+        Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay
+                , (beats == beatsPerBar));      //  fixme
         return ret;
     }
 
     public Chord(ScaleChord scaleChord) {
-        this(scaleChord, 4, 4, null, ChordAnticipationOrDelay.none);
+        this(scaleChord, 4, 4, null, ChordAnticipationOrDelay.none, true);
     }
 
     public Chord(ScaleChord scaleChord, int beats, int beatsPerBar) {
-        this(scaleChord, beats, beatsPerBar, null, ChordAnticipationOrDelay.none);
+        this(scaleChord, beats, beatsPerBar, null, ChordAnticipationOrDelay.none, true);
     }
 
     public Chord transpose(Key key, int halfSteps) {
         return new Chord(scaleChord.transpose(key, halfSteps), beats, beatsPerBar,
-                slashScaleChord == null ? null : slashScaleChord.transpose(key, halfSteps), anticipationOrDelay);
+                slashScaleChord == null ? null : slashScaleChord.transpose(key, halfSteps), anticipationOrDelay, implicitBeats);
     }
 
     /**
@@ -170,7 +173,6 @@ public class Chord implements Comparable<Chord> {
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
-     *
      *
      * @param o the object to be compared.
      * @return a negative integer, zero, or a positive integer as this object

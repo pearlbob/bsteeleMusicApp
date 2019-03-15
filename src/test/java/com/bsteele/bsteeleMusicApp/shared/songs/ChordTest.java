@@ -16,31 +16,28 @@ public class ChordTest extends TestCase {
     public void testSetScaleChord() {
 
         TreeSet<ScaleChord> slashScaleChords = new TreeSet<>();
-        int beatsPerBar = 4;
-        //       for (ChordAnticipationOrDelay anticipationOrDelay : ChordAnticipationOrDelay.values()) {
-        ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.none;
-        for (ScaleNote scaleNote : ScaleNote.values()) {
-            for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
-                for (int beats = 2; beats <= 4; beats++) {
-                    ScaleChord scaleChord = new ScaleChord(scaleNote, chordDescriptor);
-                    if (chordDescriptor == ChordDescriptor.minor)
-                        slashScaleChords.add(scaleChord);
-                    Chord chord = new Chord(scaleChord, beats, beatsPerBar, null, anticipationOrDelay);
-                    //System.out.println(chord.toString());
-                    Chord pChord = Chord.parse(chord.toString(), beatsPerBar);
-                    switch (beats) {
-                        case 1:                 //  the beats will default to beats per bar if unspecified
-                            assertEquals(chord.getScaleChord(), pChord.getScaleChord());
-                            assertEquals(chord.getSlashScaleChord(), pChord.getSlashScaleChord());
-                            break;
-                        default:
-                            assertEquals(chord, pChord);
-                            break;
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++)
+            for (ChordAnticipationOrDelay anticipationOrDelay : ChordAnticipationOrDelay.values()) {
+                logger.fine("anticipationOrDelay: " + anticipationOrDelay.toString());
+                for (ScaleNote scaleNote : ScaleNote.values()) {
+                    for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+                        for (int beats = 2; beats <= 4; beats++) {
+                            ScaleChord scaleChord = new ScaleChord(scaleNote, chordDescriptor);
+                            if (chordDescriptor == ChordDescriptor.minor)
+                                slashScaleChords.add(scaleChord);
+                            Chord chord = new Chord(scaleChord, beats, beatsPerBar, null, anticipationOrDelay, true);
+                            logger.finer(chord.toString());
+                            Chord pChord = Chord.parse(chord.toString(), beatsPerBar);
+                            if (beats != beatsPerBar) {
+                                //  the beats will default to beats per bar if unspecified
+                                assertEquals(chord.getScaleChord(), pChord.getScaleChord());
+                                assertEquals(chord.getSlashScaleChord(), pChord.getSlashScaleChord());
+                            } else
+                                assertEquals(chord, pChord);
+                        }
                     }
                 }
             }
-        }
-        // }
     }
 
     @Test

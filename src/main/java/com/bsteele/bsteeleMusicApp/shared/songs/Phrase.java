@@ -107,67 +107,54 @@ public class Phrase extends MeasureNode {
         }
     }
 
-    boolean insert(MeasureNode measureNode, Measure newMeasure) {
+    boolean insert(int index, Measure newMeasure) {
         if (measures == null)
             measures = new ArrayList<>();
-        if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
+        if (measures.isEmpty()) {
             measures.add(newMeasure);
             return true;
         }
 
-        Measure oldMeasure = (Measure) measureNode;
-
-        for (int i = 0; i < measures.size(); i++) {
-
-            if (oldMeasure == measures.get(i)) {
-                measures.add(i, newMeasure);
-                return true;
-            }
+        try {
+            measures.add(index, newMeasure);
+        } catch (IndexOutOfBoundsException ex) {
+            measures.add(newMeasure);   //  default to the end!
         }
-        measures.add(newMeasure);
         return true;
     }
 
-    boolean replace(MeasureNode measureNode, Measure newMeasure) {
-        if (measureNode == null || measures == null || measures.isEmpty())
+    boolean replace(int index, Measure newMeasure) {
+        if (measures == null || measures.isEmpty())
             return false;
 
-        if (!(measureNode instanceof Measure))
-            return false;
-
-        Measure oldMeasure = (Measure) measureNode;
-        for (int i = 0; i < measures.size(); i++) {
-            if (oldMeasure == measures.get(i)) {
-                ArrayList<Measure> replacementList = new ArrayList<>();
-                if (i > 0)
-                    replacementList.addAll(measures.subList(0, i));
-                replacementList.add(newMeasure);
-                if (i < measures.size() - 1)
-                    replacementList.addAll(measures.subList(i + 1, measures.size()));
-                measures = replacementList;
-                return true;
-            }
+        try {
+            ArrayList<Measure> replacementList = new ArrayList<>();
+            if (index > 0)
+                replacementList.addAll(measures.subList(0, index));
+            replacementList.add(newMeasure);
+            if (index < measures.size() - 1)
+                replacementList.addAll(measures.subList(index + 1, measures.size()));
+            measures = replacementList;
+        } catch (IndexOutOfBoundsException ex) {
+            measures.add(newMeasure);   //  default to the end!
         }
-        return false;
+        return true;
     }
 
-    boolean append(MeasureNode measureNode, Measure newMeasure) {
+    boolean append(int index, Measure newMeasure) {
         if (measures == null)
             measures = new ArrayList<>();
-        if (measureNode == null || !(measureNode instanceof Measure) || measures.isEmpty()) {
+        if ( measures.isEmpty()) {
             measures.add(newMeasure);
             return true;
         }
 
-        Measure oldMeasure = (Measure) measureNode;
-
-        for (int i = 0; i < measures.size(); i++) {
-            if (oldMeasure == measures.get(i)) {
-                measures.add(i + 1, newMeasure);
-                return true;
-            }
+        try {
+            measures.add(index+1, newMeasure);
+        } catch (IndexOutOfBoundsException ex) {
+            measures.add(newMeasure);   //  default to the end!
         }
-        measures.add(newMeasure);
+
         return true;
     }
 

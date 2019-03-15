@@ -5,12 +5,13 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  * User: bob
  */
 
+import java.util.TreeSet;
+
 /**
  * A small timing adjustment for a chord to change the feel of the chord.
  * Units are fractions of a beat expressed assuming quarter note beat duration.
  */
-public enum ChordAnticipationOrDelay
-{
+public enum ChordAnticipationOrDelay {
     /**
      * Play the chord on time.
      */
@@ -39,14 +40,14 @@ public enum ChordAnticipationOrDelay
     /**
      * Delay (pull) the chord by one triplet's duration.
      */
-    delayTriplet(">3"),;
+    delayTriplet(">3"),
+    ;
 
     ChordAnticipationOrDelay(String shortName) {
         this.shortName = shortName;
     }
 
-    public static final String generateGrammar()
-    {
+    public static final String generateGrammar() {
         StringBuilder sb = new StringBuilder();
         sb.append("\t//\tChordAnticipationOrDelay\n");
         sb.append("\t(");
@@ -69,6 +70,18 @@ public enum ChordAnticipationOrDelay
     }
 
 
+    static ChordAnticipationOrDelay parse(StringBuffer sb) {
+        if (sb == null || sb.length() <= 0)
+            return none;
+        for (ChordAnticipationOrDelay a : sortedByShortNameLength) {
+            if (sb.length() >= a.shortName.length() && a.shortName.equals(sb.substring(0, a.shortName.length()))) {
+                sb.delete(0, a.shortName.length());
+                return a;
+            }
+        }
+        return none;
+    }
+
     /**
      * Returns the human name of this enum.
      *
@@ -80,4 +93,11 @@ public enum ChordAnticipationOrDelay
     }
 
     private final String shortName;
+    private static final TreeSet<ChordAnticipationOrDelay> sortedByShortNameLength = new TreeSet<>(
+            (a1, a2) -> a2.shortName.compareTo(a1.shortName));
+
+    static {
+        for (ChordAnticipationOrDelay a : ChordAnticipationOrDelay.values())
+            sortedByShortNameLength.add(a);
+    }
 }

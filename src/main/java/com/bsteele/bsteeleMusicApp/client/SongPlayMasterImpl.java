@@ -31,12 +31,10 @@ public class SongPlayMasterImpl
         extends HandlerContainerImpl
         implements SongPlayMaster,
         DefaultDrumSelectEventHandler,
-        AnimationScheduler.AnimationCallback
-{
+        AnimationScheduler.AnimationCallback {
 
     @Inject
-    public SongPlayMasterImpl(final EventBus eventBus)
-    {
+    public SongPlayMasterImpl(final EventBus eventBus) {
         this.eventBus = eventBus;
     }
 
@@ -47,8 +45,7 @@ public class SongPlayMasterImpl
      * load the audio properly.
      */
     @Override
-    public void execute(double systemT)
-    {
+    public void execute(double systemT) {
         //  do this first to get the best time alignment
         double t = audioFilePlayer.getCurrentTime();
         double t0 = songOutUpdate.getEventTime();
@@ -62,7 +59,7 @@ public class SongPlayMasterImpl
         }
         double tn = t + systemToAudioOffset;
 //        if (Math.abs(tn - systemT) > 0.005)
-//            GWT.log("dt: " + (tn - systemT));
+//            logger.info("dt: " + (tn - systemT));
 
         int measureNumber = Integer.MIN_VALUE;
         if (audioFilePlayer != null) {
@@ -106,8 +103,7 @@ public class SongPlayMasterImpl
                         sendStatus("measureNumber", measureNumber);
                         sendMeasureDurationStatus(tn);
                     }
-
-                    //GWT.log(".");
+                    
                     break;
                 default:
                     lastSystemT = systemT;
@@ -123,16 +119,14 @@ public class SongPlayMasterImpl
     }
 
     @Override
-    protected void onBind()
-    {
+    protected void onBind() {
         eventBus.addHandler(DefaultDrumSelectEvent.TYPE, this);
     }
 
     /**
      * @param t system time
      */
-    private void songLocalUpdate(double t)
-    {
+    private void songLocalUpdate(double t) {
         double songT = songOutUpdate.getEventTime();
 
         double measureDuration = songOutUpdate.getMeasureDuration();
@@ -158,8 +152,7 @@ public class SongPlayMasterImpl
         logger.fine("local update done: m: " + m + ", " + songOutUpdate.getMeasure());
     }
 
-    private void beatTheDrums(LegacyDrumMeasure drumSelection)
-    {
+    private void beatTheDrums(LegacyDrumMeasure drumSelection) {
         Song song = songOutUpdate.getSong();
         int beatsPerBar = song.getBeatsPerBar();
         double measureDuration = songOutUpdate.getMeasureDuration();
@@ -233,51 +226,45 @@ public class SongPlayMasterImpl
     }
 
     @Override
-    public void onMessage(double systemT, String data)
-    {
+    public void onMessage(double systemT, String data) {
         try {
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
             if (songInUpdate == null) {
-                GWT.log("PlayMaster null songInUpdate");
+                logger.fine("PlayMaster null songInUpdate");
                 return;
             }
-            GWT.log("update diff: " + songInUpdate.diff(songOutUpdate));
+            logger.info("update diff: " + songInUpdate.diff(songOutUpdate));
 
             eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
 
             songOutUpdate = songInUpdate;
             requestedState = songOutUpdate.getState();
         } catch (JSONException jsonException) {
-            GWT.log(jsonException.getMessage());
+            logger.info(jsonException.getMessage());
         }
     }
 
     @Override
-    public void onDefaultDrumSelection(DefaultDrumSelectEvent event)
-    {
+    public void onDefaultDrumSelection(DefaultDrumSelectEvent event) {
         defaultDrumSelection = event.getDrumSelection();
     }
 
-    public final void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO)
-    {
+    public final void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO) {
         this.bSteeleMusicIO = bSteeleMusicIO;
     }
 
-    public final void stopSong()
-    {
+    public final void stopSong() {
         requestedState = SongUpdate.State.idle;
     }
 
-    public final void issueSongUpdate(SongUpdate songUpdate)
-    {
+    public final void issueSongUpdate(SongUpdate songUpdate) {
         if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson()))
             //  issue the song update locally if there is no communication with the server
             eventBus.fireEvent(new SongUpdateEvent(songUpdate));
     }
 
     @Override
-    public void playSongUpdate(SongUpdate songUpdate)
-    {
+    public void playSongUpdate(SongUpdate songUpdate) {
         songOutUpdate = songUpdate;
 
         double measureDuration = songOutUpdate.getMeasureDuration();
@@ -293,8 +280,7 @@ public class SongPlayMasterImpl
     }
 
     @Override
-    public void play(Song song)
-    {
+    public void play(Song song) {
         SongUpdate songUpdate = new SongUpdate();
         songUpdate.setSong(song);
         songUpdate.setBeatsPerBar(song.getBeatsPerBar());
@@ -303,13 +289,11 @@ public class SongPlayMasterImpl
         playSongUpdate(songUpdate);
     }
 
-    public final void continueSong()
-    {
+    public final void continueSong() {
         requestedState = SongUpdate.State.playing;
     }
 
-    public final void setSelection(int first, int last)
-    {
+    public final void setSelection(int first, int last) {
         this.firstSection = first;
         this.lastSection = last;
     }
@@ -323,8 +307,7 @@ public class SongPlayMasterImpl
 //    }
 
     @Override
-    public void initialize()
-    {
+    public void initialize() {
         audioFilePlayer = new AudioFilePlayer();
 
         //  prep the canned sounds
@@ -342,7 +325,7 @@ public class SongPlayMasterImpl
         audioFilePlayer.bufferFile(kick);
         audioFilePlayer.bufferFile(snare);
 
-        GWT.log("Latency: " + audioFilePlayer.getBaseLatency()
+        logger.info("Latency: " + audioFilePlayer.getBaseLatency()
                 + ", " + audioFilePlayer.getOutputLatency()
         );
 
@@ -353,26 +336,22 @@ public class SongPlayMasterImpl
         timer.requestAnimationFrame(this);
     }
 
-    private void sendMeasureDurationStatus(double songT)
-    {
+    private void sendMeasureDurationStatus(double songT) {
         double dur = songT - lastSystemT;
         sendStatus("measureDuration", dur);
         //double lowPassDur =  pass * lowPassDur + (1-pass) * dur;
         lastSystemT = songT;
     }
 
-    private void sendStatus(String name, String value)
-    {
+    private void sendStatus(String name, String value) {
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 
-    private void sendStatus(String name, int value)
-    {
+    private void sendStatus(String name, int value) {
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 
-    private void sendStatus(String name, double value)
-    {
+    private void sendStatus(String name, double value) {
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 

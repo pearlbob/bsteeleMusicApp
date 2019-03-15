@@ -75,6 +75,10 @@ public class ScaleChord implements Comparable<ScaleChord> {
         return chordDescriptor.getChordComponents().contains(chordComponent);
     }
 
+    public final boolean isEasyGuitarChord() {
+        return easyGuitarChords.contains(this);
+    }
+
     /**
      * Indicates whether some other object is "equal to" this one.
      */
@@ -127,6 +131,20 @@ public class ScaleChord implements Comparable<ScaleChord> {
         if (ret != 0)
             return ret;
         return 0;
+    }
+
+    private static final TreeSet<ScaleChord> easyGuitarChords = new TreeSet<ScaleChord>();
+
+    static {
+        //C A G E D and Am Em Dm
+        easyGuitarChords.add(ScaleChord.parse("C"));
+        easyGuitarChords.add(ScaleChord.parse("A"));
+        easyGuitarChords.add(ScaleChord.parse("G"));
+        easyGuitarChords.add(ScaleChord.parse("E"));
+        easyGuitarChords.add(ScaleChord.parse("D"));
+        easyGuitarChords.add(ScaleChord.parse("Am"));
+        easyGuitarChords.add(ScaleChord.parse("Em"));
+        easyGuitarChords.add(ScaleChord.parse("Dm"));
     }
 
     private ScaleNote scaleNote;

@@ -738,7 +738,7 @@ public class SongEditView
                     editLocation = MeasureEditType.replace;
                 }
 
-                if (song.measureEdit(song.getStructuralMeasureNode(lastChordSelection), editLocation, measure)) {
+                if (song.measureEdit(song.getCurrentChordSectionLocation(), editLocation, measure)) {
                     undoStackPushSong();
                     editAppend.setValue(true);      //  select append for subsequent additions
                     displaySong();

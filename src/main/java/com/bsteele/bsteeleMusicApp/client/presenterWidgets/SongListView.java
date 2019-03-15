@@ -168,7 +168,12 @@ public class SongListView
             for (Song song : allSongs) {
                 try {
                     song.checkSong();
+
+                    //  include commented songs
+                    if ( song.getMessage() != null )
+                        sortedSongs.add(song);
                 } catch (ParseException pe) {
+                    //  parse error
                     sortedSongs.add(song);
                 }
             }
