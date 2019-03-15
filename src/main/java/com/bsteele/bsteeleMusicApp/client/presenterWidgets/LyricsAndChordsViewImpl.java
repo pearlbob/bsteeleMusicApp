@@ -9,6 +9,7 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordSectionLocation;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
@@ -376,14 +377,14 @@ public class LyricsAndChordsViewImpl
 
                 int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio,
                         chordsMaxFontSize)));
-                Grid<MeasureNode> grid = song.getStructuralGrid();
+                Grid<ChordSectionLocation> grid = song.getChordSectionLocationGrid();
                 int rLimit = grid.getRowCount();
                 if (forceChordsFontSize || chordsFontSize != size) {
                     //  fixme: demands all chord fonts be the same size
                     song.transpose(prefix, chordsFlexTable, halfStepOffset, chordsFontSize);
 
                     for (int r = 0; r < rLimit; r++) {
-                        ArrayList<MeasureNode> row = grid.getRow(r);
+                        ArrayList<ChordSectionLocation> row = grid.getRow(r);
                         int colLimit = row.size();
                         for (int c = 0; c < colLimit; c++) {
                             Element e = formatter.getElement(r, c);
@@ -429,10 +430,10 @@ public class LyricsAndChordsViewImpl
                 final RegExp fontSizeRegexp = RegExp.compile("^([\\d.]+)px$");
                 FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
 
-                Grid<MeasureNode> grid = song.getStructuralGrid();
+                Grid<ChordSectionLocation> grid = song.getChordSectionLocationGrid();
                 int rLimit = grid.getRowCount();
                 for (int r = 0; r < rLimit; r++) {
-                    ArrayList<MeasureNode> row = grid.getRow(r);
+                    ArrayList<ChordSectionLocation> row = grid.getRow(r);
                     int colLimit = row.size();
                     for (int c = 0; c < colLimit; c++) {
                         Element e = formatter.getElement(r, c);

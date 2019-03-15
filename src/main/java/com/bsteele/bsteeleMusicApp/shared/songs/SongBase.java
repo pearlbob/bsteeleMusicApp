@@ -287,6 +287,7 @@ public class SongBase {
      *
      * @return the nominal display structural grid
      */
+    @Deprecated
     public final Grid<MeasureNode> getStructuralGrid() {
         if (structuralGrid != null)
             return structuralGrid;
@@ -661,7 +662,7 @@ public class SongBase {
         }
     }
 
-    final MeasureNode findMeasureNode(ChordSectionLocation chordSectionLocation) {
+    public final MeasureNode findMeasureNode(ChordSectionLocation chordSectionLocation) {
         try {
             ChordSection chordSection = chordSectionMap.get(chordSectionLocation.getChordSection().getSectionVersion());
             if (!chordSectionLocation.hasPhraseIndex())
@@ -679,7 +680,7 @@ public class SongBase {
 
             return phrase.getMeasure(chordSectionLocation.getMeasureIndex());
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
-            return null;
+            return Measure.getDefaultMeasure();
         }
     }
 

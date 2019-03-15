@@ -8,11 +8,11 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.BassFile;
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
-import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.core.client.Scheduler;
@@ -215,7 +215,7 @@ public class BassViewImpl
         song = songUpdate.getSong();
 
         //  load new data even if the identity has not changed
-        setAnchors(title,artist);
+        setAnchors(title, artist);
         copyright.setInnerHTML(song.getCopyright());
 
         timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
@@ -414,8 +414,10 @@ public class BassViewImpl
             scoreCtx.setFont("bold 15px sans-serif");
             for (int m = firstMoment; m < lastMoment; m++) {
                 SongMoment songMoment = song.getSongMoments().get(m);
-                scoreCtx.fillText(songMoment.getMeasure().toString(), barStart + (m - firstMoment) * barWidth,
+                scoreCtx.fillText(song.findMeasureNode(songMoment.getChordSectionLocation()).toString(), barStart + (m - firstMoment) * barWidth,
                         scoreLineHeight);
+
+
             }
         }
     }

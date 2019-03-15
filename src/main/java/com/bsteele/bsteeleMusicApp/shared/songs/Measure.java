@@ -27,26 +27,27 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param chords    the chords to be played over this measure
      */
     public Measure(int beatCount, ArrayList<Chord> chords) {
-        setBeatCount(beatCount);
-        setChords(chords);
+        this.beatCount = beatCount;
+        this.chords = chords;
         allocateTheBeats();
     }
 
     public Measure(Measure measure) {
         if (measure == null)
             return;
-        setBeatCount(measure.beatCount);
+
+        this.beatCount = measure.beatCount;
 
         //  deep copy
         ArrayList<Chord> chords = new ArrayList<>(measure.chords.size());
         for (Chord chord : measure.chords) {
             chords.add(new Chord(chord));
         }
-        setChords(chords);
+        this.chords = chords;
     }
 
     protected Measure() {
-        setBeatCount(0);
+        beatCount = 0;
     }
 
     /**
@@ -116,8 +117,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return ret;
     }
 
-    private void allocateTheBeats()
-    {
+    private void allocateTheBeats() {
         // allocate the beats
         //  try to deal with over-specified beats: eg. in 4/4:  E....A...
         if (chords.size() > 0) {
@@ -140,7 +140,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 for (Chord c : chords) {
                     c.setImplicitBeats(false);
                 }
-                setBeatCount(explicitBeats);
+                beatCount = explicitBeats;
                 return;
             }
 
@@ -197,30 +197,12 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
     /**
-     * The beat count for this measure.
-     *
-     * @param beatCount the beat count
-     */
-    private void setBeatCount(int beatCount) {
-        this.beatCount = beatCount;
-    }
-
-    /**
      * The chords to be played over this measure.
      *
      * @return the chords
      */
     public final ArrayList<Chord> getChords() {
         return chords;
-    }
-
-    /**
-     * The chords to be played over this measure
-     *
-     * @param chords the chords
-     */
-    public final void setChords(ArrayList<Chord> chords) {
-        this.chords = chords;
     }
 
     public final Chord getChordAtBeat(double beat) {
@@ -284,6 +266,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return "X";  // no chords
     }
 
+    public static final Measure getDefaultMeasure() {
+        return defaultMeasure;
+    }
+
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
@@ -338,4 +324,5 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     private int beatCount = 4;  //  default only
     private ArrayList<Chord> chords = new ArrayList<>();
     public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
+    public static final Measure defaultMeasure = new Measure(4, emptyChordList);
 }
