@@ -75,6 +75,8 @@ public class SongListView
     Button clearSearch;
 
     @UiField
+    SelectElement filterByComplexity;
+    @UiField
     SelectElement listBySelect;
 
     @UiField
@@ -135,6 +137,13 @@ public class SongListView
             }
         });
 
+        Event.sinkEvents(filterByComplexity, Event.ONCHANGE);
+        Event.setEventListener(filterByComplexity, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                setComplexityFilter(filterByComplexity.getValue());
+            }
+        });
+
         /**
          * Song file read
          */
@@ -170,7 +179,7 @@ public class SongListView
                     song.checkSong();
 
                     //  include commented songs
-                    if ( song.getMessage() != null )
+                    if (song.getMessage() != null)
                         sortedSongs.add(song);
                 } catch (ParseException pe) {
                     //  parse error
@@ -186,6 +195,15 @@ public class SongListView
             allSongs.clear();
             searchSongs();
         });
+    }
+
+    private void setComplexityFilter(String value) {
+        try {
+            complexityFilter = ComplexityFilter.valueOf(value);
+        } catch (IllegalArgumentException ex) {
+            complexityFilter = ComplexityFilter.all;
+        }
+        displaySongList();
     }
 
     @Override
@@ -221,7 +239,7 @@ public class SongListView
      * Native function to write the song as JSON.
      *
      * @param filename the file name to write
-     * @param data the json data to write
+     * @param data     the json data to write
      */
     @Override
     public void saveSongAs(String filename, String data) {
@@ -269,9 +287,35 @@ public class SongListView
         }
         search = search.replaceAll("[^\\w\\s']+", "");
         search = search.toLowerCase();
+
+        //  apply complexity filster
+        TreeSet<Song> allSongsFiltered = allSongs;
+        if (complexityFilter != ComplexityFilter.all) {
+            TreeSet<Song> sortedSongs = new TreeSet<>(Song.getComparatorByType(Song.ComparatorType.complexity));
+            sortedSongs.addAll(allSongs);
+            double factor = 1.0;
+            switch (complexityFilter) {
+                case veryEasy:
+                    factor = 1.0 / 4;
+                    break;
+                case easy:
+                    factor = 2.0 / 4;
+                    break;
+                case moderate:
+                    factor = 3.0 / 4;
+                    break;
+            }
+            int limit = (int) (factor * sortedSongs.size());
+            Song[] allSongsFilteredList = sortedSongs.toArray(new Song[0]);
+            allSongsFiltered = new TreeSet<>();
+            for (int i = 0; i < limit; i++)
+                allSongsFiltered.add(allSongsFilteredList[i]);
+        }
+
+        //  apply search filter
         {
             TreeSet<Song> sortedSongs = new TreeSet<>(songComparator);
-            for (Song song : allSongs) {
+            for (Song song : allSongsFiltered) {
                 if (search.length() == 0
                         || song.getTitle().toLowerCase().contains(search)
                         || song.getArtist().toLowerCase().contains(search)) {
@@ -397,6 +441,15 @@ public class SongListView
         reader.readAsText(file);
     }
 
+    private enum ComplexityFilter {
+        all,
+        veryEasy,
+        easy,
+        moderate;
+    }
+
+    private ComplexityFilter complexityFilter = ComplexityFilter.all;
+
     private final HandlerManager handlerManager;
     private final EventBus eventBus;
 
@@ -406,6 +459,8 @@ public class SongListView
     private Song selectedSong;
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
     private int songListScrollOffset = 0;
+
+    private static final Song[] emptySongArray = new Song[0];
 
     private static final Logger logger = getLogger(SongListView.class.getName());
 }

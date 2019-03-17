@@ -11,6 +11,12 @@
                     <span class="{resources.style.label}">Search:</span>
                     <g:TextBox ui:field="songSearch"/>
                     <g:Button text="X" ui:field="clearSearch"/>
+                    <select ui:field="filterByComplexity" >
+                        <option value="all" selected="selected">All</option>
+                        <option value="veryEasy" >Very Easy</option>
+                        <option value="easy" >Easy</option>
+                        <option value="moderate" >Moderate</option>
+                    </select>
                     <select ui:field="listBySelect" >
                         <option value="title" selected="selected">by Title</option>
                         <option value="artist" >by Artist</option>

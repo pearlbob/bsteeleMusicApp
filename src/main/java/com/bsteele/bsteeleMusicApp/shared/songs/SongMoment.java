@@ -60,7 +60,7 @@ public class SongMoment {
 
     public final ChordSectionLocation getChordSectionLocation() {
         if ( chordSectionLocation == null )
-            chordSectionLocation = new ChordSectionLocation(chordSection, phraseIndex, measureIndex);
+            chordSectionLocation = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
         return chordSectionLocation;
     }
 

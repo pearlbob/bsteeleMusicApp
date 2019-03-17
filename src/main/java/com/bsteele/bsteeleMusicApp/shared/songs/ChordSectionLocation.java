@@ -4,11 +4,12 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
+import java.util.Objects;
 
 public class ChordSectionLocation {
 
-    ChordSectionLocation(@Nonnull ChordSection chordSection, int phraseIndex, int measureIndex) {
-        this.chordSection = chordSection;
+    ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, int measureIndex) {
+        this.sectionVersion = sectionVersion;
         this.phraseIndex = phraseIndex;
         hasPhraseIndex = true;
         this.measureIndex = measureIndex;
@@ -16,8 +17,8 @@ public class ChordSectionLocation {
         marker = Marker.none;
     }
 
-    ChordSectionLocation(@Nonnull ChordSection chordSection, int phraseIndex) {
-        this.chordSection = chordSection;
+    ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex) {
+        this.sectionVersion = sectionVersion;
         this.phraseIndex = phraseIndex;
         hasPhraseIndex = true;
         this.measureIndex = 0;
@@ -25,8 +26,8 @@ public class ChordSectionLocation {
         marker = Marker.none;
     }
 
-    ChordSectionLocation(@Nonnull ChordSection chordSection, int phraseIndex, Marker marker) {
-        this.chordSection = chordSection;
+    ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, Marker marker) {
+        this.sectionVersion = sectionVersion;
         this.phraseIndex = phraseIndex;
         hasPhraseIndex = true;
         this.measureIndex = 0;
@@ -34,8 +35,8 @@ public class ChordSectionLocation {
         this.marker = marker;
     }
 
-    ChordSectionLocation(@Nonnull ChordSection chordSection) {
-        this.chordSection = chordSection;
+    ChordSectionLocation(@Nonnull SectionVersion sectionVersion) {
+        this.sectionVersion = sectionVersion;
         this.phraseIndex = 0;
         hasPhraseIndex = false;
         this.measureIndex = 0;
@@ -72,7 +73,7 @@ public class ChordSectionLocation {
                     int phraseIndex = Integer.parseInt(mr.getGroup(1));
                     int measureIndex = Integer.parseInt(mr.getGroup(2));
                     sb.delete(0, mr.getGroup(0).length());
-                    return new ChordSectionLocation(new ChordSection(sectionVersion), phraseIndex, measureIndex);
+                    return new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
                 } catch (NumberFormatException nfe) {
                     return null;
                 }
@@ -85,13 +86,13 @@ public class ChordSectionLocation {
                 try {
                     int phraseIndex = Integer.parseInt(mr.getGroup(1));
                     sb.delete(0, mr.getGroup(0).length());
-                    return new ChordSectionLocation(new ChordSection(sectionVersion), phraseIndex);
+                    return new ChordSectionLocation(sectionVersion, phraseIndex);
                 } catch (NumberFormatException nfe) {
                     return null;
                 }
             }
         }
-        return new ChordSectionLocation(new ChordSection(sectionVersion));
+        return new ChordSectionLocation(sectionVersion);
     }
 
     @Override
@@ -100,11 +101,11 @@ public class ChordSectionLocation {
     }
 
     public final String getId() {
-        return chordSection.getId() + ":" + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
+        return sectionVersion.toString() + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
     }
 
-    public final ChordSection getChordSection() {
-        return chordSection;
+    public final SectionVersion getSectionVersion() {
+        return sectionVersion;
     }
 
     public final int getPhraseIndex() {
@@ -129,11 +130,23 @@ public class ChordSectionLocation {
     }
 
     @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = (31 * hash + sectionVersion.hashCode()) % (1 << 31);
+        hash = (31 * hash + (hasPhraseIndex?1:0)) % (1 << 31);
+        hash = (31 * hash + phraseIndex) % (1 << 31);
+        hash = (31 * hash + (hasMeasureIndex?1:0)) % (1 << 31);
+        hash = (31 * hash + measureIndex) % (1 << 31);
+        hash = (31 * hash + Objects.hashCode(marker)) % (1 << 31);
+        return hash;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null || !(obj instanceof ChordSectionLocation))
             return false;
         ChordSectionLocation o = (ChordSectionLocation) obj;
-        return chordSection.equals(o.chordSection)
+        return sectionVersion.equals(o.sectionVersion)
                 && hasPhraseIndex == o.hasPhraseIndex
                 && hasMeasureIndex == o.hasMeasureIndex
                 && (hasPhraseIndex ? phraseIndex == o.phraseIndex : true)
@@ -141,7 +154,7 @@ public class ChordSectionLocation {
                 ;
     }
 
-    private final ChordSection chordSection;
+    private final SectionVersion sectionVersion;
     private final int phraseIndex;
     private final boolean hasPhraseIndex;
     private final int measureIndex;

@@ -39,9 +39,8 @@ public class ChordSectionLocationTest {
             for (int v = 1; v <= 4; v++) {
                 for (int phraseIndex = 1; phraseIndex <= 3; phraseIndex++) {
                     SectionVersion sectionVersion = new SectionVersion(section, v);
-                    ChordSection chordSection = new ChordSection(sectionVersion);
                     for (int index = 1; index <= 40; index++) {
-                        ChordSectionLocation chordSectionLocationExpected = new ChordSectionLocation(chordSection, phraseIndex, index);
+                        ChordSectionLocation chordSectionLocationExpected = new ChordSectionLocation(sectionVersion, phraseIndex, index);
                         StringBuffer sb = new StringBuffer(sectionVersion.getId() + ":" + phraseIndex + ":" + index);
                         ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(sb);
                         //System.out.println(chordSectionLocationExpected);
@@ -55,9 +54,8 @@ public class ChordSectionLocationTest {
             for (int v = 1; v <= 4; v++) {
                 for (int phraseIndex = 1; phraseIndex <= 3; phraseIndex++) {
                     SectionVersion sectionVersion = new SectionVersion(section, v);
-                    ChordSection chordSection = new ChordSection(sectionVersion);
                     for (int index = 1; index <= 40; index++) {
-                        ChordSectionLocation chordSectionLocationExpected = new ChordSectionLocation(chordSection, phraseIndex, index);
+                        ChordSectionLocation chordSectionLocationExpected = new ChordSectionLocation(sectionVersion, phraseIndex, index);
                         StringBuffer sb = new StringBuffer(chordSectionLocationExpected.toString());
                         ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(sb);
                         assertEquals(chordSectionLocationExpected, chordSectionLocation);
@@ -86,41 +84,40 @@ public class ChordSectionLocationTest {
         Section section = Section.verse;
         int v = 1;
         SectionVersion sectionVersion = new SectionVersion(section, v);
-        ChordSection chordSection = new ChordSection(sectionVersion);
         assertEquals(Measure.parse("Em7", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 0)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 0)));
         assertEquals(Measure.parse("G", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 3)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 3)));
         assertEquals(Measure.parse("Eb7", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 1, 3)));
-        assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 0, 9)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 1, 3)));
+        assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 9)));
 
-        chordSection = ChordSection.parse("v2:", beatsPerBar);
+        sectionVersion = SectionVersion.parse("v2:");
         assertEquals(Measure.parse("A", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 0)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 0)));
         assertEquals(Measure.parse("D", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 3)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 3)));
         assertEquals(Measure.parse("G#m", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 7)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 7)));
         assertEquals(Measure.parse("GbB", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 1, 3)));
-        assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 1, 4)));
-        assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 1, 4234)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 1, 3)));
+        assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 1, 4)));
+        assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 1, 4234)));
 
 
         //  no Ch2:
         section = Section.chorus;
-        chordSection = new ChordSection(new SectionVersion(section, v));
-        assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 0, 0)));
+        sectionVersion = new SectionVersion(section, v);
+        assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 0)));
 
-        chordSection = new ChordSection(new SectionVersion(section, 0));
+        sectionVersion = new SectionVersion(section, 0);
         assertEquals(Measure.parse("F", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 0)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 0)));
 
-        chordSection = new ChordSection(new SectionVersion(Section.outro));
+        sectionVersion = new SectionVersion(Section.outro);
         assertEquals(Measure.parse("B", beatsPerBar),
-                a.findMeasure(new ChordSectionLocation(chordSection, 0, 4)));
-        assertNull(a.findMeasure(new ChordSectionLocation(chordSection, 0, 5)));
+                a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 4)));
+        assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 5)));
     }
 
 }

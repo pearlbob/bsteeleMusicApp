@@ -67,7 +67,7 @@ public class MeasureRepeatTest {
         assertTrue(phrase instanceof MeasureRepeat);
         measureRepeat = (MeasureRepeat) phrase;
         logger.fine(measureRepeat.toMarkup());
-        ChordSectionLocation loc = new ChordSectionLocation(chordSection, 0);
+        ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), 0);
         logger.fine(loc.toString());
         assertEquals( "V3:0", loc.toString());
     }

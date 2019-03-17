@@ -25,8 +25,8 @@ public class SongMomentLocationTest {
             loc = SongMomentLocation.parse(new StringBuffer("V2:0:1#0"));
             assertNull(loc);
             loc = SongMomentLocation.parse(new StringBuffer("V2:2:1#3"));
-            SongMomentLocation locExpected = new SongMomentLocation(new ChordSectionLocation(new ChordSection(
-                    new SectionVersion(Section.verse, 2)), 2, 1), 3);
+            SongMomentLocation locExpected = new SongMomentLocation(new ChordSectionLocation(
+                    new SectionVersion(Section.verse, 2), 2, 1), 3);
             //System.out.println(locExpected);
             assertEquals(locExpected, loc);
         }
@@ -36,8 +36,8 @@ public class SongMomentLocationTest {
                 for (int phraseIndex = 0; phraseIndex <= 3; phraseIndex++)
                     for (int index = 1; index < 8; index++) {
                         for (int instance = 1; instance < 4; instance++) {
-                            SongMomentLocation locExpected = new SongMomentLocation(new ChordSectionLocation(new ChordSection(
-                                    new SectionVersion(section, version)), phraseIndex, index), instance);
+                            SongMomentLocation locExpected = new SongMomentLocation(new ChordSectionLocation(
+                                    new SectionVersion(section, version), phraseIndex, index), instance);
                             StringBuffer sb = new StringBuffer(section.toString() + (version > 0 ? version : "") + ":" + phraseIndex + ":" + index + "#" + instance);
 
                             //System.out.println(sb.toString());

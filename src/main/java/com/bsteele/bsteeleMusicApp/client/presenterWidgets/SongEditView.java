@@ -10,9 +10,10 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
-import com.bsteele.bsteeleMusicApp.client.songs.ClientSongChordGridSelection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.shared.songs.SongChordGridSelection;
+import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordSection;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordSectionLocation;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
@@ -290,19 +291,19 @@ public class SongEditView
             switch (event.getNativeKeyCode()) {
                 case KeyCodes.KEY_DOWN:
                     logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordsCell(new SongChordGridSelection(lastChordSelection.getRow() + 1, lastChordSelection.getCol()));
+                    selectChordCell(lastGridCoordinate.getRow() + 1, lastGridCoordinate.getCol());
                     return;
                 case KeyCodes.KEY_RIGHT:
                     logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordsCell(new SongChordGridSelection(lastChordSelection.getRow(), lastChordSelection.getCol() + 1));
+                    selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() + 1);
                     return;
                 case KeyCodes.KEY_UP:
                     logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordsCell(new SongChordGridSelection(lastChordSelection.getRow() - 1, lastChordSelection.getCol()));
+                    selectChordCell(lastGridCoordinate.getRow() - 1, lastGridCoordinate.getCol());
                     return;
                 case KeyCodes.KEY_LEFT:
                     logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordsCell(new SongChordGridSelection(lastChordSelection.getRow(), lastChordSelection.getCol() - 1));
+                    selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() - 1);
                     return;
 //                case KeyCodes.KEY_Z:  //  fixme:  only works if measureEntry is focused but conflicts with normal text processing there
 //                    if (event.isControlKeyDown()) {
@@ -339,10 +340,10 @@ public class SongEditView
 
         editAppend.setValue(true);
         editInsert.addClickHandler((ClickEvent e) -> {
-            selectChordsCell(lastChordSelection);
+            selectChordCell();
         });
         editReplace.addClickHandler((ClickEvent e) -> {
-            selectChordsCell(lastChordSelection);
+            selectChordCell();
         });
         editDelete.setEnabled(false);
         editDelete.addClickHandler((ClickEvent e) -> {
@@ -350,7 +351,7 @@ public class SongEditView
         });
 
         editAppend.addClickHandler((ClickEvent e) -> {
-            selectChordsCell(lastChordSelection);
+            selectChordCell();
         });
 
         chordsFlexTable.addDragStartHandler(dragStartEvent -> {
@@ -670,20 +671,20 @@ public class SongEditView
             if (sectionVersion != null) {
                 logger.info("new SectionVersion: \"" + sectionVersion.toString() + "\"");
 
-                SongChordGridSelection songChordGridSelection =
-                        song.findSectionVersionChordGridLocation(sectionVersion);
-                if (songChordGridSelection != null) {
+                ChordSectionLocation chordSectionLocation = song.getChordSectionLocation(sectionVersion);
+                if (chordSectionLocation != null) {
                     //  new section already there, select it
                     displaySong();
                     editAppend.setValue(true);
-                    selectChordsCell(songChordGridSelection);
+                    selectChordCell(chordSectionLocation);
                     continue;
                 }
                 //  add a new section
-                boolean ret = song.addSectionVersion(sectionVersion);
+                if (!song.addSectionVersion(sectionVersion))
+                    return false;
                 displaySong();
                 editAppend.setValue(true);
-                selectChordsCell(song.findSectionVersionChordGridLocation(sectionVersion));
+                selectChordCell(sectionVersion);
                 undoStackPushSong();
                 continue;
             }
@@ -698,9 +699,13 @@ public class SongEditView
                         measure = null;
                         sb = new StringBuffer(backup);
                     }
-                } else if (backup.startsWith("-") && lastChordSelection != null && editAppend.getValue()) {
-                    measure = new Measure(song.findMeasure(lastChordSelection));
-                    //logger.info("new measure: -");
+                } else if (backup.startsWith("-") && lastChordSectionLocation != null && editAppend.getValue()) {
+                    measure = song.findMeasure(lastChordSectionLocation);
+                    if (measure == null)
+                        return false;
+                    measure = new Measure(measure);
+
+                    logger.fine("new measure: for - : " + measure.toMarkup());
                     sb.delete(0, 1);
                 } else {
                     final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
@@ -708,7 +713,7 @@ public class SongEditView
                     if (mr != null) {
                         // logger.info("new measure: repeat");
                         int repeats = Integer.parseInt(mr.getGroup(1));
-                        song.setRepeat(lastChordSelection, repeats);
+                        song.setRepeat(lastChordSectionLocation, repeats);
                         undoStackPushSong();
                         displaySong();
                         sb.delete(0, mr.getGroup(0).length());
@@ -717,7 +722,7 @@ public class SongEditView
 
                     MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, 0, song.getBeatsPerBar());
                     if (measureRepeat != null) {
-                        song.addRepeat(lastChordSelection, measureRepeat);
+                        song.addRepeat(lastChordSectionLocation, measureRepeat);
                         undoStackPushSong();
                         displaySong();
                         continue;
@@ -730,7 +735,7 @@ public class SongEditView
 
 
             //  if we found something valid in the input, edit the song
-            if (measure != null && lastChordSelection != null) {
+            if (measure != null && lastChordSectionLocation != null) {
                 MeasureEditType editLocation = MeasureEditType.append;
                 if (editInsert.getValue()) {
                     editLocation = MeasureEditType.insert;
@@ -742,8 +747,8 @@ public class SongEditView
                     undoStackPushSong();
                     editAppend.setValue(true);      //  select append for subsequent additions
                     displaySong();
-                    lastChordSelection = song.getCurrentSongChordGridSelection();
-                    selectChordsCell(lastChordSelection);
+                    lastChordSectionLocation = song.getCurrentChordSectionLocation();
+                    selectChordCell(song.getCurrentChordSectionLocation());
                     continue;
                 }
             }
@@ -794,8 +799,8 @@ public class SongEditView
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
 
-        lastChordSelection = song.getCurrentSongChordGridSelection();       //  fixme
-        if (lastChordSelection == null)
+        lastChordSectionLocation = song.getCurrentChordSectionLocation();       //  fixme
+        if (lastChordSectionLocation == null)
             selectLastChordsCell();
         displaySong();
 
@@ -803,9 +808,8 @@ public class SongEditView
             measureFocus();
 
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
-            if (cell == null)
-                return;
-            selectChordsCell(ClientSongChordGridSelection.getSongChordGridSelection(cell));
+            if (cell != null && song != null)
+                selectChordCell(cell.getRowIndex(), cell.getCellIndex());
         });
         chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
             measureFocus();
@@ -818,7 +822,7 @@ public class SongEditView
             int column = TableCellElement.as(td).getCellIndex();
 
             editReplace.setValue(true);
-            selectChordsCell(new SongChordGridSelection(row, column));
+            selectChordCell(row, column);
         });
 
 
@@ -880,111 +884,97 @@ public class SongEditView
         int cols = chordsFlexTable.getCellCount(rows - 1);
         if (cols <= 0)
             return;
-        selectChordsCell(new SongChordGridSelection(rows - 1, cols - 1));
+        selectChordCell(rows - 1, cols - 1);
     }
 
 
+    private void selectChordCell() {
+        if (song == null)
+            return;
+        selectChordCell(song.getCurrentChordSectionLocation());
+    }
+
     /**
-     * Select the selected chords cell after some edit.
+     * Select the selected chords cell
      *
-     * @param chordSelection the current selection
+     * @param row the row
+     * @param col the column
      */
+    private void selectChordCell(int row, int col) {
+        selectChordCell(new GridCoordinate(row, col));
+    }
 
-    private void selectChordsCell(SongChordGridSelection chordSelection) {
+    private void selectChordCell(GridCoordinate gridCoordinate) {
 
-        if (chordSelection == null) {
-            selectLastChordsCell();
+        if (chordsFlexTable == null || song == null || gridCoordinate == null)
             return;
-        }
-        if (chordsFlexTable == null)
+
+        ChordSectionLocation chordSectionLocation = song.getChordSectionLocation(gridCoordinate);
+
+        if (chordSectionLocation == null)
             return;
+
+        selectChordCell(chordSectionLocation, gridCoordinate);
+    }
+
+    private void selectChordCell(SectionVersion sectionVersion) {
+        if (song == null || sectionVersion == null)
+            return;
+        selectChordCell(song.getChordSectionLocation(sectionVersion));
+    }
+
+    private void selectChordCell(ChordSectionLocation chordSectionLocation) {
+        if (chordsFlexTable == null || song == null || chordSectionLocation == null)
+            return;
+        selectChordCell(chordSectionLocation, song.getGridCoordinate(chordSectionLocation));
+    }
+
+    private void selectChordCell(ChordSectionLocation chordSectionLocation, GridCoordinate gridCoordinate) {
+        if (chordsFlexTable == null || song == null || chordSectionLocation == null || gridCoordinate == null)
+            return;
+
+        logger.info("selectChordCell: " + chordSectionLocation.toString() + " at " + gridCoordinate.toString());
+
+        song.setCurrentChordSectionLocation(chordSectionLocation);
 
         FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
         String text = null;
-        Element e = null;
-        {
-            int row = chordSelection.getRow();
-            int cols = chordSelection.getCol();
 
-            //  limit to current conditions
-            if (row >= chordsFlexTable.getRowCount()) {
-                //  row might have changed
-                row = chordsFlexTable.getRowCount() - 1;
-                cols = chordsFlexTable.getCellCount(row) - 1;
-            } else if (cols >= chordsFlexTable.getCellCount(row))
-                cols = chordsFlexTable.getCellCount(row) - 1;
-
-
-            for (; row >= 0 && cols >= 0; ) {
-                e = formatter.getElement(row, cols);
-                text = e.getInnerText();
-                if (text != null && text.length() > 0) {
-                    break;  //  found something
+        //  clear the last selection
+        if (lastGridCoordinate != null) {
+            try {
+                Element le = formatter.getElement(lastGridCoordinate.getRow(), lastGridCoordinate.getCol());
+                if (le != null) {
+                    le.setAttribute("editSelect", "none");
+                    le.getStyle().setBackgroundColor("");
                 }
-                if (cols > 0)
-                    cols--;     //  try previous column
-                else {
-                    //  try end of previous row
-                    row--;
-                    if (row < 0) {
-                        row = 0;
-                        cols = 0;
-                        break;
-                    }
-                    cols = chordsFlexTable.getCellCount(row) - 1;
-                }
+            } catch (IndexOutOfBoundsException ioob) {
             }
-            chordSelection = new SongChordGridSelection(row, cols);
         }
+        lastGridCoordinate = song.getGridCoordinate(chordSectionLocation);
 
-
-        if (text != null && text.length() > 0) {
-
-            //  clear the last selection
-            if (lastChordSelection != null) {
-                try {
-                    Element le = formatter.getElement(lastChordSelection.getRow(), lastChordSelection.getCol());
-                    if (le != null) {
-                        le.setAttribute("editSelect", "none");
-                        le.getStyle().setBackgroundColor("");
-                    }
-                } catch (IndexOutOfBoundsException ioob) {
-                }
-            }
-
-            //  indicate the current selection
-            MeasureEditType editLocation = MeasureEditType.append;
-            boolean deleteEnable = false;
-            if (editInsert.getValue()) {
-                e.setAttribute("editSelect", "insert");
-                editLocation = MeasureEditType.insert;
-            } else if (editAppend.getValue()) {
-                e.setAttribute("editSelect", "append");
-            } else {
-                e.setAttribute("editSelect", "replace");
-                e.getStyle().setBackgroundColor(selectedBorderColorValueString);
-                editLocation = MeasureEditType.replace;
-                deleteEnable = true;
-            }
-            editDelete.setEnabled(deleteEnable);
-
-            measureEntry.setText(text);
-            measureEntry.selectAll();
-            measureEntry.setFocus(true);
-
-            //  debug
-            if (logger.isLoggable(Level.FINER))
-                if (song != null) {
-                    MeasureNode measureNode = song.getStructuralMeasureNode(
-                            chordSelection.getRow(),
-                            chordSelection.getCol());
-                    logger.finer("chordSelection: (" + chordSelection.getRow() + "," + chordSelection.getCol() + ") "
-                            + measureNode.toString()
-                            + " " + editLocation.name());
-                }
-
-            lastChordSelection = chordSelection;
+        //  indicate the current selection
+        Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
+        //  MeasureEditType editLocation = MeasureEditType.append;
+        boolean deleteEnable = false;
+        if (editInsert.getValue()) {
+            e.setAttribute("editSelect", "insert");
+            //editLocation = MeasureEditType.insert;
+        } else if (editAppend.getValue()) {
+            e.setAttribute("editSelect", "append");
+        } else {
+            e.setAttribute("editSelect", "replace");
+            e.getStyle().setBackgroundColor(selectedBorderColorValueString);
+            // editLocation = MeasureEditType.replace;
+            deleteEnable = true;
         }
+        editDelete.setEnabled(deleteEnable);
+
+        measureEntry.setText(text);
+        measureEntry.selectAll();
+        measureEntry.setFocus(true);
+
+        lastChordSectionLocation = chordSectionLocation;
     }
 
     /**
@@ -992,24 +982,21 @@ public class SongEditView
      * This will delete the entire chord section if the section header is selected.
      */
     private void deleteChordsCell() {
-        if (lastChordSelection == null)
+        if (lastChordSectionLocation == null)
             return;
 
-        Measure measure = song.findMeasure(lastChordSelection);
+        Measure measure = song.findMeasure(lastChordSectionLocation);
         if (measure == null) {
-            if (lastChordSelection.getCol() == 0      //  safety
-                    && song.chordSectionDelete(song.findChordSection(lastChordSelection)))
+            if (song.chordSectionDelete(song.findChordSection(lastChordSectionLocation.getSectionVersion())))
                 undoStackPushSong();
             editAppend.setValue(true);     // no delete section delete
         } else {
-            if (song.structuralGridDelete(lastChordSelection.getRow(), lastChordSelection.getCol()))
-                undoStackPushSong();
-            else logger.info("didn't find in song: " + measure.toString());
+            logger.info("didn't find in song: " + measure.toString());
         }
 
         displaySong();
         //editAppend.setValue(true);     // delete after delete?
-        selectChordsCell(lastChordSelection);
+        selectChordCell();
 
         measureFocus();
         checkSong();
@@ -1053,10 +1040,7 @@ public class SongEditView
         song = newSong;
         displaySong();
 
-        if (lastChordSelection != null)
-            selectChordsCell(lastChordSelection);
-        else
-            selectLastChordsCell();      // default
+        selectChordCell();
 
         songEnter.setDisabled(false);
 
@@ -1308,7 +1292,8 @@ public class SongEditView
     private UndoStack<Song> undoStack = new UndoStack<>(20);
     private Key key = Key.getDefault();
     private Song song;
-    private SongChordGridSelection lastChordSelection;
+    private GridCoordinate lastGridCoordinate = new GridCoordinate(0, 0);
+    private ChordSectionLocation lastChordSectionLocation;
     private static final int fontsize = 32;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();

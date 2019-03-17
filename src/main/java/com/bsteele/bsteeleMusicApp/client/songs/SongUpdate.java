@@ -78,7 +78,6 @@ public class SongUpdate
     {
         sectionNumber = 0;
         sectionVersion = Section.getDefaultVersion();
-        measureContent = "";
         //  special for first measure
 
         if (m >= 0
@@ -89,13 +88,6 @@ public class SongUpdate
             ArrayList<SongMoment> songMoments = song.getSongMoments();
             songMoment = songMoments.get(sectionNumber);
             sectionVersion = songMoment.getLyricSection().getSectionVersion();
-            Grid<String> chordSection = song.getChordSectionStrings(sectionVersion);
-            if (chordSection != null && !chordSection.isEmpty())
-            {
-                ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
-                if (chordCols != null && chordCols.size() > 0)
-                    measureContent = chordCols.get(0);
-            }
         }
         sectionId = sectionVersion.toString();
         logger.fine("measureSet() from " + measure + " to " + m);
@@ -132,7 +124,7 @@ public class SongUpdate
      *
      * @return true if the measure exists
      */
-    public final boolean nextMeasure()
+    public final boolean nextMeasure()  //  fixme:  way broken!!!!!!!!!!!!!!!!!!!!!!!!
     {
         logger.fine("nextMeasure() from " + measure);
         if (measure < 0)
@@ -153,42 +145,6 @@ public class SongUpdate
         //  increment to next the next measure slot
         SongMoment songMoment = songMoments.get(sectionNumber);
         sectionVersion = songMoment.getLyricSection().getSectionVersion();
-        Grid<String> chordSection = song.getChordSectionStrings(sectionVersion);
-        if (chordSection == null)
-            return true;
-
-        ArrayList<String> chordCols = chordSection.getRow(chordSectionRow);
-        chordSectionColumn++;
-        if (chordCols == null || this.chordSectionColumn >= chordCols.size())
-        {
-            //  go to the next row
-            this.chordSectionColumn = 0;
-            this.chordSectionRow++;
-
-            //  repeat if required
-            if (repeatTotal > 0
-                    && chordSectionRow > repeatLastRow
-                    && repeatCurrent < repeatTotal
-                    )
-            {
-                repeatCurrent++;
-                if (repeatCurrent < repeatTotal)
-                    chordSectionRow = repeatFirstRow;
-                else
-                {
-                    repeatTotal = 0;  //  repeat done
-                    repeatFirstRow = -1;
-                    repeatLastCol = -1;
-                }
-            }
-            //  go to the next sectionNumber
-            if (chordSectionRow >= chordSection.getRowCount())
-            {
-                repeatTotal = 0;
-                chordSectionRow = 0;
-                sectionNumber++;
-            }
-        }
 
         //  validate where we've landed after the increment
         if (sectionNumber >= songMoments.size())
@@ -196,49 +152,6 @@ public class SongUpdate
 
         songMoment = songMoments.get(sectionNumber);
         sectionVersion = songMoment.getLyricSection().getSectionVersion();
-        chordSection = song.getChordSectionStrings(sectionVersion);
-
-        chordCols = chordSection.getRow(chordSectionRow);
-        if (chordCols == null)
-        {
-            return false;
-        }
-
-        measureContent = chordCols.get(chordSectionColumn);
-        if (measureContent == null)
-        {
-            return false;
-        }
-
-
-        //  look for the repeat extender
-        //  note: doesn't have to be at the end of the row due to comments
-        final RegExp extenderRegExp = RegExp.compile("^\\s*\\|");
-        if (extenderRegExp.test(measureContent))
-        {
-            //  not currently repeating
-            //  mark the first vertical bar row
-            if (this.repeatFirstRow < 0)
-                this.repeatFirstRow = chordSectionRow;
-            return this.nextMeasure();   //  go find the next real measure
-        }
-
-        //  look for repeat
-        final RegExp repeatRegExp = RegExp.compile("x *(?:\\d+\\/)?(\\d+)", "i");
-        MatchResult mr = repeatRegExp.exec(measureContent);
-        if (mr != null)
-        {
-            if (repeatTotal == 0)
-            {
-                //  not currently repeating
-                repeatTotal = Integer.parseInt(mr.getGroup(1));
-                repeatCurrent = 0;
-                repeatFirstRow = (repeatFirstRow >= 0 ? repeatFirstRow : chordSectionRow);
-                repeatLastRow = chordSectionRow;
-                repeatLastCol = chordSectionColumn;
-            }
-            return this.nextMeasure();   //  go find the next real measure
-        }
 
         sectionId = sectionVersion.toString();
         measure++;
@@ -738,7 +651,6 @@ public class SongUpdate
     private int repeatLastCol;
 
     private int measure;
-    private String measureContent;
 
     //  play values
     private int beat;
