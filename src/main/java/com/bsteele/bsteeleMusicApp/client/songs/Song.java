@@ -78,12 +78,11 @@ public class Song extends SongBase implements Comparable<Song> {
         song.setArtist(artist);
         song.setCopyright(copyright);
         song.setKey(key);
+        song.setBeatsPerMinute(bpm);
+        song.setBeatsPerBar(beatsPerBar);
         song.setUnitsPerMeasure(unitsPerMeasure);
         song.setChords(chords);
         song.setRawLyrics(lyrics);
-
-        song.setBeatsPerMinute(bpm);
-        song.setBeatsPerBar(beatsPerBar);
 
         return song;
     }
@@ -101,6 +100,8 @@ public class Song extends SongBase implements Comparable<Song> {
         ret.lastModifiedDate = lastModifiedDate;
         ret.setDuration(getDuration());
         ret.setTotalBeats(getTotalBeats());
+        ret.setCurrentChordSectionLocation(getCurrentChordSectionLocation());
+        ret.setCurrentMeasureEditType(getCurrentMeasureEditType());
         return ret;
     }
 

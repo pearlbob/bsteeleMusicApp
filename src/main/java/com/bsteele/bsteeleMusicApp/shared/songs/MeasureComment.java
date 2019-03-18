@@ -101,6 +101,11 @@ public class MeasureComment extends Measure {
     }
 
     @Override
+    public String toMarkup() {
+        return toString();
+    }
+
+    @Override
     public String toString() {
         return comment == null || comment.length() <= 0 ? "" : "(" + comment + ")";
     }

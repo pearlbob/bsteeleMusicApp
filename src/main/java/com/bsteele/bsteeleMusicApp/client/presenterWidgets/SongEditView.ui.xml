@@ -86,12 +86,12 @@
                         <g:TextBox ui:field="measureEntry" styleName="{resources.style.longEntryLine}"/>
                     </td>
                 </tr>
-                <tr><td style="vertical-align:top">
+                <tr><td style="vertical-align:top;" width="35%">
                         <g:RadioButton ui:field="editInsert" name="EditPosition">Insert</g:RadioButton>
                         <g:RadioButton ui:field="editReplace" name="EditPosition">Replace</g:RadioButton>
                         <g:Button ui:field="editDelete">Delete</g:Button>
                         <g:RadioButton ui:field="editAppend" name="EditPosition">Append</g:RadioButton>
-                        <g:FlexTable ui:field="chordsFlexTable"/>
+                        <g:FlexTable ui:field="chordsFlexTable" />
                     </td>
                     <td style="vertical-align:top">
                         <table>

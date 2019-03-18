@@ -12,15 +12,13 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordSection;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordSectionLocation;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
 import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordSectionLocation;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureEditType;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureRepeat;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
@@ -556,6 +554,7 @@ public class SongEditView
                 if (song != null) {
                     fireEvent(new SongRemoveEvent(song));
                     clearSong();
+                    eventBus.fireEvent(new NextSongEvent());
                 }
             }
         });
@@ -743,12 +742,15 @@ public class SongEditView
                     editLocation = MeasureEditType.replace;
                 }
 
+                logger.fine("preEdit: " + song.getCurrentChordSectionLocation());
                 if (song.measureEdit(song.getCurrentChordSectionLocation(), editLocation, measure)) {
+                    logger.fine("postEdit: " + song.getCurrentChordSectionLocation());
                     undoStackPushSong();
                     editAppend.setValue(true);      //  select append for subsequent additions
                     displaySong();
                     lastChordSectionLocation = song.getCurrentChordSectionLocation();
                     selectChordCell(song.getCurrentChordSectionLocation());
+                    logger.fine("postselect: " + song.getCurrentChordSectionLocation());
                     continue;
                 }
             }
@@ -785,50 +787,54 @@ public class SongEditView
     }
 
     private final void setSong(Song song) {
-        if (song == null)
-            return;
-
-        this.song = song.copySong();
-
-        titleEntry.setText(song.getTitle());
-        artistEntry.setText(song.getArtist());
-        copyrightEntry.setText(song.getCopyright());
-        setKey(song.getKey());
-        bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
-        timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-        lyricsTextEntry.setValue(song.getLyricsAsString());
-        findMostCommonScaleChords();
-
-        lastChordSectionLocation = song.getCurrentChordSectionLocation();       //  fixme
-        if (lastChordSectionLocation == null)
-            selectLastChordsCell();
-        displaySong();
-
-        chordsFlexTable.addClickHandler(clickEvent -> {
-            measureFocus();
-
-            HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
-            if (cell != null && song != null)
-                selectChordCell(cell.getRowIndex(), cell.getCellIndex());
-        });
-        chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
-            measureFocus();
-
-            Element td = getEventTargetCell(Event.as(doubleClickEvent.getNativeEvent()));
-            if (td == null) {
+            if (song == null)
                 return;
-            }
-            int row = TableRowElement.as(td.getParentElement()).getSectionRowIndex();
-            int column = TableCellElement.as(td).getCellIndex();
 
-            editReplace.setValue(true);
-            selectChordCell(row, column);
-        });
+            this.song = song.copySong();
+
+            titleEntry.setText(song.getTitle());
+            artistEntry.setText(song.getArtist());
+            copyrightEntry.setText(song.getCopyright());
+            setKey(song.getKey());
+            bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
+            timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+            lyricsTextEntry.setValue(song.getLyricsAsString());
+            findMostCommonScaleChords();
+            displaySong();
+            updateMeasureEditType(song.getCurrentMeasureEditType());
+
+            lastChordSectionLocation = song.getCurrentChordSectionLocation();
+
+            if (lastChordSectionLocation != null)
+                selectChordCell(lastChordSectionLocation);
+            else
+                selectLastChordsCell();
+
+            chordsFlexTable.addClickHandler(clickEvent -> {
+                measureFocus();
+
+                HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
+                if (cell != null && song != null)
+                    selectChordCell(cell.getRowIndex(), cell.getCellIndex());
+            });
+            chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
+                measureFocus();
+
+                Element td = getEventTargetCell(Event.as(doubleClickEvent.getNativeEvent()));
+                if (td == null) {
+                    return;
+                }
+                int row = TableRowElement.as(td.getParentElement()).getSectionRowIndex();
+                int column = TableCellElement.as(td).getCellIndex();
+
+                editReplace.setValue(true);
+                selectChordCell(row, column);
+            });
 
 
-        checkSong();
+            checkSong();
 
-        setUndoRedoEnables();
+            setUndoRedoEnables();
     }
 
     private void displaySong() {
@@ -938,7 +944,6 @@ public class SongEditView
         song.setCurrentChordSectionLocation(chordSectionLocation);
 
         FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
-        String text = null;
 
         //  clear the last selection
         if (lastGridCoordinate != null) {
@@ -959,22 +964,47 @@ public class SongEditView
         boolean deleteEnable = false;
         if (editInsert.getValue()) {
             e.setAttribute("editSelect", "insert");
-            //editLocation = MeasureEditType.insert;
+            song.setCurrentMeasureEditType(MeasureEditType.insert);
         } else if (editAppend.getValue()) {
             e.setAttribute("editSelect", "append");
+            song.setCurrentMeasureEditType(MeasureEditType.append);
         } else {
             e.setAttribute("editSelect", "replace");
             e.getStyle().setBackgroundColor(selectedBorderColorValueString);
-            // editLocation = MeasureEditType.replace;
+            song.setCurrentMeasureEditType(MeasureEditType.replace);
             deleteEnable = true;
         }
         editDelete.setEnabled(deleteEnable);
 
-        measureEntry.setText(text);
+        measureEntry.setText(song.findMeasureNode(chordSectionLocation).toMarkup());
         measureEntry.selectAll();
         measureEntry.setFocus(true);
 
-        lastChordSectionLocation = chordSectionLocation;
+        if (!chordSectionLocation.equals(lastChordSectionLocation)) {
+            lastChordSectionLocation = chordSectionLocation;
+            song.setCurrentChordSectionLocation(chordSectionLocation);
+            undoStackPushSong();
+        }
+    }
+
+    private void updateMeasureEditType(MeasureEditType measureEditType) {
+        switch (measureEditType) {
+            case insert:
+                editInsert.setValue(true);
+                break;
+            case replace:
+                editReplace.setValue(true);
+                editDelete.setEnabled(false);
+                break;
+            case delete:
+                editReplace.setValue(true);
+                editDelete.setEnabled(true);
+                break;
+            case append:
+            default:
+                editAppend.setValue(true);
+                break;
+        }
     }
 
     /**
@@ -982,24 +1012,16 @@ public class SongEditView
      * This will delete the entire chord section if the section header is selected.
      */
     private void deleteChordsCell() {
-        if (lastChordSectionLocation == null)
-            return;
 
-        Measure measure = song.findMeasure(lastChordSectionLocation);
-        if (measure == null) {
-            if (song.chordSectionDelete(song.findChordSection(lastChordSectionLocation.getSectionVersion())))
-                undoStackPushSong();
-            editAppend.setValue(true);     // no delete section delete
-        } else {
-            logger.info("didn't find in song: " + measure.toString());
+        if (song.chordSectionLocationDelete(song.getCurrentChordSectionLocation())) {
+            undoStackPushSong();
+            displaySong();
+            editAppend.setValue(true);     // delete after delete?
+            selectChordCell();
+
+            measureFocus();
+            checkSong();
         }
-
-        displaySong();
-        //editAppend.setValue(true);     // delete after delete?
-        selectChordCell();
-
-        measureFocus();
-        checkSong();
     }
 
 
@@ -1031,6 +1053,7 @@ public class SongEditView
                     newKey, bpmEntry.getText(), beatsPerBar, unitsPerMeasure,
                     song.toMarkup(), lyricsTextEntry.getValue());
             warn(newSong.getMessage());
+            newSong.setCurrentChordSectionLocation(song.getCurrentChordSectionLocation());
         } catch (ParseException pe) {
             error(pe.getMessage());
             songEnter.setDisabled(true);
@@ -1286,10 +1309,9 @@ public class SongEditView
         Scheduler.get().scheduleFinally(() -> measureEntry.setFocus(true));
     }
 
-
     private ArrayList<Measure> recentMeasures = new ArrayList<>();
     private HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
-    private UndoStack<Song> undoStack = new UndoStack<>(20);
+    private UndoStack<Song> undoStack = new UndoStack<>(50);
     private Key key = Key.getDefault();
     private Song song;
     private GridCoordinate lastGridCoordinate = new GridCoordinate(0, 0);

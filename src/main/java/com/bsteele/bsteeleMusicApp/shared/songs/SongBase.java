@@ -196,6 +196,8 @@ public class SongBase {
         computeSongMoments();
         computeDuration();
         setDefaultCurrentChordLocation();
+
+        logger.finer(logGrid());
     }
 
     private void setDefaultCurrentChordLocation() {
@@ -572,6 +574,7 @@ public class SongBase {
         try {
             ChordSection chordSection = getChordSection(chordSectionLocation.getSectionVersion());
             if (chordSection.deleteMeasure(chordSectionLocation.getPhraseIndex(), chordSectionLocation.getMeasureIndex())) {
+                clearCachedValues();
                 setCurrentChordSectionLocation(chordSectionLocation);
                 return true;
             }
@@ -620,7 +623,7 @@ public class SongBase {
 
             sb.append("</td></tr><tr><td></td>");
 
-            for (ChordSection chordSection : new TreeSet<ChordSection>(chordSectionMap.values())) {
+            for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
                 if (chordSection.getSectionVersion().equals(lyricSection.getSectionVersion())) {
                     innerHtml = chordSection.generateInnerHtml(key, tran, true);
                     rowStartSequenceNumber = sequenceNumber;
@@ -917,6 +920,9 @@ public class SongBase {
      * @param append       true if the chord section is to be added to an existing flex table data
      */
     private final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
+        if (chordSection == null)
+            return;
+
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
@@ -928,7 +934,7 @@ public class SongBase {
 
         int offset = 0;
         if (append)
-            offset = flexTable.getRowCount();
+            offset = 0;
         else {
             flexTable.removeAllRows();
             offset = -coordinate.getRow();
@@ -1599,6 +1605,10 @@ public class SongBase {
         return currentMeasureEditType;
     }
 
+    public void setCurrentMeasureEditType(MeasureEditType measureEditType) {
+        currentMeasureEditType = measureEditType;
+    }
+
     public ChordSectionLocation getCurrentChordSectionLocation() {
         return currentChordSectionLocation;
     }
@@ -1609,26 +1619,37 @@ public class SongBase {
 
     public void setCurrentChordSectionLocation(@Nonnull ChordSectionLocation chordSectionLocation) {
         //  try to find something close if the exact location doesn't exist
-        try {
-            ChordSection chordSection = getChordSection(chordSectionLocation);
-            ChordSection cs = chordSection;
-            if (cs == null) {
-                TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>();
-                sortedSectionVersions.addAll(chordSectionMap.keySet());
-                cs = chordSectionMap.get(sortedSectionVersions.last());
+        if (chordSectionLocation == null) {
+            chordSectionLocation = currentChordSectionLocation;
+            if (chordSectionLocation == null) {
+                chordSectionLocation = getLastChordSectionLocation();
             }
-            Phrase phrase = cs.getPhrase(chordSectionLocation.getPhraseIndex());
-            if (phrase == null)
-                phrase = cs.getPhrase(cs.getPhraseCount() - 1);
-            int phraseIndex = phrase.getPhraseIndex();
-            int pi = (phraseIndex >= cs.getPhraseCount() ? cs.getPhraseCount() - 1 : phraseIndex);
-            int measureIndex = chordSectionLocation.getMeasureIndex();
-            int mi = (measureIndex >= phrase.size() ? phrase.size() - 1 : measureIndex);
-            if (cs != chordSection || pi != phraseIndex || mi != measureIndex)
-                chordSectionLocation = new ChordSectionLocation(cs.getSectionVersion(), pi, mi);
-        } catch (NullPointerException | IndexOutOfBoundsException ex) {
-            chordSectionLocation = null;
         }
+        if (chordSectionLocation != null)
+            try {
+                ChordSection chordSection = getChordSection(chordSectionLocation);
+                ChordSection cs = chordSection;
+                if (cs == null) {
+                    TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>();
+                    sortedSectionVersions.addAll(chordSectionMap.keySet());
+                    cs = chordSectionMap.get(sortedSectionVersions.last());
+                }
+                Phrase phrase = cs.getPhrase(chordSectionLocation.getPhraseIndex());
+                if (phrase == null)
+                    phrase = cs.getPhrase(cs.getPhraseCount() - 1);
+                int phraseIndex = phrase.getPhraseIndex();
+                int pi = (phraseIndex >= cs.getPhraseCount() ? cs.getPhraseCount() - 1 : phraseIndex);
+                int measureIndex = chordSectionLocation.getMeasureIndex();
+                int mi = (measureIndex >= phrase.size() ? phrase.size() - 1 : measureIndex);
+                if (cs != chordSection || pi != phraseIndex || mi != measureIndex)
+                    chordSectionLocation = new ChordSectionLocation(cs.getSectionVersion(), pi, mi);
+            } catch (NullPointerException | IndexOutOfBoundsException ex) {
+                chordSectionLocation = null;
+            } catch (Exception ex) {
+                //  javascript parse error
+                logger.fine(ex.getMessage());
+                chordSectionLocation = null;
+            }
 
         currentChordSectionLocation = chordSectionLocation;
     }

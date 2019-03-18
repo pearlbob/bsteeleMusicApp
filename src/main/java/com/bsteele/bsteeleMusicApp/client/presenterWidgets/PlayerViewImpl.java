@@ -337,37 +337,37 @@ public class PlayerViewImpl
 
     private void syncKey(int tran) {
 
-        currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
-        keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
+            currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
+            keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
 
-        player.clear();
+            player.clear();
 
-        ArrayList<LyricSection> lyricSections = song.getLyricSections();
-        int sectionIndex = 0;
-        {
-            FlexTable flexTable = new FlexTable();
-            FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
-            final int chordCol = 0;
-            final int lyricsCol = 1;
-            for (LyricSection lyricSection : lyricSections) {
+            ArrayList<LyricSection> lyricSections = song.getLyricSections();
+            int sectionIndex = 0;
+            {
+                FlexTable flexTable = new FlexTable();
+                FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+                final int chordCol = 0;
+                final int lyricsCol = 1;
+                for (LyricSection lyricSection : lyricSections) {
 
-                int firstRow = flexTable.getRowCount();
-                FlexTable sectionTable = new FlexTable();
-                song.transpose(song.getChordSection(lyricSection.getSectionVersion()), prefix + sectionIndex++,
-                        sectionTable, tran, lyricsDefaultFontSize, false);
-                flexTable.setWidget(firstRow, chordCol, sectionTable);
+                    int firstRow = flexTable.getRowCount();
+                    FlexTable sectionTable = new FlexTable();
+                    song.transpose(song.getChordSection(lyricSection.getSectionVersion()), prefix + sectionIndex++,
+                            sectionTable, tran, lyricsDefaultFontSize, false);
+                    flexTable.setWidget(firstRow, chordCol, sectionTable);
 
-                StringBuilder sb = new StringBuilder();
-                for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
-                    sb.append(lyricsLine.getLyrics()).append("\n");
+                    StringBuilder sb = new StringBuilder();
+                    for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
+                        sb.append(lyricsLine.getLyrics()).append("\n");
 
-                flexTable.setHTML(firstRow, lyricsCol, sb.toString());
-                formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
-                        .getSectionVersion().getSection().getAbbreviation() + "Class");
-                formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
+                    flexTable.setHTML(firstRow, lyricsCol, sb.toString());
+                    formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
+                            .getSectionVersion().getSection().getAbbreviation() + "Class");
+                    formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
+                }
+                player.add(flexTable);
             }
-            player.add(flexTable);
-        }
     }
 
     private AudioBeatDisplay audioBeatDisplay;

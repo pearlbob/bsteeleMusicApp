@@ -126,6 +126,7 @@ public class SongUpdate
      */
     public final boolean nextMeasure()  //  fixme:  way broken!!!!!!!!!!!!!!!!!!!!!!!!
     {
+        logger.info("fix nextMeasure()" );
         logger.fine("nextMeasure() from " + measure);
         if (measure < 0)
         {

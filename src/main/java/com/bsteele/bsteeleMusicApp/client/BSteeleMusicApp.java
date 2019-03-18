@@ -29,13 +29,8 @@ public class BSteeleMusicApp implements EntryPoint {
     }
 
     private static void ensureNotUmbrellaError(@NotNull Throwable e) {
-        for (Throwable th : ((UmbrellaException) e).getCauses()) {
-            if (th instanceof UmbrellaException) {
-                ensureNotUmbrellaError(th);
-            } else {
-                th.printStackTrace();
-            }
-        }
+        logger.severe(e.getMessage());
+        e.printStackTrace();
     }
     private static final Logger logger = Logger.getLogger(BSteeleMusicApp.class.getName());
 }
