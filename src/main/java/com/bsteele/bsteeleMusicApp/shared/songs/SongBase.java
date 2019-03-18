@@ -997,6 +997,7 @@ public class SongBase {
 
     /**
      * Debug only!
+     * @return a string form of the song chord section grid
      */
     public final String logGrid() {
 

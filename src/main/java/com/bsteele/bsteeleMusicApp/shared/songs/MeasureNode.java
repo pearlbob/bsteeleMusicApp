@@ -45,7 +45,7 @@ public abstract class MeasureNode {
     /**
      * Return true if the measure node is a collection and it's empty
      *
-     * @return
+     * @return if the measure node contains no measures
      */
     boolean isEmpty() {
         return false;
