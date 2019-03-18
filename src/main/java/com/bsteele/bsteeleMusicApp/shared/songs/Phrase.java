@@ -63,16 +63,6 @@ public class Phrase extends MeasureNode {
         return ret;
     }
 
-    @Override
-    public void addToGrid(Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
-        logger.finest("Phrase.addToGrid()");
-
-        for (Measure measure : measures) {
-            if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1)
-                grid.addTo(0, grid.getRowCount(), chordSection);
-            measure.addToGrid(grid, chordSection);
-        }
-    }
 
     @Override
     public String transpose(@Nonnull Key key, int halfSteps) {

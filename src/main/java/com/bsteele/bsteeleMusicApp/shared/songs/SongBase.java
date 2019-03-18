@@ -11,6 +11,8 @@ import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -235,7 +237,7 @@ public class SongBase {
 
         int row = 0;
         int col = 0;
-        int measuresPerline = 4;    //  fixme: should be dynamic, read from phrase
+        int measuresPerline = 4;    //  fixme: should be dynamic, read from each phrase
         final int offset = 1;
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
             if (col != 0) {
@@ -268,7 +270,10 @@ public class SongBase {
                         //  put an end marker on multiline repeats
                         if (phrase.isRepeat()) {
                             grid.addTo(col++, row, new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
-                                    ChordSectionLocation.Marker.repeat));
+                                    (repeatExtensionUsed
+                                            ? ChordSectionLocation.Marker.repeatMiddleRight
+                                            : ChordSectionLocation.Marker.repeatUpperRight
+                                    )));
                             repeatExtensionUsed = true;
                         }
                         if (measureIndex < size) {
@@ -294,7 +299,7 @@ public class SongBase {
 
                         if (repeatExtensionUsed) {
                             ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
-                                    ChordSectionLocation.Marker.repeat);
+                                    ChordSectionLocation.Marker.repeatLowerRight);
                             GridCoordinate coordinate = new GridCoordinate(row, col);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                             gridChordSectionLocationCoordinateMap.put(loc, coordinate);
@@ -544,9 +549,9 @@ public class SongBase {
             Phrase phrase = chordSection.getPhrase(chordSectionLocation.getPhraseIndex());
             if (!chordSectionLocation.hasMeasureIndex()) {
                 switch (chordSectionLocation.getMarker()) {
-                    case repeat:
-                        return MeasureRepeatExtension.defaultInstance();
                     default:
+                        return MeasureRepeatExtension.get(chordSectionLocation.getMarker());
+                    case none:
                         return phrase;
                 }
             }
@@ -957,6 +962,7 @@ public class SongBase {
                     continue;
 
                 MeasureNode measureNode = findMeasureNode(loc);
+                final int flexRow = r + offset;
 
                 String s = "";
                 switch (c) {
@@ -964,7 +970,7 @@ public class SongBase {
                         if (!sectionVersion.equals(loc.getSectionVersion()))
                             return;
                         s = sectionVersion.toString();
-                        formatter.addStyleName(r + offset, 0, CssConstants.style + "sectionLabel");
+                        formatter.addStyleName(flexRow, 0, CssConstants.style + "sectionLabel");
                         break;
                     default:
                         s = measureNode.transpose(newKey, halfSteps);
@@ -976,27 +982,29 @@ public class SongBase {
                         && s.equals(lastValue)
                         && !(measureNode instanceof MeasureComment)) {
                     s = "-";
-                    formatter.addStyleName(r + offset, c, CssConstants.style + "textCenter");
+                    formatter.addStyleName(flexRow, c, CssConstants.style + "textCenter");
                 } else
                     lastValue = s;
 
-                //formatter.setAlignment(r + offset, c, ALIGN_CENTER, ALIGN_BOTTOM);
-                flexTable.setHTML(r + offset, c,
-                        "<span style=\"font-size: " + fontSize + "px;\"" +
-                                " id=\"" + loc.toString() + "\">"
+                //formatter.setAlignment(flexRow, c, ALIGN_CENTER, ALIGN_BOTTOM);   //  as per Shari, comment out
+                flexTable.setHTML(flexRow, c,
+                        "<span style=\"font-size: " + fontSize + "px;\">"
                                 + s
                                 + "</span>"
                 );
-                formatter.addStyleName(r + offset, c, CssConstants.style
-                        + (measureNode.isComment()
+                formatter.addStyleName(flexRow, c, CssConstants.style
+                        + (measureNode.isComment() && !measureNode.isRepeat()
                         ? "sectionCommentClass"
                         : "section" + sectionVersion.getSection().getAbbreviation() + "Class"));
+
+                formatter.getElement(flexRow, c).setId((measureNode.isComment() || measureNode.isRepeat() ? "" : "C."));
             }
         }
     }
 
     /**
      * Debug only!
+     *
      * @return a string form of the song chord section grid
      */
     public final String logGrid() {

@@ -169,20 +169,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
 
     @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
-        logger.finest("ChordSection.addToGrid()");
-
-        if (phrases == null || phrases.isEmpty())
-            //  initial editing
-            grid.addTo(0, grid.getRowCount(), this);
-        else
-            for (Phrase measureSequenceItem : phrases) {
-                grid.addTo(0, grid.getRowCount(), this);
-                measureSequenceItem.addToGrid(grid, this);
-            }
-    }
-
-    @Override
     public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
         ArrayList<String> ret = new ArrayList<>();
 

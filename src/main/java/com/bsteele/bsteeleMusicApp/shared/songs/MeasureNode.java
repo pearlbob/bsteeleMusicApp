@@ -54,8 +54,8 @@ public abstract class MeasureNode {
     /**
      * Generate inner HTML for the node representation in the key and transform offet.
      *
-     * @param key the key the measure is in
-     * @param tran the number of transposition steps to take
+     * @param key           the key the measure is in
+     * @param tran          the number of transposition steps to take
      * @param expandRepeats true if repeats are to be expanded
      * @return the generated HTML
      */
@@ -63,30 +63,24 @@ public abstract class MeasureNode {
 
 
     /**
-     * Add the given chord section to the measure node.
-     * Only makes sense if the node is a chord section or a measure sequence item.
-     *
-     * @param grid the grid to be added to
-     * @param chordSection the chord section to add
-     */
-    public abstract void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection);
-
-    /**
      * Transpose the measure node the given number of half steps from the given key.
-     * @param key the original key
+     *
+     * @param key       the original key
      * @param halfSteps the number of halfsteps to be transposed
      * @return a string representation of the transpositions
      */
     public abstract String transpose(@Nonnull Key key, int halfSteps);
 
-    /** Represent the measure node to the user in a string form and from storage encoding.
+    /**
+     * Represent the measure node to the user in a string form and from storage encoding.
      *
      * @return the string form created from the measure node's contents.
      */
-    abstract  public String toMarkup();
+    abstract public String toMarkup();
 
     /**
      * Override of the Java Object class equals() member.
+     *
      * @param o the other measure node to compare to
      * @return true if the two measure nodes are equal
      */
@@ -94,12 +88,14 @@ public abstract class MeasureNode {
 
     /**
      * Override of the Java Object class hashCode() member.
+     *
      * @return the hashcode
      */
     public abstract int hashCode();
 
 
-    /** Gets the block identifier for this measure node type when expressed in HTML.
+    /**
+     * Gets the block identifier for this measure node type when expressed in HTML.
      *
      * @return the block id
      */

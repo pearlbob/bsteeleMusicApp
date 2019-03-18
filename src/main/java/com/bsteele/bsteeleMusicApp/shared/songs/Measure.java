@@ -232,12 +232,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return ret;
     }
 
-    @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
-        grid.add(this);
-    }
-
-    @Override
+      @Override
     public String transpose(@Nonnull Key key, int halfSteps) {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();

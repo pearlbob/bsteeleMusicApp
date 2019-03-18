@@ -46,7 +46,9 @@ public class ChordSectionLocation {
 
     enum Marker {
         none,
-        repeat
+        repeatUpperRight,
+        repeatMiddleRight,
+        repeatLowerRight;
     }
 
     static final ChordSectionLocation parse(String s) {

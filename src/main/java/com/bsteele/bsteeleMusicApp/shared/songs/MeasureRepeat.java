@@ -196,27 +196,6 @@ public class MeasureRepeat extends Phrase {
         return ret;
     }
 
-    @Override
-    public void addToGrid(@Nonnull Grid<MeasureNode> grid, @Nonnull ChordSection chordSection) {
-        //  fixme: improve repeats.addToGrid()
-        for (MeasureNode measureNode : measures) {
-            if (grid.lastRowSize() >= MusicConstant.measuresPerDisplayRow + 1) {
-                if (measures.size() > MusicConstant.measuresPerDisplayRow) {
-                    grid.add(new MeasureRepeatExtension());
-                }
-                grid.addTo(0, grid.getRowCount(), chordSection);
-            }
-            measureNode.addToGrid(grid, chordSection);
-        }
-
-        for (int measureCount = measures.size(); measureCount % MusicConstant.measuresPerDisplayRow != 0; measureCount++)
-            grid.add(new MeasureComment());
-        if (measures.size() > MusicConstant.measuresPerDisplayRow) {
-            grid.add(new MeasureRepeatExtension());
-        }
-        grid.add(getRepeatMarker());
-    }
-
     public final MeasureRepeatMarker getRepeatMarker() {
         return repeatMarker;
     }
