@@ -286,23 +286,24 @@ public class SongEditView
         measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
             event.stopPropagation();
 
-            switch (event.getNativeKeyCode()) {
-                case KeyCodes.KEY_DOWN:
-                    logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordCell(lastGridCoordinate.getRow() + 1, lastGridCoordinate.getCol());
-                    return;
-                case KeyCodes.KEY_RIGHT:
-                    logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() + 1);
-                    return;
-                case KeyCodes.KEY_UP:
-                    logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordCell(lastGridCoordinate.getRow() - 1, lastGridCoordinate.getCol());
-                    return;
-                case KeyCodes.KEY_LEFT:
-                    logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
-                    selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() - 1);
-                    return;
+            if (event.isControlKeyDown())
+                switch (event.getNativeKeyCode()) {
+                    case KeyCodes.KEY_DOWN:
+                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        selectChordCell(lastGridCoordinate.getRow() + 1, lastGridCoordinate.getCol());
+                        return;
+                    case KeyCodes.KEY_RIGHT:
+                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() + 1);
+                        return;
+                    case KeyCodes.KEY_UP:
+                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        selectChordCell(lastGridCoordinate.getRow() - 1, lastGridCoordinate.getCol());
+                        return;
+                    case KeyCodes.KEY_LEFT:
+                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() - 1);
+                        return;
 //                case KeyCodes.KEY_Z:  //  fixme:  only works if measureEntry is focused but conflicts with normal text processing there
 //                    if (event.isControlKeyDown()) {
 //                        if (event.isShiftKeyDown()) {
@@ -315,9 +316,9 @@ public class SongEditView
 //                        return;
 //                    }
 //                    break;
-                default:
-                    break;
-            }
+                    default:
+                        break;
+                }
 
             String entry = measureEntry.getValue();
             if (entry.isEmpty())
@@ -787,54 +788,54 @@ public class SongEditView
     }
 
     private final void setSong(Song song) {
-            if (song == null)
+        if (song == null)
+            return;
+
+        this.song = song.copySong();
+
+        titleEntry.setText(song.getTitle());
+        artistEntry.setText(song.getArtist());
+        copyrightEntry.setText(song.getCopyright());
+        setKey(song.getKey());
+        bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
+        timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+        lyricsTextEntry.setValue(song.getLyricsAsString());
+        findMostCommonScaleChords();
+        displaySong();
+        updateMeasureEditType(song.getCurrentMeasureEditType());
+
+        lastChordSectionLocation = song.getCurrentChordSectionLocation();
+
+        if (lastChordSectionLocation != null)
+            selectChordCell(lastChordSectionLocation);
+        else
+            selectLastChordsCell();
+
+        chordsFlexTable.addClickHandler(clickEvent -> {
+            measureFocus();
+
+            HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
+            if (cell != null && song != null)
+                selectChordCell(cell.getRowIndex(), cell.getCellIndex());
+        });
+        chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
+            measureFocus();
+
+            Element td = getEventTargetCell(Event.as(doubleClickEvent.getNativeEvent()));
+            if (td == null) {
                 return;
+            }
+            int row = TableRowElement.as(td.getParentElement()).getSectionRowIndex();
+            int column = TableCellElement.as(td).getCellIndex();
 
-            this.song = song.copySong();
-
-            titleEntry.setText(song.getTitle());
-            artistEntry.setText(song.getArtist());
-            copyrightEntry.setText(song.getCopyright());
-            setKey(song.getKey());
-            bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
-            timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-            lyricsTextEntry.setValue(song.getLyricsAsString());
-            findMostCommonScaleChords();
-            displaySong();
-            updateMeasureEditType(song.getCurrentMeasureEditType());
-
-            lastChordSectionLocation = song.getCurrentChordSectionLocation();
-
-            if (lastChordSectionLocation != null)
-                selectChordCell(lastChordSectionLocation);
-            else
-                selectLastChordsCell();
-
-            chordsFlexTable.addClickHandler(clickEvent -> {
-                measureFocus();
-
-                HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
-                if (cell != null && song != null)
-                    selectChordCell(cell.getRowIndex(), cell.getCellIndex());
-            });
-            chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
-                measureFocus();
-
-                Element td = getEventTargetCell(Event.as(doubleClickEvent.getNativeEvent()));
-                if (td == null) {
-                    return;
-                }
-                int row = TableRowElement.as(td.getParentElement()).getSectionRowIndex();
-                int column = TableCellElement.as(td).getCellIndex();
-
-                editReplace.setValue(true);
-                selectChordCell(row, column);
-            });
+            editReplace.setValue(true);
+            selectChordCell(row, column);
+        });
 
 
-            checkSong();
+        checkSong();
 
-            setUndoRedoEnables();
+        setUndoRedoEnables();
     }
 
     private void displaySong() {
