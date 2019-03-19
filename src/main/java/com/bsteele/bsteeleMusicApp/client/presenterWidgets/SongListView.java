@@ -176,10 +176,10 @@ public class SongListView
             TreeSet<Song> sortedSongs = new TreeSet<>(songComparator);
             for (Song song : allSongs) {
                 try {
-                    song.checkSong();
+                   Song newSong = song.checkSong();
 
                     //  include commented songs
-                    if (song.getMessage() != null)
+                    if (newSong.getMessage() != null)
                         sortedSongs.add(song);
                 } catch (ParseException pe) {
                     //  parse error

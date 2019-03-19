@@ -836,11 +836,13 @@ public class SongEditView
         checkSong();
 
         setUndoRedoEnables();
+
+        logger.info(song.toMarkup());
     }
 
     private void displaySong() {
-        song.transpose(prefix, chordsFlexTable, 0, fontsize);
-        //logger.info(song.getStructuralGridAsText());
+        song.transpose(chordsFlexTable, 0, fontsize);
+        logger.finer(song.toMarkup());
     }
 
     private final void undoStackPushSong() {
@@ -1068,7 +1070,7 @@ public class SongEditView
 
         songEnter.setDisabled(false);
 
-        debug("current: " + song.getCurrentChordSectionLocation() + " " + song.getCurrentMeasureEditType());
+        //debug("current: " + song.getCurrentChordSectionLocation() + " " + song.getCurrentMeasureEditType());
 
         return newSong;
     }
@@ -1321,8 +1323,6 @@ public class SongEditView
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
     private final EventBus eventBus;    //  is actually used
-    private static String prefix = "songEdit";
-
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
 }

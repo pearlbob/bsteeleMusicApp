@@ -235,16 +235,19 @@ public class SongBase {
         gridCoordinateChordSectionLocationMap = new HashMap<>();
         gridChordSectionLocationCoordinateMap = new HashMap<>();
 
+        //  grid each section
         int row = 0;
         int col = 0;
         int measuresPerline = 4;    //  fixme: should be dynamic, read from each phrase
-        final int offset = 1;
+        final int offset = 1;       //  offset of phrase start from section start
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            //  start each section on it's own line
             if (col != 0) {
                 row++;
                 col = 0;
             }
             {
+                //  grid the section header
                 ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion());
                 GridCoordinate coordinate = new GridCoordinate(row, col);
                 chordSectionGridCoorinateMap.put(chordSection.getSectionVersion(), coordinate);
@@ -253,21 +256,25 @@ public class SongBase {
                 grid.addTo(col++, row, loc);
             }
 
+            //  grid each phrase
             for (int phraseIndex = 0; phraseIndex < chordSection.getPhrases().size(); phraseIndex++) {
-                if (col < offset) {
+                //  start each phrase on it's own line
+                if (col > offset) {
                     row++;
                     col = 0;
                     grid.addTo(col++, row, null);
                 }
+
                 Phrase phrase = chordSection.getPhrase(phraseIndex);
 
+                //  grid each measure of the phrase
                 boolean repeatExtensionUsed = false;
-                int size = phrase.getMeasures().size();
-                for (int measureIndex = 0; measureIndex < size; measureIndex++) {
+                int phraseSize = phrase.getMeasures().size();
+                for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
 
-                    //  limit line to the measures per line
+                    //  limit line length to the measures per line
                     if (col >= offset + measuresPerline) {
-                        //  put an end marker on multiline repeats
+                        //  put an end of line marker on multiline repeats
                         if (phrase.isRepeat()) {
                             grid.addTo(col++, row, new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
                                     (repeatExtensionUsed
@@ -276,7 +283,7 @@ public class SongBase {
                                     )));
                             repeatExtensionUsed = true;
                         }
-                        if (measureIndex < size) {
+                        if (measureIndex < phraseSize) {
                             row++;
                             col = 0;
                             grid.addTo(col++, row, null);
@@ -284,6 +291,7 @@ public class SongBase {
                     }
 
                     {
+                        //  grid the measure with it's location
                         ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
                         GridCoordinate coordinate = new GridCoordinate(row, col);
                         gridCoordinateChordSectionLocationMap.put(coordinate, loc);
@@ -291,12 +299,13 @@ public class SongBase {
                         grid.addTo(col++, row, loc);
                     }
 
-                    //  put the repeat on the end of the last line
-                    if (phrase.isRepeat() && measureIndex == size - 1) {
+                    //  put the repeat on the end of the last line of the repeat
+                    if (phrase.isRepeat() && measureIndex == phraseSize - 1) {
                         //  fill row to measures per line
                         while (col < offset + measuresPerline)
                             grid.addTo(col++, row, null);
 
+                        //  close the multiline repeat marker
                         if (repeatExtensionUsed) {
                             ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
                                     ChordSectionLocation.Marker.repeatLowerRight);
@@ -307,8 +316,8 @@ public class SongBase {
 
                             repeatExtensionUsed = false;
                         }
-                        //  add repeat indicator
                         {
+                            //  add repeat indicator
                             ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex);
                             GridCoordinate coordinate = new GridCoordinate(row, col);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
@@ -884,7 +893,7 @@ public class SongBase {
         return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
     }
 
-    public final void transpose(String prefix, FlexTable flexTable, int halfSteps, int fontSize) {
+    public final void transpose(FlexTable flexTable, int halfSteps, int fontSize) {
         transpose(flexTable, halfSteps, fontSize, false);
     }
 
@@ -948,6 +957,8 @@ public class SongBase {
         FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
 
         Grid<ChordSectionLocation> grid = getChordSectionLocationGrid();
+
+        logger.fine(grid.toString());
 
         int rLimit = grid.getRowCount();    // safety third
         int rowIndex = 0;

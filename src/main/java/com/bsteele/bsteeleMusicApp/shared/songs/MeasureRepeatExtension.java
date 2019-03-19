@@ -55,11 +55,11 @@ public class MeasureRepeatExtension extends MeasureComment {
         return markerString;
     }
 
-    private static final String uppperRight = "\u23AB";
-    private static final String lowerRight = "\u23AD";
-    private static final String uppperLeft = "\u23AB";
-    private static final String lowerLeft = "\u23AB";
-    private static final String extension = "\u23AA";
+    private static final String uppperRight = 	"\u23A4";
+    private static final String lowerRight = "\u23A6";
+    private static final String uppperLeft = "\u23A1";
+    private static final String lowerLeft = "\u23A3";
+    private static final String extension = "\u23A5";
     private static final MeasureRepeatExtension upperRightMeasureRepeatExtension = new MeasureRepeatExtension(uppperRight);
     private static final MeasureRepeatExtension middleRightMeasureRepeatExtension = new MeasureRepeatExtension(extension);
     private static final MeasureRepeatExtension lowerRightMeasureRepeatExtension = new MeasureRepeatExtension(lowerRight);

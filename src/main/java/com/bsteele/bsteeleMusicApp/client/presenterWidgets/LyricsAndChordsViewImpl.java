@@ -347,7 +347,7 @@ public class LyricsAndChordsViewImpl
         if (song == null)
             return;
 
-        song.transpose(prefix, chordsFlexTable, halfStepOffset, chordsFontSize);
+        song.transpose(chordsFlexTable, halfStepOffset, chordsFontSize);
 
         resizeChords();
     }
@@ -381,7 +381,7 @@ public class LyricsAndChordsViewImpl
                 int rLimit = grid.getRowCount();
                 if (forceChordsFontSize || chordsFontSize != size) {
                     //  fixme: demands all chord fonts be the same size
-                    song.transpose(prefix, chordsFlexTable, halfStepOffset, chordsFontSize);
+                    song.transpose( chordsFlexTable, halfStepOffset, chordsFontSize);
 
                     for (int r = 0; r < rLimit; r++) {
                         ArrayList<ChordSectionLocation> row = grid.getRow(r);
