@@ -359,17 +359,18 @@ public class SongBase {
     private final void clearCachedValues() {
         chordSectionLocationGrid = null;
         complexity = 0;
-        chordsAsMarkup=null;
+        chordsAsMarkup = null;
     }
 
 
     public final String toMarkup() {
-        if ( chordsAsMarkup != null )
+        if (chordsAsMarkup != null)
             return chordsAsMarkup;
         StringBuilder sb = new StringBuilder();
 
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
             sb.append(chordSection.toMarkup());
+            sb.append("\n");    //  for human readability only
         }
         chordsAsMarkup = sb.toString();
         return chordsAsMarkup;
@@ -556,11 +557,11 @@ public class SongBase {
     public final MeasureNode findMeasureNode(ChordSectionLocation chordSectionLocation) {
         try {
             ChordSection chordSection = chordSectionMap.get(chordSectionLocation.getSectionVersion());
-            if (!chordSectionLocation.hasPhraseIndex())
+            if (chordSectionLocation.isSection())
                 return chordSection;
 
             Phrase phrase = chordSection.getPhrase(chordSectionLocation.getPhraseIndex());
-            if (!chordSectionLocation.hasMeasureIndex()) {
+            if (chordSectionLocation.isPhrase()) {
                 switch (chordSectionLocation.getMarker()) {
                     default:
                         return MeasureRepeatExtension.get(chordSectionLocation.getMarker());
@@ -1033,8 +1034,7 @@ public class SongBase {
                 if (loc == null)
                     continue;
                 sb.append("(").append(r).append(",").append(c).append(") ")
-                        .append(loc.hasPhraseIndex() ?
-                                (loc.hasMeasureIndex() ? "        " : "    ") : "")
+                        .append(loc.isMeasure() ? "        " : (loc.isPhrase() ? "    " : ""))
                         .append(loc.toString()).append("  ").append(findMeasureNode(loc).toMarkup() + "\n");
             }
         }

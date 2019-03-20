@@ -118,12 +118,21 @@ public class ChordSectionLocation {
         return measureIndex;
     }
 
-    public boolean hasPhraseIndex() {
+    public final boolean hasPhraseIndex() {
         return hasPhraseIndex;
     }
 
-    public boolean hasMeasureIndex() {
-        return hasMeasureIndex;
+
+    public final boolean isSection() {
+        return hasPhraseIndex == false && hasMeasureIndex == false;
+    }
+
+    public final boolean isPhrase() {
+        return hasPhraseIndex == true && hasMeasureIndex == false;
+    }
+
+    public final boolean isMeasure() {
+        return hasPhraseIndex == true && hasMeasureIndex == true;
     }
 
 
@@ -135,9 +144,9 @@ public class ChordSectionLocation {
     public int hashCode() {
         int hash = 7;
         hash = (31 * hash + sectionVersion.hashCode()) % (1 << 31);
-        hash = (31 * hash + (hasPhraseIndex?1:0)) % (1 << 31);
+        hash = (31 * hash + (hasPhraseIndex ? 1 : 0)) % (1 << 31);
         hash = (31 * hash + phraseIndex) % (1 << 31);
-        hash = (31 * hash + (hasMeasureIndex?1:0)) % (1 << 31);
+        hash = (31 * hash + (hasMeasureIndex ? 1 : 0)) % (1 << 31);
         hash = (31 * hash + measureIndex) % (1 << 31);
         hash = (31 * hash + Objects.hashCode(marker)) % (1 << 31);
         return hash;

@@ -16,23 +16,23 @@ public class ChordSectionLocationTest {
             assertEquals(ChordSection.parse("i:", beatsPerBar).toString().trim(), ChordSectionLocation.parse("i:").toString());
             ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse("i:");
             assertEquals("I:", chordSectionLocation.toString());
-            assertFalse(chordSectionLocation.hasPhraseIndex());
-            assertFalse(chordSectionLocation.hasMeasureIndex());
+            assertFalse(chordSectionLocation.isPhrase());
+            assertFalse(chordSectionLocation.isMeasure());
 
             chordSectionLocation = ChordSectionLocation.parse("verse2:");
             assertEquals("V2:", chordSectionLocation.toString());
-            assertFalse(chordSectionLocation.hasPhraseIndex());
-            assertFalse(chordSectionLocation.hasMeasureIndex());
+            assertFalse(chordSectionLocation.isPhrase());
+            assertFalse(chordSectionLocation.isMeasure());
 
             chordSectionLocation = ChordSectionLocation.parse("verse2:0");
             assertEquals("V2:0", chordSectionLocation.toString());
-            assertTrue(chordSectionLocation.hasPhraseIndex());
-            assertFalse(chordSectionLocation.hasMeasureIndex());
+            assertTrue(chordSectionLocation.isPhrase());
+            assertFalse(chordSectionLocation.isMeasure());
 
             chordSectionLocation = ChordSectionLocation.parse("verse2:0:12");
             assertEquals("V2:0:12", chordSectionLocation.toString());
-            assertTrue(chordSectionLocation.hasPhraseIndex());
-            assertTrue(chordSectionLocation.hasMeasureIndex());
+            assertFalse(chordSectionLocation.isPhrase());
+            assertTrue(chordSectionLocation.isMeasure());
         }
 
         for (Section section : Section.values()) {
