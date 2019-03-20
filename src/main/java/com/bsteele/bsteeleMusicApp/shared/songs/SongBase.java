@@ -51,7 +51,7 @@ public class SongBase {
         setKey(Key.C);
         unitsPerMeasure = 4;
         setRawLyrics("");
-        setChords("");
+        parseChords("");
         setBeatsPerMinute(100);
         setBeatsPerBar(4);
     }
@@ -168,7 +168,7 @@ public class SongBase {
     /**
      * Parse the current string representation of the song's chords into the song internal strucutures.
      */
-    private final void parseChords() {
+    protected final void parseChords(final String chords) {
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
         clearCachedValues();  //  force lazy eval
@@ -359,16 +359,20 @@ public class SongBase {
     private final void clearCachedValues() {
         chordSectionLocationGrid = null;
         complexity = 0;
+        chordsAsMarkup=null;
     }
 
 
     public final String toMarkup() {
+        if ( chordsAsMarkup != null )
+            return chordsAsMarkup;
         StringBuilder sb = new StringBuilder();
 
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
             sb.append(chordSection.toMarkup());
         }
-        return sb.toString();
+        chordsAsMarkup = sb.toString();
+        return chordsAsMarkup;
     }
 
     /**
@@ -1122,7 +1126,7 @@ public class SongBase {
         return checkSong(getTitle(), getArtist(), getCopyright(),
                 getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
                 Integer.toString(getUnitsPerMeasure()),
-                getChords(), getRawLyrics());
+                toMarkup(), getRawLyrics());
     }
 
     /**
@@ -1466,16 +1470,6 @@ public class SongBase {
     }
 
     /**
-     * Return the chords
-     *
-     * @return the chords
-     */
-    @Deprecated
-    protected final String getChordsAsString() {
-        return chords;
-    }
-
-    /**
      * Return the default beats per minute.
      *
      * @return the defaultBpm
@@ -1581,15 +1575,6 @@ public class SongBase {
 
     protected void setDuration(double duration) {
         this.duration = duration;
-    }
-
-    public String getChords() {
-        return chords;
-    }
-
-    protected void setChords(String chords) {
-        this.chords = chords;
-        parseChords();
     }
 
     public String getRawLyrics() {
@@ -1799,7 +1784,7 @@ public class SongBase {
             return false;
         if (unitsPerMeasure != o.unitsPerMeasure)
             return false;
-        if (!chords.equals(o.chords))
+        if (!toMarkup().equals(o.toMarkup()))
             return false;
         if (!rawLyrics.equals(o.rawLyrics))
             return false;
@@ -1833,7 +1818,7 @@ public class SongBase {
         hash = (79 * hash + Objects.hashCode(this.key)) % (1 << 31);
         hash = (79 * hash + this.defaultBpm) % (1 << 31);
         hash = (79 * hash + this.unitsPerMeasure) % (1 << 31);
-        hash = (79 * hash + Objects.hashCode(this.chords)) % (1 << 31);
+        hash = (79 * hash + chordSectionMap.hashCode()) % (1 << 31);
         hash = (79 * hash + Objects.hashCode(this.rawLyrics)) % (1 << 31);
         hash = (79 * hash + Objects.hashCode(this.metadata)) % (1 << 31);
         return hash;
@@ -1862,9 +1847,9 @@ public class SongBase {
     private MeasureEditType currentMeasureEditType = MeasureEditType.append;
     private transient Grid<ChordSectionLocation> chordSectionLocationGrid = null;
     private transient int complexity;
+    private transient String chordsAsMarkup;
     private transient String message;
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
-    private String chords = "";
     private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
     private String rawLyrics = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();

@@ -359,8 +359,8 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString()).append(" ");
         if (phrases != null)
-            for (Phrase msi : phrases)
-                sb.append(msi.toMarkup());
+            for (Phrase phrase : phrases)
+                sb.append(phrase.toMarkup());
         return sb.toString();
     }
 

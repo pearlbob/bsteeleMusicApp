@@ -81,7 +81,7 @@ public class Song extends SongBase implements Comparable<Song> {
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
         song.setUnitsPerMeasure(unitsPerMeasure);
-        song.setChords(chords);
+        song.parseChords(chords);
         song.setRawLyrics(lyrics);
 
         return song;
@@ -263,9 +263,9 @@ public class Song extends SongBase implements Comparable<Song> {
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append("\n");
                         }
-                        song.setChords(sb.toString());
+                        song.parseChords(sb.toString());
                     } else {
-                        song.setChords(jv.isString().stringValue());
+                        song.parseChords(jv.isString().stringValue());
                     }
                     break;
                 case "lyrics":
@@ -346,7 +346,7 @@ public class Song extends SongBase implements Comparable<Song> {
 
         //  chord content
         boolean first = true;
-        for (String s : getChordsAsString().split("\n")) {
+        for (String s : toMarkup().split("\n")) {
             if (s.length() == 0)  //  json is not happy with empty array elements
                 continue;
             if (first) {

@@ -129,7 +129,7 @@ public class SongBaseTest
         assertTrue(a.measureEdit(ChordSectionLocation.parse("I:0"), MeasureEditType.append,
                 newMeasure));
         text = a.toMarkup();
-        logger.fine(a.getChords());
+        logger.fine(a.toMarkup());
         assertEquals("I: B ", text);
         newMeasure = Measure.parse("C", a.getBeatsPerBar());
         assertTrue(a.measureEdit(ChordSectionLocation.parse("I:0"), MeasureEditType.append,
@@ -182,7 +182,7 @@ public class SongBaseTest
 
         {
             String chords = "I: A A♯ B C V: C♯ D D♯ E";
-            a.setChords(chords);
+            a.parseChords(chords);
             text = a.toMarkup().trim();
             //logger.info("\"" + text + "\"");
             assertEquals(chords, text);
@@ -205,7 +205,7 @@ public class SongBaseTest
             //  backwards
             String chords = "I: A A A A V: B♯ C D♯ E";
             String chordSequence = "AAAABCDE";
-            a.setChords(chords);
+            a.parseChords(chords);
             newMeasure = Measure.parse("F", 4);
             for (int i = 7; i >= 4; i--) {
                 String s = chordSequence.substring(i, i + 1) + "♯?";
@@ -437,7 +437,7 @@ public class SongBaseTest
                         "C: F F# G G# Ab A O: C C C C B",
                 "i:\nv: bob, bob, bob berand\nc: sing chorus here \no:");
         logger.fine(a.getSongId().toString());
-        logger.fine("\t" + a.getChords());
+        logger.fine("\t" + a.toMarkup());
         logger.fine(a.getRawLyrics());
 
         ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(new StringBuffer("v:0:0"));
@@ -645,7 +645,7 @@ public class SongBaseTest
         song.setCopyright(copyright);
         song.setKey(key);
         song.setUnitsPerMeasure(unitsPerMeasure);
-        song.setChords(chords);
+        song.parseChords(chords);
         song.setRawLyrics(lyrics);
 
         song.setBeatsPerMinute(bpm);
