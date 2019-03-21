@@ -1285,6 +1285,46 @@ public class SongBase {
         return newSong;
     }
 
+    public static final String diff(SongBase a, SongBase b) {
+        StringBuilder sb = new StringBuilder();
+
+        if (  a.getTitle() == null || a.getTitle().compareTo(b.getTitle()) != 0 )
+            sb.append("title: "+a.getTitle()+ " != "+b.getTitle());
+        if (  a.getArtist() == null ||a.getArtist().compareTo(b.getArtist()) != 0 )
+            sb.append("artist: "+a.getArtist()+ " != "+b.getArtist());
+        if ( a.getCoverArtist() == null ||a.getCoverArtist().compareTo(b.getCoverArtist()) != 0 )
+            sb.append("cover: "+a.getCoverArtist()+ " != "+b.getCoverArtist());
+        if (a.getCopyright() == null || a.getCopyright().compareTo(b.getCopyright()) != 0 )
+            sb.append("copyright: "+a.getCopyright()+ " != "+b.getCopyright());
+        if (a.getKey() == null || a.getKey().compareTo(b.getKey()) != 0 )
+            sb.append("key: "+a.getKey().toString()+ " != "+b.getKey().toString());
+        if ( a.getBeatsPerMinute() !=b.getBeatsPerMinute() )
+            sb.append("BPM: "+a.getBeatsPerMinute()+ " != "+b.getBeatsPerMinute());
+        if ( a.getBeatsPerBar() !=b.getBeatsPerBar() )
+            sb.append("per bar: "+a.getBeatsPerBar()+ " != "+b.getBeatsPerBar());
+        if ( a.getUnitsPerMeasure() !=b.getUnitsPerMeasure() )
+            sb.append("units/measure: "+a.getUnitsPerMeasure()+ " != "+b.getUnitsPerMeasure());
+
+        //  chords
+        for ( ChordSection aChordSection: a.getChordSections())
+        {
+            ChordSection bChordSection =  b.getChordSection(aChordSection.getSectionVersion());
+            if ( bChordSection == null )
+            {
+                sb.append("chords: missing from b: "+aChordSection.toMarkup());
+            }
+            else if ( aChordSection.compareTo(bChordSection )!= 0 ){
+
+            }
+        }
+
+        //  lyrics
+        for  ( LyricSection lyricSection : a.getLyricSections()){
+        }
+
+        return sb.toString();
+    }
+
     private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {
         HashMap<SectionVersion, Grid<String>> ret = new HashMap<>();
         for (SectionVersion version : map.keySet()) {
