@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.songs;
 import com.bsteele.bsteeleMusicApp.client.util.JsonUtil;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
+import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONException;
@@ -387,7 +388,23 @@ public class Song extends SongBase implements Comparable<Song> {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public enum ComparatorType {
+    public static final ArrayList<StringTriple> diff(Song a, Song b) {
+        ArrayList<StringTriple> ret = SongBase.diff(a,b);
+        final int limit = 15;
+        if ( ret.size() > limit) {
+            while (ret.size() > limit) {
+                ret.remove(ret.size() - 1);
+            }
+            ret.add( new StringTriple("+more","",""));
+        }
+        ret.add(0,new StringTriple("file date",
+                (a.lastModifiedDate != null ? a.lastModifiedDate.toDateString():""),
+                (b.lastModifiedDate != null ? b.lastModifiedDate.toDateString():"")));
+        return ret;
+    }
+
+
+        public enum ComparatorType {
         title,
         artist,
         lastModifiedDate,

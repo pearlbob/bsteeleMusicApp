@@ -98,7 +98,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                     break;
                 }
                 //  see if this is a repeat measure
-                if (sb.charAt(0) == '-' && lastMeasure != null) {
+                if (chords.isEmpty() && sb.charAt(0) == '-' && lastMeasure != null) {
                     ret = new Measure(beatsPerBar, lastMeasure.getChords());
                     sb.delete(0, 1);
                     break;

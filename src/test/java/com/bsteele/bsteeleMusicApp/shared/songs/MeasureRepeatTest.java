@@ -29,7 +29,7 @@ public class MeasureRepeatTest {
         assertTrue(s.startsWith(measureRepeat.toMarkup()));
         assertEquals(refRepeat, measureRepeat);
 
-        s = "   [   A B   C D \n]\nx2 Eb Fmaj7";
+        s = "   [   A B   C D ]\nx2 Eb Fmaj7";
         measureRepeat = MeasureRepeat.parse(s, 0, 4);
         assertNotNull(measureRepeat);
         assertEquals(refRepeat, measureRepeat);
@@ -44,12 +44,17 @@ public class MeasureRepeatTest {
         assertNotNull(refRepeat);
         assertEquals("[A B (yo) C D ] x2 ", refRepeat.toMarkup());
 
-        measureRepeat = MeasureRepeat.parse("   A B yo\nC D  x2 E F", 0, 4);
+        measureRepeat = MeasureRepeat.parse("   A B (yo)|\nC D  x2 E F", 0, 4);
         assertNotNull(measureRepeat);
         assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
         assertEquals(refRepeat, measureRepeat);
 
-        measureRepeat = MeasureRepeat.parse(" [   A B yo\nC D]x2 E F", 0, 4);
+        measureRepeat = MeasureRepeat.parse(" [   A B (yo)|\nC D]x2 E F", 0, 4);
+        assertNotNull(measureRepeat);
+        assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
+        assertEquals(refRepeat, measureRepeat);
+
+        measureRepeat = MeasureRepeat.parse(" [   A B (yo)   C D]x2 E F", 0, 4);
         assertNotNull(measureRepeat);
         assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
         assertEquals(refRepeat, measureRepeat);

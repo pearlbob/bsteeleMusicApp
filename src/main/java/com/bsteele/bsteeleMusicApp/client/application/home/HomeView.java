@@ -203,8 +203,15 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @Override
     public void selectLastPlayTab() {
         AppTab tab = AppTab.values()[homeTabs.getSelectedIndex()];
-        if (tab != lastPlayTab)
-            homeTabs.selectTab(lastPlayTab.ordinal());
+        switch (tab) {
+            case edit:  //  stay on edit if already there
+                break;
+            default:
+                if (tab != lastPlayTab)
+                    homeTabs.selectTab(lastPlayTab.ordinal());
+                break;
+        }
+
     }
 
     @Override
@@ -246,5 +253,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     private final HandlerManager handlerManager;
 
     private HashMap<String, String> statusMap = new HashMap<>();
-    private AppTab lastPlayTab = AppTab.lyricsAndChords;
+    private AppTab lastPlayTab = AppTab.player;
 }

@@ -233,7 +233,7 @@ public class SongPlayMasterImpl
                 logger.fine("PlayMaster null songInUpdate");
                 return;
             }
-            logger.info("update diff: " + songInUpdate.diff(songOutUpdate));
+            logger.fine("update diff: " + songInUpdate.diff(songOutUpdate));
 
             eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
 

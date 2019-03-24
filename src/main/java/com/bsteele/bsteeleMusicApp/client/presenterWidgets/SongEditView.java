@@ -39,6 +39,7 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
@@ -283,25 +284,25 @@ public class SongEditView
             logger.fine("measure change: \"" + event.getValue() + "\"");
             processMeasureEntry();
         });
-        measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
+        measureEntry.addKeyDownHandler((KeyDownEvent event) -> {
             event.stopPropagation();
 
             if (event.isControlKeyDown())
                 switch (event.getNativeKeyCode()) {
                     case KeyCodes.KEY_DOWN:
-                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow() + 1, lastGridCoordinate.getCol());
                         return;
                     case KeyCodes.KEY_RIGHT:
-                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() + 1);
                         return;
                     case KeyCodes.KEY_UP:
-                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow() - 1, lastGridCoordinate.getCol());
                         return;
                     case KeyCodes.KEY_LEFT:
-                        logger.info("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
+                        logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() - 1);
                         return;
 //                case KeyCodes.KEY_Z:  //  fixme:  only works if measureEntry is focused but conflicts with normal text processing there
@@ -324,17 +325,16 @@ public class SongEditView
             if (entry.isEmpty())
                 return;
 
-            char lastChar = entry.charAt(entry.length() - 1);
-            switch (lastChar) {
-                //              case ' ':
-                case '\n':
-                case '\r':
+            switch (event.getNativeKeyCode()) {
+                case KeyCodes.KEY_ENTER:
                     processMeasureEntry();
                     break;
                 default:
                     preProcessMeasureEntry();
                     break;
             }
+
+
         });
 
         editAppend.setValue(true);
@@ -355,11 +355,11 @@ public class SongEditView
 
         chordsFlexTable.addDragStartHandler(dragStartEvent -> {
             dragStartEvent.stopPropagation();
-            logger.info("dragStartEvent: " + dragStartEvent.toDebugString());
+            logger.fine("dragStartEvent: " + dragStartEvent.toDebugString());
         });
         chordsFlexTable.addDragEndHandler(dragEndEvent -> {
             dragEndEvent.stopPropagation();
-            logger.info("dragEndEvent: " + dragEndEvent.toDebugString());
+            logger.fine("dragEndEvent: " + dragEndEvent.toDebugString());
         });
 
         lyricsTextEntry.addKeyUpHandler((KeyUpHandler) -> {
@@ -669,7 +669,7 @@ public class SongEditView
             //  look for a section
             SectionVersion sectionVersion = SectionVersion.parse(sb);
             if (sectionVersion != null) {
-                logger.info("new SectionVersion: \"" + sectionVersion.toString() + "\"");
+                logger.fine("new SectionVersion: \"" + sectionVersion.toString() + "\"");
 
                 ChordSectionLocation chordSectionLocation = song.getChordSectionLocation(sectionVersion);
                 if (chordSectionLocation != null) {
@@ -711,7 +711,7 @@ public class SongEditView
                     final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
                     MatchResult mr = repeatExp.exec(backup);
                     if (mr != null) {
-                        // logger.info("new measure: repeat");
+                        // logger.fine("new measure: repeat");
                         int repeats = Integer.parseInt(mr.getGroup(1));
                         song.setRepeat(lastChordSectionLocation, repeats);
                         undoStackPushSong();
@@ -832,12 +832,11 @@ public class SongEditView
             selectChordCell(row, column);
         });
 
-
         checkSong();
 
         setUndoRedoEnables();
 
-        logger.info(song.toMarkup());
+        logger.fine(song.toMarkup());
     }
 
     private void displaySong() {
@@ -942,7 +941,7 @@ public class SongEditView
         if (chordsFlexTable == null || song == null || chordSectionLocation == null || gridCoordinate == null)
             return;
 
-        logger.info("selectChordCell: " + chordSectionLocation.toString() + " at " + gridCoordinate.toString());
+        logger.fine("selectChordCell: " + chordSectionLocation.toString() + " at " + gridCoordinate.toString());
 
         song.setCurrentChordSectionLocation(chordSectionLocation);
 

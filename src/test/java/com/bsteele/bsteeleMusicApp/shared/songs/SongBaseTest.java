@@ -130,18 +130,18 @@ public class SongBaseTest
                 newMeasure));
         text = a.toMarkup();
         logger.fine(a.toMarkup());
-        assertEquals("I: B ", text);
+        assertEquals("I: B \n", text);
         newMeasure = Measure.parse("C", a.getBeatsPerBar());
         assertTrue(a.measureEdit(ChordSectionLocation.parse("I:0"), MeasureEditType.append,
                 newMeasure));
         text = a.toMarkup();
-        assertEquals("I: B C ", text);
+        assertEquals("I: B C \n", text);
         logger.fine(text);
         newMeasure = Measure.parse("A", a.getBeatsPerBar());
         assertTrue(a.measureEdit(ChordSectionLocation.parse("I:1"), MeasureEditType.insert,
                 newMeasure));
         text = a.toMarkup();
-        assertEquals("I: A B C ", text);
+        assertEquals("I: A B C \n", text);
         logger.fine(text);
 
         {
@@ -181,7 +181,7 @@ public class SongBaseTest
         }
 
         {
-            String chords = "I: A A♯ B C V: C♯ D D♯ E";
+            String chords = "I: A A♯ B C \nV: C♯ D D♯ E";
             a.parseChords(chords);
             text = a.toMarkup().trim();
             //logger.info("\"" + text + "\"");
@@ -203,7 +203,7 @@ public class SongBaseTest
 
         {
             //  backwards
-            String chords = "I: A A A A V: B♯ C D♯ E";
+            String chords = "I: A A A A \nV: B♯ C D♯ E";
             String chordSequence = "AAAABCDE";
             a.parseChords(chords);
             newMeasure = Measure.parse("F", 4);
@@ -274,12 +274,12 @@ public class SongBaseTest
             Measure m = a.findMeasure(new GridCoordinate(0, 4));
             ChordSectionLocation chordSectionLocation = a.findChordSectionLocation(m);
             a.setRepeat(chordSectionLocation, 2);
-            assertEquals("I: [A B C D ] x2 V: E F G A♯", a.toMarkup().trim());
+            assertEquals("I: [A B C D ] x2 \nV: E F G A♯", a.toMarkup().trim());
 
             //  remove the repeat
             chordSectionLocation = a.findChordSectionLocation(m);
             a.setRepeat(chordSectionLocation, 1);
-            assertEquals("I: A B C D V: E F G A♯", a.toMarkup().trim());
+            assertEquals("I: A B C D \nV: E F G A♯", a.toMarkup().trim());
         }
 
         {
@@ -297,9 +297,11 @@ public class SongBaseTest
                         Measure m = a.findMeasure(new GridCoordinate(row, col));
                         ChordSectionLocation chordSectionLocation = a.findChordSectionLocation(m);
                         a.setRepeat(chordSectionLocation, r);
+                        String s = a.toMarkup().trim();
+                        logger.fine(s);
                         assertEquals("I: [A B C D ] x" + (row > 0 ? 2 : r)
-                                        + (row > 0 ? " V: [E F G A♯ ] x" + r : " V: E F G A♯"),
-                                a.toMarkup().trim());
+                                        + (row > 0 ? " \nV: [E F G A♯ ] x" + r : " \nV: E F G A♯"),
+                                s);
                     }
             }
         }
@@ -581,17 +583,80 @@ public class SongBaseTest
         Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
         assertEquals(5, grid.getRowCount());
         ArrayList<ChordSectionLocation> row = grid.getRow(0);
-        assertEquals(6, row.size());
+        assertEquals(2, row.size());
         row = grid.getRow(1);
         logger.fine("row: "+row.toString());
-        assertEquals(8, row.size());
-        row = grid.getRow(2);
         assertEquals(6, row.size());
+        row = grid.getRow(2);
+        assertEquals(5, row.size());
         row = grid.getRow(3);
-        assertEquals(7, row.size());
+        assertEquals(6, row.size());
         row = grid.getRow(4);
         assertEquals(2, row.size());
+    }
 
+    @Test
+    public void testOddSongs() {
+        SongBase a = createSongBase("Rio", "Duran Duran", "Sony/ATV Music Publishing LLC", Key.getDefault(),
+                100, 4, 4,
+        "V:\n"
+                +"Cm7--- F7--- Bbmaj7--- Ebmaj7---\n"
+                +"Am7b5--- D7--- Gm7--- G7---\n"
+                +"Cm7--- F7--- Bbmaj7--- Ebmaj7--- \n"
+                +"Am7b5--- D7--- Gm7--- Gm7---\n"
+                +"Am7b5--- D7--- Gm7--- Gm7---\n"
+                + "Cm7--- F7--- Bbmaj7--- Bbmaj7---\n"
+                + "Am7b5--- D7--- Gm7-C7- Fm7-Bb7-\n"
+                + "Am7b5--- D7--- Gm7--- Gm7---\n",
+                "V: not important now");
+        logger.fine( a.logGrid());
+        assertEquals(Measure.parse("Am7b5", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(16, 1)));
+        assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(31, 4)));
+
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4,
+                "I1:\n"+
+                        "CD CD CD X.\n"+    //  toss the dot as a comment
+                        "D X\n"+
+                        "\n"+
+                        "V:\n"+
+                        "D7 D7 CD CD\n"+
+                        "D7 D7 CD CD\n"+
+                        "D7 D7 CD CD\n"+
+                        "D7 D7 CD D.\n"+
+                        "\n"+
+                        "I2:\n"+
+                        "CD CD CD D.\n"+
+                        "D\n"+
+                        "\n"+
+                        "C1:\n"+
+                        "DB♭ B♭ DC C\n"+
+                        "DB♭ B♭ DC C\n"+
+                        "DB♭ B♭ DC DC\n"+
+                        "DC\n"+
+                        "\n"+
+                        "I3:\n"+
+                        "D\n"+
+                        "\n"+
+                        "C2:\n"+
+                        "DB♭ B♭ DC C\n"+
+                        "DB♭ B♭ DC C\n"+
+                        "DB♭ B♭ DC C\n"+
+                        "DB♭ B♭ DC DC\n"+
+                        "DC DC\n"+
+                        "\n"+
+                        "I4:\n"+
+                        "C5D5 C5D5 C5D5 C5D5 x7\n"+
+                        "\n"+
+                        "O:\n"+
+                        "C5D5 C5D5 C5D5 C5D5\n"+
+                        "C5D5 C5D5 C5D5 C5D5",
+                "i1:\nv: bob, bob, bob berand\ni2: nope\nc1: sing \ni3: chorus here \ni4: mo chorus here\no: last line of outro");
+        logger.fine( a.logGrid());
+        assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(1, 3)));
+        assertEquals(Measure.parse("C5D5", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(5, 4)));
+        assertEquals(Measure.parse("DC", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(18, 2)));
     }
 
     @Test

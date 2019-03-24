@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
@@ -25,12 +27,14 @@ import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FileUpload;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -59,8 +63,8 @@ public class SongListView
         extends ViewImpl
         implements SongListPresenterWidget.MyView,
         AttachEvent.Handler,
+        SongSubmissionEventHandler,
         HasHandlers {
-
 
     interface Binder extends UiBinder<Widget, SongListView> {
     }
@@ -105,6 +109,8 @@ public class SongListView
         songSearch.addAttachHandler(this);
 
         this.eventBus = eventBus;
+
+        eventBus.addHandler(SongSubmissionEvent.TYPE, this);
 
         songGrid.addClickHandler(event -> {
             if (filteredSongs != null && songGrid != null) {
@@ -156,15 +162,8 @@ public class SongListView
                 SongFile f = new SongFile(files.getItem(i));
                 reducedSongFiles.add(f);
             }
-//            SongFile lastSongFile = null;
             for (SongFile songFile : reducedSongFiles) {
-//                if (lastSongFile != null && lastSongFile.getSongTitle().equals(songFile.getSongTitle()))
-//                    eventBus.fireEvent(new StatusEvent("song read skip",
-//                            "\"" + songFile.getFile().getName() +
-//                                    "\", used \"" + lastSongFile.getFile().getName() + "\""));
-//                else
                 asyncReadSongFile(songFile.getFile());
-//                lastSongFile = songFile;
             }
             clearFiles(event.getNativeEvent()); //  clear files for a new "change"
         });
@@ -176,7 +175,7 @@ public class SongListView
             TreeSet<Song> sortedSongs = new TreeSet<>(songComparator);
             for (Song song : allSongs) {
                 try {
-                   Song newSong = song.checkSong();
+                    Song newSong = song.checkSong();
 
                     //  include commented songs
                     if (newSong.getMessage() != null)
@@ -251,17 +250,57 @@ public class SongListView
     public boolean addToSongList(Song song, boolean force) {
         if (song != null) {
             if (allSongs.contains(song)) {
+                String message;
                 Song oldSong = allSongs.floor(song);
+                if ( oldSong.equals(song))
+                    return false;
                 if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
-                    logger.info("song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"");
+                    message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
+                    popupOver(message, oldSong, song);
+                    logger.info(message);
                     return false;
                 }
-                allSongs.remove(oldSong);  //  remove any prior version
-                logger.info("song parse: \"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"");
+
+                if (force) {
+                    allSongs.remove(oldSong);  //  remove any prior version
+                    return allSongs.add(song);
+                }
+                message = "song parse: \"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"";
+                popupOver(message, oldSong, song);
+                logger.info(message);
+                return false;
             }
             return allSongs.add(song);
         }
         return false;
+    }
+
+    @Override
+    public void onSongSubmission(SongSubmissionEvent event) {
+        Song song = event.getSong();
+
+        if (event.isWriteSong()) {
+            String filename = song.getTitle() + ".songlyrics";
+
+            saveSongAs(filename, song.toJson());
+        }
+
+        addToSongList(song, true);
+        displaySongList();
+        fireEvent(new SongUpdateEvent(song));
+    }
+
+    private void popupOver(String message, Song oldSong, Song newSong) {
+        SongReadPopup popup = new SongReadPopup(message, oldSong, newSong);
+        popup.SongSubmissionEventHandler(this);
+        popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+            public void setPosition(int offsetWidth, int offsetHeight) {
+                int left = (Window.getClientWidth() - offsetWidth) / 3;
+                int top = (Window.getClientHeight() - offsetHeight) / 3;
+                popup.setPopupPosition(left, top);
+            }
+        });
+        popup.show();
     }
 
     @Override
@@ -352,7 +391,11 @@ public class SongListView
             for (Song song : filteredSongs) {
                 songGrid.setHTML(r, 0,
                         "<div class=\"" + CssConstants.style + "songListItem\">"
-                                + song.getTitle() + "</div>");
+                                + song.getTitle()
+                                + (song.getFileVersionNumber() > 0
+                                ? " (" + Integer.toString(song.getFileVersionNumber()) + ")"
+                                : "")
+                                + "</div>");
                 songGrid.setHTML(r, 1,
                         "<div class=\"" + CssConstants.style + "songListItemData\">"
                                 + song.getArtist() + "</div>");

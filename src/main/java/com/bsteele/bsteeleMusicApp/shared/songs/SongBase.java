@@ -9,6 +9,7 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
+import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -130,6 +131,8 @@ public class SongBase {
      * @return the corrsesponding chord section
      */
     private final ChordSection findChordSection(LyricSection lyricSection) {
+        if (lyricSection == null)
+            return null;
         return chordSectionMap.get(lyricSection.getSectionVersion());
     }
 
@@ -871,7 +874,9 @@ public class SongBase {
         }
         //  last one is not terminated by another section
         if (lyricSection != null)
-            lyricSections.add(lyricSection);
+            if (!lyrics.isEmpty())
+                lyricSection.add(new LyricsLine(lyrics));
+        lyricSections.add(lyricSection);
     }
 
     /**
@@ -1092,7 +1097,6 @@ public class SongBase {
                 chordSectionDelete(chordSection);
                 chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
                 chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
-                clearCachedValues();
             } else {
                 //  change the count
                 measureRepeat.setRepeats(repeats);
@@ -1110,8 +1114,9 @@ public class SongBase {
             chordSectionDelete(chordSection);
             chordSection = new ChordSection(chordSection.getSectionVersion(), measureSequenceItems);
             chordSectionMap.put(chordSection.getSectionVersion(), chordSection);
-            clearCachedValues();
         }
+
+        clearCachedValues();
     }
 
 
@@ -1285,12 +1290,71 @@ public class SongBase {
         return newSong;
     }
 
-    private static HashMap<SectionVersion, Grid<String>> deepCopy(HashMap<SectionVersion, Grid<String>> map) {
-        HashMap<SectionVersion, Grid<String>> ret = new HashMap<>();
-        for (SectionVersion version : map.keySet()) {
-            ret.put(version, new Grid<String>().deepCopy(map.get(version)));
-            //  fixme: worry about version alteration!
+    public static final ArrayList<StringTriple> diff(SongBase a, SongBase b) {
+        ArrayList<StringTriple> ret = new ArrayList<>();
+
+        if (a.getTitle().compareTo(b.getTitle()) != 0)
+            ret.add(new StringTriple("title:", a.getTitle(), b.getTitle()));
+        if (a.getArtist().compareTo(b.getArtist()) != 0)
+            ret.add(new StringTriple("artist:", a.getArtist(), b.getArtist()));
+        if (a.getCoverArtist() != null && b.getCoverArtist() != null && a.getCoverArtist().compareTo(b.getCoverArtist()) != 0)
+            ret.add(new StringTriple("cover:", a.getCoverArtist(), b.getCoverArtist()));
+        if (a.getCopyright().compareTo(b.getCopyright()) != 0)
+            ret.add(new StringTriple("copyright:", a.getCopyright(), b.getCopyright()));
+        if (a.getKey().compareTo(b.getKey()) != 0)
+            ret.add(new StringTriple("key:", a.getKey().toString(), b.getKey().toString()));
+        if (a.getBeatsPerMinute() != b.getBeatsPerMinute())
+            ret.add(new StringTriple("BPM:", Integer.toString(a.getBeatsPerMinute()), Integer.toString(b.getBeatsPerMinute())));
+        if (a.getBeatsPerBar() != b.getBeatsPerBar())
+            ret.add(new StringTriple("per bar:", Integer.toString(a.getBeatsPerBar()), Integer.toString(b.getBeatsPerBar())));
+        if (a.getUnitsPerMeasure() != b.getUnitsPerMeasure())
+            ret.add(new StringTriple("units/measure:", Integer.toString(a.getUnitsPerMeasure()), Integer.toString(b.getUnitsPerMeasure())));
+
+        //  chords
+        for (ChordSection aChordSection : a.getChordSections()) {
+            ChordSection bChordSection = b.getChordSection(aChordSection.getSectionVersion());
+            if (bChordSection == null) {
+                ret.add(new StringTriple("chords missing:", aChordSection.toMarkup(), ""));
+            } else if (aChordSection.compareTo(bChordSection) != 0) {
+                ret.add(new StringTriple("chords:", aChordSection.toMarkup(), bChordSection.toMarkup()));
+            }
         }
+        for (ChordSection bChordSection : b.getChordSections()) {
+            ChordSection aChordSection = a.getChordSection(bChordSection.getSectionVersion());
+            if (aChordSection == null) {
+                ret.add(new StringTriple("chords missing:", "", bChordSection.toMarkup()));
+            }
+        }
+
+        //  lyrics
+        {
+            int limit = Math.min(a.getLyricSections().size(), b.getLyricSections().size());
+            for (int i = 0; i < limit; i++) {
+
+                LyricSection aLyricSection = a.getLyricSections().get(i);
+                SectionVersion sectionVersion = aLyricSection.getSectionVersion();
+                LyricSection bLyricSection = b.getLyricSections().get(i);
+                int lineLimit = Math.min(aLyricSection.getLyricsLines().size(), bLyricSection.getLyricsLines().size());
+                for (int j = 0; j < lineLimit; j++) {
+                    String aLine = aLyricSection.getLyricsLines().get(j).getLyrics();
+                    String bLine = bLyricSection.getLyricsLines().get(j).getLyrics();
+                    if (aLine.compareTo(bLine) != 0)
+                        ret.add(new StringTriple("lyrics " + sectionVersion.toString(), aLine, bLine));
+                }
+                lineLimit = aLyricSection.getLyricsLines().size();
+                for (int j = bLyricSection.getLyricsLines().size(); j < lineLimit; j++) {
+                    String aLine = aLyricSection.getLyricsLines().get(j).getLyrics();
+                    ret.add(new StringTriple("lyrics missing " + sectionVersion.toString(), aLine, ""));
+                }
+                lineLimit = bLyricSection.getLyricsLines().size();
+                for (int j = aLyricSection.getLyricsLines().size(); j < lineLimit; j++) {
+                    String bLine = bLyricSection.getLyricsLines().get(j).getLyrics();
+                    ret.add(new StringTriple("lyrics missing " + sectionVersion.toString(), "", bLine));
+                }
+
+            }
+        }
+
         return ret;
     }
 
@@ -1827,7 +1891,7 @@ public class SongBase {
     private String title = "Unknown";
     private SongId songId = new SongId();
     private String artist = "Unknown";
-    private String coverArtist;
+    private String coverArtist = "";
     private String copyright = "Unknown";
     private transient String fileName;
     private transient int fileVersionNumber = 0;
@@ -1855,8 +1919,6 @@ public class SongBase {
     private LegacyDrumSection drumSection = new LegacyDrumSection();
     private Arrangement drumArrangement;    //  default
     private TreeSet<Metadata> metadata = new TreeSet<>();
-
-    private static final char js_delta = '\u0394';
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;

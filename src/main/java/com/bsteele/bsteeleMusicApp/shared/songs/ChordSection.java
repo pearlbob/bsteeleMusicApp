@@ -307,7 +307,18 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
      */
     @Override
     public int compareTo(ChordSection o) {
-        return sectionVersion.compareTo(o.sectionVersion);
+        if (sectionVersion.compareTo(o.sectionVersion) != 0)
+            return sectionVersion.compareTo(o.sectionVersion);
+
+        if (phrases.size() != o.phrases.size())
+            return phrases.size() < o.phrases.size() ? -1 : 1;
+
+        for (int i = 0; i < phrases.size(); i++) {
+            int ret = phrases.get(i).toMarkup().compareTo(o.phrases.get(i).toMarkup());
+            if (ret != 0)
+                return ret;
+        }
+        return 0;
     }
 
     @Override

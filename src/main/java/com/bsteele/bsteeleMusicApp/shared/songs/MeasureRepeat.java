@@ -31,7 +31,7 @@ public class MeasureRepeat extends Phrase {
 
         ArrayList<Measure> measures = new ArrayList<>();
 
-        Util.stripLeadingWhitespace(sb);
+        Util.stripLeadingSpaces(sb);
 
         StringBuffer lookaheadSb = new StringBuffer(sb);//  fixme: limit size?
         boolean hasBracket = lookaheadSb.charAt(0) == '[';
@@ -41,14 +41,31 @@ public class MeasureRepeat extends Phrase {
 
 
         //  look for a set of measures and comments
+        boolean barFound = false;
         for (int i = 0; i < 1e4; i++) {   //  safety
-            Util.stripLeadingWhitespace(lookaheadSb);
+            Util.stripLeadingSpaces(lookaheadSb);
             if (lookaheadSb.length() == 0)
                 return null;
+
+            //  extend the search for a repeat only if the line ends with a |
+            if ( lookaheadSb.charAt(0) == '|') {
+                barFound = true;
+                lookaheadSb.delete(0, 1);
+                continue;
+            }
+            if ( lookaheadSb.charAt(0) == '\n') {
+                lookaheadSb.delete(0, 1);
+                if ( barFound ) {
+                    barFound = false;
+                    continue;
+                }
+                return null;  //  not a repeat
+            }
 
             Measure measure = Measure.parse(lookaheadSb, beatsPerBar);
             if (measure != null) {
                 measures.add(measure);
+                barFound = false;
                 continue;
             }
             if (lookaheadSb.charAt(0) != ']' && lookaheadSb.charAt(0) != 'x') {

@@ -17,9 +17,16 @@ import java.util.TreeSet;
 public enum ChordDescriptor {
     //  longest short names first!
     //  avoid starting descriptors with b, #, s to avoid confusion with scale notes
+    sevenSus4("7sus4", "R 4 5 m7"),    // Dominant 7th chord with the 3rd replaced by the 4th. Suspended chords are neither major or minor.
+    sevenSus2("7sus2", "R 2 5 m7"),
+    sevenSus("7sus", "R 5 m7"),
+
     dominant13("13", "R 3 5 m7 9 11 13"),
     dominant11("11", "R 3 5 m7 9 11"),
+    mmaj7("mmaj7","R m3 5 7"),
     minor7b5("m7b5", "R m3 b5 m7"),
+    msus2("msus2", "R 2 m3 5"),
+    msus4("msus4", "R m3 4 5"),
     add9("add9", "R 2 3 5 7"),
     jazz7b9("jazz7b9", "R m2 3 5"),
     sevenSharp5("7#5", "R 3 #5 m7"),
@@ -31,6 +38,7 @@ public enum ChordDescriptor {
     six9("69", "R 2 3 5 6"),
     major6("6", "R 3 5 6"),
     diminished7("dim7", "R m3 b5 6"),
+    dimMasculineOrdinalIndicator7("º7", "R m3 b5 6"),
     diminishedAsCircle("" + MusicConstant.diminishedCircle, "R m3 b5"),
     diminished("dim", "R m3 b5"),
 
@@ -41,22 +49,30 @@ public enum ChordDescriptor {
     suspended4("sus4", "R 4 5"),
     suspended2("sus2", "R 2 5"),
     suspended("sus", "R 5"),
+    minor9("m9", "R m3 5 m7 9"),
     minor11("m11", "R m3 5 m7 11"),
     minor13("m13", "R m3 5 m7 13"),
     minor6("m6", "R m3 5 6"),
+    capMajor7("Maj7", "R 3 5 7"),
     major7("maj7", "R 3 5 7"),
+    major9("maj9", "R 3 5 7 9"),
+    maj("maj", "R 3 5"),
     major7asDelta("" + MusicConstant.greekCapitalDelta, "R 3 5 7"),
+    majorNine("M9", "R 3 5 7 9"),
     majorSeven("M7", "R 3 5 7"),
     suspendedSecond("2", "R 2 5"),     //  alias for  suspended2
     suspendedFourth("4", "R 4 5"),      //  alias for suspended 4
     power5("5", "R 5"),  //  3rd omitted typically to avoid distortions
     minor7("m7", "R m3 5 m7"),
     dominant7("7", "R 3 5 m7"),
-    minor("m", "r m3 5"),
+    minor("m", "R m3 5"),
+    capMajor("M", "R 3 5"),
+    dimMasculineOrdinalIndicator("º", "R m3 b5"),
+
     /**
      * Default chord descriptor.
      */
-    major("", "r 3 5");
+    major("", "R 3 5");
 
     ChordDescriptor(String shortName, String structure) {
         this.shortName = shortName;
@@ -171,11 +187,17 @@ public enum ChordDescriptor {
             jazz7b9,
             major7,
             majorSeven,
+            major9,
+            majorNine,
+            minor9,
             minor11,
             minor13,
             minor6,
             minor7,
+            mmaj7,
             minor7b5,
+            msus2,
+            msus4,
             flat5,
             sevenFlat5,
             sevenFlat9,
@@ -186,6 +208,9 @@ public enum ChordDescriptor {
             suspended4,
             suspendedFourth,
             suspended7,
+            sevenSus,
+            sevenSus2,
+            sevenSus4,
 
             //  numerically named chords
             power5,

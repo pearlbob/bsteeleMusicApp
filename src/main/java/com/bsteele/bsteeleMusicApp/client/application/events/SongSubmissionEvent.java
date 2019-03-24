@@ -18,7 +18,12 @@ public class SongSubmissionEvent extends GwtEvent<SongSubmissionEventHandler> {
 
     public SongSubmissionEvent(Song song) {
         this.song = song;
+        writeSong=true;
 }
+    public SongSubmissionEvent(Song song, boolean writeSong ) {
+        this.song = song;
+        this.writeSong=writeSong;
+    }
 
     @Override
     public Type<SongSubmissionEventHandler> getAssociatedType() {
@@ -33,4 +38,12 @@ public class SongSubmissionEvent extends GwtEvent<SongSubmissionEventHandler> {
     public Song getSong() {
         return song;
     }
+
+
+    public boolean isWriteSong() {
+        return writeSong;
+    }
+
+    private final  boolean writeSong;
+
 }

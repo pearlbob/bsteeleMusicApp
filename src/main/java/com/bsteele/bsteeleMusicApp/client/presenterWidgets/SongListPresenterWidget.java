@@ -48,7 +48,6 @@ import static java.util.logging.Logger.getLogger;
 public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWidget.MyView>
         implements
         SongUpdateEventHandler,
-        SongSubmissionEventHandler,
         SongReadEventHandler,
         SongRemoveEventHandler,
         NextSongEventHandler,
@@ -125,7 +124,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         view.addSongUpdateEventHandler(this);
         view.addSongReadEventHandler(this);
 
-        eventBus.addHandler(SongSubmissionEvent.TYPE, this);
         eventBus.addHandler(AllSongWriteEvent.TYPE, this);
         eventBus.addHandler(NextSongEvent.TYPE, this);
         eventBus.addHandler(SongRemoveEvent.TYPE, this);
@@ -135,18 +133,6 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     @Override
     public void onSongUpdate(SongUpdateEvent event) {
         eventBus.fireEvent(event);
-    }
-
-    @Override
-    public void onSongSubmission(SongSubmissionEvent event) {
-        Song song = event.getSong();
-        String filename = song.getTitle() + ".songlyrics";
-
-        view.saveSongAs(filename, song.toJson());
-
-        view.addToSongList(song, true);
-        view.displaySongList();
-        fireEvent(new SongUpdateEvent(song));
     }
 
     @Override
