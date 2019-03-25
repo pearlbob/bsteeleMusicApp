@@ -165,6 +165,8 @@ public class SongBase {
     }
 
     public final ChordSection getChordSection(@Nonnull ChordSectionLocation chordSectionLocation) {
+        if (chordSectionLocation == null)
+            return null;
         return chordSectionMap.get(chordSectionLocation.getSectionVersion());
     }
 
@@ -411,6 +413,7 @@ public class SongBase {
 
         if (chordSection.getPhrases().isEmpty()) {
             chordSection.getPhrases().add(new Phrase(new ArrayList<>(), 0));
+            editLocation = MeasureEditType.insert;
         }
 
         Phrase phrase;
@@ -421,13 +424,33 @@ public class SongBase {
         }
 
         boolean ret = false;
-        int measureIndex = location.getMeasureIndex();
+        int measureIndex = 0;
+        location.getMeasureIndex();
+        if (location.hasMeasureIndex()) {
+            measureIndex = location.getMeasureIndex();
+        } else {
+            measureIndex = 0;
+            location = new ChordSectionLocation(location.getSectionVersion(), 0, 0 );
+            editLocation = MeasureEditType.insert;
+        }
         switch (editLocation) {
             case insert:
                 ret = phrase.insert(measureIndex, measure);
+                if (ret) {
+                    //  no location change
+                    clearCachedValues();
+                    setCurrentChordSectionLocation(location);
+                    currentMeasureEditType = MeasureEditType.append;    //  but move to append
+                }
                 break;
             case replace:
                 ret = phrase.replace(measureIndex, measure);
+                if (ret) {
+                    //  follow the measure with an append
+                    clearCachedValues();
+                    setCurrentChordSectionLocation(location);
+                    currentMeasureEditType = MeasureEditType.append;
+                }
                 break;
             case append:
                 try {
@@ -446,11 +469,12 @@ public class SongBase {
                     //  ignore attempt
                 }
                 ret = phrase.append(measureIndex, measure);
+                if (ret) {
+                    clearCachedValues();
+                    setCurrentChordSectionLocation(location.nextMeasureIndexLocation());
+                    currentMeasureEditType = MeasureEditType.append;
+                }
                 break;
-        }
-        if (ret) {
-            setCurrentChordSectionLocation(findChordSectionLocation(measure));
-            clearCachedValues();
         }
         return ret;
     }
@@ -1703,15 +1727,19 @@ public class SongBase {
                     sortedSectionVersions.addAll(chordSectionMap.keySet());
                     cs = chordSectionMap.get(sortedSectionVersions.last());
                 }
-                Phrase phrase = cs.getPhrase(chordSectionLocation.getPhraseIndex());
-                if (phrase == null)
-                    phrase = cs.getPhrase(cs.getPhraseCount() - 1);
-                int phraseIndex = phrase.getPhraseIndex();
-                int pi = (phraseIndex >= cs.getPhraseCount() ? cs.getPhraseCount() - 1 : phraseIndex);
-                int measureIndex = chordSectionLocation.getMeasureIndex();
-                int mi = (measureIndex >= phrase.size() ? phrase.size() - 1 : measureIndex);
-                if (cs != chordSection || pi != phraseIndex || mi != measureIndex)
-                    chordSectionLocation = new ChordSectionLocation(cs.getSectionVersion(), pi, mi);
+                if (chordSectionLocation.hasPhraseIndex() ) {
+                    Phrase phrase = cs.getPhrase(chordSectionLocation.getPhraseIndex());
+                    if (phrase == null)
+                        phrase = cs.getPhrase(cs.getPhraseCount() - 1);
+                    int phraseIndex = phrase.getPhraseIndex();
+                    if ( chordSectionLocation.hasMeasureIndex() ) {
+                        int pi = (phraseIndex >= cs.getPhraseCount() ? cs.getPhraseCount() - 1 : phraseIndex);
+                        int measureIndex = chordSectionLocation.getMeasureIndex();
+                        int mi = (measureIndex >= phrase.size() ? phrase.size() - 1 : measureIndex);
+                        if (cs != chordSection || pi != phraseIndex || mi != measureIndex)
+                            chordSectionLocation = new ChordSectionLocation(cs.getSectionVersion(), pi, mi);
+                    }
+                }
             } catch (NullPointerException | IndexOutOfBoundsException ex) {
                 chordSectionLocation = null;
             } catch (Exception ex) {

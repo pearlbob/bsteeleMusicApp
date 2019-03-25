@@ -292,18 +292,22 @@ public class SongEditView
                     case KeyCodes.KEY_DOWN:
                         logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow() + 1, lastGridCoordinate.getCol());
+                        measureFocus();
                         return;
                     case KeyCodes.KEY_RIGHT:
                         logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() + 1);
+                        measureFocus();
                         return;
                     case KeyCodes.KEY_UP:
                         logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow() - 1, lastGridCoordinate.getCol());
+                        measureFocus();
                         return;
                     case KeyCodes.KEY_LEFT:
                         logger.fine("measure KeyUp: \"" + event.getNativeKeyCode() + "\"");
                         selectChordCell(lastGridCoordinate.getRow(), lastGridCoordinate.getCol() - 1);
+                        measureFocus();
                         return;
 //                case KeyCodes.KEY_Z:  //  fixme:  only works if measureEntry is focused but conflicts with normal text processing there
 //                    if (event.isControlKeyDown()) {
@@ -340,17 +344,21 @@ public class SongEditView
         editAppend.setValue(true);
         editInsert.addClickHandler((ClickEvent e) -> {
             selectChordCell();
+            measureFocus();
         });
         editReplace.addClickHandler((ClickEvent e) -> {
             selectChordCell();
+            measureFocus();
         });
         editDelete.setEnabled(false);
         editDelete.addClickHandler((ClickEvent e) -> {
             deleteChordsCell();
+            measureFocus();
         });
 
         editAppend.addClickHandler((ClickEvent e) -> {
             selectChordCell();
+            measureFocus();
         });
 
         chordsFlexTable.addDragStartHandler(dragStartEvent -> {
@@ -677,6 +685,7 @@ public class SongEditView
                     displaySong();
                     editAppend.setValue(true);
                     selectChordCell(chordSectionLocation);
+                    measureFocus();
                     continue;
                 }
                 //  add a new section
@@ -686,10 +695,12 @@ public class SongEditView
                 editAppend.setValue(true);
                 selectChordCell(sectionVersion);
                 undoStackPushSong();
+                measureFocus();
                 continue;
             }
 
             //  look for a measure
+            ChordSectionLocation chordSectionLocation = song.getCurrentChordSectionLocation();
             if (measure == null) {
                 String backup = sb.toString();  //  backup for a measure followed by non-whitespace
                 measure = Measure.parse(sb, song.getBeatsPerBar());
@@ -699,8 +710,8 @@ public class SongEditView
                         measure = null;
                         sb = new StringBuffer(backup);
                     }
-                } else if (backup.startsWith("-") && lastChordSectionLocation != null && editAppend.getValue()) {
-                    measure = song.findMeasure(lastChordSectionLocation);
+                } else if (backup.startsWith("-") && chordSectionLocation != null && editAppend.getValue()) {
+                    measure = song.findMeasure(chordSectionLocation);
                     if (measure == null)
                         return false;
                     measure = new Measure(measure);
@@ -713,7 +724,7 @@ public class SongEditView
                     if (mr != null) {
                         // logger.fine("new measure: repeat");
                         int repeats = Integer.parseInt(mr.getGroup(1));
-                        song.setRepeat(lastChordSectionLocation, repeats);
+                        song.setRepeat(chordSectionLocation, repeats);
                         undoStackPushSong();
                         displaySong();
                         sb.delete(0, mr.getGroup(0).length());
@@ -722,7 +733,7 @@ public class SongEditView
 
                     MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, 0, song.getBeatsPerBar());
                     if (measureRepeat != null) {
-                        song.addRepeat(lastChordSectionLocation, measureRepeat);
+                        song.addRepeat(chordSectionLocation, measureRepeat);
                         undoStackPushSong();
                         displaySong();
                         continue;
@@ -735,7 +746,7 @@ public class SongEditView
 
 
             //  if we found something valid in the input, edit the song
-            if (measure != null && lastChordSectionLocation != null) {
+            if (measure != null && chordSectionLocation != null) {
                 MeasureEditType editLocation = MeasureEditType.append;
                 if (editInsert.getValue()) {
                     editLocation = MeasureEditType.insert;
@@ -743,14 +754,14 @@ public class SongEditView
                     editLocation = MeasureEditType.replace;
                 }
 
-                logger.fine("preEdit: " + song.getCurrentChordSectionLocation());
-                if (song.measureEdit(song.getCurrentChordSectionLocation(), editLocation, measure)) {
+                logger.fine("preEdit: " + chordSectionLocation);
+                if (song.measureEdit(chordSectionLocation, editLocation, measure)) {
                     logger.fine("postEdit: " + song.getCurrentChordSectionLocation());
                     undoStackPushSong();
                     editAppend.setValue(true);      //  select append for subsequent additions
                     displaySong();
-                    lastChordSectionLocation = song.getCurrentChordSectionLocation();
                     selectChordCell(song.getCurrentChordSectionLocation());
+                    measureFocus();
                     logger.fine("postselect: " + song.getCurrentChordSectionLocation());
                     continue;
                 }
@@ -804,10 +815,10 @@ public class SongEditView
         displaySong();
         updateMeasureEditType(song.getCurrentMeasureEditType());
 
-        lastChordSectionLocation = song.getCurrentChordSectionLocation();
+        ChordSectionLocation  chordSectionLocation = song.getCurrentChordSectionLocation();
 
-        if (lastChordSectionLocation != null)
-            selectChordCell(lastChordSectionLocation);
+        if (chordSectionLocation != null)
+            selectChordCell(chordSectionLocation);
         else
             selectLastChordsCell();
 
@@ -817,6 +828,7 @@ public class SongEditView
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
             if (cell != null && song != null)
                 selectChordCell(cell.getRowIndex(), cell.getCellIndex());
+            measureFocus();
         });
         chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
             measureFocus();
@@ -830,6 +842,7 @@ public class SongEditView
 
             editReplace.setValue(true);
             selectChordCell(row, column);
+            measureFocus();
         });
 
         checkSong();
@@ -980,13 +993,6 @@ public class SongEditView
 
         measureEntry.setText(song.findMeasureNode(chordSectionLocation).toMarkup());
         measureEntry.selectAll();
-        measureEntry.setFocus(true);
-
-        if (!chordSectionLocation.equals(lastChordSectionLocation)) {
-            lastChordSectionLocation = chordSectionLocation;
-            song.setCurrentChordSectionLocation(chordSectionLocation);
-            undoStackPushSong();
-        }
     }
 
     private void updateMeasureEditType(MeasureEditType measureEditType) {
@@ -1308,6 +1314,7 @@ public class SongEditView
 
     @Override
     public void measureFocus() {
+        logger.fine("measureFocus()");
         Scheduler.get().scheduleFinally(() -> measureEntry.setFocus(true));
     }
 
@@ -1317,7 +1324,6 @@ public class SongEditView
     private Key key = Key.getDefault();
     private Song song;
     private GridCoordinate lastGridCoordinate = new GridCoordinate(0, 0);
-    private ChordSectionLocation lastChordSectionLocation;
     private static final int fontsize = 32;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
