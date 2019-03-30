@@ -26,6 +26,11 @@ public class MeasureComment extends Measure {
         return true;
     }
 
+    @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.comment;
+    }
+
     /**
      * Trash can of measure parsing.  Will consume all that it sees to the end of line.
      *

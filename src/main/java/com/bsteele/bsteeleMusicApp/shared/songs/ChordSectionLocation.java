@@ -10,17 +10,35 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, int measureIndex) {
         this.sectionVersion = sectionVersion;
-        this.phraseIndex = phraseIndex;
-        hasPhraseIndex = true;
-        this.measureIndex = measureIndex;
-        hasMeasureIndex = true;
+        if (phraseIndex < 0) {
+            this.phraseIndex = -1;
+            hasPhraseIndex = false;
+            this.measureIndex = measureIndex;
+            hasMeasureIndex = false;
+        } else {
+            this.phraseIndex = phraseIndex;
+            hasPhraseIndex = true;
+            if ( measureIndex < 0 ){
+                this.measureIndex = measureIndex;
+                hasMeasureIndex = false;
+            } else {
+                this.measureIndex = measureIndex;
+                hasMeasureIndex = true;
+            }
+        }
+
         marker = Marker.none;
     }
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex) {
         this.sectionVersion = sectionVersion;
-        this.phraseIndex = phraseIndex;
-        hasPhraseIndex = true;
+        if (phraseIndex < 0) {
+            this.phraseIndex = -1;
+            hasPhraseIndex = false;
+        } else {
+            this.phraseIndex = phraseIndex;
+            hasPhraseIndex = true;
+        }
         this.measureIndex = 0;
         hasMeasureIndex = false;
         marker = Marker.none;
@@ -28,8 +46,13 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, Marker marker) {
         this.sectionVersion = sectionVersion;
-        this.phraseIndex = phraseIndex;
-        hasPhraseIndex = true;
+        if (phraseIndex < 0) {
+            this.phraseIndex = -1;
+            hasPhraseIndex = false;
+        } else {
+            this.phraseIndex = phraseIndex;
+            hasPhraseIndex = true;
+        }
         this.measureIndex = 0;
         hasMeasureIndex = false;
         this.marker = marker;
@@ -37,9 +60,9 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
-        this.phraseIndex = 0;
+        this.phraseIndex = -1;
         hasPhraseIndex = false;
-        this.measureIndex = 0;
+        this.measureIndex = -1;
         hasMeasureIndex = false;
         marker = Marker.none;
     }
@@ -127,6 +150,7 @@ public class ChordSectionLocation {
     public final boolean hasPhraseIndex() {
         return hasPhraseIndex;
     }
+
     public final boolean hasMeasureIndex() {
         return hasMeasureIndex;
     }

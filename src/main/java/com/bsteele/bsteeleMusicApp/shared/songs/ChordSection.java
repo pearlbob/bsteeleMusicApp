@@ -222,27 +222,36 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     public int findMeasureNodeIndex(MeasureNode measureNode) {
         int index = 0;
-        for (Phrase measureSequenceItem : getPhrases()) {
-            int i = measureSequenceItem.findMeasureNodeIndex(measureNode);
+        for (Phrase phrase : getPhrases()) {
+            int i = phrase.findMeasureNodeIndex(measureNode);
             if (i >= 0)
                 return index + i;
-            index += measureSequenceItem.size();
+            index += phrase.size();
         }
         return -1;
     }
 
     public Phrase findPhrase(MeasureNode measureNode) {
         for (Phrase phrase : getPhrases()) {
-            if (phrase.contains(measureNode))
+            if (phrase == measureNode || phrase.contains(measureNode))
                 return phrase;
         }
         return null;
     }
 
-    public int indexOf(Phrase measureSequenceItem) {
+    public int findPhraseIndex(MeasureNode measureNode) {
         for (int i = 0; i < getPhrases().size(); i++) {
-            Phrase msi = getPhrases().get(i);
-            if (measureSequenceItem == msi)
+            Phrase p = getPhrases().get(i);
+            if (measureNode == p || p.contains(measureNode))
+                return i;
+        }
+        return -1;
+    }
+
+    public int indexOf(Phrase phrase) {
+        for (int i = 0; i < getPhrases().size(); i++) {
+            Phrase p = getPhrases().get(i);
+            if (phrase == p)
                 return i;
         }
         return -1;
@@ -257,9 +266,21 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         }
     }
 
+    public final boolean deletePhrase(int phraseIndex) {
+        try {
+            return phrases.remove(phraseIndex) != null;
+        } catch (NullPointerException | IndexOutOfBoundsException ex) {
+            return false;
+        }
+    }
+
     public final boolean deleteMeasure(int phraseIndex, int measureIndex) {
         try {
-            return getPhrase(phraseIndex).delete(measureIndex) != null;
+            Phrase phrase = getPhrase(phraseIndex);
+            boolean ret = phrase.delete(measureIndex) != null;
+            if (ret && phrase.isEmpty())
+                return deletePhrase(phraseIndex);
+            return ret;
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
             return false;
         }
@@ -343,6 +364,11 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     @Override
     public String getId() {
         return sectionVersion.getId();
+    }
+
+    @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.section;
     }
 
     public MeasureNode lastMeasureNode() {

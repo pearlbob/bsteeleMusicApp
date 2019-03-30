@@ -216,14 +216,16 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
+                                <td>Extras:</td>
                                 <td>
                                     <g:Button ui:field="undo">Undo</g:Button>
                                     <g:Button ui:field="redo">Redo</g:Button>
+                                    <g:Button ui:field="showHints">Hints</g:Button>
                                 </td>
                             </tr>
                         </table>
 
+                        <div ui:field="editHints">
                         <ul>
                             <li>Chords must be in upper case!</li>
                             <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
@@ -261,6 +263,7 @@
                                 to the end of the line. Suggest comments go into parenthesis.
                             </li>
                         </ul>
+                        </div>
                     </td>
                 </tr>
             </table>

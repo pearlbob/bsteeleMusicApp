@@ -25,6 +25,11 @@ public class MeasureRepeatExtension extends MeasureComment {
         }
     }
 
+    @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.decoration;
+    }
+
     private MeasureRepeatExtension(String markerString) {
         this.markerString = markerString;
     }

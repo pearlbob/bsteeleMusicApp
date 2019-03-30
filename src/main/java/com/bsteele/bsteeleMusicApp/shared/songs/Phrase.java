@@ -197,6 +197,11 @@ public class Phrase extends MeasureNode {
     }
 
     @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.phrase;
+    }
+
+    @Override
     boolean isEmpty() {
         return measures == null || measures.isEmpty();
     }

@@ -312,6 +312,11 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
     @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.measure;
+    }
+
+    @Override
     public String toString() {
         return toMarkup();
     }

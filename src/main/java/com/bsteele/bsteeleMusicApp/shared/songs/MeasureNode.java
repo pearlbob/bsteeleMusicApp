@@ -109,4 +109,15 @@ public abstract class MeasureNode {
      * @return the id
      */
     public abstract String getId();
+
+    public enum MeasureNodeType{
+        section,
+        repeat,
+        phrase,
+        measure,
+        comment,
+        decoration;
+    }
+    public abstract MeasureNodeType getMeasureNodeType();
+
 }

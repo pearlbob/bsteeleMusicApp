@@ -12,6 +12,11 @@ public class MeasureRepeatMarker extends Measure
         this.setRepeats(repeats);
     }
 
+    @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.decoration;
+    }
+
     public final int getRepeats() {
         return repeats;
     }
