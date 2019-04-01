@@ -624,25 +624,36 @@ public class SongBaseTest
         row = grid.getRow(2);
         assertEquals(4, row.size());
         row = grid.getRow(3);
-        assertNull( row);
+        assertNull(row);
     }
 
     @Test
     public void testOddSongs() {
-        SongBase a = createSongBase("Rio", "Duran Duran", "Sony/ATV Music Publishing LLC", Key.getDefault(),
-                100, 4, 4,
-                "V:\n"
-                        + "Cm7--- F7--- Bbmaj7--- Ebmaj7---\n"
-                        + "Am7b5--- D7--- Gm7--- G7---\n"
-                        + "Cm7--- F7--- Bbmaj7--- Ebmaj7--- \n"
-                        + "Am7b5--- D7--- Gm7--- Gm7---\n"
-                        + "Am7b5--- D7--- Gm7--- Gm7---\n"
-                        + "Cm7--- F7--- Bbmaj7--- Bbmaj7---\n"
-                        + "Am7b5--- D7--- Gm7-C7- Fm7-Bb7-\n"
-                        + "Am7b5--- D7--- Gm7--- Gm7---\n",
-                "V: not important now");
-        logger.fine(a.logGrid());
+        SongBase a;
         try {
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "O:" +
+                            "D..Dm7 Dm7 C..B♭maj7 B♭maj7\n" +
+                            " x12",
+                    "o: nothing");
+            logger.fine(a.logGrid());
+            assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(1, 3)));
+
+            a = createSongBase("Rio", "Duran Duran", "Sony/ATV Music Publishing LLC", Key.getDefault(),
+                    100, 4, 4,
+                    "V:\n"
+                            + "Cm7--- F7--- Bbmaj7--- Ebmaj7---\n"
+                            + "Am7b5--- D7--- Gm7--- G7---\n"
+                            + "Cm7--- F7--- Bbmaj7--- Ebmaj7--- \n"
+                            + "Am7b5--- D7--- Gm7--- Gm7---\n"
+                            + "Am7b5--- D7--- Gm7--- Gm7---\n"
+                            + "Cm7--- F7--- Bbmaj7--- Bbmaj7---\n"
+                            + "Am7b5--- D7--- Gm7-C7- Fm7-Bb7-\n"
+                            + "Am7b5--- D7--- Gm7--- Gm7---\n",
+                    "V: not important now");
+            logger.fine(a.logGrid());
+
             assertEquals(Measure.parse("Am7b5", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(16, 1)));
             assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(31, 4)));
 
