@@ -6,6 +6,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -34,20 +35,24 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return false;
     }
 
-    final static ChordSection parse(String s, int beatsPerBar) {
+    final static ChordSection parse(String s, int beatsPerBar)
+            throws ParseException{
         return parse(new StringBuffer(s), beatsPerBar);
     }
 
-    public final static ChordSection parse(StringBuffer sb, int beatsPerBar) {
-        if (sb == null || sb.length() <= 0)
-            return null;
+    public final static ChordSection parse(StringBuffer sb, int beatsPerBar)
+            throws ParseException {
+        if (sb == null || sb.length() < 1)
+            throw new ParseException("no data to parse", 0);
 
         Util.stripLeadingWhitespace(sb);    //  includes newline
         if (sb.length() <= 0)
-            return null;
+            throw new ParseException("no data to parse", 0);
 
-        SectionVersion sectionVersion = SectionVersion.parse(sb);
-        if (sectionVersion == null) {
+        SectionVersion sectionVersion;
+        try {
+            sectionVersion = SectionVersion.parse(sb);
+        } catch (ParseException pex) {
             //  cope with badly formatted songs
             sectionVersion = new SectionVersion(Section.verse);
         }
@@ -120,16 +125,17 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 continue;
             }
 
-            {
+            try {
                 //  add a measure to the current line measures
                 Measure measure = Measure.parse(sb, beatsPerBar, lastMeasure);
-                if (measure != null) {
                     lineMeasures.add(measure);
                     lastMeasure = measure;
                     continue;
-                }
+            } catch (ParseException pex) {
+                //  ignore
             }
-            {
+
+            try {
                 //  look for a block repeat
                 MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, measureSequenceItems.size(), beatsPerBar);
                 if (measureRepeat != null) {
@@ -144,15 +150,17 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                     measureSequenceItems.add(measureRepeat);
                     continue;
                 }
+            } catch (ParseException pex) {
+                //  ignore
             }
-            {
+
+            try {
                 //  look for a comment
                 MeasureComment measureComment = MeasureComment.parse(sb);
-                if (measureComment != null) {
-                    lineMeasures.add(measureComment);
-                    continue;
-                } else
-                    break;      //  fixme: not a measure, we're done
+                lineMeasures.add(measureComment);
+                continue;
+            } catch (ParseException pex) {
+                break;      //  fixme: not a measure, we're done
             }
         }
 
@@ -165,6 +173,68 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
         ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
         return ret;
+    }
+
+
+    boolean add(int index, MeasureNode newMeasureNode) {
+        if (newMeasureNode == null)
+            return false;
+
+        switch (newMeasureNode.getMeasureNodeType()) {
+            case repeat:
+            case phrase:
+                break;
+            default:
+                return false;
+        }
+
+        Phrase newPhrase = (Phrase) newMeasureNode;
+
+        if (phrases == null)
+            phrases = new ArrayList<>();
+
+        if (phrases.isEmpty()) {
+            phrases.add(newPhrase);
+            return true;
+        }
+
+        try {
+            phrases.add(index+1, newPhrase);
+        } catch (IndexOutOfBoundsException ex) {
+            phrases.add(newPhrase);   //  default to the end!
+        }
+        return true;
+    }
+
+
+    boolean insert(int index, MeasureNode newMeasureNode) {
+        if (newMeasureNode == null)
+            return false;
+
+        switch (newMeasureNode.getMeasureNodeType()) {
+            case repeat:
+            case phrase:
+                break;
+            default:
+                return false;
+        }
+
+        Phrase newPhrase = (Phrase) newMeasureNode;
+
+        if (phrases == null)
+            phrases = new ArrayList<>();
+
+        if (phrases.isEmpty()) {
+            phrases.add(newPhrase);
+            return true;
+        }
+
+        try {
+            phrases.add(index, newPhrase);
+        } catch (IndexOutOfBoundsException ex) {
+            phrases.add(newPhrase);   //  default to the end!
+        }
+        return true;
     }
 
 

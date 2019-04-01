@@ -6,6 +6,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -21,13 +22,15 @@ public class MeasureRepeat extends Phrase {
         this.repeatMarker = new MeasureRepeatMarker(repeats);
     }
 
-    static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar) {
+    static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar)
+            throws ParseException {
         return parse(new StringBuffer(s), phraseIndex, beatsPerBar);
     }
 
-    public static final MeasureRepeat parse(StringBuffer sb, int phraseIndex, int beatsPerBar) {
+    public static final MeasureRepeat parse(StringBuffer sb, int phraseIndex, int beatsPerBar)
+            throws ParseException {
         if (sb == null || sb.length() < 1)
-            return null;
+            throw new ParseException("no data to parse", 0);
 
         ArrayList<Measure> measures = new ArrayList<>();
 
@@ -45,29 +48,33 @@ public class MeasureRepeat extends Phrase {
         for (int i = 0; i < 1e4; i++) {   //  safety
             Util.stripLeadingSpaces(lookaheadSb);
             if (lookaheadSb.length() == 0)
-                return null;
+                throw new ParseException("no data to parse", 0);
 
             //  extend the search for a repeat only if the line ends with a |
-            if ( lookaheadSb.charAt(0) == '|') {
+            if (lookaheadSb.charAt(0) == '|') {
                 barFound = true;
                 lookaheadSb.delete(0, 1);
                 continue;
             }
-            if ( lookaheadSb.charAt(0) == '\n') {
+            if (lookaheadSb.charAt(0) == '\n') {
                 lookaheadSb.delete(0, 1);
-                if ( barFound ) {
+                if (barFound) {
                     barFound = false;
                     continue;
                 }
-                return null;  //  not a repeat
+                throw new ParseException("repeat not found", 0);
             }
 
-            Measure measure = Measure.parse(lookaheadSb, beatsPerBar);
-            if (measure != null) {
-                measures.add(measure);
-                barFound = false;
-                continue;
+            try
+            {
+                Measure measure = Measure.parse(lookaheadSb, beatsPerBar);
+                    measures.add(measure);
+                    barFound = false;
+                    continue;
+            } catch (ParseException pex) {
+                //  ignore
             }
+
             if (lookaheadSb.charAt(0) != ']' && lookaheadSb.charAt(0) != 'x') {
                 MeasureComment measureComment = MeasureComment.parse(lookaheadSb);
                 if (measureComment != null) {
@@ -88,8 +95,7 @@ public class MeasureRepeat extends Phrase {
             return ret;
         }
 
-
-        return null;
+        throw new ParseException("repeat not found", 0);
     }
 
     @Override
@@ -105,6 +111,11 @@ public class MeasureRepeat extends Phrase {
 
     public final void setRepeats(int repeats) {
         getRepeatMarker().setRepeats(repeats);
+    }
+
+    @Override
+    public MeasureNodeType getMeasureNodeType() {
+        return MeasureNodeType.repeat;
     }
 
     @Override
@@ -229,7 +240,7 @@ public class MeasureRepeat extends Phrase {
 
     @Override
     public String transpose(@Nonnull Key key, int halfSteps) {
-        return "x"+getRepeats();
+        return "x" + getRepeats();
     }
 
     @Override

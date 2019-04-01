@@ -89,17 +89,22 @@ public class Phrase extends MeasureNode {
         return ret;
     }
 
-    public final Measure findMeasure(int n) {
-        try {
-            return measures.get(n);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+    boolean insert(int index, MeasureNode newMeasureNode) {
+        if (newMeasureNode == null)
+            return false;
 
-    boolean insert(int index, Measure newMeasure) {
+        switch (newMeasureNode.getMeasureNodeType()) {
+            case measure:
+                break;
+            default:
+                return false;
+        }
+
+        Measure newMeasure = (Measure) newMeasureNode;
+
         if (measures == null)
             measures = new ArrayList<>();
+
         if (measures.isEmpty()) {
             measures.add(newMeasure);
             return true;
@@ -113,9 +118,21 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean replace(int index, Measure newMeasure) {
+    boolean replace(int index, MeasureNode newMeasureNode) {
         if (measures == null || measures.isEmpty())
             return false;
+
+        if (newMeasureNode == null)
+            return false;
+
+        switch (newMeasureNode.getMeasureNodeType()) {
+            case measure:
+                break;
+            default:
+                return false;
+        }
+
+        Measure newMeasure = (Measure) newMeasureNode;
 
         try {
             ArrayList<Measure> replacementList = new ArrayList<>();
@@ -131,18 +148,113 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean append(int index, Measure newMeasure) {
+    boolean append(int index, MeasureNode newMeasureNode) {
+        if (newMeasureNode == null)
+            return false;
+
+        switch (newMeasureNode.getMeasureNodeType()) {
+            case measure:
+                break;
+            default:
+                return false;
+        }
+
+        Measure newMeasure = (Measure) newMeasureNode;
+
         if (measures == null)
             measures = new ArrayList<>();
-        if ( measures.isEmpty()) {
+        if (measures.isEmpty()) {
             measures.add(newMeasure);
             return true;
         }
 
         try {
-            measures.add(index+1, newMeasure);
+            measures.add(index + 1, newMeasure);
         } catch (IndexOutOfBoundsException ex) {
             measures.add(newMeasure);   //  default to the end!
+        }
+
+        return true;
+    }
+
+    boolean edit(MeasureEditType type, int index, MeasureNode newMeasureNode) {
+        Measure newMeasure = null;
+
+        if (newMeasureNode == null) {
+            switch (type) {
+                case delete:
+                    break;
+                default:
+                    return false;
+            }
+        } else {
+            //  reject wrong node type
+            switch (newMeasureNode.getMeasureNodeType()) {
+                case comment:
+                case measure:
+                    break;
+                default:
+                    return false;
+            }
+
+            //  correct the type
+            newMeasure = (Measure) newMeasureNode;
+        }
+
+        //  assure measures are ready
+        switch (type) {
+            case replace:
+            case delete:
+                if (measures == null || measures.isEmpty())
+                    return false;
+                break;
+            case insert:
+            case append:
+                if (measures == null)
+                    measures = new ArrayList<>();
+
+                //  index doesn't matter
+                if (measures.isEmpty()) {
+                    measures.add(newMeasure);
+                    return true;
+                }
+                break;
+            default:
+                return false;
+        }
+
+        switch (type) {
+            case delete:
+                try {
+                    measures.remove(index);
+                } catch (IndexOutOfBoundsException ex) {
+                    return false;
+                }
+                break;
+            case insert:
+                try {
+                    measures.add(index, newMeasure);
+                } catch (IndexOutOfBoundsException ex) {
+                    measures.add(newMeasure);   //  default to the end!
+                }
+                break;
+            case append:
+                try {
+                    measures.add(index + 1, newMeasure);
+                } catch (IndexOutOfBoundsException ex) {
+                    measures.add(newMeasure);   //  default to the end!
+                }
+                break;
+            case replace:
+                try {
+                    measures.remove(index);
+                    measures.add(index, newMeasure);
+                } catch (IndexOutOfBoundsException ex) {
+                    measures.add(newMeasure);   //  default to the end!
+                }
+                break;
+            default:
+                return false;
         }
 
         return true;

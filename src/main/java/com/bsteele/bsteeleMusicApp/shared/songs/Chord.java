@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
 import java.util.Objects;
 
 /**
@@ -28,13 +29,14 @@ public class Chord implements Comparable<Chord> {
         implicitBeats = chord.implicitBeats;
     }
 
-    static final Chord parse(String s, int beatsPerBar) {
+    static final Chord parse(String s, int beatsPerBar)
+            throws ParseException {
         return parse(new StringBuffer(s), beatsPerBar);
     }
 
-    public static final Chord parse(StringBuffer sb, int beatsPerBar) {
+    public static final Chord parse(StringBuffer sb, int beatsPerBar) throws ParseException {
         if (sb == null || sb.length() <= 0)
-            return null;
+            throw new ParseException("no data to parse", 0);
 
         int beats = beatsPerBar;  //  default only
         ScaleChord scaleChord = ScaleChord.parse(sb);
@@ -64,8 +66,7 @@ public class Chord implements Comparable<Chord> {
         }
 
         if (beats > beatsPerBar)
-            //  whoops, too many beats
-            ;    //  fixme: notify user
+            throw new ParseException("too many beats in the chord", 0); //  whoops
 
         Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay
                 , (beats == beatsPerBar));      //  fixme

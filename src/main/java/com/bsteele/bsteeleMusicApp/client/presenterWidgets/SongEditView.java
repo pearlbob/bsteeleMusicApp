@@ -684,13 +684,17 @@ public class SongEditView
             if (sb.charAt(0) == '(') {
                 int index = sb.indexOf(")");
                 if (index > 0) {
-                    measure = MeasureComment.parse(sb);
+                    try {
+                        measure = MeasureComment.parse(sb);
+                    } catch (ParseException pex) {
+                        logger.info("comment not found: " + pex.getMessage());
+                    }
                 }
             }
 
             //  look for a section
-            SectionVersion sectionVersion = SectionVersion.parse(sb);
-            if (sectionVersion != null) {
+            try {
+                SectionVersion sectionVersion = SectionVersion.parse(sb);
                 logger.fine("new SectionVersion: \"" + sectionVersion.toString() + "\"");
 
                 ChordSectionLocation chordSectionLocation = song.getChordSectionLocation(sectionVersion);
@@ -709,13 +713,19 @@ public class SongEditView
                 undoStackPushSong();
                 measureFocus();
                 continue;
+            } catch (ParseException pex) {
+                //  ignore
             }
 
             //  look for a measure
             ChordSectionLocation chordSectionLocation = song.getCurrentChordSectionLocation();
             if (measure == null) {
                 String backup = sb.toString();  //  backup for a measure followed by non-whitespace
-                measure = Measure.parse(sb, song.getBeatsPerBar());
+                try {
+                    measure = Measure.parse(sb, song.getBeatsPerBar());
+                } catch (ParseException pex) {
+                    measure = null;//   nope
+                }
                 if (measure != null) {
                     if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(0))) {
                         //  reject the measure for not ending correctly:  end of input or in white space
@@ -743,16 +753,24 @@ public class SongEditView
                         continue;
                     }
 
-                    MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, 0, song.getBeatsPerBar());
-                    if (measureRepeat != null) {
-                        song.addRepeat(chordSectionLocation, measureRepeat);
-                        undoStackPushSong();
-                        displaySong();
-                        continue;
+                    try {
+                        MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, 0, song.getBeatsPerBar());
+                        if (measureRepeat != null) {
+                            song.addRepeat(chordSectionLocation, measureRepeat);
+                            undoStackPushSong();
+                            displaySong();
+                            continue;
+                        }
+                    } catch (ParseException pex) {
+                        //  ignore
                     }
 
                     //  desperation: force the unknown input into a comment
-                    measure = MeasureComment.parse(sb);
+                    try {
+                        measure = MeasureComment.parse(sb);
+                    } catch (ParseException pex) {
+                        //  ignore?
+                    }
                 }
             }
 
@@ -819,11 +837,12 @@ public class SongEditView
         selectChordCell(song.getCurrentChordSectionLocation());
     }
 
-    private  void updateCurrentChordEditLocation( int row, int col){
+    private void updateCurrentChordEditLocation(int row, int col) {
         if (song == null)
             return;
         updateCurrentChordEditLocation(song.getChordSectionLocation(new GridCoordinate(row, col)));
     }
+
     private void updateCurrentChordEditLocation(ChordSectionLocation chordSectionLocation) {
         if (song == null)
             return;
@@ -1034,7 +1053,7 @@ public class SongEditView
         //  indicate the current selection
         Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
         //  MeasureEditType editLocation = MeasureEditType.append;
-        switch (song.getCurrentMeasureEditType()){
+        switch (song.getCurrentMeasureEditType()) {
             default:
             case append:
                 e.setAttribute("editSelect", "append");
@@ -1145,7 +1164,7 @@ public class SongEditView
         errorLabel.getElement().getStyle().setColor("green");
     }
 
-    private void error(String message) {
+    protected void error(String message) {
         errorLabel.setText(message);
         errorLabel.getElement().getStyle().setColor("red");
     }
@@ -1185,15 +1204,16 @@ public class SongEditView
 
     private void enterChord(String name) {
 
-        Measure measure = Measure.parse(new StringBuffer(name), song.getBeatsPerBar());
-        if (measure == null)
-            return; //  fixme: shouldn't happen
-
-        if (processChordEntry(measure.toMarkup() + " ")) {
-            addRecentMeasure(measure);
-            findMostCommonScaleChords();
-            checkSong();
-            measureFocus();
+        try {
+            Measure measure = Measure.parse(new StringBuffer(name), song.getBeatsPerBar());
+            if (processChordEntry(measure.toMarkup() + " ")) {
+                addRecentMeasure(measure);
+                findMostCommonScaleChords();
+                checkSong();
+                measureFocus();
+            }
+        } catch (ParseException pex) {
+            logger.info("unexpected error: " + pex.getMessage());
         }
     }
 

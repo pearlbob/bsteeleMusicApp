@@ -5,6 +5,8 @@ import com.google.gwt.regexp.shared.RegExp;
 
 import javax.validation.constraints.NotNull;
 
+import java.text.ParseException;
+
 import static java.util.Objects.hash;
 
 /**
@@ -34,7 +36,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
-    public static final SectionVersion parse(String s) {
+    public static final SectionVersion parse(String s) throws ParseException {
         return parse(new StringBuffer(s));
     }
 
@@ -48,26 +50,28 @@ public class SectionVersion implements Comparable<SectionVersion> {
      * @param sb the string to parse
      * @return the length of the parse. Zero if no parse
      */
-    public static final SectionVersion parse(StringBuffer sb) {
+    public static final SectionVersion parse(StringBuffer sb) throws ParseException {
         if (sb == null)
-            return null;
+            throw new ParseException("no data to parse", 0);
+
         final RegExp sectionRegexp = RegExp.compile(sectionVersionRegexpPattern);
         MatchResult m = sectionRegexp.exec(sb.toString());
-        if (m != null) {
-            String sectionId = m.getGroup(1);
-            String versionId = (m.getGroupCount() >= 2 ? m.getGroup(2) : null);
-            int version = 0;
-            if (versionId != null && versionId.length() > 0) {
-                version = Integer.parseInt(versionId);
-            }
-            Section section = Section.getSection(sectionId);
-            if (section != null) {
-                //   consume the section label
-                sb.delete(0, m.getGroup(0).length()); //  includes the separator
-                return section.makeVersion(version);
-            }
+        if (m == null)
+            throw new ParseException("no section version found", 0);
+
+        String sectionId = m.getGroup(1);
+        String versionId = (m.getGroupCount() >= 2 ? m.getGroup(2) : null);
+        int version = 0;
+        if (versionId != null && versionId.length() > 0) {
+            version = Integer.parseInt(versionId);
         }
-        return null;
+        Section section = Section.getSection(sectionId);
+        if (section == null)
+            throw new ParseException("no section found", 0);
+
+        //   consume the section label
+        sb.delete(0, m.getGroup(0).length()); //  includes the separator
+        return section.makeVersion(version);
     }
 
     /**

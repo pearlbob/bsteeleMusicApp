@@ -4,6 +4,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -37,9 +38,9 @@ public class MeasureComment extends Measure {
      * @param sb the input line to parse
      * @return the comment made of the input
      */
-    public static final MeasureComment parse(StringBuffer sb) {
+    public static final MeasureComment parse(StringBuffer sb) throws ParseException  {
         if (sb == null || sb.length() <= 0)
-            return null;
+            throw new ParseException("no data to parse", 0);
 
         //  prep a sub string to look for the comment
         int n = sb.indexOf("\n");    //  all comments end at the end of the line
@@ -63,7 +64,7 @@ public class MeasureComment extends Measure {
             sb.delete(0, s.length());
             s = s.trim();
             if (s.length() <= 0)
-                return null;    //  all whitespace
+                throw new ParseException("no comment found", 0);   //  all whitespace
         }
 
         //  cope with unbalanced leading ('s and trailing )'s

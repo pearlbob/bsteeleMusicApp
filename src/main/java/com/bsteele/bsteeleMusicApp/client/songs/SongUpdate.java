@@ -16,6 +16,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import jsinterop.annotations.JsType;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -418,7 +419,7 @@ public class SongUpdate
         return sb.toString();
     }
 
-    public static final SongUpdate fromJson(String jsonString)
+    public static final SongUpdate fromJson(String jsonString) throws ParseException
     {
         logger.fine(jsonString);
         if (jsonString == null || jsonString.length() <= 0)
@@ -437,7 +438,7 @@ public class SongUpdate
         return fromJsonObject(jo);
     }
 
-    public static final SongUpdate fromJsonObject(JSONObject jo)
+    public static final SongUpdate fromJsonObject(JSONObject jo) throws ParseException
     {
         if (jo == null)
         {

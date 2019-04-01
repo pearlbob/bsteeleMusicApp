@@ -1,10 +1,10 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.shared.songs.Key;
-import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
@@ -15,6 +15,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 import javax.annotation.Nonnull;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -124,17 +125,18 @@ class CommonPlayViewImpl
         scrollDelay = 0;
     }
 
-    /** set the anchors for title and artist
+    /**
+     * set the anchors for title and artist
      *
-     * @param title the child viewImpl's title anchor
+     * @param title  the child viewImpl's title anchor
      * @param artist the child viewImpl's artist anchor
      */
     protected void setAnchors(Anchor title, Anchor artist) {
         title.setText(song.getTitle()
-        + (song.getFileVersionNumber() > 0
+                + (song.getFileVersionNumber() > 0
                 ? " (" + Integer.toString(song.getFileVersionNumber()) + ")"
                 : ""));
-        title.setHref(anchorUrlStart + URL.encode(song.getTitle()+" "+song.getArtist()));
+        title.setHref(anchorUrlStart + URL.encode(song.getTitle() + " " + song.getArtist()));
         artist.setText(song.getArtist());
         artist.setHref(anchorUrlStart + URL.encode(song.getArtist()));
     }
@@ -155,4 +157,6 @@ class CommonPlayViewImpl
     private int lastScrollPosition = 0;
     private double scrollPosition = 0;
     private int scrollDelay = 0;
+
+    private static Logger logger = Logger.getLogger(CommonPlayViewImpl.class.getName());
 }

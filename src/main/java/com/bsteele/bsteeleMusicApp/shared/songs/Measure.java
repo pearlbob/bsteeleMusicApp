@@ -3,6 +3,7 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -57,11 +58,12 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param beatsPerBar beats per bar
      * @return the measure for the parsing
      */
-    static final Measure parse(String s, int beatsPerBar) {
+    static final Measure parse(String s, int beatsPerBar) throws ParseException {
         return parse(new StringBuffer(s), beatsPerBar, null);
     }
 
-    public static final Measure parse(StringBuffer sb, int beatsPerBar) {
+    public static final Measure parse(StringBuffer sb, int beatsPerBar)
+            throws ParseException {
         return parse(sb, beatsPerBar, null);
     }
 
@@ -73,10 +75,12 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param lastMeasure the prior measure, in case of -
      * @return the measure for the parsing
      */
-    public static final Measure parse(StringBuffer sb, int beatsPerBar, Measure lastMeasure) {
+    public static final Measure parse(StringBuffer sb, int beatsPerBar, Measure lastMeasure)
+            throws ParseException {
         //  should not be white space, even leading, in a measure
+
         if (sb == null || sb.length() <= 0)
-            return null;
+            throw new ParseException("no data to parse", 0);
 
         ArrayList<Chord> chords = new ArrayList<>();
         Measure ret = null;
@@ -89,8 +93,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             if (Section.lookahead(sb))
                 break;
 
-            Chord chord = Chord.parse(sb, beatsPerBar);
-            if (chord == null) {
+            try {
+                Chord chord = Chord.parse(sb, beatsPerBar);
+                chords.add(chord);
+            } catch (ParseException pex) {
                 //  see if this is a chord less measure
                 if (sb.charAt(0) == 'X') {
                     ret = new Measure(beatsPerBar, emptyChordList);
@@ -105,11 +111,9 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 }
                 break;
             }
-
-            chords.add(chord);
         }
         if (ret == null && chords.isEmpty())
-            return null;
+            throw new ParseException("no chords found", 0);
 
         if (ret == null)
             ret = new Measure(beatsPerBar, chords);
@@ -232,7 +236,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return ret;
     }
 
-      @Override
+    @Override
     public String transpose(@Nonnull Key key, int halfSteps) {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();

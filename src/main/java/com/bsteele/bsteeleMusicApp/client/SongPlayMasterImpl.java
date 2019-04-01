@@ -21,6 +21,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
+import java.text.ParseException;
 import java.util.logging.Logger;
 
 /**
@@ -239,8 +240,8 @@ public class SongPlayMasterImpl
 
             songOutUpdate = songInUpdate;
             requestedState = songOutUpdate.getState();
-        } catch (JSONException jsonException) {
-            logger.info(jsonException.getMessage());
+        } catch (JSONException | ParseException ex) {
+            logger.info(ex.getMessage());
         }
     }
 

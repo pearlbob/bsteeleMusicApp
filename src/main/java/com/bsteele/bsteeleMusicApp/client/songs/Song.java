@@ -18,6 +18,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -82,7 +83,11 @@ public class Song extends SongBase implements Comparable<Song> {
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
         song.setUnitsPerMeasure(unitsPerMeasure);
-        song.parseChords(chords);
+        try {
+            song.parseChords(chords);
+        } catch (ParseException pex) {
+            logger.info("unexpected: " + pex.getMessage());
+        }
         song.setRawLyrics(lyrics);
 
         return song;
@@ -158,7 +163,8 @@ public class Song extends SongBase implements Comparable<Song> {
      * @param jsonObject the json object to parse
      * @return the song. Can be null.
      */
-    public static final Song fromJsonObject(JSONObject jsonObject) {
+    public static final Song fromJsonObject(JSONObject jsonObject)
+            throws ParseException {
         if (jsonObject == null) {
             return null;
         }
@@ -170,7 +176,8 @@ public class Song extends SongBase implements Comparable<Song> {
         return songFromJsonObject(jsonObject);
     }
 
-    private static final Song songFromJsonFileObject(JSONObject jsonObject) {
+    private static final Song songFromJsonFileObject(JSONObject jsonObject)
+            throws ParseException {
         Song song = null;
         double lastModifiedDate = 0;
         String fileName = null;
@@ -203,7 +210,7 @@ public class Song extends SongBase implements Comparable<Song> {
         return song;
     }
 
-    private static final Song songFromJsonObject(JSONObject jsonObject) {
+    private static final Song songFromJsonObject(JSONObject jsonObject) throws ParseException {
         Song song = Song.createEmptySong();
         JSONNumber jn;
         JSONArray ja;
@@ -389,22 +396,22 @@ public class Song extends SongBase implements Comparable<Song> {
     }
 
     public static final ArrayList<StringTriple> diff(Song a, Song b) {
-        ArrayList<StringTriple> ret = SongBase.diff(a,b);
+        ArrayList<StringTriple> ret = SongBase.diff(a, b);
         final int limit = 15;
-        if ( ret.size() > limit) {
+        if (ret.size() > limit) {
             while (ret.size() > limit) {
                 ret.remove(ret.size() - 1);
             }
-            ret.add( new StringTriple("+more","",""));
+            ret.add(new StringTriple("+more", "", ""));
         }
-        ret.add(0,new StringTriple("file date",
-                (a.lastModifiedDate != null ? a.lastModifiedDate.toDateString():""),
-                (b.lastModifiedDate != null ? b.lastModifiedDate.toDateString():"")));
+        ret.add(0, new StringTriple("file date",
+                (a.lastModifiedDate != null ? a.lastModifiedDate.toDateString() : ""),
+                (b.lastModifiedDate != null ? b.lastModifiedDate.toDateString() : "")));
         return ret;
     }
 
 
-        public enum ComparatorType {
+    public enum ComparatorType {
         title,
         artist,
         lastModifiedDate,

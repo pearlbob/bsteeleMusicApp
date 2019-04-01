@@ -36,6 +36,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.logging.Logger;
@@ -94,21 +95,38 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     logger.info("failed file reading: "+ exception.getMessage());
                     sendStatus("failed reading", exception.getMessage());
                     //  default all songs
-                    addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                    try {
+                        addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                    } catch (ParseException pex){
+                        logger.info("unexpected parse error allSongs: "+pex.getMessage());
+                    }
                     logger.info("Used internal copy instead.");
                 }
 
                 public void onResponseReceived(Request request, Response response) {
                     //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
                     if (response.getStatusCode() == 200) {
-                        addJsonToSongList(response.getText());
                         logger.info("read songs from: " + url);
+
+                        //  all songs from server
+                        try {
+                            addJsonToSongList(response.getText());
+                        } catch (ParseException pex){
+                            logger.info("unexpected parse error from server: "+pex.getMessage());
+                        }
+
                         sendStatus("read", url);
                     } else {
-                        addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+
                         logger.info("failed reading: " + url);
                         logger.info("Used internal copy instead.");
                         sendStatus("failed reading", url);
+                        //  default all songs
+                        try {
+                            addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+                        } catch (ParseException pex){
+                            logger.info("unexpected parse error allSongs: "+pex.getMessage());
+                        }
                     }
                 }
             });
@@ -181,7 +199,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
 
-    private void addJsonToSongList(String jsonString) {
+    private void addJsonToSongList(String jsonString) throws ParseException  {
         if (jsonString != null && jsonString.length() > 0) {
             JSONValue jv = JSONParser.parseStrict(jsonString);
             if (jv != null) {

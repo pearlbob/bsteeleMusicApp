@@ -9,6 +9,8 @@ import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
+import java.text.ParseException;
+
 /**
  * A note in a scale has no duration or pitch but represents
  * the relative scale position within the given key scale.
@@ -117,7 +119,9 @@ public enum ScaleNote {
         return flats[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
 
-    final static ScaleNote parse(String s) {
+    final static ScaleNote parse(String s)
+            throws ParseException
+    {
         return parse(new StringBuffer(s));
     }
 
@@ -130,12 +134,15 @@ public enum ScaleNote {
      * @param sb string buffer to be parsed
      * @return ScaleNote represented by the string.  Can be null.
      */
-    public final static ScaleNote parse(StringBuffer sb) {
+    public final static ScaleNote parse(StringBuffer sb)
+    throws ParseException
+    {
         if (sb == null || sb.length() < 1)
-            return null;
+            throw new ParseException("no data to parse", 0);
+
         char c = sb.charAt(0);
         if (c < 'A' || c > 'G')
-            return null;
+            throw new ParseException("scale note must start with A to G", 0);
 
         StringBuilder scaleNoteString = new StringBuilder();
         scaleNoteString.append(c);

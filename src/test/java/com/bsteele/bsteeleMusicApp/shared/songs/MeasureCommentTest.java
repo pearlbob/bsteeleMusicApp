@@ -4,6 +4,8 @@ import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.text.ParseException;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
@@ -65,12 +67,21 @@ public class MeasureCommentTest extends TestCase {
         parse("");//  not a comment
         assertNull(measureComment);
 
-        assertNull(MeasureComment.parse(null));
+        try {
+            MeasureComment.parse(null);
+            fail();
+        } catch (ParseException e) {
+            //  should throw this exception
+        }
     }
 
     private void parse(String s) {
         rawComment = s;
-        measureComment = MeasureComment.parse(new StringBuffer(s));
+        try {
+            measureComment = MeasureComment.parse(new StringBuffer(s));
+        } catch (ParseException e) {
+            measureComment = null;
+        }
     }
 
     private String rawComment;

@@ -1,9 +1,11 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import javax.validation.constraints.NotNull;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -31,17 +33,17 @@ public class ScaleChord implements Comparable<ScaleChord> {
         this(scaleNote, ChordDescriptor.major);
     }
 
-    static final ScaleChord parse(String s) {
+    static final ScaleChord parse(String s)
+            throws ParseException
+    {
         return parse(new StringBuffer(s));
     }
 
-    public static final ScaleChord parse(StringBuffer sb) {
+    public static final ScaleChord parse(StringBuffer sb) throws ParseException {
         if (sb == null || sb.length() < 1)
-            return null;
+            throw new ParseException("no data to parse", 0);
 
         ScaleNote retScaleNote = ScaleNote.parse(sb);
-        if (retScaleNote == null)
-            return null;
 
         ChordDescriptor retChordDescriptor = ChordDescriptor.parse(sb);
 
@@ -135,18 +137,24 @@ public class ScaleChord implements Comparable<ScaleChord> {
 
     private static final TreeSet<ScaleChord> easyGuitarChords = new TreeSet<ScaleChord>();
 
-    static {
-        //C A G E D and Am Em Dm
-        easyGuitarChords.add(ScaleChord.parse("C"));
-        easyGuitarChords.add(ScaleChord.parse("A"));
-        easyGuitarChords.add(ScaleChord.parse("G"));
-        easyGuitarChords.add(ScaleChord.parse("E"));
-        easyGuitarChords.add(ScaleChord.parse("D"));
-        easyGuitarChords.add(ScaleChord.parse("Am"));
-        easyGuitarChords.add(ScaleChord.parse("Em"));
-        easyGuitarChords.add(ScaleChord.parse("Dm"));
-    }
+
 
     private ScaleNote scaleNote;
     private ChordDescriptor chordDescriptor;
+    private static Logger logger = Logger.getLogger(ScaleChord.class.getName());
+    static {
+        try {
+            //C A G E D and Am Em Dm
+            easyGuitarChords.add(ScaleChord.parse("C"));
+            easyGuitarChords.add(ScaleChord.parse("A"));
+            easyGuitarChords.add(ScaleChord.parse("G"));
+            easyGuitarChords.add(ScaleChord.parse("E"));
+            easyGuitarChords.add(ScaleChord.parse("D"));
+            easyGuitarChords.add(ScaleChord.parse("Am"));
+            easyGuitarChords.add(ScaleChord.parse("Em"));
+            easyGuitarChords.add(ScaleChord.parse("Dm"));
+        } catch (ParseException pex){
+            logger.info( "parse exception should never happen: "+pex.getMessage());
+        }
+    }
 }

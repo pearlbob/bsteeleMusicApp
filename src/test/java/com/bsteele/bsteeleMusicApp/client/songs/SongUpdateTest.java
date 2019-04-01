@@ -10,6 +10,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.text.ParseException;
+
 /**
  * @author bob
  */
@@ -224,8 +226,12 @@ public class SongUpdateTest extends GWTTestCase {
         System.out.println("fromJson");
         String jsonString = "";
         SongUpdate expResult = null;
-        SongUpdate result = SongUpdate.fromJson(jsonString);
-        assertEquals(expResult, result);
+        try {
+            SongUpdate result = SongUpdate.fromJson(jsonString);
+            assertEquals(expResult, result);
+        } catch (ParseException pex){
+            fail(pex.getMessage());
+        }
     }
 
     /**
@@ -236,7 +242,12 @@ public class SongUpdateTest extends GWTTestCase {
         System.out.println("fromJsonObject");
         JSONObject jo = null;
         SongUpdate expResult = null;
-        SongUpdate result = SongUpdate.fromJsonObject(jo);
+        SongUpdate result = null;
+        try {
+            result = SongUpdate.fromJsonObject(jo);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         assertEquals(expResult, result);
     }
 

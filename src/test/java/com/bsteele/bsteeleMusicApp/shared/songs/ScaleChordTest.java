@@ -3,6 +3,7 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -10,8 +11,7 @@ import java.util.TreeSet;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class ScaleChordTest extends TestCase
-{
+public class ScaleChordTest extends TestCase {
 
     @Test
     public void testParse() {
@@ -26,46 +26,54 @@ public class ScaleChordTest extends TestCase
                 "  </head>\n" +
                 "  <body>\n" +
                 "    <table border=\"1\" >\n");
+        try {
+            for (ScaleNote sn : ScaleNote.values()) {
+                String s = sn.toString();
+                ScaleChord sc = null;
 
-        for (ScaleNote sn : ScaleNote.values()) {
-            String s = sn.toString();
-            ScaleChord sc = ScaleChord.parse(s);
-            assertEquals(sn, sc.getScaleNote());
-
-            for (ChordDescriptor cd : ChordDescriptor.values()) {
-                s = sn.toString() + cd.getShortName();
-                sc = ScaleChord.parse(s);
-                assertEquals(sn, sc.getScaleNote());
-                assertEquals(cd, sc.getChordDescriptor());
-
-                s = sn.toString() + cd.getShortName();
                 sc = ScaleChord.parse(s);
 
-                ScaleChord builtScaleChord = new ScaleChord(sn, cd);
-
-                assertEquals(sc, builtScaleChord);
                 assertEquals(sn, sc.getScaleNote());
-                assertEquals(cd, sc.getChordDescriptor());
 
-                ArrayList<ScaleChord> scaleChords = new ArrayList<>();
-                scaleChords.add(builtScaleChord);
-                Key key = Key.guessKey(scaleChords);
+                for (ChordDescriptor cd : ChordDescriptor.values()) {
+                    s = sn.toString() + cd.getShortName();
+                    sc = ScaleChord.parse(s);
+                    assertEquals(sn, sc.getScaleNote());
+                    assertEquals(cd, sc.getChordDescriptor());
 
-                System.out.println("<tr><td>" + builtScaleChord.toString() + "</td><td>"
-                        + chordComponentsToString(builtScaleChord.getChordComponents())
-                        + "</td><td>"
-                        + key.getKeyScaleNote().toString()
-                        + "</td><td>"
-                        + chordComponentScaleNotesToString(key, builtScaleChord)
-                        + "</td></tr>"
-                );
+                    s = sn.toString() + cd.getShortName();
+                    sc = ScaleChord.parse(s);
 
+                    ScaleChord builtScaleChord = new ScaleChord(sn, cd);
+
+                    assertEquals(sc, builtScaleChord);
+                    assertEquals(sn, sc.getScaleNote());
+                    assertEquals(cd, sc.getChordDescriptor());
+
+                    ArrayList<ScaleChord> scaleChords = new ArrayList<>();
+                    scaleChords.add(builtScaleChord);
+                    Key key = Key.guessKey(scaleChords);
+
+                    System.out.println("<tr><td>" + builtScaleChord.toString() + "</td><td>"
+                            + chordComponentsToString(builtScaleChord.getChordComponents())
+                            + "</td><td>"
+                            + key.getKeyScaleNote().toString()
+                            + "</td><td>"
+                            + chordComponentScaleNotesToString(key, builtScaleChord)
+                            + "</td></tr>"
+                    );
+
+                }
             }
+            System.out.println(
+                    "  </table>\n" +
+                            "  </body>\n" +
+                            "</html>");
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
         }
-        System.out.println(
-                "  </table>\n" +
-                        "  </body>\n" +
-                        "</html>");
     }
 
     private String chordComponentsToString(TreeSet<ChordComponent> chordComponents) {
@@ -91,13 +99,18 @@ public class ScaleChordTest extends TestCase
 
     @Test
     public void testScaleChordParse() {
-        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.dominant13), ScaleChord.parse("A13"));
-        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("F"));
-        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("FGm"));
-        assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.parse("Fm"));
-        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#m"));
-        assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
-        assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.parse("Ddim/G"));
-        assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.parse("Adim/G"));
+        try {
+            assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.dominant13), ScaleChord.parse("A13"));
+            assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("F"));
+            assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("FGm"));
+            assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.minor), ScaleChord.parse("Fm"));
+            assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#m"));
+            assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
+            assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.parse("Ddim/G"));
+            assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.parse("Adim/G"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 }

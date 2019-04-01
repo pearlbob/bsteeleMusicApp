@@ -4,6 +4,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 
 public class SongMomentLocation {
 
@@ -16,11 +17,9 @@ public class SongMomentLocation {
      * @param sb string buffer
      * @return the song moment location parsed
      */
-    public static final SongMomentLocation parse(StringBuffer sb) {
+    public static final SongMomentLocation parse(StringBuffer sb) throws ParseException  {
 
         ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(sb);
-        if (chordSectionLocation == null)
-            return null;
 
         if (sb.length() < 2)
             return null;

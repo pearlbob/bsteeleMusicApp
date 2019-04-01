@@ -4,6 +4,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 import java.util.Objects;
 
 public class ChordSectionLocation {
@@ -74,7 +75,7 @@ public class ChordSectionLocation {
         repeatLowerRight;
     }
 
-    static final ChordSectionLocation parse(String s) {
+    static final ChordSectionLocation parse(String s) throws ParseException {
         return parse(new StringBuffer(s));
     }
 
@@ -84,11 +85,9 @@ public class ChordSectionLocation {
      * @param sb the given string input
      * @return the chord section location, can be null
      */
-    public static final ChordSectionLocation parse(StringBuffer sb) {
+    public static final ChordSectionLocation parse(StringBuffer sb) throws ParseException {
 
         SectionVersion sectionVersion = SectionVersion.parse(sb);
-        if (sectionVersion == null)
-            return null;
 
         if (sb.length() >= 3) {
             final RegExp numberRegexp = RegExp.compile("^(\\d+):(\\d+)");  //  workaround for RegExp is not serializable.
@@ -100,7 +99,7 @@ public class ChordSectionLocation {
                     sb.delete(0, mr.getGroup(0).length());
                     return new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
                 } catch (NumberFormatException nfe) {
-                    return null;
+                    throw new ParseException(nfe.getMessage(),0);
                 }
             }
         }
@@ -113,7 +112,7 @@ public class ChordSectionLocation {
                     sb.delete(0, mr.getGroup(0).length());
                     return new ChordSectionLocation(sectionVersion, phraseIndex);
                 } catch (NumberFormatException nfe) {
-                    return null;
+                    throw new ParseException(nfe.getMessage(),0);
                 }
             }
         }

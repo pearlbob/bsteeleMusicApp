@@ -3,6 +3,7 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -198,148 +199,154 @@ public class KeyTest extends TestCase {
     public void testGuessKey() {
         Key key;
 
-        ArrayList<ScaleChord> scaleChords = new ArrayList<>();
-        scaleChords.add(new ScaleChord(ScaleNote.Gb));
-        scaleChords.add(new ScaleChord(ScaleNote.Cb));
-        scaleChords.add(new ScaleChord(ScaleNote.Db, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
+        try {
+            ArrayList<ScaleChord> scaleChords = new ArrayList<>();
+            scaleChords.add(new ScaleChord(ScaleNote.Gb));
+            scaleChords.add(new ScaleChord(ScaleNote.Cb));
+            scaleChords.add(new ScaleChord(ScaleNote.Db, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
 
-        scaleChords.clear();
-        scaleChords.add(ScaleChord.parse("Gb"));
-        scaleChords.add(ScaleChord.parse("Cb"));
-        scaleChords.add(ScaleChord.parse("Db7"));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
+            scaleChords.clear();
 
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.C));
-        scaleChords.add(new ScaleChord(ScaleNote.F));
-        scaleChords.add(new ScaleChord(ScaleNote.G, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.C, key.getKeyScaleNote());
+            scaleChords.add(ScaleChord.parse("Gb"));
+            scaleChords.add(ScaleChord.parse("Cb"));
+            scaleChords.add(ScaleChord.parse("Db7"));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Gb, key.getKeyScaleNote());
 
-        //  1     2   3    4    5    6     7
-        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.Db));
-        scaleChords.add(new ScaleChord(ScaleNote.Gb));
-        scaleChords.add(new ScaleChord(ScaleNote.Ab, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.C));
+            scaleChords.add(new ScaleChord(ScaleNote.F));
+            scaleChords.add(new ScaleChord(ScaleNote.G, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.C, key.getKeyScaleNote());
 
-        //  1     2   3    4    5    6     7
-        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.Cs));
-        scaleChords.add(ScaleChord.parse("F#"));
-        scaleChords.add(new ScaleChord(ScaleNote.Gs, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.minor));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+            //  1     2   3    4    5    6     7
+            //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.Db));
+            scaleChords.add(new ScaleChord(ScaleNote.Gb));
+            scaleChords.add(new ScaleChord(ScaleNote.Ab, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Db, key.getKeyScaleNote());
 
-
-        //  1     2   3    4    5    6     7
-        //  A    Bm   C♯m  D    E7   F♯m  G♯m7b5
-        //  B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5
-        //  E    F♯m  G♯m  A    B7   C♯m  D♯m7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.A));
-        scaleChords.add(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.B, ChordDescriptor.minor));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.B, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.E, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.E, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.D, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.A, key.getKeyScaleNote());
-
-        //  1     2   3    4    5    6     7
-        //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
-        //  F    Gm   Am   B♭   C7   Dm   Em7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.Ab));
-        scaleChords.add(new ScaleChord(ScaleNote.F, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.G, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.F, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.Eb, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Eb, key.getKeyScaleNote());
-
-        //  1     2   3    4    5    6     7
-        //  C    Dm   Em   F    G7   Am   Bm7b5
-        //  A    Bm   C♯m  D    E7   F♯m  G♯m7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.A, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.D, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.E, ChordDescriptor.minor));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.A, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.G, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.D, key.getKeyScaleNote());
+            //  1     2   3    4    5    6     7
+            //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.Cs));
+            scaleChords.add(ScaleChord.parse("F#"));
+            scaleChords.add(new ScaleChord(ScaleNote.Gs, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.minor));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Db, key.getKeyScaleNote());
 
 
-        //  1     2   3    4    5    6     7
-        //  B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5
-        //  E    F♯m  G♯m  A    B7   C♯m  D♯m7b5
-        //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.Gs, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.Ds, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.E));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Eb, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.Fs, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.E, key.getKeyScaleNote());
+            //  1     2   3    4    5    6     7
+            //  A    Bm   C♯m  D    E7   F♯m  G♯m7b5
+            //  B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5
+            //  E    F♯m  G♯m  A    B7   C♯m  D♯m7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.A));
+            scaleChords.add(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.B, ChordDescriptor.minor));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.B, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.E, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.E, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.D, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.A, key.getKeyScaleNote());
+
+            //  1     2   3    4    5    6     7
+            //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
+            //  F    Gm   Am   B♭   C7   Dm   Em7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.Ab));
+            scaleChords.add(new ScaleChord(ScaleNote.F, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.G, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.F, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.Eb, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Eb, key.getKeyScaleNote());
+
+            //  1     2   3    4    5    6     7
+            //  C    Dm   Em   F    G7   Am   Bm7b5
+            //  A    Bm   C♯m  D    E7   F♯m  G♯m7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.A, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.D, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.E, ChordDescriptor.minor));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.A, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.G, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.D, key.getKeyScaleNote());
 
 
-        //  1     2   3    4    5    6     7
-        //  A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5
-        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
-        //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.minor));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Bb, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.Ab, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.Db, ChordDescriptor.dominant7));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
+            //  1     2   3    4    5    6     7
+            //  B    C♯m  D♯m  E    F♯7  G♯m  A♯m7b5
+            //  E    F♯m  G♯m  A    B7   C♯m  D♯m7b5
+            //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.Gs, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.Ds, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.E));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Eb, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.Fs, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.E, key.getKeyScaleNote());
 
-        //  1     2   3    4    5    6     7
-        //  A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5
-        //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.minor));
-        scaleChords.add(new ScaleChord(ScaleNote.Db));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Db, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.Ab));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
 
-        //  1     2   3    4    5    6     7
-        //  G    Am   Bm   C    D7   Em   F♯m7b5
-        //  D    Em   F♯m  G    A7   Bm   C♯m7b5
-        scaleChords.clear();
-        scaleChords.add(new ScaleChord(ScaleNote.D));
-        scaleChords.add(new ScaleChord(ScaleNote.A));
-        scaleChords.add(new ScaleChord(ScaleNote.G));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.D, key.getKeyScaleNote());
-        scaleChords.add(new ScaleChord(ScaleNote.C));
-        key = Key.guessKey(scaleChords);
-        assertEquals(ScaleNote.G, key.getKeyScaleNote());
+            //  1     2   3    4    5    6     7
+            //  A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5
+            //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+            //  E♭   Fm   Gm   A♭   B♭7  Cm   Dm7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.minor));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Bb, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.Ab, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.Db, ChordDescriptor.dominant7));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
+
+            //  1     2   3    4    5    6     7
+            //  A♭   B♭m  Cm   D♭   E♭7  Fm   Gm7b5
+            //  D♭   E♭m  Fm   G♭   A♭7  B♭m  Cm7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.Bb, ChordDescriptor.minor));
+            scaleChords.add(new ScaleChord(ScaleNote.Db));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Db, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.Ab));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.Ab, key.getKeyScaleNote());
+
+            //  1     2   3    4    5    6     7
+            //  G    Am   Bm   C    D7   Em   F♯m7b5
+            //  D    Em   F♯m  G    A7   Bm   C♯m7b5
+            scaleChords.clear();
+            scaleChords.add(new ScaleChord(ScaleNote.D));
+            scaleChords.add(new ScaleChord(ScaleNote.A));
+            scaleChords.add(new ScaleChord(ScaleNote.G));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.D, key.getKeyScaleNote());
+            scaleChords.add(new ScaleChord(ScaleNote.C));
+            key = Key.guessKey(scaleChords);
+            assertEquals(ScaleNote.G, key.getKeyScaleNote());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
