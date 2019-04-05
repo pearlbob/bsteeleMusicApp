@@ -19,6 +19,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureEditType;
+import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
 import com.bsteele.bsteeleMusicApp.shared.songs.MeasureRepeat;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
@@ -343,8 +344,6 @@ public class SongEditView
                     preProcessMeasureEntry();
                     break;
             }
-
-
         });
 
         editAppend.setValue(true);
@@ -672,7 +671,7 @@ public class SongEditView
         StringBuffer sb = new StringBuffer(input.replaceAll("\\s+", " "));
 
         boolean inComment = false;
-        for (int i = 0; i < 1e4; i++)      //  safety
+        for (int i = 0; i < 1e3; i++)      //  safety
         {
             Util.stripLeadingSpaces(sb);
             if (sb.length() <= 0)
@@ -873,19 +872,19 @@ public class SongEditView
     }
 
     @Override
-    public void setSongEdit(Song song) {
-        if (song == null)
+    public void setSongEdit(Song newSong) {
+        if (newSong == null)
             return;
 
-        setSong(song);
+        setSong(newSong);
         undoStackPushSong();
     }
 
-    private final void setSong(Song song) {
-        if (song == null)
+    private final void setSong(Song newSong) {
+        if (newSong == null)
             return;
 
-        this.song = song.copySong();
+        this.song = newSong.copySong();
 
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
@@ -906,6 +905,7 @@ public class SongEditView
             selectLastChordsCell();
 
         chordsFlexTable.addClickHandler(clickEvent -> {
+            logger.finest("singleClick");
             measureFocus();
 
             HTMLTable.Cell cell = chordsFlexTable.getCellForEvent(clickEvent);
@@ -914,6 +914,7 @@ public class SongEditView
             measureFocus();
         });
         chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
+            logger.finest("doubleClick");
             measureFocus();
 
             Element td = getEventTargetCell(Event.as(doubleClickEvent.getNativeEvent()));
@@ -925,7 +926,6 @@ public class SongEditView
 
             song.setCurrentMeasureEditType(MeasureEditType.replace);
             updateCurrentChordEditLocation(row, column);
-            measureFocus();
         });
 
         checkSong();
@@ -1050,6 +1050,17 @@ public class SongEditView
         }
         lastGridCoordinate = song.getGridCoordinate(chordSectionLocation);
 
+        MeasureNode measureNode = song.findMeasureNode(chordSectionLocation);
+        switch ( measureNode.getMeasureNodeType()){
+            case section:
+            case phrase:
+            case repeat:
+                song.setCurrentMeasureEditType(MeasureEditType.replace);
+                break;
+            default:
+                break;
+        }
+
         //  indicate the current selection
         Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
         //  MeasureEditType editLocation = MeasureEditType.append;
@@ -1068,7 +1079,7 @@ public class SongEditView
                 break;
         }
 
-        measureEntry.setText(song.findMeasureNode(chordSectionLocation).toMarkup());
+        measureEntry.setText(measureNode.toMarkup());
         measureEntry.selectAll();
     }
 
@@ -1341,7 +1352,7 @@ public class SongEditView
         {    // other chords
             scaleNoteOtherSelection.clear();
             OptionElement optionElement = document.createOptionElement();
-            optionElement.setLabel("Other chord");
+            optionElement.setLabel("Other chords");
             optionElement.setValue("");
             scaleNoteOtherSelection.add(optionElement, null);
             for (ChordDescriptor cd : ChordDescriptor.getOtherChordDescriptorsOrdered()) {

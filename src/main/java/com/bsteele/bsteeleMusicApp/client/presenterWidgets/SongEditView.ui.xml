@@ -230,7 +230,7 @@
                             <li>Chords must be in upper case!</li>
                             <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                             <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9] and more.
-                                See "Other chord" selection above.
+                                See "Other chords" selection above.
                             </li>
                             <li>Spaces between chords indicate a new measure. Chords without spaces are within one
                                 measure.

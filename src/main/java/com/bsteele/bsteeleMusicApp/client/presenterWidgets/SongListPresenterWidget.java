@@ -87,54 +87,58 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        String url = GWT.getHostPageBaseURL() + "allSongs.songlyrics";
-        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
-        try {
-            requestBuilder.sendRequest(null, new RequestCallback() {
-                public void onError(Request request, Throwable exception) {
-                    logger.info("failed file reading: "+ exception.getMessage());
-                    sendStatus("failed reading", exception.getMessage());
-                    //  default all songs
-                    try {
-                        addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
-                    } catch (ParseException pex){
-                        logger.info("unexpected parse error allSongs: "+pex.getMessage());
+        String url = GWT.getHostPageBaseURL()+ "allSongs.songlyrics";
+        if (url.matches("^http://127.0.0.1.*") || url.matches("^http://local.host.*")) {
+            //  expedite debugging
+            defaultAllSongs();
+        } else {
+            RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+            try {
+                requestBuilder.sendRequest(null, new RequestCallback() {
+                    public void onError(Request request, Throwable exception) {
+                        logger.info("failed file reading: " + exception.getMessage());
+                        sendStatus("failed reading", exception.getMessage());
+                        defaultAllSongs();
                     }
-                    logger.info("Used internal copy instead.");
-                }
 
-                public void onResponseReceived(Request request, Response response) {
-                    //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
-                    if (response.getStatusCode() == 200) {
-                        logger.info("read songs from: " + url);
+                    public void onResponseReceived(Request request, Response response) {
+                        //GWT.log("response.getStatusCode(): "+ response.getStatusCode());
+                        if (response.getStatusCode() == 200) {
+                            logger.info("read songs from: " + url);
 
-                        //  all songs from server
-                        try {
-                            addJsonToSongList(response.getText());
-                        } catch (ParseException pex){
-                            logger.info("unexpected parse error from server: "+pex.getMessage());
-                        }
+                            //  all songs from server
+                            try {
+                                addJsonToSongList(response.getText());
+                            } catch (ParseException pex) {
+                                logger.info("unexpected parse error from server: " + pex.getMessage());
+                            }
 
-                        sendStatus("read", url);
-                    } else {
+                            sendStatus("read", url);
+                        } else {
 
-                        logger.info("failed reading: " + url);
-                        logger.info("Used internal copy instead.");
-                        sendStatus("failed reading", url);
-                        //  default all songs
-                        try {
-                            addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
-                        } catch (ParseException pex){
-                            logger.info("unexpected parse error allSongs: "+pex.getMessage());
+                            logger.info("failed reading: " + url);
+                            logger.info("Used internal copy instead.");
+                            sendStatus("failed reading", url);
+                            defaultAllSongs();
                         }
                     }
-                }
-            });
-        } catch (Exception e) {
-            logger.info("RequestException for " + url + ": "+ e.getMessage());
-            sendStatus("Exception", e.getMessage());
+                });
+            } catch (Exception e) {
+                logger.info("RequestException for " + url + ": " + e.getMessage());
+                sendStatus("Exception", e.getMessage());
+            }
         }
 
+    }
+
+    private void defaultAllSongs() {
+        //  default all songs
+        try {
+            addJsonToSongList(AppResources.INSTANCE.allSongsAsJsonString().getText());
+            logger.info("Used internal copy allSongs.songlyrics");
+        } catch (ParseException pex) {
+            logger.info("unexpected parse error internal allSongs: " + pex.getMessage());
+        }
     }
 
     @Override
@@ -199,7 +203,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
     }
 
 
-    private void addJsonToSongList(String jsonString) throws ParseException  {
+    private void addJsonToSongList(String jsonString) throws ParseException {
         if (jsonString != null && jsonString.length() > 0) {
             JSONValue jv = JSONParser.parseStrict(jsonString);
             if (jv != null) {
@@ -238,7 +242,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
      * Native function to write the song as JSON.
      *
      * @param filename the file to be written to
-     * @param data the json data to write
+     * @param data     the json data to write
      */
     private void saveSongAs(String filename, String data) {
         ClientFileIO.saveDataAs(filename, data);
