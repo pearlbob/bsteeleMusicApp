@@ -295,6 +295,9 @@ public class Phrase extends MeasureNode {
         if (this == o) return true;
         if (o == null || !(o instanceof Phrase)) return false;
         Phrase that = (Phrase) o;
+        if ( (measures == null || measures.isEmpty())
+                && (that.measures == null || that.measures.isEmpty()))
+            return true;
         return Objects.equals(measures, that.measures);
     }
 

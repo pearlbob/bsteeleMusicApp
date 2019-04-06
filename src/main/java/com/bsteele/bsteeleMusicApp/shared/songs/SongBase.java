@@ -12,8 +12,6 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -172,6 +170,63 @@ public class SongBase {
         if (chordSectionLocation == null)
             return null;
         return chordSectionMap.get(chordSectionLocation.getSectionVersion());
+    }
+
+    private enum UpperCaseState {
+        initial,
+        flatIsPossible,
+        normal;
+    }
+
+    public static final String entryToUppercase(String entry) {
+        StringBuilder sb = new StringBuilder();
+
+        UpperCaseState state = UpperCaseState.initial;
+        for (int i = 0; i < entry.length(); i++) {
+            char c = entry.charAt(i);
+            switch (state) {
+                case flatIsPossible:
+                    if ( c == 'b'){
+                        state = UpperCaseState.initial;
+                        sb.append(c);
+                        break;
+                    }
+                    //  fall through
+                case initial:
+                    if (c >= 'a' && c <= 'g') {
+                        String test = entry.substring(i);
+                        boolean isChordDescriptor = false;
+                        for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+                            String cdString = chordDescriptor.toString();
+                            if (cdString.length() > 0 && test.startsWith(cdString)) {
+                                isChordDescriptor = true;
+                                break;
+                            }
+                        }
+                        if (isChordDescriptor == false) {
+                            //  map the chord to upper case
+                            c = Character.toUpperCase(c);
+                        }
+                    }
+                    state = (c >= 'A' && c <= 'G') ? UpperCaseState.flatIsPossible : UpperCaseState.normal;
+                    //  fall through
+                case normal:
+                    //  reset on sequential reset characters
+                    if (Character.isWhitespace(c)
+                            || c == '/'
+                            || c == ':'
+                            || c == '#'
+                            || c == MusicConstant.flatChar
+                            || c == MusicConstant.sharpChar
+                    )
+                        state = UpperCaseState.initial;
+
+                    sb.append(c);
+                    break;
+            }
+
+        }
+        return sb.toString();
     }
 
     /**
@@ -891,6 +946,11 @@ public class SongBase {
     @Deprecated
     final Measure getCurrentMeasure() {
         return findMeasure(currentChordSectionLocation);
+    }
+
+    public final MeasureNode findMeasureNode(GridCoordinate coordinate) {
+        calcChordMaps();
+        return findMeasureNode(gridCoordinateChordSectionLocationMap.get(coordinate));
     }
 
     public final MeasureNode findMeasureNode(ChordSectionLocation chordSectionLocation) {

@@ -38,7 +38,7 @@ public class ChordTest extends TestCase {
                             if (beats != beatsPerBar) {
                                 //  the beats will default to beats per bar if unspecified
                                 assertEquals(chord.getScaleChord(), pChord.getScaleChord());
-                                assertEquals(chord.getSlashScaleChord(), pChord.getSlashScaleChord());
+                                assertEquals(chord.getSlashScaleNote(), pChord.getSlashScaleNote());
                             } else
                                 assertEquals(chord, pChord);
                         }
@@ -51,15 +51,15 @@ public class ChordTest extends TestCase {
     public void testChordParse() {
         try {
             Chord chord = new Chord(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished));
-            chord.setSlashScaleChord(new ScaleChord(ScaleNote.G));
+            chord.setSlashScaleNote(ScaleNote.G);
 
             assertEquals(chord, Chord.parse("Ddim/G", 4));
 
             chord = new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished));
-            chord.setSlashScaleChord(new ScaleChord(ScaleNote.G));
+            chord.setSlashScaleNote(ScaleNote.G);
             assertEquals(chord, Chord.parse("Adim/G", 4));
             chord = new Chord(new ScaleChord(ScaleNote.G, ChordDescriptor.suspendedSecond));
-            chord.setSlashScaleChord(new ScaleChord(ScaleNote.A));
+            chord.setSlashScaleNote(ScaleNote.A);
             assertEquals(chord, Chord.parse("G2/A", 4));
             chord = new Chord(new ScaleChord(ScaleNote.G, ChordDescriptor.add9));
             assertEquals(chord, Chord.parse("Gadd9A", 4));
