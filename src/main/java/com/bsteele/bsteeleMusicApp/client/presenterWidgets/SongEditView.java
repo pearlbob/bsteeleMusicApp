@@ -12,21 +12,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
-import com.bsteele.bsteeleMusicApp.shared.songs.ChordSectionLocation;
-import com.bsteele.bsteeleMusicApp.shared.songs.Key;
-import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureComment;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureEditType;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
-import com.bsteele.bsteeleMusicApp.shared.songs.MeasureRepeat;
-import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
-import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
-import com.bsteele.bsteeleMusicApp.shared.songs.Section;
-import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
-import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
+import com.bsteele.bsteeleMusicApp.shared.songs.*;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.Scheduler;
@@ -43,6 +29,8 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
@@ -151,6 +139,9 @@ public class SongEditView
 
     @UiField
     TextBox measureEntry;
+
+    @UiField
+    Label measureEntryCorrection;
 
     @UiField
     RadioButton editInsert;
@@ -291,7 +282,7 @@ public class SongEditView
             logger.fine("measure change: \"" + event.getValue() + "\"");
             processMeasureEntry();
         });
-        measureEntry.addKeyDownHandler((KeyDownEvent event) -> {
+        measureEntry.addKeyUpHandler((KeyUpEvent event) -> {
             event.stopPropagation();
 
             if (event.isControlKeyDown())
@@ -522,14 +513,18 @@ public class SongEditView
 
         undo.setEnabled(false);
         undo.addClickHandler((ClickEvent event) -> {
-            if (undoStack.canUndo())
+            if (undoStack.canUndo()) {
                 setSong(undoStack.undo());
+                measureFocus();
+            }
         });
 
         redo.setEnabled(false);
         redo.addClickHandler((ClickEvent event) -> {
-            if (undoStack.canRedo())
+            if (undoStack.canRedo()) {
                 setSong(undoStack.redo());
+                measureFocus();
+            }
         });
 
         editHints.getStyle().setDisplay(Style.Display.NONE);
@@ -622,34 +617,29 @@ public class SongEditView
 
     private void preProcessMeasureEntry() {
         String entry = measureEntry.getValue();
-        if (entry.isEmpty())
+        if (entry.isEmpty()) {
+            measureEntryCorrection.getElement().setInnerHTML(nbsp);
             return;
-
-        //  speed entry enhancement: first chord char is always upper case
-        if (entry.length() == 1) {
-            char c = entry.charAt(0);
-            if (c >= 'a' && c <= 'g') {
-                entry = Util.firstToUpper(entry);
-                measureEntry.setValue(entry);
-            }
-        } else if (entry.length() >= 3 && entry.charAt(entry.length() - 2) == ' ') {
-            int len = entry.length() - 1;
-            char c = entry.charAt(len);
-            if (c >= 'a' && c <= 'g') {
-                entry = entry.substring(0, len) + Character.toUpperCase(c);
-                measureEntry.setValue(entry);
-            }
         }
+
+        //  speed entry enhancement
+        String upperEntry = SongBase.entryToUppercase(entry);
+        if (upperEntry.equals(entry))
+            measureEntryCorrection.getElement().setInnerHTML(nbsp);
+        else
+            measureEntryCorrection.setText(upperEntry);
     }
 
     private void processMeasureEntry() {
-        String entry = measureEntry.getValue();
+        preProcessMeasureEntry();
+
+        String entry = SongBase.entryToUppercase(measureEntry.getValue());
         if (entry.isEmpty())
             return;
 
-        preProcessMeasureEntry();
         if (processChordEntry(entry)) {
             measureEntry.setValue("");
+            preProcessMeasureEntry();
         }
     }
 
@@ -667,6 +657,9 @@ public class SongEditView
 
         if (song == null)
             song = Song.createEmptySong();
+
+        if (input.isEmpty())
+            return false;
 
         StringBuffer sb = new StringBuffer(input.replaceAll("\\s+", " "));
 
@@ -787,8 +780,8 @@ public class SongEditView
                 if (song.measureEdit(chordSectionLocation, editLocation, measure)) {
                     logger.fine("postEdit: " + song.getCurrentChordSectionLocation());
                     undoStackPushSong();
-                    updateCurrentChordEditLocation();
                     displaySong();
+                    updateCurrentChordEditLocation();
                     measureFocus();
                     logger.fine("postselect: " + song.getCurrentChordSectionLocation());
                     continue;
@@ -1051,7 +1044,7 @@ public class SongEditView
         lastGridCoordinate = song.getGridCoordinate(chordSectionLocation);
 
         MeasureNode measureNode = song.findMeasureNode(chordSectionLocation);
-        switch ( measureNode.getMeasureNodeType()){
+        switch (measureNode.getMeasureNodeType()) {
             case section:
             case phrase:
             case repeat:
@@ -1062,21 +1055,27 @@ public class SongEditView
         }
 
         //  indicate the current selection
-        Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
-        //  MeasureEditType editLocation = MeasureEditType.append;
-        switch (song.getCurrentMeasureEditType()) {
-            default:
-            case append:
-                e.setAttribute("editSelect", "append");
-                break;
-            case insert:
-                e.setAttribute("editSelect", "insert");
-                break;
-            case replace:
-            case delete:
-                e.setAttribute("editSelect", "replace");
-                e.getStyle().setBackgroundColor(selectedBorderColorValueString);
-                break;
+        try {
+          logger.info("rowCount: "+  chordsFlexTable.getRowCount());
+            Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
+            //  MeasureEditType editLocation = MeasureEditType.append;
+            switch (song.getCurrentMeasureEditType()) {
+                default:
+                case append:
+                    e.setAttribute("editSelect", "append");
+                    break;
+                case insert:
+                    e.setAttribute("editSelect", "insert");
+                    break;
+                case replace:
+                case delete:
+                    e.setAttribute("editSelect", "replace");
+                    e.getStyle().setBackgroundColor(selectedBorderColorValueString);
+                    break;
+            }
+        } catch (IndexOutOfBoundsException ioob ){
+            logger.severe(ioob.getMessage()+" at ("+gridCoordinate.getRow()+", "+gridCoordinate.getCol()+")");
+            logger.info( song.logGrid());
         }
 
         measureEntry.setText(measureNode.toMarkup());
@@ -1419,6 +1418,7 @@ public class SongEditView
     private static final int fontsize = 32;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();
+    private static final String nbsp = "&nbsp;";
     private final EventBus eventBus;    //  is actually used
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());

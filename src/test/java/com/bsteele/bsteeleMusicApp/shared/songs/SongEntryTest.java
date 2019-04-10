@@ -1,10 +1,12 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.StringTripleToHtmlTable;
 import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
@@ -14,7 +16,7 @@ public class SongEntryTest
         extends TestCase {
 
     @Test
-    public void testEntry() {
+    public void testEntryToUppercase() {
         {
             assertEquals("A", SongBase.entryToUppercase("a"));
             assertEquals("G", SongBase.entryToUppercase("g"));
@@ -43,7 +45,7 @@ public class SongEntryTest
 
             int beats = 4;
             int beatsPerBar = 4;
-            ScaleNote[] slashScaleNotes = new ScaleNote[] { null, ScaleNote.A, ScaleNote.As, ScaleNote.Eb, ScaleNote.Cb };
+            ScaleNote[] slashScaleNotes = new ScaleNote[]{null, ScaleNote.A, ScaleNote.As, ScaleNote.Eb, ScaleNote.Cb};
             for (ScaleNote scaleNote : ScaleNote.values()) {
                 for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
                     for (ScaleNote slashScaleNote : slashScaleNotes) {
@@ -79,6 +81,22 @@ public class SongEntryTest
                 }
             }
         }
+    }
+
+    @Test
+    public void testParseEntry() {
+
+        int beatsPerBar = 4;
+
+        try {
+            StringBuffer sb;
+            ArrayList<MeasureNode> measureNodes = SongBase.parseChordEntry("A", beatsPerBar);
+            assertEquals(1, measureNodes.size());
+            assertEquals(Measure.parse("A", beatsPerBar), measureNodes.get(0));
+        } catch (ParseException pex) {
+            fail();
+        }
+
     }
 
     private static Logger logger = Logger.getLogger(SongEntryTest.class.getName());

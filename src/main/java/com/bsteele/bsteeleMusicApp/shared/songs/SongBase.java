@@ -186,7 +186,7 @@ public class SongBase {
             char c = entry.charAt(i);
             switch (state) {
                 case flatIsPossible:
-                    if ( c == 'b'){
+                    if (c == 'b') {
                         state = UpperCaseState.initial;
                         sb.append(c);
                         break;
@@ -230,7 +230,7 @@ public class SongBase {
     }
 
     /**
-     * Parse the current string representation of the song's chords into the song internal strucutures.
+     * Parse the current string representation of the song's chords into the song internal structures.
      */
     protected final void parseChords(final String chords)
             throws ParseException {
@@ -281,6 +281,82 @@ public class SongBase {
         setDefaultCurrentChordLocation();
 
         logger.finest(logGrid());
+    }
+
+    /**
+     * Will always return something, even if errors have to be commented out
+     *
+     * @param entry
+     * @param beatsPerBar
+     * @return
+     */
+    public final static ArrayList<MeasureNode> parseChordEntry(final String entry, int beatsPerBar) {
+        ArrayList<MeasureNode> ret = new ArrayList<>();
+
+        if (entry != null) {
+            logger.finer("parseChordEntry: " + entry);
+            TreeSet<ChordSection> emptyChordSections = new TreeSet<>();
+            StringBuffer sb = new StringBuffer(entry);
+            ChordSection chordSection;
+            int phaseIndex = 0;
+            while (sb.length() > 0) {
+                Util.stripLeadingWhitespace(sb);
+                if (sb.length() <= 0)
+                    break;
+                logger.finest(sb.toString());
+
+                try {
+                    chordSection = ChordSection.parse(sb, beatsPerBar);
+
+                    //  look for multiple sections defined at once
+                    if (chordSection.getPhrases().isEmpty())
+                        emptyChordSections.add(chordSection);
+                    else if (!emptyChordSections.isEmpty()) {
+                        //  share the common measure sequence items
+                        for (ChordSection wasEmptyChordSection : emptyChordSections) {
+                            wasEmptyChordSection.setPhrases(chordSection.getPhrases());
+                        }
+                        emptyChordSections.clear();
+                    }
+                    ret.add(chordSection);
+                    continue;
+                } catch (ParseException pex) {
+                }
+                try {
+                    ret.add(MeasureRepeat.parse(sb, phaseIndex, beatsPerBar));
+                    phaseIndex++;
+                    continue;
+                } catch (ParseException pex) {
+                }
+                try {
+                    ret.add(Phrase.parse(sb, phaseIndex, beatsPerBar));
+                    phaseIndex++;
+                    continue;
+                } catch (ParseException pex) {
+                }
+                try {
+                    ret.add(MeasureComment.parse(sb, phaseIndex));
+                    phaseIndex++;
+                    continue;
+                } catch (ParseException pex) {
+                }
+
+                //  entry not understood, force it to be a comment
+                {
+                    int commentIndex = sb.indexOf(" ");
+                    if ( commentIndex < 0 ) {
+                        ret.add(new MeasureComment(sb.toString()));
+                        break;
+                    }
+                    else {
+                        ret.add(new MeasureComment(sb.substring(0,commentIndex)));
+                        sb.delete(0,commentIndex);
+                    }
+                }
+            }
+        }
+
+        return ret;
     }
 
     private void setDefaultCurrentChordLocation() {
