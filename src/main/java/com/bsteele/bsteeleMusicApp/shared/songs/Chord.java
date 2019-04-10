@@ -11,11 +11,11 @@ import java.util.Objects;
 public class Chord implements Comparable<Chord> {
 
     public Chord(@NotNull ScaleChord scaleChord, int beats, int beatsPerBar,
-                 ScaleChord slashScaleChord, ChordAnticipationOrDelay anticipationOrDelay, boolean implicitBeats) {
+                 ScaleNote slashScaleNote, ChordAnticipationOrDelay anticipationOrDelay, boolean implicitBeats) {
         this.scaleChord = scaleChord;
         this.beats = beats;
         this.beatsPerBar = beatsPerBar;
-        this.slashScaleChord = slashScaleChord;
+        this.slashScaleNote = slashScaleNote;
         this.anticipationOrDelay = anticipationOrDelay;
         this.implicitBeats = implicitBeats;
     }
@@ -24,7 +24,7 @@ public class Chord implements Comparable<Chord> {
         scaleChord = chord.scaleChord;
         beats = chord.beatsPerBar;
         beatsPerBar = chord.beatsPerBar;
-        slashScaleChord = chord.slashScaleChord;
+        slashScaleNote = chord.slashScaleNote;
         anticipationOrDelay = chord.anticipationOrDelay;
         implicitBeats = chord.implicitBeats;
     }
@@ -46,14 +46,10 @@ public class Chord implements Comparable<Chord> {
         ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.parse(sb);
 
 
-        ScaleChord slashScaleChord = null;
+        ScaleNote slashScaleNote = null;
         if (sb.length() > 0 && sb.charAt(0) == '/') {
             sb.delete(0, 1);
-            slashScaleChord = ScaleChord.parse(sb);
-            //  force the slash chord to be major
-            if (slashScaleChord != null && slashScaleChord.getChordDescriptor() != ChordDescriptor.major) {
-                slashScaleChord = new ScaleChord(slashScaleChord.getScaleNote(), ChordDescriptor.major);
-            }
+            slashScaleNote = ScaleNote.parse(sb);
         }
         if (sb.length() > 0 && sb.charAt(0) == '.') {
             beats = 1;
@@ -68,7 +64,7 @@ public class Chord implements Comparable<Chord> {
         if (beats > beatsPerBar)
             throw new ParseException("too many beats in the chord", 0); //  whoops
 
-        Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay
+        Chord ret = new Chord(scaleChord, beats, beatsPerBar, slashScaleNote, anticipationOrDelay
                 , (beats == beatsPerBar));      //  fixme
         return ret;
     }
@@ -83,7 +79,7 @@ public class Chord implements Comparable<Chord> {
 
     public Chord transpose(Key key, int halfSteps) {
         return new Chord(scaleChord.transpose(key, halfSteps), beats, beatsPerBar,
-                slashScaleChord == null ? null : slashScaleChord.transpose(key, halfSteps), anticipationOrDelay, implicitBeats);
+                slashScaleNote == null ? null : slashScaleNote.transpose(key, halfSteps), anticipationOrDelay, implicitBeats);
     }
 
     /**
@@ -128,18 +124,18 @@ public class Chord implements Comparable<Chord> {
      *
      * @return the matching slash chord if one exists
      */
-    public final ScaleChord getSlashScaleChord() {
-        return slashScaleChord;
+    public final ScaleNote getSlashScaleNote() {
+        return slashScaleNote;
     }
 
     /**
      * The matching slash chord for this chord.
      * Typically is is the bass inversion.
      *
-     * @param slashScaleChord the slash chord to set
+     * @param slashScaleNote the slash chord to set
      */
-    final void setSlashScaleChord(ScaleChord slashScaleChord) {
-        this.slashScaleChord = slashScaleChord;
+    final void setSlashScaleNote(ScaleNote slashScaleNote) {
+        this.slashScaleNote = slashScaleNote;
     }
 
     /**
@@ -187,12 +183,12 @@ public class Chord implements Comparable<Chord> {
         int ret = scaleChord.compareTo(o.scaleChord);
         if (ret != 0)
             return ret;
-        if (slashScaleChord == null && o.slashScaleChord != null)
+        if (slashScaleNote == null && o.slashScaleNote != null)
             return -1;
-        if (slashScaleChord != null && o.slashScaleChord == null)
+        if (slashScaleNote != null && o.slashScaleNote == null)
             return 1;
-        if (slashScaleChord != null && o.slashScaleChord != null) {
-            ret = slashScaleChord.compareTo(o.slashScaleChord);
+        if (slashScaleNote != null && o.slashScaleNote != null) {
+            ret = slashScaleNote.compareTo(o.slashScaleNote);
             if (ret != 0)
                 return ret;
         }
@@ -230,7 +226,7 @@ public class Chord implements Comparable<Chord> {
     @Override
     public String toString() {
         String ret = scaleChord.toString()
-                + (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
+                + (slashScaleNote == null ? "" : "/" + slashScaleNote.toString())
                 + anticipationOrDelay.toString();
         if (!implicitBeats && beats < beatsPerBar) {
             int b = 1;
@@ -242,7 +238,7 @@ public class Chord implements Comparable<Chord> {
 
     public String toStringWithoutInversion() {
         String ret = scaleChord.toString()
-                //+ (slashScaleChord == null ? "" : "/" + slashScaleChord.toString())
+                //+ (slashScaleNote == null ? "" : "/" + slashScaleNote.toString())
                 + anticipationOrDelay.toString();
         if (!implicitBeats && beats < beatsPerBar) {
             int b = 1;
@@ -259,9 +255,9 @@ public class Chord implements Comparable<Chord> {
             return false;
         Chord oc = (Chord) o;
 
-        if (slashScaleChord == null) {
-            if (oc.slashScaleChord != null) return false;
-        } else if (!slashScaleChord.equals(oc.slashScaleChord))
+        if (slashScaleNote == null) {
+            if (oc.slashScaleNote != null) return false;
+        } else if (!slashScaleNote.equals(oc.slashScaleNote))
             return false;
         return scaleChord.equals(oc.scaleChord)
                 && anticipationOrDelay.equals(oc.anticipationOrDelay)
@@ -272,7 +268,7 @@ public class Chord implements Comparable<Chord> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(scaleChord, beats, beatsPerBar, slashScaleChord, anticipationOrDelay);
+        return Objects.hash(scaleChord, beats, beatsPerBar, slashScaleNote, anticipationOrDelay);
     }
 
     public final int getBeatsPerBar() {
@@ -287,7 +283,7 @@ public class Chord implements Comparable<Chord> {
     private int beats;
     private int beatsPerBar;
     private boolean implicitBeats = true;
-    private ScaleChord slashScaleChord;
+    private ScaleNote slashScaleNote;
     private ChordAnticipationOrDelay anticipationOrDelay;
 
 }

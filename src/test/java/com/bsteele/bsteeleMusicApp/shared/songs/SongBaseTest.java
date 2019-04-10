@@ -630,15 +630,30 @@ public class SongBaseTest
     @Test
     public void testOddSongs() {
         SongBase a;
+        int beatsPerBar = 4;
         try {
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
-                    100, 4, 4,
+                    100, beatsPerBar, 4,
                     "O:" +
                             "D..Dm7 Dm7 C..B♭maj7 B♭maj7\n" +
                             " x12",
                     "o: nothing");
             logger.fine(a.logGrid());
-            assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(1, 3)));
+            ChordSectionLocation location = new ChordSectionLocation(new SectionVersion(Section.outro), 0, 3);
+            MeasureNode measureNode = a.findMeasureNode(location);
+            logger.fine(measureNode.toMarkup());
+            assertEquals(Measure.parse("B♭maj7", beatsPerBar), measureNode);
+            assertEquals(Measure.parse("B♭maj7", beatsPerBar), a.findMeasureNode(new GridCoordinate(0, 4)));
+
+            location = new ChordSectionLocation(new SectionVersion(Section.outro), 1);
+            measureNode = a.findMeasureNode(location);
+            logger.fine(measureNode.toMarkup());
+            assertEquals(measureNode, a.findMeasureNode(new GridCoordinate(1, 5)));
+            measureNode = new MeasureRepeat(null, 0, 12);
+            assertEquals(measureNode, a.findMeasureNode(new GridCoordinate(1, 5)));
+
+
+            //     assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasureNode(new ChordSectionLocation(1, 3)));
 
             a = createSongBase("Rio", "Duran Duran", "Sony/ATV Music Publishing LLC", Key.getDefault(),
                     100, 4, 4,

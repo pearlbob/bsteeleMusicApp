@@ -280,11 +280,11 @@ public class ChordSectionTest extends TestCase {
 
     private void checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote scaleNote, ArrayList<Measure> measures,
                                                           int measureN, int chordN) {
-        ScaleChord slashChord = measures.get(measureN).getChords().get(chordN).getSlashScaleChord();
-        if (slashChord == null)
+        ScaleNote slashScaleNote = measures.get(measureN).getChords().get(chordN).getSlashScaleNote();
+        if (slashScaleNote == null)
             assertNull(scaleNote);
         else
-            assertEquals(scaleNote, slashChord.getScaleNote());
+            assertEquals(scaleNote, slashScaleNote);
     }
 
     private static Logger logger = Logger.getLogger(ChordSectionTest.class.getName());

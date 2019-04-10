@@ -84,6 +84,8 @@
                         Chords:
                         <br/>
                         <g:TextBox ui:field="measureEntry" styleName="{resources.style.longEntryLine}"/>
+                        <br/>
+                        <g:Label ui:field="measureEntryCorrection"  styleName="{resources.style.longEntryLine}">&nbsp;</g:Label>
                     </td>
                 </tr>
                 <tr><td style="vertical-align:top;" width="35%">

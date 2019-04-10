@@ -1,8 +1,9 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
 
 import javax.annotation.Nonnull;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
@@ -24,6 +25,43 @@ public class Phrase extends MeasureNode {
     public int getTotalMoments() {
         return measures.size();
     }   //  fixme
+
+    public static  Phrase parse(StringBuffer sb, int phraseIndex, int beatsPerBar)
+            throws ParseException {
+        if (sb == null || sb.length() < 1)
+            throw new ParseException("no data to parse", 0);
+
+        ArrayList<Measure> measures = new ArrayList<>();
+
+        Util.stripLeadingSpaces(sb);
+
+        //  look for a set of measures and comments
+        StringBuffer lookaheadSb = new StringBuffer(sb);//  fixme: limit size?
+        for (int i = 0; i < 1e3; i++) {   //  safety
+            Util.stripLeadingSpaces(lookaheadSb);
+            if (lookaheadSb.length() == 0)
+                throw new ParseException("no data to parse", 0);
+
+            try {
+                measures.add(Measure.parse(lookaheadSb, beatsPerBar));
+                continue;
+            } catch (ParseException pex) {
+                //  ignore
+            }
+
+            try {
+                measures.add(MeasureComment.parse(lookaheadSb));
+                continue;
+            } catch (ParseException pex) {
+                //  ignore
+            }
+            throw new ParseException("Phrase not understood: " + lookaheadSb.toString(), 0);
+        }
+
+        sb.delete(0, sb.length() - lookaheadSb.length());
+        return new Phrase(measures, phraseIndex);
+    }
+
 
     @Override
     public ArrayList<String> generateInnerHtml(Key key, int tran, boolean expandRepeats) {
@@ -295,6 +333,9 @@ public class Phrase extends MeasureNode {
         if (this == o) return true;
         if (o == null || !(o instanceof Phrase)) return false;
         Phrase that = (Phrase) o;
+        if ((measures == null || measures.isEmpty())
+                && (that.measures == null || that.measures.isEmpty()))
+            return true;
         return Objects.equals(measures, that.measures);
     }
 

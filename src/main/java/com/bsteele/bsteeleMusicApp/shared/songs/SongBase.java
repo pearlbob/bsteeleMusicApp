@@ -12,8 +12,6 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -174,8 +172,65 @@ public class SongBase {
         return chordSectionMap.get(chordSectionLocation.getSectionVersion());
     }
 
+    private enum UpperCaseState {
+        initial,
+        flatIsPossible,
+        normal;
+    }
+
+    public static final String entryToUppercase(String entry) {
+        StringBuilder sb = new StringBuilder();
+
+        UpperCaseState state = UpperCaseState.initial;
+        for (int i = 0; i < entry.length(); i++) {
+            char c = entry.charAt(i);
+            switch (state) {
+                case flatIsPossible:
+                    if (c == 'b') {
+                        state = UpperCaseState.initial;
+                        sb.append(c);
+                        break;
+                    }
+                    //  fall through
+                case initial:
+                    if (c >= 'a' && c <= 'g') {
+                        String test = entry.substring(i);
+                        boolean isChordDescriptor = false;
+                        for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+                            String cdString = chordDescriptor.toString();
+                            if (cdString.length() > 0 && test.startsWith(cdString)) {
+                                isChordDescriptor = true;
+                                break;
+                            }
+                        }
+                        if (isChordDescriptor == false) {
+                            //  map the chord to upper case
+                            c = Character.toUpperCase(c);
+                        }
+                    }
+                    state = (c >= 'A' && c <= 'G') ? UpperCaseState.flatIsPossible : UpperCaseState.normal;
+                    //  fall through
+                case normal:
+                    //  reset on sequential reset characters
+                    if (Character.isWhitespace(c)
+                            || c == '/'
+                            || c == ':'
+                            || c == '#'
+                            || c == MusicConstant.flatChar
+                            || c == MusicConstant.sharpChar
+                    )
+                        state = UpperCaseState.initial;
+
+                    sb.append(c);
+                    break;
+            }
+
+        }
+        return sb.toString();
+    }
+
     /**
-     * Parse the current string representation of the song's chords into the song internal strucutures.
+     * Parse the current string representation of the song's chords into the song internal structures.
      */
     protected final void parseChords(final String chords)
             throws ParseException {
@@ -226,6 +281,82 @@ public class SongBase {
         setDefaultCurrentChordLocation();
 
         logger.finest(logGrid());
+    }
+
+    /**
+     * Will always return something, even if errors have to be commented out
+     *
+     * @param entry
+     * @param beatsPerBar
+     * @return
+     */
+    public final static ArrayList<MeasureNode> parseChordEntry(final String entry, int beatsPerBar) {
+        ArrayList<MeasureNode> ret = new ArrayList<>();
+
+        if (entry != null) {
+            logger.finer("parseChordEntry: " + entry);
+            TreeSet<ChordSection> emptyChordSections = new TreeSet<>();
+            StringBuffer sb = new StringBuffer(entry);
+            ChordSection chordSection;
+            int phaseIndex = 0;
+            while (sb.length() > 0) {
+                Util.stripLeadingWhitespace(sb);
+                if (sb.length() <= 0)
+                    break;
+                logger.finest(sb.toString());
+
+                try {
+                    chordSection = ChordSection.parse(sb, beatsPerBar);
+
+                    //  look for multiple sections defined at once
+                    if (chordSection.getPhrases().isEmpty())
+                        emptyChordSections.add(chordSection);
+                    else if (!emptyChordSections.isEmpty()) {
+                        //  share the common measure sequence items
+                        for (ChordSection wasEmptyChordSection : emptyChordSections) {
+                            wasEmptyChordSection.setPhrases(chordSection.getPhrases());
+                        }
+                        emptyChordSections.clear();
+                    }
+                    ret.add(chordSection);
+                    continue;
+                } catch (ParseException pex) {
+                }
+                try {
+                    ret.add(MeasureRepeat.parse(sb, phaseIndex, beatsPerBar));
+                    phaseIndex++;
+                    continue;
+                } catch (ParseException pex) {
+                }
+                try {
+                    ret.add(Phrase.parse(sb, phaseIndex, beatsPerBar));
+                    phaseIndex++;
+                    continue;
+                } catch (ParseException pex) {
+                }
+                try {
+                    ret.add(MeasureComment.parse(sb, phaseIndex));
+                    phaseIndex++;
+                    continue;
+                } catch (ParseException pex) {
+                }
+
+                //  entry not understood, force it to be a comment
+                {
+                    int commentIndex = sb.indexOf(" ");
+                    if ( commentIndex < 0 ) {
+                        ret.add(new MeasureComment(sb.toString()));
+                        break;
+                    }
+                    else {
+                        ret.add(new MeasureComment(sb.substring(0,commentIndex)));
+                        sb.delete(0,commentIndex);
+                    }
+                }
+            }
+        }
+
+        return ret;
     }
 
     private void setDefaultCurrentChordLocation() {
@@ -891,6 +1022,11 @@ public class SongBase {
     @Deprecated
     final Measure getCurrentMeasure() {
         return findMeasure(currentChordSectionLocation);
+    }
+
+    public final MeasureNode findMeasureNode(GridCoordinate coordinate) {
+        calcChordMaps();
+        return findMeasureNode(gridCoordinateChordSectionLocationMap.get(coordinate));
     }
 
     public final MeasureNode findMeasureNode(ChordSectionLocation chordSectionLocation) {

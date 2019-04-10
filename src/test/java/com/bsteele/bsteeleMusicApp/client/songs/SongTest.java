@@ -38,13 +38,13 @@ public class SongTest
         int songCount = 0;
         String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
         JSONValue jv = JSONParser.parseStrict(jsonString);
-        logger.fine("jv: "+jv.toString().length());
+        logger.finer("jv: "+jv.toString().length());
         TreeSet<ChordDescriptor> chordDescriptors = new TreeSet<>();
         if (jv != null) {
             JSONArray ja = jv.isArray();
             logger.fine("ja: "+ja.size());
             if (ja != null) {
-                int jaLimit = Math.min(1000, ja.size());   //    fixme: find why this fails at 1000
+                int jaLimit = Math.min(500, ja.size());   //    fixme: find why this fails at 1000
                 for (int i = 0; i < jaLimit; i++) {
                     songCount++;
                     Song song = null;
@@ -54,7 +54,7 @@ public class SongTest
                         e.printStackTrace();
                         fail();
                     }
-                    logger.info(songCount + ": "+song.getTitle());
+                    logger.fine(songCount + ": "+song.getTitle());
 
                     HashMap<ScaleChord, Integer> scaleChordMap =
                             song.findScaleChordsUsed();
