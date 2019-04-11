@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -36,23 +37,26 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     final static ChordSection parse(String s, int beatsPerBar)
-            throws ParseException{
-        return parse(new StringBuffer(s), beatsPerBar);
+            throws ParseException {
+        return parse(new MarkedString(s), beatsPerBar, false );
     }
 
-    public final static ChordSection parse(StringBuffer sb, int beatsPerBar)
+    final static ChordSection parse(MarkedString markedString, int beatsPerBar, boolean strict)
             throws ParseException {
-        if (sb == null || sb.length() < 1)
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
-        Util.stripLeadingWhitespace(sb);    //  includes newline
-        if (sb.length() <= 0)
+        Util.stripLeadingWhitespace(markedString);    //  includes newline
+        if (markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         SectionVersion sectionVersion;
         try {
-            sectionVersion = SectionVersion.parse(sb);
+            sectionVersion = SectionVersion.parse(markedString);
         } catch (ParseException pex) {
+            if (strict)
+                throw pex;
+
             //  cope with badly formatted songs
             sectionVersion = new SectionVersion(Section.verse);
         }
@@ -65,38 +69,38 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
         {
 
-            Util.stripLeadingSpaces(sb);
-            if (sb.length() <= 0)
+            Util.stripLeadingSpaces(markedString);
+            if (markedString.isEmpty())
                 break;
 
             //  quit if next section found
-            if (Section.lookahead(sb))
+            if (Section.lookahead(markedString))
                 break;
 
             //  look for a repeat marker
-            if (sb.charAt(0) == '|') {
+            if (markedString.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
                     measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
-                sb.delete(0, 1);
+                markedString.consume(1);
                 continue;
             }
 
             //  look for a repeat end
-            if (sb.charAt(0) == 'x') {
+            if (markedString.charAt(0) == 'x') {
                 repeatMarker = false;
-                sb.delete(0, 1);
+                markedString.consume(1);
 
                 //  look for repeat count
-                Util.stripLeadingSpaces(sb);
-                if (sb == null || sb.length() <= 0)
+                Util.stripLeadingSpaces(markedString);
+                if (markedString == null || markedString.isEmpty())
                     break;
 
                 final RegExp oneOrMoreDigitsRegexp = RegExp.compile("^(\\d+)");
-                MatchResult mr = oneOrMoreDigitsRegexp.exec(sb.toString());
+                MatchResult mr = oneOrMoreDigitsRegexp.exec(markedString.toString());
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
@@ -104,7 +108,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
-                    sb.delete(0, ns.length());
+                    markedString.consume(ns.length());
                     int repeatTotal = Integer.parseInt(ns);
                     measureSequenceItems.add(new MeasureRepeat(lineMeasures, measureSequenceItems.size(), repeatTotal));
                     lineMeasures = new ArrayList<>();
@@ -113,7 +117,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             }
 
             //  use a newline as the default repeat marker
-            if (sb.charAt(0) == '\n') {
+            if (markedString.charAt(0) == '\n') {
                 if (!repeatMarker) {
                     //  add line of measures to output collection
                     for (Measure m : lineMeasures)
@@ -121,23 +125,23 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                     lineMeasures = new ArrayList<>();
                 }
                 //  consume the newline
-                sb.delete(0, 1);
+                markedString.consume(1);
                 continue;
             }
 
             try {
                 //  add a measure to the current line measures
-                Measure measure = Measure.parse(sb, beatsPerBar, lastMeasure);
-                    lineMeasures.add(measure);
-                    lastMeasure = measure;
-                    continue;
+                Measure measure = Measure.parse(markedString, beatsPerBar, lastMeasure);
+                lineMeasures.add(measure);
+                lastMeasure = measure;
+                continue;
             } catch (ParseException pex) {
                 //  ignore
             }
 
             try {
                 //  look for a block repeat
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, measureSequenceItems.size(), beatsPerBar);
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(markedString, measureSequenceItems.size(), beatsPerBar);
                 if (measureRepeat != null) {
                     //  don't assume every line has an eol
                     for (Measure m : lineMeasures)
@@ -156,7 +160,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
             try {
                 //  look for a comment
-                MeasureComment measureComment = MeasureComment.parse(sb);
+                MeasureComment measureComment = MeasureComment.parse(markedString);
                 lineMeasures.add(measureComment);
                 continue;
             } catch (ParseException pex) {
@@ -199,7 +203,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         }
 
         try {
-            phrases.add(index+1, newPhrase);
+            phrases.add(index + 1, newPhrase);
         } catch (IndexOutOfBoundsException ex) {
             phrases.add(newPhrase);   //  default to the end!
         }

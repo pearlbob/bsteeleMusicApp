@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -24,59 +25,62 @@ public class MeasureRepeat extends Phrase {
 
     static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar)
             throws ParseException {
-        return parse(new StringBuffer(s), phraseIndex, beatsPerBar);
+        return parse(new MarkedString(s), phraseIndex, beatsPerBar);
     }
 
-    public static final MeasureRepeat parse(StringBuffer sb, int phraseIndex, int beatsPerBar)
+    static final MeasureRepeat parse(MarkedString markedString, int phraseIndex, int beatsPerBar)
             throws ParseException {
-        if (sb == null || sb.length() < 1)
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
+
+        int initialMark = markedString.mark();
 
         ArrayList<Measure> measures = new ArrayList<>();
 
-        Util.stripLeadingSpaces(sb);
+        Util.stripLeadingSpaces(markedString);
 
-        StringBuffer lookaheadSb = new StringBuffer(sb);//  fixme: limit size?
-        boolean hasBracket = lookaheadSb.charAt(0) == '[';
-
+        boolean hasBracket = markedString.charAt(0) == '[';
         if (hasBracket)
-            lookaheadSb.delete(0, 1);
+            markedString.consume(1);
 
 
         //  look for a set of measures and comments
         boolean barFound = false;
-        for (int i = 0; i < 1e4; i++) {   //  safety
-            Util.stripLeadingSpaces(lookaheadSb);
-            if (lookaheadSb.length() == 0)
+        for (int i = 0; i < 1e3; i++) {   //  safety
+            Util.stripLeadingSpaces(markedString);
+            if (markedString.isEmpty()) {
+                markedString.resetToMark(initialMark);
                 throw new ParseException("no data to parse", 0);
+            }
 
             //  extend the search for a repeat only if the line ends with a |
-            if (lookaheadSb.charAt(0) == '|') {
+            if (markedString.charAt(0) == '|') {
                 barFound = true;
-                lookaheadSb.delete(0, 1);
+                markedString.consume(1);
                 continue;
             }
-            if (lookaheadSb.charAt(0) == '\n') {
-                lookaheadSb.delete(0, 1);
+            if (markedString.charAt(0) == '\n') {
+                markedString.consume(1);
                 if (barFound) {
                     barFound = false;
                     continue;
                 }
+                markedString.resetToMark(initialMark);
                 throw new ParseException("repeat not found", 0);
             }
 
-            try
-            {
-                Measure measure = Measure.parse(lookaheadSb, beatsPerBar);
-                    measures.add(measure);
-                    barFound = false;
-                    continue;
+            int mark = markedString.mark();
+            try {
+                Measure measure = Measure.parse(markedString, beatsPerBar);
+                measures.add(measure);
+                barFound = false;
+                continue;
             } catch (ParseException pex) {
-                //  ignore
+                markedString.resetToMark(mark);
             }
 
-            if (lookaheadSb.charAt(0) != ']' && lookaheadSb.charAt(0) != 'x') {
-                MeasureComment measureComment = MeasureComment.parse(lookaheadSb);
+            if (markedString.charAt(0) != ']' && markedString.charAt(0) != 'x') {
+                MeasureComment measureComment = MeasureComment.parse(markedString);
                 if (measureComment != null) {
                     measures.add(measureComment);
                     continue;
@@ -86,15 +90,16 @@ public class MeasureRepeat extends Phrase {
         }
 
         final RegExp repeatExp = RegExp.compile("^" + (hasBracket ? "\\s*]" : "") + "\\s*x\\s*(\\d+)\\s*");
-        MatchResult mr = repeatExp.exec(lookaheadSb.toString());
+        MatchResult mr = repeatExp.exec(markedString.toString());
         if (mr != null) {
             int repeats = Integer.parseInt(mr.getGroup(1));
             MeasureRepeat ret = new MeasureRepeat(measures, phraseIndex, repeats);
             logger.finer("new measure repeat: " + ret.toMarkup());
-            sb.delete(0, sb.length() - lookaheadSb.length() + mr.getGroup(0).length());
+            markedString.consume(mr.getGroup(0).length());
             return ret;
         }
 
+        markedString.resetToMark(initialMark);
         throw new ParseException("repeat not found", 0);
     }
 

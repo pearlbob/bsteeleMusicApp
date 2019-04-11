@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 
 import javax.annotation.Nonnull;
@@ -26,39 +27,44 @@ public class Phrase extends MeasureNode {
         return measures.size();
     }   //  fixme
 
-    public static  Phrase parse(StringBuffer sb, int phraseIndex, int beatsPerBar)
+    static Phrase parse(String string, int phraseIndex, int beatsPerBar)
             throws ParseException {
-        if (sb == null || sb.length() < 1)
+        return parse(new MarkedString(string), phraseIndex, beatsPerBar);
+    }
+
+
+    static Phrase parse(MarkedString markedString, int phraseIndex, int beatsPerBar)
+            throws ParseException {
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         ArrayList<Measure> measures = new ArrayList<>();
 
-        Util.stripLeadingSpaces(sb);
+        Util.stripLeadingSpaces(markedString);
 
         //  look for a set of measures and comments
-        StringBuffer lookaheadSb = new StringBuffer(sb);//  fixme: limit size?
+        int mark = markedString.mark();
         for (int i = 0; i < 1e3; i++) {   //  safety
-            Util.stripLeadingSpaces(lookaheadSb);
-            if (lookaheadSb.length() == 0)
+            Util.stripLeadingSpaces(markedString);
+            if (markedString.isEmpty())
                 throw new ParseException("no data to parse", 0);
 
             try {
-                measures.add(Measure.parse(lookaheadSb, beatsPerBar));
+                measures.add(Measure.parse(markedString, beatsPerBar));
                 continue;
             } catch (ParseException pex) {
-                //  ignore
+                markedString.resetToMark(mark);
             }
 
             try {
-                measures.add(MeasureComment.parse(lookaheadSb));
+                measures.add(MeasureComment.parse(markedString));
                 continue;
             } catch (ParseException pex) {
-                //  ignore
+                markedString.resetToMark(mark);
             }
-            throw new ParseException("Phrase not understood: " + lookaheadSb.toString(), 0);
+            throw new ParseException("Phrase not understood: " + markedString.toString(), 0);
         }
 
-        sb.delete(0, sb.length() - lookaheadSb.length());
         return new Phrase(measures, phraseIndex);
     }
 

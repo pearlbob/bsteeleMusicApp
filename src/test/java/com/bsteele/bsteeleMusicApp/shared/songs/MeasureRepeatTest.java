@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import org.junit.Test;
 
 import java.text.ParseException;
@@ -23,11 +24,11 @@ public class MeasureRepeatTest {
             }
 
             String s = "[A B C D ] x2 ";
-            StringBuffer sb = new StringBuffer(s);
-            MeasureRepeat refRepeat = MeasureRepeat.parse(sb, 0, 4);
+            MarkedString markedString = new MarkedString(s);
+            MeasureRepeat refRepeat = MeasureRepeat.parse(markedString, 0, 4);
             assertNotNull(refRepeat);
             assertEquals(s, refRepeat.toMarkup());
-            assertEquals(0, sb.length());
+            assertEquals(0, markedString.available());
 
             s = "[A B C D ] x2 E F";
             measureRepeat = MeasureRepeat.parse(s, 0, 4);

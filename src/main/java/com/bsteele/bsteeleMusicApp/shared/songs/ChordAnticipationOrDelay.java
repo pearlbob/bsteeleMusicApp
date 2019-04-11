@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  * User: bob
  */
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
+
 import java.text.ParseException;
 import java.util.TreeSet;
 
@@ -71,15 +73,15 @@ public enum ChordAnticipationOrDelay {
     }
 
 
-    static ChordAnticipationOrDelay parse(StringBuffer sb)
+    static ChordAnticipationOrDelay parse(MarkedString markedString)
             throws ParseException
     {
-        if (sb == null)
+        if (markedString == null)
             throw new ParseException("no data to parse", 0);
-        if (sb.length() > 0)
+        if (!markedString.isEmpty())
             for (ChordAnticipationOrDelay a : sortedByShortNameLength) {
-                if (sb.length() >= a.shortName.length() && a.shortName.equals(sb.substring(0, a.shortName.length()))) {
-                    sb.delete(0, a.shortName.length());
+                if (markedString.available() >= a.shortName.length() && a.shortName.equals(markedString.remainingStringLimited( a.shortName.length()))) {
+                    markedString.consume(a.shortName.length());
                     return a;
                 }
             }

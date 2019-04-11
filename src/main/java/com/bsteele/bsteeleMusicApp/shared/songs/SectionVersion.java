@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -37,7 +38,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
     }
 
     public static final SectionVersion parse(String s) throws ParseException {
-        return parse(new StringBuffer(s));
+        return parse(new MarkedString(s));
     }
 
 
@@ -47,15 +48,15 @@ public class SectionVersion implements Comparable<SectionVersion> {
      * Use the returned version.getParseLength() to find how many characters were
      * used in the id.
      *
-     * @param sb the string to parse
+     * @param markedString the string to parse
      * @return the length of the parse. Zero if no parse
      */
-    public static final SectionVersion parse(StringBuffer sb) throws ParseException {
-        if (sb == null)
+     static final SectionVersion parse(MarkedString markedString) throws ParseException {
+        if (markedString == null)
             throw new ParseException("no data to parse", 0);
 
         final RegExp sectionRegexp = RegExp.compile(sectionVersionRegexpPattern);
-        MatchResult m = sectionRegexp.exec(sb.toString());
+        MatchResult m = sectionRegexp.exec(markedString.toString());
         if (m == null)
             throw new ParseException("no section version found", 0);
 
@@ -70,7 +71,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
             throw new ParseException("no section found", 0);
 
         //   consume the section label
-        sb.delete(0, m.getGroup(0).length()); //  includes the separator
+        markedString.consume( m.getGroup(0).length()); //  includes the separator
         return section.makeVersion(version);
     }
 

@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -110,9 +111,9 @@ public enum Section {
         return new SectionVersion(this, v);
     }
 
-    static final boolean lookahead(StringBuffer sb) {
+    static final boolean lookahead(MarkedString markedString) {
         final RegExp sectionRegexp = RegExp.compile(SectionVersion.sectionVersionRegexpPattern );  //  has to include the :
-        MatchResult m = sectionRegexp.exec(sb.substring(0, Math.min(sb.length(), maxLength)));
+        MatchResult m = sectionRegexp.exec(markedString.remainingStringLimited(maxLength));
         if (m == null)
             return false;
         return getSection(m.getGroup(1)) != null;

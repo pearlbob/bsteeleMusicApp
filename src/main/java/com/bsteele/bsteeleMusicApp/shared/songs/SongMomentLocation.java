@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -13,25 +14,29 @@ public class SongMomentLocation {
         this.index = index;
     }
 
+    public static final SongMomentLocation parse(String s) throws ParseException  {
+        return parse(new MarkedString(s));
+    }
+
     /**
-     * @param sb string buffer
+     * @param markedString string buffer
      * @return the song moment location parsed
      */
-    public static final SongMomentLocation parse(StringBuffer sb) throws ParseException  {
+    public static final SongMomentLocation parse(MarkedString markedString) throws ParseException  {
 
-        ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(sb);
+        ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(markedString);
 
-        if (sb.length() < 2)
+        if (markedString.available() < 2)
             return null;
 
         final RegExp numberRegexp = RegExp.compile("^"+separator+"(\\d+)");  //  workaround for RegExp is not serializable.
-        MatchResult mr = numberRegexp.exec(sb.substring(0, Math.min(sb.length(), 5)));
+        MatchResult mr = numberRegexp.exec(markedString.remainingStringLimited(5));
         if (mr != null) {
             try {
                 int index = Integer.parseInt(mr.getGroup(1));
                 if ( index <=0 )
                     return null;
-                sb.delete(0, mr.getGroup(0).length());
+                markedString.consume(mr.getGroup(0).length());
                 return new SongMomentLocation(chordSectionLocation, index);
             } catch (NumberFormatException nfe) {
                 return null;

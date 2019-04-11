@@ -5,6 +5,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  * User: bob
  */
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
+
 import java.util.ArrayList;
 import java.util.TreeSet;
 
@@ -80,17 +82,17 @@ public enum ChordDescriptor {
     }
 
     static final ChordDescriptor parse(String s) {
-        return parse(new StringBuffer(s));
+        return parse(new MarkedString(s));
     }
 
     /**
      * Parse the start of the given string for a chord description.
      *
-     * @param sb the string buffer to parse
+     * @param markedString the string buffer to parse
      * @return the matching chord descriptor
      */
-    public static final ChordDescriptor parse(StringBuffer sb) {
-        if (sb != null && sb.length() > 0) {
+     static final ChordDescriptor parse(MarkedString markedString) {
+        if (markedString != null && !markedString.isEmpty()) {
             //  special for major7 thanks to John Coltrane
 //            if (s.charAt(0) == MusicConstant.greekCapitalDelta) {
 //                return ChordDescriptor.major7;
@@ -99,10 +101,10 @@ public enum ChordDescriptor {
 //            if (s.charAt(0) == MusicConstant.diminishedCircle)
 //                return ChordDescriptor.diminished;
             final int maxLength = 25;  //  arbitrary cutoff
-            String match = sb.substring(0, Math.min(sb.length(), maxLength));
+            String match = markedString.remainingStringLimited( maxLength);
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 if (cd.getShortName().length() > 0 && match.startsWith(cd.getShortName())) {
-                    sb.delete(0, cd.getShortName().length());
+                    markedString.consume( cd.getShortName().length());
                     return cd;
                 }
             }

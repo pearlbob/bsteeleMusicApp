@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  * User: bob
  */
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -122,7 +123,7 @@ public enum ScaleNote {
     final static ScaleNote parse(String s)
             throws ParseException
     {
-        return parse(new StringBuffer(s));
+        return parse(new MarkedString(s));
     }
 
 
@@ -131,37 +132,37 @@ public enum ScaleNote {
      * Is case sensitive.
      * <p>Ultimately, the markup language will disappear.</p>
      *
-     * @param sb string buffer to be parsed
+     * @param markedString string buffer to be parsed
      * @return ScaleNote represented by the string.  Can be null.
      */
-    public final static ScaleNote parse(StringBuffer sb)
+     final static ScaleNote parse(MarkedString markedString)
     throws ParseException
     {
-        if (sb == null || sb.length() < 1)
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
-        char c = sb.charAt(0);
+        char c = markedString.charAt(0);
         if (c < 'A' || c > 'G')
             throw new ParseException("scale note must start with A to G", 0);
 
         StringBuilder scaleNoteString = new StringBuilder();
         scaleNoteString.append(c);
-        sb.delete(0, 1);
+        markedString.getNextChar();
 
         //  look for modifier
-        if (sb.length() > 0) {
-            c = sb.charAt(0);
+        if (!markedString.isEmpty()) {
+            c = markedString.charAt(0);
             switch (c) {
                 case 'b':
                 case MusicConstant.flatChar:
                     scaleNoteString.append('b');
-                    sb.delete(0, 1);
+                    markedString.getNextChar();
                     break;
 
                 case '#':
                 case MusicConstant.sharpChar:
                     scaleNoteString.append('s');
-                    sb.delete(0, 1);
+                    markedString.getNextChar();
                     break;
             }
         }

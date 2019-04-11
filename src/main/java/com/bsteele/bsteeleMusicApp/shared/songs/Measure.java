@@ -1,6 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 
 import javax.annotation.Nonnull;
 import java.text.ParseException;
@@ -59,54 +60,62 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @return the measure for the parsing
      */
     static final Measure parse(String s, int beatsPerBar) throws ParseException {
-        return parse(new StringBuffer(s), beatsPerBar, null);
+        return parse(new MarkedString(s), beatsPerBar, null);
     }
 
-    public static final Measure parse(StringBuffer sb, int beatsPerBar)
+     static final Measure parse(MarkedString markedString, int beatsPerBar)
             throws ParseException {
-        return parse(sb, beatsPerBar, null);
+        return parse(markedString, beatsPerBar, null);
+    }
+
+    static final Measure parse(String s, int beatsPerBar, Measure lastMeasure)
+            throws ParseException {
+        return parse(new MarkedString(s),  beatsPerBar,  lastMeasure);
     }
 
     /**
      * Parse a measure from the input string
      *
-     * @param sb          input string buffer
+     * @param markedString          input string buffer
      * @param beatsPerBar beats per bar
      * @param lastMeasure the prior measure, in case of -
      * @return the measure for the parsing
      */
-    public static final Measure parse(StringBuffer sb, int beatsPerBar, Measure lastMeasure)
+     static final Measure parse(MarkedString markedString, int beatsPerBar, Measure lastMeasure)
             throws ParseException {
         //  should not be white space, even leading, in a measure
 
-        if (sb == null || sb.length() <= 0)
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         ArrayList<Chord> chords = new ArrayList<>();
         Measure ret = null;
         for (int i = 0; i < 8; i++)    //  safety
         {
-            if (sb.length() <= 0)
+            if (markedString.isEmpty())
                 break;
 
             //  assure this is not a section
-            if (Section.lookahead(sb))
+            if (Section.lookahead(markedString))
                 break;
 
+            int mark = markedString.mark();
             try {
-                Chord chord = Chord.parse(sb, beatsPerBar);
+                Chord chord = Chord.parse(markedString, beatsPerBar);
                 chords.add(chord);
             } catch (ParseException pex) {
+                markedString.resetTo(mark);
+
                 //  see if this is a chord less measure
-                if (sb.charAt(0) == 'X') {
+                if (markedString.charAt(0) == 'X') {
                     ret = new Measure(beatsPerBar, emptyChordList);
-                    sb.delete(0, 1);
+                    markedString.getNextChar();
                     break;
                 }
                 //  see if this is a repeat measure
-                if (chords.isEmpty() && sb.charAt(0) == '-' && lastMeasure != null) {
+                if (chords.isEmpty() && markedString.charAt(0) == '-' && lastMeasure != null) {
                     ret = new Measure(beatsPerBar, lastMeasure.getChords());
-                    sb.delete(0, 1);
+                    markedString.getNextChar();
                     break;
                 }
                 break;

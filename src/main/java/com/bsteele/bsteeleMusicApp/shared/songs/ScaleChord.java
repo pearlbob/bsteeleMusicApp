@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
+
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.util.HashMap;
@@ -36,16 +38,16 @@ public class ScaleChord implements Comparable<ScaleChord> {
     static final ScaleChord parse(String s)
             throws ParseException
     {
-        return parse(new StringBuffer(s));
+        return parse(new MarkedString(s));
     }
 
-    public static final ScaleChord parse(StringBuffer sb) throws ParseException {
-        if (sb == null || sb.length() < 1)
+     static final ScaleChord parse(MarkedString markedString) throws ParseException {
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
-        ScaleNote retScaleNote = ScaleNote.parse(sb);
+        ScaleNote retScaleNote = ScaleNote.parse(markedString);
 
-        ChordDescriptor retChordDescriptor = ChordDescriptor.parse(sb);
+        ChordDescriptor retChordDescriptor = ChordDescriptor.parse(markedString);
 
         return new ScaleChord(retScaleNote, retChordDescriptor);
     }

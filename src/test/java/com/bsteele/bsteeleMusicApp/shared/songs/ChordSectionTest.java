@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -216,15 +217,15 @@ public class ChordSectionTest extends TestCase {
                 assertEquals(ScaleNote.D, measures.get(3).getChords().get(0).getScaleChord().getScaleNote());
             }
             {
-                StringBuffer sb = new StringBuffer("\nT:D\n");
-                ChordSection chordSection = ChordSection.parse(sb, 4);
-                assertTrue(sb.length() == 0);
+                MarkedString markedString = new MarkedString("\nT:D\n");
+                ChordSection chordSection = ChordSection.parse(markedString, 4, false);
+                assertTrue(markedString.isEmpty());
             }
             {
-                StringBuffer sb = new StringBuffer("\nT:\n" +
+                MarkedString markedString = new MarkedString("\nT:\n" +
                         "D C AG D\n");
-                ChordSection chordSection = ChordSection.parse(sb, 4);
-                assertTrue(sb.length() == 0);
+                ChordSection chordSection = ChordSection.parse(markedString, 4, false);
+                assertTrue(markedString.isEmpty());
                 assertTrue(chordSection != null);
                 SectionVersion sectionVersion = new SectionVersion(Section.tag);
                 assertTrue(chordSection.getSectionVersion().equals(sectionVersion));

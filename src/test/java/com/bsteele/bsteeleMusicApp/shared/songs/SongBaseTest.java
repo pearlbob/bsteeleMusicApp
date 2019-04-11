@@ -254,19 +254,19 @@ public class SongBaseTest
                         "i: dude v: bob, bob, bob berand");
 
 
-                assertNull(a.findChordSection(new StringBuffer("ch:")));
-                ChordSection chordSection = a.findChordSection(new StringBuffer("i:"));
+                assertNull(a.findChordSection("ch:"));
+                ChordSection chordSection = a.findChordSection("i:");
                 logger.fine(chordSection.toMarkup());
                 assertEquals("I: A B C D ", chordSection.toMarkup());
 
-                chordSection = a.findChordSection(new StringBuffer("v:"));
+                chordSection = a.findChordSection("v:");
                 logger.fine(chordSection.toMarkup());
-                logger.fine(a.findChordSection(new StringBuffer("v:")).toMarkup());
+                logger.fine(a.findChordSection("v:").toMarkup());
                 assertEquals("V: E F G A♯ ", chordSection.toMarkup());
 
-                chordSection = a.findChordSection(new StringBuffer("t:"));
+                chordSection = a.findChordSection("t:");
                 logger.fine(chordSection.toMarkup());
-                logger.fine(a.findChordSection(new StringBuffer("t:")).toMarkup());
+                logger.fine(a.findChordSection("t:").toMarkup());
                 assertEquals("T: Gm Gm ", chordSection.toMarkup());
 
 
@@ -352,6 +352,7 @@ public class SongBaseTest
         chordSection = chordSections.first();
         measures = chordSection.getPhrases().get(0).getMeasures();
         assertEquals(5, measures.size());
+        assertEquals("(yo)",measures.get(4).toMarkup());
     }
 
 
@@ -466,59 +467,59 @@ public class SongBaseTest
 
         ChordSectionLocation chordSectionLocation = null;
         try {
-            chordSectionLocation = ChordSectionLocation.parse(new StringBuffer("v:0:0"));
+            chordSectionLocation = ChordSectionLocation.parse("v:0:0");
 
             Measure m = a.findMeasure(chordSectionLocation);
             assertEquals(Measure.parse("D", a.getBeatsPerBar()), m);
             assertEquals(m, a.findMeasureNode(chordSectionLocation));
 
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v:0:3")));
+            m = a.findMeasure(ChordSectionLocation.parse("v:0:3"));
             assertEquals(Measure.parse("F#", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v:0:4")));
+            m = a.findMeasure(ChordSectionLocation.parse("v:0:4"));
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:2:0")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:2:0"));
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:1:1")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:1:1"));
             assertEquals(Measure.parse("D", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:0:0")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:0:0"));
             assertEquals(Measure.parse("Em7", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:0:4")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:0:4"));
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:0:3")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:0:3"));
             assertEquals(Measure.parse("G", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:1:0")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:1:0"));
             assertEquals(Measure.parse("C", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:1:1")));
+            m = a.findMeasure(ChordSectionLocation.parse("v1:1:1"));
             assertEquals(Measure.parse("D", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v1:0:9")));//    repeats don't count here
+            m = a.findMeasure(ChordSectionLocation.parse("v1:0:9"));//    repeats don't count here
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v2:0:0")));
+            m = a.findMeasure(ChordSectionLocation.parse("v2:0:0"));
             assertEquals(Measure.parse("A", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v2:0:3")));
+            m = a.findMeasure(ChordSectionLocation.parse("v2:0:3"));
             assertEquals(Measure.parse("D", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v2:0:4")));
+            m = a.findMeasure(ChordSectionLocation.parse("v2:0:4"));
             assertEquals(Measure.parse("E", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v2:1:3")));
+            m = a.findMeasure(ChordSectionLocation.parse("v2:1:3"));
             assertEquals(Measure.parse("GbB", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("v2:1:4")));
+            m = a.findMeasure(ChordSectionLocation.parse("v2:1:4"));
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("o:0:4")));
+            m = a.findMeasure(ChordSectionLocation.parse("o:0:4"));
             assertEquals(Measure.parse("B", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("o:0:5")));
+            m = a.findMeasure(ChordSectionLocation.parse("o:0:5"));
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("c:0:5")));
+            m = a.findMeasure(ChordSectionLocation.parse("c:0:5"));
             assertEquals(Measure.parse("A", a.getBeatsPerBar()), m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("c:0:6")));
+            m = a.findMeasure(ChordSectionLocation.parse("c:0:6"));
             assertNull(m);
-            m = a.findMeasure(ChordSectionLocation.parse(new StringBuffer("i:0:0")));
+            m = a.findMeasure(ChordSectionLocation.parse("i:0:0"));
             assertEquals(Measure.parse("A", a.getBeatsPerBar()), m);
 
-            chordSectionLocation = ChordSectionLocation.parse(new StringBuffer("v:0"));
+            chordSectionLocation = ChordSectionLocation.parse("v:0");
             MeasureNode mn = a.findMeasureNode(chordSectionLocation);
             logger.fine(mn.toMarkup());
             assertEquals("D E F F♯ ", mn.toMarkup());
 
-            chordSectionLocation = ChordSectionLocation.parse(new StringBuffer("out:"));
+            chordSectionLocation = ChordSectionLocation.parse("out:");
             mn = a.findMeasureNode(chordSectionLocation);
             logger.fine(mn.toMarkup());
             assertEquals("O: C C C C B ", mn.toMarkup());
@@ -615,15 +616,15 @@ public class SongBaseTest
 
         logger.fine(a.logGrid());
         Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
-        assertEquals(3, grid.getRowCount());
+        assertEquals(5, grid.getRowCount());
         ArrayList<ChordSectionLocation> row = grid.getRow(0);
         assertEquals(2, row.size());
         row = grid.getRow(1);
         logger.fine("row: " + row.toString());
         assertEquals(6, row.size());
         row = grid.getRow(2);
-        assertEquals(4, row.size());
-        row = grid.getRow(3);
+        assertEquals(5, row.size());
+        row = grid.getRow(5);
         assertNull(row);
     }
 

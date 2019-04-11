@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.util.EntryBuffer;
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -33,23 +33,27 @@ public class MeasureComment extends Measure {
         return MeasureNodeType.comment;
     }
 
+    static final MeasureComment parse(String s) throws ParseException {
+        return parse(new MarkedString(s));
+    }
+
     /**
      * Trash can of measure parsing.  Will consume all that it sees to the end of line.
      *
-     * @param sb the input line to parse
+     * @param markedString the input line to parse
      * @return the comment made of the input
      */
-    public static final MeasureComment parse(StringBuffer sb) throws ParseException  {
-        if (sb == null || sb.length() <= 0)
+    static final MeasureComment parse(MarkedString markedString) throws ParseException {
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         //  prep a sub string to look for the comment
-        int n = sb.indexOf("\n");    //  all comments end at the end of the line
+        int n = markedString.indexOf("\n");    //  all comments end at the end of the line
         String s = "";
         if (n > 0)
-            s = sb.substring(0, n);
+            s = markedString.remainingStringLimited(n);
         else
-            s = sb.toString();
+            s = markedString.toString();
 
         //  properly formatted comment
         final RegExp commentRegExp = RegExp.compile("^\\s*\\(\\s*(.*?)\\s*\\)\\s*");
@@ -58,18 +62,18 @@ public class MeasureComment extends Measure {
         //  consume the comment
         if (mr != null) {
             s = mr.getGroup(1);
-            sb.delete(0, mr.getGroup(0).length());
+            markedString.consume(mr.getGroup(0).length());
         } else {
             //  format what we found if it's not proper
             //  note: consume any non-whitespace string as a comment if you have to
-            sb.delete(0, s.length());
+            markedString.consume(s.length());
             s = s.trim();
             if (s.length() <= 0)
                 throw new ParseException("no comment found", 0);   //  all whitespace
         }
 
         //  cope with unbalanced leading ('s and trailing )'s
-        s = s.replaceAll("^\\(","").replaceAll("\\)$","");
+        s = s.replaceAll("^\\(", "").replaceAll("\\)$", "");
         s = s.trim();   //  in case there is white space inside unbalanced parens
 
         MeasureComment ret = new MeasureComment(s);

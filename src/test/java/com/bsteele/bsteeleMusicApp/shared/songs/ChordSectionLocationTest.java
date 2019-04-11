@@ -47,8 +47,8 @@ public class ChordSectionLocationTest {
                     SectionVersion sectionVersion = new SectionVersion(section, v);
                     for (int index = 1; index <= 40; index++) {
                         ChordSectionLocation chordSectionLocationExpected = new ChordSectionLocation(sectionVersion, phraseIndex, index);
-                        StringBuffer sb = new StringBuffer(sectionVersion.getId() + ":" + phraseIndex + ":" + index);
-                        ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(sb);
+                        ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(
+                                sectionVersion.getId() + ":" + phraseIndex + ":" + index);
                         //System.out.println(chordSectionLocationExpected);
                         assertEquals(chordSectionLocationExpected, chordSectionLocation);
                     }
@@ -62,8 +62,8 @@ public class ChordSectionLocationTest {
                     SectionVersion sectionVersion = new SectionVersion(section, v);
                     for (int index = 1; index <= 40; index++) {
                         ChordSectionLocation chordSectionLocationExpected = new ChordSectionLocation(sectionVersion, phraseIndex, index);
-                        StringBuffer sb = new StringBuffer(chordSectionLocationExpected.toString());
-                        ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(sb);
+                        ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(
+                                chordSectionLocationExpected.toString());
                         assertEquals(chordSectionLocationExpected, chordSectionLocation);
                     }
                 }

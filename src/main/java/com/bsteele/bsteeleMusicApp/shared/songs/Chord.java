@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
+
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.util.Objects;
@@ -31,30 +33,30 @@ public class Chord implements Comparable<Chord> {
 
     static final Chord parse(String s, int beatsPerBar)
             throws ParseException {
-        return parse(new StringBuffer(s), beatsPerBar);
+        return parse(new MarkedString(s), beatsPerBar);
     }
 
-    public static final Chord parse(StringBuffer sb, int beatsPerBar) throws ParseException {
-        if (sb == null || sb.length() <= 0)
+     static final Chord parse(MarkedString markedString, int beatsPerBar) throws ParseException {
+        if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         int beats = beatsPerBar;  //  default only
-        ScaleChord scaleChord = ScaleChord.parse(sb);
+        ScaleChord scaleChord = ScaleChord.parse(markedString);
         if (scaleChord == null)
             return null;
 
-        ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.parse(sb);
+        ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.parse(markedString);
 
 
         ScaleNote slashScaleNote = null;
-        if (sb.length() > 0 && sb.charAt(0) == '/') {
-            sb.delete(0, 1);
-            slashScaleNote = ScaleNote.parse(sb);
+        if (!markedString.isEmpty() && markedString.charAt(0) == '/') {
+            markedString.consume(1);
+            slashScaleNote = ScaleNote.parse(markedString);
         }
-        if (sb.length() > 0 && sb.charAt(0) == '.') {
+        if (!markedString.isEmpty() && markedString.charAt(0) == '.') {
             beats = 1;
-            while (sb.length() > 0 && sb.charAt(0) == '.') {
-                sb.delete(0, 1);
+            while (!markedString.isEmpty() && markedString.charAt(0) == '.') {
+                markedString.consume(1);
                 beats++;
                 if (beats >= 12)
                     break;

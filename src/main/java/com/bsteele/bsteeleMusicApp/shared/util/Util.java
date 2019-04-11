@@ -75,6 +75,28 @@ public class Util
     /**
      * Strip leading space and tabs but newline is not considered a space!
      *
+     * @param markedString the string buffer to clip
+     */
+    public static final void stripLeadingWhitespace(MarkedString markedString) {
+        if (markedString == null)
+            return;
+
+        while (!markedString.isEmpty()) {
+            switch (markedString.charAt(0)) {
+                case ' ':
+                case '\t':
+                case '\r':
+                case '\n':
+                    markedString.consume(1);
+                    continue;
+            }
+            break;
+        }
+    }
+
+    /**
+     * Strip leading space and tabs but newline is not considered a space!
+     *
      * @param sb  the string buffer to clip
      */
     public static final void stripLeadingSpaces(StringBuffer sb) {
@@ -87,6 +109,27 @@ public class Util
                 case '\t':
                 case '\r':
                     sb.delete(0, 1);
+                    continue;
+            }
+            break;
+        }
+    }
+
+    /**
+     * Strip leading space and tabs but newline is not considered a space!
+     *
+     * @param sb  the marked string to clip
+     */
+    public static final void stripLeadingSpaces(MarkedString sb) {
+        if (sb == null)
+            return;
+
+        while (!sb.isEmpty()) {
+            switch (sb.charAt(0)) {
+                case ' ':
+                case '\t':
+                case '\r':
+                    sb.getNextChar();
                     continue;
             }
             break;

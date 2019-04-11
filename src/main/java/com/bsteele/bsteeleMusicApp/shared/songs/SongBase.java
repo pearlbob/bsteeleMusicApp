@@ -9,6 +9,7 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.GWT;
@@ -241,16 +242,16 @@ public class SongBase {
         if (chords != null) {
             logger.finer("parseChords for: " + getTitle());
             TreeSet<ChordSection> emptyChordSections = new TreeSet<>();
-            StringBuffer sb = new StringBuffer(chords);
+            MarkedString markedString = new MarkedString(chords);
             ChordSection chordSection;
-            while (sb.length() > 0) {
-                Util.stripLeadingWhitespace(sb);
-                if (sb.length() <= 0)
+            while (!markedString.isEmpty()) {
+                Util.stripLeadingWhitespace(markedString);
+                if (markedString.isEmpty())
                     break;
-                logger.finest(sb.toString());
+                logger.finest(markedString.toString());
 
                 try {
-                    chordSection = ChordSection.parse(sb, beatsPerBar);
+                    chordSection = ChordSection.parse(markedString, beatsPerBar, false);
                     if (chordSection.getPhrases().isEmpty())
                         emptyChordSections.add(chordSection);
                     else if (!emptyChordSections.isEmpty()) {
@@ -296,17 +297,18 @@ public class SongBase {
         if (entry != null) {
             logger.finer("parseChordEntry: " + entry);
             TreeSet<ChordSection> emptyChordSections = new TreeSet<>();
-            StringBuffer sb = new StringBuffer(entry);
+            MarkedString markedString = new MarkedString(entry);
             ChordSection chordSection;
             int phaseIndex = 0;
-            while (sb.length() > 0) {
-                Util.stripLeadingWhitespace(sb);
-                if (sb.length() <= 0)
+            while (!markedString.isEmpty()) {
+                Util.stripLeadingWhitespace(markedString);
+                if (markedString.isEmpty())
                     break;
-                logger.finest(sb.toString());
+                logger.finest(markedString.toString());
 
+                int mark = markedString.mark();
                 try {
-                    chordSection = ChordSection.parse(sb, beatsPerBar);
+                    chordSection = ChordSection.parse(markedString, beatsPerBar, true);
 
                     //  look for multiple sections defined at once
                     if (chordSection.getPhrases().isEmpty())
@@ -321,36 +323,45 @@ public class SongBase {
                     ret.add(chordSection);
                     continue;
                 } catch (ParseException pex) {
+                    markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(MeasureRepeat.parse(sb, phaseIndex, beatsPerBar));
+                    ret.add(MeasureRepeat.parse(markedString, phaseIndex, beatsPerBar));
                     phaseIndex++;
                     continue;
                 } catch (ParseException pex) {
+                    markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(Phrase.parse(sb, phaseIndex, beatsPerBar));
+                    ret.add(Phrase.parse(markedString, phaseIndex, beatsPerBar));
                     phaseIndex++;
                     continue;
                 } catch (ParseException pex) {
+                    markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(MeasureComment.parse(sb, phaseIndex));
+                    ret.add(Measure.parse(markedString, beatsPerBar));
+                    continue;
+                } catch (ParseException pex) {
+                    markedString.resetToMark(mark);
+                }
+                try {
+                    ret.add(MeasureComment.parse(markedString));
                     phaseIndex++;
                     continue;
                 } catch (ParseException pex) {
+                    markedString.resetToMark(mark);
                 }
 
                 //  entry not understood, force it to be a comment
                 {
-                    int commentIndex = sb.indexOf(" ");
-                    if ( commentIndex < 0 ) {
-                        ret.add(new MeasureComment(sb.toString()));
+                    int commentIndex = markedString.indexOf(" ");
+                    if (commentIndex < 0) {
+                        ret.add(new MeasureComment(markedString.toString()));
                         break;
-                    }
-                    else {
-                        ret.add(new MeasureComment(sb.substring(0,commentIndex)));
-                        sb.delete(0,commentIndex);
+                    } else {
+                        ret.add(new MeasureComment(markedString.remainingStringLimited(commentIndex)));
+                        markedString.consume(commentIndex);
                     }
                 }
             }
@@ -1056,8 +1067,13 @@ public class SongBase {
     }
 
 
-    public final ChordSection findChordSection(StringBuffer sb) throws ParseException {
-        SectionVersion sectionVersion = SectionVersion.parse(sb);
+    public final ChordSection findChordSection(String s) throws ParseException {
+        SectionVersion sectionVersion = SectionVersion.parse(s);
+        return chordSectionMap.get(sectionVersion);
+    }
+
+    public final ChordSection findChordSection(MarkedString markedString) throws ParseException {
+        SectionVersion sectionVersion = SectionVersion.parse(markedString);
         return chordSectionMap.get(sectionVersion);
     }
 
@@ -1205,9 +1221,9 @@ public class SongBase {
         int sectionIndex = 0;
         boolean isSection = false;
         String whiteSpace = "";
-        StringBuffer sb = new StringBuffer(rawLyrics);
-        while (sb.length() > 0) {
-            char c = sb.charAt(0);
+        MarkedString markedString = new MarkedString(rawLyrics);
+        while (!markedString.isEmpty()) {
+            char c = markedString.charAt(0);
             switch (state) {
                 default:
                     state = 0;
@@ -1220,7 +1236,7 @@ public class SongBase {
                     //  fall through
                 case 1:
                     try {
-                        SectionVersion version = SectionVersion.parse(sb);
+                        SectionVersion version = SectionVersion.parse(markedString);
                         isSection = true;
 
                         if (lyrics.length() > 0) {
@@ -1268,7 +1284,7 @@ public class SongBase {
                     }
                     break;
             }
-            sb.delete(0, 1);     //  consume parsed character
+            markedString.consume(1);     //  consume parsed character
         }
 
         lyrics = tableStart
@@ -1287,9 +1303,9 @@ public class SongBase {
 
         lyricSections = new ArrayList<>();
 
-        StringBuffer sb = new StringBuffer(rawLyrics);
-        while (sb.length() > 0) {
-            char c = sb.charAt(0);
+        MarkedString markedString = new MarkedString(rawLyrics);
+        while (!markedString.isEmpty()) {
+            char c = markedString.charAt(0);
             switch (state) {
                 default:
                     state = 0;
@@ -1302,7 +1318,7 @@ public class SongBase {
                     //  fall through
                 case 1:
                     try {
-                        SectionVersion version = SectionVersion.parse(sb);
+                        SectionVersion version = SectionVersion.parse(markedString);
                         if (lyricSection != null)
                             lyricSections.add(lyricSection);
 
@@ -1344,7 +1360,7 @@ public class SongBase {
                     break;
             }
 
-            sb.delete(0, 1);
+            markedString.consume(1);
         }
         //  last one is not terminated by another section
         if (lyricSection != null)

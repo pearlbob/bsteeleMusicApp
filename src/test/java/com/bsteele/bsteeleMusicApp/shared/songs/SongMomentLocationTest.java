@@ -1,8 +1,10 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,20 +19,20 @@ public class SongMomentLocationTest {
             {
 
 
-                loc = SongMomentLocation.parse(null);
+                loc = SongMomentLocation.parse((String)null);
 
                 assertNull(loc);
-                loc = SongMomentLocation.parse(new StringBuffer("V2:"));
+                loc = SongMomentLocation.parse("V2:");
                 assertNull(loc);
-                loc = SongMomentLocation.parse(new StringBuffer("V2:0"));
+                loc = SongMomentLocation.parse("V2:0");
                 assertNull(loc);
-                loc = SongMomentLocation.parse(new StringBuffer("V2:0:1"));
+                loc = SongMomentLocation.parse("V2:0:1");
                 assertNull(loc);
-                loc = SongMomentLocation.parse(new StringBuffer("V2:0:1"));
+                loc = SongMomentLocation.parse("V2:0:1");
                 assertNull(loc);
-                loc = SongMomentLocation.parse(new StringBuffer("V2:0:1#0"));
+                loc = SongMomentLocation.parse("V2:0:1#0");
                 assertNull(loc);
-                loc = SongMomentLocation.parse(new StringBuffer("V2:2:1#3"));
+                loc = SongMomentLocation.parse("V2:2:1#3");
                 SongMomentLocation locExpected = new SongMomentLocation(new ChordSectionLocation(
                         new SectionVersion(Section.verse, 2), 2, 1), 3);
                 //System.out.println(locExpected);
@@ -44,10 +46,12 @@ public class SongMomentLocationTest {
                             for (int instance = 1; instance < 4; instance++) {
                                 SongMomentLocation locExpected = new SongMomentLocation(new ChordSectionLocation(
                                         new SectionVersion(section, version), phraseIndex, index), instance);
-                                StringBuffer sb = new StringBuffer(section.toString() + (version > 0 ? version : "") + ":" + phraseIndex + ":" + index + "#" + instance);
+                                MarkedString markedString = new MarkedString(
+                                        section.toString() + (version > 0 ? version : "")
+                                                + ":" + phraseIndex + ":" + index + "#" + instance);
 
-                                //System.out.println(sb.toString());
-                                loc = SongMomentLocation.parse(sb);
+                               logger.fine(markedString.toString());
+                                loc = SongMomentLocation.parse(markedString);
 
                                 assertNotNull(loc);
                                 assertEquals(locExpected, loc);
@@ -57,4 +61,6 @@ public class SongMomentLocationTest {
             e.printStackTrace();
         }
     }
+
+    private static Logger logger = Logger.getLogger(SongMomentLocationTest.class.getName());
 }

@@ -267,7 +267,7 @@ public class MeasureTest extends TestCase {
             {
                 for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
                     Measure m0 = Measure.parse("C", beatsPerBar);
-                    Measure m = Measure.parse(new StringBuffer("-"), beatsPerBar, m0);
+                    Measure m = Measure.parse("-", beatsPerBar, m0);
                     assertEquals(beatsPerBar, m.getBeatCount());
                     assertEquals(1, m.getChords().size());
                     assertEquals(m0.getChords(), m.getChords());

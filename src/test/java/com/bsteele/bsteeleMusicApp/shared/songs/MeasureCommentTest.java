@@ -68,7 +68,7 @@ public class MeasureCommentTest extends TestCase {
         assertNull(measureComment);
 
         try {
-            MeasureComment.parse(null);
+            MeasureComment.parse((String) null);
             fail();
         } catch (ParseException e) {
             //  should throw this exception
@@ -78,7 +78,7 @@ public class MeasureCommentTest extends TestCase {
     private void parse(String s) {
         rawComment = s;
         try {
-            measureComment = MeasureComment.parse(new StringBuffer(s));
+            measureComment = MeasureComment.parse(s);
         } catch (ParseException e) {
             measureComment = null;
         }

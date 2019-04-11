@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 
@@ -19,7 +20,7 @@ public class ChordSectionLocation {
         } else {
             this.phraseIndex = phraseIndex;
             hasPhraseIndex = true;
-            if ( measureIndex < 0 ){
+            if (measureIndex < 0) {
                 this.measureIndex = measureIndex;
                 hasMeasureIndex = false;
             } else {
@@ -76,43 +77,43 @@ public class ChordSectionLocation {
     }
 
     static final ChordSectionLocation parse(String s) throws ParseException {
-        return parse(new StringBuffer(s));
+        return parse(new MarkedString(s));
     }
 
     /**
      * Parse a chord section location from the given string input
      *
-     * @param sb the given string input
+     * @param markedString the given string input
      * @return the chord section location, can be null
      */
-    public static final ChordSectionLocation parse(StringBuffer sb) throws ParseException {
+    static final ChordSectionLocation parse(MarkedString markedString) throws ParseException {
 
-        SectionVersion sectionVersion = SectionVersion.parse(sb);
+        SectionVersion sectionVersion = SectionVersion.parse(markedString);
 
-        if (sb.length() >= 3) {
+        if (markedString.available() >= 3) {
             final RegExp numberRegexp = RegExp.compile("^(\\d+):(\\d+)");  //  workaround for RegExp is not serializable.
-            MatchResult mr = numberRegexp.exec(sb.substring(0, Math.min(sb.length(), 6)));
+            MatchResult mr = numberRegexp.exec(markedString.remainingStringLimited(6));
             if (mr != null) {
                 try {
                     int phraseIndex = Integer.parseInt(mr.getGroup(1));
                     int measureIndex = Integer.parseInt(mr.getGroup(2));
-                    sb.delete(0, mr.getGroup(0).length());
+                    markedString.consume(mr.getGroup(0).length());
                     return new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
                 } catch (NumberFormatException nfe) {
-                    throw new ParseException(nfe.getMessage(),0);
+                    throw new ParseException(nfe.getMessage(), 0);
                 }
             }
         }
-        if (sb.length() >= 1) {
+        if (!markedString.isEmpty()) {
             final RegExp numberRegexp = RegExp.compile("^(\\d+)");  //  workaround for RegExp is not serializable.
-            MatchResult mr = numberRegexp.exec(sb.substring(0, Math.min(sb.length(), 2)));
+            MatchResult mr = numberRegexp.exec(markedString.remainingStringLimited(2));
             if (mr != null) {
                 try {
                     int phraseIndex = Integer.parseInt(mr.getGroup(1));
-                    sb.delete(0, mr.getGroup(0).length());
+                    markedString.consume(mr.getGroup(0).length());
                     return new ChordSectionLocation(sectionVersion, phraseIndex);
                 } catch (NumberFormatException nfe) {
-                    throw new ParseException(nfe.getMessage(),0);
+                    throw new ParseException(nfe.getMessage(), 0);
                 }
             }
         }
