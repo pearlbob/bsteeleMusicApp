@@ -354,7 +354,7 @@ public class Song extends SongBase implements Comparable<Song> {
 
         //  chord content
         boolean first = true;
-        for (String s : toMarkup().split("\n")) {
+        for (String s : chordsToTransportString().split("\n")) {
             if (s.length() == 0)  //  json is not happy with empty array elements
                 continue;
             if (first) {

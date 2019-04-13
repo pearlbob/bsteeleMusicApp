@@ -77,7 +77,7 @@ public class SongTest
 //                    // .size());
                     assertTrue(song.getRawLyrics().length() > 0);
 
-                    logger.finest(song.toJson());
+                    logger.fine(song.toJson());
                     //logger.info("songtest: copyright: <"+song.getCopyright()+">");
                     ArrayList<Song> jsonList = Song.fromJson(song.toJson());
                     assertNotNull(jsonList);
@@ -89,9 +89,15 @@ public class SongTest
 //                        logger.info("equals error 2nd: " + song1.toJson());
 //                        song.equals(song1);
 //                    }
+                    logger.fine(song1.toJson());
                     Song song2 = Song.fromJson(song1.toJson()).get(0);
+                    logger.fine("song2: "+song2.toJson());
+                    logger.fine("song to 2: "+song2.toJson());
                     assertTrue(song.compareTo(song2) == 0);
+                    logger.fine("song1 to 2: "+song2.toJson());
+
                     assertTrue(song1.compareTo(song2) == 0);
+                    logger.fine("song1 equals 2: "+song2.toJson());
                     assertTrue(song1.equals(song2));
                 }
             }

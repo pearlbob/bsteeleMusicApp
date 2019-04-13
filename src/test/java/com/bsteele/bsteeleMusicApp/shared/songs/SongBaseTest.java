@@ -542,35 +542,35 @@ public class SongBaseTest
             loc = ChordSectionLocation.parse("i:0:2");
             a.setCurrentChordSectionLocation(loc);
             logger.fine(a.getCurrentChordSectionLocation().toString());
-            logger.fine(a.findMeasure(a.getCurrentChordSectionLocation()).toMarkup());
+            logger.fine(a.findMeasureNode(a.getCurrentChordSectionLocation()).toMarkup());
             a.chordSectionLocationDelete(loc);
             logger.fine(a.findChordSection(SectionVersion.parse("i:")).toMarkup());
-            logger.fine(a.findMeasure(loc).toMarkup());
+            logger.fine(a.findMeasureNode(loc).toMarkup());
             logger.fine("loc: " + a.getCurrentChordSectionLocation().toString());
-            logger.fine(a.findMeasure(a.getCurrentChordSectionLocation()).toMarkup());
-            assertEquals(a.findMeasure(loc),
-                    a.findMeasure(a.getCurrentChordSectionLocation()));
+            logger.fine(a.findMeasureNode(a.getCurrentChordSectionLocation()).toMarkup());
+            assertEquals(a.findMeasureNode(loc),
+                    a.findMeasureNode(a.getCurrentChordSectionLocation()));
 
-            assertEquals("I: A B D ", a.getChordSection(SectionVersion.parse("i:")).toString());
+            assertEquals("I: A B D ", a.getChordSection(SectionVersion.parse("i:")).toMarkup());
             assertEquals(Measure.parse("D", beatsPerBar), a.getCurrentChordSectionLocationMeasureNode());
             logger.fine("cur: " + a.getCurrentChordSectionLocationMeasureNode().toMarkup());
 
             a.chordSectionLocationDelete(loc);
-            assertEquals("I: A B ", a.getChordSection(SectionVersion.parse("i:")).toString());
+            assertEquals("I: A B ", a.getChordSection(SectionVersion.parse("i:")).toMarkup());
             logger.fine(a.getCurrentChordSectionLocationMeasureNode().toMarkup());
             assertEquals(Measure.parse("B", beatsPerBar), a.getCurrentChordSectionLocationMeasureNode());
 
             a.chordSectionLocationDelete(ChordSectionLocation.parse("i:0:0"));
-            assertEquals("I: B ", a.getChordSection(SectionVersion.parse("i:")).toString());
+            assertEquals("I: B ", a.getChordSection(SectionVersion.parse("i:")).toMarkup());
             logger.fine(a.getCurrentChordSectionLocationMeasureNode().toMarkup());
             assertEquals(Measure.parse("B", beatsPerBar), a.getCurrentChordSectionLocationMeasureNode());
 
             a.chordSectionLocationDelete(ChordSectionLocation.parse("i:0:0"));
-            assertEquals("I: ", a.getChordSection(SectionVersion.parse("i:")).toString());
+            assertEquals("I: ", a.getChordSection(SectionVersion.parse("i:")).toMarkup());
             assertNull(a.getCurrentChordSectionLocationMeasureNode());
             //assertEquals(ChordSection.parse("I:", beatsPerBar ),a.getCurrentChordSectionLocationMeasureNode());
 
-            assertEquals("V: D E F F♯ ", a.getChordSection(SectionVersion.parse("v:")).toString());
+            assertEquals("V: D E F F♯ ", a.getChordSection(SectionVersion.parse("v:")).toMarkup());
             a.setCurrentChordSectionLocation(ChordSectionLocation.parse("v:0:3"));
             assertEquals(Measure.parse("F#", beatsPerBar), a.getCurrentChordSectionLocationMeasureNode());
             a.chordSectionLocationDelete(ChordSectionLocation.parse("v:0:3"));

@@ -545,6 +545,18 @@ public class SongBase {
         chordsAsMarkup = null;
     }
 
+    protected final String chordsToTransportString() {
+        if (chordsAsMarkup != null)
+            return chordsAsMarkup;
+        StringBuilder sb = new StringBuilder();
+
+        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            sb.append(chordSection.toString());
+            sb.append("\n");
+        }
+        chordsAsMarkup = sb.toString();
+        return chordsAsMarkup;
+    }
 
     public final String toMarkup() {
         if (chordsAsMarkup != null)
@@ -552,8 +564,8 @@ public class SongBase {
         StringBuilder sb = new StringBuilder();
 
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
-            sb.append(chordSection.toString());     //  fixme: later
-            sb.append("\n");    //  for human readability only
+            sb.append(chordSection.toMarkup());
+            sb.append(" ");    //  for human readability only
         }
         chordsAsMarkup = sb.toString();
         return chordsAsMarkup;
