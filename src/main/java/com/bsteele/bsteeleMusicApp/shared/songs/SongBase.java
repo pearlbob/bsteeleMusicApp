@@ -552,8 +552,8 @@ public class SongBase {
         StringBuilder sb = new StringBuilder();
 
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
-            sb.append(chordSection.toMarkup());
-            sb.append(" ");    //  for human readability only
+            sb.append(chordSection.toString());     //  fixme: later
+            sb.append("\n");    //  for human readability only
         }
         chordsAsMarkup = sb.toString();
         return chordsAsMarkup;

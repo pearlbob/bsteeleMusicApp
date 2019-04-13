@@ -475,9 +475,19 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sb.toString();
     }
 
+    /**
+     * Old style markup
+     *
+     * @return old style markup
+     */
     @Override
     public String toString() {
-        return toMarkup();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSectionVersion().toString()).append("\n");
+        if (phrases != null)
+            for (Phrase phrase : phrases)
+                sb.append(phrase.toString());
+        return sb.toString();
     }
 
     public final SectionVersion getSectionVersion() {

@@ -248,6 +248,28 @@ public class MeasureRepeat extends Phrase {
         return "x" + getRepeats();
     }
 
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException   if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    public int compareTo(MeasureRepeat o) {
+        int ret = super.compareTo(o);
+        if (ret != 0)
+            return ret;
+        ret = repeatMarker.compareTo(o.repeatMarker);
+        if (ret != 0)
+            return ret;
+        return 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -268,7 +290,7 @@ public class MeasureRepeat extends Phrase {
 
     @Override
     public String toString() {
-        return toMarkup();
+        return super.toMarkup()+ " x" + getRepeats() + "\n";
     }
 
     private MeasureRepeatMarker repeatMarker;

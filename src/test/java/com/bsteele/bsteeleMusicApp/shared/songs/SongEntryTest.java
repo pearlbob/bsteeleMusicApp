@@ -95,6 +95,13 @@ public class SongEntryTest
             assertEquals(1, measureNodes.size());
             assertEquals(Measure.parse("A", beatsPerBar), measureNodes.get(0));
 
+            //  short measure
+            measureNodes = SongBase.parseChordEntry("G G. Bm", beatsPerBar);
+            assertEquals(3, measureNodes.size());
+            assertEquals(Measure.parse("G", beatsPerBar), measureNodes.get(0));
+            assertEquals("G.", measureNodes.get(1).toMarkup());
+            assertEquals("Bm", measureNodes.get(2).toMarkup());
+
             //  chord section
             measureNodes = SongBase.parseChordEntry("v:A", beatsPerBar);
             assertEquals(1, measureNodes.size());
@@ -118,6 +125,17 @@ public class SongEntryTest
             MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
             assertEquals(Measure.parse("D", beatsPerBar), measureRepeat.getMeasure(0));
             assertEquals(Measure.parse("E", beatsPerBar), measureRepeat.getMeasure(3));
+            assertEquals(3, measureRepeat.getRepeats());
+
+            //  repeat with short measure
+            measureNodes = SongBase.parseChordEntry("D G G. E x3", beatsPerBar);
+            logger.fine(measureNodes.toString());
+            assertEquals(1, measureNodes.size());
+            measureNode = measureNodes.get(0);
+            assertEquals(MeasureNode.MeasureNodeType.repeat, measureNode.getMeasureNodeType());
+             measureRepeat = (MeasureRepeat) measureNode;
+            assertEquals("G", measureRepeat.getMeasure(1).toMarkup());
+            assertEquals("G.", measureRepeat.getMeasure(2).toMarkup());
             assertEquals(3, measureRepeat.getRepeats());
 
             //  comment

@@ -63,25 +63,25 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return parse(new MarkedString(s), beatsPerBar, null);
     }
 
-     static final Measure parse(MarkedString markedString, int beatsPerBar)
+    static final Measure parse(MarkedString markedString, int beatsPerBar)
             throws ParseException {
         return parse(markedString, beatsPerBar, null);
     }
 
     static final Measure parse(String s, int beatsPerBar, Measure lastMeasure)
             throws ParseException {
-        return parse(new MarkedString(s),  beatsPerBar,  lastMeasure);
+        return parse(new MarkedString(s), beatsPerBar, lastMeasure);
     }
 
     /**
      * Parse a measure from the input string
      *
-     * @param markedString          input string buffer
-     * @param beatsPerBar beats per bar
-     * @param lastMeasure the prior measure, in case of -
+     * @param markedString input string buffer
+     * @param beatsPerBar  beats per bar
+     * @param lastMeasure  the prior measure, in case of -
      * @return the measure for the parsing
      */
-     static final Measure parse(MarkedString markedString, int beatsPerBar, Measure lastMeasure)
+    static final Measure parse(final MarkedString markedString, final int beatsPerBar, final Measure lastMeasure)
             throws ParseException {
         //  should not be white space, even leading, in a measure
 
@@ -168,6 +168,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             } else {
                 //  allocate the remaining beats to the unspecified chords
                 //  give left over beats to the first unspecified
+                int totalBeats = explicitBeats;
                 if (chords.size() > explicitChords) {
                     Chord firstUnspecifiedChord = null;
                     int beatsPerUnspecifiedChord = Math.max(1, (beatCount - explicitBeats) / (chords.size() - explicitChords));
@@ -177,22 +178,31 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                             if (firstUnspecifiedChord == null)
                                 firstUnspecifiedChord = c;
                             c.setBeats(beatsPerUnspecifiedChord);
-                            explicitBeats += beatsPerUnspecifiedChord;
+                            totalBeats += beatsPerUnspecifiedChord;
                         }
                     }
                     //  dump all the remaining beats on the first unspecified
-                    if (firstUnspecifiedChord != null && explicitBeats < beatCount)
-                        firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatCount - explicitBeats));
+                    if (firstUnspecifiedChord != null && totalBeats < beatCount) {
+                        firstUnspecifiedChord.setImplicitBeats(false);
+                        firstUnspecifiedChord.setBeats(beatsPerUnspecifiedChord + (beatCount - totalBeats));
+                        totalBeats = beatCount;
+                    }
                 }
-                if (explicitBeats == beatCount && explicitChords == chords.size()) {
+                if (totalBeats == beatCount) {
                     int b = chords.get(0).getBeats();
                     boolean allMatch = true;
                     for (Chord c : chords)
                         allMatch &= (c.getBeats() == b);
-                    if (allMatch)
+                    if (allMatch) {
                         //  reduce the over specification
                         for (Chord c : chords)
                             c.setImplicitBeats(true);
+                    } else if (totalBeats > 1) {
+                        //  reduce the over specification
+                        for (Chord c : chords)
+                            if (c.getBeats() == 1)
+                                c.setImplicitBeats(true);
+                    }
                 }
             }
         }
@@ -336,6 +346,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
     private int beatCount = 4;  //  default only
     private ArrayList<Chord> chords = new ArrayList<>();
+
     public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
     public static final Measure defaultMeasure = new Measure(4, emptyChordList);
 }

@@ -41,6 +41,11 @@ public class MeasureRepeatTest {
             assertNotNull(measureRepeat);
             assertEquals(refRepeat, measureRepeat);
 
+            s = "A B C D x2 Eb Fmaj7";
+            measureRepeat = MeasureRepeat.parse(s, 0, 4);
+            assertNotNull(measureRepeat);
+            assertEquals(refRepeat, measureRepeat);
+
             //  test without brackets
             measureRepeat = MeasureRepeat.parse("   A B C D  x2 E F", 0, 4);
             assertNotNull(measureRepeat);
@@ -76,9 +81,10 @@ public class MeasureRepeatTest {
         MeasureRepeat measureRepeat;
 
         ChordSection chordSection = null;
+
         try {
             chordSection = ChordSection.parse(
-                    "v3: A B C D | \n E F G G#|x2\n"
+                    "v3: A B C D | \n E F G G# | x2   \n"
                     , 4);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -90,6 +96,23 @@ public class MeasureRepeatTest {
         measureRepeat = (MeasureRepeat) phrase;
         logger.fine(measureRepeat.toMarkup());
         ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), 0);
+        logger.fine(loc.toString());
+        assertEquals("V3:0", loc.toString());
+
+        try {
+            chordSection = ChordSection.parse(
+                    "v3:A B C D|\nE F G G#|x2\n"
+                    , 4);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+        assertNotNull(chordSection);
+        phrase = chordSection.getPhrase(0);
+        assertTrue(phrase instanceof MeasureRepeat);
+        measureRepeat = (MeasureRepeat) phrase;
+        logger.fine(measureRepeat.toMarkup());
+        loc = new ChordSectionLocation(chordSection.getSectionVersion(), 0);
         logger.fine(loc.toString());
         assertEquals("V3:0", loc.toString());
     }

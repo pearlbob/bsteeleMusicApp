@@ -3,6 +3,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.util.logging.Logger;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
@@ -70,7 +72,29 @@ public class ChordDescriptorTest extends TestCase
     public void testChordComponentsToString() {
         if (false)
             for (ChordDescriptor cd : ChordDescriptor.values()) {
-                System.out.println(cd.toString() + ":\t" + cd.chordComponentsToString());
+                logger.info(cd.toString() + ":\t" + cd.chordComponentsToString());
             }
     }
+
+    @Test
+    public void testChordDescriptorCompareTo() {
+
+        int expected = -1;
+        ChordDescriptor cd1 = ChordDescriptor.dominant7;
+            for (ChordDescriptor cd2 : ChordDescriptor.values()) {
+                int compareValue = cd2.compareTo(cd1);
+                compareValue = (compareValue < 0 ? -1 : (compareValue > 0 ? 1 : 0));
+
+                logger.fine(cd2.toString() + ":\t" + compareValue);
+                if ( cd1 == cd2 )
+                {
+                    assertEquals(0,compareValue);
+                    expected = 1;
+                }
+                else
+                    assertTrue( expected == compareValue);
+            }
+    }
+
+    private static Logger logger = Logger.getLogger(MeasureRepeatTest.class.getName());
 }

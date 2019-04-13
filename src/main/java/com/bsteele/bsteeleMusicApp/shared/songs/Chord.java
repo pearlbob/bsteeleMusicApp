@@ -1,10 +1,13 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -24,7 +27,7 @@ public class Chord implements Comparable<Chord> {
 
     public Chord(@NotNull Chord chord) {
         scaleChord = chord.scaleChord;
-        beats = chord.beatsPerBar;
+        beats = chord.beats;
         beatsPerBar = chord.beatsPerBar;
         slashScaleNote = chord.slashScaleNote;
         anticipationOrDelay = chord.anticipationOrDelay;
@@ -36,7 +39,7 @@ public class Chord implements Comparable<Chord> {
         return parse(new MarkedString(s), beatsPerBar);
     }
 
-     static final Chord parse(MarkedString markedString, int beatsPerBar) throws ParseException {
+    static final Chord parse(final MarkedString markedString, int beatsPerBar) throws ParseException {
         if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
@@ -55,11 +58,19 @@ public class Chord implements Comparable<Chord> {
         }
         if (!markedString.isEmpty() && markedString.charAt(0) == '.') {
             beats = 1;
-            while (!markedString.isEmpty() && markedString.charAt(0) == '.') {
-                markedString.consume(1);
-                beats++;
-                if (beats >= 12)
-                    break;
+            final RegExp fontSizeRegexp = RegExp.compile("^\\.([\\d]+)");
+            MatchResult mr = fontSizeRegexp.exec(markedString.remainingStringLimited(3));
+            if (mr != null) {
+                logger.finest(mr.getGroup(1));
+                beats = Integer.parseInt(mr.getGroup(1));
+                markedString.consume(mr.getGroup(0).length());
+            } else {
+                while (!markedString.isEmpty() && markedString.charAt(0) == '.') {
+                    markedString.consume(1);
+                    beats++;
+                    if (beats >= 12)
+                        break;
+                }
             }
         }
 
@@ -231,21 +242,13 @@ public class Chord implements Comparable<Chord> {
                 + (slashScaleNote == null ? "" : "/" + slashScaleNote.toString())
                 + anticipationOrDelay.toString();
         if (!implicitBeats && beats < beatsPerBar) {
-            int b = 1;
-            while (b++ < beats && b < 8)
-                ret += ".";
-        }
-        return ret;
-    }
-
-    public String toStringWithoutInversion() {
-        String ret = scaleChord.toString()
-                //+ (slashScaleNote == null ? "" : "/" + slashScaleNote.toString())
-                + anticipationOrDelay.toString();
-        if (!implicitBeats && beats < beatsPerBar) {
-            int b = 1;
-            while (b++ < beats && b < 8)
-                ret += ".";
+            if ( beats == 1 ){
+                ret += ".1";
+            } else {
+                int b = 1;
+                while (b++ < beats && b < 12)
+                    ret += ".";
+            }
         }
         return ret;
     }
@@ -288,4 +291,5 @@ public class Chord implements Comparable<Chord> {
     private ScaleNote slashScaleNote;
     private ChordAnticipationOrDelay anticipationOrDelay;
 
+    private static final Logger logger = Logger.getLogger(Chord.class.getName());
 }

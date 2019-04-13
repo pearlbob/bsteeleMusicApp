@@ -50,19 +50,29 @@ public class ChordTest extends TestCase {
     @Test
     public void testChordParse() {
         try {
+            int beatsPerBar = 4;
             Chord chord = new Chord(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished));
             chord.setSlashScaleNote(ScaleNote.G);
 
-            assertEquals(chord, Chord.parse("Ddim/G", 4));
+            assertEquals(chord, Chord.parse("Ddim/G", beatsPerBar));
 
             chord = new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished));
             chord.setSlashScaleNote(ScaleNote.G);
-            assertEquals(chord, Chord.parse("Adim/G", 4));
+            assertEquals(chord, Chord.parse("Adim/G", beatsPerBar));
             chord = new Chord(new ScaleChord(ScaleNote.G, ChordDescriptor.suspendedSecond));
             chord.setSlashScaleNote(ScaleNote.A);
-            assertEquals(chord, Chord.parse("G2/A", 4));
+            assertEquals(chord, Chord.parse("G2/A", beatsPerBar));
             chord = new Chord(new ScaleChord(ScaleNote.G, ChordDescriptor.add9));
-            assertEquals(chord, Chord.parse("Gadd9A", 4));
+            assertEquals(chord, Chord.parse("Gadd9A", beatsPerBar));
+
+            chord = Chord.parse("G.1", beatsPerBar);
+            assertEquals("G.1", chord.toString());
+            chord = Chord.parse("G.2", beatsPerBar);
+            assertEquals("G.", chord.toString());
+            chord = Chord.parse("G.3", beatsPerBar);
+            assertEquals("G..", chord.toString());
+            chord = Chord.parse("G.4", beatsPerBar);
+            assertEquals("G", chord.toString());
         } catch (ParseException e) {
             e.printStackTrace();
             fail();

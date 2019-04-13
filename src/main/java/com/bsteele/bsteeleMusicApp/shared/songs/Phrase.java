@@ -334,6 +334,30 @@ public class Phrase extends MeasureNode {
         return false;
     }
 
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     *
+     * @param o the object to be compared.
+     * @return a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     * @throws NullPointerException if the specified object is null
+     * @throws ClassCastException   if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    public int compareTo(Phrase o) {
+        int limit = Math.min(measures.size(), o.measures.size());
+        for (int i = 0; i < limit; i++) {
+            int ret = measures.get(i).compareTo(o.measures.get(i));
+            if (ret != 0)
+                return ret;
+        }
+        if (measures.size() != o.measures.size())
+            return measures.size() < o.measures.size() ? -1 : 1;
+        return 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -377,7 +401,7 @@ public class Phrase extends MeasureNode {
 
     @Override
     public String toString() {
-        return toMarkup();
+        return toMarkup() + "\n";
     }
 
     public final int size() {

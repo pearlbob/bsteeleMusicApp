@@ -352,7 +352,7 @@ public class SongBaseTest
         chordSection = chordSections.first();
         measures = chordSection.getPhrases().get(0).getMeasures();
         assertEquals(5, measures.size());
-        assertEquals("(yo)",measures.get(4).toMarkup());
+        assertEquals("(yo)", measures.get(4).toMarkup());
     }
 
 
@@ -670,8 +670,8 @@ public class SongBaseTest
                     "V: not important now");
             logger.fine(a.logGrid());
 
-            assertEquals(Measure.parse("Am7b5", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(16, 1)));
-            assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(31, 4)));
+            assertEquals(Measure.parse("Am7b5", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(16, 1)));
+            assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(31, 4)));
 
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
@@ -714,9 +714,28 @@ public class SongBaseTest
                             "C5D5 C5D5 C5D5 C5D5",
                     "i1:\nv: bob, bob, bob berand\ni2: nope\nc1: sing \ni3: chorus here \ni4: mo chorus here\no: last line of outro");
             logger.fine(a.logGrid());
-            assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(1, 3)));
-            assertEquals(Measure.parse("C5D5", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(5, 4)));
-            assertEquals(Measure.parse("DC", a.getBeatsPerBar()), a.findMeasure(new GridCoordinate(18, 2)));
+            assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(1, 3)));
+            assertEquals(Measure.parse("C5D5", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(5, 4)));
+            assertEquals(Measure.parse("DC", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(18, 2)));
+
+
+            //  not what's intended, but what's declared
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "V:I:O:\n" +
+                            "Ebsus2 Bb Gm7 C\n" +
+                            "\n" +
+                            "C:\n" +
+                            "Cm F Bb Eb x3\n" +
+                            "Cm F\n" +
+                            "\n"
+                            + "O:V:\n"
+                    ,
+                    "i1:\nv: bob, bob, bob berand\ni2: nope\nc1: sing \ni3: chorus here \ni4: mo chorus here\no: last line of outro");
+            logger.fine(a.logGrid());
+            assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(0, 3)));
+            assertEquals(Measure.parse("Cm", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(2,1)));
+            assertEquals(Measure.parse("F", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(3,2)));
         } catch (ParseException e) {
             e.printStackTrace();
             fail();

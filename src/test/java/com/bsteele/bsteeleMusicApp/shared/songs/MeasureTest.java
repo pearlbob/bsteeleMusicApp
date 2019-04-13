@@ -111,28 +111,6 @@ public class MeasureTest extends TestCase {
                 assertEquals("E♭.F", m.toMarkup());
             }
             {
-                Measure m = Measure.parse("E#m7.. ", 2);
-                //  too many beats or over specified, doesn't cover the beats per bar
-                assertNotNull(m);  //  fixme: Measure.parse() on errors
-            }
-            {
-                int beatsPerBar = 4;
-                Measure m = Measure.parse(" .G ", beatsPerBar);
-                assertNull(m);
-            }
-            {
-                int beatsPerBar = 3;
-                //System.out.println("beatsPerBar: " + beatsPerBar);
-                Measure m;
-                m = Measure.parse(" .G ", beatsPerBar);
-                assertNull(m);
-                m = Measure.parse("E#m7... ", beatsPerBar);
-                assertNotNull(m);   //  fixme: Measure.parse() on errors
-                m = Measure.parse("E#m7. ", beatsPerBar);
-                assertNotNull(m);   //  fixme: Measure.parse() on errors
-            }
-
-            {
                 //  test beat allocation
                 Measure m = Measure.parse("EAB", 4);
                 assertEquals(3, m.getChords().size());
@@ -197,30 +175,12 @@ public class MeasureTest extends TestCase {
                 assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat1, beatsPerBar), chord1);
             }
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                // System.out.println("beatsPerBar: " + beatsPerBar);
                 Measure m = Measure.parse("E#m7. ", beatsPerBar);
-                if (beatsPerBar > 2)
-                    //  over specified, doesn't cover the beats per bar
-                    assertNotNull(m);  //  fixme: Measure.parse() on errors
-                else {
-                    assertEquals(beatsPerBar, m.getBeatCount());
-                    assertEquals(1, m.getChords().size());
-                    Chord chord0 = m.getChords().get(0);
-                    assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
-                }
-            }
-            for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                //System.out.println("beatsPerBar: " + beatsPerBar);
-                Measure m = Measure.parse("E#m7.. ", beatsPerBar);
-                if (beatsPerBar != 3)
-                    //  too many beats or over specified, doesn't cover the beats per bar
-                    assertNotNull(m);  //  fixme: Measure.parse() on errors
-                else {
-                    assertEquals(beatsPerBar, m.getBeatCount());
-                    assertEquals(1, m.getChords().size());
-                    Chord chord0 = m.getChords().get(0);
-                    assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), beatsPerBar, beatsPerBar), chord0);
-                }
+                assertNotNull(m);
+                assertEquals(2, m.getBeatCount());
+                assertEquals(1, m.getChords().size());
+                Chord chord0 = m.getChords().get(0);
+                assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), 2, beatsPerBar), chord0);
             }
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
                 Measure m = Measure.parse("E#m7Gb7", beatsPerBar);
@@ -280,8 +240,64 @@ public class MeasureTest extends TestCase {
                     assertEquals(0, m.getChords().size());
                 }
             }
+            {
+                Measure m = Measure.parse("E#m7. ", 3);
+                assertNotNull(m);
+                assertEquals("E♯m7.", m.toMarkup());
+            }
         } catch (ParseException e) {
             e.printStackTrace();
+            fail();
+        }
+
+        {
+            //  too many beats or over specified, doesn't cover the beats per bar
+            try {
+                Measure m = Measure.parse("E#m7.. ", 2);
+                fail();
+            } catch (ParseException e) {
+                //  expected
+            }
+        }
+        {
+            int beatsPerBar = 4;
+            try {
+                Measure m = Measure.parse(" .G ", beatsPerBar);
+                fail();
+            } catch (ParseException e) {
+                //  expected
+            }
+        }
+        {
+            int beatsPerBar = 3;
+            //System.out.println("beatsPerBar: " + beatsPerBar);
+            Measure m;
+            try {
+                m = Measure.parse(" .G ", beatsPerBar);
+                fail();
+            } catch (ParseException e) {
+                //  expected
+            }
+            try {
+                m = Measure.parse("E#m7... ", beatsPerBar);
+                fail();
+            } catch (ParseException e) {
+                //  expected
+            }
+        }
+        for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+            try {
+                Measure m = Measure.parse("E#m7.. ", beatsPerBar);
+                assertEquals(3, m.getBeatCount());
+                assertEquals(1, m.getChords().size());
+                Chord chord0 = m.getChords().get(0);
+                assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), 3, beatsPerBar), chord0);
+            } catch (ParseException e) {
+                //  too many beats or over specified, doesn't cover the beats per bar
+                if (beatsPerBar < 3)
+                    continue;
+                fail();     //  parse failed
+            }
         }
     }
 }

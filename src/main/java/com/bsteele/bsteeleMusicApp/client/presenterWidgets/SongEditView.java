@@ -661,142 +661,14 @@ public class SongEditView
         if (input.isEmpty())
             return false;
 
-//        StringBuffer sb = new StringBuffer(input.replaceAll("\\s+", " "));
-//
-//        boolean inComment = false;
-//        for (int i = 0; i < 1e3; i++)      //  safety
-//        {
-//            Util.stripLeadingSpaces(sb);
-//            if (sb.length() <= 0)
-//                break;
-//
-//            Measure measure = null;
-//
-//            //  look for a comment
-//            if (sb.charAt(0) == '(') {
-//                int index = sb.indexOf(")");
-//                if (index > 0) {
-//                    try {
-//                        measure = MeasureComment.parse(sb);
-//                    } catch (ParseException pex) {
-//                        logger.info("comment not found: " + pex.getMessage());
-//                    }
-//                }
-//            }
-//
-//            //  look for a section
-//            try {
-//                SectionVersion sectionVersion = SectionVersion.parse(sb);
-//                logger.fine("new SectionVersion: \"" + sectionVersion.toString() + "\"");
-//
-//                ChordSectionLocation chordSectionLocation = song.getChordSectionLocation(sectionVersion);
-//                if (chordSectionLocation != null) {
-//                    //  new section already there, select it
-//                    updateCurrentChordEditLocation(chordSectionLocation, MeasureEditType.append);
-//                    displaySong();
-//                    measureFocus();
-//                    continue;
-//                }
-//                //  add a new section
-//                if (!song.addSectionVersion(sectionVersion))
-//                    return false;
-//                displaySong();
-//                updateCurrentChordEditLocation();
-//                undoStackPushSong();
-//                measureFocus();
-//                continue;
-//            } catch (ParseException pex) {
-//                //  ignore
-//            }
-//
-//            //  look for a measure
-//            ChordSectionLocation chordSectionLocation = song.getCurrentChordSectionLocation();
-//            if (measure == null) {
-//                String backup = sb.toString();  //  backup for a measure followed by non-whitespace
-//                try {
-//                    measure = Measure.parse(sb, song.getBeatsPerBar());
-//                } catch (ParseException pex) {
-//                    measure = null;//   nope
-//                }
-//                if (measure != null) {
-//                    if (sb.length() > 0 && !Character.isWhitespace(sb.charAt(0))) {
-//                        //  reject the measure for not ending correctly:  end of input or in white space
-//                        measure = null;
-//                        sb = new StringBuffer(backup);
-//                    }
-//                } else if (backup.startsWith("-") && chordSectionLocation != null && editAppend.getValue()) {
-//                    measure = song.findMeasure(chordSectionLocation);
-//                    if (measure == null)
-//                        return false;
-//                    measure = new Measure(measure);
-//
-//                    logger.fine("new measure: for - : " + measure.toMarkup());
-//                    sb.delete(0, 1);
-//                } else {
-//                    final RegExp repeatExp = RegExp.compile("\\s*x\\s*(\\d+)\\s*$");
-//                    MatchResult mr = repeatExp.exec(backup);
-//                    if (mr != null) {
-//                        // logger.fine("new measure: repeat");
-//                        int repeats = Integer.parseInt(mr.getGroup(1));
-//                        song.setRepeat(chordSectionLocation, repeats);
-//                        undoStackPushSong();
-//                        displaySong();
-//                        sb.delete(0, mr.getGroup(0).length());
-//                        continue;
-//                    }
-//
-//                    try {
-//                        MeasureRepeat measureRepeat = MeasureRepeat.parse(sb, 0, song.getBeatsPerBar());
-//                        if (measureRepeat != null) {
-//                            song.addRepeat(chordSectionLocation, measureRepeat);
-//                            undoStackPushSong();
-//                            displaySong();
-//                            continue;
-//                        }
-//                    } catch (ParseException pex) {
-//                        //  ignore
-//                    }
-//
-//                    //  desperation: force the unknown input into a comment
-//                    try {
-//                        measure = MeasureComment.parse(sb);
-//                    } catch (ParseException pex) {
-//                        //  ignore?
-//                    }
-//                }
-//            }
-//
-//
-//            //  if we found something valid in the input, edit the song
-//            if (measure != null && chordSectionLocation != null) {
-//                MeasureEditType editLocation = MeasureEditType.append;
-//                if (editInsert.getValue()) {
-//                    editLocation = MeasureEditType.insert;
-//                } else if (editReplace.getValue()) {
-//                    editLocation = MeasureEditType.replace;
-//                }
-//
-//                logger.fine("preEdit: " + chordSectionLocation);
-//                if (song.measureEdit(chordSectionLocation, editLocation, measure)) {
-//                    logger.fine("postEdit: " + song.getCurrentChordSectionLocation());
-//                    undoStackPushSong();
-//                    displaySong();
-//                    updateCurrentChordEditLocation();
-//                    measureFocus();
-//                    logger.fine("postselect: " + song.getCurrentChordSectionLocation());
-//                    continue;
-//                }
-//            }
-//
-//            if (sb.length() > 0) {
-//                errorLabel.setText("Measure entry not understood: \"" + sb.toString() + "\"");
-//                measureEntry.setValue(sb.toString());
-//                songEnter.setDisabled(true);
-//                return false;
-//            }
-//
-//        }
-//        measureEntry.setValue(sb.toString());
+        ArrayList<MeasureNode> measureNodes=   SongBase.parseChordEntry(input, song.getBeatsPerBar());
+        for ( MeasureNode measureNode:measureNodes){
+            logger.info("m: "+measureNode.toMarkup());
+            if ( song.edit(measureNode))
+            {
+                undoStackPushSong();
+            }
+        }
 
         checkSong();
         measureFocus();
@@ -1188,8 +1060,11 @@ public class SongEditView
 
     public void enterSong() {
         Song newSong = checkSong();
-        if (newSong != null)
+
+        if (newSong != null) {
+            logger.fine(newSong.toJson());
             fireSongSubmission(newSong);
+        }
     }
 
     private void setKey(Key key) {
@@ -1213,18 +1088,7 @@ public class SongEditView
     }
 
     private void enterChord(String name) {
-
-//        try {
-//            Measure measure = Measure.parse(new StringBuffer(name), song.getBeatsPerBar());
-//            if (processChordEntry(measure.toMarkup() + " ")) {
-//                addRecentMeasure(measure);
-//                findMostCommonScaleChords();
-//                checkSong();
-//                measureFocus();
-//            }
-//        } catch (ParseException pex) {
-//            logger.info("unexpected error: " + pex.getMessage());
-//        }
+        processChordEntry(name );
     }
 
     private void addRecentMeasure(Measure measure) {

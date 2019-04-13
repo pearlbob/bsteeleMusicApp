@@ -6,8 +6,7 @@ import javax.annotation.Nonnull;
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class MeasureRepeatMarker extends Measure
-{
+public class MeasureRepeatMarker extends Measure {
     public MeasureRepeatMarker(int repeats) {
         this.setRepeats(repeats);
     }
@@ -26,8 +25,7 @@ public class MeasureRepeatMarker extends Measure
     }
 
     @Override
-    public String transpose(@Nonnull Key key, int halfSteps)
-    {
+    public String transpose(@Nonnull Key key, int halfSteps) {
         return toString();
     }
 
@@ -35,9 +33,12 @@ public class MeasureRepeatMarker extends Measure
         return "RX";
     }
 
+    public int compareTo(MeasureRepeatMarker o) {
+        return repeats < o.repeats ? -1 : (repeats > o.repeats ? 1 : 0);
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "x" + getRepeats();
     }
 
