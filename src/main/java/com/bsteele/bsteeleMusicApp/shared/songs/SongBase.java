@@ -372,7 +372,7 @@ public class SongBase {
 
     private void setDefaultCurrentChordLocation() {
         currentChordSectionLocation = null;
-        currentMeasureEditType = MeasureEditType.append;
+        setCurrentMeasureEditType(MeasureEditType.append);
 
         TreeSet<ChordSection> sortedChordSections = new TreeSet<>(chordSectionMap.values());
         if (sortedChordSections.isEmpty())
@@ -583,7 +583,7 @@ public class SongBase {
         chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
         clearCachedValues();
         setCurrentChordSectionLocation(new ChordSectionLocation(sectionVersion));
-        currentMeasureEditType = MeasureEditType.append;
+        setCurrentMeasureEditType(MeasureEditType.append);
         return true;
     }
 
@@ -613,8 +613,7 @@ public class SongBase {
 
         if (location.isMeasure()) {
             ret = phrase.edit(MeasureEditType.delete, location.getMeasureIndex(), null);
-        }
-        else if (location.isPhrase()) {
+        } else if (location.isPhrase()) {
             ret = chordSection.deletePhrase(location.getPhraseIndex());
             if (ret) {
                 //  move the current location if required
@@ -629,7 +628,7 @@ public class SongBase {
                     }
                 }
             }
-        } else if ( location.isSection() ){
+        } else if (location.isSection()) {
             //  find the section prior to the one being deleted
             TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionMap.keySet());
             SectionVersion nextSectionVersion = sortedSectionVersions.lower(chordSection.getSectionVersion());
@@ -681,6 +680,7 @@ public class SongBase {
 
         //  handle situations by the type of measure node being added
         ChordSection newChordSection;
+        MeasureRepeat newRepeat;
         switch (measureNode.getMeasureNodeType()) {
             case section:
                 switch (editLocation) {
@@ -689,7 +689,7 @@ public class SongBase {
                         newChordSection = (ChordSection) measureNode;
                         chordSectionMap.put(newChordSection.getSectionVersion(), newChordSection);
                         ret = true;
-                        //  no location change
+                        location = new ChordSectionLocation(newChordSection.getSectionVersion());
                         break;
                     case delete:
                         //  find the section prior to the one being deleted
@@ -703,76 +703,85 @@ public class SongBase {
                                 nextSectionVersion = sortedSectionVersions.first();
                             }
                             if (nextSectionVersion != null) {
-                                chordSection = findChordSection(nextSectionVersion);
-                                measureNode = chordSection;
+                                location = new ChordSectionLocation(nextSectionVersion);
                             }
+                            else
+                                ;// fixme: set location to empty location
                         }
                         break;
                 }
-                standardEditCleanup(ret, measureNode);
+                standardEditCleanup(ret, location);
                 return ret;
-            case repeat: {
-                MeasureRepeat newRepeat = (MeasureRepeat) measureNode;
+
+            case repeat:
+                newRepeat = (MeasureRepeat) measureNode;
                 if (newRepeat.isEmpty()) {
                     //  empty repeat
                     if (phrase.isRepeat()) {
                         //  change repeats
                         MeasureRepeat repeat = (MeasureRepeat) phrase;
                         repeat.setRepeats(newRepeat.getRepeats());
-                        return standardEditCleanup(true, measureNode);
+                        return standardEditCleanup(true, location);
                     }
                     if (!phrase.isEmpty()) {
                         //  convert phrase to a repeat
                         MeasureRepeat repeat = new MeasureRepeat(phrase.getMeasures(), phrase.getPhraseIndex(), newRepeat.getRepeats());
                         chordSection.deletePhrase(phrase.getPhraseIndex());
                         chordSection.add(repeat.getPhraseIndex(), repeat);
-                        return standardEditCleanup(true, repeat);
+                        location = new ChordSectionLocation(chordSection.getSectionVersion(),repeat.getPhraseIndex());
+                        return standardEditCleanup(true, location);
                     }
                 } else {
                     //  non-empty repeat
                     switch (editLocation) {
                         case delete:
-                            return standardEditCleanup(chordSection.deletePhrase(phrase.getPhraseIndex()), newRepeat);
+                            return standardEditCleanup(chordSection.deletePhrase(phrase.getPhraseIndex()), location);
                         case append:
                             newRepeat.setPhraseIndex(phrase.getPhraseIndex() + 1);
-                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newRepeat), newRepeat);
+                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newRepeat),
+                                    new ChordSectionLocation(chordSection.getSectionVersion(),phrase.getPhraseIndex() + 1));
                         case insert:
                             newRepeat.setPhraseIndex(phrase.getPhraseIndex());
-                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newRepeat), newRepeat);
+                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newRepeat), location);
                         case replace:
                             newRepeat.setPhraseIndex(phrase.getPhraseIndex());
                             return standardEditCleanup(chordSection.deletePhrase(phrase.getPhraseIndex())
-                                    && chordSection.add(newRepeat.getPhraseIndex(), newRepeat), newRepeat);
+                                    && chordSection.add(newRepeat.getPhraseIndex(), newRepeat), location);
                     }
                 }
-            }
-            break;
+                break;
 
             case measure:
             case comment:
                 //  add measure to current phrase
-                if (location.hasMeasureIndex())
-                    return standardEditCleanup(phrase.edit(editLocation, location.getMeasureIndex(), measureNode), measureNode);
+                if (location.hasMeasureIndex()) {
+                    ChordSectionLocation newLocation = location;
+                    switch (editLocation) {
+                        case append:
+                            newLocation = location.nextMeasureIndexLocation();
+                    }
+                    return standardEditCleanup(phrase.edit(editLocation, location.getMeasureIndex(), measureNode), newLocation);
+                }
 
                 //  add measure to chordSection by creating a new phase
                 if (location.hasPhraseIndex()) {
                     ArrayList<Measure> measures = new ArrayList<>();
                     measures.add((Measure) measureNode);
                     Phrase newPhrase = new Phrase(measures, location.getPhraseIndex());
-                    standardEditCleanup(chordSection.add(location.getPhraseIndex(), newPhrase), newPhrase);
                     switch (editLocation) {
                         case delete:
                             break;
                         case append:
-                            newPhrase.setPhraseIndex(phrase.getPhraseIndex() + 1);
-                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newPhrase), newPhrase);
+                            newPhrase.setPhraseIndex(phrase.getPhraseIndex());
+                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newPhrase),
+                                    location.nextMeasureIndexLocation());
                         case insert:
                             newPhrase.setPhraseIndex(phrase.getPhraseIndex());
-                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newPhrase), newPhrase);
+                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex(), newPhrase), location);
                         case replace:
                             newPhrase.setPhraseIndex(phrase.getPhraseIndex());
                             return standardEditCleanup(chordSection.deletePhrase(phrase.getPhraseIndex())
-                                    && chordSection.add(newPhrase.getPhraseIndex(), newPhrase), newPhrase);
+                                    && chordSection.add(newPhrase.getPhraseIndex(), newPhrase), location);
                     }
                 }
                 break;
@@ -789,7 +798,7 @@ public class SongBase {
                         break;
                 }
                 //  no location change
-                standardEditCleanup(ret, measureNode);
+                standardEditCleanup(ret, location);
                 break;
 
             case append:
@@ -820,7 +829,7 @@ public class SongBase {
                         case phrase:
                         case repeat:
                             ret = chordSection.add(location.getPhraseIndex(), (Phrase) measureNode);
-                            standardEditCleanup(ret, measureNode);
+                            standardEditCleanup(ret, location);
                             return ret;
                     }
                 }
@@ -830,7 +839,7 @@ public class SongBase {
                         case phrase:
                             chordSection.getPhrases().add(location.getPhraseIndex(), (Phrase) measureNode);
                             ret = true;
-                            standardEditCleanup(ret, measureNode);
+                            standardEditCleanup(ret, location);
                             break;
                     }
                     break;
@@ -883,28 +892,19 @@ public class SongBase {
                 } else if (location.isSection()) {
 
                 }
-                standardEditCleanup(ret, measureNode);
+                standardEditCleanup(ret, location);
                 break;
         }
         return ret;
     }
 
-    private final boolean standardEditCleanup(boolean ret, MeasureNode measureNode) {
-        if (ret) {
-            //  no location change
-            clearCachedValues();
-            setCurrentChordSectionLocation(measureNode);
-            currentMeasureEditType = MeasureEditType.append;    //  but move to append
-        }
-        return ret;
-    }
-
-    private final void standardEditCleanup(boolean ret, ChordSectionLocation location) {
+    private final boolean standardEditCleanup(boolean ret, ChordSectionLocation location) {
         if (ret) {
             clearCachedValues();
             setCurrentChordSectionLocation(location);
-            currentMeasureEditType = MeasureEditType.append;
+            setCurrentMeasureEditType(MeasureEditType.append);
         }
+        return ret;
     }
 
 
@@ -953,7 +953,7 @@ public class SongBase {
                     //  no location change
                     clearCachedValues();
                     setCurrentChordSectionLocation(location);
-                    currentMeasureEditType = MeasureEditType.append;    //  but move to append
+                    setCurrentMeasureEditType(MeasureEditType.append);    //  but move to append
                 }
                 break;
             case replace:
@@ -962,7 +962,7 @@ public class SongBase {
                     //  follow the measure with an append
                     clearCachedValues();
                     setCurrentChordSectionLocation(location);
-                    currentMeasureEditType = MeasureEditType.append;
+                    setCurrentMeasureEditType(MeasureEditType.append);
                 }
                 break;
             case append:
@@ -985,7 +985,7 @@ public class SongBase {
                 if (ret) {
                     clearCachedValues();
                     setCurrentChordSectionLocation(location.nextMeasureIndexLocation());
-                    currentMeasureEditType = MeasureEditType.append;
+                    setCurrentMeasureEditType(MeasureEditType.append);
                 }
                 break;
         }
@@ -2232,6 +2232,10 @@ public class SongBase {
 
     public void setCurrentMeasureEditType(MeasureEditType measureEditType) {
         currentMeasureEditType = measureEditType;
+        logger.fine("curloc: "
+                + (currentChordSectionLocation != null ? currentChordSectionLocation.toString() : "none")
+                + " "
+                + (currentMeasureEditType != null ? currentMeasureEditType.toString() : "no type"));
     }
 
     public ChordSectionLocation getCurrentChordSectionLocation() {
@@ -2307,6 +2311,10 @@ public class SongBase {
             }
 
         currentChordSectionLocation = chordSectionLocation;
+        logger.fine("curloc: "
+                + (currentChordSectionLocation != null ? currentChordSectionLocation.toString() : "none")
+                + " "
+                + (currentMeasureEditType != null ? currentMeasureEditType.toString() : "no type"));
     }
 
 

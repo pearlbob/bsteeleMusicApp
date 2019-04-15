@@ -515,15 +515,19 @@ public class SongEditView
         });
 
         noRepeat.addClickHandler((ClickEvent event) -> {
+            setCurrentMeasureEditType(MeasureEditType.replace);
             processChordEntry("x1");
         });
         repeat2.addClickHandler((ClickEvent event) -> {
+            setCurrentMeasureEditType(MeasureEditType.replace);
             processChordEntry("x2");
         });
         repeat3.addClickHandler((ClickEvent event) -> {
+            setCurrentMeasureEditType(MeasureEditType.replace);
             processChordEntry("x3");
         });
         repeat4.addClickHandler((ClickEvent event) -> {
+            setCurrentMeasureEditType(MeasureEditType.replace);
             processChordEntry("x4");
         });
         noChord.addClickHandler((ClickEvent event) -> {
@@ -688,6 +692,7 @@ public class SongEditView
             logger.info("m: " + measureNode.toMarkup());
             if (song.edit(measureNode)) {
                 undoStackPushSong();
+                updateCurrentChordEditLocation();
             }
         }
 
@@ -696,13 +701,15 @@ public class SongEditView
         return true;
     }
 
-    private final void  deleteCurrentChordSectionLocation(){
+    private final void deleteCurrentChordSectionLocation() {
         errorLabel.setText(null);
 
         if (song == null)
             return;
-        if ( song.deleteCurrentChordSectionLocation())
+        if (song.deleteCurrentChordSectionLocation()) {
             undoStackPushSong();
+            updateCurrentChordEditLocation();
+        }
         checkSong();
         measureFocus();
     }
@@ -915,6 +922,17 @@ public class SongEditView
             }
         }
         lastGridCoordinate = song.getGridCoordinate(chordSectionLocation);
+
+        if (chordSectionLocation.isSection()) {
+            switch (song.getCurrentMeasureEditType()) {
+                case replace:
+                case delete:
+                    break;
+                default:
+                    setCurrentMeasureEditType(MeasureEditType.replace); //  fixme: shouldn't be here?
+                    break;
+            }
+        }
 
         //  indicate the current selection
         try {

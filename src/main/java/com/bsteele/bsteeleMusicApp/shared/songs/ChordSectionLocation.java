@@ -126,6 +126,12 @@ public class ChordSectionLocation {
         return new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex + 1);
     }
 
+    public final ChordSectionLocation nextPhraseIndexLocation() {
+        if (!hasPhraseIndex)
+            return this;
+        return new ChordSectionLocation(sectionVersion, phraseIndex + 1);
+    }
+
     @Override
     public String toString() {
         return getId();
