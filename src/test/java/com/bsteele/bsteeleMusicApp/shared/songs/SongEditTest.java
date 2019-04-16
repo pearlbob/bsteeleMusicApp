@@ -51,6 +51,36 @@ public class SongEditTest extends TestCase {
             logger.fine(a.toMarkup());
             assertEquals("V: A B C D", a.toMarkup().trim());
             assertEquals("V:0:3", a.getCurrentChordSectionLocation().toString());
+            newMeasure = Measure.parse("E", beatsPerBar);
+            logger.finer(newPhrase.toMarkup());
+            assertTrue(a.edit(newMeasure));
+            logger.fine(a.toMarkup());
+            assertEquals("V: A B C D E", a.toMarkup().trim());
+            assertEquals("V:0:4", a.getCurrentChordSectionLocation().toString());
+            newPhrase = Phrase.parse("F", 0, beatsPerBar);
+            logger.finer(newPhrase.toMarkup());
+            assertTrue(a.edit(newPhrase));
+            logger.fine(a.toMarkup());
+            assertEquals("V: A B C D E F", a.toMarkup().trim());
+            assertEquals("V:0:5", a.getCurrentChordSectionLocation().toString());
+
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "i: A B C D V: D E F F# c: D C G G",
+                    "i:\nv: bob, bob, bob berand\nc: nope nope");
+            logger.finer(a.toMarkup());
+            location =  ChordSectionLocation.parse("i:0:3");
+            a.setCurrentChordSectionLocation(location);
+            a.setCurrentMeasureEditType(MeasureEditType.append);
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
+                    + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            newPhrase = Phrase.parse("Db C B A", 0, beatsPerBar);
+            assertTrue(a.edit(newPhrase));
+            logger.fine(a.toMarkup());
+            assertEquals("I: A B C D D♭ C B A  V: D E F F♯  C: D C G G", a.toMarkup().trim());
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            assertEquals("I:0:7", a.getCurrentChordSectionLocation().toString());
+            assertEquals("A", a.getCurrentMeasureNode().toMarkup());
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, 4, 4,
@@ -67,8 +97,8 @@ public class SongEditTest extends TestCase {
             logger.fine(a.toMarkup());
             assertEquals("V: C F C C GB F C Dm7 G F C G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertEquals("V:1:3", a.getCurrentChordSectionLocation().toString());
-            assertEquals("Dm7", a.getCurrentMeasureNode().toMarkup());
+            assertEquals("V:0:11", a.getCurrentChordSectionLocation().toString());
+            assertEquals("G", a.getCurrentMeasureNode().toMarkup());
 
             //   current type	current edit loc	entry	replace entry	new edit type	new edit loc	result
             logger.fine("section	append	section(s)		replace	section(s)	add or replace section(s), de-dup");
@@ -107,6 +137,17 @@ public class SongEditTest extends TestCase {
             assertEquals("I: A B C D  V: A D C D  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
             assertEquals(new ChordSectionLocation(v), a.getCurrentChordSectionLocation());
+            location = ChordSectionLocation.parse("i:0:3");
+            a.setCurrentChordSectionLocation(location);
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
+                    + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            newMeasure = Measure.parse("F", beatsPerBar);
+            assertTrue(a.edit(newMeasure));
+            logger.fine(a.toMarkup());
+            assertEquals("I: A B C D F  V: A D C D  C: D C G G", a.toMarkup().trim());
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            assertEquals(ChordSectionLocation.parse("i:0:4"), a.getCurrentChordSectionLocation());
+            assertEquals(newMeasure.toMarkup(), a.getCurrentChordSectionLocationMeasureNode().toMarkup());
 
             logger.fine("phrase	append	section(s)		replace	section(s)	add or replace section(s), de-dup");
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),

@@ -532,7 +532,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     @Override
     boolean isEmpty() {
-        return phrases == null || phrases.isEmpty();
+        return phrases == null || phrases.isEmpty()  || phrases.get(0).isEmpty();
     }
 
     private final SectionVersion sectionVersion;

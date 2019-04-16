@@ -196,6 +196,15 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
+    boolean add( ArrayList<Measure> newMeasures){
+        if ( newMeasures == null || newMeasures.isEmpty())
+            return false;
+        if ( measures == null )
+            measures = new ArrayList<Measure>();
+        measures.addAll(newMeasures);
+        return true;
+    }
+
     boolean append(int index, MeasureNode newMeasureNode) {
         if (newMeasureNode == null)
             return false;
