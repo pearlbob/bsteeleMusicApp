@@ -38,7 +38,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     final static ChordSection parse(String s, int beatsPerBar)
             throws ParseException {
-        return parse(new MarkedString(s), beatsPerBar, false );
+        return parse(new MarkedString(s), beatsPerBar, false);
     }
 
     final static ChordSection parse(MarkedString markedString, int beatsPerBar, boolean strict)
@@ -61,7 +61,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             sectionVersion = new SectionVersion(Section.verse);
         }
 
-        ArrayList<Phrase> measureSequenceItems = new ArrayList<>();
+        ArrayList<Phrase> phrases = new ArrayList<>();
         ArrayList<Measure> measures = new ArrayList<>();
         ArrayList<Measure> lineMeasures = new ArrayList<>();
         boolean repeatMarker = false;
@@ -81,7 +81,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             if (markedString.charAt(0) == '|') {
                 if (!measures.isEmpty()) {
                     //  add measures prior to the repeat to the output
-                    measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
+                    phrases.add(new Phrase(measures, phrases.size()));
                     measures = new ArrayList<>();
                 }
                 repeatMarker = true;
@@ -104,13 +104,13 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 if (mr != null) {
                     if (!measures.isEmpty()) {
                         //  add measures prior to the single line repeat to the output
-                        measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
+                        phrases.add(new Phrase(measures, phrases.size()));
                         measures = new ArrayList<>();
                     }
                     String ns = mr.getGroup(1);
                     markedString.consume(ns.length());
                     int repeatTotal = Integer.parseInt(ns);
-                    measureSequenceItems.add(new MeasureRepeat(lineMeasures, measureSequenceItems.size(), repeatTotal));
+                    phrases.add(new MeasureRepeat(lineMeasures, phrases.size(), repeatTotal));
                     lineMeasures = new ArrayList<>();
                 }
                 continue;
@@ -141,17 +141,18 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
             try {
                 //  look for a block repeat
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(markedString, measureSequenceItems.size(), beatsPerBar);
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(markedString, phrases.size(), beatsPerBar);
                 if (measureRepeat != null) {
                     //  don't assume every line has an eol
                     for (Measure m : lineMeasures)
                         measures.add(m);
                     lineMeasures = new ArrayList<>();
                     if (!measures.isEmpty()) {
-                        measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
+                        phrases.add(new Phrase(measures, phrases.size()));
                     }
+                    measureRepeat.setPhraseIndex(phrases.size());
+                    phrases.add(measureRepeat);
                     measures = new ArrayList<>();
-                    measureSequenceItems.add(measureRepeat);
                     continue;
                 }
             } catch (ParseException pex) {
@@ -172,10 +173,10 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         for (Measure m : lineMeasures)
             measures.add(m);
         if (!measures.isEmpty()) {
-            measureSequenceItems.add(new Phrase(measures, measureSequenceItems.size()));
+            phrases.add(new Phrase(measures, phrases.size()));
         }
 
-        ChordSection ret = new ChordSection(sectionVersion, measureSequenceItems);
+        ChordSection ret = new ChordSection(sectionVersion, phrases);
         return ret;
     }
 

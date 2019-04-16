@@ -21,6 +21,25 @@ public class SongEditTest extends TestCase {
             MeasureRepeat newRepeat;
             Measure newMeasure;
 
+
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "V: C F C C [GB F C Dm7 ] x4 G F C G  ",
+                    "v: bob, bob, bob berand");
+            logger.finer(a.toMarkup());
+            location =  ChordSectionLocation.parse("v:1");
+            a.setCurrentChordSectionLocation(location);
+            a.setCurrentMeasureEditType(MeasureEditType.replace);
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
+                    + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            newRepeat = MeasureRepeat.parse("[]x1", 0, beatsPerBar);
+            assertTrue(a.edit(newRepeat));
+            logger.fine(a.toMarkup());
+            assertEquals("V: C F C C GB F C Dm7 G F C G", a.toMarkup().trim());
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            assertEquals("V:1:3", a.getCurrentChordSectionLocation().toString());
+            assertEquals("Dm7", a.getCurrentMeasureNode().toMarkup());
+
             //   current type	current edit loc	entry	replace entry	new edit type	new edit loc	result
             logger.fine("section	append	section(s)		replace	section(s)	add or replace section(s), de-dup");
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
@@ -360,7 +379,7 @@ public class SongEditTest extends TestCase {
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: D E F F♯  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertEquals(ChordSectionLocation.parse("V:0"), a.getCurrentChordSectionLocation());
+            assertEquals(ChordSectionLocation.parse("V:0:3"), a.getCurrentChordSectionLocation());
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, 4, 4,
@@ -398,7 +417,7 @@ public class SongEditTest extends TestCase {
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: [D E F F♯ ] x3  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertEquals(ChordSectionLocation.parse("v:0"), a.getCurrentChordSectionLocation());
+            assertEquals(ChordSectionLocation.parse("v:0:3"), a.getCurrentChordSectionLocation());
             //  non-empty repeat appends to current section
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, 4, 4,

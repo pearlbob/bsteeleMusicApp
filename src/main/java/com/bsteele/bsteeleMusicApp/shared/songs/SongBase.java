@@ -722,7 +722,10 @@ public class SongBase {
                         MeasureRepeat repeat = (MeasureRepeat) phrase;
                         if (newRepeat.getRepeats() < 2) {
                             //  convert repeat to phrase
-                            Phrase newPhrase = new Phrase(repeat.getMeasures(), repeat.getPhraseIndex());
+                            Phrase newPhrase = new Phrase(repeat.getMeasures(), location.getPhraseIndex());
+                            location = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                    location.getPhraseIndex(), newPhrase.getMeasures().size() - 1);
+                            logger.info("new loc: " + location.toString());
                             return standardEditCleanup(chordSection.deletePhrase(newPhrase.getPhraseIndex())
                                     && chordSection.add(newPhrase.getPhraseIndex(), newPhrase), location);
                         }
@@ -756,7 +759,7 @@ public class SongBase {
                             MeasureRepeat repeat = new MeasureRepeat(phrase.getMeasures().subList(minLocation.getMeasureIndex(),
                                     maxLocation.getMeasureIndex() + 1), phraseIndex, newRepeat.getRepeats());
                             chordSection.add(phraseIndex, repeat);
-                            location = new ChordSectionLocation(chordSection.getSectionVersion(), repeat.getPhraseIndex());
+                            location = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex);
                             phraseIndex++;
                         }
                         //  replace the old late part
@@ -781,7 +784,7 @@ public class SongBase {
                             return standardEditCleanup(chordSection.deletePhrase(phrase.getPhraseIndex()), location);
                         case append:
                             newPhrase.setPhraseIndex(phrase.getPhraseIndex() + 1);
-                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex()+1, newPhrase),
+                            return standardEditCleanup(chordSection.add(phrase.getPhraseIndex() + 1, newPhrase),
                                     new ChordSectionLocation(chordSection.getSectionVersion(), phrase.getPhraseIndex() + 1));
                         case insert:
                             newPhrase.setPhraseIndex(phrase.getPhraseIndex());
@@ -1407,7 +1410,7 @@ public class SongBase {
     private final void parseLyrics() {
         int state = 0;
         String whiteSpace = "";
-        String lyrics = "";
+        StringBuilder lyrics = new StringBuilder();
         LyricSection lyricSection = null;
 
         lyricSections = new ArrayList<>();
@@ -1456,13 +1459,13 @@ public class SongBase {
                                 lyricSection = new LyricSection();
                                 lyricSection.setSectionVersion(Section.getDefaultVersion());
                             }
-                            lyricSection.add(new LyricsLine(lyrics));
-                            lyrics = "";
+                            lyricSection.add(new LyricsLine(lyrics.toString()));
+                            lyrics = new StringBuilder();
                             whiteSpace = ""; //  ignore trailing white space
                             state = 0;
                             break;
                         default:
-                            lyrics += whiteSpace + c;
+                            lyrics.append(whiteSpace).append(c);
                             whiteSpace = "";
                             break;
                     }
@@ -1473,7 +1476,7 @@ public class SongBase {
         }
         //  last one is not terminated by another section
         if (lyricSection != null)
-            lyricSection.add(new LyricsLine(lyrics));
+            lyricSection.add(new LyricsLine(lyrics.toString()));
         lyricSections.add(lyricSection);
 
         computeSongMoments();
@@ -1990,7 +1993,7 @@ public class SongBase {
     }
 
 
-    public  final void setCoverArtist(String coverArtist) {
+    public final void setCoverArtist(String coverArtist) {
         if (coverArtist != null) {
             //  move the leading "The " to the end
             final RegExp theRegExp = RegExp.compile("^the +", "i");
@@ -2002,7 +2005,7 @@ public class SongBase {
         computeSongId();
     }
 
-    private  final void computeSongId() {
+    private final void computeSongId() {
         songId = new SongId("Song_" + title.replaceAll("\\W+", "")
                 + "_by_" + artist.replaceAll("\\W+", "")
                 + (coverArtist == null ? "" : "_coverBy_" + coverArtist));
@@ -2218,7 +2221,7 @@ public class SongBase {
      *
      * @return a relative complexity index
      */
-    public final  int getComplexity() {
+    public final int getComplexity() {
         if (complexity == 0) {
             //  compute the complexity
             TreeSet<Measure> differentChords = new TreeSet<>();
@@ -2240,44 +2243,44 @@ public class SongBase {
         return complexity;
     }
 
-    protected  final void setDuration(double duration) {
+    protected final void setDuration(double duration) {
         this.duration = duration;
     }
 
-    public  final String getRawLyrics() {
+    public final String getRawLyrics() {
         return rawLyrics;
     }
 
-    protected  final void setRawLyrics(String rawLyrics) {
+    protected final void setRawLyrics(String rawLyrics) {
         this.rawLyrics = rawLyrics;
         parseLyrics();
     }
 
-    public  final void setTotalBeats(int totalBeats) {
+    public final void setTotalBeats(int totalBeats) {
         this.totalBeats = totalBeats;
     }
 
-    public  final void setDefaultBpm(int defaultBpm) {
+    public final void setDefaultBpm(int defaultBpm) {
         this.defaultBpm = defaultBpm;
     }
 
-    public  final String getCoverArtist() {
+    public final String getCoverArtist() {
         return coverArtist;
     }
 
-    public  final String getMessage() {
+    public final String getMessage() {
         return message;
     }
 
-    protected  final void setMessage(String message) {
+    protected final void setMessage(String message) {
         this.message = message;
     }
 
-    public  final MeasureEditType getCurrentMeasureEditType() {
+    public final MeasureEditType getCurrentMeasureEditType() {
         return currentMeasureEditType;
     }
 
-    public  final void setCurrentMeasureEditType(MeasureEditType measureEditType) {
+    public final void setCurrentMeasureEditType(MeasureEditType measureEditType) {
         currentMeasureEditType = measureEditType;
         logger.fine("curloc: "
                 + (currentChordSectionLocation != null ? currentChordSectionLocation.toString() : "none")
@@ -2285,15 +2288,15 @@ public class SongBase {
                 + (currentMeasureEditType != null ? currentMeasureEditType.toString() : "no type"));
     }
 
-    public  final ChordSectionLocation getCurrentChordSectionLocation() {
+    public final ChordSectionLocation getCurrentChordSectionLocation() {
         return currentChordSectionLocation;
     }
 
-    public  final MeasureNode getCurrentChordSectionLocationMeasureNode() {
+    public final MeasureNode getCurrentChordSectionLocationMeasureNode() {
         return currentChordSectionLocation == null ? null : findMeasureNode(currentChordSectionLocation);
     }
 
-    private  final void setCurrentChordSectionLocation(@Nonnull MeasureNode measureNode) {
+    private final void setCurrentChordSectionLocation(@Nonnull MeasureNode measureNode) {
         ChordSectionLocation loc;
         ChordSection section = findChordSection(measureNode);
         if (section == null) {
@@ -2319,7 +2322,7 @@ public class SongBase {
         setCurrentChordSectionLocation(loc);
     }
 
-    public  final void setCurrentChordSectionLocation(@Nonnull ChordSectionLocation chordSectionLocation) {
+    public final void setCurrentChordSectionLocation(@Nonnull ChordSectionLocation chordSectionLocation) {
         //  try to find something close if the exact location doesn't exist
         if (chordSectionLocation == null) {
             chordSectionLocation = currentChordSectionLocation;
@@ -2361,7 +2364,9 @@ public class SongBase {
         logger.fine("curloc: "
                 + (currentChordSectionLocation != null ? currentChordSectionLocation.toString() : "none")
                 + " "
-                + (currentMeasureEditType != null ? currentMeasureEditType.toString() : "no type"));
+                + (currentMeasureEditType != null ? currentMeasureEditType.toString() : "no type")
+                + " " + (currentChordSectionLocation != null ? findMeasureNode(currentChordSectionLocation) : "none")
+        );
     }
 
 

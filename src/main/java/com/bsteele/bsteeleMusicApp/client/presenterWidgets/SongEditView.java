@@ -689,7 +689,7 @@ public class SongEditView
 
         ArrayList<MeasureNode> measureNodes = SongBase.parseChordEntry(input, song.getBeatsPerBar());
         for (MeasureNode measureNode : measureNodes) {
-            logger.info("m: " + measureNode.toMarkup());
+            logger.fine("m: " + measureNode.toMarkup());
             if (song.edit(measureNode)) {
                 addRecentMeasureNode(measureNode);
                 undoStackPushSong();
@@ -958,8 +958,9 @@ public class SongEditView
                     break;
             }
         } catch (IndexOutOfBoundsException ioob) {
-            logger.severe(ioob.getMessage() + " at (" + gridCoordinate.getRow() + ", " + gridCoordinate.getCol() + ")");
-            logger.info(song.logGrid());
+            //  can happen
+            logger.fine(ioob.getMessage() + " at (" + gridCoordinate.getRow() + ", " + gridCoordinate.getCol() + ")");
+            logger.fine(song.logGrid());
         }
 
         MeasureNode measureNode = song.findMeasureNode(chordSectionLocation);
@@ -1013,7 +1014,9 @@ public class SongEditView
                     newKey, bpmEntry.getText(), beatsPerBar, unitsPerMeasure,
                     song.toMarkup(), lyricsTextEntry.getValue());
             warn(newSong.getMessage());
-            newSong.setCurrentChordSectionLocation(song.getCurrentChordSectionLocation());
+            //  worry about the location spec changing after parsing above
+            newSong.setCurrentChordSectionLocation(newSong.getChordSectionLocation(
+                    song.getGridCoordinate(song.getCurrentChordSectionLocation())));
         } catch (ParseException pe) {
             error(pe.getMessage());
             displaySong();

@@ -16,9 +16,9 @@
                             <g:SimpleLayoutPanel ui:field="songList"/>
                         </g:tab>
                         <g:tab>
-                            <g:header size='3'>Lyrics &amp; Chords</g:header>
+                            <g:header size='3'>Player</g:header>
                             <g:ResizeLayoutPanel>
-                                <g:SplitLayoutPanel ui:field="lyricsAndChords"/>
+                                <g:DockLayoutPanel ui:field="player"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
@@ -30,9 +30,9 @@
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>
-                            <g:header size='3'>Player</g:header>
+                            <g:header size='3'>Lyrics &amp; Chords</g:header>
                             <g:ResizeLayoutPanel>
-                                <g:DockLayoutPanel ui:field="player"/>
+                                <g:SplitLayoutPanel ui:field="lyricsAndChords"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
                         <g:tab>

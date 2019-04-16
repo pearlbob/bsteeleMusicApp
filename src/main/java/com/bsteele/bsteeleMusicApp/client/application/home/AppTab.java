@@ -4,9 +4,9 @@ public enum AppTab {
         // fixme: very weak tab selection mechanism!
         //  maintain order!
         songs,
-        lyricsAndChords,
-        edit,
         player,
+        edit,
+        lyricsAndChords,
         bass,
         singer,
         drums,
