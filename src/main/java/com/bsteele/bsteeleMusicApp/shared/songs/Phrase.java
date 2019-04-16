@@ -48,7 +48,7 @@ public class Phrase extends MeasureNode {
         for (int i = 0; i < 1e3; i++) {   //  safety
             Util.stripLeadingSpaces(markedString);
             if (markedString.isEmpty())
-                throw new ParseException("no data to parse", 0);
+                break;
 
             try {
                 measures.add(Measure.parse(markedString, beatsPerBar));
@@ -65,6 +65,9 @@ public class Phrase extends MeasureNode {
             }
             throw new ParseException("Phrase not understood: " + markedString.toString(), 0);
         }
+
+        if (measures.isEmpty())
+            throw new ParseException("no measures found to parse", 0);
 
         return new Phrase(measures, phraseIndex);
     }

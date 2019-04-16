@@ -37,6 +37,10 @@ public class SectionVersion implements Comparable<SectionVersion> {
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
+    public static final SectionVersion getDefault() {
+        return new SectionVersion(Section.verse);
+    }
+
     public static final SectionVersion parse(String s) throws ParseException {
         return parse(new MarkedString(s));
     }

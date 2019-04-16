@@ -21,14 +21,18 @@ import java.util.logging.Logger;
  * User: bob
  */
 public class ChordSection extends MeasureNode implements Comparable<ChordSection> {
-    public ChordSection(@Nonnull SectionVersion sectionVersion, ArrayList<Phrase> measureSequenceItems) {
+    public ChordSection(@Nonnull SectionVersion sectionVersion, ArrayList<Phrase> phrases) {
         this.sectionVersion = sectionVersion;
-        this.phrases = (measureSequenceItems != null ? measureSequenceItems : new ArrayList<>());
+        this.phrases = (phrases != null ? phrases : new ArrayList<>());
     }
 
     public ChordSection(SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
         this.phrases = new ArrayList<>();
+    }
+
+    public static final ChordSection getDefault() {
+        return new ChordSection(SectionVersion.getDefault(), null);
     }
 
     @Override
