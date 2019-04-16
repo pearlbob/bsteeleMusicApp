@@ -6,6 +6,7 @@ import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import javax.annotation.Nonnull;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -14,8 +15,8 @@ import java.util.logging.Logger;
  * User: bob
  */
 public class Phrase extends MeasureNode {
-    public Phrase(@Nonnull ArrayList<Measure> measures, int phraseIndex) {
-        this.measures = measures;
+    public Phrase(@Nonnull List<Measure> measures, int phraseIndex) {
+        this.measures = (measures == null ? new ArrayList<>() : new ArrayList<>(measures));
         this.phraseIndex = phraseIndex;
     }
 

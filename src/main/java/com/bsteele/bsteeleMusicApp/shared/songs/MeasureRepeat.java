@@ -9,6 +9,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import javax.annotation.Nonnull;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class MeasureRepeat extends Phrase {
 
-    MeasureRepeat(@Nonnull ArrayList<Measure> measures, int phraseIndex, int repeats) {
+    MeasureRepeat(@Nonnull List<Measure> measures, int phraseIndex, int repeats) {
         super(measures, phraseIndex);
         this.repeatMarker = new MeasureRepeatMarker(repeats);
     }

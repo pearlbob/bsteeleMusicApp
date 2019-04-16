@@ -326,6 +326,59 @@ public class SongEditTest extends TestCase {
 
             //   current type	current edit loc	entry	replace entry	new edit type	new edit loc	result
             logger.fine("repeat  append  repeat    replace  repeat  replace repeat");
+            //  x1 repeat should be converted to phrase
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "i: A B C D V: [D E F F#]x3 c: D C G G",
+                    "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
+            logger.finer(a.toMarkup());
+            location = new ChordSectionLocation(v,0);
+            a.setCurrentChordSectionLocation(location);
+            a.setCurrentMeasureEditType(MeasureEditType.replace);
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
+                    + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            newRepeat = MeasureRepeat.parse("[ A D C D ] x1", 0, beatsPerBar);
+            assertTrue(a.edit(newRepeat));
+            logger.fine(a.toMarkup());
+            assertEquals("I: A B C D  V: A D C D  C: D C G G", a.toMarkup().trim());
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            assertEquals(ChordSectionLocation.parse("V:0"), a.getCurrentChordSectionLocation());
+
+            //  empty x1 repeat appended should be convert repeat to phrase
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "i: A B C D V: [D E F F#]x3 c: D C G G",
+                    "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
+            logger.finer(a.toMarkup());
+            location = new ChordSectionLocation(v,0);
+            a.setCurrentChordSectionLocation(location);
+            a.setCurrentMeasureEditType(MeasureEditType.append);
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
+                    + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            newRepeat = MeasureRepeat.parse("[] x1", 0, beatsPerBar);
+            assertTrue(a.edit(newRepeat));
+            logger.fine(a.toMarkup());
+            assertEquals("I: A B C D  V: D E F F♯  C: D C G G", a.toMarkup().trim());
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            assertEquals(ChordSectionLocation.parse("V:0"), a.getCurrentChordSectionLocation());
+
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, 4, 4,
+                    "i: A B C D V: [D E F F#]x3 c: D C G G",
+                    "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
+            logger.finer(a.toMarkup());
+            location = new ChordSectionLocation(v,0);
+            a.setCurrentChordSectionLocation(location);
+            a.setCurrentMeasureEditType(MeasureEditType.replace);
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
+                    + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            newRepeat = MeasureRepeat.parse("[ A D C D ] x4", 0, beatsPerBar);
+            assertTrue(a.edit(newRepeat));
+            logger.fine(a.toMarkup());
+            assertEquals("I: A B C D  V: [A D C D ] x4  C: D C G G", a.toMarkup().trim());
+            logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
+            assertEquals(ChordSectionLocation.parse("V:0"), a.getCurrentChordSectionLocation());
+
             logger.fine("phrase  append  repeat    replace  repeat  append repeat");
 
             logger.fine("measure  append  repeat    replace  repeat  append repeat");

@@ -52,5 +52,4 @@ public class GridCoordinate implements Comparable<GridCoordinate> {
 
     private final int row;
     private final int col;
-
 }

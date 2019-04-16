@@ -203,7 +203,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         }
 
         try {
-            phrases.add(index + 1, newPhrase);
+            phrases.add(index, newPhrase);
         } catch (IndexOutOfBoundsException ex) {
             phrases.add(newPhrase);   //  default to the end!
         }
@@ -494,7 +494,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sectionVersion;
     }
 
-    final ArrayList<Phrase> getPhrases() {
+    public final ArrayList<Phrase> getPhrases() {
         return phrases;
     }
 

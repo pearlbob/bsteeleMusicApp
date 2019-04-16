@@ -691,7 +691,9 @@ public class SongEditView
         for (MeasureNode measureNode : measureNodes) {
             logger.info("m: " + measureNode.toMarkup());
             if (song.edit(measureNode)) {
+                addRecentMeasureNode(measureNode);
                 undoStackPushSong();
+                findMostCommonScaleChords();
                 updateCurrentChordEditLocation();
             }
         }
@@ -1080,6 +1082,30 @@ public class SongEditView
         processChordEntry(name);
     }
 
+    private void addRecentMeasureNode(MeasureNode measureNode) {
+        if (measureNode == null)
+            return;
+
+        switch (measureNode.getMeasureNodeType()) {
+            case comment:
+            case decoration:
+                break;
+            case measure:
+                addRecentMeasure((Measure) measureNode);
+                break;
+            case repeat:
+            case phrase:
+                for (Measure measure : ((Phrase) measureNode).getMeasures())
+                    addRecentMeasure(measure);
+                break;
+            case section:
+                for (Phrase phrase : ((ChordSection) measureNode).getPhrases())
+                    for (Measure measure : phrase.getMeasures())
+                        addRecentMeasure(measure);
+                break;
+        }
+    }
+
     private void addRecentMeasure(Measure measure) {
         if (recentMeasures.contains(measure))
             return; //  leave well enough alone
@@ -1143,9 +1169,17 @@ public class SongEditView
         };
 
         HashMap<Measure, Integer> measureMap = new HashMap<>();
-        for (SongMoment songMoment : song.getSongMoments()) {
-            Measure m = songMoment.getMeasure();
-            measureMap.put(m, (measureMap.containsKey(m) ? measureMap.get(m).intValue() : 0) + 1);
+        {
+            Measure measure;
+            for (SongMoment songMoment : song.getSongMoments()) {
+                MeasureNode measureNode = song.findMeasureNode(songMoment.getChordSectionLocation());
+                switch (measureNode.getMeasureNodeType()) {
+                    case measure:
+                        measure = (Measure) measureNode;
+                        measureMap.put(measure, (measureMap.containsKey(measure) ? measureMap.get(measure).intValue() : 0) + 1);
+                        break;
+                }
+            }
         }
 
         TreeSet<MeasureCountItem> MeasureCountItems = new TreeSet<>();

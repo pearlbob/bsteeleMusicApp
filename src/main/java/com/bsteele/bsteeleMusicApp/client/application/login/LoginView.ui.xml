@@ -18,7 +18,7 @@
                     Password:
                 </td>
                 <td>
-                    <g:PasswordTextBox ui:field="password"/>
+                    <g:TextBox ui:field="password">No password required yet!</g:TextBox>
                 </td>
             </tr>
         </table>

@@ -15,14 +15,16 @@ public class LyricsLine {
 
     /**
      * A convenience constructor to build a typical lyrics line.
+     *
      * @param lyrics the lyrics to be sung over this lyrics line
      */
-    public LyricsLine(String lyrics){
+    public LyricsLine(String lyrics) {
         setLyrics(lyrics);
     }
 
     /**
      * The lyrics to be sung over this measure.
+     *
      * @return the lyrics
      */
     public String getLyrics() {
@@ -31,10 +33,11 @@ public class LyricsLine {
 
     /**
      * The lyrics to be sung over this measure.
+     *
      * @param lyrics the lyrics
      */
     public void setLyrics(String lyrics) {
-        this.lyrics = lyrics;
+        this.lyrics = (lyrics == null ? "" : lyrics);
     }
 
     private String lyrics;
