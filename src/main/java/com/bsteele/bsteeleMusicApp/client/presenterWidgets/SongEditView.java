@@ -689,7 +689,6 @@ public class SongEditView
 
         ArrayList<MeasureNode> measureNodes = SongBase.parseChordEntry(input, song.getBeatsPerBar());
         for (MeasureNode measureNode : measureNodes) {
-            logger.fine("m: " + measureNode.toMarkup());
             if (song.edit(measureNode)) {
                 addRecentMeasureNode(measureNode);
                 undoStackPushSong();
@@ -794,7 +793,7 @@ public class SongEditView
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
         displaySong();
-        setCurrentMeasureEditType(MeasureEditType.append);
+        updateCurrentChordEditLocation();
 
         ChordSectionLocation chordSectionLocation = song.getCurrentChordSectionLocation();
 

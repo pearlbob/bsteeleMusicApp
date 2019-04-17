@@ -196,12 +196,22 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean add( ArrayList<Measure> newMeasures){
-        if ( newMeasures == null || newMeasures.isEmpty())
+    boolean add(ArrayList<Measure> newMeasures) {
+        if (newMeasures == null || newMeasures.isEmpty())
             return false;
-        if ( measures == null )
+        if (measures == null)
             measures = new ArrayList<Measure>();
         measures.addAll(newMeasures);
+        return true;
+    }
+
+    boolean add(int index, ArrayList<Measure> newMeasures) {
+        if (newMeasures == null || newMeasures.isEmpty())
+            return false;
+        if (measures == null)
+            measures = new ArrayList<Measure>();
+        index = Math.min(index, measures.size() - 1);
+        measures.addAll(index, newMeasures);
         return true;
     }
 
@@ -235,8 +245,6 @@ public class Phrase extends MeasureNode {
     }
 
     boolean edit(MeasureEditType type, int index, MeasureNode newMeasureNode) {
-        Measure newMeasure = null;
-
         if (newMeasureNode == null) {
             switch (type) {
                 case delete:
@@ -247,15 +255,14 @@ public class Phrase extends MeasureNode {
         } else {
             //  reject wrong node type
             switch (newMeasureNode.getMeasureNodeType()) {
+                case phrase:    //  multiple measures
                 case comment:
                 case measure:
                     break;
+                //  repeats not allowed!
                 default:
                     return false;
             }
-
-            //  correct the type
-            newMeasure = (Measure) newMeasureNode;
         }
 
         //  assure measures are ready
@@ -272,7 +279,10 @@ public class Phrase extends MeasureNode {
 
                 //  index doesn't matter
                 if (measures.isEmpty()) {
-                    measures.add(newMeasure);
+                    if (newMeasureNode.isSingleItem())
+                        measures.add((Measure) newMeasureNode);
+                    else
+                        measures.addAll(((Phrase) newMeasureNode).getMeasures());
                     return true;
                 }
                 break;
@@ -280,34 +290,57 @@ public class Phrase extends MeasureNode {
                 return false;
         }
 
+        //  edit by type
         switch (type) {
             case delete:
                 try {
                     measures.remove(index);
+                    //  note: newMeasureNode is ignored
                 } catch (IndexOutOfBoundsException ex) {
                     return false;
                 }
                 break;
             case insert:
                 try {
-                    measures.add(index, newMeasure);
+                    if (newMeasureNode.isSingleItem())
+                        measures.add(index, (Measure) newMeasureNode);
+                    else
+                        measures.addAll(index, ((Phrase) newMeasureNode).getMeasures());
                 } catch (IndexOutOfBoundsException ex) {
-                    measures.add(newMeasure);   //  default to the end!
+                    //  default to the end!
+                    if (newMeasureNode.isSingleItem())
+                        measures.add((Measure) newMeasureNode);
+                    else
+                        measures.addAll(((Phrase) newMeasureNode).getMeasures());
                 }
                 break;
             case append:
                 try {
-                    measures.add(index + 1, newMeasure);
+                    if (newMeasureNode.isSingleItem())
+                        measures.add(index + 1, (Measure) newMeasureNode);
+                    else
+                        measures.addAll(index + 1, ((Phrase) newMeasureNode).getMeasures());
                 } catch (IndexOutOfBoundsException ex) {
-                    measures.add(newMeasure);   //  default to the end!
+                    //  default to the end!
+                    if (newMeasureNode.isSingleItem())
+                        measures.add((Measure) newMeasureNode);
+                    else
+                        measures.addAll(((Phrase) newMeasureNode).getMeasures());
                 }
                 break;
             case replace:
                 try {
                     measures.remove(index);
-                    measures.add(index, newMeasure);
+                    if (newMeasureNode.isSingleItem())
+                        measures.add(index, (Measure) newMeasureNode);
+                    else
+                        measures.addAll(index, ((Phrase) newMeasureNode).getMeasures());
                 } catch (IndexOutOfBoundsException ex) {
-                    measures.add(newMeasure);   //  default to the end!
+                    //  default to the end!
+                    if (newMeasureNode.isSingleItem())
+                        measures.add((Measure) newMeasureNode);
+                    else
+                        measures.addAll(((Phrase) newMeasureNode).getMeasures());
                 }
                 break;
             default:

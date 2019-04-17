@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import javax.validation.constraints.NotNull;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class SongEditTest extends TestCase {
@@ -21,6 +22,19 @@ public class SongEditTest extends TestCase {
             MeasureRepeat newRepeat;
             Phrase newPhrase;
             Measure newMeasure;
+
+            //  append into the middle
+            startingChords("V: C Dm C C F F C C G F C G  ");
+            pre(MeasureEditType.append, "V:0:1", "Dm", "Em ");
+            resultChords("V: C Dm Em C C F F C C G F C G  ");
+            post(MeasureEditType.append, "V:0:2", "Em");
+
+            //  replace second measure
+            startingChords("V: C F C C F F C C G F C G  ");  //
+            pre(MeasureEditType.replace, "V:0:1", "F", "Dm ");  //
+            resultChords("V: C Dm C C F F C C G F C G  ");  //
+            post(MeasureEditType.append, "V:0:1", "Dm");  //
+
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, 4, 4,
@@ -69,7 +83,7 @@ public class SongEditTest extends TestCase {
                     "i: A B C D V: D E F F# c: D C G G",
                     "i:\nv: bob, bob, bob berand\nc: nope nope");
             logger.finer(a.toMarkup());
-            location =  ChordSectionLocation.parse("i:0:3");
+            location = ChordSectionLocation.parse("i:0:3");
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.append);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -87,7 +101,7 @@ public class SongEditTest extends TestCase {
                     "V: C F C C [GB F C Dm7 ] x4 G F C G  ",
                     "v: bob, bob, bob berand");
             logger.finer(a.toMarkup());
-            location =  ChordSectionLocation.parse("v:1");
+            location = ChordSectionLocation.parse("v:1");
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.replace);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -357,7 +371,7 @@ public class SongEditTest extends TestCase {
             a.setCurrentChordSectionLocation(location);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
                     + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
-                assertTrue(a.deleteCurrentChordSectionLocation());
+            assertTrue(a.deleteCurrentChordSectionLocation());
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: D E F F♯  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
@@ -422,7 +436,7 @@ public class SongEditTest extends TestCase {
                     "i: A B C D V: [D E F F#]x3 c: D C G G",
                     "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
             logger.finer(a.toMarkup());
-            location = new ChordSectionLocation(v,0);
+            location = new ChordSectionLocation(v, 0);
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.replace);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -440,7 +454,7 @@ public class SongEditTest extends TestCase {
                     "i: A B C D V: [D E F F#]x3 c: D C G G",
                     "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
             logger.finer(a.toMarkup());
-            location = new ChordSectionLocation(v,0);
+            location = new ChordSectionLocation(v, 0);
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.append);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -457,7 +471,7 @@ public class SongEditTest extends TestCase {
                     "i: A B C D V: [D E F F#]x3 c: D C G G",
                     "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
             logger.finer(a.toMarkup());
-            location = new ChordSectionLocation(v,0);
+            location = new ChordSectionLocation(v, 0);
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.replace);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -478,7 +492,7 @@ public class SongEditTest extends TestCase {
                     "i: A B C D V: D E F F# c: D C G G",
                     "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
             logger.finer(a.toMarkup());
-            location =  ChordSectionLocation.parse("v:0:3");
+            location = ChordSectionLocation.parse("v:0:3");
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.append);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -495,7 +509,7 @@ public class SongEditTest extends TestCase {
                     "i: A B C D V: D E F F# c: D C G G",
                     "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
             logger.finer(a.toMarkup());
-            location =  ChordSectionLocation.parse("v:0:3");
+            location = ChordSectionLocation.parse("v:0:3");
             a.setCurrentChordSectionLocation(location);
             a.setCurrentMeasureEditType(MeasureEditType.append);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
@@ -620,6 +634,41 @@ public class SongEditTest extends TestCase {
         } catch (ParseException pex) {
             pex.printStackTrace();
         }
+    }
+
+
+    private final void startingChords(String chords) {
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4,
+                chords,
+                "i:\nv: bob, bob, bob berand\nc: sing chorus here \no: last line of outro");
+    }
+
+    private final void pre(MeasureEditType type, String locationString, String measureNodeString, String editEntry) {
+        a.setCurrentMeasureEditType(type);
+        try {
+            a.setCurrentChordSectionLocation(ChordSectionLocation.parse(locationString));
+        } catch (ParseException pe) {
+            fail(pe.getMessage());
+        }
+        assertEquals(locationString, a.getCurrentChordSectionLocation().toString());
+        assertEquals(measureNodeString, a.getCurrentMeasureNode().toString());
+        logger.fine("editEntry: " + editEntry);
+        ArrayList<MeasureNode> measureNodes = SongBase.parseChordEntry(editEntry, a.getBeatsPerBar());
+        for (MeasureNode measureNode : measureNodes) {
+            logger.finer("edit: " + measureNode.toMarkup());
+            assertTrue(a.edit(measureNode));
+        }
+    }
+
+    private final void resultChords(String chords) {
+        assertEquals(chords, a.toMarkup());
+    }
+
+    private final void post(MeasureEditType type, String locationString, String measureNodeString) {
+        assertEquals(type, a.getCurrentMeasureEditType());
+        assertEquals(locationString, a.getCurrentChordSectionLocation().toString());
+        assertEquals(measureNodeString, a.getCurrentMeasureNode().toMarkup());
     }
 
 
