@@ -1016,6 +1016,7 @@ public class SongEditView
             //  worry about the location spec changing after parsing above
             newSong.setCurrentChordSectionLocation(newSong.getChordSectionLocation(
                     song.getGridCoordinate(song.getCurrentChordSectionLocation())));
+            newSong.setCurrentMeasureEditType(song.getCurrentMeasureEditType());
         } catch (ParseException pe) {
             error(pe.getMessage());
             displaySong();

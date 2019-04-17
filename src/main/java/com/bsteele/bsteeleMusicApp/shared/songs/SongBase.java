@@ -884,6 +884,46 @@ public class SongBase {
                         newLocation = new ChordSectionLocation(chordSection.getSectionVersion(),
                                 phrase.getPhraseIndex(), phrase.getMeasures().size() + newPhrase.size() - 1);
                         return standardEditCleanup(phrase.add(newPhrase.getMeasures()), newLocation);
+
+                    case insert:
+                        if (location == null) {
+                            if (chordSection.getPhraseCount() == 0) {
+                                //  append as first phrase
+                                location = new ChordSectionLocation(chordSection.getSectionVersion(), 0, newPhrase.size() - 1);
+                                newPhrase.setPhraseIndex(phaseIndex);
+                                return standardEditCleanup(chordSection.add(phaseIndex, newPhrase), location);
+                            }
+
+                            //  first of section
+                            Phrase firstPhrase = chordSection.getPhrase(0);
+                            switch (firstPhrase.getMeasureNodeType()) {
+                                case phrase:
+                                    location = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                            firstPhrase.getPhraseIndex(), 0);
+                                    return standardEditCleanup(firstPhrase.add(newPhrase.getMeasures()), location);
+                            }
+
+                            phaseIndex = 0;
+                            location = new ChordSectionLocation(chordSection.getSectionVersion(), phaseIndex, firstPhrase.size());
+                            newPhrase.setPhraseIndex(phaseIndex);
+                            return standardEditCleanup(chordSection.add(phaseIndex, newPhrase), location);
+                        }
+                        if (chordSection.isEmpty()) {
+                            location = new ChordSectionLocation(chordSection.getSectionVersion(), phaseIndex, newPhrase.size() - 1);
+                            newPhrase.setPhraseIndex(phaseIndex);
+                            return standardEditCleanup(chordSection.add(phaseIndex, newPhrase), location);
+                        }
+
+                        if (location.hasMeasureIndex()) {
+                            newLocation = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                    phrase.getPhraseIndex(), location.getMeasureIndex() + newPhrase.size()-1);
+                            return standardEditCleanup(phrase.edit(editType, location.getMeasureIndex(), newPhrase), newLocation);
+                        }
+
+                        //  insert new phrase in front of existing phrase
+                        newLocation = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                phrase.getPhraseIndex(), newPhrase.size() - 1);
+                        return standardEditCleanup(phrase.add(0, newPhrase.getMeasures()), newLocation);
                     case replace:
                         if (location != null) {
                             if (location.hasPhraseIndex()) {
@@ -893,14 +933,17 @@ public class SongBase {
                                     return standardEditCleanup(phrase.edit(
                                             editType, location.getMeasureIndex(), newPhrase), location);
                                 }
+                                //  delete the phrase before replacing it
+                                location = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                        location.getPhraseIndex(), newPhrase.getMeasures().size() - 1);
+                                return standardEditCleanup(chordSection.deletePhrase(newPhrase.getPhraseIndex())
+                                        && chordSection.add(newPhrase.getPhraseIndex(), newPhrase), location);
                             }
                             break;
                         }
                         phaseIndex = (location != null && location.hasPhraseIndex() ? location.getPhraseIndex() : 0);
                         break;
                     default:
-
-
                         phaseIndex = (location != null && location.hasPhraseIndex() ? location.getPhraseIndex() : 0);
                         break;
                 }
@@ -1063,6 +1106,7 @@ public class SongBase {
             setCurrentChordSectionLocation(location);
 
             switch (getCurrentMeasureEditType()) {
+                case replace:
                 case delete:
                     break;
                 default:

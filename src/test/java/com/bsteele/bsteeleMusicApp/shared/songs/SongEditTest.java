@@ -23,6 +23,17 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+            startingChords("V: C F C C F F C C [G F C G ] x4  ");
+            pre(MeasureEditType.replace, "V:1", "[G F C G ] x4 ", "B ");
+            resultChords("V: A C F C C F F C C B  ");
+            post(MeasureEditType.replace, "V:0:9", "B");
+
+            //  insert into a repeat
+            startingChords("V: [C F C C ] x2 F F C C G F C G  ");
+            pre(MeasureEditType.insert, "V:0:1", "F", "Dm ");
+            resultChords("V: [C Dm F C C ] x2 F F C C G F C G  ");
+            post(MeasureEditType.append, "V:0:1", "Dm");
+
             //  append into the middle
             startingChords("V: C Dm C C F F C C G F C G  ");
             pre(MeasureEditType.append, "V:0:1", "Dm", "Em ");
@@ -652,7 +663,7 @@ public class SongEditTest extends TestCase {
             fail(pe.getMessage());
         }
         assertEquals(locationString, a.getCurrentChordSectionLocation().toString());
-        assertEquals(measureNodeString, a.getCurrentMeasureNode().toString());
+        assertEquals(measureNodeString, a.getCurrentMeasureNode().toMarkup());
         logger.fine("editEntry: " + editEntry);
         ArrayList<MeasureNode> measureNodes = SongBase.parseChordEntry(editEntry, a.getBeatsPerBar());
         for (MeasureNode measureNode : measureNodes) {
