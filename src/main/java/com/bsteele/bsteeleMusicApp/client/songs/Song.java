@@ -162,6 +162,7 @@ public class Song extends SongBase implements Comparable<Song> {
      *
      * @param jsonObject the json object to parse
      * @return the song. Can be null.
+     * @throws ParseException thrown if parsing fails
      */
     public static final Song fromJsonObject(JSONObject jsonObject)
             throws ParseException {

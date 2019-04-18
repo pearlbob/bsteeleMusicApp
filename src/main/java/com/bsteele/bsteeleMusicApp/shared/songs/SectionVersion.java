@@ -54,6 +54,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
      *
      * @param markedString the string to parse
      * @return the length of the parse. Zero if no parse
+     * @throws ParseException thrown if parsing fails
      */
      static final SectionVersion parse(MarkedString markedString) throws ParseException {
         if (markedString == null)

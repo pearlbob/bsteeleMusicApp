@@ -55,7 +55,7 @@ public class MarkedString {
      *
      * @param i character location
      * @return character at index plus location specified
-     * @throws IndexOutOfBoundsException
+     * @throws IndexOutOfBoundsException if the index is too small or too large
      */
     public final char charAt(int i) throws IndexOutOfBoundsException {
         return string.charAt(index + i);

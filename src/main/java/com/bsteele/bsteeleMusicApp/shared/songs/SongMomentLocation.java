@@ -21,6 +21,7 @@ public class SongMomentLocation {
     /**
      * @param markedString string buffer
      * @return the song moment location parsed
+     * @throws ParseException thrown if parsing fails
      */
     public static final SongMomentLocation parse(MarkedString markedString) throws ParseException  {
 

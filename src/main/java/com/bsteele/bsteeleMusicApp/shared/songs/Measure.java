@@ -58,6 +58,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param s           input string
      * @param beatsPerBar beats per bar
      * @return the measure for the parsing
+     * @throws ParseException thrown if parsing fails
      */
     static final Measure parse(String s, int beatsPerBar) throws ParseException {
         return parse(new MarkedString(s), beatsPerBar, null);
@@ -80,6 +81,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param beatsPerBar  beats per bar
      * @param lastMeasure  the prior measure, in case of -
      * @return the measure for the parsing
+     * @throws ParseException thrown if parsing fails
      */
     static final Measure parse(final MarkedString markedString, final int beatsPerBar, final Measure lastMeasure)
             throws ParseException {

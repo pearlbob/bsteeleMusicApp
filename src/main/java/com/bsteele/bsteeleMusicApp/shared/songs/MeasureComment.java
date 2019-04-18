@@ -42,6 +42,7 @@ public class MeasureComment extends Measure {
      *
      * @param markedString the input line to parse
      * @return the comment made of the input
+     * @throws ParseException thrown if parsing fails
      */
     static final MeasureComment parse(MarkedString markedString) throws ParseException {
         if (markedString == null || markedString.isEmpty())

@@ -234,6 +234,8 @@ public class SongBase {
 
     /**
      * Parse the current string representation of the song's chords into the song internal structures.
+     * @param chords string of chords in markup form
+     * @throws ParseException thrown if parsing fails
      */
     protected final void parseChords(final String chords)
             throws ParseException {
@@ -286,9 +288,9 @@ public class SongBase {
     /**
      * Will always return something, even if errors have to be commented out
      *
-     * @param entry
-     * @param beatsPerBar
-     * @return
+     * @param entry the human generate string entry for chords in markup form
+     * @param beatsPerBar the number of beats per bar in the song.  needed to parse measures correctly
+     * @return a list of measure nodes parsed.  note that individual measures are likely to be strung together as a phrase.
      */
     public final static ArrayList<MeasureNode> parseChordEntry(final String entry, int beatsPerBar) {
         ArrayList<MeasureNode> ret = new ArrayList<>();

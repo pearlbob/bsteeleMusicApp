@@ -85,6 +85,7 @@ public class ChordSectionLocation {
      *
      * @param markedString the given string input
      * @return the chord section location, can be null
+     * @throws ParseException thrown if parsing fails
      */
     static final ChordSectionLocation parse(MarkedString markedString) throws ParseException {
 

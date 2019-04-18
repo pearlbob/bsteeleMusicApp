@@ -76,10 +76,17 @@ jar -xf $finalWar
 #		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
 #	if ( $status != 0 ) exit -1;
 #endif
+pwd
+
 rm -rf WEB-INF/classes/com/bsteele/bsteeleMusicApp/client
 jar -cfm $finalWar META-INF/MANIFEST.MF *
+
+pwd
+exit -1
+
 cd $cwd
 rm -rf $tmp
+
 
 #	generate app on localhost web
 #	note: with github, it really doesn't need to be in google_drive

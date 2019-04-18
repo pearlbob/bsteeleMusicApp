@@ -134,6 +134,7 @@ public enum ScaleNote {
      *
      * @param markedString string buffer to be parsed
      * @return ScaleNote represented by the string.  Can be null.
+     * @throws ParseException thrown if parsing fails
      */
      final static ScaleNote parse(MarkedString markedString)
     throws ParseException
