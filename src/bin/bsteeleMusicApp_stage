@@ -62,7 +62,7 @@ if ( $stat != 0 ) then
 endif
 
 #	generate javadoc
-mvn javadoc:aggregate
+echo mvn javadoc:aggregate
 
 
 #	strip the client classes from the war
@@ -78,7 +78,7 @@ jar -xf $finalWar
 #endif
 pwd
 
-rm -rf WEB-INF/classes/com/bsteele/bsteeleMusicApp/client
+rm -rf WEB-INF/classes
 jar -cfm $finalWar META-INF/MANIFEST.MF *
 
 pwd
