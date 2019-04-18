@@ -369,6 +369,7 @@ public class SongEditView
             setCurrentMeasureEditType(MeasureEditType.append);
             if (cell != null && song != null)
                 selectChordCell(cell.getRowIndex(), cell.getCellIndex());
+            updateCurrentChordEditLocation();
         });
         chordsFlexTable.addDoubleClickHandler(doubleClickEvent -> {
             logger.fine("doubleClick");
@@ -687,7 +688,7 @@ public class SongEditView
         if (input.isEmpty())
             return false;
 
-        ArrayList<MeasureNode> measureNodes = SongBase.parseChordEntry(input, song.getBeatsPerBar());
+        ArrayList<MeasureNode> measureNodes = song.parseChordEntry(input);
         for (MeasureNode measureNode : measureNodes) {
             if (song.edit(measureNode)) {
                 addRecentMeasureNode(measureNode);
@@ -1110,8 +1111,14 @@ public class SongEditView
     }
 
     private void addRecentMeasure(Measure measure) {
-        if (recentMeasures.contains(measure))
+        if (measure == null || recentMeasures.contains(measure))
             return; //  leave well enough alone
+
+        switch (measure.getMeasureNodeType()) {
+            case decoration:
+            case comment:
+                return;
+        }
 
         //recentScaleChords.remove(scaleChord);
         final Button recents[] = {
@@ -1312,4 +1319,7 @@ public class SongEditView
     private final EventBus eventBus;    //  is actually used
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
+    static {
+        logger.setLevel(Level.FINEST);
+    }
 }

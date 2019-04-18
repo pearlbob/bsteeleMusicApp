@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -227,7 +228,7 @@ public class MeasureTest extends TestCase {
             {
                 for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
                     Measure m0 = Measure.parse("C", beatsPerBar);
-                    Measure m = Measure.parse("-", beatsPerBar, m0);
+                    Measure m = Measure.parse(new MarkedString("-"), beatsPerBar, m0);
                     assertEquals(beatsPerBar, m.getBeatCount());
                     assertEquals(1, m.getChords().size());
                     assertEquals(m0.getChords(), m.getChords());

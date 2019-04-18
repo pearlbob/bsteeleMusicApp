@@ -76,7 +76,7 @@ jar -xf $finalWar
 #		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
 #	if ( $status != 0 ) exit -1;
 #endif
-rm -rf WEB-INF/classes
+rm -rf WEB-INF/classes/com/bsteele/bsteeleMusicApp/client
 jar -cfm $finalWar META-INF/MANIFEST.MF *
 
 cd $cwd

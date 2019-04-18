@@ -234,6 +234,7 @@ public class SongBase {
 
     /**
      * Parse the current string representation of the song's chords into the song internal structures.
+     *
      * @param chords string of chords in markup form
      * @throws ParseException thrown if parsing fails
      */
@@ -289,10 +290,9 @@ public class SongBase {
      * Will always return something, even if errors have to be commented out
      *
      * @param entry the human generate string entry for chords in markup form
-     * @param beatsPerBar the number of beats per bar in the song.  needed to parse measures correctly
      * @return a list of measure nodes parsed.  note that individual measures are likely to be strung together as a phrase.
      */
-    public final static ArrayList<MeasureNode> parseChordEntry(final String entry, int beatsPerBar) {
+    public final ArrayList<MeasureNode> parseChordEntry(final String entry) {
         ArrayList<MeasureNode> ret = new ArrayList<>();
 
         if (entry != null) {
@@ -327,7 +327,7 @@ public class SongBase {
                     markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(MeasureRepeat.parse(markedString, phaseIndex, beatsPerBar));
+                    ret.add(MeasureRepeat.parse(markedString, phaseIndex, beatsPerBar, null));
                     phaseIndex++;
                     continue;
                 } catch (ParseException pex) {
@@ -341,7 +341,7 @@ public class SongBase {
                     markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(Measure.parse(markedString, beatsPerBar));
+                    ret.add(Measure.parse(markedString, beatsPerBar, getCurrentChordSectionLocationPriorMeasure()));
                     continue;
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
@@ -918,7 +918,7 @@ public class SongBase {
 
                         if (location.hasMeasureIndex()) {
                             newLocation = new ChordSectionLocation(chordSection.getSectionVersion(),
-                                    phrase.getPhraseIndex(), location.getMeasureIndex() + newPhrase.size()-1);
+                                    phrase.getPhraseIndex(), location.getMeasureIndex() + newPhrase.size() - 1);
                             return standardEditCleanup(phrase.edit(editType, location.getMeasureIndex(), newPhrase), newLocation);
                         }
 
@@ -936,10 +936,11 @@ public class SongBase {
                                             editType, location.getMeasureIndex(), newPhrase), location);
                                 }
                                 //  delete the phrase before replacing it
+                                phaseIndex = location.getPhraseIndex();
                                 location = new ChordSectionLocation(chordSection.getSectionVersion(),
-                                        location.getPhraseIndex(), newPhrase.getMeasures().size() - 1);
-                                return standardEditCleanup(chordSection.deletePhrase(newPhrase.getPhraseIndex())
-                                        && chordSection.add(newPhrase.getPhraseIndex(), newPhrase), location);
+                                        phaseIndex, newPhrase.getMeasures().size() - 1);
+                                return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
+                                        && chordSection.add(phaseIndex, newPhrase), location);
                             }
                             break;
                         }
@@ -1207,8 +1208,7 @@ public class SongBase {
         return chordSectionMap.get(sectionVersion);   //  get not type safe!!!!
     }
 
-    @Deprecated
-    public final Measure findMeasure(ChordSectionLocation chordSectionLocation) {
+    private final Measure findMeasure(ChordSectionLocation chordSectionLocation) {
         try {
             return chordSectionMap.get(chordSectionLocation.getSectionVersion())
                     .getPhrase(chordSectionLocation.getPhraseIndex())
@@ -1218,15 +1218,31 @@ public class SongBase {
         }
     }
 
-    @Deprecated
-    public final Measure findMeasure(GridCoordinate coordinate) {
+    private final Measure findMeasure(GridCoordinate coordinate) {
         calcChordMaps();
         return findMeasure(gridCoordinateChordSectionLocationMap.get(coordinate));
     }
 
-    @Deprecated
-    final Measure getCurrentMeasure() {
+    private final Measure getCurrentMeasure() {
         return findMeasure(currentChordSectionLocation);
+    }
+
+    private final Measure getCurrentChordSectionLocationPriorMeasure() {
+        ChordSectionLocation location = getCurrentChordSectionLocation();
+        if (location.hasMeasureIndex()) {
+            int index = location.getMeasureIndex();
+            if (index > 0) {
+                location = new ChordSectionLocation(location.getSectionVersion(), location.getPhraseIndex(), index - 1);
+                MeasureNode measureNode = findMeasureNode(location);
+                if (measureNode != null) {
+                    switch (measureNode.getMeasureNodeType()) {
+                        case measure:
+                            return (Measure) measureNode;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     public final MeasureNode findMeasureNode(GridCoordinate coordinate) {

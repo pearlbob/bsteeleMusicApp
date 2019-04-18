@@ -120,16 +120,16 @@ public class ChordSectionLocationTest {
             //  no Ch2:
             section = Section.chorus;
             sectionVersion = new SectionVersion(section, v);
-            assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 0)));
+            assertNull(a.findMeasureNode(new ChordSectionLocation(sectionVersion, 0, 0)));
 
             sectionVersion = new SectionVersion(section, 0);
             assertEquals(Measure.parse("F", beatsPerBar),
-                    a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 0)));
+                    a.findMeasureNode(new ChordSectionLocation(sectionVersion, 0, 0)));
 
             sectionVersion = new SectionVersion(Section.outro);
             assertEquals(Measure.parse("B", beatsPerBar),
-                    a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 4)));
-            assertNull(a.findMeasure(new ChordSectionLocation(sectionVersion, 0, 5)));
+                    a.findMeasureNode(new ChordSectionLocation(sectionVersion, 0, 4)));
+            assertNull(a.findMeasureNode(new ChordSectionLocation(sectionVersion, 0, 5)));
         }
         catch (ParseException pex){
             logger.info("unexpected parse error: "+pex.getMessage());

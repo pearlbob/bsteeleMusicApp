@@ -5,6 +5,8 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
 /**
+ * A pitch for a duration.
+ *
  * @author bob
  */
 public class Note {

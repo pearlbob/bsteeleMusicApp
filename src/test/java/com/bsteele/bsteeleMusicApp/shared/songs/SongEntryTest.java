@@ -87,48 +87,60 @@ public class SongEntryTest
     public void testParseEntry() {
         ArrayList<MeasureNode> measureNodes;
         MeasureNode measureNode;
+        MeasureRepeat measureRepeat;
+        Phrase phrase;
+        Measure measure;
         int beatsPerBar = 4;
+
+        SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
+                "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
 
         try {
             //  single measure
-            measureNodes = SongBase.parseChordEntry("A", beatsPerBar);
+            measureNodes = a.parseChordEntry("A");
             assertEquals(1, measureNodes.size());
-            assertEquals(Measure.parse("A", beatsPerBar), measureNodes.get(0));
+            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(Phrase.parse("A",0, beatsPerBar),phrase);
 
             //  short measure
-            measureNodes = SongBase.parseChordEntry("G G. Bm", beatsPerBar);
-            assertEquals(3, measureNodes.size());
-            assertEquals(Measure.parse("G", beatsPerBar), measureNodes.get(0));
-            assertEquals("G.", measureNodes.get(1).toMarkup());
-            assertEquals("Bm", measureNodes.get(2).toMarkup());
+            measureNodes = a.parseChordEntry("G G. Bm");
+            assertEquals(1, measureNodes.size());
+            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(Measure.parse("G", beatsPerBar), phrase.getMeasure(0));
+            assertEquals("G.", phrase.getMeasure(1).toMarkup());
+            assertEquals("Bm", phrase.getMeasure(2).toMarkup());
 
             //  chord section
-            measureNodes = SongBase.parseChordEntry("v:A", beatsPerBar);
+            measureNodes = a.parseChordEntry("v:A");
             assertEquals(1, measureNodes.size());
             measureNode = measureNodes.get(0);
             assertEquals(MeasureNode.MeasureNodeType.section, measureNode.getMeasureNodeType());
             assertEquals(ChordSection.parse("v:A", beatsPerBar), measureNodes.get(0));
 
             //  phrase
-            measureNodes = SongBase.parseChordEntry("A B Cm7", beatsPerBar);
-            assertEquals(3, measureNodes.size());
-            measureNode = measureNodes.get(0);
-            assertEquals(MeasureNode.MeasureNodeType.measure, measureNode.getMeasureNodeType());
-            assertEquals(Measure.parse("A", beatsPerBar), measureNodes.get(0));
-            assertEquals(Measure.parse("Cm7", beatsPerBar), measureNodes.get(2));
+            measureNodes = a.parseChordEntry("A B Cm7");
+            assertEquals(1, measureNodes.size());
+            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(Measure.parse("A", beatsPerBar), phrase.getMeasure(0));
+            assertEquals(Measure.parse("Cm7", beatsPerBar), phrase.getMeasure(2));
 
             //  repeat
-            measureNodes = SongBase.parseChordEntry("D Cm7 G E x3", beatsPerBar);
+            measureNodes = a.parseChordEntry("D Cm7 G E x3");
             assertEquals(1, measureNodes.size());
             measureNode = measureNodes.get(0);
             assertEquals(MeasureNode.MeasureNodeType.repeat, measureNode.getMeasureNodeType());
-            MeasureRepeat measureRepeat = (MeasureRepeat) measureNode;
+            measureRepeat = (MeasureRepeat) measureNode;
             assertEquals(Measure.parse("D", beatsPerBar), measureRepeat.getMeasure(0));
             assertEquals(Measure.parse("E", beatsPerBar), measureRepeat.getMeasure(3));
             assertEquals(3, measureRepeat.getRepeats());
 
             //  repeat with short measure
-            measureNodes = SongBase.parseChordEntry("D G G. E x3", beatsPerBar);
+            measureNodes = a.parseChordEntry("D G G. E x3");
             logger.fine(measureNodes.toString());
             assertEquals(1, measureNodes.size());
             measureNode = measureNodes.get(0);
@@ -139,11 +151,14 @@ public class SongEntryTest
             assertEquals(3, measureRepeat.getRepeats());
 
             //  comment
-            measureNodes = SongBase.parseChordEntry("(D Cm7 G E x3)", beatsPerBar);
+            measureNodes = a.parseChordEntry("(D Cm7 G E x3)");
             assertEquals(1, measureNodes.size());
-            measureNode = measureNodes.get(0);
-            assertEquals(MeasureNode.MeasureNodeType.comment, measureNode.getMeasureNodeType());
-            MeasureComment measureComment = (MeasureComment) measureNode;
+            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(1, phrase.size());
+            measure= phrase.getMeasure(0);
+            assertEquals(MeasureNode.MeasureNodeType.comment, measure.getMeasureNodeType());
+            MeasureComment measureComment = (MeasureComment) measure;
             assertEquals("D Cm7 G E x3", measureComment.getComment());
 
         } catch (ParseException pex) {

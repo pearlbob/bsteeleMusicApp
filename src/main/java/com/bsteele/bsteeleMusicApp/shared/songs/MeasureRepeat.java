@@ -24,12 +24,12 @@ public class MeasureRepeat extends Phrase {
         this.repeatMarker = new MeasureRepeatMarker(repeats);
     }
 
-    static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar)
+    static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar, Measure priorMeasure)
             throws ParseException {
-        return parse(new MarkedString(s), phraseIndex, beatsPerBar);
+        return parse(new MarkedString(s), phraseIndex, beatsPerBar,  priorMeasure);
     }
 
-    static final MeasureRepeat parse(MarkedString markedString, int phraseIndex, int beatsPerBar)
+    static final MeasureRepeat parse(MarkedString markedString, int phraseIndex, int beatsPerBar, Measure priorMeasure)
             throws ParseException {
         if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
@@ -72,7 +72,7 @@ public class MeasureRepeat extends Phrase {
 
             int mark = markedString.mark();
             try {
-                Measure measure = Measure.parse(markedString, beatsPerBar);
+                Measure measure = Measure.parse(markedString, beatsPerBar, priorMeasure);
                 measures.add(measure);
                 barFound = false;
                 continue;

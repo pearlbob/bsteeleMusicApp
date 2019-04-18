@@ -17,7 +17,7 @@ public class MeasureRepeatTest {
         try {
             try {
                 //  bad input means this is not a repeat
-                measureRepeat = MeasureRepeat.parse("[A B C D [ x2 E F", 0, 4);
+                measureRepeat = MeasureRepeat.parse("[A B C D [ x2 E F", 0, 4, null);
                 fail();
             } catch (ParseException e) {
                 //  expected
@@ -25,48 +25,48 @@ public class MeasureRepeatTest {
 
             String s = "[A B C D ] x2 ";
             MarkedString markedString = new MarkedString(s);
-            MeasureRepeat refRepeat = MeasureRepeat.parse(markedString, 0, 4);
+            MeasureRepeat refRepeat = MeasureRepeat.parse(markedString, 0, 4, null);
             assertNotNull(refRepeat);
             assertEquals(s, refRepeat.toMarkup());
             assertEquals(0, markedString.available());
 
             s = "[A B C D ] x2 E F";
-            measureRepeat = MeasureRepeat.parse(s, 0, 4);
+            measureRepeat = MeasureRepeat.parse(s, 0, 4, null);
             assertNotNull(measureRepeat);
             assertTrue(s.startsWith(measureRepeat.toMarkup()));
             assertEquals(refRepeat, measureRepeat);
 
             s = "   [   A B   C D ]\nx2 Eb Fmaj7";
-            measureRepeat = MeasureRepeat.parse(s, 0, 4);
+            measureRepeat = MeasureRepeat.parse(s, 0, 4, null);
             assertNotNull(measureRepeat);
             assertEquals(refRepeat, measureRepeat);
 
             s = "A B C D x2 Eb Fmaj7";
-            measureRepeat = MeasureRepeat.parse(s, 0, 4);
+            measureRepeat = MeasureRepeat.parse(s, 0, 4, null);
             assertNotNull(measureRepeat);
             assertEquals(refRepeat, measureRepeat);
 
             //  test without brackets
-            measureRepeat = MeasureRepeat.parse("   A B C D  x2 E F", 0, 4);
+            measureRepeat = MeasureRepeat.parse("   A B C D  x2 E F", 0, 4, null);
             assertNotNull(measureRepeat);
             assertEquals(refRepeat, measureRepeat);
 
             //  test with comment
-            refRepeat = MeasureRepeat.parse("   A B(yo)C D  x2 E F", 0, 4);
+            refRepeat = MeasureRepeat.parse("   A B(yo)C D  x2 E F", 0, 4, null);
             assertNotNull(refRepeat);
             assertEquals("[A B (yo) C D ] x2 ", refRepeat.toMarkup());
 
-            measureRepeat = MeasureRepeat.parse("   A B (yo)|\nC D  x2 E F", 0, 4);
+            measureRepeat = MeasureRepeat.parse("   A B (yo)|\nC D  x2 E F", 0, 4, null);
             assertNotNull(measureRepeat);
             assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
             assertEquals(refRepeat, measureRepeat);
 
-            measureRepeat = MeasureRepeat.parse(" [   A B (yo)|\nC D]x2 E F", 0, 4);
+            measureRepeat = MeasureRepeat.parse(" [   A B (yo)|\nC D]x2 E F", 0, 4, null);
             assertNotNull(measureRepeat);
             assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
             assertEquals(refRepeat, measureRepeat);
 
-            measureRepeat = MeasureRepeat.parse(" [   A B (yo)   C D]x2 E F", 0, 4);
+            measureRepeat = MeasureRepeat.parse(" [   A B (yo)   C D]x2 E F", 0, 4, null);
             assertNotNull(measureRepeat);
             assertEquals("[A B (yo) C D ] x2 ", measureRepeat.toMarkup());
             assertEquals(refRepeat, measureRepeat);

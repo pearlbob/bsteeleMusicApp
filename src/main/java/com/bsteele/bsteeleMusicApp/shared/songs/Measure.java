@@ -69,21 +69,16 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return parse(markedString, beatsPerBar, null);
     }
 
-    static final Measure parse(String s, int beatsPerBar, Measure lastMeasure)
-            throws ParseException {
-        return parse(new MarkedString(s), beatsPerBar, lastMeasure);
-    }
-
     /**
      * Parse a measure from the input string
      *
      * @param markedString input string buffer
      * @param beatsPerBar  beats per bar
-     * @param lastMeasure  the prior measure, in case of -
+     * @param priorMeasure  the prior measure, in case of -
      * @return the measure for the parsing
      * @throws ParseException thrown if parsing fails
      */
-    static final Measure parse(final MarkedString markedString, final int beatsPerBar, final Measure lastMeasure)
+    static final Measure parse(final MarkedString markedString, final int beatsPerBar, final Measure priorMeasure)
             throws ParseException {
         //  should not be white space, even leading, in a measure
 
@@ -115,8 +110,8 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                     break;
                 }
                 //  see if this is a repeat measure
-                if (chords.isEmpty() && markedString.charAt(0) == '-' && lastMeasure != null) {
-                    ret = new Measure(beatsPerBar, lastMeasure.getChords());
+                if (chords.isEmpty() && markedString.charAt(0) == '-' && priorMeasure != null) {
+                    ret = new Measure(beatsPerBar, priorMeasure.getChords());
                     markedString.getNextChar();
                     break;
                 }
