@@ -92,8 +92,6 @@ jar -xf $finalWar
 cp $finalWar .		#	include the war itself so servers can auto update
 cd $cwd
 
-exit -1
-
 #	leave the war on local dst for distribution to archive
 cp $finalWar $dst
 
