@@ -76,13 +76,8 @@ jar -xf $finalWar
 #		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
 #	if ( $status != 0 ) exit -1;
 #endif
-pwd
-
 rm -rf WEB-INF/classes
 jar -cfm $finalWar META-INF/MANIFEST.MF *
-
-pwd
-exit -1
 
 cd $cwd
 rm -rf $tmp
@@ -96,6 +91,8 @@ cd $dst/$app
 jar -xf $finalWar
 cp $finalWar .		#	include the war itself so servers can auto update
 cd $cwd
+
+exit -1
 
 #	leave the war on local dst for distribution to archive
 cp $finalWar $dst
