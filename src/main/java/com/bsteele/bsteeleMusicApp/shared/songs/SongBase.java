@@ -822,6 +822,15 @@ public class SongBase {
                         if (newRepeat.getRepeats() < 2) {
                             //  convert repeat to phrase
                             newPhrase = new Phrase(repeat.getMeasures(), location.getPhraseIndex());
+                            int phaseIndex = location.getPhraseIndex();
+                            if (phaseIndex > 0 && chordSection.getPhrase(phaseIndex - 1).getMeasureNodeType() == MeasureNode.MeasureNodeType.phrase) {
+                                //  expect combination of the two phrases
+                                Phrase priorPhrase = chordSection.getPhrase(phaseIndex - 1);
+                                location = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                        phaseIndex - 1, priorPhrase.getMeasures().size() );
+                                return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
+                                        && chordSection.add(phaseIndex, newPhrase), location);
+                            }
                             location = new ChordSectionLocation(chordSection.getSectionVersion(),
                                     location.getPhraseIndex(), newPhrase.getMeasures().size() - 1);
                             logger.info("new loc: " + location.toString());
@@ -987,10 +996,19 @@ public class SongBase {
                                 }
                                 //  delete the phrase before replacing it
                                 phaseIndex = location.getPhraseIndex();
-                                location = new ChordSectionLocation(chordSection.getSectionVersion(),
-                                        phaseIndex, newPhrase.getMeasures().size() - 1);
-                                return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
-                                        && chordSection.add(phaseIndex, newPhrase), location);
+                                if (phaseIndex > 0 && chordSection.getPhrase(phaseIndex - 1).getMeasureNodeType() == MeasureNode.MeasureNodeType.phrase) {
+                                    //  expect combination of the two phrases
+                                    Phrase priorPhrase = chordSection.getPhrase(phaseIndex - 1);
+                                    location = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                            phaseIndex - 1, priorPhrase.getMeasures().size() + newPhrase.getMeasures().size());
+                                    return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
+                                            && chordSection.add(phaseIndex, newPhrase), location);
+                                } else {
+                                    location = new ChordSectionLocation(chordSection.getSectionVersion(),
+                                            phaseIndex, newPhrase.getMeasures().size() - 1);
+                                    return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
+                                            && chordSection.add(phaseIndex, newPhrase), location);
+                                }
                             }
                             break;
                         }
@@ -1153,6 +1171,7 @@ public class SongBase {
         if (ret) {
             chordsAsMarkup = null;  //  force lazy re-compute of markup when required
 
+            collapsePhrases(location);
             setCurrentChordSectionLocation(location);
 
             switch (getCurrentMeasureEditType()) {
@@ -1168,6 +1187,33 @@ public class SongBase {
         }
         postMod();
         return ret;
+    }
+
+    private final void collapsePhrases(ChordSectionLocation location) {
+        if (location == null)
+            return;
+        ChordSection chordSection = chordSectionMap.get(location.getSectionVersion());
+        if (chordSection == null)
+            return;
+        int limit = chordSection.getPhraseCount();
+        Phrase lastPhrase = null;
+        for (int i = 0; i < limit; i++) {
+            Phrase phrase = chordSection.getPhrase(i);
+            if (lastPhrase == null) {
+                if (phrase.getMeasureNodeType() == MeasureNode.MeasureNodeType.phrase)
+                    lastPhrase = phrase;
+                continue;
+            }
+            if (phrase.getMeasureNodeType() == MeasureNode.MeasureNodeType.phrase) {
+                if (lastPhrase != null) {
+                    //  two contiguous phrases: join
+                    lastPhrase.add(phrase.getMeasures());
+                    chordSection.deletePhrase(i);
+                    limit--;    //  one less index
+                }
+                lastPhrase = phrase;
+            }
+        }
     }
 
     /**

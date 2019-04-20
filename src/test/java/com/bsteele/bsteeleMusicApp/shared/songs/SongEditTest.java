@@ -66,6 +66,7 @@ public class SongEditTest extends TestCase {
             startingChords("V: C F C C F F C C [G F C G ] x4  ");
             pre(MeasureEditType.replace, "V:1", "[G F C G ] x4 ", "B ");
             resultChords("V: C F C C F F C C B  ");
+            //               0 1 2 3 4 5 6 7 8
             post(MeasureEditType.replace, "V:0:8", "B");
 
             //  insert into a repeat
@@ -162,8 +163,8 @@ public class SongEditTest extends TestCase {
             logger.fine(a.toMarkup());
             assertEquals("V: C F C C GB F C Dm7 G F C G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertEquals("V:0:11", a.getCurrentChordSectionLocation().toString());
-            assertEquals("G", a.getCurrentMeasureNode().toMarkup());
+            assertEquals("V:0:4", a.getCurrentChordSectionLocation().toString());
+            assertEquals("GB", a.getCurrentMeasureNode().toMarkup());
 
             //   current type	current edit loc	entry	replace entry	new edit type	new edit loc	result
             logger.fine("section	append	section(s)		replace	section(s)	add or replace section(s), de-dup");
@@ -716,8 +717,8 @@ public class SongEditTest extends TestCase {
         } else {
             for (MeasureNode measureNode : measureNodes) {
                 logger.finer("edit: " + measureNode.toMarkup());
-                assertTrue(a.edit(measureNode));
             }
+            assertTrue(a.edit(measureNodes));
         }
     }
 
