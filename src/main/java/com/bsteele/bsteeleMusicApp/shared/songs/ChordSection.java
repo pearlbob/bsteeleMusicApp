@@ -157,7 +157,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                     measureRepeat.setPhraseIndex(phrases.size());
                     phrases.add(measureRepeat);
                     measures = new ArrayList<>();
-                    lastMeasure=null;
+                    lastMeasure = null;
                     continue;
                 }
             } catch (ParseException pex) {
@@ -475,9 +475,17 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     public String toMarkup() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString()).append(" ");
-        if (phrases != null)
-            for (Phrase phrase : phrases)
-                sb.append(phrase.toMarkup());
+        sb.append(phrasesToMarkup());
+        return sb.toString();
+    }
+
+    public String phrasesToMarkup() {
+        if (phrases == null || phrases.isEmpty()) {
+            return "";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Phrase phrase : phrases)
+            sb.append(phrase.toMarkup());
         return sb.toString();
     }
 
@@ -533,7 +541,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     @Override
     boolean isEmpty() {
-        return phrases == null || phrases.isEmpty()  || phrases.get(0).isEmpty();
+        return phrases == null || phrases.isEmpty() || phrases.get(0).isEmpty();
     }
 
     private final SectionVersion sectionVersion;

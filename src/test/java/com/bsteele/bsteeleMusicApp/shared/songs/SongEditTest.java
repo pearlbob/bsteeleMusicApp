@@ -30,13 +30,13 @@ public class SongEditTest extends TestCase {
 
             startingChords("I:  V:  ");
             pre(MeasureEditType.replace, "V:", "V: ", "Dm ");
-            resultChords("I: Dm  V: Dm  ");
+            resultChords("I:  V: Dm  ");
             post(MeasureEditType.replace, "V:0:0", "Dm");
 
             startingChords("V: C F F C C F F C C G F C G  ");
             pre(MeasureEditType.delete, "V:", "V: C F F C C F F C C G F C G ", null);
             resultChords("");
-            post(MeasureEditType.delete, "V:", null);
+            post(MeasureEditType.append, "V:", null);
 
             startingChords("V: C F C C F F C C G F C G  ");
             pre(MeasureEditType.append, "V:0:11", "G", "- ");
@@ -57,6 +57,11 @@ public class SongEditTest extends TestCase {
             pre(MeasureEditType.append, "V:0:1", "F", "-");
             resultChords("V: C F F C C F F C C G F C G  ");
             post(MeasureEditType.append, "V:0:2", "F");
+
+            startingChords("I:  V:  ");
+            pre(MeasureEditType.append, "V:", "V: ", "T: ");
+            resultChords("I:  V: T:  ");        //  fixme: why is this?
+            post(MeasureEditType.append, "T:", "T: ");
 
             startingChords("V: C F C C F F C C [G F C G ] x4  ");
             pre(MeasureEditType.replace, "V:1", "[G F C G ] x4 ", "B ");
@@ -418,7 +423,7 @@ public class SongEditTest extends TestCase {
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
                     + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
             a.setCurrentMeasureEditType(MeasureEditType.delete);
-            assertTrue(a.edit(null));
+            assertTrue(a.deleteCurrentSelection());
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: D E F F♯  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
@@ -452,7 +457,7 @@ public class SongEditTest extends TestCase {
             a.setCurrentMeasureEditType(MeasureEditType.delete);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
                     + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertTrue(a.edit(null));
+            assertTrue(a.deleteCurrentSelection());
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: D F F♯ [D C B A ] x2  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
@@ -641,7 +646,7 @@ public class SongEditTest extends TestCase {
             a.setCurrentMeasureEditType(MeasureEditType.delete);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
                     + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertTrue(a.edit(null));
+            assertTrue(a.deleteCurrentSelection());
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: D E F♯  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
@@ -658,7 +663,7 @@ public class SongEditTest extends TestCase {
             a.setCurrentMeasureEditType(MeasureEditType.delete);
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.findMeasureNode(a.getCurrentChordSectionLocation())
                     + " " + a.getCurrentMeasureEditType().toString() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertTrue(a.edit(null));
+            assertTrue(a.deleteCurrentSelection());
             logger.fine(a.toMarkup());
             assertEquals("I: A B C D  V: D E F♯  C: D C G G", a.toMarkup().trim());
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
@@ -707,7 +712,7 @@ public class SongEditTest extends TestCase {
         if (measureNodes.isEmpty()
                 && (editEntry == null || editEntry.isEmpty())
                 && type == MeasureEditType.delete) {
-            assertTrue(a.edit(null));
+            assertTrue(a.deleteCurrentSelection());
         } else {
             for (MeasureNode measureNode : measureNodes) {
                 logger.finer("edit: " + measureNode.toMarkup());

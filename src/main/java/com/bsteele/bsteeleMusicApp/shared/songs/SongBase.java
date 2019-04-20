@@ -366,6 +366,8 @@ public class SongBase {
                     }
                 }
             }
+            for (ChordSection wasEmptyChordSection : emptyChordSections)
+                ret.add(wasEmptyChordSection);
         }
 
         return ret;
@@ -562,14 +564,37 @@ public class SongBase {
     public final String toMarkup() {
         if (chordsAsMarkup != null)
             return chordsAsMarkup;
-        return computeMarkup();
-    }
 
-    public final String computeMarkup() {
         StringBuilder sb = new StringBuilder();
 
-        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
-            sb.append(chordSection.toMarkup());
+        TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionMap.keySet());
+        TreeSet<SectionVersion> completedSectionVersions = new TreeSet<>();
+        TreeSet<SectionVersion> currentSectionVersions = new TreeSet<>();
+
+        //  markup by section version order
+        for (SectionVersion sectionVersion : sortedSectionVersions) {
+            //  don't repeat anything
+            if (completedSectionVersions.contains(sectionVersion))
+                continue;
+            completedSectionVersions.add(sectionVersion);
+
+            //  find all section versions with the same chords
+            ChordSection chordSection = chordSectionMap.get(sectionVersion);
+            currentSectionVersions.clear();
+            for (SectionVersion otherSectionVersion : sortedSectionVersions) {
+                if (chordSection.getPhrases().equals(chordSectionMap.get(otherSectionVersion).getPhrases())) {
+                    currentSectionVersions.add(otherSectionVersion);
+                    completedSectionVersions.add(otherSectionVersion);
+                }
+            }
+
+            //  list the section versions for this chord section
+            for (SectionVersion currentSectionVersion : currentSectionVersions) {
+                sb.append(currentSectionVersion.toString());
+                sb.append(" ");
+            }
+            //  chord section phrases (only) to output
+            sb.append(chordSection.phrasesToMarkup());
             sb.append(" ");    //  for human readability only
         }
         chordsAsMarkup = sb.toString();
@@ -680,6 +705,23 @@ public class SongBase {
                 + "\");");
     }
 
+
+    public final boolean edit(ArrayList<MeasureNode> measureNodes) {
+        if (measureNodes == null || measureNodes.isEmpty())
+            return false;
+
+        for (MeasureNode measureNode : measureNodes) {
+            if (!edit(measureNode))
+                return false;
+        }
+        return true;
+    }
+
+    public final boolean deleteCurrentSelection() {
+        setCurrentMeasureEditType(MeasureEditType.delete);
+        return edit((MeasureNode) null);
+    }
+
     /**
      * Edit the given measure in or out of the song based on the data from the edit location.
      *
@@ -689,7 +731,7 @@ public class SongBase {
     public final boolean edit(@Nonnull MeasureNode measureNode) {
         MeasureEditType editType = getCurrentMeasureEditType();
 
-        if ( editType == MeasureEditType.delete)
+        if (editType == MeasureEditType.delete)
             return deleteCurrentChordSectionLocation();
 
         preMod(measureNode);
@@ -1109,17 +1151,14 @@ public class SongBase {
 
     private final boolean standardEditCleanup(boolean ret, ChordSectionLocation location) {
         if (ret) {
-            try {
-                parseChords(computeMarkup());
-            } catch (ParseException e) {
-                logger.info("parse fail: " + e.getMessage());
-            }
+            chordsAsMarkup = null;  //  force lazy re-compute of markup when required
+
             setCurrentChordSectionLocation(location);
 
             switch (getCurrentMeasureEditType()) {
                 case replace:
                 case delete:
-                    if ( getCurrentChordSectionLocationMeasureNode() == null)
+                    if (getCurrentChordSectionLocationMeasureNode() == null)
                         setCurrentMeasureEditType(MeasureEditType.append);
                     break;
                 default:
@@ -1174,18 +1213,18 @@ public class SongBase {
     }
 
     public final ChordSectionLocation findChordSectionLocation(MeasureNode measureNode) {
-        if ( measureNode == null )
+        if (measureNode == null)
             return null;
 
         Phrase phrase;
         try {
             ChordSection chordSection = findChordSection(measureNode);
-            switch ( measureNode.getMeasureNodeType()){
+            switch (measureNode.getMeasureNodeType()) {
                 case section:
                     return new ChordSectionLocation(chordSection.getSectionVersion());
                 case repeat:
                 case phrase:
-                     phrase = chordSection.findPhrase(measureNode);
+                    phrase = chordSection.findPhrase(measureNode);
                     return new ChordSectionLocation(chordSection.getSectionVersion(), phrase.getPhraseIndex());
                 case decoration:
                 case comment:
@@ -1260,7 +1299,7 @@ public class SongBase {
         if (location.hasMeasureIndex()) {
             int index = location.getMeasureIndex();
             if (index > 0) {
-                location = new ChordSectionLocation(location.getSectionVersion(), location.getPhraseIndex(), index );
+                location = new ChordSectionLocation(location.getSectionVersion(), location.getPhraseIndex(), index);
                 MeasureNode measureNode = findMeasureNode(location);
                 if (measureNode != null) {
                     switch (measureNode.getMeasureNodeType()) {

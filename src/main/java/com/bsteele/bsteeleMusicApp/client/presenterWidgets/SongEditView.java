@@ -708,8 +708,8 @@ public class SongEditView
 
         if (song == null)
             return;
-        song.setCurrentMeasureEditType(MeasureEditType.delete);
-        if (song.edit(null)) {
+
+        if (song.deleteCurrentSelection()) {
             undoStackPushSong();
             updateCurrentChordEditLocation();
         }
