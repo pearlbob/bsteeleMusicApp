@@ -1186,9 +1186,12 @@ public class SongEditView
             Measure measure;
             for (SongMoment songMoment : song.getSongMoments()) {
                 MeasureNode measureNode = song.findMeasureNode(songMoment.getChordSectionLocation());
+                if ( measureNode == null)
+                    continue;
                 switch (measureNode.getMeasureNodeType()) {
                     case measure:
                         measure = (Measure) measureNode;
+                        logger.finer(measure.toMarkup());
                         measureMap.put(measure, (measureMap.containsKey(measure) ? measureMap.get(measure).intValue() : 0) + 1);
                         break;
                 }
@@ -1323,6 +1326,6 @@ public class SongEditView
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
     static {
-        logger.setLevel(Level.FINEST);
+        logger.setLevel(Level.FINE);
     }
 }

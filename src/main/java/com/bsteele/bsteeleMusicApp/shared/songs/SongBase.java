@@ -1213,6 +1213,8 @@ public class SongBase {
                 }
                 lastPhrase = phrase;
             }
+            else
+                lastPhrase = null;
         }
     }
 
