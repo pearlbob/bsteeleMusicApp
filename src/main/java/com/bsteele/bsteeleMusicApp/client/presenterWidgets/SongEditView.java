@@ -708,7 +708,8 @@ public class SongEditView
 
         if (song == null)
             return;
-        if (song.deleteCurrentChordSectionLocation()) {
+        song.setCurrentMeasureEditType(MeasureEditType.delete);
+        if (song.edit(null)) {
             undoStackPushSong();
             updateCurrentChordEditLocation();
         }
@@ -906,7 +907,9 @@ public class SongEditView
         if (chordsFlexTable == null || song == null || chordSectionLocation == null || gridCoordinate == null)
             return;
 
-        logger.fine("selectChordCell: " + chordSectionLocation.toString() + " at " + gridCoordinate.toString());
+        logger.fine("selectChordCell: " + chordSectionLocation.toString()
+                + " at " + gridCoordinate.toString()
+                + "  " + song.getCurrentChordSectionLocationMeasureNode().toMarkup());
 
         song.setCurrentChordSectionLocation(chordSectionLocation);
 

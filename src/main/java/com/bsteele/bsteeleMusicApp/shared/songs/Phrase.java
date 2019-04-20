@@ -28,13 +28,13 @@ public class Phrase extends MeasureNode {
         return measures.size();
     }   //  fixme
 
-    static Phrase parse(String string, int phraseIndex, int beatsPerBar)
+    static Phrase parse(String string, int phraseIndex, int beatsPerBar, Measure priorMeasure)
             throws ParseException {
-        return parse(new MarkedString(string), phraseIndex, beatsPerBar);
+        return parse(new MarkedString(string), phraseIndex, beatsPerBar, priorMeasure);
     }
 
 
-    static Phrase parse(MarkedString markedString, int phraseIndex, int beatsPerBar)
+    static Phrase parse(MarkedString markedString, int phraseIndex, int beatsPerBar, Measure priorMeasure)
             throws ParseException {
         if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
@@ -51,7 +51,7 @@ public class Phrase extends MeasureNode {
                 break;
 
             try {
-                measures.add(Measure.parse(markedString, beatsPerBar));
+                measures.add(Measure.parse(markedString, beatsPerBar, priorMeasure));
                 continue;
             } catch (ParseException pex) {
                 markedString.resetToMark(mark);

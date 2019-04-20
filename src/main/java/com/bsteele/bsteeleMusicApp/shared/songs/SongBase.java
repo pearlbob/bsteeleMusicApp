@@ -334,14 +334,14 @@ public class SongBase {
                     markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(Phrase.parse(markedString, phaseIndex, beatsPerBar));
+                    ret.add(Phrase.parse(markedString, phaseIndex, beatsPerBar, getCurrentChordSectionLocationMeasure()));
                     phaseIndex++;
                     continue;
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
                 }
                 try {
-                    ret.add(Measure.parse(markedString, beatsPerBar, getCurrentChordSectionLocationPriorMeasure()));
+                    ret.add(Measure.parse(markedString, beatsPerBar, getCurrentChordSectionLocationMeasure()));
                     continue;
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
@@ -593,7 +593,7 @@ public class SongBase {
     }
 
 
-    public final boolean deleteCurrentChordSectionLocation() {
+    private final boolean deleteCurrentChordSectionLocation() {
 
         setCurrentMeasureEditType(MeasureEditType.delete);  //  tell the world
 
@@ -649,7 +649,7 @@ public class SongBase {
                 //  move deleted current to end of previous section
                 if (nextSectionVersion == null) {
                     sortedSectionVersions = new TreeSet<>(chordSectionMap.keySet());
-                    nextSectionVersion = sortedSectionVersions.first();
+                    nextSectionVersion = (sortedSectionVersions.isEmpty() ? null : sortedSectionVersions.first());
                 }
                 if (nextSectionVersion != null) {
                     location = findChordSectionLocation(chordSectionMap.get(nextSectionVersion));
@@ -674,7 +674,10 @@ public class SongBase {
         logger.info("resultChords(\"" + toMarkup() + "\");");
         logger.info("post(MeasureEditType." + getCurrentMeasureEditType().name()
                 + ", \"" + getCurrentChordSectionLocation().toString() + "\""
-                + ", \"" + getCurrentChordSectionLocationMeasureNode().toMarkup() + "\");");
+                + ", \"" + (getCurrentChordSectionLocationMeasureNode() == null
+                ? "null"
+                : getCurrentChordSectionLocationMeasureNode().toMarkup())
+                + "\");");
     }
 
     /**
@@ -684,6 +687,11 @@ public class SongBase {
      * @return true if the edit was performed
      */
     public final boolean edit(@Nonnull MeasureNode measureNode) {
+        MeasureEditType editType = getCurrentMeasureEditType();
+
+        if ( editType == MeasureEditType.delete)
+            return deleteCurrentChordSectionLocation();
+
         preMod(measureNode);
 
         if (measureNode == null) {
@@ -692,7 +700,7 @@ public class SongBase {
         }
 
         ChordSectionLocation location = getCurrentChordSectionLocation();
-        MeasureEditType editType = getCurrentMeasureEditType();
+
 
         //  find the named chord section
         ChordSection chordSection = getChordSection(location);
@@ -1111,6 +1119,8 @@ public class SongBase {
             switch (getCurrentMeasureEditType()) {
                 case replace:
                 case delete:
+                    if ( getCurrentChordSectionLocationMeasureNode() == null)
+                        setCurrentMeasureEditType(MeasureEditType.append);
                     break;
                 default:
                     setCurrentMeasureEditType(MeasureEditType.append);
@@ -1164,10 +1174,28 @@ public class SongBase {
     }
 
     public final ChordSectionLocation findChordSectionLocation(MeasureNode measureNode) {
+        if ( measureNode == null )
+            return null;
+
+        Phrase phrase;
         try {
             ChordSection chordSection = findChordSection(measureNode);
-            Phrase phrase = chordSection.findPhrase(measureNode);
-            return new ChordSectionLocation(chordSection.getSectionVersion(), phrase.getPhraseIndex(), phrase.findMeasureNodeIndex(measureNode));
+            switch ( measureNode.getMeasureNodeType()){
+                case section:
+                    return new ChordSectionLocation(chordSection.getSectionVersion());
+                case repeat:
+                case phrase:
+                     phrase = chordSection.findPhrase(measureNode);
+                    return new ChordSectionLocation(chordSection.getSectionVersion(), phrase.getPhraseIndex());
+                case decoration:
+                case comment:
+                case measure:
+                    phrase = chordSection.findPhrase(measureNode);
+                    return new ChordSectionLocation(chordSection.getSectionVersion(), phrase.getPhraseIndex(),
+                            phrase.findMeasureNodeIndex(measureNode));
+                default:
+                    return null;
+            }
         } catch (NullPointerException npe) {
             return null;
         }
@@ -1227,12 +1255,12 @@ public class SongBase {
         return findMeasure(currentChordSectionLocation);
     }
 
-    private final Measure getCurrentChordSectionLocationPriorMeasure() {
+    private final Measure getCurrentChordSectionLocationMeasure() {
         ChordSectionLocation location = getCurrentChordSectionLocation();
         if (location.hasMeasureIndex()) {
             int index = location.getMeasureIndex();
             if (index > 0) {
-                location = new ChordSectionLocation(location.getSectionVersion(), location.getPhraseIndex(), index - 1);
+                location = new ChordSectionLocation(location.getSectionVersion(), location.getPhraseIndex(), index );
                 MeasureNode measureNode = findMeasureNode(location);
                 if (measureNode != null) {
                     switch (measureNode.getMeasureNodeType()) {
@@ -2415,31 +2443,6 @@ public class SongBase {
         return currentChordSectionLocation == null ? null : findMeasureNode(currentChordSectionLocation);
     }
 
-    private final void setCurrentChordSectionLocation(@Nonnull MeasureNode measureNode) {
-        ChordSectionLocation loc;
-        ChordSection section = findChordSection(measureNode);
-        if (section == null) {
-            return;
-        }
-        switch (measureNode.getMeasureNodeType()) {
-            case section:
-                loc = new ChordSectionLocation(section.getSectionVersion());
-                break;
-            case repeat:
-            case phrase:
-                loc = new ChordSectionLocation(section.getSectionVersion(), section.findPhraseIndex(measureNode));
-                break;
-            case measure:
-            case comment:
-            case decoration:
-                loc = new ChordSectionLocation(section.getSectionVersion(), section.findPhraseIndex(measureNode),
-                        section.findMeasureNodeIndex(measureNode));
-                break;
-            default:
-                return;
-        }
-        setCurrentChordSectionLocation(loc);
-    }
 
     public final void setCurrentChordSectionLocation(@Nonnull ChordSectionLocation chordSectionLocation) {
         //  try to find something close if the exact location doesn't exist

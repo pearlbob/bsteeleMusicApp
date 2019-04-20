@@ -103,7 +103,7 @@ public class SongEntryTest
             assertEquals(1, measureNodes.size());
             assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
             phrase = (Phrase)  measureNodes.get(0);
-            assertEquals(Phrase.parse("A",0, beatsPerBar),phrase);
+            assertEquals(Phrase.parse("A",0, beatsPerBar, null),phrase);
 
             //  short measure
             measureNodes = a.parseChordEntry("G G. Bm");
