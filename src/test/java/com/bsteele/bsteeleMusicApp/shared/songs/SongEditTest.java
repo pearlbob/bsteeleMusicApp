@@ -23,6 +23,20 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+
+            startingChords("V: C F C C F F C C G F C G  ");
+             pre(MeasureEditType.replace, "V:0:3", "C", "[] x1 ");
+            resultChords("V: C F C C F F C C G F C G  ");
+            post(MeasureEditType.replace, "V:0:3", "C");
+
+            startingChords("V: C F C C F F C C G F C G  ");
+            //                 0 1 2 3 4 5 6 7 8 9 0 1
+             pre(MeasureEditType.replace, "V:0:6", "C", "[] x2 ");
+            resultChords("V: C F C C [F F C C ] x2 G F C G  ");
+            //               0 1 2 3  4 5 6 7      8 9 0 1
+            //               0 1 2 3  0 1 2 3      0 1 2 3
+            post(MeasureEditType.replace, "V:1", "[F F C C ] x2 ");
+            
             startingChords("V: C F C C F F C C G F C G  ");
             //                 0 1 2 3 4 5 6 7 8 9 0 1
             pre(MeasureEditType.replace, "V:0:6", "C", "[] x3 ");
@@ -173,9 +187,10 @@ public class SongEditTest extends TestCase {
             assertTrue(a.edit(newRepeat));
             logger.fine(a.toMarkup());
             assertEquals("V: C F C C GB F C Dm7 G F C G", a.toMarkup().trim());
+            //                        0 1 2 3 4  5 6 7   8 9 0 1
             logger.fine(a.getCurrentChordSectionLocation() + " " + a.getCurrentChordSectionLocationMeasureNode());
-            assertEquals("V:0:4", a.getCurrentChordSectionLocation().toString());
-            assertEquals("GB", a.getCurrentMeasureNode().toMarkup());
+            assertEquals("V:0:7", a.getCurrentChordSectionLocation().toString());
+            assertEquals("Dm7", a.getCurrentMeasureNode().toMarkup());
 
             //   current type	current edit loc	entry	replace entry	new edit type	new edit loc	result
             logger.fine("section	append	section(s)		replace	section(s)	add or replace section(s), de-dup");

@@ -820,14 +820,17 @@ public class SongBase {
                         //  change repeats
                         MeasureRepeat repeat = (MeasureRepeat) phrase;
                         if (newRepeat.getRepeats() < 2) {
+                            setCurrentMeasureEditType(MeasureEditType.append);
+
                             //  convert repeat to phrase
                             newPhrase = new Phrase(repeat.getMeasures(), location.getPhraseIndex());
                             int phaseIndex = location.getPhraseIndex();
                             if (phaseIndex > 0 && chordSection.getPhrase(phaseIndex - 1).getMeasureNodeType() == MeasureNode.MeasureNodeType.phrase) {
+
                                 //  expect combination of the two phrases
                                 Phrase priorPhrase = chordSection.getPhrase(phaseIndex - 1);
                                 location = new ChordSectionLocation(chordSection.getSectionVersion(),
-                                        phaseIndex - 1, priorPhrase.getMeasures().size() );
+                                        phaseIndex - 1, priorPhrase.getMeasures().size() + newPhrase.getMeasures().size()-1);
                                 return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
                                         && chordSection.add(phaseIndex, newPhrase), location);
                             }
@@ -840,6 +843,9 @@ public class SongBase {
                         repeat.setRepeats(newRepeat.getRepeats());
                         return standardEditCleanup(true, location);
                     }
+                    if ( newRepeat.getRepeats() <= 1 )
+                        return true;    //  no change but no change was asked for
+
                     if (!phrase.isEmpty()) {
                         //  convert phrase line to a repeat
                         GridCoordinate minGridCoordinate = getGridCoordinate(location);
@@ -1169,7 +1175,7 @@ public class SongBase {
 
     private final boolean standardEditCleanup(boolean ret, ChordSectionLocation location) {
         if (ret) {
-            chordsAsMarkup = null;  //  force lazy re-compute of markup when required
+            clearCachedValues();    //  force lazy re-compute of markup when required, after and edit
 
             collapsePhrases(location);
             setCurrentChordSectionLocation(location);
