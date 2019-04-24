@@ -137,7 +137,7 @@ public class SongBase {
     private final ChordSection findChordSection(LyricSection lyricSection) {
         if (lyricSection == null)
             return null;
-        logger.fine("chordSectionMap size: " + chordSectionMap.keySet().size());
+        logger.finer("chordSectionMap size: " + chordSectionMap.keySet().size());
         return chordSectionMap.get(lyricSection.getSectionVersion());
     }
 
@@ -410,12 +410,21 @@ public class SongBase {
         int col = 0;
         int measuresPerline = 4;    //  fixme: should be dynamic, read from each phrase
         final int offset = 1;       //  offset of phrase start from section start
+        //  use a separate set to avoid modifying a set
+        TreeSet<SectionVersion> sectionVersionsToDo = new TreeSet<>(chordSectionMap.keySet());
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            //  only do a chord section once.  it might have a duplicate set of phrases and already be listed
+            if (!sectionVersionsToDo.contains(chordSection.getSectionVersion()))
+                continue;
+            sectionVersionsToDo.remove(chordSection.getSectionVersion());
+
             //  start each section on it's own line
             if (col != 0) {
                 row++;
                 col = 0;
             }
+            int multRow = row;
+            TreeSet<SectionVersion> multSectionVersionsDone = new TreeSet<>();
             {
                 //  grid the section header
                 ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion());
@@ -424,6 +433,42 @@ public class SongBase {
                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
                 grid.addTo(col++, row, loc);
+
+
+                multSectionVersionsDone = matchingSectionVersions(chordSection.getSectionVersion());
+                for (SectionVersion multSectionVersion : multSectionVersionsDone) {
+                    if (multSectionVersion.equals(chordSection.getSectionVersion()))
+                        continue;
+
+                    //  multiple sections on one declaration
+                    multRow++;
+                    GridCoordinate multCoordinate = new GridCoordinate(multRow, 0);
+                    chordSectionGridCoorinateMap.put(multSectionVersion, multCoordinate);
+
+                    ChordSectionLocation multLoc = new ChordSectionLocation(multSectionVersion, chordSection.getSectionVersion());
+                    gridCoordinateChordSectionLocationMap.put(multCoordinate, multLoc);
+                    gridChordSectionLocationCoordinateMap.put(loc, multCoordinate);
+                    grid.addTo(0, multRow, multLoc);
+                }
+                sectionVersionsToDo.removeAll(multSectionVersionsDone);
+
+//                for (SectionVersion multSectionVersion : sectionVersionsToDo) {
+//                    ChordSection multChordSection = getChordSection(multSectionVersion);
+//                    if (chordSection.getPhrases().equals(multChordSection.getPhrases())) {
+//                        multSectionVersionsDone.add(multSectionVersion);
+//
+//                        //  multiple sections on one declaration
+//                        multRow++;
+//                        GridCoordinate multCoordinate = new GridCoordinate(multRow, 0);
+//                        chordSectionGridCoorinateMap.put(multSectionVersion, multCoordinate);
+//
+//                        ChordSectionLocation multLoc = new ChordSectionLocation(multSectionVersion);
+//                        gridCoordinateChordSectionLocationMap.put(multCoordinate, multLoc);
+//                        gridChordSectionLocationCoordinateMap.put(loc, multCoordinate);
+//                        grid.addTo(0, multRow, loc);
+//                    }
+//                }
+//                sectionVersionsToDo.removeAll(multSectionVersionsDone);
             }
 
             //  grid each phrase
@@ -512,6 +557,10 @@ public class SongBase {
                     }
                 }
             }
+
+            //  walk past multiple section declarations
+            row = Math.max(multRow, row);
+
         }
 
         if (logger.getLevel() != null && logger.getLevel().intValue() <= Level.FINEST.intValue()) {
@@ -524,6 +573,24 @@ public class SongBase {
         chordSectionLocationGrid = grid;
         logger.finer(grid.toString());
         return chordSectionLocationGrid;
+    }
+
+    private TreeSet<SectionVersion> matchingSectionVersions(SectionVersion multSectionVersion) {
+        TreeSet<SectionVersion> ret = new TreeSet<>();
+        if (multSectionVersion == null)
+            return ret;
+        ChordSection multChordSection = findChordSection(multSectionVersion);
+        if (multChordSection == null)
+            return ret;
+
+        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            if (multSectionVersion.equals(chordSection.getSectionVersion()))
+                ret.add(multSectionVersion);
+            else if (chordSection.getPhrases().equals(multChordSection.getPhrases())) {
+                ret.add(chordSection.getSectionVersion());
+            }
+        }
+        return ret;
     }
 
     public ChordSectionLocation getLastChordSectionLocation() {
@@ -599,6 +666,18 @@ public class SongBase {
         }
         chordsAsMarkup = sb.toString();
         return chordsAsMarkup;
+    }
+
+    public final String toMarkup(ChordSectionLocation location) {
+        StringBuilder sb = new StringBuilder();
+        if (location != null) {
+            for (SectionVersion sectionVersion : matchingSectionVersions(location.getLabelSectionVersion())) {
+                sb.append(sectionVersion.toString());
+                sb.append(" ");
+            }
+            sb.append(getChordSection(location).phrasesToMarkup());
+        }
+        return sb.toString();
     }
 
     /**
@@ -830,20 +909,20 @@ public class SongBase {
                                 //  expect combination of the two phrases
                                 Phrase priorPhrase = chordSection.getPhrase(phaseIndex - 1);
                                 location = new ChordSectionLocation(chordSection.getSectionVersion(),
-                                        phaseIndex - 1, priorPhrase.getMeasures().size() + newPhrase.getMeasures().size()-1);
+                                        phaseIndex - 1, priorPhrase.getMeasures().size() + newPhrase.getMeasures().size() - 1);
                                 return standardEditCleanup(chordSection.deletePhrase(phaseIndex)
                                         && chordSection.add(phaseIndex, newPhrase), location);
                             }
                             location = new ChordSectionLocation(chordSection.getSectionVersion(),
                                     location.getPhraseIndex(), newPhrase.getMeasures().size() - 1);
-                            logger.info("new loc: " + location.toString());
+                            logger.fine("new loc: " + location.toString());
                             return standardEditCleanup(chordSection.deletePhrase(newPhrase.getPhraseIndex())
                                     && chordSection.add(newPhrase.getPhraseIndex(), newPhrase), location);
                         }
                         repeat.setRepeats(newRepeat.getRepeats());
                         return standardEditCleanup(true, location);
                     }
-                    if ( newRepeat.getRepeats() <= 1 )
+                    if (newRepeat.getRepeats() <= 1)
                         return true;    //  no change but no change was asked for
 
                     if (!phrase.isEmpty()) {
@@ -856,8 +935,8 @@ public class SongBase {
                         maxGridCoordinate = new GridCoordinate(maxGridCoordinate.getRow(), chordSectionLocationGrid.getRow(maxGridCoordinate.getRow()).size() - 1);
                         MeasureNode maxMeasureNode = findMeasureNode(maxGridCoordinate);
                         ChordSectionLocation maxLocation = getChordSectionLocation(maxGridCoordinate);
-                        logger.info("min: " + minGridCoordinate.toString() + " " + minMeasureNode.toMarkup() + " " + minLocation.getMeasureIndex());
-                        logger.info("max: " + maxGridCoordinate.toString() + " " + maxMeasureNode.toMarkup() + " " + maxLocation.getMeasureIndex());
+                        logger.fine("min: " + minGridCoordinate.toString() + " " + minMeasureNode.toMarkup() + " " + minLocation.getMeasureIndex());
+                        logger.fine("max: " + maxGridCoordinate.toString() + " " + maxMeasureNode.toMarkup() + " " + maxLocation.getMeasureIndex());
 
                         //  delete the old
                         int phraseIndex = phrase.getPhraseIndex();
@@ -1218,8 +1297,7 @@ public class SongBase {
                     limit--;    //  one less index
                 }
                 lastPhrase = phrase;
-            }
-            else
+            } else
                 lastPhrase = null;
         }
     }
@@ -1297,13 +1375,6 @@ public class SongBase {
     public final ChordSectionLocation getChordSectionLocation(GridCoordinate gridCoordinate) {
         calcChordMaps();
         return gridCoordinateChordSectionLocationMap.get(gridCoordinate);
-    }
-
-    public final ChordSectionLocation getChordSectionLocation(SectionVersion sectionVersion) {
-        ChordSection chordSection = getChordSection(sectionVersion);
-        if (chordSection == null)
-            return null;
-        return chordSection.getChordSectionLocation();
     }
 
     public final GridCoordinate getGridCoordinate(ChordSectionLocation chordSectionLocation) {
@@ -1730,11 +1801,10 @@ public class SongBase {
         transpose(flexTable, halfSteps, fontSize, false);
     }
 
-    public final void transpose(ChordSection chordSection, String prefix, FlexTable flexTable, int halfSteps,
-                                int fontSize, boolean append) {
+    public final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
         if (chordSection == null || flexTable == null || fontSize <= 0)
             return;
-        transpose(chordSection, flexTable, halfSteps, fontSize, append);
+        transpose(chordSection, flexTable, halfSteps, fontSize, append, true);
     }
 
     /**
@@ -1753,7 +1823,7 @@ public class SongBase {
 
         //  install all chord sections
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
-            transpose(chordSection, flexTable, halfSteps, fontSize, true);
+            transpose(chordSection, flexTable, halfSteps, fontSize, true, false);
         }
     }
 
@@ -1764,9 +1834,10 @@ public class SongBase {
      * @param flexTable    the flex table to populate
      * @param halfSteps    the number of tranposition halfSteps to apply
      * @param fontSize     the pixel size of the font
-     * @param append       true if the chord section is to be added to an existing flex table data
+     * @param append       true if the chord section is to be added to existing flex table data
      */
-    private final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
+    private final void transpose(final ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize,
+                                 boolean append, boolean isSingleSection) {
         if (chordSection == null)
             return;
 
@@ -1778,6 +1849,14 @@ public class SongBase {
         GridCoordinate coordinate = getChordSectionGridCoorinateMap().get(sectionVersion);
         if (coordinate == null)
             return;
+
+        //  if it's single, show the whole detail
+        if (isSingleSection) {
+            sectionVersion = gridCoordinateChordSectionLocationMap.get(coordinate).getSectionVersion();
+            coordinate = getChordSectionGridCoorinateMap().get(sectionVersion);
+            if (coordinate == null)
+                return;
+        }
 
         int offset = 0;
         if (append)
@@ -1794,14 +1873,14 @@ public class SongBase {
         logger.fine(grid.toString());
 
         int rLimit = grid.getRowCount();    // safety third
-        int rowIndex = 0;
-        for (int r = coordinate.getRow(); r < rLimit; r++, rowIndex++) {
+        String abbreviation = "";
+        for (int r = coordinate.getRow(); r < rLimit; r++) {
 
             ArrayList<ChordSectionLocation> row = grid.getRow(r);
             int colLimit = row.size();
             String lastValue = "";
-            for (int c = 0; c < colLimit; c++) {
-                ChordSectionLocation loc = row.get(c);
+            for (int col = 0; col < colLimit; col++) {
+                ChordSectionLocation loc = row.get(col);
                 if (loc == null)
                     continue;
 
@@ -1809,11 +1888,22 @@ public class SongBase {
                 final int flexRow = r + offset;
 
                 String s = "";
-                switch (c) {
+                switch (col) {
                     case 0:
-                        if (!sectionVersion.equals(loc.getSectionVersion()))
-                            return;
-                        s = sectionVersion.toString();
+                        if (isSingleSection) {
+                            //  only do one section as labeled
+                            if (!sectionVersion.equals(loc.getLabelSectionVersion()))
+                                return;
+                            s = chordSection.getSectionVersion().toString();
+                            abbreviation = chordSection.getSectionVersion().getSection().getAbbreviation();
+                        } else {
+                            //  do all the sections that match
+                            if (!sectionVersion.equals(loc.getSectionVersion()))
+                                return;
+                            s = loc.getLabelSectionVersion().toString();    //  notice the mapping to the label
+                            abbreviation = loc.getLabelSectionVersion().getSection().getAbbreviation();
+                        }
+
                         formatter.addStyleName(flexRow, 0, CssConstants.style + "sectionLabel");
                         break;
                     default:
@@ -1821,27 +1911,27 @@ public class SongBase {
                         break;
                 }
                 //  enforce the - on repeated measures
-                if (c > 0
-                        && c <= MusicConstant.measuresPerDisplayRow
+                if (col > 0
+                        && col <= MusicConstant.measuresPerDisplayRow
                         && s.equals(lastValue)
                         && !(measureNode instanceof MeasureComment)) {
                     s = "-";
-                    formatter.addStyleName(flexRow, c, CssConstants.style + "textCenter");
+                    formatter.addStyleName(flexRow, col, CssConstants.style + "textCenter");
                 } else
                     lastValue = s;
 
                 //formatter.setAlignment(flexRow, c, ALIGN_CENTER, ALIGN_BOTTOM);   //  as per Shari, comment out
-                flexTable.setHTML(flexRow, c,
+                flexTable.setHTML(flexRow, col,
                         "<span style=\"font-size: " + fontSize + "px;\">"
                                 + s
                                 + "</span>"
                 );
-                formatter.addStyleName(flexRow, c, CssConstants.style
+                formatter.addStyleName(flexRow, col, CssConstants.style
                         + (measureNode.isComment() && !measureNode.isRepeat()
                         ? "sectionCommentClass"
-                        : "section" + sectionVersion.getSection().getAbbreviation() + "Class"));
+                        : "section" + abbreviation + "Class"));
 
-                formatter.getElement(flexRow, c).setId((measureNode.isComment() || measureNode.isRepeat() ? "" : "C."));
+                formatter.getElement(flexRow, col).setId((measureNode.isComment() || measureNode.isRepeat() ? "" : "C."));
             }
         }
     }
@@ -1855,6 +1945,7 @@ public class SongBase {
 
         StringBuilder sb = new StringBuilder("\n");
 
+        calcChordMaps();    //  avoid ConcurrentModificationException
         for (int r = 0; r < getChordSectionLocationGrid().getRowCount(); r++) {
             ArrayList<ChordSectionLocation> row = chordSectionLocationGrid.getRow(r);
             for (int c = 0; c < row.size(); c++) {

@@ -966,8 +966,7 @@ public class SongEditView
             logger.fine(song.logGrid());
         }
 
-        MeasureNode measureNode = song.findMeasureNode(chordSectionLocation);
-        measureEntry.setText(measureNode.toMarkup());
+        measureEntry.setText(song.toMarkup(chordSectionLocation));
         measureEntry.selectAll();
     }
 
@@ -1325,7 +1324,7 @@ public class SongEditView
     private final EventBus eventBus;    //  is actually used
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
-    static {
-        logger.setLevel(Level.FINE);
-    }
+//    static {
+//        logger.setLevel(Level.FINE);
+//    }
 }

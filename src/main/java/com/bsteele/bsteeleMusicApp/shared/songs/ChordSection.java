@@ -532,12 +532,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return phrases.get(phrases.size() - 1);
     }
 
-    final ChordSectionLocation getChordSectionLocation() {
-        //  be lazy
-        if (chordSectionLocation == null)
-            chordSectionLocation = new ChordSectionLocation(sectionVersion);
-        return chordSectionLocation;
-    }
 
     @Override
     boolean isEmpty() {
@@ -546,9 +540,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     private final SectionVersion sectionVersion;
     private ArrayList<Phrase> phrases;
-    private ChordSectionLocation chordSectionLocation;
     //private Integer bpm;
     //private Integer beatsPerBar;
     private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());
-
 }

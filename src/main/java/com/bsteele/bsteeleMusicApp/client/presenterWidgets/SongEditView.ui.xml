@@ -227,48 +227,49 @@
                             </tr>
                         </table>
 
-                        <div ui:field="editHints">
-                        <ul>
-                            <li>Chords must be in upper case!</li>
-                            <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
-                            <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9] and more.
-                                See "Other chords" selection above.
-                            </li>
-                            <li>Spaces between chords indicate a new measure. Chords without spaces are within one
-                                measure.
-                            </li>
-                            <li>Minus signs (-) can be used to indicate a repeated measure. It must have a space before
-                                and after it.
-                            </li>
-                            <li>Periods (.) can be used to repeat chords on another beat within the same meausure. For
-                                example,
-                                G..A would be three beats of G followed by one beat of A in the same measure.
-                            </li>
-                            <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
-                                For example A/G would mean a G for the bass, an A chord for the other instruments.
-                            </li>
-                            <li>Sample measures to use:
-                                A B C G
-                                A# C# Bb Db
-                                C7 D7 Dbm Dm Em Dm7 F#m7 A#maj7 Gsus9
-                                DC D#Bb G#m7Gm7 Am/G G..A
-                            </li>
-                            <li>Comments are not allowed in the chord section.
-                            </li>
-                            <li>Double click a measure to select it for replacement or deletion.
-                            </li>
-                            <li>Control plus the arrow keys can help navigate in the chord entry once selected.
-                            </li>
-                            <li>
-                                In the lyrics section, anything else not recognized as a section identifier is
-                                considered lyrics
-                                to the end of the line. Suggest comments go into parenthesis.
-                            </li>
-                        </ul>
-                        </div>
+
                     </td>
                 </tr>
             </table>
+            <div ui:field="editHints">
+                <ul>
+                    <li>Chords must be in upper case!</li>
+                    <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
+                    <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9] and more.
+                        See "Other chords" selection above.
+                    </li>
+                    <li>Spaces between chords indicate a new measure. Chords without spaces are within one
+                        measure.
+                    </li>
+                    <li>Minus signs (-) can be used to indicate a repeated measure. It must have a space before
+                        and after it.
+                    </li>
+                    <li>Periods (.) can be used to repeat chords on another beat within the same meausure. For
+                        example,
+                        G..A would be three beats of G followed by one beat of A in the same measure.
+                    </li>
+                    <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
+                        For example A/G would mean a G for the bass, an A chord for the other instruments.
+                    </li>
+                    <li>Sample measures to use:
+                        A B C G
+                        A# C# Bb Db
+                        C7 D7 Dbm Dm Em Dm7 F#m7 A#maj7 Gsus9
+                        DC D#Bb G#m7Gm7 Am/G G..A
+                    </li>
+                    <li>Comments are not allowed in the chord section.
+                    </li>
+                    <li>Double click a measure to select it for replacement or deletion.
+                    </li>
+                    <li>Control plus the arrow keys can help navigate in the chord entry once selected.
+                    </li>
+                    <li>
+                        In the lyrics section, anything else not recognized as a section identifier is
+                        considered lyrics
+                        to the end of the line. Suggest comments go into parenthesis.
+                    </li>
+                </ul>
+            </div>
 
             <p>
                 Lyrics:

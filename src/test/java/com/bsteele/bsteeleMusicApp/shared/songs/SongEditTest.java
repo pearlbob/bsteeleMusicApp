@@ -23,20 +23,24 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.replace, "V:0:2", "Am/F♯", "Am/G ");
+            resultChords("I: [Am Am/G Am/F♯ FE ] x4  V: [Am Am/G Am/G FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
+            post(MeasureEditType.replace, "V:0:2", "Am/G");
 
             startingChords("V: C F C C F F C C G F C G  ");
-             pre(MeasureEditType.replace, "V:0:3", "C", "[] x1 ");
+            pre(MeasureEditType.replace, "V:0:3", "C", "[] x1 ");
             resultChords("V: C F C C F F C C G F C G  ");
             post(MeasureEditType.replace, "V:0:3", "C");
 
             startingChords("V: C F C C F F C C G F C G  ");
             //                 0 1 2 3 4 5 6 7 8 9 0 1
-             pre(MeasureEditType.replace, "V:0:6", "C", "[] x2 ");
+            pre(MeasureEditType.replace, "V:0:6", "C", "[] x2 ");
             resultChords("V: C F C C [F F C C ] x2 G F C G  ");
             //               0 1 2 3  4 5 6 7      8 9 0 1
             //               0 1 2 3  0 1 2 3      0 1 2 3
             post(MeasureEditType.replace, "V:1", "[F F C C ] x2 ");
-            
+
             startingChords("V: C F C C F F C C G F C G  ");
             //                 0 1 2 3 4 5 6 7 8 9 0 1
             pre(MeasureEditType.replace, "V:0:6", "C", "[] x3 ");

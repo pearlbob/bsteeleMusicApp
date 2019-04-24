@@ -42,18 +42,14 @@ public class Grid<T> {
     }
 
     public final void addTo(int x, int y, T t) {
-        if (y > grid.size()) {
-            throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
-        }
         ArrayList<T> row;
-        if (y == grid.size()) {
+        while (y >= grid.size()) {
             //  addTo a new row to the grid
             row = new ArrayList<>();
-            grid.add(y, row);
-        } else {
-            row = grid.get(y);
+            grid.add(grid.size(), row);
         }
 
+        row = grid.get(y);
         if (x == row.size())
             row.add(t);
         else

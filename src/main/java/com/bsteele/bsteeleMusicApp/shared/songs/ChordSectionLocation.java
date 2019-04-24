@@ -12,6 +12,7 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, int measureIndex) {
         this.sectionVersion = sectionVersion;
+        this.labelSectionVersion = sectionVersion;
         if (phraseIndex < 0) {
             this.phraseIndex = -1;
             hasPhraseIndex = false;
@@ -34,6 +35,7 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex) {
         this.sectionVersion = sectionVersion;
+        this.labelSectionVersion = sectionVersion;
         if (phraseIndex < 0) {
             this.phraseIndex = -1;
             hasPhraseIndex = false;
@@ -48,6 +50,7 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, Marker marker) {
         this.sectionVersion = sectionVersion;
+        this.labelSectionVersion = sectionVersion;
         if (phraseIndex < 0) {
             this.phraseIndex = -1;
             hasPhraseIndex = false;
@@ -62,12 +65,24 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
+        this.labelSectionVersion = sectionVersion;
         this.phraseIndex = -1;
         hasPhraseIndex = false;
         this.measureIndex = -1;
         hasMeasureIndex = false;
         marker = Marker.none;
     }
+
+    ChordSectionLocation(@Nonnull SectionVersion sectionVersionLabel, @Nonnull SectionVersion sectionVersion) {
+        this.sectionVersion = sectionVersion;
+        this.labelSectionVersion = sectionVersionLabel;
+        this.phraseIndex = -1;
+        hasPhraseIndex = false;
+        this.measureIndex = -1;
+        hasMeasureIndex = false;
+        marker = Marker.none;
+    }
+
 
     enum Marker {
         none,
@@ -146,6 +161,10 @@ public class ChordSectionLocation {
         return sectionVersion;
     }
 
+    public final SectionVersion getLabelSectionVersion() {
+        return labelSectionVersion;
+    }
+
     public final int getPhraseIndex() {
         return phraseIndex;
     }
@@ -206,6 +225,7 @@ public class ChordSectionLocation {
     }
 
     private final SectionVersion sectionVersion;
+    private final SectionVersion labelSectionVersion;
     private final int phraseIndex;
     private final boolean hasPhraseIndex;
     private final int measureIndex;

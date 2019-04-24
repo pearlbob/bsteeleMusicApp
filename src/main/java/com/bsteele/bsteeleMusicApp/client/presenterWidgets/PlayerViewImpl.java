@@ -353,7 +353,7 @@ public class PlayerViewImpl
 
                     int firstRow = flexTable.getRowCount();
                     FlexTable sectionTable = new FlexTable();
-                    song.transpose(song.getChordSection(lyricSection.getSectionVersion()), prefix + sectionIndex++,
+                    song.transpose(song.getChordSection(lyricSection.getSectionVersion()),
                             sectionTable, tran, lyricsDefaultFontSize, false);
                     flexTable.setWidget(firstRow, chordCol, sectionTable);
 

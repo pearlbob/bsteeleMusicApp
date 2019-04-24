@@ -718,27 +718,57 @@ public class SongBaseTest
     public void testGridStuff() {
 
         int beatsPerBar = 4;
-        SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
-                100, beatsPerBar, 4,
-                "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
-                "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
+        SongBase a;
+        Grid<ChordSectionLocation> grid;
+        MeasureNode measureNode;
+        ChordSectionLocation location;
 
-        logger.finer(a.toMarkup());
+        try {
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, beatsPerBar, 4,
+                    "I: V: c: G D G D ",
+                    "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here \no: last line of outro");
 
-        Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
-        for (int r = 0; r < grid.getRowCount(); r++) {
-            ArrayList<ChordSectionLocation> row = grid.getRow(r);
-            for (int c = 0; c < row.size(); c++) {
-                GridCoordinate coordinate = new GridCoordinate(r, c);
-                logger.fine(coordinate.toString() + "  " + a.getChordSectionLocationGrid().getRow(r).get(c).toString());
-                ChordSectionLocation loc = a.getChordSectionLocation(coordinate);
-                logger.fine(loc.toString());
-                assertEquals(a.getChordSectionLocationGrid().getRow(r).get(c), a.getChordSectionLocation(coordinate));
-                assertEquals(coordinate, a.getGridCoordinate(loc));
-                assertEquals(loc, a.getChordSectionLocation(coordinate));    //  well, yeah
+            logger.finer(a.toMarkup());
+
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("I:")));
+            location = ChordSectionLocation.parse("I:0:0");
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("I:0:0")));
+            assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
+            assertEquals(new GridCoordinate(1, 0), a.getGridCoordinate(ChordSectionLocation.parse("v:")));
+            location = ChordSectionLocation.parse("V:0:0");
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("V:0:0")));
+            assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
+            assertEquals(new GridCoordinate(2, 0), a.getGridCoordinate(ChordSectionLocation.parse("c:")));
+
+            grid = a.getChordSectionLocationGrid();
+
+            assertNull(grid.get(1, 0));
+
+
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, beatsPerBar, 4,
+                    "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
+                    "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
+
+            logger.finer(a.toMarkup());
+
+            grid = a.getChordSectionLocationGrid();
+            for (int r = 0; r < grid.getRowCount(); r++) {
+                ArrayList<ChordSectionLocation> row = grid.getRow(r);
+                for (int c = 0; c < row.size(); c++) {
+                    GridCoordinate coordinate = new GridCoordinate(r, c);
+                    logger.fine(coordinate.toString() + "  " + a.getChordSectionLocationGrid().getRow(r).get(c).toString());
+                    ChordSectionLocation loc = a.getChordSectionLocation(coordinate);
+                    logger.fine(loc.toString());
+                    assertEquals(a.getChordSectionLocationGrid().getRow(r).get(c), a.getChordSectionLocation(coordinate));
+                    assertEquals(coordinate, a.getGridCoordinate(loc));
+                    assertEquals(loc, a.getChordSectionLocation(coordinate));    //  well, yeah
+                }
             }
+        } catch (ParseException pe) {
+            fail(pe.getMessage());
         }
-
     }
 
     @Test
