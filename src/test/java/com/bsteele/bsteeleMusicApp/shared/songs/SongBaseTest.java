@@ -706,8 +706,8 @@ public class SongBaseTest
                     "i1:\nv: bob, bob, bob berand\ni2: nope\nc1: sing \ni3: chorus here \ni4: mo chorus here\no: last line of outro");
             logger.fine(a.logGrid());
             assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(0, 3)));
-            assertEquals(Measure.parse("Cm", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(2, 1)));
-            assertEquals(Measure.parse("F", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(3, 2)));
+            assertEquals(Measure.parse("Cm", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(3, 1)));
+            assertEquals(Measure.parse("F", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(4, 2)));
         } catch (ParseException e) {
             e.printStackTrace();
             fail();
@@ -722,12 +722,13 @@ public class SongBaseTest
         Grid<ChordSectionLocation> grid;
         MeasureNode measureNode;
         ChordSectionLocation location;
+        GridCoordinate gridCoordinate;
 
         try {
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, beatsPerBar, 4,
                     "I: V: c: G D G D ",
-                    "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here \no: last line of outro");
+                    "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here");
 
             logger.finer(a.toMarkup());
 
@@ -735,15 +736,19 @@ public class SongBaseTest
             location = ChordSectionLocation.parse("I:0:0");
             assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("I:0:0")));
             assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
-            assertEquals(new GridCoordinate(1, 0), a.getGridCoordinate(ChordSectionLocation.parse("v:")));
+            logger.fine( a.logGrid());
+            gridCoordinate = new GridCoordinate(1, 0);
+            location = a.getChordSectionLocation(gridCoordinate);
+            logger.fine( location.toString());
+            assertEquals(gridCoordinate, a.getGridCoordinate(location));
             location = ChordSectionLocation.parse("V:0:0");
-            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("V:0:0")));
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("i:0:0")));
             assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
-            assertEquals(new GridCoordinate(2, 0), a.getGridCoordinate(ChordSectionLocation.parse("c:")));
-
-            grid = a.getChordSectionLocationGrid();
-
-            assertNull(grid.get(1, 0));
+            gridCoordinate = new GridCoordinate(2, 0);
+            location = a.getChordSectionLocation(gridCoordinate);
+            logger.fine( location.toString());
+            assertEquals(gridCoordinate, a.getGridCoordinate(location));
+            assertEquals(location.toString(), ChordSectionLocation.parse("c:").toString());
 
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),

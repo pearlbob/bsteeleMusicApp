@@ -154,7 +154,7 @@ public class ChordSectionLocation {
     }
 
     public final String getId() {
-        return sectionVersion.toString() + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
+        return labelSectionVersion.toString() + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
     }
 
     public final SectionVersion getSectionVersion() {
@@ -202,6 +202,7 @@ public class ChordSectionLocation {
     @Override
     public int hashCode() {
         int hash = 7;
+        hash = (31 * hash + labelSectionVersion.hashCode()) % (1 << 31);
         hash = (31 * hash + sectionVersion.hashCode()) % (1 << 31);
         hash = (31 * hash + (hasPhraseIndex ? 1 : 0)) % (1 << 31);
         hash = (31 * hash + phraseIndex) % (1 << 31);

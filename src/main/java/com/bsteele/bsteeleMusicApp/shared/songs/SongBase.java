@@ -283,7 +283,7 @@ public class SongBase {
 
         setDefaultCurrentChordLocation();
 
-        logger.finest(logGrid());
+        logger.finer(logGrid());
     }
 
     /**
@@ -447,7 +447,7 @@ public class SongBase {
 
                     ChordSectionLocation multLoc = new ChordSectionLocation(multSectionVersion, chordSection.getSectionVersion());
                     gridCoordinateChordSectionLocationMap.put(multCoordinate, multLoc);
-                    gridChordSectionLocationCoordinateMap.put(loc, multCoordinate);
+                    gridChordSectionLocationCoordinateMap.put(multLoc, multCoordinate);
                     grid.addTo(0, multRow, multLoc);
                 }
                 sectionVersionsToDo.removeAll(multSectionVersionsDone);
@@ -1384,7 +1384,9 @@ public class SongBase {
 //        for ( GridCoordinate coordinate:gridCoordinateChordSectionLocationMap.keySet()){
 //            logger.finer("  "+coordinate.toString()+": "+gridCoordinateChordSectionLocationMap.get(coordinate));
 //        }
-
+//        if (!chordSectionLocation.hasPhraseIndex()
+//                && !chordSectionLocation.getLabelSectionVersion().equals(chordSectionLocation.getSectionVersion()))
+//            chordSectionLocation = new ChordSectionLocation(chordSectionLocation.getLabelSectionVersion());
         return gridChordSectionLocationCoordinateMap.get(chordSectionLocation);
     }
 
