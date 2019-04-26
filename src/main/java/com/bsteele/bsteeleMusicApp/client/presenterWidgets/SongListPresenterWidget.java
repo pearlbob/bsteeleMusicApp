@@ -13,8 +13,6 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
@@ -40,8 +38,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.TreeSet;
 import java.util.logging.Logger;
-
-import static java.util.logging.Logger.getLogger;
 
 /**
  * @author bob

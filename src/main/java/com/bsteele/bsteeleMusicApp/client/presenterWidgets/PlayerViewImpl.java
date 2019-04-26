@@ -193,14 +193,14 @@ public class PlayerViewImpl
                 break;
         }
 
-        if (song != null && !song.equals(songUpdate.getSong())) {
-            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    resetScroll(chordsScrollPanel);
-                }
-            });
-        }
+//        if (song != null && !song.equals(songUpdate.getSong())) {
+//            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+//                @Override
+//                public void execute() {
+//                    resetScroll(chordsScrollPanel);
+//                }
+//            });
+//        }
         song = songUpdate.getSong();
 
         scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
@@ -220,8 +220,6 @@ public class PlayerViewImpl
         syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
 
         syncKey(songUpdate.getCurrentKey());
-
-        chordsDirty = true;
 
         chordsFontSize = 0;     //    will never match, forces the fontSize set
         chordsDirty = true;   //  done by syncKey()

@@ -267,7 +267,7 @@ public enum Key {
     public final ScaleNote getScaleNoteByHalfStep(int halfSteps) {
 
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
-        ScaleNote ret = (keyValue >= 0)
+        ScaleNote ret = (keyValue > 0)
                 ? ScaleNote.getSharpByHalfStep(halfSteps)
                 : ScaleNote.getFlatByHalfStep(halfSteps);
 
@@ -291,6 +291,12 @@ public enum Key {
             return Integer.toString(keyValue) + MusicConstant.sharpChar;
         return "";
     }
+
+
+    public final boolean isSharp(){
+        return keyValue > 0;
+    }
+
 
     /**
      * Returns the name of this enum constant in a user friendly format,

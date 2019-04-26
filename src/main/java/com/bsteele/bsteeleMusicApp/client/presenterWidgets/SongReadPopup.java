@@ -20,8 +20,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 import java.util.logging.Logger;
 
-public class SongReadPopup extends DialogBox
-{
+public class SongReadPopup extends DialogBox {
 
     public SongReadPopup(String message, Song oldSong, Song newSong) {
         // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
@@ -33,15 +32,15 @@ public class SongReadPopup extends DialogBox
         // whatever you want its contents to be.
 
         DockLayoutPanel dockLayoutPanel = new DockLayoutPanel(Style.Unit.PX);
-        dockLayoutPanel.addNorth(new Label(message),50);
+        dockLayoutPanel.addNorth(new Label(message), 50);
         setWidget(dockLayoutPanel);
 
         VerticalPanel vPanel = new VerticalPanel();
         vPanel.add(new Label(message));
         vPanel.add(new Label("\n"));
         HTMLPanel htmlPanel = new HTMLPanel(StringTripleToHtmlTable.toHtmlTable(
-                new StringTriple("Value", "Existing: "+oldSong.getFileName(), "Read: "+newSong.getFileName()),
-                Song.diff(oldSong,newSong)));
+                new StringTriple("Value", "Existing: " + oldSong.getFileName(), "Read: " + newSong.getFileName()),
+                Song.diff(oldSong, newSong)));
         vPanel.add(htmlPanel);
 
         {
@@ -53,7 +52,11 @@ public class SongReadPopup extends DialogBox
             }));
             horizontalPanel.add(new Button("Use the newly read version", new ClickHandler() {
                 public void onClick(ClickEvent event) {
-                    handlerManager.fireEvent(new SongSubmissionEvent(newSong, false));
+                    try {
+                        handlerManager.fireEvent(new SongSubmissionEvent(newSong, false));
+                    } catch (Exception ex){
+                        logger.info( "Exception on song submission: "+ex.getMessage());
+                    }
                     hide();
                 }
             }));
@@ -70,9 +73,9 @@ public class SongReadPopup extends DialogBox
     }
 
     public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler) {
-      logger.info( "pre handlerManager.getHandlerCount(): "+ handlerManager.getHandlerCount(SongSubmissionEvent.TYPE));
-        HandlerRegistration handlerRegistration =  handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
-        logger.info( "post handlerManager.getHandlerCount(): "+ handlerManager.getHandlerCount(SongSubmissionEvent.TYPE));
+        logger.info("pre handlerManager.getHandlerCount(): " + handlerManager.getHandlerCount(SongSubmissionEvent.TYPE));
+        HandlerRegistration handlerRegistration = handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
+        logger.info("post handlerManager.getHandlerCount(): " + handlerManager.getHandlerCount(SongSubmissionEvent.TYPE));
         return handlerRegistration;
     }
 

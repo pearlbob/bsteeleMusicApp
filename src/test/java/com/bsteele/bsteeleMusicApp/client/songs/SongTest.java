@@ -44,7 +44,7 @@ public class SongTest
             JSONArray ja = jv.isArray();
             logger.fine("ja: "+ja.size());
             if (ja != null) {
-                int jaLimit = Math.min(500, ja.size());   //    fixme: find why this fails at 1000
+                int jaLimit = Math.min(300, ja.size());   //    fixme: find why this fails at 1000
                 for (int i = 0; i < jaLimit; i++) {
                     songCount++;
                     Song song = null;

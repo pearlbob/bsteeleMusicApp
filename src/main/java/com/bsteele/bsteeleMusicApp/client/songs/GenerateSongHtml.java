@@ -166,7 +166,7 @@ public class GenerateSongHtml {
         sb.append("  </table>\n");
         sb.append("<p> </p>\n");
 
-        //  details
+        //  major chord details
         sb.append(
                 "<table border=\"2\" style=\"border-collapse: collapse;\">\n" +
                         "<tr><th>Key</th>" +

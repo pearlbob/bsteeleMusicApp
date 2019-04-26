@@ -632,10 +632,10 @@ public class SongEditView
 
         setKey(Key.getDefault());
 
-//        logger.info("songEditview info");
-//        logger.fine("songEditview fine");
-//        logger.finer("songEditview finer");
-//        logger.finest("songEditview finest");
+        logger.info("songEditview info");
+        logger.fine("songEditview fine");
+        logger.finer("songEditview finer");
+        logger.finest("songEditview finest");
 
     }
 
@@ -808,7 +808,7 @@ public class SongEditView
 
         setUndoRedoEnables();
 
-        logger.fine(song.toMarkup());
+        logger.info(song.toMarkup());
     }
 
     private void displaySong() {

@@ -42,14 +42,13 @@ public class Grid<T> {
     }
 
     public final void addTo(int x, int y, T t) {
-        ArrayList<T> row;
+
         while (y >= grid.size()) {
             //  addTo a new row to the grid
-            row = new ArrayList<>();
-            grid.add(grid.size(), row);
+            grid.add(grid.size(), new ArrayList<>());
         }
 
-        row = grid.get(y);
+        ArrayList<T> row = grid.get(y);
         if (x == row.size())
             row.add(t);
         else
@@ -66,20 +65,20 @@ public class Grid<T> {
         }
     }
 
-    public final void set(int x, int y, T t) {
-        if (y >= grid.size()) {
-            throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
-        }
+//    public final void set(int x, int y, T t) {
+//        if (y >= grid.size()) {
+//            throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
+//        }
+//
+//        ArrayList<T> row = grid.get(y);
+//        row.set(x, t);
+//    }
 
-        ArrayList<T> row = grid.get(y);
-        row.set(x, t);
-    }
-
-    public final int lastRowSize() {
-        if (grid.isEmpty())
-            return 0;
-        return getRow(grid.size() - 1).size();
-    }
+//    public final int lastRowSize() {
+//        if (grid.isEmpty())
+//            return 0;
+//        return getRow(grid.size() - 1).size();
+//    }
 
     @Override
     public String toString() {

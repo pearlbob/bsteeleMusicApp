@@ -46,7 +46,7 @@ public class BassPresenterWidget extends PresenterWidget<BassPresenterWidget.MyV
 
     @Override
     public void onSongUpdate(SongUpdateEvent event) {
-        view.onSongUpdate(event.getSongUpdate());
+        //fixme view.onSongUpdate(event.getSongUpdate());
     }
 
     @Override

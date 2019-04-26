@@ -508,6 +508,10 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sectionVersion;
     }
 
+    public final Section getSection() {
+        return sectionVersion.getSection();
+    }
+
     public final ArrayList<Phrase> getPhrases() {
         return phrases;
     }

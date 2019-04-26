@@ -6,6 +6,7 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 
 /**
@@ -190,8 +191,26 @@ public class KeyTest extends TestCase {
 
     @Test
     public void testMinorKey() {
-
         assertEquals(Key.A, Key.C.getMinorKey());
+    }
+
+    @Test
+    public void testScaleNoteByHalfStep() {
+        for (Key key : Key.values()) {
+            logger.fine("key "+key.toString());
+            if (key.isSharp())
+                for (int i = -18; i < 18; i++) {
+                    ScaleNote scaleNote = key.getScaleNoteByHalfStep(i);
+                    logger.finer("\t" + i + ": " + scaleNote.toString());
+                    assertTrue(scaleNote.toString().indexOf("♭") < 0);
+                }
+            else
+                for (int i = -18; i < 18; i++) {
+                    ScaleNote scaleNote = key.getScaleNoteByHalfStep(i);
+                    logger.finer("\t" + i + ": " + scaleNote.toString());
+                    assertTrue(scaleNote.toString().indexOf("♯") < 0);
+                }
+        }
 
     }
 
@@ -432,6 +451,8 @@ public class KeyTest extends TestCase {
         assertEquals(Key.Eb, Key.parse("E♭"));
         assertEquals(Key.Eb, Key.parse("Eb"));
     }
+
+    private static Logger logger = Logger.getLogger(KeyTest.class.getName());
 }
 
 
