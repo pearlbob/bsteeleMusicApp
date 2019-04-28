@@ -28,6 +28,8 @@ public class ScaleChordTest extends TestCase {
                 "    <table border=\"1\" >\n");
         try {
             for (ScaleNote sn : ScaleNote.values()) {
+                if ( sn == ScaleNote.X)
+                    continue;
                 String s = sn.toString();
                 ScaleChord sc = null;
 

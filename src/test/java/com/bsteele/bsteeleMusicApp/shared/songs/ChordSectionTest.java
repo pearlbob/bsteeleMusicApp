@@ -159,7 +159,7 @@ public class ChordSectionTest extends TestCase {
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 6, 0);
 
                 Measure measure = measures.get(7);
-                assertEquals(0, measure.getChords().size());
+                assertEquals(1, measure.getChords().size());
                 assertEquals(4, measure.getBeatCount());
             }
             {

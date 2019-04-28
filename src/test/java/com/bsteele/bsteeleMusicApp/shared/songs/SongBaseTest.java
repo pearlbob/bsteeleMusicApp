@@ -588,16 +588,15 @@ public class SongBaseTest
 
         logger.fine(a.logGrid());
         Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
-        assertEquals(5, grid.getRowCount());
+        assertEquals(8, grid.getRowCount());
         ArrayList<ChordSectionLocation> row = grid.getRow(0);
         assertEquals(2, row.size());
         row = grid.getRow(1);
         logger.fine("row: " + row.toString());
         assertEquals(6, row.size());
         row = grid.getRow(2);
-        assertEquals(5, row.size());
-        row = grid.getRow(5);
-        assertNull(row);
+        assertEquals(2, row.size());
+        assertNull(grid.get(0,5));
     }
 
     @Test
@@ -686,7 +685,7 @@ public class SongBaseTest
                             "C5D5 C5D5 C5D5 C5D5",
                     "i1:\nv: bob, bob, bob berand\ni2: nope\nc1: sing \ni3: chorus here \ni4: mo chorus here\no: last line of outro");
             logger.fine(a.logGrid());
-            assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(1, 3)));
+            assertEquals(Measure.parse("X", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(1, 2)));
             assertEquals(Measure.parse("C5D5", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(5, 4)));
             assertEquals(Measure.parse("DC", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(18, 2)));
 

@@ -178,11 +178,13 @@ public class SongBase {
     private enum UpperCaseState {
         initial,
         flatIsPossible,
+        comment,
         normal;
     }
 
     public static final String entryToUppercase(String entry) {
         StringBuilder sb = new StringBuilder();
+
 
         UpperCaseState state = UpperCaseState.initial;
         for (int i = 0; i < entry.length(); i++) {
@@ -210,6 +212,22 @@ public class SongBase {
                             //  map the chord to upper case
                             c = Character.toUpperCase(c);
                         }
+                    } else if (c == 'x') {
+                        if (i < entry.length() - 1) {
+                            char d = entry.charAt(i + 1);
+                            if (d >= '1' && d <= '9') {
+                                sb.append(c);
+                                break;      //  don't cap a repeat repetition declaration
+                            }
+                        }
+                        sb.append(Character.toUpperCase(c));   //  x to X
+                        break;
+                    } else if (c == '(') {
+                        sb.append(c);
+
+                        //  don't cap a comment
+                        state = UpperCaseState.comment;
+                        break;
                     }
                     state = (c >= 'A' && c <= 'G') ? UpperCaseState.flatIsPossible : UpperCaseState.normal;
                     //  fall through
@@ -225,6 +243,11 @@ public class SongBase {
                         state = UpperCaseState.initial;
 
                     sb.append(c);
+                    break;
+                case comment:
+                    sb.append(c);
+                    if (c == ')')
+                        state = UpperCaseState.initial;
                     break;
             }
 
@@ -469,19 +492,27 @@ public class SongBase {
                         grid.set(col++, row, loc);
                     }
                 } else {
+                    Measure lastMeasure;
+                    Measure measure = null;
                     for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
 
                         //  place comments on their own line, don't upset the col location
                         //  expect the outout to span the row
-                        Measure measure = phrase.getMeasure(measureIndex);
+                        lastMeasure = measure;
+                        measure = phrase.getMeasure(measureIndex);
+
                         if (measure.isComment()) {
-                            row++;
+                            if (col > offset && lastMeasure != null && !lastMeasure.isComment())
+                                row++;
                             ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
-                            grid.set(offset, row, loc   );
+                            grid.set(offset, row, loc);
                             GridCoordinate coordinate = new GridCoordinate(row, offset);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                             gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                            row++;
+                            if (measureIndex < phraseSize - 1)
+                                row++;
+                            else
+                                col= offset+ measuresPerline;    //  prep for next phrase
                             continue;
                         }
 
@@ -497,7 +528,7 @@ public class SongBase {
                                 repeatExtensionUsed = true;
                             }
                             row++;
-                            col = 1;
+                            col = offset;
                         }
 
                         {
@@ -1781,7 +1812,8 @@ public class SongBase {
         transpose(flexTable, halfSteps, fontSize, false);
     }
 
-    public final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
+    public final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize,
+                                boolean append) {
         if (chordSection == null || flexTable == null || fontSize <= 0)
             return;
         transpose(chordSection, flexTable, halfSteps, fontSize, append, true);
@@ -1869,8 +1901,8 @@ public class SongBase {
                 final int flexRow = r + offset;
 
                 //  expect comment to span the row
-                if ( measureNode.isComment()){
-                    formatter.setColSpan(flexRow, col,MusicConstant.measuresPerDisplayRow);
+                if (measureNode.isComment()) {
+                    formatter.setColSpan(flexRow, col, MusicConstant.measuresPerDisplayRow);
                 }
 
                 String s = "";
@@ -2740,7 +2772,8 @@ public class SongBase {
         return title + (fileVersionNumber > 0 ? ":(" + fileVersionNumber + ")" : "") + " by " + artist;
     }
 
-    public static final boolean containsSongTitleAndArtist(Collection<? extends SongBase> collection, SongBase song) {
+    public static final boolean containsSongTitleAndArtist(Collection<? extends SongBase> collection, SongBase
+            song) {
         for (SongBase collectionSong : collection) {
             if (song.defaultCompareTo(collectionSong) == 0)
                 return true;

@@ -18,6 +18,13 @@ public class SongEntryTest
     @Test
     public void testEntryToUppercase() {
         {
+            assertEquals("X", SongBase.entryToUppercase("x"));
+            assertEquals("X ", SongBase.entryToUppercase("x "));
+            assertEquals("XA", SongBase.entryToUppercase("xa"));
+            assertEquals("AX", SongBase.entryToUppercase("ax"));
+            assertEquals("Ax2", SongBase.entryToUppercase("ax2"));
+            assertEquals("x2", SongBase.entryToUppercase("x2"));
+
             assertEquals("A", SongBase.entryToUppercase("a"));
             assertEquals("G", SongBase.entryToUppercase("g"));
             assertEquals("h", SongBase.entryToUppercase("h"));
@@ -25,6 +32,10 @@ public class SongEntryTest
             assertEquals("Ab", SongBase.entryToUppercase("ab"));
             assertEquals("Gb", SongBase.entryToUppercase("gb"));
             assertEquals("hb", SongBase.entryToUppercase("hb"));
+
+            assertEquals("AFoo", SongBase.entryToUppercase("afoo"));//  fixme
+            assertEquals("(afoo)", SongBase.entryToUppercase("(afoo)"));
+            assertEquals("DCGG(afoo)AX", SongBase.entryToUppercase("dcgg(afoo)ax"));
 
             assertEquals("V:Ab", SongBase.entryToUppercase("V:ab"));
             assertEquals("v:Gb", SongBase.entryToUppercase("v:gb"));
@@ -47,8 +58,12 @@ public class SongEntryTest
             int beatsPerBar = 4;
             ScaleNote[] slashScaleNotes = new ScaleNote[]{null, ScaleNote.A, ScaleNote.As, ScaleNote.Eb, ScaleNote.Cb};
             for (ScaleNote scaleNote : ScaleNote.values()) {
+                if (scaleNote == ScaleNote.X)
+                    continue;
                 for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
                     for (ScaleNote slashScaleNote : slashScaleNotes) {
+                        if (slashScaleNote == ScaleNote.X)
+                            continue;
                         ScaleChord scaleChord = new ScaleChord(scaleNote, chordDescriptor);
                         ChordAnticipationOrDelay chordAnticipationOrDelay = ChordAnticipationOrDelay.none;
                         Chord chord = new Chord(scaleChord, beats, beatsPerBar,
@@ -101,15 +116,15 @@ public class SongEntryTest
             //  single measure
             measureNodes = a.parseChordEntry("A");
             assertEquals(1, measureNodes.size());
-            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
-            phrase = (Phrase)  measureNodes.get(0);
-            assertEquals(Phrase.parse("A",0, beatsPerBar, null),phrase);
+            assertEquals(MeasureNode.MeasureNodeType.phrase, measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase) measureNodes.get(0);
+            assertEquals(Phrase.parse("A", 0, beatsPerBar, null), phrase);
 
             //  short measure
             measureNodes = a.parseChordEntry("G G. Bm");
             assertEquals(1, measureNodes.size());
-            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
-            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(MeasureNode.MeasureNodeType.phrase, measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase) measureNodes.get(0);
             assertEquals(Measure.parse("G", beatsPerBar), phrase.getMeasure(0));
             assertEquals("G.", phrase.getMeasure(1).toMarkup());
             assertEquals("Bm", phrase.getMeasure(2).toMarkup());
@@ -124,8 +139,8 @@ public class SongEntryTest
             //  phrase
             measureNodes = a.parseChordEntry("A B Cm7");
             assertEquals(1, measureNodes.size());
-            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
-            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(MeasureNode.MeasureNodeType.phrase, measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase) measureNodes.get(0);
             assertEquals(Measure.parse("A", beatsPerBar), phrase.getMeasure(0));
             assertEquals(Measure.parse("Cm7", beatsPerBar), phrase.getMeasure(2));
 
@@ -145,7 +160,7 @@ public class SongEntryTest
             assertEquals(1, measureNodes.size());
             measureNode = measureNodes.get(0);
             assertEquals(MeasureNode.MeasureNodeType.repeat, measureNode.getMeasureNodeType());
-             measureRepeat = (MeasureRepeat) measureNode;
+            measureRepeat = (MeasureRepeat) measureNode;
             assertEquals("G", measureRepeat.getMeasure(1).toMarkup());
             assertEquals("G.", measureRepeat.getMeasure(2).toMarkup());
             assertEquals(3, measureRepeat.getRepeats());
@@ -153,10 +168,10 @@ public class SongEntryTest
             //  comment
             measureNodes = a.parseChordEntry("(D Cm7 G E x3)");
             assertEquals(1, measureNodes.size());
-            assertEquals(MeasureNode.MeasureNodeType.phrase,measureNodes.get(0).getMeasureNodeType());
-            phrase = (Phrase)  measureNodes.get(0);
+            assertEquals(MeasureNode.MeasureNodeType.phrase, measureNodes.get(0).getMeasureNodeType());
+            phrase = (Phrase) measureNodes.get(0);
             assertEquals(1, phrase.size());
-            measure= phrase.getMeasure(0);
+            measure = phrase.getMeasure(0);
             assertEquals(MeasureNode.MeasureNodeType.comment, measure.getMeasureNodeType());
             MeasureComment measureComment = (MeasureComment) measure;
             assertEquals("D Cm7 G E x3", measureComment.getComment());

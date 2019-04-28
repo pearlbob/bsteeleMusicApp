@@ -21,6 +21,8 @@ public class ChordTest extends TestCase {
             for (ChordAnticipationOrDelay anticipationOrDelay : ChordAnticipationOrDelay.values()) {
                 logger.fine("anticipationOrDelay: " + anticipationOrDelay.toString());
                 for (ScaleNote scaleNote : ScaleNote.values()) {
+                    if ( scaleNote==ScaleNote.X)
+                        continue;
                     for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
                         for (int beats = 2; beats <= 4; beats++) {
                             ScaleChord scaleChord = new ScaleChord(scaleNote, chordDescriptor);
