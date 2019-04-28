@@ -31,7 +31,7 @@ public class Grid<T> {
             ArrayList<T> row = other.getRow(r);
             int colLimit = row.size();
             for (int c = 0; c < colLimit; c++) {
-                addTo(c, r, row.get(c));
+                set(c, r, row.get(c));
             }
         }
         return this;
@@ -41,7 +41,11 @@ public class Grid<T> {
         return grid.isEmpty();
     }
 
-    public final void addTo(int x, int y, T t) {
+    public final void set(int x, int y, T t) {
+        if ( x < 0 )
+            x = 0;
+        if ( y < 0 )
+            y = 0;
 
         while (y >= grid.size()) {
             //  addTo a new row to the grid
@@ -51,34 +55,12 @@ public class Grid<T> {
         ArrayList<T> row = grid.get(y);
         if (x == row.size())
             row.add(t);
-        else
-            row.add(x, t);
-    }
-
-    public final void add(T t) {
-        if (grid.isEmpty())
-            addTo(0, 0, t);
         else {
-            int r = grid.size() - 1;
-            ArrayList<T> row = grid.get(r);
-            addTo(row.size(), r, t);
+            while ( x > row.size()-1)
+                row.add(null);
+            row.set(x, t);
         }
     }
-
-//    public final void set(int x, int y, T t) {
-//        if (y >= grid.size()) {
-//            throw new ArrayIndexOutOfBoundsException("row is not incremental: y: " + y + " vs " + grid.size());
-//        }
-//
-//        ArrayList<T> row = grid.get(y);
-//        row.set(x, t);
-//    }
-
-//    public final int lastRowSize() {
-//        if (grid.isEmpty())
-//            return 0;
-//        return getRow(grid.size() - 1).size();
-//    }
 
     @Override
     public String toString() {

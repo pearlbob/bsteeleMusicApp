@@ -12,9 +12,22 @@ import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
-import com.bsteele.bsteeleMusicApp.shared.songs.*;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordComponent;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordDescriptor;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordSection;
+import com.bsteele.bsteeleMusicApp.shared.songs.ChordSectionLocation;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.Measure;
+import com.bsteele.bsteeleMusicApp.shared.songs.MeasureEditType;
+import com.bsteele.bsteeleMusicApp.shared.songs.MeasureNode;
+import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
+import com.bsteele.bsteeleMusicApp.shared.songs.Phrase;
+import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
+import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
+import com.bsteele.bsteeleMusicApp.shared.songs.Section;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
-import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
@@ -28,9 +41,6 @@ import com.google.gwt.dom.client.TableCellElement;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.shared.GwtEvent;
@@ -405,7 +415,6 @@ public class SongEditView
         sectionBr.addClickHandler((ClickEvent event) -> {
             processSectionEntry(Section.bridge.getAbbreviation());
         });
-
         sectionO.addClickHandler((ClickEvent event) -> {
             processSectionEntry(Section.outro.getAbbreviation());
         });
@@ -661,21 +670,19 @@ public class SongEditView
         if (entry.isEmpty())
             return;
 
-        if (processChordEntry(entry)) {
-            measureEntry.setValue("");
-            preProcessMeasureEntry();
-        }
+        processChordEntry(entry);
     }
 
     private boolean processSectionEntry(String entry) {
         boolean ret = processChordEntry(
-                //measureEntry.getValue() + " " +
-                entry
-                        + sectionVersionSelect.getValue()
+                SongBase.entryToUppercase(measureEntry.getValue()) + " " +
+                        entry
+                        + (sectionVersionSelect.getSelectedIndex() > 0 ? sectionVersionSelect.getValue() : "")
                         + ":"
         );
-        if (ret)
+        if (ret) {
             sectionVersionSelect.setSelectedIndex(0);
+        }
         return ret;
     }
 
@@ -699,6 +706,8 @@ public class SongEditView
         }
 
         checkSong();
+        measureEntry.setValue("");
+        preProcessMeasureEntry();
         measureFocus();
         return true;
     }
@@ -958,6 +967,7 @@ public class SongEditView
                 case delete:
                     e.setAttribute("editSelect", "replace");
                     e.getStyle().setBackgroundColor(selectedBorderColorValueString);
+                    measureEntry.setText(song.toMarkup(chordSectionLocation));
                     break;
             }
         } catch (IndexOutOfBoundsException ioob) {
@@ -966,7 +976,6 @@ public class SongEditView
             logger.fine(song.logGrid());
         }
 
-        measureEntry.setText(song.toMarkup(chordSectionLocation));
         measureEntry.selectAll();
     }
 
@@ -1185,7 +1194,7 @@ public class SongEditView
             Measure measure;
             for (SongMoment songMoment : song.getSongMoments()) {
                 MeasureNode measureNode = song.findMeasureNode(songMoment.getChordSectionLocation());
-                if ( measureNode == null)
+                if (measureNode == null)
                     continue;
                 switch (measureNode.getMeasureNodeType()) {
                     case measure:

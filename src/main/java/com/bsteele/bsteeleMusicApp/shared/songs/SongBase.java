@@ -426,34 +426,22 @@ public class SongBase {
 
             logger.finest("gridding: " + chordSection.getSectionVersion().toString() + " (" + col + ", " + row + ")");
 
-            int multRow = row;
             TreeSet<SectionVersion> multSectionVersionsDone = new TreeSet<>();
             {
                 //  grid the section header
-                ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion());
+                TreeSet<SectionVersion> matchingSectionVersions = matchingSectionVersions(chordSection.getSectionVersion());
                 GridCoordinate coordinate = new GridCoordinate(row, col);
-                chordSectionGridCoorinateMap.put(chordSection.getSectionVersion(), coordinate);
+                for (SectionVersion sectionVersion : matchingSectionVersions) {
+                    chordSectionGridCoorinateMap.put(sectionVersion, coordinate);
+                    ChordSectionLocation loc = new ChordSectionLocation(sectionVersion);
+                    gridChordSectionLocationCoordinateMap.put(loc, coordinate);
+                }
+
+                ChordSectionLocation loc = new ChordSectionLocation(matchingSectionVersions);
                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                grid.addTo(col++, row, loc);
-
-
-                multSectionVersionsDone = matchingSectionVersions(chordSection.getSectionVersion());
-                for (SectionVersion multSectionVersion : multSectionVersionsDone) {
-                    if (multSectionVersion.equals(chordSection.getSectionVersion()))
-                        continue;
-
-                    //  multiple sections on one declaration
-                    multRow++;
-                    GridCoordinate multCoordinate = new GridCoordinate(multRow, 0);
-                    chordSectionGridCoorinateMap.put(multSectionVersion, multCoordinate);
-
-                    ChordSectionLocation multLoc = new ChordSectionLocation(multSectionVersion, chordSection.getSectionVersion());
-                    gridCoordinateChordSectionLocationMap.put(multCoordinate, multLoc);
-                    gridChordSectionLocationCoordinateMap.put(multLoc, multCoordinate);
-                    grid.addTo(0, multRow, multLoc);
-                }
-                sectionVersionsToDo.removeAll(multSectionVersionsDone);
+                grid.set(col++, row, loc);
+                sectionVersionsToDo.removeAll(matchingSectionVersions);
             }
 
             //  grid each phrase
@@ -461,8 +449,7 @@ public class SongBase {
                 //  start each phrase on it's own line
                 if (col > offset) {
                     row++;
-                    col = 0;
-                    grid.addTo(col++, row, null);
+                    col = offset;
                 }
 
                 Phrase phrase = chordSection.getPhrase(phraseIndex);
@@ -473,15 +460,14 @@ public class SongBase {
                 if (phraseSize == 0 && phrase.isRepeat()) {
                     //  special case: deal with empty repeat
                     //  fill row to measures per line
-                    while (col < offset + measuresPerline)
-                        grid.addTo(col++, row, null);
+                    col = offset + measuresPerline - 1;
                     {
                         //  add repeat indicator
                         ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex);
                         GridCoordinate coordinate = new GridCoordinate(row, col);
                         gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                         gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                        grid.addTo(col++, row, loc);
+                        grid.set(col++, row, loc);
                     }
                 } else {
                     for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
@@ -490,7 +476,7 @@ public class SongBase {
                         if (col >= offset + measuresPerline) {
                             //  put an end of line marker on multiline repeats
                             if (phrase.isRepeat()) {
-                                grid.addTo(col++, row, new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
+                                grid.set(col++, row, new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
                                         (repeatExtensionUsed
                                                 ? ChordSectionLocation.Marker.repeatMiddleRight
                                                 : ChordSectionLocation.Marker.repeatUpperRight
@@ -498,10 +484,7 @@ public class SongBase {
                                 repeatExtensionUsed = true;
                             }
                             row++;
-                            col = 0;
-                            if (grid.getRowCount() <= row || grid.getRow(row) == null || grid.getRow(row).size() <= 0)
-                                grid.addTo(col, row, null);
-                            col++;
+                            col = 1;
                         }
 
                         {
@@ -510,14 +493,13 @@ public class SongBase {
                             GridCoordinate coordinate = new GridCoordinate(row, col);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                             gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                            grid.addTo(col++, row, loc);
+                            grid.set(col++, row, loc);
                         }
 
                         //  put the repeat on the end of the last line of the repeat
                         if (phrase.isRepeat() && measureIndex == phraseSize - 1) {
                             //  fill row to measures per line
-                            while (col < offset + measuresPerline)
-                                grid.addTo(col++, row, null);
+                            col = offset + measuresPerline;
 
                             //  close the multiline repeat marker
                             if (repeatExtensionUsed) {
@@ -526,7 +508,7 @@ public class SongBase {
                                 GridCoordinate coordinate = new GridCoordinate(row, col);
                                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                                grid.addTo(col++, row, loc);
+                                grid.set(col++, row, loc);
 
                                 repeatExtensionUsed = false;
                             }
@@ -536,16 +518,12 @@ public class SongBase {
                                 GridCoordinate coordinate = new GridCoordinate(row, col);
                                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                                grid.addTo(col++, row, loc);
+                                grid.set(col++, row, loc);
                             }
                         }
                     }
                 }
             }
-
-            //  walk past multiple section declarations
-            row = Math.max(multRow, row);
-
         }
 
         if (logger.getLevel() != null && logger.getLevel().intValue() <= Level.FINEST.intValue()) {
@@ -657,10 +635,8 @@ public class SongBase {
         StringBuilder sb = new StringBuilder();
         if (location != null) {
             if (location.isSection()) {
-                for (SectionVersion sectionVersion : matchingSectionVersions(location.getLabelSectionVersion())) {
-                    sb.append(sectionVersion.toString());
-                    sb.append(" ");
-                }
+                sb.append(location.toString());
+                sb.append(" ");
                 sb.append(getChordSection(location).phrasesToMarkup());
                 return sb.toString();
             } else {
@@ -1019,6 +995,11 @@ public class SongBase {
                                     phrase.getPhraseIndex(), location.getMeasureIndex() + newPhrase.size());
                             return standardEditCleanup(phrase.edit(editType, location.getMeasureIndex(), newPhrase), newLocation);
                         }
+                        if (location.hasPhraseIndex()) {
+                            phaseIndex = location.getPhraseIndex() + 1;
+                            newLocation = new ChordSectionLocation(chordSection.getSectionVersion(), phaseIndex, newPhrase.size() - 1);
+                            return standardEditCleanup(chordSection.add(phaseIndex, newPhrase), newLocation);
+                        }
                         newLocation = new ChordSectionLocation(chordSection.getSectionVersion(),
                                 phrase.getPhraseIndex(), phrase.getMeasures().size() + newPhrase.size() - 1);
                         return standardEditCleanup(phrase.add(newPhrase.getMeasures()), newLocation);
@@ -1252,7 +1233,7 @@ public class SongBase {
             setCurrentChordSectionLocation(location);
 
             switch (getCurrentMeasureEditType()) {
-                case replace:
+                // case replace:
                 case delete:
                     if (getCurrentChordSectionLocationMeasureNode() == null)
                         setCurrentMeasureEditType(MeasureEditType.append);
@@ -1885,13 +1866,12 @@ public class SongBase {
                             if (firstRow) {
                                 s = chordSection.getSectionVersion().toString();
                                 abbreviation = chordSection.getSectionVersion().getSection().getAbbreviation();
-                            }
-                            else
+                            } else
                                 continue;
                         } else {
                             //  do all the sections that match
-                            s = loc.getLabelSectionVersion().toString();    //  notice the mapping to the label
-                            abbreviation = loc.getLabelSectionVersion().getSection().getAbbreviation();
+                            s = loc.toString();
+                            abbreviation = loc.getSectionVersion().getSection().getAbbreviation();
                         }
 
                         formatter.addStyleName(flexRow, 0, CssConstants.style + "sectionLabel");
@@ -1912,17 +1892,17 @@ public class SongBase {
                     lastValue = s;
 
                 //formatter.setAlignment(flexRow, c, ALIGN_CENTER, ALIGN_BOTTOM);   //  as per Shari, comment out
-                    flexTable.setHTML(flexRow, col,
-                            "<span style=\"font-size: " + fontSize + "px;\">"
-                                    + s
-                                    + "</span>"
-                    );
-                    formatter.addStyleName(flexRow, col, CssConstants.style
-                            + (measureNode.isComment() && !measureNode.isRepeat()
-                            ? "sectionCommentClass"
-                            : "section" + abbreviation + "Class"));
+                flexTable.setHTML(flexRow, col,
+                        "<span style=\"font-size: " + fontSize + "px;\">"
+                                + s
+                                + "</span>"
+                );
+                formatter.addStyleName(flexRow, col, CssConstants.style
+                        + (measureNode.isComment() && !measureNode.isRepeat()
+                        ? "sectionCommentClass"
+                        : "section" + abbreviation + "Class"));
 
-                    formatter.getElement(flexRow, col).setId((measureNode.isComment() || measureNode.isRepeat() ? "" : "C."));
+                formatter.getElement(flexRow, col).setId((measureNode.isComment() || measureNode.isRepeat() ? "" : "C."));
             }
 
             firstRow = false;

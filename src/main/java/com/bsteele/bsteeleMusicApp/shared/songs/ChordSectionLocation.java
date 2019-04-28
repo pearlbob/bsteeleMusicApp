@@ -7,12 +7,13 @@ import com.google.gwt.regexp.shared.RegExp;
 import javax.annotation.Nonnull;
 import java.text.ParseException;
 import java.util.Objects;
+import java.util.TreeSet;
 
 public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, int measureIndex) {
         this.sectionVersion = sectionVersion;
-        this.labelSectionVersion = sectionVersion;
+        labelSectionVersions = null;
         if (phraseIndex < 0) {
             this.phraseIndex = -1;
             hasPhraseIndex = false;
@@ -35,7 +36,7 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex) {
         this.sectionVersion = sectionVersion;
-        this.labelSectionVersion = sectionVersion;
+        labelSectionVersions = null;
         if (phraseIndex < 0) {
             this.phraseIndex = -1;
             hasPhraseIndex = false;
@@ -50,7 +51,7 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion, int phraseIndex, Marker marker) {
         this.sectionVersion = sectionVersion;
-        this.labelSectionVersion = sectionVersion;
+        labelSectionVersions = null;
         if (phraseIndex < 0) {
             this.phraseIndex = -1;
             hasPhraseIndex = false;
@@ -65,7 +66,7 @@ public class ChordSectionLocation {
 
     ChordSectionLocation(@Nonnull SectionVersion sectionVersion) {
         this.sectionVersion = sectionVersion;
-        this.labelSectionVersion = sectionVersion;
+        labelSectionVersions = null;
         this.phraseIndex = -1;
         hasPhraseIndex = false;
         this.measureIndex = -1;
@@ -73,9 +74,14 @@ public class ChordSectionLocation {
         marker = Marker.none;
     }
 
-    ChordSectionLocation(@Nonnull SectionVersion sectionVersionLabel, @Nonnull SectionVersion sectionVersion) {
-        this.sectionVersion = sectionVersion;
-        this.labelSectionVersion = sectionVersionLabel;
+    ChordSectionLocation(@Nonnull TreeSet<SectionVersion> labelSectionVersions) {
+        if (labelSectionVersions == null)
+            labelSectionVersions = new TreeSet<>();
+        if (labelSectionVersions.isEmpty())
+            labelSectionVersions.add(SectionVersion.getDefault());
+
+        this.sectionVersion = labelSectionVersions.first();
+        this.labelSectionVersions = (labelSectionVersions.size() == 1 ? null : labelSectionVersions);
         this.phraseIndex = -1;
         hasPhraseIndex = false;
         this.measureIndex = -1;
@@ -154,15 +160,23 @@ public class ChordSectionLocation {
     }
 
     public final String getId() {
-        return labelSectionVersion.toString() + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
+        if (id == null) {
+            if (labelSectionVersions == null)
+                id = sectionVersion.toString()
+                        + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
+            else {
+                StringBuilder sb = new StringBuilder();
+                for (SectionVersion sectionVersion : labelSectionVersions) {
+                    sb.append(sectionVersion.toString()).append(" ");
+                }
+                id = sb.toString();
+            }
+        }
+        return id;
     }
 
     public final SectionVersion getSectionVersion() {
         return sectionVersion;
-    }
-
-    public final SectionVersion getLabelSectionVersion() {
-        return labelSectionVersion;
     }
 
     public final int getPhraseIndex() {
@@ -202,7 +216,7 @@ public class ChordSectionLocation {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = (31 * hash + labelSectionVersion.hashCode()) % (1 << 31);
+        hash = (31 * hash + Objects.hashCode(labelSectionVersions)) % (1 << 31);
         hash = (31 * hash + sectionVersion.hashCode()) % (1 << 31);
         hash = (31 * hash + (hasPhraseIndex ? 1 : 0)) % (1 << 31);
         hash = (31 * hash + phraseIndex) % (1 << 31);
@@ -226,11 +240,12 @@ public class ChordSectionLocation {
     }
 
     private final SectionVersion sectionVersion;
-    private final SectionVersion labelSectionVersion;
+    private final TreeSet<SectionVersion> labelSectionVersions;
     private final int phraseIndex;
     private final boolean hasPhraseIndex;
     private final int measureIndex;
     private final boolean hasMeasureIndex;
     private final Marker marker;
+    private transient String id;
 
 }

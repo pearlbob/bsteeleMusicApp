@@ -23,6 +23,11 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.append, "I:0", "[Am Am/G Am/F♯ FE ] x4 ", "E ");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4 E  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
+            post(MeasureEditType.append, "I:1:0", "E");
+
             startingChords("I: V: O: E♭sus2 B♭ Gm7 Em F F7 G7 G Em Em Em Em Em Em Em Em Em C  C: [Cm F B♭ E♭ ] x3 Cm F  ");
             pre(MeasureEditType.delete, "I:0:14", "Em", "null");
             resultChords("I: V: O: E♭sus2 B♭ Gm7 Em F F7 G7 G Em Em Em Em Em Em Em Em C  C: [Cm F B♭ E♭ ] x3 Cm F  ");
@@ -36,7 +41,7 @@ public class SongEditTest extends TestCase {
             startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
             pre(MeasureEditType.replace, "V:0:2", "Am/F♯", "Am/G ");
             resultChords("I: V: [Am Am/G Am/G FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
-            post(MeasureEditType.replace, "V:0:2", "Am/G");
+            post(MeasureEditType.append, "V:0:2", "Am/G");
 
             startingChords("V: C F C C F F C C G F C G  ");
             pre(MeasureEditType.replace, "V:0:3", "C", "[] x1 ");
@@ -49,18 +54,18 @@ public class SongEditTest extends TestCase {
             resultChords("V: C F C C [F F C C ] x2 G F C G  ");
             //               0 1 2 3  4 5 6 7      8 9 0 1
             //               0 1 2 3  0 1 2 3      0 1 2 3
-            post(MeasureEditType.replace, "V:1", "[F F C C ] x2 ");
+            post(MeasureEditType.append, "V:1", "[F F C C ] x2");
 
             startingChords("V: C F C C F F C C G F C G  ");
             //                 0 1 2 3 4 5 6 7 8 9 0 1
             pre(MeasureEditType.replace, "V:0:6", "C", "[] x3 ");
             resultChords("V: C F C C [F F C C ] x3 G F C G  ");
-            post(MeasureEditType.replace, "V:1", "[F F C C ] x3 ");
+            post(MeasureEditType.append, "V:1", "[F F C C ] x3");
 
             startingChords("V: C F C C F F C C [G F C D ] x2  ");
             pre(MeasureEditType.replace, "V:0:3", "C", "[] x2 ");
             resultChords("V: [C F C C ] x2 F F C C [G F C D ] x2  ");
-            post(MeasureEditType.replace, "V:0", "[C F C C ] x2 ");
+            post(MeasureEditType.append, "V:0", "[C F C C ] x2");
 
             startingChords("I:  V:  ");
             pre(MeasureEditType.append, "V:", "V: ", "Dm ");
@@ -70,7 +75,7 @@ public class SongEditTest extends TestCase {
             startingChords("I:  V:  ");
             pre(MeasureEditType.replace, "V:", "V: ", "Dm ");
             resultChords("I:  V: Dm  ");
-            post(MeasureEditType.replace, "V:0:0", "Dm");
+            post(MeasureEditType.append, "V:0:0", "Dm");
 
             startingChords("V: C F F C C F F C C G F C G  ");
             pre(MeasureEditType.delete, "V:", "V: C F F C C F F C C G F C G ", null);
@@ -106,7 +111,7 @@ public class SongEditTest extends TestCase {
             pre(MeasureEditType.replace, "V:1", "[G F C G ] x4 ", "B ");
             resultChords("V: C F C C F F C C B  ");
             //               0 1 2 3 4 5 6 7 8
-            post(MeasureEditType.replace, "V:0:8", "B");
+            post(MeasureEditType.append, "V:0:8", "B");
 
             //  insert into a repeat
             startingChords("V: [C F C C ] x2 F F C C G F C G  ");
@@ -124,7 +129,7 @@ public class SongEditTest extends TestCase {
             startingChords("V: C F C C F F C C G F C G  ");  //
             pre(MeasureEditType.replace, "V:0:1", "F", "Dm ");  //
             resultChords("V: C Dm C C F F C C G F C G  ");  //
-            post(MeasureEditType.replace, "V:0:1", "Dm");  //
+            post(MeasureEditType.append, "V:0:1", "Dm");  //
 
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
@@ -775,7 +780,7 @@ public class SongEditTest extends TestCase {
         if (measureNodeString == null)
             assertTrue(a.getCurrentMeasureNode() == null);
         else
-            assertEquals(measureNodeString, a.getCurrentMeasureNode().toMarkup());
+            assertEquals(measureNodeString.trim(), a.getCurrentMeasureNode().toMarkup().trim());
     }
 
 
