@@ -52,9 +52,12 @@ public class Chord implements Comparable<Chord> {
 
 
         ScaleNote slashScaleNote = null;
-        if (!markedString.isEmpty() && markedString.charAt(0) == '/') {
-            markedString.consume(1);
-            slashScaleNote = ScaleNote.parse(markedString);
+        if ( scaleChord.getScaleNote() != ScaleNote.X)  //  no slash chords over no chord
+        {
+            if (!markedString.isEmpty() && markedString.charAt(0) == '/') {
+                markedString.consume(1);
+                slashScaleNote = ScaleNote.parse(markedString);
+            }
         }
         if (!markedString.isEmpty() && markedString.charAt(0) == '.') {
             beats = 1;

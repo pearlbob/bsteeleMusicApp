@@ -36,20 +36,22 @@ public class ScaleChord implements Comparable<ScaleChord> {
     }
 
     static final ScaleChord parse(String s)
-            throws ParseException
-    {
+            throws ParseException {
         return parse(new MarkedString(s));
     }
 
-     static final ScaleChord parse(MarkedString markedString) throws ParseException {
+    static final ScaleChord parse(MarkedString markedString) throws ParseException {
         if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         ScaleNote retScaleNote = ScaleNote.parse(markedString);
-
-        ChordDescriptor retChordDescriptor = ChordDescriptor.parse(markedString);
-
-        return new ScaleChord(retScaleNote, retChordDescriptor);
+        switch (retScaleNote) {
+            case X:
+                return new ScaleChord(retScaleNote, ChordDescriptor.major); //  by convention only
+            default:
+                ChordDescriptor retChordDescriptor = ChordDescriptor.parse(markedString);
+                return new ScaleChord(retScaleNote, retChordDescriptor);
+        }
     }
 
     public final ScaleChord transpose(Key key, int halfSteps) {
@@ -140,10 +142,10 @@ public class ScaleChord implements Comparable<ScaleChord> {
     private static final TreeSet<ScaleChord> easyGuitarChords = new TreeSet<ScaleChord>();
 
 
-
     private ScaleNote scaleNote;
     private ChordDescriptor chordDescriptor;
     private static Logger logger = Logger.getLogger(ScaleChord.class.getName());
+
     static {
         try {
             //C A G E D and Am Em Dm
@@ -155,8 +157,8 @@ public class ScaleChord implements Comparable<ScaleChord> {
             easyGuitarChords.add(ScaleChord.parse("Am"));
             easyGuitarChords.add(ScaleChord.parse("Em"));
             easyGuitarChords.add(ScaleChord.parse("Dm"));
-        } catch (ParseException pex){
-            logger.info( "parse exception should never happen: "+pex.getMessage());
+        } catch (ParseException pex) {
+            logger.info("parse exception should never happen: " + pex.getMessage());
         }
     }
 }

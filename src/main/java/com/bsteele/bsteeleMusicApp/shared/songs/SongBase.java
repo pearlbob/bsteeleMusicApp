@@ -426,7 +426,6 @@ public class SongBase {
 
             logger.finest("gridding: " + chordSection.getSectionVersion().toString() + " (" + col + ", " + row + ")");
 
-            TreeSet<SectionVersion> multSectionVersionsDone = new TreeSet<>();
             {
                 //  grid the section header
                 TreeSet<SectionVersion> matchingSectionVersions = matchingSectionVersions(chordSection.getSectionVersion());
@@ -471,6 +470,20 @@ public class SongBase {
                     }
                 } else {
                     for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
+
+                        //  place comments on their own line, don't upset the col location
+                        //  expect the outout to span the row
+                        Measure measure = phrase.getMeasure(measureIndex);
+                        if (measure.isComment()) {
+                            row++;
+                            ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
+                            grid.set(offset, row, loc   );
+                            GridCoordinate coordinate = new GridCoordinate(row, offset);
+                            gridCoordinateChordSectionLocationMap.put(coordinate, loc);
+                            gridChordSectionLocationCoordinateMap.put(loc, coordinate);
+                            row++;
+                            continue;
+                        }
 
                         //  limit line length to the measures per line
                         if (col >= offset + measuresPerline) {
@@ -1854,6 +1867,11 @@ public class SongBase {
 
                 MeasureNode measureNode = findMeasureNode(loc);
                 final int flexRow = r + offset;
+
+                //  expect comment to span the row
+                if ( measureNode.isComment()){
+                    formatter.setColSpan(flexRow, col,MusicConstant.measuresPerDisplayRow);
+                }
 
                 String s = "";
                 switch (col) {

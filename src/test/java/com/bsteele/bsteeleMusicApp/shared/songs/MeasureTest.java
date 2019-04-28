@@ -14,10 +14,36 @@ public class MeasureTest extends TestCase {
 
     @Test
     public void testParse() {
+        String s;
+        Measure m;
         try {
             {
-                String s = "A.B.";
-                Measure m = null;
+                s = "AX";
+
+                m = Measure.parse(s, 4);
+                assertNotNull(m);
+                //  explicit measure short of beats is left as specified
+                assertEquals("AX", m.toMarkup());
+            }
+            {
+                s = "AX..";
+
+                m = Measure.parse(s, 4);
+                assertNotNull(m);
+                //  explicit measure short of beats is left as specified
+                assertEquals("AX..", m.toMarkup());
+            }
+            {
+                s = "X";
+
+                m = Measure.parse(s, 4);
+                assertNotNull(m);
+                //  explicit measure short of beats is left as specified
+                assertEquals("X", m.toMarkup());
+            }
+
+            {
+                s = "A.B.";
 
                 m = Measure.parse(s, 5);
                 assertNotNull(m);
@@ -25,95 +51,103 @@ public class MeasureTest extends TestCase {
                 assertEquals("A.B.", m.toMarkup());
             }
             {
-                String s = "AB";
-                Measure m = Measure.parse(s, 5);
+                s = "A.B.";
+
+                m = Measure.parse(s, 5);
+                assertNotNull(m);
+                //  explicit measure short of beats is left as specified
+                assertEquals("A.B.", m.toMarkup());
+            }
+            {
+                s = "AB";
+                m = Measure.parse(s, 5);
                 assertNotNull(m);
                 //  5/4 split across two chords, first one gets the extra beat
                 assertEquals("A..B.", m.toMarkup());
             }
             {
-                String s = "A.B.";
-                Measure m = Measure.parse(s, 4);
+                s = "A.B.";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 //  default to simplest expression
                 assertEquals("AB", m.toMarkup());
             }
             {
-                String s = "A/GA/F♯";
-                Measure m = Measure.parse(s, 4);
+                s = "A/GA/F♯";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "A/G";
-                Measure m = Measure.parse(s, 4);
+                s = "A/G";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "F.";
-                Measure m = Measure.parse(s, 4);
+                s = "F.";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "F.";
-                Measure m = Measure.parse(s, 2);
+                s = "F.";
+                m = Measure.parse(s, 2);
                 assertNotNull(m);
                 assertEquals("F", m.toMarkup());
             }
             {
-                String s = "F..";
-                Measure m = Measure.parse(s, 4);
+                s = "F..";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "F...";
-                Measure m = Measure.parse(s, 4);
+                s = "F...";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals("F", m.toMarkup());
             }
             {
-                String s = "A..B";
-                Measure m = Measure.parse(s, 4);
+                s = "A..B";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "AB..";
-                Measure m = Measure.parse(s, 4);
+                s = "AB..";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "ABC.";
-                Measure m = Measure.parse(s, 4);
+                s = "ABC.";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "A.BC";
-                Measure m = Measure.parse(s, 4);
+                s = "A.BC";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
 
             {
-                String s = "E♭F";
-                Measure m = Measure.parse(s, 4);
+                s = "E♭F";
+                m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
             }
             {
-                String s = "E♭F";
-                Measure m = Measure.parse(s, 3);
+                s = "E♭F";
+                m = Measure.parse(s, 3);
                 assertNotNull(m);
                 assertEquals("E♭.F", m.toMarkup());
             }
             {
                 //  test beat allocation
-                Measure m = Measure.parse("EAB", 4);
+                m = Measure.parse("EAB", 4);
                 assertEquals(3, m.getChords().size());
                 assertEquals(2, m.getChords().get(0).getBeats());
                 assertEquals(1, m.getChords().get(1).getBeats());
@@ -156,7 +190,7 @@ public class MeasureTest extends TestCase {
             }
 
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("A", beatsPerBar);
+                m = Measure.parse("A", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(1, m.getChords().size());
                 Chord chord = m.getChords().get(0);
@@ -164,7 +198,7 @@ public class MeasureTest extends TestCase {
             }
 
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("BC", beatsPerBar);
+                m = Measure.parse("BC", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(2, m.getChords().size());
                 Chord chord0 = m.getChords().get(0);
@@ -176,7 +210,7 @@ public class MeasureTest extends TestCase {
                 assertEquals(new Chord(new ScaleChord(ScaleNote.C), beat1, beatsPerBar), chord1);
             }
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("E#m7. ", beatsPerBar);
+                m = Measure.parse("E#m7. ", beatsPerBar);
                 assertNotNull(m);
                 assertEquals(2, m.getBeatCount());
                 assertEquals(1, m.getChords().size());
@@ -184,7 +218,7 @@ public class MeasureTest extends TestCase {
                 assertEquals(new Chord(new ScaleChord(ScaleNote.Es, ChordDescriptor.minor7), 2, beatsPerBar), chord0);
             }
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("E#m7Gb7", beatsPerBar);
+                m = Measure.parse("E#m7Gb7", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(2, m.getChords().size());
                 Chord chord0 = m.getChords().get(0);
@@ -195,7 +229,7 @@ public class MeasureTest extends TestCase {
                 assertEquals(new Chord(new ScaleChord(ScaleNote.Gb, ChordDescriptor.dominant7), beat1, beatsPerBar), chord1);
             }
             for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("F#m7.Asus4", beatsPerBar);
+                m = Measure.parse("F#m7.Asus4", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(2, m.getChords().size());
                 Chord chord0 = m.getChords().get(0);
@@ -206,7 +240,7 @@ public class MeasureTest extends TestCase {
                 assertEquals(new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.suspended4), beat1, beatsPerBar), chord1);
             }
             for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("A/G#", beatsPerBar);
+                m = Measure.parse("A/G#", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(1, m.getChords().size());
                 Chord chord = m.getChords().get(0);
@@ -214,7 +248,7 @@ public class MeasureTest extends TestCase {
                         ScaleNote.Gs, ChordAnticipationOrDelay.none, true), chord);
             }
             for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-                Measure m = Measure.parse("C/F#.G", beatsPerBar);
+                m = Measure.parse("C/F#.G", beatsPerBar);
                 assertEquals(beatsPerBar, m.getBeatCount());
                 assertEquals(2, m.getChords().size());
                 Chord chord0 = m.getChords().get(0);
@@ -228,7 +262,7 @@ public class MeasureTest extends TestCase {
             {
                 for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
                     Measure m0 = Measure.parse("C", beatsPerBar);
-                    Measure m = Measure.parse(new MarkedString("-"), beatsPerBar, m0);
+                    m = Measure.parse(new MarkedString("-"), beatsPerBar, m0);
                     assertEquals(beatsPerBar, m.getBeatCount());
                     assertEquals(1, m.getChords().size());
                     assertEquals(m0.getChords(), m.getChords());
@@ -236,13 +270,13 @@ public class MeasureTest extends TestCase {
             }
             {
                 for (int beatsPerBar = 3; beatsPerBar <= 4; beatsPerBar++) {
-                    Measure m = Measure.parse("X", beatsPerBar);
+                    m = Measure.parse("X", beatsPerBar);
                     assertEquals(beatsPerBar, m.getBeatCount());
-                    assertEquals(0, m.getChords().size());
+                    assertEquals(1, m.getChords().size());
                 }
             }
             {
-                Measure m = Measure.parse("E#m7. ", 3);
+                m = Measure.parse("E#m7. ", 3);
                 assertNotNull(m);
                 assertEquals("E♯m7.", m.toMarkup());
             }
@@ -254,7 +288,7 @@ public class MeasureTest extends TestCase {
         {
             //  too many beats or over specified, doesn't cover the beats per bar
             try {
-                Measure m = Measure.parse("E#m7.. ", 2);
+                m = Measure.parse("E#m7.. ", 2);
                 fail();
             } catch (ParseException e) {
                 //  expected
@@ -263,7 +297,7 @@ public class MeasureTest extends TestCase {
         {
             int beatsPerBar = 4;
             try {
-                Measure m = Measure.parse(" .G ", beatsPerBar);
+                m = Measure.parse(" .G ", beatsPerBar);
                 fail();
             } catch (ParseException e) {
                 //  expected
@@ -272,7 +306,6 @@ public class MeasureTest extends TestCase {
         {
             int beatsPerBar = 3;
             //System.out.println("beatsPerBar: " + beatsPerBar);
-            Measure m;
             try {
                 m = Measure.parse(" .G ", beatsPerBar);
                 fail();
@@ -288,7 +321,7 @@ public class MeasureTest extends TestCase {
         }
         for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
             try {
-                Measure m = Measure.parse("E#m7.. ", beatsPerBar);
+                m = Measure.parse("E#m7.. ", beatsPerBar);
                 assertEquals(3, m.getBeatCount());
                 assertEquals(1, m.getChords().size());
                 Chord chord0 = m.getChords().get(0);

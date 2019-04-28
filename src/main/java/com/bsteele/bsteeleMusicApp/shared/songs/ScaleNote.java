@@ -45,6 +45,7 @@ public enum ScaleNote {
     Es(8),     //  used for Fs (+6) key
     Bs(3),     //   for completeness of piano expression
     Fb(7),     //   for completeness of piano expression
+    X(0)       //  No scale note!  Used to avoid testing for null
     ;
 
     ScaleNote(int halfStep) {
@@ -88,7 +89,7 @@ public enum ScaleNote {
             scaleNoteHtml = base + modHtml;
             scaleNoteMarkup = base + markup;
         } else {
-            scaleNoteString = name();//    fixme: should throw error, should never happen
+            scaleNoteString = name();//    should only happen on X
             scaleNoteHtml = name();
             scaleNoteMarkup = name();
             isSharp = false;
@@ -121,8 +122,7 @@ public enum ScaleNote {
     }
 
     final static ScaleNote parse(String s)
-            throws ParseException
-    {
+            throws ParseException {
         return parse(new MarkedString(s));
     }
 
@@ -136,15 +136,19 @@ public enum ScaleNote {
      * @return ScaleNote represented by the string.  Can be null.
      * @throws ParseException thrown if parsing fails
      */
-     final static ScaleNote parse(MarkedString markedString)
-    throws ParseException
-    {
+    final static ScaleNote parse(MarkedString markedString)
+            throws ParseException {
         if (markedString == null || markedString.isEmpty())
             throw new ParseException("no data to parse", 0);
 
         char c = markedString.charAt(0);
-        if (c < 'A' || c > 'G')
+        if (c < 'A' || c > 'G') {
+            if ( c == 'X') {
+                markedString.getNextChar();
+                return ScaleNote.X;
+            }
             throw new ParseException("scale note must start with A to G", 0);
+        }
 
         StringBuilder scaleNoteString = new StringBuilder();
         scaleNoteString.append(c);
@@ -171,8 +175,10 @@ public enum ScaleNote {
         return ScaleNote.valueOf(scaleNoteString.toString());
     }
 
-    public final ScaleNote transpose(Key key, int steps ){
-        return key.getScaleNoteByHalfStep( halfStep + steps);
+    public final ScaleNote transpose(Key key, int steps) {
+        if ( this == ScaleNote.X )
+            return ScaleNote.X;
+        return key.getScaleNoteByHalfStep(halfStep + steps);
     }
 
     /**
