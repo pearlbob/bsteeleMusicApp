@@ -424,8 +424,9 @@ public class Phrase extends MeasureNode {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || !(o instanceof Phrase)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Phrase that = (Phrase) o;
+
         if ((measures == null || measures.isEmpty())
                 && (that.measures == null || that.measures.isEmpty()))
             return true;
