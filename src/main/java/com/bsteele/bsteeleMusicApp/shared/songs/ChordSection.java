@@ -136,7 +136,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
             try {
                 //  look for a block repeat
-                MeasureRepeat measureRepeat = MeasureRepeat.parse(markedString, phrases.size(), beatsPerBar, lastMeasure);
+                MeasureRepeat measureRepeat = MeasureRepeat.parse(markedString, phrases.size(), beatsPerBar, null);
                 if (measureRepeat != null) {
                     //  don't assume every line has an eol
                     for (Measure m : lineMeasures)

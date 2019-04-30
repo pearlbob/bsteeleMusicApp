@@ -23,57 +23,67 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
-//            startingChords("V: C F C C F F C C G F C G  ");
-//            pre(MeasureEditType.append, "V:0:11", "G", "PC: []");
-//            resultChords("V: C F C C F F C C G F C G  PC: [] ");
-//            post(MeasureEditType.append, "PC:", "PC: []");
-//            startingChords("V: C F C C F F C C G F C G  PC: [] ");
-//            pre(MeasureEditType.replace, "PC:", "PC: []", "PC: []");
-//            resultChords("V: C F C C F F C C G F C G  PC: [] ");
-//            post(MeasureEditType.append, "PC:", "PC: []");
-//            startingChords("V: C F C C F F C C G F C G  PC:  ");
-//            pre(MeasureEditType.append, "PC:", "PC: []", "O: []");
-//            resultChords("V: C F C C F F C C G F C G  PC: [] O: [] ");
-//            post(MeasureEditType.append, "O:", "O: []");
-//            startingChords("V: C F C C F F C C G F C G  PC: []  O: [] ");
-//            pre(MeasureEditType.replace, "O:", "O: []", "O: []");
-//            resultChords("V: C F C C F F C C G F C G  PC: [] O: [] ");
-//            post(MeasureEditType.append, "O:", "O: []");
-//
-//            startingChords("V: [C♯m A♭ F A♭ ] x4 C  C: [C G B♭ F ] x4  ");
-//            pre(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ", "null");
-//            resultChords("C: [C G B♭ F ] x4  ");
-//            post(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ");
-//            startingChords("C: [C G B♭ F ] x4  ");
-//            pre(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ", "null");
-//            resultChords("");
-//            post(MeasureEditType.append, "V:", null);
-//
-//            startingChords("V: [C♯m A♭ F A♭ ] x4 C  PC2:  C: T: [C G B♭ F ] x4  ");
-//            pre(MeasureEditType.delete, "PC2:", "PC2: [C G B♭ F ] x4", "null");
-//            resultChords("V: [C♯m A♭ F A♭ ] x4 C  C: T: [C G B♭ F ] x4  ");
-//            post(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ");
-//            startingChords("V: [C♯m A♭ F A♭ ] x4 C  C: T: [C G B♭ F ] x4  ");
-//            pre(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ", "null");
-//            resultChords("C: T: [C G B♭ F ] x4  ");
-//            post(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ");
-//            startingChords("C: T: [C G B♭ F ] x4  ");
-//            pre(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ", "null");
-//            resultChords("T: [C G B♭ F ] x4  ");
-//            post(MeasureEditType.delete, "T:", "T: [C G B♭ F ] x4 ");
-//            startingChords("T: [C G B♭ F ] x4  ");
-//            pre(MeasureEditType.delete, "T:", "T: [C G B♭ F ] x4 ", "null");
-//            resultChords("");
-//            post(MeasureEditType.append, "V:", null);
-//
-//            startingChords("V: C F C C F F C C G F C G  ");
-//            pre(MeasureEditType.append, "V:0:7", "C", "C PC:");
-//            resultChords("V: C F C C F F C C C G F C G  PC: []");
-//            post(MeasureEditType.append, "PC:", "PC: []");
-//            startingChords("V: C F C C F F C C G F C G  ");
-//            pre(MeasureEditType.append, "V:0:7", "C", "PC:");
-//            resultChords("V: C F C C F F C C G F C G  PC: []");
-//            post(MeasureEditType.append, "PC:", "PC: []");
+            startingChords("I: A G D  V: D C G G  V1: Dm  V2: Em  PC: D C G D  C: F7 G7 G Am  ");
+            pre(MeasureEditType.delete, "I:0:1", "G", "null");
+            resultChords("I: A D  V: D C G G  V1: Dm  V2: Em  PC: D C G D  C: F7 G7 G Am  ");
+            post(MeasureEditType.delete, "I:0:1", "D");
+
+            startingChords("I: A G D  V: D C G G  V1: Dm  V2: Em  PC: D C G D  C: F7 G7 G Am  ");
+            pre(MeasureEditType.replace, "I:0:1", "G", "G G");
+            resultChords("I: A G G D  V: D C G G  V1: Dm  V2: Em  PC: D C G D  C: F7 G7 G Am  ");
+            post(MeasureEditType.append, "I:0:2", "G");
+
+            startingChords("V: C F C C F F C C G F C G  ");
+            pre(MeasureEditType.append, "V:0:11", "G", "PC: []");
+            resultChords("V: C F C C F F C C G F C G  PC: [] ");
+            post(MeasureEditType.append, "PC:", "PC: []");
+            startingChords("V: C F C C F F C C G F C G  PC: [] ");
+            pre(MeasureEditType.replace, "PC:", "PC: []", "PC: []");
+            resultChords("V: C F C C F F C C G F C G  PC: [] ");
+            post(MeasureEditType.append, "PC:", "PC: []");
+            startingChords("V: C F C C F F C C G F C G  PC:  ");
+            pre(MeasureEditType.append, "PC:", "PC: []", "O: []");
+            resultChords("V: C F C C F F C C G F C G  PC: [] O: [] ");
+            post(MeasureEditType.append, "O:", "O: []");
+            startingChords("V: C F C C F F C C G F C G  PC: []  O: [] ");
+            pre(MeasureEditType.replace, "O:", "O: []", "O: []");
+            resultChords("V: C F C C F F C C G F C G  PC: [] O: [] ");
+            post(MeasureEditType.append, "O:", "O: []");
+
+            startingChords("V: [C♯m A♭ F A♭ ] x4 C  C: [C G B♭ F ] x4  ");
+            pre(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ", "null");
+            resultChords("C: [C G B♭ F ] x4  ");
+            post(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ");
+            startingChords("C: [C G B♭ F ] x4  ");
+            pre(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ", "null");
+            resultChords("");
+            post(MeasureEditType.append, "V:", null);
+
+            startingChords("V: [C♯m A♭ F A♭ ] x4 C  PC2:  C: T: [C G B♭ F ] x4  ");
+            pre(MeasureEditType.delete, "PC2:", "PC2: [C G B♭ F ] x4", "null");
+            resultChords("V: [C♯m A♭ F A♭ ] x4 C  C: T: [C G B♭ F ] x4  ");
+            post(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ");
+            startingChords("V: [C♯m A♭ F A♭ ] x4 C  C: T: [C G B♭ F ] x4  ");
+            pre(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ", "null");
+            resultChords("C: T: [C G B♭ F ] x4  ");
+            post(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ");
+            startingChords("C: T: [C G B♭ F ] x4  ");
+            pre(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ", "null");
+            resultChords("T: [C G B♭ F ] x4  ");
+            post(MeasureEditType.delete, "T:", "T: [C G B♭ F ] x4 ");
+            startingChords("T: [C G B♭ F ] x4  ");
+            pre(MeasureEditType.delete, "T:", "T: [C G B♭ F ] x4 ", "null");
+            resultChords("");
+            post(MeasureEditType.append, "V:", null);
+
+            startingChords("V: C F C C F F C C G F C G  ");
+            pre(MeasureEditType.append, "V:0:7", "C", "C PC:");
+            resultChords("V: C F C C F F C C C G F C G  PC: []");
+            post(MeasureEditType.append, "PC:", "PC: []");
+            startingChords("V: C F C C F F C C G F C G  ");
+            pre(MeasureEditType.append, "V:0:7", "C", "PC:");
+            resultChords("V: C F C C F F C C G F C G  PC: []");
+            post(MeasureEditType.append, "PC:", "PC: []");
 
 
             startingChords("V: (Verse) [C♯m A♭ F A♭ ] x4 (Prechorus) C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");

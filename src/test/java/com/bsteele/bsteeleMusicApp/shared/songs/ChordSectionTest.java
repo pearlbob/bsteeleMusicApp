@@ -23,10 +23,40 @@ public class ChordSectionTest extends TestCase {
 
         try {
             {
+                //  - at end of repeat
+                ChordSection chordSection = ChordSection.parse(
+                        "V: [D G D - ] x3",
+                        beatsPerBar);
+                assertNotNull(chordSection);
+                logger.fine(chordSection.toMarkup());
+                assertEquals("V: [D G D D ] x3 ", chordSection.toMarkup());
+            }
+            {
+                //  - at end of repeat
+                ChordSection chordSection = ChordSection.parse(
+                        "V: D G D - [D G D - ] x3 C A C A  C..A D - ",
+                        beatsPerBar);
+                assertNotNull(chordSection);
+                logger.fine(chordSection.toMarkup());
+                assertEquals("V: D G D D [D G D D ] x3 C A C A C..A D D ", chordSection.toMarkup());
+            }
+            {
+                //  - at end of repeat
+                ChordSection chordSection = ChordSection.parse(
+                        "\n" +
+                                "V:\n" +
+                                "D G D - \n" +
+                                "D G D -  x3\n" +
+                                "C A C A\n" +
+                                "C..A D -\n",
+                        beatsPerBar);
+                assertNotNull(chordSection);
+                logger.fine(chordSection.toMarkup());
+                assertEquals("V: D G D D [D G D D ] x3 C A C A C..A D D ", chordSection.toMarkup());
+            }
+            {
                 //  comment only
-                ChordSection chordSection = null;
-
-                chordSection = ChordSection.parse(
+                ChordSection chordSection = ChordSection.parse(
                         "V: (comment) A C#m F#m F#m/E\n"
                         , 4);
                 assertNotNull(chordSection);
@@ -69,12 +99,12 @@ public class ChordSectionTest extends TestCase {
                 assertNotNull(measures);
                 assertTrue(!measures.isEmpty());
                 Measure m = measures.get(measures.size() - 1);
-                assertEquals(Measure.parse("AmDm",  beatsPerBar),m);
+                assertEquals(Measure.parse("AmDm", beatsPerBar), m);
                 measures = chordSection.getPhrases().get(1).getMeasures();
                 assertNotNull(measures);
                 assertTrue(!measures.isEmpty());
-                 m = measures.get(measures.size() - 1);
-                assertEquals(Measure.parse("DmAm",  beatsPerBar),m);
+                m = measures.get(measures.size() - 1);
+                assertEquals(Measure.parse("DmAm", beatsPerBar), m);
                 measures = chordSection.getPhrases().get(2).getMeasures();
                 m = measures.get(0);
                 assert (m instanceof MeasureComment);
@@ -113,14 +143,14 @@ public class ChordSectionTest extends TestCase {
                 assertEquals(2, phrases.size());
 
                 measures = phrases.get(0).getMeasures();
-                assertNotNull(measures );
+                assertNotNull(measures);
                 assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.B, measures, 1, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 2, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measures, 3, 0);
                 measures = phrases.get(1).getMeasures();
-                assertNotNull(measures );
+                assertNotNull(measures);
                 assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.Bb, measures, 0, 1);
@@ -134,11 +164,11 @@ public class ChordSectionTest extends TestCase {
                 ChordSection chordSection = ChordSection.parse("I: A - - -\n" +
                         "Ab - - G ", 4);
                 assertTrue(chordSection != null);
-                logger.fine( chordSection.toMarkup());
+                logger.fine(chordSection.toMarkup());
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
                 phrases = chordSection.getPhrases();
-                assertNotNull(phrases );
+                assertNotNull(phrases);
                 assertEquals(2, phrases.size());
                 measures = phrases.get(0).getMeasures();
                 assertTrue(measures != null);
@@ -166,14 +196,14 @@ public class ChordSectionTest extends TestCase {
                 assertEquals(2, phrases.size());
 
                 measures = phrases.get(0).getMeasures();
-                assertNotNull(measures );
+                assertNotNull(measures);
                 assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 1, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 2, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 3, 0);
                 measures = phrases.get(1).getMeasures();
-                assertNotNull(measures );
+                assertNotNull(measures);
                 assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 1, 0);
@@ -188,7 +218,7 @@ public class ChordSectionTest extends TestCase {
                 ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
                         "AbBb/G# Am7 Ebsus4 C7/Bb x4", 4);
                 assertTrue(chordSection != null);
-                logger.fine( chordSection.toMarkup());
+                logger.fine(chordSection.toMarkup());
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
                 phrases = chordSection.getPhrases();

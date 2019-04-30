@@ -18,6 +18,8 @@ public class SongEntryTest
     @Test
     public void testEntryToUppercase() {
         {
+            assertEquals("G G", SongBase.entryToUppercase("g g"));
+
             assertEquals("X", SongBase.entryToUppercase("x"));
             assertEquals("X ", SongBase.entryToUppercase("x "));
             assertEquals("XA", SongBase.entryToUppercase("xa"));

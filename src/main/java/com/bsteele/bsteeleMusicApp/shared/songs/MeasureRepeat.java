@@ -76,8 +76,8 @@ public class MeasureRepeat extends Phrase {
 
             int mark = markedString.mark();
             try {
-                Measure measure = Measure.parse(markedString, beatsPerBar, priorMeasure);
-                measures.add(measure);
+                priorMeasure = Measure.parse(markedString, beatsPerBar, priorMeasure);
+                measures.add(priorMeasure);
                 barFound = false;
                 continue;
             } catch (ParseException pex) {
@@ -88,6 +88,7 @@ public class MeasureRepeat extends Phrase {
                 try {
                 MeasureComment measureComment = MeasureComment.parse(markedString);
                     measures.add(measureComment);
+                    priorMeasure = null;
                     continue;
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);

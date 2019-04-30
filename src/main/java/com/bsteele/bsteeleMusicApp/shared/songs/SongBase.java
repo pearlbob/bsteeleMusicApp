@@ -1108,10 +1108,10 @@ public class SongBase {
                         if (location != null) {
                             if (location.hasPhraseIndex()) {
                                 if (location.hasMeasureIndex()) {
-                                    location = new ChordSectionLocation(chordSection.getSectionVersion(), phaseIndex,
+                                    newLocation = new ChordSectionLocation(chordSection.getSectionVersion(), phaseIndex,
                                             location.getMeasureIndex() + newPhrase.size() - 1);
                                     return standardEditCleanup(phrase.edit(
-                                            editType, location.getMeasureIndex(), newPhrase), location);
+                                            editType, location.getMeasureIndex(), newPhrase), newLocation);
                                 }
                                 //  delete the phrase before replacing it
                                 phaseIndex = location.getPhraseIndex();
