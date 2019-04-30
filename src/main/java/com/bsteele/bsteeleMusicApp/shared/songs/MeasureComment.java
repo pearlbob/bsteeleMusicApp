@@ -65,12 +65,7 @@ public class MeasureComment extends Measure {
             s = mr.getGroup(1);
             markedString.consume(mr.getGroup(0).length());
         } else {
-            //  format what we found if it's not proper
-            //  note: consume any non-whitespace string as a comment if you have to
-            markedString.consume(s.length());
-            s = s.trim();
-            if (s.length() <= 0)
-                throw new ParseException("no comment found", 0);   //  all whitespace
+            throw new ParseException("no well formed comment found", 0);   //  all whitespace
         }
 
         //  cope with unbalanced leading ('s and trailing )'s

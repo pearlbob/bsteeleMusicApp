@@ -70,6 +70,10 @@ public class MeasureRepeat extends Phrase {
                 throw new ParseException("repeat not found", 0);
             }
 
+            //  assure this is not a section
+            if (Section.lookahead(markedString))
+                break;
+
             int mark = markedString.mark();
             try {
                 Measure measure = Measure.parse(markedString, beatsPerBar, priorMeasure);
@@ -81,10 +85,12 @@ public class MeasureRepeat extends Phrase {
             }
 
             if (markedString.charAt(0) != ']' && markedString.charAt(0) != 'x') {
+                try {
                 MeasureComment measureComment = MeasureComment.parse(markedString);
-                if (measureComment != null) {
                     measures.add(measureComment);
                     continue;
+                } catch (ParseException pex) {
+                    markedString.resetToMark(mark);
                 }
             }
             break;

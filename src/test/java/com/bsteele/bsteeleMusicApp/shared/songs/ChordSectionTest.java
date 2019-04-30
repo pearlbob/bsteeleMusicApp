@@ -16,9 +16,10 @@ public class ChordSectionTest extends TestCase {
 
     @Test
     public void testChordSectionParse() {
-        ArrayList<Phrase> measureSequenceItems;
-        Phrase measureSequenceItem;
+        ArrayList<Phrase> phrases;
+        Phrase phrase;
         ArrayList<Measure> measures;
+        final int beatsPerBar = 4;
 
         try {
             {
@@ -53,7 +54,7 @@ public class ChordSectionTest extends TestCase {
                 //  invented garbage is comment, verse is presumed
                 ChordSection chordSection = ChordSection.parse("ia: EDCBA (single notes rapid)", 4);
                 logger.info(chordSection.toMarkup());
-                assertEquals("V: (ia: EDCBA (single notes rapid)", chordSection.toMarkup().trim());
+                assertEquals("V: (ia:) EDCBA (single notes rapid)", chordSection.toMarkup().trim());
             } catch (ParseException e) {
                 fail();
             }
@@ -61,12 +62,21 @@ public class ChordSectionTest extends TestCase {
                 ChordSection chordSection = ChordSection.parse(
                         "v:Am Am Am AmDm\n"
                                 + "Dm Dm Dm DmAm 2x\n"
-                                + "\n", 4);
+                                + "\n", beatsPerBar);
                 assertNotNull(chordSection);
+                logger.fine(chordSection.toMarkup());
                 measures = chordSection.getPhrases().get(0).getMeasures();
                 assertNotNull(measures);
-                assert (!measures.isEmpty());
+                assertTrue(!measures.isEmpty());
                 Measure m = measures.get(measures.size() - 1);
+                assertEquals(Measure.parse("AmDm",  beatsPerBar),m);
+                measures = chordSection.getPhrases().get(1).getMeasures();
+                assertNotNull(measures);
+                assertTrue(!measures.isEmpty());
+                 m = measures.get(measures.size() - 1);
+                assertEquals(Measure.parse("DmAm",  beatsPerBar),m);
+                measures = chordSection.getPhrases().get(2).getMeasures();
+                m = measures.get(0);
                 assert (m instanceof MeasureComment);
             }
             {
@@ -81,15 +91,16 @@ public class ChordSectionTest extends TestCase {
                 //  failure to parse a leading dot
                 ChordSection chordSection = ChordSection.parse("I: G .G Bm Bm  x2", 4);
                 assertTrue(chordSection != null);
+                logger.fine(chordSection.toMarkup());
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
-                measureSequenceItems = chordSection.getPhrases();
-                assertTrue(measureSequenceItems != null);
-                assertEquals(1, measureSequenceItems.size());
-                measures = measureSequenceItems.get(0).getMeasures();
+                phrases = chordSection.getPhrases();
+                assertTrue(phrases != null);
+                assertEquals(3, phrases.size());
+                measures = phrases.get(1).getMeasures();
                 assertTrue(measures != null);
-                assertEquals(2, measures.size());
-                assertEquals("(.G Bm Bm  x2)", measures.get(1).toString());
+                assertEquals(1, measures.size());
+                assertEquals("(.G)", measures.get(0).toString());
             }
             {
                 ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
@@ -97,45 +108,52 @@ public class ChordSectionTest extends TestCase {
                 assertTrue(chordSection != null);
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
-                measureSequenceItems = chordSection.getPhrases();
-                assertTrue(measureSequenceItems != null);
-                assertEquals(1, measureSequenceItems.size());
-                measures = measureSequenceItems.get(0).getMeasures();
-                assertTrue(measures != null);
-                assertEquals(8, measures.size());
+                phrases = chordSection.getPhrases();
+                assertTrue(phrases != null);
+                assertEquals(2, phrases.size());
 
+                measures = phrases.get(0).getMeasures();
+                assertNotNull(measures );
+                assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.B, measures, 1, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 2, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measures, 3, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 4, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Bb, measures, 4, 1);
-                checkMeasureNodesSlashScaleNoteByMeasure(null, measures, 4, 0);
-                checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote.Gs, measures, 4, 1);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 5, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Eb, measures, 6, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 7, 0);
+                measures = phrases.get(1).getMeasures();
+                assertNotNull(measures );
+                assertEquals(4, measures.size());
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 0, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Bb, measures, 0, 1);
+                checkMeasureNodesSlashScaleNoteByMeasure(null, measures, 0, 0);
+                checkMeasureNodesSlashScaleNoteByMeasure(ScaleNote.Gs, measures, 0, 1);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 1, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Eb, measures, 2, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 3, 0);
             }
             {
                 ChordSection chordSection = ChordSection.parse("I: A - - -\n" +
                         "Ab - - G ", 4);
                 assertTrue(chordSection != null);
+                logger.fine( chordSection.toMarkup());
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
-                measureSequenceItems = chordSection.getPhrases();
-                assertTrue(measureSequenceItems != null);
-                assertEquals(1, measureSequenceItems.size());
-                measures = measureSequenceItems.get(0).getMeasures();
+                phrases = chordSection.getPhrases();
+                assertNotNull(phrases );
+                assertEquals(2, phrases.size());
+                measures = phrases.get(0).getMeasures();
                 assertTrue(measures != null);
-                assertEquals(8, measures.size());
+                assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 1, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 2, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 3, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 4, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 5, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 6, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.G, measures, 7, 0);
+                measures = phrases.get(1).getMeasures();
+                assertTrue(measures != null);
+                assertEquals(4, measures.size());
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 0, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 1, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 2, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.G, measures, 3, 0);
             }
             {
                 ChordSection chordSection = ChordSection.parse("I: A - - -\n" +
@@ -143,22 +161,26 @@ public class ChordSectionTest extends TestCase {
                 assertTrue(chordSection != null);
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
-                measureSequenceItems = chordSection.getPhrases();
-                assertTrue(measureSequenceItems != null);
-                assertEquals(1, measureSequenceItems.size());
-                measures = measureSequenceItems.get(0).getMeasures();
-                assertTrue(measures != null);
-                assertEquals(8, measures.size());
+                phrases = chordSection.getPhrases();
+                assertTrue(phrases != null);
+                assertEquals(2, phrases.size());
 
+                measures = phrases.get(0).getMeasures();
+                assertNotNull(measures );
+                assertEquals(4, measures.size());
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 0, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 1, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 2, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.A, measures, 3, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 4, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 5, 0);
-                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 6, 0);
+                measures = phrases.get(1).getMeasures();
+                assertNotNull(measures );
+                assertEquals(4, measures.size());
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 0, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 1, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.Ab, measures, 2, 0);
+                checkMeasureNodesScaleNoteByMeasure(ScaleNote.X, measures, 3, 0);
 
-                Measure measure = measures.get(7);
+                Measure measure = measures.get(3);
                 assertEquals(1, measure.getChords().size());
                 assertEquals(4, measure.getBeatCount());
             }
@@ -166,12 +188,13 @@ public class ChordSectionTest extends TestCase {
                 ChordSection chordSection = ChordSection.parse("I: A B C D\n" +
                         "AbBb/G# Am7 Ebsus4 C7/Bb x4", 4);
                 assertTrue(chordSection != null);
+                logger.fine( chordSection.toMarkup());
                 SectionVersion intro = new SectionVersion(Section.intro);
                 assertTrue(chordSection.getSectionVersion().equals(intro));
-                measureSequenceItems = chordSection.getPhrases();
-                assertTrue(measureSequenceItems != null);
-                assertEquals(2, measureSequenceItems.size());
-                measures = measureSequenceItems.get(0).getMeasures();
+                phrases = chordSection.getPhrases();
+                assertTrue(phrases != null);
+                assertEquals(2, phrases.size());
+                measures = phrases.get(0).getMeasures();
                 assertTrue(measures != null);
                 assertEquals(4, measures.size());
 
@@ -180,9 +203,9 @@ public class ChordSectionTest extends TestCase {
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.C, measures, 2, 0);
                 checkMeasureNodesScaleNoteByMeasure(ScaleNote.D, measures, 3, 0);
 
-                measureSequenceItem = chordSection.getPhrases().get(1);//    the repeat
-                assertEquals(16, measureSequenceItem.getTotalMoments());
-                measures = measureSequenceItem.getMeasures();
+                phrase = chordSection.getPhrases().get(1);//    the repeat
+                assertEquals(16, phrase.getTotalMoments());
+                measures = phrase.getMeasures();
                 assertEquals(4, measures.size());
 
                 assertEquals(4, measures.size());
@@ -202,14 +225,14 @@ public class ChordSectionTest extends TestCase {
                 assertTrue(chordSection != null);
                 SectionVersion verse = new SectionVersion(Section.verse);
                 assertTrue(chordSection.getSectionVersion().equals(verse));
-                measureSequenceItems = chordSection.getPhrases();
-                measureSequenceItem = measureSequenceItems.get(0);
-                measures = measureSequenceItem.getMeasures();
+                phrases = chordSection.getPhrases();
+                phrase = phrases.get(0);
+                measures = phrase.getMeasures();
                 assertTrue(measures != null);
                 assertEquals(4, measures.size());
 
-                assertEquals(4 * 4, measureSequenceItem.getTotalMoments());
-                measures = measureSequenceItems.get(0).getMeasures();
+                assertEquals(4 * 4, phrase.getTotalMoments());
+                measures = phrases.get(0).getMeasures();
                 assertEquals(4, measures.size());
                 assertEquals(ScaleNote.A, measures.get(0).getChords().get(0).getScaleChord().getScaleNote());
                 assertEquals(ScaleNote.B, measures.get(1).getChords().get(0).getScaleChord().getScaleNote());
@@ -229,12 +252,12 @@ public class ChordSectionTest extends TestCase {
                 assertTrue(chordSection != null);
                 SectionVersion sectionVersion = new SectionVersion(Section.tag);
                 assertTrue(chordSection.getSectionVersion().equals(sectionVersion));
-                measureSequenceItems = chordSection.getPhrases();
-                assertTrue(measureSequenceItems != null);
-                assertEquals(1, measureSequenceItems.size());
-                measureSequenceItem = measureSequenceItems.get(0);
-                assertEquals(4, measureSequenceItem.getTotalMoments());
-                measures = measureSequenceItem.getMeasures();
+                phrases = chordSection.getPhrases();
+                assertTrue(phrases != null);
+                assertEquals(1, phrases.size());
+                phrase = phrases.get(0);
+                assertEquals(4, phrase.getTotalMoments());
+                measures = phrase.getMeasures();
                 assertTrue(measures != null);
                 assertEquals(4, measures.size());
                 MeasureNode measureNode = measures.get(0);

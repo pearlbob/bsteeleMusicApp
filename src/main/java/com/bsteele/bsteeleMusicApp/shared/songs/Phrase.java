@@ -44,30 +44,47 @@ public class Phrase extends MeasureNode {
         Util.stripLeadingSpaces(markedString);
 
         //  look for a set of measures and comments
-        int mark = markedString.mark();
+        int initialMark = markedString.mark();
+
+        boolean hasBracket = markedString.charAt(0) == '[';
+        if (hasBracket)
+            markedString.consume(1);
+
         for (int i = 0; i < 1e3; i++) {   //  safety
             Util.stripLeadingSpaces(markedString);
             if (markedString.isEmpty())
                 break;
 
+            //  assure this is not a section
+            if (Section.lookahead(markedString))
+                break;
+
             try {
-                measures.add(Measure.parse(markedString, beatsPerBar, priorMeasure));
+                priorMeasure = Measure.parse(markedString, beatsPerBar, priorMeasure);
+                measures.add(priorMeasure);
                 continue;
             } catch (ParseException pex) {
-                markedString.resetToMark(mark);
             }
 
+            //  force junk into a comment
             try {
                 measures.add(MeasureComment.parse(markedString));
+                priorMeasure = null;
                 continue;
             } catch (ParseException pex) {
-                markedString.resetToMark(mark);
             }
-            throw new ParseException("Phrase not understood: " + markedString.toString(), 0);
+
+            //  end of bracketed phrase
+            if (hasBracket && markedString.charAt(0) == ']') {
+                markedString.consume(1);
+            }
+
+            break;
         }
 
-        if (measures.isEmpty())
-            throw new ParseException("no measures found to parse", 0);
+        //  note: bracketed phrases can be empty
+        if (!hasBracket && measures.isEmpty())
+            throw new ParseException("no measures found in parse", 0);
 
         return new Phrase(measures, phraseIndex);
     }
@@ -437,11 +454,13 @@ public class Phrase extends MeasureNode {
 
     @Override
     public String toMarkup() {
+        if (measures == null || measures.isEmpty())
+            return "[]";
+
         StringBuilder sb = new StringBuilder();
-        if (measures != null)
-            for (Measure measure : measures) {
-                sb.append(measure.toString()).append(" ");
-            }
+        for (Measure measure : measures) {
+            sb.append(measure.toString()).append(" ");
+        }
         return sb.toString();
     }
 

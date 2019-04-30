@@ -203,9 +203,9 @@ public class SongBaseTest
                 100, 4, 4, "i: v: t:",
                 "i: dude v: bob, bob, bob berand");
 
-        assertEquals("I: V: T:", a.toMarkup().trim());
+        assertEquals("I: [] V: [] T: []", a.toMarkup().trim());
         assertTrue(a.edit(a.parseChordEntry("t: G G C G")));
-        assertEquals("I: V:  T: G G C G", a.toMarkup().trim());
+        assertEquals("I: [] V: [] T: G G C G", a.toMarkup().trim());
         assertTrue(a.edit(a.parseChordEntry("I: V:  A B C D")));
         assertEquals("I: V: A B C D  T: G G C G", a.toMarkup().trim());
         try {
@@ -538,7 +538,7 @@ public class SongBaseTest
             assertEquals(Measure.parse("B", beatsPerBar), a.getCurrentChordSectionLocationMeasureNode());
 
             a.chordSectionLocationDelete(ChordSectionLocation.parse("i:0:0"));
-            assertEquals("I: ", a.getChordSection(SectionVersion.parse("i:")).toMarkup());
+            assertEquals("I: []", a.getChordSection(SectionVersion.parse("i:")).toMarkup());
             assertNull(a.getCurrentChordSectionLocationMeasureNode());
             //assertEquals(ChordSection.parse("I:", beatsPerBar ),a.getCurrentChordSectionLocationMeasureNode());
 
@@ -588,7 +588,7 @@ public class SongBaseTest
 
         logger.fine(a.logGrid());
         Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
-        assertEquals(8, grid.getRowCount());
+        assertEquals(10, grid.getRowCount());   //  comments on their own line add a bunch
         ArrayList<ChordSectionLocation> row = grid.getRow(0);
         assertEquals(2, row.size());
         row = grid.getRow(1);
@@ -641,7 +641,7 @@ public class SongBaseTest
                     "V: not important now");
             logger.fine(a.logGrid());
 
-            assertEquals(Measure.parse("Am7b5", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(16, 1)));
+            assertEquals(Measure.parse("Am7b5", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(24, 1)));
             assertEquals(Measure.parse("Gm7", a.getBeatsPerBar()), a.findMeasureNode(new GridCoordinate(31, 4)));
 
 

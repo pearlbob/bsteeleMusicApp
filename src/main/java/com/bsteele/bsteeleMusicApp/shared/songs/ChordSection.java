@@ -73,7 +73,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
         {
 
-            Util.stripLeadingSpaces(markedString);
+            Util.stripLeadingWhitespace(markedString);
             if (markedString.isEmpty())
                 break;
 
@@ -133,15 +133,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 continue;
             }
 
-            try {
-                //  add a measure to the current line measures
-                Measure measure = Measure.parse(markedString, beatsPerBar, lastMeasure);
-                lineMeasures.add(measure);
-                lastMeasure = measure;
-                continue;
-            } catch (ParseException pex) {
-                //  ignore
-            }
 
             try {
                 //  look for a block repeat
@@ -165,13 +156,73 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             }
 
             try {
+                //  look for a phrase
+                Phrase phrase = Phrase.parse(markedString, phrases.size(), beatsPerBar, null);
+                if (phrase != null) {
+                    //  don't assume every line has an eol
+                    for (Measure m : lineMeasures)
+                        measures.add(m);
+                    lineMeasures = new ArrayList<>();
+                    if (!measures.isEmpty()) {
+                        phrases.add(new Phrase(measures, phrases.size()));
+                    }
+                    phrase.setPhraseIndex(phrases.size());
+                    phrases.add(phrase);
+                    measures = new ArrayList<>();
+                    lastMeasure = null;
+                    continue;
+                }
+            } catch (ParseException pex) {
+                //  ignore
+            }
+
+            try {
+                //  add a measure to the current line measures
+                Measure measure = Measure.parse(markedString, beatsPerBar, lastMeasure);
+                lineMeasures.add(measure);
+                lastMeasure = measure;
+                continue;
+            } catch (ParseException pex) {
+                //  ignore
+            }
+
+            try {
                 //  look for a comment
                 MeasureComment measureComment = MeasureComment.parse(markedString);
                 lineMeasures.add(measureComment);
                 continue;
             } catch (ParseException pex) {
-                break;      //  fixme: not a measure, we're done
+                //  ignore
             }
+
+            //  chordSection has no choice, force junk into a comment
+            {
+                int n = markedString.indexOf("\n");    //  all comments end at the end of the line
+                String s = "";
+                if (n > 0)
+                    s = markedString.remainingStringLimited(n + 1);
+                else
+                    s = markedString.toString();
+
+                final RegExp commentRegExp = RegExp.compile("^(\\S+)\\s+");
+                MatchResult mr = commentRegExp.exec(s);
+
+                //  consume the comment
+                if (mr != null) {
+                    s = mr.getGroup(1);
+                    markedString.consume(mr.getGroup(0).length());
+                    //  cope with unbalanced leading ('s and trailing )'s
+                    s = s.replaceAll("^\\(", "").replaceAll("\\)$", "");
+                    s = s.trim();   //  in case there is white space inside unbalanced parens
+
+                    MeasureComment measureComment = new MeasureComment(s);
+                    lineMeasures.add(measureComment);
+                    continue;
+                } else
+                    logger.info("here: " + s);
+            }
+            logger.info( "can't figure out: " + markedString.toString());
+            throw new ParseException("can't figure out: " + markedString.toString(), 0);   //  all whitespace
         }
 
         //  don't assume every line has an eol
@@ -481,7 +532,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
 
     public String phrasesToMarkup() {
         if (phrases == null || phrases.isEmpty()) {
-            return "";
+            return "[]";
         }
         StringBuilder sb = new StringBuilder();
         for (Phrase phrase : phrases)
@@ -546,5 +597,5 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     private ArrayList<Phrase> phrases;
     //private Integer bpm;
     //private Integer beatsPerBar;
-    private static final Logger logger = Logger.getLogger(SectionVersion.class.getName());
+    private static final Logger logger = Logger.getLogger(ChordSection.class.getName());
 }

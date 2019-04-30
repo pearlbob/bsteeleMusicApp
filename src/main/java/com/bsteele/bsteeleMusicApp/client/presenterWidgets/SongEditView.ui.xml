@@ -123,8 +123,7 @@
                                     <g:Button ui:field="sectionT">Tag</g:Button>
                                     -->
                                     <select ui:field="sectionVersionSelect">
-                                        <option value="" selected="selected">Section Version</option>
-                                        <option value="">Default</option>
+                                        <option value="0" selected="selected">Section Version</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>

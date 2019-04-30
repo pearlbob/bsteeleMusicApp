@@ -23,6 +23,80 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+//            startingChords("V: C F C C F F C C G F C G  ");
+//            pre(MeasureEditType.append, "V:0:11", "G", "PC: []");
+//            resultChords("V: C F C C F F C C G F C G  PC: [] ");
+//            post(MeasureEditType.append, "PC:", "PC: []");
+//            startingChords("V: C F C C F F C C G F C G  PC: [] ");
+//            pre(MeasureEditType.replace, "PC:", "PC: []", "PC: []");
+//            resultChords("V: C F C C F F C C G F C G  PC: [] ");
+//            post(MeasureEditType.append, "PC:", "PC: []");
+//            startingChords("V: C F C C F F C C G F C G  PC:  ");
+//            pre(MeasureEditType.append, "PC:", "PC: []", "O: []");
+//            resultChords("V: C F C C F F C C G F C G  PC: [] O: [] ");
+//            post(MeasureEditType.append, "O:", "O: []");
+//            startingChords("V: C F C C F F C C G F C G  PC: []  O: [] ");
+//            pre(MeasureEditType.replace, "O:", "O: []", "O: []");
+//            resultChords("V: C F C C F F C C G F C G  PC: [] O: [] ");
+//            post(MeasureEditType.append, "O:", "O: []");
+//
+//            startingChords("V: [C♯m A♭ F A♭ ] x4 C  C: [C G B♭ F ] x4  ");
+//            pre(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ", "null");
+//            resultChords("C: [C G B♭ F ] x4  ");
+//            post(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ");
+//            startingChords("C: [C G B♭ F ] x4  ");
+//            pre(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ", "null");
+//            resultChords("");
+//            post(MeasureEditType.append, "V:", null);
+//
+//            startingChords("V: [C♯m A♭ F A♭ ] x4 C  PC2:  C: T: [C G B♭ F ] x4  ");
+//            pre(MeasureEditType.delete, "PC2:", "PC2: [C G B♭ F ] x4", "null");
+//            resultChords("V: [C♯m A♭ F A♭ ] x4 C  C: T: [C G B♭ F ] x4  ");
+//            post(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ");
+//            startingChords("V: [C♯m A♭ F A♭ ] x4 C  C: T: [C G B♭ F ] x4  ");
+//            pre(MeasureEditType.delete, "V:", "V: [C♯m A♭ F A♭ ] x4 C ", "null");
+//            resultChords("C: T: [C G B♭ F ] x4  ");
+//            post(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ");
+//            startingChords("C: T: [C G B♭ F ] x4  ");
+//            pre(MeasureEditType.delete, "C:", "C: [C G B♭ F ] x4 ", "null");
+//            resultChords("T: [C G B♭ F ] x4  ");
+//            post(MeasureEditType.delete, "T:", "T: [C G B♭ F ] x4 ");
+//            startingChords("T: [C G B♭ F ] x4  ");
+//            pre(MeasureEditType.delete, "T:", "T: [C G B♭ F ] x4 ", "null");
+//            resultChords("");
+//            post(MeasureEditType.append, "V:", null);
+//
+//            startingChords("V: C F C C F F C C G F C G  ");
+//            pre(MeasureEditType.append, "V:0:7", "C", "C PC:");
+//            resultChords("V: C F C C F F C C C G F C G  PC: []");
+//            post(MeasureEditType.append, "PC:", "PC: []");
+//            startingChords("V: C F C C F F C C G F C G  ");
+//            pre(MeasureEditType.append, "V:0:7", "C", "PC:");
+//            resultChords("V: C F C C F F C C G F C G  PC: []");
+//            post(MeasureEditType.append, "PC:", "PC: []");
+
+
+            startingChords("V: (Verse) [C♯m A♭ F A♭ ] x4 (Prechorus) C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
+            pre(MeasureEditType.delete, "V:0:0", "(Verse)", "null");
+            resultChords("V: [C♯m A♭ F A♭ ] x4 (Prechorus) C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
+            post(MeasureEditType.delete, "V:0:0", "C♯m");
+            a.setCurrentChordSectionLocation(ChordSectionLocation.parse("V:0"));
+            assertEquals("[C♯m A♭ F A♭ ] x4 ", a.getCurrentChordSectionLocationMeasureNode().toMarkup());
+            a.setCurrentChordSectionLocation(ChordSectionLocation.parse("V:1:0"));
+            assertEquals("(Prechorus)", a.getCurrentChordSectionLocationMeasureNode().toMarkup());
+            pre(MeasureEditType.delete, "V:1:0", "(Prechorus)", "null");
+            resultChords("V: [C♯m A♭ F A♭ ] x4 C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
+            post(MeasureEditType.delete, "V:1:0", "C");
+            pre(MeasureEditType.delete, "V:1:1", "(C/)", "null");
+            resultChords("V: [C♯m A♭ F A♭ ] x4 C (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
+            post(MeasureEditType.delete, "V:1:1", "(chorus)");
+            pre(MeasureEditType.delete, "V:1:1", "(chorus)", "null");
+            resultChords("V: [C♯m A♭ F A♭ ] x4 C [C G B♭ F ] x4 (Tag Chorus)  ");
+            post(MeasureEditType.delete, "V:2:0", "C");
+            pre(MeasureEditType.delete, "V:3:0", "(Tag Chorus)", "null");
+            resultChords("V: [C♯m A♭ F A♭ ] x4 C [C G B♭ F ] x4  ");
+            post(MeasureEditType.delete, "V:2:3", "F");
+
             startingChords("I: CXCC XCCC CXCC XCCC (bass-only)  V: Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 C7 F F Dm G Em Am F G Cmaj7 Cmaj7  C: A♭ A♭ E♭ E♭ B♭ B♭ G G  O: Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 C7 F F Dm G Em Am F G Em A7 F F G G Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 (fade)  ");
             pre(MeasureEditType.append, "I:0:4", "(bass-only)", "XCCC ");
             resultChords("I: CXCC XCCC CXCC XCCC (bass-only) XCCC  V: Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 C7 F F Dm G Em Am F G Cmaj7 Cmaj7  C: A♭ A♭ E♭ E♭ B♭ B♭ G G  O: Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 C7 F F Dm G Em Am F G Em A7 F F G G Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 Cmaj7 (fade)  ");
@@ -73,13 +147,13 @@ public class SongEditTest extends TestCase {
             post(MeasureEditType.append, "V:0", "[C F C C ] x2");
 
             startingChords("I:  V:  ");
-            pre(MeasureEditType.append, "V:", "V: ", "Dm ");
-            resultChords("I:  V: Dm  ");
+            pre(MeasureEditType.append, "V:", "V: []", "Dm ");
+            resultChords("I: [] V: Dm  ");
             post(MeasureEditType.append, "V:0:0", "Dm");
 
             startingChords("I:  V:  ");
-            pre(MeasureEditType.replace, "V:", "V: ", "Dm ");
-            resultChords("I:  V: Dm  ");
+            pre(MeasureEditType.replace, "V:", "V: []", "Dm ");
+            resultChords("I: [] V: Dm  ");
             post(MeasureEditType.append, "V:0:0", "Dm");
 
             startingChords("V: C F F C C F F C C G F C G  ");
@@ -108,9 +182,9 @@ public class SongEditTest extends TestCase {
             post(MeasureEditType.append, "V:0:2", "F");
 
             startingChords("I:  V:  ");
-            pre(MeasureEditType.append, "V:", "V: ", "T: ");
-            resultChords("I:  V: T:  ");        //  fixme: why is this?
-            post(MeasureEditType.append, "T:", "T: ");
+            pre(MeasureEditType.append, "V:", "V: []", "T: ");
+            resultChords("I: [] V: [] T: []");        //  fixme: why is this?
+            post(MeasureEditType.append, "T:", "T: []");
 
             startingChords("V: C F C C F F C C [G F C G ] x4  ");
             pre(MeasureEditType.replace, "V:1", "[G F C G ] x4 ", "B ");
@@ -157,7 +231,7 @@ public class SongEditTest extends TestCase {
             newSection = ChordSection.parse("v:", beatsPerBar);
             assertTrue(a.edit(newSection));
             logger.fine(a.toMarkup());
-            assertEquals("V:", a.toMarkup().trim());
+            assertEquals("V: []", a.toMarkup().trim());
             assertEquals("V:", a.getCurrentChordSectionLocation().toString());
             a.setCurrentMeasureEditType(MeasureEditType.append);
             newPhrase = Phrase.parse("A B C D", 0, beatsPerBar, null);
@@ -757,7 +831,7 @@ public class SongEditTest extends TestCase {
             fail(pe.getMessage());
         }
         assertEquals(locationString, a.getCurrentChordSectionLocation().toString());
-        assertEquals(measureNodeString, a.getCurrentMeasureNode().toMarkup());
+        assertEquals(measureNodeString.trim(), a.getCurrentMeasureNode().toMarkup().trim());
         logger.fine("editEntry: " + editEntry);
         ArrayList<MeasureNode> measureNodes = a.parseChordEntry(editEntry);
         if (measureNodes.isEmpty()
@@ -774,7 +848,7 @@ public class SongEditTest extends TestCase {
 
     private final void resultChords(String chords) {
 
-        assertEquals(chords, a.toMarkup());
+        assertEquals(chords.trim(), a.toMarkup().trim());
     }
 
     private final void post(MeasureEditType type, String locationString, String measureNodeString) {
@@ -784,8 +858,9 @@ public class SongEditTest extends TestCase {
         logger.finer("getCurrentMeasureNode(): " + a.getCurrentMeasureNode());
         if (measureNodeString == null)
             assertTrue(a.getCurrentMeasureNode() == null);
-        else
+        else {
             assertEquals(measureNodeString.trim(), a.getCurrentMeasureNode().toMarkup().trim());
+        }
     }
 
 

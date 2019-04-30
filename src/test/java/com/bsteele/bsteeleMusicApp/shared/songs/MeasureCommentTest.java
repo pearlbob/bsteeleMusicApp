@@ -48,21 +48,17 @@ public class MeasureCommentTest extends TestCase {
         assertEquals(rawComment.length() - 2, measureComment.toString().length());
         assertEquals("this is a comment", measureComment.getComment());
 
-        parse("this is also a comment )");
-        assertEquals(rawComment.length() - 2, measureComment.getComment().length());
-        assertEquals(rawComment.substring(0,rawComment.length()-2), measureComment.getComment());
+        parse("this is not a comment )");
+        assertNull(measureComment);
 
         parse("( this is also a bad comment");
-        assertEquals(rawComment.length() - 2, measureComment.getComment().length());    //  parens no
-        assertEquals(rawComment.substring(2), measureComment.getComment());
+        assertNull(measureComment);
 
-        parse("this is also has to be a comment");
-        assertEquals(rawComment.length() + 2, measureComment.toString().length());      //  parens yes
-        assertEquals(rawComment, measureComment.getComment());
+        parse("this is also has to not be a comment");
+        assertNull(measureComment);
 
         parse("ABC\nDEF");//  not all a comment
-        assertEquals(3 + 2, measureComment.toString().length());
-        assertEquals(rawComment.substring(0, 3), measureComment.getComment());
+        assertNull(measureComment);
 
         parse("");//  not a comment
         assertNull(measureComment);

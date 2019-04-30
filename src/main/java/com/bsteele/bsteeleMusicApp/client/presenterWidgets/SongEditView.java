@@ -25,6 +25,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Phrase;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.shared.songs.Section;
+import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
@@ -443,6 +444,13 @@ public class SongEditView
                 sectionOtherSelection.add(optionElement, null);
             }
         }
+        Event.sinkEvents(sectionVersionSelect, Event.ONCHANGE);
+        Event.setEventListener(sectionVersionSelect, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                setSectionAddEnables();
+            }
+        });
+
 
         //  chord entry
         chordsI.addClickHandler((ClickEvent event) -> {
@@ -675,8 +683,7 @@ public class SongEditView
 
     private boolean processSectionEntry(String entry) {
         boolean ret = processChordEntry(
-                SongBase.entryToUppercase(measureEntry.getValue()) + " " +
-                        entry
+                entry
                         + (sectionVersionSelect.getSelectedIndex() > 0 ? sectionVersionSelect.getValue() : "")
                         + ":"
         );
@@ -702,6 +709,7 @@ public class SongEditView
                 undoStackPushSong();
                 findMostCommonScaleChords();
                 updateCurrentChordEditLocation();
+                setSectionAddEnables();
             }
         }
 
@@ -816,6 +824,7 @@ public class SongEditView
         checkSong();
 
         setUndoRedoEnables();
+        setSectionAddEnables();
 
         logger.info(song.toMarkup());
     }
@@ -838,6 +847,17 @@ public class SongEditView
     private final void setUndoRedoEnables() {
         undo.setEnabled(undoStack.canUndo());
         redo.setEnabled(undoStack.canRedo());
+    }
+
+    private final void setSectionAddEnables() {
+        int v = sectionVersionSelect.getSelectedIndex();    //  fixme: weak correlation?
+
+        sectionI.setEnabled(song == null || !song.hasSectionVersion(Section.intro, v));
+        sectionV.setEnabled(song == null || !song.hasSectionVersion(Section.verse, v));
+        sectionPC.setEnabled(song == null || !song.hasSectionVersion(Section.preChorus, v));
+        sectionC.setEnabled(song == null || !song.hasSectionVersion(Section.chorus, v));
+        sectionBr.setEnabled(song == null || !song.hasSectionVersion(Section.bridge, v));
+        sectionO.setEnabled(song == null || !song.hasSectionVersion(Section.outro, v));
     }
 
     /**

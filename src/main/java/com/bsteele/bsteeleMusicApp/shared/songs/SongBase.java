@@ -512,7 +512,7 @@ public class SongBase {
                             if (measureIndex < phraseSize - 1)
                                 row++;
                             else
-                                col= offset+ measuresPerline;    //  prep for next phrase
+                                col = offset + measuresPerline;    //  prep for next phrase
                             continue;
                         }
 
@@ -643,7 +643,7 @@ public class SongBase {
 
         TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionMap.keySet());
         TreeSet<SectionVersion> completedSectionVersions = new TreeSet<>();
-        TreeSet<SectionVersion> currentSectionVersions = new TreeSet<>();
+
 
         //  markup by section version order
         for (SectionVersion sectionVersion : sortedSectionVersions) {
@@ -654,19 +654,27 @@ public class SongBase {
 
             //  find all section versions with the same chords
             ChordSection chordSection = chordSectionMap.get(sectionVersion);
-            currentSectionVersions.clear();
-            for (SectionVersion otherSectionVersion : sortedSectionVersions) {
-                if (chordSection.getPhrases().equals(chordSectionMap.get(otherSectionVersion).getPhrases())) {
-                    currentSectionVersions.add(otherSectionVersion);
-                    completedSectionVersions.add(otherSectionVersion);
+            if ( chordSection.isEmpty()){
+                //  empty sections stand alone
+                sb.append(sectionVersion.toString());
+                sb.append(" ");
+            }
+            else {
+                TreeSet<SectionVersion> currentSectionVersions = new TreeSet<>();
+                for (SectionVersion otherSectionVersion : sortedSectionVersions) {
+                    if (chordSection.getPhrases().equals(chordSectionMap.get(otherSectionVersion).getPhrases())) {
+                        currentSectionVersions.add(otherSectionVersion);
+                        completedSectionVersions.add(otherSectionVersion);
+                    }
+                }
+
+                //  list the section versions for this chord section
+                for (SectionVersion currentSectionVersion : currentSectionVersions) {
+                    sb.append(currentSectionVersion.toString());
+                    sb.append(" ");
                 }
             }
 
-            //  list the section versions for this chord section
-            for (SectionVersion currentSectionVersion : currentSectionVersions) {
-                sb.append(currentSectionVersion.toString());
-                sb.append(" ");
-            }
             //  chord section phrases (only) to output
             sb.append(chordSection.phrasesToMarkup());
             sb.append(" ");    //  for human readability only
@@ -741,21 +749,10 @@ public class SongBase {
 
         if (location.isMeasure()) {
             ret = phrase.edit(MeasureEditType.delete, location.getMeasureIndex(), null);
+            if (ret && phrase.isEmpty())
+                return deleteCurrentChordSectionPhrase();
         } else if (location.isPhrase()) {
-            ret = chordSection.deletePhrase(location.getPhraseIndex());
-            if (ret) {
-                //  move the current location if required
-                if (location.getPhraseIndex() >= chordSection.getPhrases().size()) {
-                    if (chordSection.getPhrases().isEmpty())
-                        location = new ChordSectionLocation(chordSection.getSectionVersion());
-                    else {
-                        int i = chordSection.getPhrases().size() - 1;
-                        phrase = chordSection.getPhrase(i);
-                        int m = phrase.getMeasures().size() - 1;
-                        location = new ChordSectionLocation(chordSection.getSectionVersion(), i, m);
-                    }
-                }
-            }
+            return deleteCurrentChordSectionPhrase();
         } else if (location.isSection()) {
             //  find the section prior to the one being deleted
             TreeSet<SectionVersion> sortedSectionVersions = new TreeSet<>(chordSectionMap.keySet());
@@ -769,6 +766,26 @@ public class SongBase {
                 }
                 if (nextSectionVersion != null) {
                     location = findChordSectionLocation(chordSectionMap.get(nextSectionVersion));
+                }
+            }
+        }
+        return standardEditCleanup(ret, location);
+    }
+
+    private final boolean deleteCurrentChordSectionPhrase() {
+        ChordSectionLocation location = getCurrentChordSectionLocation();
+        ChordSection chordSection = getChordSection(location);
+        boolean ret = chordSection.deletePhrase(location.getPhraseIndex());
+        if (ret) {
+            //  move the current location if required
+            if (location.getPhraseIndex() >= chordSection.getPhrases().size()) {
+                if (chordSection.getPhrases().isEmpty())
+                    location = new ChordSectionLocation(chordSection.getSectionVersion());
+                else {
+                    int i = chordSection.getPhrases().size() - 1;
+                    Phrase phrase = chordSection.getPhrase(i);
+                    int m = phrase.getMeasures().size() - 1;
+                    location = new ChordSectionLocation(chordSection.getSectionVersion(), i, m);
                 }
             }
         }
@@ -2171,6 +2188,12 @@ public class SongBase {
         if (newSong.getChordSections().isEmpty())
             throw new ParseException("The song has no chord sections!", 0);
 
+        for (ChordSection chordSection : newSong.getChordSections()) {
+            if (chordSection.isEmpty())
+                throw new ParseException("Chord section " + chordSection.getSectionVersion().toString()
+                        + " is empty.", 0);
+        }
+
         //  see that all chord sections have a lyric section
         for (ChordSection chordSection : newSong.getChordSections()) {
             SectionVersion chordSectionVersion = chordSection.getSectionVersion();
@@ -2293,6 +2316,17 @@ public class SongBase {
         }
 
         return ret;
+    }
+
+    public boolean hasSectionVersion(Section section, int version) {
+        if (section == null)
+            return false;
+
+        for (SectionVersion sectionVersion : chordSectionMap.keySet()) {
+            if (sectionVersion.getSection() == section && sectionVersion.getVersion() == version)
+                return true;
+        }
+        return false;
     }
 
     /**
