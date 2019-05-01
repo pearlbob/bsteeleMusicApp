@@ -21,7 +21,7 @@ public class ChordTest extends TestCase {
             for (ChordAnticipationOrDelay anticipationOrDelay : ChordAnticipationOrDelay.values()) {
                 logger.fine("anticipationOrDelay: " + anticipationOrDelay.toString());
                 for (ScaleNote scaleNote : ScaleNote.values()) {
-                    if ( scaleNote==ScaleNote.X)
+                    if (scaleNote == ScaleNote.X)
                         continue;
                     for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
                         for (int beats = 2; beats <= 4; beats++) {
@@ -52,11 +52,16 @@ public class ChordTest extends TestCase {
     @Test
     public void testChordParse() {
         try {
+            Chord chord;
             int beatsPerBar = 4;
-            Chord chord = new Chord(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished));
+            chord = new Chord(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished));
             chord.setSlashScaleNote(ScaleNote.G);
 
             assertEquals(chord, Chord.parse("Ddim/G", beatsPerBar));
+
+            chord = new Chord(new ScaleChord(ScaleNote.X, ChordDescriptor.major));
+            chord.setSlashScaleNote(ScaleNote.G);
+            assertEquals(chord, Chord.parse("X/G", beatsPerBar));
 
             chord = new Chord(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished));
             chord.setSlashScaleNote(ScaleNote.G);

@@ -18,6 +18,21 @@ public class SongEntryTest
     @Test
     public void testEntryToUppercase() {
         {
+            int beatsPerBar = 4;
+
+            SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, beatsPerBar, 4,
+                    "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
+                    "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
+
+
+            assertEquals("DmE ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("dme"))));
+            assertEquals("Dmaj ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("dmaj"))));
+
+            assertEquals("DD ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("dd"))));
+            assertEquals("DD (i)", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("ddi"))));
+            assertEquals("Ddim ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("ddim"))));
+
             assertEquals("G G", SongBase.entryToUppercase("g g"));
 
             assertEquals("X", SongBase.entryToUppercase("x"));
@@ -57,7 +72,6 @@ public class SongEntryTest
             assertEquals("v: Bb/Ab A F#C AG/E AGb/E", SongBase.entryToUppercase("v: bb/ab a f#c ag/e agb/e"));
 
             int beats = 4;
-            int beatsPerBar = 4;
             ScaleNote[] slashScaleNotes = new ScaleNote[]{null, ScaleNote.A, ScaleNote.As, ScaleNote.Eb, ScaleNote.Cb};
             for (ScaleNote scaleNote : ScaleNote.values()) {
                 if (scaleNote == ScaleNote.X)

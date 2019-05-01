@@ -50,14 +50,11 @@ public class Chord implements Comparable<Chord> {
 
         ChordAnticipationOrDelay anticipationOrDelay = ChordAnticipationOrDelay.parse(markedString);
 
-
         ScaleNote slashScaleNote = null;
-        if ( scaleChord.getScaleNote() != ScaleNote.X)  //  no slash chords over no chord
-        {
-            if (!markedString.isEmpty() && markedString.charAt(0) == '/') {
-                markedString.consume(1);
-                slashScaleNote = ScaleNote.parse(markedString);
-            }
+        //  note: X chords can have a slash chord
+        if (!markedString.isEmpty() && markedString.charAt(0) == '/') {
+            markedString.consume(1);
+            slashScaleNote = ScaleNote.parse(markedString);
         }
         if (!markedString.isEmpty() && markedString.charAt(0) == '.') {
             beats = 1;
@@ -245,7 +242,7 @@ public class Chord implements Comparable<Chord> {
                 + (slashScaleNote == null ? "" : "/" + slashScaleNote.toString())
                 + anticipationOrDelay.toString();
         if (!implicitBeats && beats < beatsPerBar) {
-            if ( beats == 1 ){
+            if (beats == 1) {
                 ret += ".1";
             } else {
                 int b = 1;

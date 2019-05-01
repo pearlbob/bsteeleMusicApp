@@ -185,7 +185,6 @@ public class SongBase {
     public static final String entryToUppercase(String entry) {
         StringBuilder sb = new StringBuilder();
 
-
         UpperCaseState state = UpperCaseState.initial;
         for (int i = 0; i < entry.length(); i++) {
             char c = entry.charAt(i);
@@ -199,19 +198,56 @@ public class SongBase {
                     //  fall through
                 case initial:
                     if (c >= 'a' && c <= 'g') {
-                        String test = entry.substring(i);
-                        boolean isChordDescriptor = false;
-                        for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
-                            String cdString = chordDescriptor.toString();
-                            if (cdString.length() > 0 && test.startsWith(cdString)) {
-                                isChordDescriptor = true;
+                        if (i < entry.length() - 1) {
+                            char sf = entry.charAt(i + 1);
+                            switch (sf) {
+                                case 'b':
+                                case '#':
+                                case MusicConstant.flatChar:
+                                case MusicConstant.sharpChar:
+                                    i++;
+                                    break;
+                                default:
+                                    sf = 0;
+                                    break;
+                            }
+                            if (i < entry.length() - 1) {
+                                String test = entry.substring(i + 1);
+                                boolean isChordDescriptor = false;
+                                String cdString = "";
+                                for (ChordDescriptor chordDescriptor : ChordDescriptor.values()) {
+                                    cdString = chordDescriptor.toString();
+                                    if (cdString.length() > 0 && test.startsWith(cdString)) {
+                                        isChordDescriptor = true;
+                                        break;
+                                    }
+                                }
+                                //  a chord descriptor makes a good partition to restart capitalization
+                                if (isChordDescriptor) {
+                                    sb.append(Character.toUpperCase(c));
+                                    if (sf != 0)
+                                        sb.append(sf);
+                                    sb.append(cdString);
+                                    i += cdString.length();
+                                    break;
+                                }
+                                else {
+                                    sb.append(Character.toUpperCase(c));
+                                    if (sf != 0) {
+                                        sb.append(sf);
+                                    }
+                                    break;
+                                }
+                            } else {
+                                sb.append(Character.toUpperCase(c));
+                                if (sf != 0) {
+                                    sb.append(sf);
+                                }
                                 break;
                             }
                         }
-                        if (isChordDescriptor == false) {
-                            //  map the chord to upper case
-                            c = Character.toUpperCase(c);
-                        }
+                        //  map the chord to upper case
+                        c = Character.toUpperCase(c);
                     } else if (c == 'x') {
                         if (i < entry.length() - 1) {
                             char d = entry.charAt(i + 1);
@@ -654,12 +690,11 @@ public class SongBase {
 
             //  find all section versions with the same chords
             ChordSection chordSection = chordSectionMap.get(sectionVersion);
-            if ( chordSection.isEmpty()){
+            if (chordSection.isEmpty()) {
                 //  empty sections stand alone
                 sb.append(sectionVersion.toString());
                 sb.append(" ");
-            }
-            else {
+            } else {
                 TreeSet<SectionVersion> currentSectionVersions = new TreeSet<>();
                 for (SectionVersion otherSectionVersion : sortedSectionVersions) {
                     if (chordSection.getPhrases().equals(chordSectionMap.get(otherSectionVersion).getPhrases())) {

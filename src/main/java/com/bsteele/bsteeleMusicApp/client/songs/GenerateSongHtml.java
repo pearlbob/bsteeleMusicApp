@@ -534,7 +534,7 @@ public class GenerateSongHtml {
         sb.append("<p>If a measure line ends with a vertical bar '|' it will be included with the following " +
                 " line or lines in a repeat. By convention, the last line of the repeat should also have a " +
                 " vertical bar '|' before the 'x' and a number of the repeat.  This is consdered a legacy" +
-                " form that will be deprecated and retired in favor of the brackedted format.</p>\n");
+                " form that will be deprecated and retired in favor of the bracketed format.</p>\n");
 
         sb.append("<h1>Lyric Markup Language</h1>\n");
         sb.append("<p>The lyric markup language is of the form:</p>\n");

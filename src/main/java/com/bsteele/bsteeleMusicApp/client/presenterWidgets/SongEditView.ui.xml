@@ -232,7 +232,13 @@
             </table>
             <div ui:field="editHints">
                 <ul>
-                    <li>Chords must be in upper case!</li>
+                    <li>Chords must be in upper case!  If they are not, the app will try to guess
+                    the capitalization for your input and place it on the line below the test entry box.
+                    What you see in the lower text will be what will be entered into the edit.
+                    Note that often the partial chord descriptor will be considered a comment, i.e. will be placed
+                        in parenthesis.
+                    When the entry is correct, the characters will be removed from the comment and will be
+                        returned to their correct position in the entry.</li>
                     <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                     <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9] and more.
                         See "Other chords" selection above.

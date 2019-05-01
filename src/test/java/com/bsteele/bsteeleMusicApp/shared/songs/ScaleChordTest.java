@@ -101,6 +101,7 @@ public class ScaleChordTest extends TestCase {
 
     @Test
     public void testScaleChordParse() {
+        ScaleChord scaleChord;
         try {
             assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.dominant13), ScaleChord.parse("A13"));
             assertEquals(new ScaleChord(ScaleNote.F, ChordDescriptor.major), ScaleChord.parse("F"));
@@ -110,6 +111,7 @@ public class ScaleChordTest extends TestCase {
             assertEquals(new ScaleChord(ScaleNote.Fs, ChordDescriptor.minor), ScaleChord.parse("F#mGm"));
             assertEquals(new ScaleChord(ScaleNote.D, ChordDescriptor.diminished), ScaleChord.parse("Ddim/G"));
             assertEquals(new ScaleChord(ScaleNote.A, ChordDescriptor.diminished), ScaleChord.parse("Adim/G"));
+            assertEquals(new ScaleChord(ScaleNote.X, ChordDescriptor.major), ScaleChord.parse("X/G"));
         } catch (ParseException e) {
             e.printStackTrace();
             fail();

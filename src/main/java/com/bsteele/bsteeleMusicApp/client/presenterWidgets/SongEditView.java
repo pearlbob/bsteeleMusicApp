@@ -656,25 +656,25 @@ public class SongEditView
 
     }
 
-    private void preProcessMeasureEntry() {
+    private String preProcessMeasureEntry() {
         String entry = measureEntry.getValue();
         if (entry.isEmpty()) {
             measureEntryCorrection.getElement().setInnerHTML(nbsp);
-            return;
+            return "";
         }
 
         //  speed entry enhancement
-        String upperEntry = SongBase.entryToUppercase(entry);
+        String upperEntry = MeasureNode.concatMarkup(song.parseChordEntry(SongBase.entryToUppercase(entry)));
         if (upperEntry.equals(entry))
             measureEntryCorrection.getElement().setInnerHTML(nbsp);
         else
             measureEntryCorrection.setText(upperEntry);
+        return upperEntry;
     }
 
     private void processMeasureEntry() {
-        preProcessMeasureEntry();
 
-        String entry = SongBase.entryToUppercase(measureEntry.getValue());
+        String entry = preProcessMeasureEntry();
         if (entry.isEmpty())
             return;
 

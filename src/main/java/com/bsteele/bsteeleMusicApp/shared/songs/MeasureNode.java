@@ -78,6 +78,15 @@ public abstract class MeasureNode {
      */
     abstract public String toMarkup();
 
+
+    public static final String concatMarkup( ArrayList<MeasureNode> measureNodes){
+        StringBuilder sb = new StringBuilder();
+        if ( measureNodes != null )
+            for ( MeasureNode measureNode: measureNodes)
+                sb.append(measureNode.toMarkup());
+        return sb.toString();
+    }
+
     /**
      * Override of the Java Object class equals() member.
      *
