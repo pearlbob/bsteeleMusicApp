@@ -26,7 +26,7 @@ public class MeasureRepeat extends Phrase {
 
     static final MeasureRepeat parse(String s, int phraseIndex, int beatsPerBar, Measure priorMeasure)
             throws ParseException {
-        return parse(new MarkedString(s), phraseIndex, beatsPerBar,  priorMeasure);
+        return parse(new MarkedString(s), phraseIndex, beatsPerBar, priorMeasure);
     }
 
     static final MeasureRepeat parse(MarkedString markedString, int phraseIndex, int beatsPerBar, Measure priorMeasure)
@@ -86,7 +86,7 @@ public class MeasureRepeat extends Phrase {
 
             if (markedString.charAt(0) != ']' && markedString.charAt(0) != 'x') {
                 try {
-                MeasureComment measureComment = MeasureComment.parse(markedString);
+                    MeasureComment measureComment = MeasureComment.parse(markedString);
                     measures.add(measureComment);
                     priorMeasure = null;
                     continue;
@@ -97,7 +97,7 @@ public class MeasureRepeat extends Phrase {
             break;
         }
 
-        final RegExp repeatExp = RegExp.compile("^" + (hasBracket ? "\\s*]" : "") + "\\s*x\\s*(\\d+)\\s*");
+        final RegExp repeatExp = RegExp.compile("^" + (hasBracket ? "\\s*]" : "") + "\\s*x(\\d+)\\s*");
         MatchResult mr = repeatExp.exec(markedString.toString());
         if (mr != null) {
             int repeats = Integer.parseInt(mr.getGroup(1));
@@ -293,12 +293,12 @@ public class MeasureRepeat extends Phrase {
 
     @Override
     public String toMarkup() {
-        return "[" + super.toMarkup() + "] x" + getRepeats() + " ";
+        return "[" + (getMeasures().isEmpty() ? "" : super.toMarkup()) + "] x" + getRepeats() + " ";
     }
 
     @Override
     public String toString() {
-        return super.toMarkup()+ " x" + getRepeats() + "\n";
+        return super.toMarkup() + " x" + getRepeats() + "\n";
     }
 
     private MeasureRepeatMarker repeatMarker;

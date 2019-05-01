@@ -135,7 +135,7 @@ public class Phrase extends MeasureNode {
     }
 
 
-    public MeasureNode findMeasureNode(MeasureNode measureNode) {
+     MeasureNode findMeasureNode(MeasureNode measureNode) {
         for (Measure m : measures) {
             if (m == measureNode)
                 return m;
@@ -143,7 +143,7 @@ public class Phrase extends MeasureNode {
         return null;
     }
 
-    public int findMeasureNodeIndex(MeasureNode measureNode) throws IndexOutOfBoundsException {
+    final int findMeasureNodeIndex(MeasureNode measureNode) throws IndexOutOfBoundsException {
         if (measureNode == null)
             throw new IndexOutOfBoundsException("measureNode null");
 
@@ -154,7 +154,7 @@ public class Phrase extends MeasureNode {
         return ret;
     }
 
-    boolean insert(int index, MeasureNode newMeasureNode) {
+    final boolean insert(int index, MeasureNode newMeasureNode) {
         if (newMeasureNode == null)
             return false;
 
@@ -183,7 +183,7 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean replace(int index, MeasureNode newMeasureNode) {
+    final boolean replace(int index, MeasureNode newMeasureNode) {
         if (measures == null || measures.isEmpty())
             return false;
 
@@ -213,7 +213,7 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean add(ArrayList<Measure> newMeasures) {
+    final boolean add(ArrayList<Measure> newMeasures) {
         if (newMeasures == null || newMeasures.isEmpty())
             return false;
         if (measures == null)
@@ -222,7 +222,7 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean add(int index, ArrayList<Measure> newMeasures) {
+    final boolean add(int index, ArrayList<Measure> newMeasures) {
         if (newMeasures == null || newMeasures.isEmpty())
             return false;
         if (measures == null)
@@ -232,7 +232,7 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean append(int index, MeasureNode newMeasureNode) {
+    final boolean append(int index, MeasureNode newMeasureNode) {
         if (newMeasureNode == null)
             return false;
 
@@ -261,7 +261,7 @@ public class Phrase extends MeasureNode {
         return true;
     }
 
-    boolean edit(MeasureEditType type, int index, MeasureNode newMeasureNode) {
+    final boolean edit(MeasureEditType type, int index, MeasureNode newMeasureNode) {
         if (newMeasureNode == null) {
             switch (type) {
                 case delete:
@@ -470,11 +470,11 @@ public class Phrase extends MeasureNode {
         return toMarkup() + "\n";
     }
 
-    public final int size() {
+    final int size() {
         return measures.size();
     }
 
-    public final int getPhraseIndex() {
+    final int getPhraseIndex() {
         return phraseIndex;
     }
 

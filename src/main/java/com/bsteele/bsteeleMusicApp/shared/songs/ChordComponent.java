@@ -27,7 +27,8 @@ public enum ChordComponent {
     seventh("7", 7, 11),
     ninth("9", 9, 12 + 4),
     eleventh("11", 11, 12 + 7),
-    thirteenth("13", 13, 12 + 11),;
+    thirteenth("13", 13, 12 + 11),
+    ;
 
     ChordComponent(String shortName, int scaleNumber, int halfSteps) {
         this.shortName = shortName;
@@ -35,7 +36,7 @@ public enum ChordComponent {
         this.halfSteps = halfSteps;
     }
 
-    public static TreeSet<ChordComponent> parse(String chordComponentString) {
+    static TreeSet<ChordComponent> parse(String chordComponentString) {
         TreeSet<ChordComponent> ret = new TreeSet<>();
         for (String s : chordComponentString.split("[,. ]")) {
             if (s.length() <= 0)
@@ -70,7 +71,7 @@ public enum ChordComponent {
         return chordComponentByHalfSteps[Util.mod(halfStep, MusicConstant.halfStepsPerOctave)];
     }
 
-    public final  int getHalfSteps() {
+    public final int getHalfSteps() {
         return halfSteps;
     }
 

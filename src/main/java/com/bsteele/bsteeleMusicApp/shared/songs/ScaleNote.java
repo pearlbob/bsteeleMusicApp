@@ -104,7 +104,6 @@ public enum ScaleNote {
      * @param step the number of half steps from A
      * @return the sharp scale note
      */
-    @Deprecated
     static final ScaleNote getSharpByHalfStep(int step) {
         return sharps[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
@@ -116,7 +115,6 @@ public enum ScaleNote {
      * @param step the number of half steps from A
      * @return the sharp scale note
      */
-    @Deprecated
     static final ScaleNote getFlatByHalfStep(int step) {
         return flats[Util.mod(step, MusicConstant.halfStepsPerOctave)];
     }
@@ -255,11 +253,11 @@ public enum ScaleNote {
 
     private static final ScaleNote sharps[] = {
             A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs
-            // 1  2  3  4   5   6  7  8   9  10, 11
+            // 1   2  3  4   5  6   7  8  9  10, 11
     };
     private static final ScaleNote flats[] = {
             A, Bb, B, C, Db, D, Eb, E, F, Gb, G, Ab
-            // 1  2  3  4   5   6  7  8   9  10, 11
+            // 1   2  3  4   5  6   7  8  9  10, 11
     };
 
     static {

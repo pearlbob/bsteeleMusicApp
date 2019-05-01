@@ -37,11 +37,11 @@ public class SectionVersion implements Comparable<SectionVersion> {
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");
     }
 
-    public static final SectionVersion getDefault() {
+    static final SectionVersion getDefault() {
         return new SectionVersion(Section.verse);
     }
 
-    public static final SectionVersion parse(String s) throws ParseException {
+    static final SectionVersion parse(String s) throws ParseException {
         return parse(new MarkedString(s));
     }
 
@@ -56,7 +56,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
      * @return the length of the parse. Zero if no parse
      * @throws ParseException thrown if parsing fails
      */
-     static final SectionVersion parse(MarkedString markedString) throws ParseException {
+    static final SectionVersion parse(MarkedString markedString) throws ParseException {
         if (markedString == null)
             throw new ParseException("no data to parse", 0);
 
@@ -76,7 +76,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
             throw new ParseException("no section found", 0);
 
         //   consume the section label
-        markedString.consume( m.getGroup(0).length()); //  includes the separator
+        markedString.consume(m.getGroup(0).length()); //  includes the separator
         return section.makeVersion(version);
     }
 

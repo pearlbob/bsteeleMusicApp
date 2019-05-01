@@ -142,13 +142,13 @@ public class ChordSectionLocation {
         return new ChordSectionLocation(sectionVersion);
     }
 
-    public final ChordSectionLocation nextMeasureIndexLocation() {
+    final ChordSectionLocation nextMeasureIndexLocation() {
         if (!hasPhraseIndex || !hasMeasureIndex)
             return this;
         return new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex + 1);
     }
 
-    public final ChordSectionLocation nextPhraseIndexLocation() {
+    final ChordSectionLocation nextPhraseIndexLocation() {
         if (!hasPhraseIndex)
             return this;
         return new ChordSectionLocation(sectionVersion, phraseIndex + 1);
@@ -159,7 +159,7 @@ public class ChordSectionLocation {
         return getId();
     }
 
-    public final String getId() {
+    final String getId() {
         if (id == null) {
             if (labelSectionVersions == null)
                 id = sectionVersion.toString()
@@ -175,23 +175,23 @@ public class ChordSectionLocation {
         return id;
     }
 
-    public final SectionVersion getSectionVersion() {
+    final SectionVersion getSectionVersion() {
         return sectionVersion;
     }
 
-    public final int getPhraseIndex() {
+    final int getPhraseIndex() {
         return phraseIndex;
     }
 
-    public final int getMeasureIndex() {
+    final int getMeasureIndex() {
         return measureIndex;
     }
 
-    public final boolean hasPhraseIndex() {
+    final boolean hasPhraseIndex() {
         return hasPhraseIndex;
     }
 
-    public final boolean hasMeasureIndex() {
+    final boolean hasMeasureIndex() {
         return hasMeasureIndex;
     }
 
@@ -200,16 +200,16 @@ public class ChordSectionLocation {
         return hasPhraseIndex == false && hasMeasureIndex == false;
     }
 
-    public final boolean isPhrase() {
+    final boolean isPhrase() {
         return hasPhraseIndex == true && hasMeasureIndex == false;
     }
 
-    public final boolean isMeasure() {
+    final boolean isMeasure() {
         return hasPhraseIndex == true && hasMeasureIndex == true;
     }
 
 
-    public Marker getMarker() {
+    final Marker getMarker() {
         return marker;
     }
 

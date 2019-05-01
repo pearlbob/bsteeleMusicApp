@@ -14,7 +14,7 @@ public class SongMomentLocation {
         this.index = index;
     }
 
-    public static final SongMomentLocation parse(String s) throws ParseException  {
+    public static final SongMomentLocation parse(String s) throws ParseException {
         return parse(new MarkedString(s));
     }
 
@@ -23,19 +23,19 @@ public class SongMomentLocation {
      * @return the song moment location parsed
      * @throws ParseException thrown if parsing fails
      */
-    public static final SongMomentLocation parse(MarkedString markedString) throws ParseException  {
+    static final SongMomentLocation parse(MarkedString markedString) throws ParseException {
 
         ChordSectionLocation chordSectionLocation = ChordSectionLocation.parse(markedString);
 
         if (markedString.available() < 2)
             return null;
 
-        final RegExp numberRegexp = RegExp.compile("^"+separator+"(\\d+)");  //  workaround for RegExp is not serializable.
+        final RegExp numberRegexp = RegExp.compile("^" + separator + "(\\d+)");  //  workaround for RegExp is not serializable.
         MatchResult mr = numberRegexp.exec(markedString.remainingStringLimited(5));
         if (mr != null) {
             try {
                 int index = Integer.parseInt(mr.getGroup(1));
-                if ( index <=0 )
+                if (index <= 0)
                     return null;
                 markedString.consume(mr.getGroup(0).length());
                 return new SongMomentLocation(chordSectionLocation, index);
@@ -60,11 +60,12 @@ public class SongMomentLocation {
                 && index == o.index
                 ;
     }
-    public String getId() {
+
+    final String getId() {
         return chordSectionLocation.getId() + separator + index;
     }
 
-    public int getIndex() {
+    public final int getIndex() {
         return index;
     }
 

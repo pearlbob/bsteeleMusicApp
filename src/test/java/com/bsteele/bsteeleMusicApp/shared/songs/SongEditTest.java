@@ -23,6 +23,44 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.replace, "C:", "C: F F C C G G F F ",
+                                                                    "C: F F C C G G C B F F ");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C B F F  O: Dm C B B♭ A  ");
+            post(MeasureEditType.append, "C:", "C: F F C C G G C B F F ");
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C B F F  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.delete, "C:0:7", "B", "null");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C F F  O: Dm C B B♭ A  ");
+            post(MeasureEditType.delete, "C:0:7", "F");
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C F F  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.delete, "C:0:7", "F", "null");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C F  O: Dm C B B♭ A  ");
+            post(MeasureEditType.delete, "C:0:7", "F");
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C F  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.delete, "C:0:7", "F", "null");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C  O: Dm C B B♭ A  ");
+            post(MeasureEditType.delete, "C:0:6", "C");
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.append, "C:0:6", "C", "G G ");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C G G  O: Dm C B B♭ A  ");
+            post(MeasureEditType.append, "C:0:8", "G");
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C G G  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.replace, "I2:0", "[Am Am/G Am/F♯ FE ] x2 ", "[] x3 ");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x3  C: F F C C G G C G G  O: Dm C B B♭ A  ");
+            post(MeasureEditType.append, "I2:0", "[Am Am/G Am/F♯ FE ] x3 ");
+
+            startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x3  C: F F C C G G C G G  O: Dm C B B♭ A  ");
+            pre(MeasureEditType.replace, "I2:0", "[Am Am/G Am/F♯ FE ] x3 ", "[] x1 ");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: Am Am/G Am/F♯ FE  C: F F C C G G C G G  O: Dm C B B♭ A  ");
+            post(MeasureEditType.append, "I2:0:3", "FE");
+
+
             startingChords("I: A G D  V: D C G G  V1: Dm  V2: Em  PC: D C G D  C: F7 G7 G Am  ");
             pre(MeasureEditType.delete, "I:0:1", "G", "null");
             resultChords("I: A D  V: D C G G  V1: Dm  V2: Em  PC: D C G D  C: F7 G7 G Am  ");
