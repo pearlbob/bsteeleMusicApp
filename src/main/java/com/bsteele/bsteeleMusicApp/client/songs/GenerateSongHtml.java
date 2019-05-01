@@ -458,8 +458,8 @@ public class GenerateSongHtml {
                 "<p>Capitalization is not significant to section identification.</p>"
         );
         sb.append(
-                "<p>Section versions can be identified by a single digit immediately following the section." +
-                        "Sections without a version id will be considered an additional section.</p>"
+                "<p>Section versions can be identified by a single digit ( 1 - 9 ) immediately following the section." +
+                        " Sections without a version id will be considered an additional section.</p>"
         );
         sb.append("<h2>Measures</h2>\n");
         sb.append(
@@ -479,6 +479,8 @@ public class GenerateSongHtml {
         {
             boolean first = true;
             for (ScaleNote scaleNote : ScaleNote.values()) {
+                if ( scaleNote== ScaleNote.X)
+                    continue;
                 if (first)
                     first = false;
                 else
@@ -505,7 +507,8 @@ public class GenerateSongHtml {
                 "<p>Capitalization is significant to scaleNote identification and chord description.</p>"
         );
         sb.append("<p>A part of the measure where no chord is to be played is noted with a capital X." +
-                " This can also be used to indicate a pause.</p>\n");
+                " This can also be used to indicate a pause if it is the entire measure." +
+                " Note that X chords cannot have a chord descriptor.</p>\n");
         sb.append("<p>Note: Annotations for anticipations (pushes) and delays are planned but not part of the markup " +
                 " language as yet.</p>\n");
         sb.append("<p>A measure followed by a slash '/' and a chord without whitespace " +
@@ -519,10 +522,19 @@ public class GenerateSongHtml {
         sb.append("<h2>Repeats</h2>\n");
         sb.append("<p>A measure line that ends with a 'x' and a number is a repeat.  The line is to be repeated " +
                 "the number of counts indicated by the number.</p>\n");
+        sb.append("<p>A repeat can also be represented by bracketed measures followed by an 'x' and a number is a repeat.\n" +
+                "  Bracketed measures start with square bracket '[', have an arbitrary number of measures followed" +
+                        " by a closing square bracket ']'."+
+                "  A new line is not required in this case.  That is a new collection of measures can lead the bracketing\n" +
+                " and follow the bracketing.  There is no restrictions on the number of measures in the bracketed" +
+                " repeat.  The multi-line separator bar '|' should not be used.</p>\n");
+        sb.append("<p>For example:</p>\n");
+        sb.append("<p><code>V: D C G G [ D C D D G B D C] x4 B G C G</code></p>\n");
         sb.append("<h2>Multiline Repeats</h2>\n");
         sb.append("<p>If a measure line ends with a vertical bar '|' it will be included with the following " +
-                "line or lines in a repeat. By convention, the last line of the repeat should also have a " +
-                "vertical bar '|' before the 'x' and a number of the repeat.</p>\n");
+                " line or lines in a repeat. By convention, the last line of the repeat should also have a " +
+                " vertical bar '|' before the 'x' and a number of the repeat.  This is consdered a legacy" +
+                " form that will be deprecated and retired in favor of the brackedted format.</p>\n");
 
         sb.append("<h1>Lyric Markup Language</h1>\n");
         sb.append("<p>The lyric markup language is of the form:</p>\n");
@@ -539,6 +551,12 @@ public class GenerateSongHtml {
         sb.append("<h2>Suggestions</h2>\n");
         sb.append("<p>Writing all songs will provide a sample file format for examination.  To write all songs," +
                 " choose Options, Write All Songs. See the button below.</p>\n");
+
+        sb.append("<h2>Notes</h2>\n");
+        sb.append("<p>Any sequence of measures can be bracketed, if it's a repeat or not." +
+                " That is started with '[' and ended with ']'." +
+                " In the near future, these brackeded sequences will be prefixed with indicators controlling" +
+                " the number of columns to be used in their display representation and other preferences.</p>\n");
 
         return sb.toString();
     }
