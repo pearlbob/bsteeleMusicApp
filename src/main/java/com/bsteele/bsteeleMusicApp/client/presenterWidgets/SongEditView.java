@@ -663,6 +663,9 @@ public class SongEditView
             return "";
         }
 
+        if (song == null)
+            song = Song.createEmptySong();
+
         //  speed entry enhancement
         String upperEntry = MeasureNode.concatMarkup(song.parseChordEntry(SongBase.entryToUppercase(entry)));
         if (upperEntry.equals(entry))
