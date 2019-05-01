@@ -19,11 +19,14 @@ public class SongEntryTest
     public void testEntryToUppercase() {
         {
             int beatsPerBar = 4;
+            SongBase a;
 
-            SongBase a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, beatsPerBar, 4,
                     "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
                     "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
+
+            assertEquals("I: []", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("i:"))));
 
 
             assertEquals("DmE ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("dme"))));

@@ -275,6 +275,8 @@ public class SongBase {
                             || c == '#'
                             || c == MusicConstant.flatChar
                             || c == MusicConstant.sharpChar
+                            || c == '['
+                            || c == ']'
                     )
                         state = UpperCaseState.initial;
 
@@ -371,12 +373,15 @@ public class SongBase {
                     chordSection = ChordSection.parse(markedString, beatsPerBar, true);
 
                     //  look for multiple sections defined at once
-                    if (chordSection.getPhrases().isEmpty())
+                    if (chordSection.getPhrases().isEmpty()) {
                         emptyChordSections.add(chordSection);
+                        continue;
+                    }
                     else if (!emptyChordSections.isEmpty()) {
                         //  share the common measure sequence items
                         for (ChordSection wasEmptyChordSection : emptyChordSections) {
                             wasEmptyChordSection.setPhrases(chordSection.getPhrases());
+                            ret.add(wasEmptyChordSection);
                         }
                         emptyChordSections.clear();
                     }
@@ -425,6 +430,8 @@ public class SongBase {
                     }
                 }
             }
+
+            //  add trailing empty sections... without a following non-empty section
             for (ChordSection wasEmptyChordSection : emptyChordSections)
                 ret.add(wasEmptyChordSection);
         }

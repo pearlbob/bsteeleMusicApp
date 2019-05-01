@@ -23,10 +23,20 @@ public class SongEditTest extends TestCase {
             Phrase newPhrase;
             Measure newMeasure;
 
+//            startingChords("");
+//            pre(MeasureEditType.append, "", "", "i: [A B C D]");
+//            resultChords("I: A B C D ");
+//            post(MeasureEditType.append, "I:", "I: A B C D");
+
+            startingChords("");
+            pre(MeasureEditType.append, "", "", SongBase.entryToUppercase("i: [a b c d]"));
+            resultChords("I: A B C D ");
+            post(MeasureEditType.append, "I:", "I: A B C D");
+
 
             startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
             pre(MeasureEditType.replace, "C:", "C: F F C C G G F F ",
-                                                                    "C: F F C C G G C B F F ");
+                    "C: F F C C G G C B F F ");
             resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C B F F  O: Dm C B B♭ A  ");
             post(MeasureEditType.append, "C:", "C: F F C C G G C B F F ");
 
@@ -873,13 +883,20 @@ public class SongEditTest extends TestCase {
 
     private final void pre(MeasureEditType type, String locationString, String measureNodeString, String editEntry) {
         a.setCurrentMeasureEditType(type);
-        try {
-            a.setCurrentChordSectionLocation(ChordSectionLocation.parse(locationString));
-        } catch (ParseException pe) {
-            fail(pe.getMessage());
+        if (locationString != null && !locationString.isEmpty()) {
+            try {
+                a.setCurrentChordSectionLocation(ChordSectionLocation.parse(locationString));
+            } catch (ParseException pe) {
+
+                fail(pe.getMessage());
+            }
+            assertEquals(locationString, a.getCurrentChordSectionLocation().toString());
+
+            if (measureNodeString != null) {
+                assertEquals(measureNodeString.trim(), a.getCurrentMeasureNode().toMarkup().trim());
+            }
         }
-        assertEquals(locationString, a.getCurrentChordSectionLocation().toString());
-        assertEquals(measureNodeString.trim(), a.getCurrentMeasureNode().toMarkup().trim());
+
         logger.fine("editEntry: " + editEntry);
         ArrayList<MeasureNode> measureNodes = a.parseChordEntry(editEntry);
         if (measureNodes.isEmpty()
