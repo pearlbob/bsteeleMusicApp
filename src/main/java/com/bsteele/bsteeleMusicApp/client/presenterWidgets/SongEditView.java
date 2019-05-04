@@ -133,16 +133,14 @@ public class SongEditView
     Button sectionBr;
     @UiField
     Button sectionO;
-    //    @UiField
-//    Button sectionA;
-//    @UiField
-//    Button sectionB;
-//    @UiField
-//    Button sectionCo;
-//    @UiField
-//    Button sectionT;
     @UiField
-    SelectElement sectionOtherSelection;
+    Button sectionA;
+    @UiField
+    Button sectionB;
+    @UiField
+    Button sectionCo;
+    @UiField
+    Button sectionT;
 
     @UiField
     SelectElement sectionVersionSelect;
@@ -418,38 +416,24 @@ public class SongEditView
         sectionO.addClickHandler((ClickEvent event) -> {
             processSectionEntry(Section.outro.getAbbreviation());
         });
-        {
-            // other sections
-            Event.sinkEvents(sectionOtherSelection, Event.ONCHANGE);
-            Event.setEventListener(sectionOtherSelection, (Event event) -> {
-                if (Event.ONCHANGE == event.getTypeInt()) {
-                    if (sectionOtherSelection.getSelectedIndex() > 0)
-                        processSectionEntry(sectionOtherSelection.getValue());
-                    sectionOtherSelection.setSelectedIndex(0);    //  hack: clear the selection to get a hit on change
-                }
-            });
-
-            sectionOtherSelection.clear();
-            OptionElement optionElement = document.createOptionElement();
-            optionElement.setLabel("Other section");
-            optionElement.setValue("");
-            sectionOtherSelection.add(optionElement, null);
-
-            Section otherSections[] = new Section[]{Section.a, Section.b, Section.coda, Section.tag};
-            for (Section section : otherSections) {
-                optionElement = document.createOptionElement();
-                optionElement.setLabel(section.toString());
-                optionElement.setValue(section.getAbbreviation());
-                sectionOtherSelection.add(optionElement, null);
-            }
-        }
+        sectionA.addClickHandler((ClickEvent event) -> {
+            processSectionEntry(Section.a.getAbbreviation());
+        });
+        sectionB.addClickHandler((ClickEvent event) -> {
+            processSectionEntry(Section.b.getAbbreviation());
+        });
+        sectionCo.addClickHandler((ClickEvent event) -> {
+            processSectionEntry(Section.coda.getAbbreviation());
+        });
+        sectionT.addClickHandler((ClickEvent event) -> {
+            processSectionEntry(Section.tag.getAbbreviation());
+        });
         Event.sinkEvents(sectionVersionSelect, Event.ONCHANGE);
         Event.setEventListener(sectionVersionSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
                 setSectionAddEnables();
             }
         });
-
 
         //  chord entry
         chordsI.addClickHandler((ClickEvent event) -> {
@@ -822,13 +806,14 @@ public class SongEditView
             selectChordCell(chordSectionLocation);
         else
             selectLastChordsCell();
+        sectionVersionSelect.setSelectedIndex(0);
 
         checkSong();
 
         setUndoRedoEnables();
         setSectionAddEnables();
 
-        logger.info(song.toMarkup());
+        logger.fine(song.toMarkup());
     }
 
     private void displaySong() {
@@ -860,6 +845,10 @@ public class SongEditView
         sectionC.setEnabled(song == null || !song.hasSectionVersion(Section.chorus, v));
         sectionBr.setEnabled(song == null || !song.hasSectionVersion(Section.bridge, v));
         sectionO.setEnabled(song == null || !song.hasSectionVersion(Section.outro, v));
+        sectionA.setEnabled(song == null || !song.hasSectionVersion(Section.a, v));
+        sectionB.setEnabled(song == null || !song.hasSectionVersion(Section.b, v));
+        sectionCo.setEnabled(song == null || !song.hasSectionVersion(Section.coda, v));
+        sectionT.setEnabled(song == null || !song.hasSectionVersion(Section.tag, v));
     }
 
     /**

@@ -85,15 +85,17 @@
                         <br/>
                         <g:TextBox ui:field="measureEntry" styleName="{resources.style.longEntryLine}"/>
                         <br/>
-                        <g:Label ui:field="measureEntryCorrection"  styleName="{resources.style.longEntryLine}">&nbsp;</g:Label>
+                        <g:Label ui:field="measureEntryCorrection" styleName="{resources.style.longEntryLine}">&nbsp;
+                        </g:Label>
                     </td>
                 </tr>
-                <tr><td style="vertical-align:top;" width="35%">
+                <tr>
+                    <td style="vertical-align:top;" width="35%">
                         <g:RadioButton ui:field="editInsert" name="EditPosition">Insert</g:RadioButton>
                         <g:RadioButton ui:field="editReplace" name="EditPosition">Replace</g:RadioButton>
                         <g:Button ui:field="editDelete">Delete</g:Button>
                         <g:RadioButton ui:field="editAppend" name="EditPosition">Append</g:RadioButton>
-                        <g:FlexTable ui:field="chordsFlexTable" />
+                        <g:FlexTable ui:field="chordsFlexTable"/>
                     </td>
                     <td style="vertical-align:top">
                         <table>
@@ -115,15 +117,21 @@
                                     </g:Button>
                                     <g:Button ui:field="sectionO" styleName="{resources.style.lyricsOClass}">Outro
                                     </g:Button>
-                                    <select ui:field="sectionOtherSelection"/>
-                                    <!--
-                                    <g:Button ui:field="sectionA">Section A</g:Button>
-                                    <g:Button ui:field="sectionB">Section B</g:Button>
-                                    <g:Button ui:field="sectionCo">Coda</g:Button>
-                                    <g:Button ui:field="sectionT">Tag</g:Button>
-                                    -->
+                                    <g:Button ui:field="sectionA" styleName="{resources.style.lyricsOClass}">Section A
+                                    </g:Button>
+                                    <g:Button ui:field="sectionB" styleName="{resources.style.lyricsOClass}">Section B
+                                    </g:Button>
+                                    <g:Button ui:field="sectionCo" styleName="{resources.style.lyricsOClass}">Coda
+                                    </g:Button>
+                                    <g:Button ui:field="sectionT" styleName="{resources.style.lyricsOClass}">Tag
+                                    </g:Button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Section version:</td>
+                                <td>
                                     <select ui:field="sectionVersionSelect">
-                                        <option value="0" selected="selected">Section Version</option>
+                                        <option value="0" selected="selected">Default</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -232,13 +240,14 @@
             </table>
             <div ui:field="editHints">
                 <ul>
-                    <li>Chords must be in upper case!  If they are not, the app will try to guess
-                    the capitalization for your input and place it on the line below the test entry box.
-                    What you see in the lower text will be what will be entered into the edit.
-                    Note that often the partial chord descriptor will be considered a comment, i.e. will be placed
+                    <li>Chords must be in upper case! If they are not, the app will try to guess
+                        the capitalization for your input and place it on the line below the test entry box.
+                        What you see in the lower text will be what will be entered into the edit.
+                        Note that often the partial chord descriptor will be considered a comment, i.e. will be placed
                         in parenthesis.
-                    When the entry is correct, the characters will be removed from the comment and will be
-                        returned to their correct position in the entry.</li>
+                        When the entry is correct, the characters will be removed from the comment and will be
+                        returned to their correct position in the entry.
+                    </li>
                     <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                     <li>Limited set of case sensitive chord modifiers: # b (m | maj | sus) [0-9] and more.
                         See "Other chords" selection above.
