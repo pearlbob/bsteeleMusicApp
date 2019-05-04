@@ -16,6 +16,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
+import com.google.gwt.core.client.JsDate;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SelectElement;
@@ -252,7 +253,7 @@ public class SongListView
             if (allSongs.contains(song)) {
                 String message;
                 Song oldSong = allSongs.floor(song);
-                if ( oldSong.equals(song))
+                if (oldSong.equals(song))
                     return false;
                 if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
                     message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
@@ -367,15 +368,17 @@ public class SongListView
         displaySongList(filteredSongs);
 
         {
-            //  roll the songs on an empty select
-            int scrollPosition = 0;
-            if (search == "" && songGrid.getOffsetHeight() > 0) {
-                songListScrollOffset = songListScrollOffset + songGrid.getOffsetHeight() / 20;
-                if (songListScrollOffset > songGrid.getOffsetHeight())
+            if (listBySelect.getValue() == "title") {
+                //  roll the songs on an empty title select
+                if (search == "" && songGrid.getOffsetHeight() > 0) {
+                    songListScrollOffset = songListScrollOffset + songGrid.getOffsetHeight() / 20;
+                    if (songListScrollOffset > songGrid.getOffsetHeight())
+                        songListScrollOffset = 0;
+                } else
                     songListScrollOffset = 0;
-                scrollPosition = songListScrollOffset;
-            }
-            songListScrollPanel.setVerticalScrollPosition(scrollPosition);// in pixels
+            } else
+                songListScrollOffset = 0;
+            songListScrollPanel.setVerticalScrollPosition(songListScrollOffset);// in pixels
         }
     }
 
@@ -385,6 +388,8 @@ public class SongListView
     public void displaySongList(ArrayList<Song> filteredSongs) {
 
         this.filteredSongs = filteredSongs;
+        JsDate jsDate = JsDate.create();
+
         songGrid.resize(filteredSongs.size(), columns);
         {
             int r = 0;
@@ -399,10 +404,14 @@ public class SongListView
                 songGrid.setHTML(r, 1,
                         "<div class=\"" + CssConstants.style + "songListItemData\">"
                                 + song.getArtist() + "</div>");
+                String timeAsString = "unloved since 2017";
+                if (song.getLastModifiedTime() > 0) {
+                    jsDate.setTime(song.getLastModifiedTime());
+                    timeAsString = jsDate.toDateString();
+                }
                 songGrid.setHTML(r, 2,
                         "<div class=\"" + CssConstants.style + "songListItemData\">"
-                                + (song.getLastModifiedDate() == null ? "unloved since 2017" : song
-                                .getLastModifiedDate().toDateString()) + "</div>");
+                                + timeAsString + "</div>");
                 r++;
             }
         }
@@ -475,7 +484,7 @@ public class SongListView
                 logger.warning("file parse failure on: " + file.getName());
             else if (songs.size() == 1) {
                 Song song = songs.get(0);
-                song.setLastModifiedDate(file.getLastModifiedDate());
+                song.setLastModifiedTime(file.getLastModifiedDate().getTime());
                 song.setFileName(file.getName());
                 fireEvent(new SongReadEvent(song));
             } else

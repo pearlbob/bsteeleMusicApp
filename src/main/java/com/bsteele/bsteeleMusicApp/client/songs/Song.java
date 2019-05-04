@@ -103,7 +103,7 @@ public class Song extends SongBase implements Comparable<Song> {
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
                 toMarkup(), getLyricsAsString());
         ret.setFileName(getFileName());
-        ret.lastModifiedDate = lastModifiedDate;
+        ret.setLastModifiedTime(getLastModifiedTime());
         ret.setDuration(getDuration());
         ret.setTotalBeats(getTotalBeats());
         ret.setCurrentChordSectionLocation(getCurrentChordSectionLocation());
@@ -180,7 +180,7 @@ public class Song extends SongBase implements Comparable<Song> {
     private static final Song songFromJsonFileObject(JSONObject jsonObject)
             throws ParseException {
         Song song = null;
-        double lastModifiedDate = 0;
+        double lastModifiedTime = 0;
         String fileName = null;
 
         JSONNumber jn;
@@ -193,7 +193,7 @@ public class Song extends SongBase implements Comparable<Song> {
                 case "lastModifiedDate":
                     jn = jv.isNumber();
                     if (jn != null) {
-                        lastModifiedDate = jn.doubleValue();
+                        lastModifiedTime = jn.doubleValue();
                     }
                     break;
                 case "file":
@@ -204,8 +204,8 @@ public class Song extends SongBase implements Comparable<Song> {
         if (song == null)
             return null;
 
-        if (lastModifiedDate > 0)
-            song.lastModifiedDate = JsDate.create(lastModifiedDate);
+        if (lastModifiedTime > song.getLastModifiedTime())
+            song.setLastModifiedTime(lastModifiedTime);
         song.setFileName(fileName);
 
         return song;
@@ -291,6 +291,12 @@ public class Song extends SongBase implements Comparable<Song> {
                         song.setRawLyrics(jv.isString().stringValue());
                     }
                     break;
+                case "lastModifiedDate":
+                    jn = jv.isNumber();
+                    if (jn != null) {
+                        song.setLastModifiedTime(jn.doubleValue());
+                    }
+                    break;
             }
         }
         return song;
@@ -315,8 +321,7 @@ public class Song extends SongBase implements Comparable<Song> {
     }
 
     private String toJsonAsFile() {
-        double time = lastModifiedDate == null ? 0 : lastModifiedDate.getTime();
-        return "{ \"file\": " + JsonUtil.encode(getFileName()) + ", \"lastModifiedDate\": " + time + ", \"song\":" +
+        return "{ \"file\": " + JsonUtil.encode(getFileName()) + ", \"lastModifiedDate\": " + getLastModifiedTime() + ", \"song\":" +
                 " \n"
                 + toJson()
                 + "}";
@@ -329,12 +334,16 @@ public class Song extends SongBase implements Comparable<Song> {
      */
     public final String toJson() {
         StringBuilder sb = new StringBuilder();
+
         sb.append("{\n")
                 .append("\"title\": ")
                 .append(JsonUtil.encode(getTitle()))
                 .append(",\n")
                 .append("\"artist\": ")
                 .append(JsonUtil.encode(getArtist()))
+                .append(",\n")
+                .append("\"lastModifiedDate\": ")
+                .append(getLastModifiedTime())
                 .append(",\n")
                 .append("\"copyright\": ")
                 .append(JsonUtil.encode(getCopyright()))
@@ -388,12 +397,9 @@ public class Song extends SongBase implements Comparable<Song> {
         return sb.toString();
     }
 
-    public JsDate getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(JsDate lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
+    @Override
+    public void resetLastModifiedDateToNow() {
+        setLastModifiedTime(JsDate.create().getTime());
     }
 
     public static final ArrayList<StringTriple> diff(Song a, Song b) {
@@ -406,8 +412,9 @@ public class Song extends SongBase implements Comparable<Song> {
             ret.add(new StringTriple("+more", "", ""));
         }
         ret.add(0, new StringTriple("file date",
-                (a.lastModifiedDate != null ? a.lastModifiedDate.toDateString() : ""),
-                (b.lastModifiedDate != null ? b.lastModifiedDate.toDateString() : "")));
+                JsDate.create(a.getLastModifiedTime()).toDateString(),
+                JsDate.create(b.getLastModifiedTime()).toDateString()
+        ));
         return ret;
     }
 
@@ -508,20 +515,12 @@ public class Song extends SongBase implements Comparable<Song> {
          */
         @Override
         public int compare(Song o1, Song o2) {
-            JsDate mod1 = o1.lastModifiedDate;
-            JsDate mod2 = o2.lastModifiedDate;
-            if (mod1 != null) {
-                if (mod2 != null) {
-                    if (mod1.getTime() == mod2.getTime())
-                        return o1.compareTo(o2);
-                    return mod1.getTime() < mod2.getTime() ? 1 : -1;
-                }
-                return -1;
-            }
-            if (mod2 != null) {
-                return 1;
-            }
-            return o1.compareTo(o2);
+            double mod1 = o1.getLastModifiedTime();
+            double mod2 = o2.getLastModifiedTime();
+
+            if (mod1 == mod2)
+                return o1.compareTo(o2);
+            return mod1 < mod2 ? 1 : -1;
         }
     }
 
@@ -547,20 +546,12 @@ public class Song extends SongBase implements Comparable<Song> {
     }
 
     public static int compareByLastModifiedDate(Song o1, Song o2) {
-        JsDate mod1 = o1.lastModifiedDate;
-        JsDate mod2 = o2.lastModifiedDate;
-        if (mod1 != null) {
-            if (mod2 != null) {
-                if (mod1.getTime() == mod2.getTime())
-                    return o1.compareTo(o2);
-                return mod1.getTime() < mod2.getTime() ? -1 : 1;
-            }
-            return 1;
-        }
-        if (mod2 != null) {
-            return -1;
-        }
-        return o1.compareTo(o2);
+        double mod1 = o1.getLastModifiedTime();
+        double mod2 = o2.getLastModifiedTime();
+
+        if (mod1 == mod2)
+            return o1.compareTo(o2);
+        return mod1 < mod2 ? -1 : 1;
     }
 
     public static final class ComparatorByVersionNumber implements Comparator<Song> {
@@ -652,8 +643,6 @@ public class Song extends SongBase implements Comparable<Song> {
 //    }
         return 0;
     }
-
-    private transient JsDate lastModifiedDate;
 
     private static final Logger logger = Logger.getLogger(Song.class.getName());
 }

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,12 +26,13 @@ import java.util.logging.Logger;
  * User: bob
  */
 public class SongTest
-        extends GWTTestCase
-{
+        extends GWTTestCase {
 
     @Test
-    public void testFromJson()
-    {
+    public void testFromJson() {
+        //logger.setLevel(Level.FINEST);      //  fixme: debug workaround
+
+
 //        logger.info("null: <"+JsonUtil.encode(null)+">");
 //        logger.info("\"\": <"+JsonUtil.encode("")+">");
 //        logger.info("\" \": <"+JsonUtil.encode(" ")+">");
@@ -38,11 +40,11 @@ public class SongTest
         int songCount = 0;
         String jsonString = AppResources.INSTANCE.allSongsAsJsonString().getText();
         JSONValue jv = JSONParser.parseStrict(jsonString);
-        logger.finer("jv: "+jv.toString().length());
+        logger.finer("jv: " + jv.toString().length());
         TreeSet<ChordDescriptor> chordDescriptors = new TreeSet<>();
         if (jv != null) {
             JSONArray ja = jv.isArray();
-            logger.fine("ja: "+ja.size());
+            logger.fine("ja: " + ja.size());
             if (ja != null) {
                 int jaLimit = Math.min(300, ja.size());   //    fixme: find why this fails at 1000
                 for (int i = 0; i < jaLimit; i++) {
@@ -54,7 +56,7 @@ public class SongTest
                         e.printStackTrace();
                         fail();
                     }
-                    logger.fine(songCount + ": "+song.getTitle());
+                    logger.fine(songCount + ": " + song.getTitle());
 
                     HashMap<ScaleChord, Integer> scaleChordMap =
                             song.findScaleChordsUsed();
@@ -67,18 +69,16 @@ public class SongTest
                     assertTrue(song.getBeatsPerBar() <= 12);
                     assertTrue(song.getBeatsPerMinute() > 20);
                     assertTrue(song.getBeatsPerMinute() <= 400);
-                    JsDate date = song.getLastModifiedDate();
-                    if (date != null) {
-                        //logger.info(Double.toString(date.getTime()));
-                        assertTrue(date.getTime() > 1510000000000.0); //    ~6 November 2017
-                    }
+                    double modTime = song.getLastModifiedTime();
+                    logger.finer("modTime: " + Double.toString(modTime));
+                    if (modTime > 0)
+                        assertTrue(modTime > 1510000000000.0); //    ~6 November 2017
+
                     assertTrue(song.getKey() != null);
-//                    //logger.info("song.getChordSectionInnerHtmlMap().size() = "+song.getChordSectionInnerHtmlMap()
-//                    // .size());
                     assertTrue(song.getRawLyrics().length() > 0);
 
                     logger.fine(song.toJson());
-                    //logger.info("songtest: copyright: <"+song.getCopyright()+">");
+                    logger.finer("copyright: <" + song.getCopyright() + ">");
                     ArrayList<Song> jsonList = Song.fromJson(song.toJson());
                     assertNotNull(jsonList);
                     assertTrue(!jsonList.isEmpty());
@@ -91,13 +91,13 @@ public class SongTest
 //                    }
                     logger.fine(song1.toJson());
                     Song song2 = Song.fromJson(song1.toJson()).get(0);
-                    logger.fine("song2: "+song2.toJson());
-                    logger.fine("song to 2: "+song2.toJson());
+                    logger.fine("song2: " + song2.toJson());
+                    logger.fine("song to 2: " + song2.toJson());
                     assertTrue(song.compareTo(song2) == 0);
-                    logger.fine("song1 to 2: "+song2.toJson());
+                    logger.fine("song1 to 2: " + song2.toJson());
 
                     assertTrue(song1.compareTo(song2) == 0);
-                    logger.fine("song1 equals 2: "+song2.toJson());
+                    logger.fine("song1 equals 2: " + song2.toJson());
                     assertTrue(song1.equals(song2));
                 }
             }
@@ -108,8 +108,7 @@ public class SongTest
     }
 
     @Test
-    public void testCompare()
-    {
+    public void testCompare() {
 
         Song aNull = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
@@ -120,13 +119,13 @@ public class SongTest
 
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        a.setLastModifiedDate(JsDate.create(1520605228000.0));
+        a.setLastModifiedTime(1520605228000.0);
         Song c = Song.createSong("C", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        c.setLastModifiedDate(JsDate.create(1520605228000.0));
+        c.setLastModifiedTime(1520605228000.0);
         Song b = Song.createSong("B", "bob", "bsteele.com", Key.getDefault(),
                 100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
-        b.setLastModifiedDate(JsDate.create());
+        b.resetLastModifiedDateToNow();
 
         logger.fine("aNull == aNull");
         assertTrue(comparator.compare(aNull, aNull) == 0);
@@ -168,8 +167,7 @@ public class SongTest
     }
 
     @Test
-    public void testComparatorByVersionNumber()
-    {
+    public void testComparatorByVersionNumber() {
         Comparator<Song> comparator = Song.getComparatorByType(Song.ComparatorType.versionNumber);
 
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
@@ -202,8 +200,7 @@ public class SongTest
 
 
     @Override
-    public String getModuleName()
-    {
+    public String getModuleName() {
         return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
     }
 

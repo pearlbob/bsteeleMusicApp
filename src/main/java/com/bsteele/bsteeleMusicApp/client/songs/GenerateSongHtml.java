@@ -367,6 +367,11 @@ public class GenerateSongHtml {
                 "<td>The artist of the song.</td>" +
                 "<td>For search purposes, artist names beginning with \"The\" will have " +
                 "the preposition swapped to the end of the title after a comma.</td></tr>\n");
+        sb.append("<tr><td><code>lastModifiedDate</code></td><td>JavaScript JSDate</td>\n" +
+                "<td>The number of milliseconds from since the Unix epoch (00:00:00 UTC on 1 January 1970)." +
+                " This represents the last time the song (not the file)" +
+                " was modified.  See javascript File.lastModified. </td>" +
+                "<td></td></tr>\n");
         sb.append("<tr><td><code>copyright</code></td><td>JSON String</td>\n" +
                 "<td>The copyright notice of the owner.</td>" +
                 "<td>Copyrights are often difficult to find and may not be proper legally. " +

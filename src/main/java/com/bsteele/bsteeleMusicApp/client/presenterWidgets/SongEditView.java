@@ -25,7 +25,6 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Phrase;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.shared.songs.Section;
-import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
@@ -1046,7 +1045,7 @@ public class SongEditView
             newSong = Song.checkSong(titleEntry.getText(), artistEntry.getText(),
                     copyrightEntry.getText(),
                     newKey, bpmEntry.getText(), beatsPerBar, unitsPerMeasure,
-                    song.toMarkup(), lyricsTextEntry.getValue());
+                    song.toMarkup(), lyricsTextEntry.getValue(), song.getLastModifiedTime());
             warn(newSong.getMessage());
             //  worry about the location spec changing after parsing above
             newSong.setCurrentChordSectionLocation(newSong.getChordSectionLocation(

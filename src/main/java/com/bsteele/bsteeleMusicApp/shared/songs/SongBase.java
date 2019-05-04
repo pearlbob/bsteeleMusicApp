@@ -175,6 +175,14 @@ public class SongBase {
         return chordSectionMap.get(chordSectionLocation.getSectionVersion());
     }
 
+    public double getLastModifiedTime() {
+        return lastModifiedTime;
+    }
+
+    public void setLastModifiedTime(double lastModifiedTime) {
+        this.lastModifiedTime = lastModifiedTime;
+    }
+
     private enum UpperCaseState {
         initial,
         flatIsPossible,
@@ -1334,6 +1342,7 @@ public class SongBase {
 
             collapsePhrases(location);
             setCurrentChordSectionLocation(location);
+            resetLastModifiedDateToNow();
 
             switch (getCurrentMeasureEditType()) {
                 // case replace:
@@ -2127,7 +2136,7 @@ public class SongBase {
         return checkSong(getTitle(), getArtist(), getCopyright(),
                 getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
                 Integer.toString(getUnitsPerMeasure()),
-                toMarkup(), getRawLyrics());
+                toMarkup(), getRawLyrics(), getLastModifiedTime());
     }
 
     /**
@@ -2148,7 +2157,7 @@ public class SongBase {
      */
     public static final Song checkSong(String title, String artist, String copyright,
                                        Key key, String bpmEntry, String beatsPerBarEntry, String unitsPerMeasureEntry,
-                                       String chordsTextEntry, String lyricsTextEntry)
+                                       String chordsTextEntry, String lyricsTextEntry, double lastLastModifiedTime)
             throws ParseException {
         if (title == null || title.length() <= 0) {
             throw new ParseException("no song title given!", 0);
@@ -2226,6 +2235,7 @@ public class SongBase {
         Song newSong = Song.createSong(title, artist,
                 copyright, key, bpm, beatsPerBar, unitsPerMeasure,
                 chordsTextEntry, lyricsTextEntry);
+        newSong.resetLastModifiedDateToNow();
 
         if (newSong.getChordSections().isEmpty())
             throw new ParseException("The song has no chord sections!", 0);
@@ -2414,6 +2424,10 @@ public class SongBase {
         computeSongId();
     }
 
+    public void resetLastModifiedDateToNow() {
+        //  for song override
+    }
+
     private final void computeSongId() {
         songId = new SongId("Song_" + title.replaceAll("\\W+", "")
                 + "_by_" + artist.replaceAll("\\W+", "")
@@ -2575,7 +2589,7 @@ public class SongBase {
         this.drumSection = drumSection;
     }
 
-    protected Collection<ChordSection> getChordSections() {
+    public Collection<ChordSection> getChordSections() {
         return chordSectionMap.values();
     }
 
@@ -2971,6 +2985,8 @@ public class SongBase {
     private LegacyDrumSection drumSection = new LegacyDrumSection();
     private Arrangement drumArrangement;    //  default
     private TreeSet<Metadata> metadata = new TreeSet<>();
+
+    private  double lastModifiedTime;
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;

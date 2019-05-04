@@ -44,7 +44,6 @@ public class SongMoment {
         return measureIndex;
     }
 
-    @Deprecated
     public Measure getMeasure() {
         return measure;
     }
