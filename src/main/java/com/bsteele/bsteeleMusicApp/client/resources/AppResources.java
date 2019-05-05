@@ -103,6 +103,10 @@ public interface AppResources extends ClientBundle {
         String textCenter();
 
         String sectionCommentClass();
+
+        String playChordsBackground();
+
+        String playChordsForeground();
     }
 
     @Source("css/bsteeleMusicApp.gss")

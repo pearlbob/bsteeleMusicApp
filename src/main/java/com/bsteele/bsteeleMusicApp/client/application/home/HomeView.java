@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
+import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
@@ -7,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -19,6 +21,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -64,6 +67,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     SimplePanel drumOptions;
 
     @UiField
+    RadioButton dashAllMeasureRepetitions;
+    @UiField
+    RadioButton debug;
+
+    @UiField
     Button showAllScales;
     @UiField
     HTML allScales;
@@ -87,9 +95,6 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
     @UiField
     Label buildId;
-
-    @UiField
-    Label allSongId;
 
     @UiField
     Button writeAllSongs;
@@ -198,6 +203,21 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
                     }
             }
         }
+
+        dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
+        dashAllMeasureRepetitions.addClickHandler((ClickEvent e) -> {
+            appOptions.setDashAllMeasureRepetitions(!appOptions.isDashAllMeasureRepetitions());
+            dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
+        });
+        debug.setValue(appOptions.isDebug());
+        debug.addClickHandler((ClickEvent e) -> {
+            AppOptions.getInstance().setDebug(!appOptions.isDebug());
+            debug.setValue(appOptions.isDebug());
+        });
+
+        //  hide debug if not local
+        if (GWT.getHostPageBaseURL().matches(".*127.0.0.1:8888"))
+            debug.setVisible(false);
     }
 
     @Override
@@ -254,4 +274,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
     private HashMap<String, String> statusMap = new HashMap<>();
     private AppTab lastPlayTab = AppTab.player;
+       private static final AppOptions appOptions = AppOptions.getInstance();
 }

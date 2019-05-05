@@ -5,14 +5,18 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
+import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
-import com.bsteele.bsteeleMusicApp.shared.songs.Key;
-import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
-import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
+import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
+import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
+import com.google.gwt.canvas.client.Canvas;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.FillStrokeStyle;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
@@ -34,6 +38,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -83,6 +88,9 @@ public class PlayerViewImpl
 
     @UiField
     HTMLPanel player;
+
+    @UiField
+    CanvasElement playerBackgroundElement;
 
     @UiField
     SpanElement copyright;
@@ -193,20 +201,13 @@ public class PlayerViewImpl
                 break;
         }
 
-//        if (song != null && !song.equals(songUpdate.getSong())) {
-//            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
-//                @Override
-//                public void execute() {
-//                    resetScroll(chordsScrollPanel);
-//                }
-//            });
-//        }
         song = songUpdate.getSong();
 
         scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
             @Override
             public void execute() {
                 resetScroll(chordsScrollPanel);
+                onSongRender();
             }
         });
 
@@ -262,8 +263,8 @@ public class PlayerViewImpl
         if (song == null)
             return;
 
-        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+//        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+//                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
 
         {
             Widget parent = player.getParent();
@@ -335,37 +336,79 @@ public class PlayerViewImpl
 
     private void syncKey(int tran) {
 
-            currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
-            keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
+        currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
+        keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
 
-            player.clear();
+        player.clear();
 
-            ArrayList<LyricSection> lyricSections = song.getLyricSections();
-            int sectionIndex = 0;
-            {
-                FlexTable flexTable = new FlexTable();
-                FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
-                final int chordCol = 0;
-                final int lyricsCol = 1;
-                for (LyricSection lyricSection : lyricSections) {
+        ArrayList<LyricSection> lyricSections = song.getLyricSections();
+        {
+            FlexTable flexTable = new FlexTable();
+            FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
+            final int chordCol = 0;
+            final int lyricsCol = 1;
 
-                    int firstRow = flexTable.getRowCount();
-                    FlexTable sectionTable = new FlexTable();
-                    song.transpose(song.getChordSection(lyricSection.getSectionVersion()),
-                            sectionTable, tran, lyricsDefaultFontSize, false);
-                    flexTable.setWidget(firstRow, chordCol, sectionTable);
+            for (LyricSection lyricSection : lyricSections) {
 
-                    StringBuilder sb = new StringBuilder();
-                    for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
-                        sb.append(lyricsLine.getLyrics()).append("\n");
+                int firstRow = flexTable.getRowCount();
+                FlexTable sectionTable = new FlexTable();
+                song.transpose(song.getChordSection(lyricSection.getSectionVersion()),
+                        sectionTable, tran, lyricsDefaultFontSize, false);
+                flexTable.setWidget(firstRow, chordCol, sectionTable);
 
-                    flexTable.setHTML(firstRow, lyricsCol, sb.toString());
-                    formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
-                            .getSectionVersion().getSection().getAbbreviation() + "Class");
-                    formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
-                }
-                player.add(flexTable);
+                StringBuilder sb = new StringBuilder();
+                for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
+                    sb.append(lyricsLine.getLyrics()).append("\n");
+
+                flexTable.setHTML(firstRow, lyricsCol, sb.toString());
+                formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
+                        .getSectionVersion().getSection().getAbbreviation() + "Class");
+                formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
             }
+            if (playerFlexTable != null)
+                playerFlexTable.removeFromParent();
+            playerFlexTable = flexTable;
+            player.add(flexTable);
+            // player.addHandler(, ResizeEvent.getType());
+        }
+    }
+
+    protected void onSongRender() {
+        if (playerFlexTable != null) {
+            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
+            logger.fine("player table rows: " + playerFlexTable.getRowCount());
+            for (int r = 0; r < playerFlexTable.getRowCount(); r++) {
+                int cols = playerFlexTable.getCellCount(r);
+                for (int c = 0; c < cols; c++) {
+
+                    Element element = formatter.getElement(r, c);
+                    if (element == null)
+                        continue;
+
+                    logger.fine("  measure( " + c + ", " + r + "): top "
+                            + element.getAbsoluteBottom() + "-" + element.getAbsoluteTop() + " = "
+                            + (element.getAbsoluteBottom() - element.getAbsoluteTop()));
+                }
+            }
+        }
+
+        {
+            Context2d ctx = playerBackgroundElement.getContext2d();
+           CanvasElement canvasElement = ctx.getCanvas();
+            canvasElement.setWidth(canvasElement.getClientWidth());
+            canvasElement.setHeight(canvasElement.getClientHeight());
+
+            ctx.setFillStyle("#f5f0e1");
+            double w = canvasElement.getWidth();
+            double h = canvasElement.getHeight();
+            ctx.fillRect(0.0, 0.0, w, h);
+            ctx.setStrokeStyle("black");
+            ctx.setLineWidth(1.5);
+            ctx.beginPath();
+            ctx.moveTo(0.0, h / 2);
+            ctx.lineTo(w, h / 2);
+            ctx.stroke();
+        }
     }
 
     private AudioBeatDisplay audioBeatDisplay;
@@ -376,6 +419,7 @@ public class PlayerViewImpl
     private Element lastRepeatElement;
     private int lastRepeatTotal;
     private int lastMeasureNumber;
+    private FlexTable playerFlexTable;
 
 
     public static final String highlightColor = "#e4c9ff";
@@ -387,6 +431,13 @@ public class PlayerViewImpl
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
     private static final String prefix = "player";
     private static final Scheduler scheduler = Scheduler.get();
+    private static final AppOptions appOptions = AppOptions.getInstance();
+
+
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
+
+    static {
+        logger.setLevel(Level.FINEST);
+    }
 
 }

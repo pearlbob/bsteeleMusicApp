@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
 import com.bsteele.bsteeleMusicApp.client.songs.Metadata;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
@@ -238,8 +239,7 @@ public class SongBase {
                                     sb.append(cdString);
                                     i += cdString.length();
                                     break;
-                                }
-                                else {
+                                } else {
                                     sb.append(Character.toUpperCase(c));
                                     if (sf != 0) {
                                         sb.append(sf);
@@ -384,8 +384,7 @@ public class SongBase {
                     if (chordSection.getPhrases().isEmpty()) {
                         emptyChordSections.add(chordSection);
                         continue;
-                    }
-                    else if (!emptyChordSections.isEmpty()) {
+                    } else if (!emptyChordSections.isEmpty()) {
                         //  share the common measure sequence items
                         for (ChordSection wasEmptyChordSection : emptyChordSections) {
                             wasEmptyChordSection.setPhrases(chordSection.getPhrases());
@@ -2000,7 +1999,8 @@ public class SongBase {
                         break;
                 }
                 //  enforce the - on repeated measures
-                if (col > 0
+                if (appOptions.isDashAllMeasureRepetitions()
+                        && col > 0
                         && col <= MusicConstant.measuresPerDisplayRow
                         && s.equals(lastValue)
                         && !(measureNode instanceof MeasureComment)) {
@@ -2985,8 +2985,9 @@ public class SongBase {
     private LegacyDrumSection drumSection = new LegacyDrumSection();
     private Arrangement drumArrangement;    //  default
     private TreeSet<Metadata> metadata = new TreeSet<>();
+    private static final AppOptions appOptions = AppOptions.getInstance();
 
-    private  double lastModifiedTime;
+    private double lastModifiedTime;
 
     private static final int minBpm = 50;
     private static final int maxBpm = 400;

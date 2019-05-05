@@ -274,3 +274,14 @@ td[editSelect=append] {
     border-right-color: red;
 }
 
+/*  css for play background canvas  */
+.playChordsBackground {
+        position:absolute;
+        z-index:-1;
+        }
+/*  css for play foreground lyrics and chords   */
+.playChordsForeground {
+        position:relative;
+        z-index:0;
+        }
+

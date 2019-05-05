@@ -87,6 +87,12 @@
                                         </g:TreeItem>
                                     </g:Tree>
                                     <br/>
+                                    <g:RadioButton ui:field="dashAllMeasureRepetitions"
+                                                   name="dashAllMeasureRepetitions">Dash All Measure Repetitions
+                                    </g:RadioButton>
+                                    <br/>
+                                    <g:RadioButton ui:field="debug" name="debug">debug</g:RadioButton>
+                                    <br/>
                                     <g:Button ui:field="showAllScales">Show all scales</g:Button>
                                     <g:HTML ui:field="allScales"/>
                                     <br/>
@@ -102,13 +108,11 @@
                                     <g:Button ui:field="showStatus">Show Status</g:Button>
                                     <g:HTML ui:field="allStatus"/>
                                     <p>
-                                    buildId:
-                                    <g:Label ui:field="buildId"/>
+                                        buildId:
+                                        <g:Label ui:field="buildId"/>
                                     </p>
                                     <p>
-                                    allSongId:
-                                    <g:Label ui:field="allSongId"/>
-                                    <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
+                                        <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
                                     </p>
                                 </g:HTMLPanel>
 
