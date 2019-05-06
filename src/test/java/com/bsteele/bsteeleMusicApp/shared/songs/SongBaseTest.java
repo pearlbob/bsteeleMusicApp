@@ -724,6 +724,21 @@ public class SongBaseTest
         GridCoordinate gridCoordinate;
 
         try {
+
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, beatsPerBar, 4,
+                    "I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ",
+                    "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here");
+
+            logger.finer(a.toMarkup());
+
+
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("V:0:0")));
+
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("I:")));
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("V:")));
+            assertEquals(new GridCoordinate(2, 0), a.getGridCoordinate(ChordSectionLocation.parse("C:")));
+
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, beatsPerBar, 4,
                     "I: V: c: G D G D ",
@@ -732,8 +747,14 @@ public class SongBaseTest
             logger.finer(a.toMarkup());
 
             assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("I:")));
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("V:")));
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("C:")));
             location = ChordSectionLocation.parse("I:0:0");
             assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("I:0:0")));
+            assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("v:0:0")));
+            assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("c:0:0")));
             assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
             logger.fine( a.logGrid());
             gridCoordinate = new GridCoordinate(0, 0);

@@ -14,6 +14,7 @@ import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.FillStrokeStyle;
@@ -325,7 +326,7 @@ public class PlayerViewImpl
         }
 
         //  auto scroll
-        autoScroll(chordsScrollPanel, player);
+
 
     }
 
@@ -394,7 +395,7 @@ public class PlayerViewImpl
 
         {
             Context2d ctx = playerBackgroundElement.getContext2d();
-           CanvasElement canvasElement = ctx.getCanvas();
+            CanvasElement canvasElement = ctx.getCanvas();
             canvasElement.setWidth(canvasElement.getClientWidth());
             canvasElement.setHeight(canvasElement.getClientHeight());
 
@@ -436,8 +437,8 @@ public class PlayerViewImpl
 
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
-    static {
-        logger.setLevel(Level.FINEST);
-    }
+//    static {
+//        logger.setLevel(Level.FINEST);
+//    }
 
 }

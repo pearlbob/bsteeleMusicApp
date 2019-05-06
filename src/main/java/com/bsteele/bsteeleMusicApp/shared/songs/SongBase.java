@@ -68,6 +68,9 @@ public class SongBase {
      * repeat ends, repeat counts, section headers, etc. are ignored.
      */
     private final void computeSongMoments() {
+        if (songMoments != null)
+            return;
+
         songMoments = new ArrayList<>();
 
         if (lyricSections == null)
@@ -116,6 +119,24 @@ public class SongBase {
             }
         }
 
+//        for (SongMoment songMoment : songMoments) {
+//
+//            SectionVersion sectionVersion = songMoment.getChordSectionLocation().getSectionVersion();
+//            ChordSectionLocation  sectionLocation = new ChordSectionLocation(sectionVersion  );
+//            GridCoordinate gridCoordinate = getGridCoordinate(sectionLocation);
+//            int baseChordRow = gridCoordinate.getRow();
+//            gridCoordinate = getGridCoordinate(songMoment.getChordSectionLocation());
+//            gridCoordinate = new GridCoordinate(gridCoordinate.getRow()-baseChordRow, gridCoordinate.getCol());
+//
+//            logger.finer(songMoment.getSequenceNumber()
+//                    + ": " + songMoment.getChordSectionLocation().toString()
+//                    + " @ " + gridCoordinate
+//                    + " " + songMoment.getMeasure().toMarkup()
+//                    + (songMoment.getRepeatMax() > 1 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax() : "")
+//            );
+//        }
+
+
         //  debug
         if (false) {
             GWT.log(getSongId().toString());
@@ -145,7 +166,10 @@ public class SongBase {
     /**
      * Compute the duration and total beat count for the song.
      */
-    private void computeDuration() {  //  fixme: account for repeats!!!!!!!!!!!!!!!!!!!
+    private void computeDuration() {
+        //  be lazy
+        if (duration > 0)
+            return;
 
         duration = 0;
         totalBeats = 0;
@@ -341,8 +365,7 @@ public class SongBase {
                     clearCachedValues();
                 } catch (ParseException pex) {
                     //  try some repair
-                    computeSongMoments();
-                    computeDuration();
+                    clearCachedValues();
 
                     logger.finest(logGrid());
                     throw pex;
@@ -475,6 +498,7 @@ public class SongBase {
 
         Grid<ChordSectionLocation> grid = new Grid<>();
         chordSectionGridCoorinateMap = new HashMap<>();
+        chordSectionGridMatches = new HashMap<>();
         gridCoordinateChordSectionLocationMap = new HashMap<>();
         gridChordSectionLocationCoordinateMap = new HashMap<>();
 
@@ -486,10 +510,12 @@ public class SongBase {
         //  use a separate set to avoid modifying a set
         TreeSet<SectionVersion> sectionVersionsToDo = new TreeSet<>(chordSectionMap.keySet());
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            SectionVersion sectionVersion = chordSection.getSectionVersion();
+
             //  only do a chord section once.  it might have a duplicate set of phrases and already be listed
-            if (!sectionVersionsToDo.contains(chordSection.getSectionVersion()))
+            if (!sectionVersionsToDo.contains(sectionVersion))
                 continue;
-            sectionVersionsToDo.remove(chordSection.getSectionVersion());
+            sectionVersionsToDo.remove(sectionVersion);
 
             //  start each section on it's own line
             if (col != 0) {
@@ -497,16 +523,22 @@ public class SongBase {
                 col = 0;
             }
 
-            logger.finest("gridding: " + chordSection.getSectionVersion().toString() + " (" + col + ", " + row + ")");
+            logger.finest("gridding: " + sectionVersion.toString() + " (" + col + ", " + row + ")");
 
             {
                 //  grid the section header
-                TreeSet<SectionVersion> matchingSectionVersions = matchingSectionVersions(chordSection.getSectionVersion());
+                TreeSet<SectionVersion> matchingSectionVersions = matchingSectionVersions(sectionVersion);
                 GridCoordinate coordinate = new GridCoordinate(row, col);
-                for (SectionVersion sectionVersion : matchingSectionVersions) {
-                    chordSectionGridCoorinateMap.put(sectionVersion, coordinate);
-                    ChordSectionLocation loc = new ChordSectionLocation(sectionVersion);
+                for (SectionVersion matchingSectionVersion : matchingSectionVersions) {
+                    chordSectionGridCoorinateMap.put(matchingSectionVersion, coordinate);
+                    ChordSectionLocation loc = new ChordSectionLocation(matchingSectionVersion);
                     gridChordSectionLocationCoordinateMap.put(loc, coordinate);
+                }
+                for (SectionVersion matchingSectionVersion : matchingSectionVersions) {
+                    //  don't add identity mapping
+                    if (matchingSectionVersion.equals(sectionVersion))
+                        continue;
+                    chordSectionGridMatches.put(matchingSectionVersion, sectionVersion);
                 }
 
                 ChordSectionLocation loc = new ChordSectionLocation(matchingSectionVersions);
@@ -535,7 +567,7 @@ public class SongBase {
                     col = offset + measuresPerline - 1;
                     {
                         //  add repeat indicator
-                        ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex);
+                        ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
                         GridCoordinate coordinate = new GridCoordinate(row, col);
                         gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                         gridChordSectionLocationCoordinateMap.put(loc, coordinate);
@@ -554,7 +586,7 @@ public class SongBase {
                         if (measure.isComment()) {
                             if (col > offset && lastMeasure != null && !lastMeasure.isComment())
                                 row++;
-                            ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
+                            ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
                             grid.set(offset, row, loc);
                             GridCoordinate coordinate = new GridCoordinate(row, offset);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
@@ -570,7 +602,7 @@ public class SongBase {
                         if (col >= offset + measuresPerline) {
                             //  put an end of line marker on multiline repeats
                             if (phrase.isRepeat()) {
-                                grid.set(col++, row, new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
+                                grid.set(col++, row, new ChordSectionLocation(sectionVersion, phraseIndex,
                                         (repeatExtensionUsed
                                                 ? ChordSectionLocation.Marker.repeatMiddleRight
                                                 : ChordSectionLocation.Marker.repeatUpperRight
@@ -583,7 +615,7 @@ public class SongBase {
 
                         {
                             //  grid the measure with it's location
-                            ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
+                            ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
                             GridCoordinate coordinate = new GridCoordinate(row, col);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                             gridChordSectionLocationCoordinateMap.put(loc, coordinate);
@@ -597,7 +629,7 @@ public class SongBase {
 
                             //  close the multiline repeat marker
                             if (repeatExtensionUsed) {
-                                ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex,
+                                ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex,
                                         ChordSectionLocation.Marker.repeatLowerRight);
                                 GridCoordinate coordinate = new GridCoordinate(row, col);
                                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
@@ -608,7 +640,7 @@ public class SongBase {
                             }
                             {
                                 //  add repeat indicator
-                                ChordSectionLocation loc = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex);
+                                ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
                                 GridCoordinate coordinate = new GridCoordinate(row, col);
                                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
@@ -632,6 +664,12 @@ public class SongBase {
         return chordSectionLocationGrid;
     }
 
+    /**
+     * Find all matches to the give section version, including the given section version itself
+     *
+     * @param multSectionVersion
+     * @return
+     */
     private TreeSet<SectionVersion> matchingSectionVersions(SectionVersion multSectionVersion) {
         TreeSet<SectionVersion> ret = new TreeSet<>();
         if (multSectionVersion == null)
@@ -670,6 +708,8 @@ public class SongBase {
         complexity = 0;
         chordsAsMarkup = null;
         songMoments = null;
+        duration = 0;
+        totalBeats = 0;
     }
 
     protected final String chordsToTransportString() {
@@ -1463,6 +1503,8 @@ public class SongBase {
 
     public final GridCoordinate getGridCoordinate(ChordSectionLocation chordSectionLocation) {
         calcChordMaps();
+        chordSectionLocation = chordSectionLocation.changeSectionVersion(
+                chordSectionGridMatches.get(chordSectionLocation.getSectionVersion()));
         return gridChordSectionLocationCoordinateMap.get(chordSectionLocation);
     }
 
@@ -1486,15 +1528,6 @@ public class SongBase {
         } catch (NullPointerException | IndexOutOfBoundsException ex) {
             return null;
         }
-    }
-
-    private final Measure findMeasure(GridCoordinate coordinate) {
-        calcChordMaps();
-        return findMeasure(gridCoordinateChordSectionLocationMap.get(coordinate));
-    }
-
-    private final Measure getCurrentMeasure() {
-        return findMeasure(currentChordSectionLocation);
     }
 
     private final Measure getCurrentChordSectionLocationMeasure() {
@@ -1591,6 +1624,7 @@ public class SongBase {
         int j = 0;
         LyricSection lyricSection = null;
         SongMoment songMoment;
+        computeSongMoments();
         for (int safety = 0; safety < 10000; safety++) {
             if (sequenceNumber >= songMoments.size())
                 break;
@@ -1847,8 +1881,8 @@ public class SongBase {
             lyricSection.add(new LyricsLine(lyrics.toString()));
         lyricSections.add(lyricSection);
 
-        computeSongMoments();
-        computeDuration();
+        //  safety with lazy eval
+        clearCachedValues();
     }
 
     /**
@@ -2487,7 +2521,7 @@ public class SongBase {
      */
     public final void setBeatsPerBar(int beatsPerBar) {
         this.beatsPerBar = beatsPerBar;
-        computeDuration();
+        clearCachedValues();
     }
 
 
@@ -2626,8 +2660,7 @@ public class SongBase {
     }
 
     public final ArrayList<SongMoment> getSongMoments() {
-        if (songMoments == null)
-            computeSongMoments();
+        computeSongMoments();
         return songMoments;
     }
 
@@ -2970,6 +3003,10 @@ public class SongBase {
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private transient HashMap<SectionVersion, ChordSection> chordSectionMap = new HashMap<>();
     private transient HashMap<SectionVersion, GridCoordinate> chordSectionGridCoorinateMap = new HashMap<>();
+
+    //  match to representative section version
+    private transient HashMap<SectionVersion, SectionVersion> chordSectionGridMatches = new HashMap<>();
+
     private transient HashMap<GridCoordinate, ChordSectionLocation> gridCoordinateChordSectionLocationMap = new HashMap<>();
     private transient HashMap<ChordSectionLocation, GridCoordinate> gridChordSectionLocationCoordinateMap = new HashMap<>();
 
@@ -2993,4 +3030,8 @@ public class SongBase {
     private static final int maxBpm = 400;
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
+
+//    static {
+//        logger.setLevel(Level.FINER);
+//    }
 }

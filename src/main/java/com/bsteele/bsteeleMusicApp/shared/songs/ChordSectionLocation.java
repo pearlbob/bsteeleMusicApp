@@ -89,6 +89,19 @@ public class ChordSectionLocation {
         marker = Marker.none;
     }
 
+    ChordSectionLocation changeSectionVersion(SectionVersion sectionVersion) {
+        if (sectionVersion == null || sectionVersion.equals(getSectionVersion()))
+            return this;    //  no change
+
+        if (hasPhraseIndex) {
+            if (hasMeasureIndex)
+                return new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
+            else
+                return new ChordSectionLocation(sectionVersion, phraseIndex);
+        } else
+            return new ChordSectionLocation(sectionVersion);
+    }
+
 
     enum Marker {
         none,
