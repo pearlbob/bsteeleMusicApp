@@ -596,7 +596,7 @@ public class SongBaseTest
         assertEquals(6, row.size());
         row = grid.getRow(2);
         assertEquals(2, row.size());
-        assertNull(grid.get(0,5));
+        assertNull(grid.get(0, 5));
     }
 
     @Test
@@ -756,17 +756,17 @@ public class SongBaseTest
             assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
             assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("c:0:0")));
             assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
-            logger.fine( a.logGrid());
+            logger.fine(a.logGrid());
             gridCoordinate = new GridCoordinate(0, 0);
             location = a.getChordSectionLocation(gridCoordinate);
-            logger.fine( location.toString());
+            logger.fine(location.toString());
             assertEquals(gridCoordinate, a.getGridCoordinate(location));
             location = ChordSectionLocation.parse("V:0:0");
             assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("i:0:0")));
             assertEquals(Measure.parse("G", beatsPerBar), a.findMeasureNode(location));
             gridCoordinate = new GridCoordinate(0, 0);
             location = a.getChordSectionLocation(gridCoordinate);
-            logger.fine( location.toString());
+            logger.fine(location.toString());
             assertEquals(gridCoordinate, a.getGridCoordinate(location));
             assertEquals("I: V: C: ", location.toString());
 
@@ -812,6 +812,34 @@ public class SongBaseTest
         assertEquals("V: A B C D  PC: D E F F♯  C: [G D C G ] x3", a.toMarkup().trim());
 
 
+    }
+
+    @Test
+    public void testDebugSongMoments() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "verse: C2: V2: A B C D Ab Bb Eb Db prechorus: D E F F# o:chorus: G D C G x3 T: A",
+                "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \nv: nope\nc: yes\nv: nope\nt:\no: last line of outro\n");
+        a.debugSongMoments();
+
+        int count = 0;
+        for (SongMoment songMoment : a.getSongMoments()) {
+            logger.fine(songMoment.toString());
+            assertEquals(count, songMoment.getSequenceNumber());
+            GridCoordinate momentGridCoordinate = a.getMomentGridCoordinate(songMoment);
+            assertNotNull(momentGridCoordinate);
+            logger.finer(momentGridCoordinate.toString());
+            SongMoment songMomentFound = a.getSongMoment(momentGridCoordinate);
+            assertNotNull(songMomentFound);
+            logger.finest( songMoment.toString());
+            logger.finest( songMomentFound.toString());
+            assertEquals(songMoment.getChordSectionLocation(), songMomentFound.getChordSectionLocation());
+
+            count++;
+        }
     }
 
     /**

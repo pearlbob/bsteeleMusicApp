@@ -1,13 +1,16 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
+
 /**
  * CopyRight 2018 bsteele.com
  * User: bob
  */
-public class SongMoment {
+public class SongMoment implements Comparable<SongMoment> {
+
     SongMoment(int sequenceNumber, LyricSection lyricSection,
                ChordSection chordSection, int phraseIndex, Phrase phrase, int measureIndex, Measure measure,
-               int repeat, int repeatMax) {
+               int repeat, int repeatMax, int sectionCount) {
         this.sequenceNumber = sequenceNumber;
         this.lyricSection = lyricSection;
         this.chordSection = chordSection;
@@ -17,6 +20,7 @@ public class SongMoment {
         this.measure = measure;
         this.repeat = repeat;
         this.repeatMax = repeatMax;
+        this.sectionCount = sectionCount;
     }
 
     public final int getSequenceNumber() {
@@ -32,7 +36,7 @@ public class SongMoment {
     }
 
     @Deprecated
-    public MeasureNode getPhrase() {
+    public final MeasureNode getPhrase() {
         return phrase;
     }
 
@@ -44,7 +48,7 @@ public class SongMoment {
         return measureIndex;
     }
 
-    public Measure getMeasure() {
+    public final Measure getMeasure() {
         return measure;
     }
 
@@ -52,21 +56,34 @@ public class SongMoment {
         return repeat;
     }
 
-    public  final int getRepeatMax() {
+    public final int getRepeatMax() {
         return repeatMax;
+    }
+
+    public final int getSectionCount() {
+        return sectionCount;
+    }
+
+
+    @Override
+    public int compareTo(SongMoment o) {
+        if (sequenceNumber == o.sequenceNumber)
+            return 0;
+        return sequenceNumber < o.sequenceNumber ? -1 : 1;
     }
 
 
     public final ChordSectionLocation getChordSectionLocation() {
-        if ( chordSectionLocation == null )
+        if (chordSectionLocation == null)
             chordSectionLocation = new ChordSectionLocation(chordSection.getSectionVersion(), phraseIndex, measureIndex);
         return chordSectionLocation;
     }
 
     @Override
     public String toString() {
-        return  getChordSectionLocation().toString() + "@"+sequenceNumber;
+        return "m" + sequenceNumber + ": "+getChordSectionLocation().toString() + "#" + sectionCount;
     }
+
 
     private transient ChordSectionLocation chordSectionLocation;
 
@@ -81,4 +98,6 @@ public class SongMoment {
     private final Phrase phrase;
     private final int measureIndex;
     private final Measure measure;
+    private final int sectionCount;
+
 }
