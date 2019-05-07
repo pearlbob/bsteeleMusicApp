@@ -540,6 +540,14 @@ public class SongBase {
         getChordSectionLocationGrid();  //  use location grid to force them all in lazy eval
     }
 
+    public final int getChordSectionLocationGridMaxColCount() {
+        int maxCols = 0;
+        for (GridCoordinate gridCoordinate : gridCoordinateChordSectionLocationMap.keySet()) {
+            maxCols = Math.max(maxCols, gridCoordinate.getCol());
+        }
+        return maxCols;
+    }
+
     public final Grid<ChordSectionLocation> getChordSectionLocationGrid() {
         //  support lazy eval
         if (chordSectionLocationGrid != null)
@@ -1966,6 +1974,7 @@ public class SongBase {
                                 boolean append) {
         if (chordSection == null || flexTable == null || fontSize <= 0)
             return;
+        logger.fine("tran: cs: " + chordSection.toMarkup());
         transpose(chordSection, flexTable, halfSteps, fontSize, append, true);
     }
 
@@ -2003,6 +2012,9 @@ public class SongBase {
         if (chordSection == null)
             return;
 
+        logger.fine("transpose: cs: " + chordSection.toMarkup());
+
+
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
         Key newKey = key.nextKeyByHalfStep(halfSteps);
@@ -2020,13 +2032,13 @@ public class SongBase {
                 return;
         }
 
-        int offset = 0;
-        if (append)
-            offset = 0;
-        else {
+        int offset = -coordinate.getRow();
+        if (append) {
+            offset += flexTable.getRowCount();
+        } else {
             flexTable.removeAllRows();
-            offset = -coordinate.getRow();
         }
+
 
         FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
 
@@ -2051,7 +2063,7 @@ public class SongBase {
                 final int flexRow = r + offset;
 
                 //  expect comment to span the row
-                if (measureNode.isComment()) {
+                if (measureNode.isComment() && !measureNode.isRepeat()) {   //fixme: better identification of repeat marker
                     formatter.setColSpan(flexRow, col, MusicConstant.measuresPerDisplayRow);
                 }
 
@@ -3084,7 +3096,7 @@ public class SongBase {
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 
-//    static {
-//        logger.setLevel(Level.FINER);
-//    }
+    static {
+//        logger.setLevel(Level.FINE);
+    }
 }

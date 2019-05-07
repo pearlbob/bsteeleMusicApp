@@ -14,10 +14,7 @@ import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
-import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
-import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.canvas.dom.client.FillStrokeStyle;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Element;
@@ -32,6 +29,7 @@ import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -346,35 +344,72 @@ public class PlayerViewImpl
         {
             FlexTable flexTable = new FlexTable();
             FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
-            final int chordCol = 0;
-            final int lyricsCol = 1;
+            final int lyricsCol = song.getChordSectionLocationGridMaxColCount() + 1;
 
             for (LyricSection lyricSection : lyricSections) {
 
                 int firstRow = flexTable.getRowCount();
-                FlexTable sectionTable = new FlexTable();
+                logger.finer("lyricSection: " + lyricSection.getSectionVersion().toString());
+                logger.finer("chordSection: " + song.getChordSection(lyricSection.getSectionVersion()).toString());
+                logger.finest("pre  tran: " + flexTable.getRowCount()
+                        + (firstRow > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
                 song.transpose(song.getChordSection(lyricSection.getSectionVersion()),
-                        sectionTable, tran, lyricsDefaultFontSize, false);
-                flexTable.setWidget(firstRow, chordCol, sectionTable);
-
+                        flexTable, tran, lyricsDefaultFontSize, true);
+                logger.finest("post tran: " + flexTable.getRowCount()
+                        + (flexTable.getRowCount() > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
                 StringBuilder sb = new StringBuilder();
                 for (LyricsLine lyricsLine : lyricSection.getLyricsLines())
                     sb.append(lyricsLine.getLyrics()).append("\n");
+
+                //  fill the blanks in the table
+                int lastRow = flexTable.getRowCount() - 1;
+                for (int r = firstRow; r <= lastRow; r++)
+                    for (int c = flexTable.getCellCount(r); c < lyricsCol; c++)
+                        flexTable.setHTML(r, c, "");
 
                 flexTable.setHTML(firstRow, lyricsCol, sb.toString());
                 formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
                         .getSectionVersion().getSection().getAbbreviation() + "Class");
                 formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
+                logger.finest("post lyrics: " + firstRow + " to " + flexTable.getRowCount()
+                        + (flexTable.getRowCount() > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
             }
             if (playerFlexTable != null)
                 playerFlexTable.removeFromParent();
             playerFlexTable = flexTable;
             player.add(flexTable);
-            // player.addHandler(, ResizeEvent.getType());
+
+            playerFlexTable.addClickHandler(clickEvent -> {
+                logger.fine("singleClick");
+
+                HTMLTable.Cell cell = playerFlexTable.getCellForEvent(clickEvent);
+
+                logger.info("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ")");
+                Element e = cell.getElement();
+                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundElement.getAbsoluteTop());
+            });
         }
     }
 
-    protected void onSongRender() {
+    private final void renderHorizontalLineAt(double y) {
+        Context2d ctx = playerBackgroundElement.getContext2d();
+        CanvasElement canvasElement = ctx.getCanvas();
+        canvasElement.setWidth(canvasElement.getClientWidth());
+        canvasElement.setHeight(canvasElement.getClientHeight());
+
+        ctx.setFillStyle("#f5f0e1");    //  fixme: one location for background constant
+        double w = canvasElement.getWidth();
+        double h = canvasElement.getHeight();
+        ctx.fillRect(0.0, 0.0, w, h);
+        ctx.setStrokeStyle("black");
+        ctx.setLineWidth(1.5);
+        ctx.beginPath();
+        ctx.moveTo(0.0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+    }
+
+    protected final void onSongRender() {
         if (playerFlexTable != null) {
             FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
             logger.fine("player table rows: " + playerFlexTable.getRowCount());
@@ -392,24 +427,7 @@ public class PlayerViewImpl
                 }
             }
         }
-
-        {
-            Context2d ctx = playerBackgroundElement.getContext2d();
-            CanvasElement canvasElement = ctx.getCanvas();
-            canvasElement.setWidth(canvasElement.getClientWidth());
-            canvasElement.setHeight(canvasElement.getClientHeight());
-
-            ctx.setFillStyle("#f5f0e1");
-            double w = canvasElement.getWidth();
-            double h = canvasElement.getHeight();
-            ctx.fillRect(0.0, 0.0, w, h);
-            ctx.setStrokeStyle("black");
-            ctx.setLineWidth(1.5);
-            ctx.beginPath();
-            ctx.moveTo(0.0, h / 2);
-            ctx.lineTo(w, h / 2);
-            ctx.stroke();
-        }
+        renderHorizontalLineAt(0);
     }
 
     private AudioBeatDisplay audioBeatDisplay;
@@ -437,8 +455,8 @@ public class PlayerViewImpl
 
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
-//    static {
-//        logger.setLevel(Level.FINEST);
-//    }
+    static {
+     //   logger.setLevel(Level.FINEST);
+    }
 
 }
