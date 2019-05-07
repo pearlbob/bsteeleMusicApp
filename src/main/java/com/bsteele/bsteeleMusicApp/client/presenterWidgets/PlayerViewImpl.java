@@ -8,9 +8,9 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
+import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
@@ -37,7 +37,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -183,22 +182,22 @@ public class PlayerViewImpl
         }
 
         //  turn on highlights if required
-        switch (songUpdate.getState()) {
-            case idle:
-                break;
-            case playing:
-                if (songUpdate.getRepeatTotal() > 0) {
-                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
-                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
-                    Element re = player.getElementById(id);
-                    if (re != null) {
-                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
-                        lastRepeatElement = re;
-                        lastRepeatTotal = songUpdate.getRepeatTotal();
-                    }
-                }
-                break;
-        }
+//        switch (songUpdate.getState()) {
+//            case idle:
+//                break;
+//            case playing:
+//                if (songUpdate.getRepeatTotal() > 0) {
+//                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
+//                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
+//                    Element re = player.getElementById(id);
+//                    if (re != null) {
+//                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
+//                        lastRepeatElement = re;
+//                        lastRepeatTotal = songUpdate.getRepeatTotal();
+//                    }
+//                }
+//                break;
+//        }
 
         song = songUpdate.getSong();
 
@@ -206,7 +205,8 @@ public class PlayerViewImpl
             @Override
             public void execute() {
                 resetScroll(chordsScrollPanel);
-                onSongRender();
+//                onSongRender();
+                //renderHorizontalLineAt(0);
             }
         });
 
@@ -223,6 +223,24 @@ public class PlayerViewImpl
 
         chordsFontSize = 0;     //    will never match, forces the fontSize set
         chordsDirty = true;   //  done by syncKey()
+        lastHorizontalLineY = 0;
+
+        if (song != null && playerFlexTable != null) {
+            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songUpdate.getMomentNumber());
+
+            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
+            int r = gridCoordinate.getRow();
+            if (r < playerFlexTable.getRowCount()) {
+                int c = gridCoordinate.getCol();
+                if (c < playerFlexTable.getCellCount(r)) {
+                    Element e = formatter.getElement(r, c);
+                    if (e != null) {
+                        renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
+                                - playerBackgroundElement.getAbsoluteTop());
+                    }
+                }
+            }
+        }
     }
 
     private void setEnables() {
@@ -286,39 +304,39 @@ public class PlayerViewImpl
 
         if (chordsDirty) {
 
-            //  turn off all highlights
-            if (lastChordElement != null) {
-                lastChordElement.getStyle().clearBackgroundColor();
-                lastChordElement = null;
-            }
-            if (lastLyricsElement != null) {
-                lastLyricsElement.getStyle().clearBackgroundColor();
-                lastLyricsElement = null;
-            }
-
-            //  high light chord and lyrics
-            switch (songUpdate.getState()) {
-                case playing:
-                    //  add highlights
-                    if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getSectionNumber() + Song.genChordId(songUpdate
-                                        .getSectionVersion(),
-                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-                        //GWT.log(chordCellId );
-                        Element ce = player.getElementById(chordCellId);
-                        if (ce != null) {
-                            ce.getStyle().setBackgroundColor(highlightColor);
-                            lastChordElement = ce;
-                        }
-                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
-                        Element le = player.getElementById(lyricsCellId);
-                        if (le != null) {
-                            le.getStyle().setBackgroundColor(highlightColor);
-                            lastLyricsElement = le;
-                        }
-                    }
-                    break;
-            }
+//            //  turn off all highlights
+//            if (lastChordElement != null) {
+//                lastChordElement.getStyle().clearBackgroundColor();
+//                lastChordElement = null;
+//            }
+//            if (lastLyricsElement != null) {
+//                lastLyricsElement.getStyle().clearBackgroundColor();
+//                lastLyricsElement = null;
+//            }
+//
+//            //  high light chord and lyrics
+//            switch (songUpdate.getState()) {
+//                case playing:
+//                    //  add highlights
+//                    if (songUpdate.getMeasure() >= 0) {
+//                        String chordCellId = prefix + songUpdate.getMomentNumber() + Song.genChordId(songUpdate
+//                                        .getSectionVersion(),
+//                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+//                        //GWT.log(chordCellId );
+//                        Element ce = player.getElementById(chordCellId);
+//                        if (ce != null) {
+//                            ce.getStyle().setBackgroundColor(highlightColor);
+//                            lastChordElement = ce;
+//                        }
+//                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
+//                        Element le = player.getElementById(lyricsCellId);
+//                        if (le != null) {
+//                            le.getStyle().setBackgroundColor(highlightColor);
+//                            lastLyricsElement = le;
+//                        }
+//                    }
+//                    break;
+//            }
 
             chordsDirty = false;
         }
@@ -392,6 +410,12 @@ public class PlayerViewImpl
     }
 
     private final void renderHorizontalLineAt(double y) {
+        if (y == lastHorizontalLineY)
+            return;
+        lastHorizontalLineY = y;
+
+        logger.finest("y: "+y);
+
         Context2d ctx = playerBackgroundElement.getContext2d();
         CanvasElement canvasElement = ctx.getCanvas();
         canvasElement.setWidth(canvasElement.getClientWidth());
@@ -421,7 +445,7 @@ public class PlayerViewImpl
                     if (element == null)
                         continue;
 
-                    logger.fine("  measure( " + c + ", " + r + "): top "
+                    logger.finer("  measure( " + c + ", " + r + "): top "
                             + element.getAbsoluteBottom() + "-" + element.getAbsoluteTop() + " = "
                             + (element.getAbsoluteBottom() - element.getAbsoluteTop()));
                 }
@@ -439,6 +463,7 @@ public class PlayerViewImpl
     private int lastRepeatTotal;
     private int lastMeasureNumber;
     private FlexTable playerFlexTable;
+    private double lastHorizontalLineY;
 
 
     public static final String highlightColor = "#e4c9ff";
@@ -456,7 +481,7 @@ public class PlayerViewImpl
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
     static {
-     //   logger.setLevel(Level.FINEST);
+          // logger.setLevel(Level.FINE);
     }
 
 }

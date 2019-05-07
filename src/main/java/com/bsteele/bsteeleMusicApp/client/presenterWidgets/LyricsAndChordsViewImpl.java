@@ -326,7 +326,7 @@ public class LyricsAndChordsViewImpl
 //                            ce.getStyle().setBackgroundColor(highlightColor);
 //                            lastChordElement = ce;
 //            }
-//                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
+//                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
 //                        Element le = lyrics.getElementById(lyricsCellId);
 //                        if (le != null) {
 //                            le.getStyle().setBackgroundColor(highlightColor);

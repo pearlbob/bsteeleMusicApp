@@ -307,7 +307,7 @@ public class BassViewImpl
                 case playing:
                     //  add highlights
                     if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getSectionNumber()
+                        String chordCellId = prefix + songUpdate.getMomentNumber()
                                 + Song.genChordId(songUpdate.getSectionVersion(),
                                 songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
                         //GWT.log(chordCellId );
@@ -316,7 +316,7 @@ public class BassViewImpl
                             ce.getStyle().setBackgroundColor(highlightColor);
                             lastChordElement = ce;
                         }
-                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
+                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
                         Element le = bass.getElementById(lyricsCellId);
                         if (le != null) {
                             le.getStyle().setBackgroundColor(highlightColor);

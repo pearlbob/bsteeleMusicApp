@@ -184,6 +184,13 @@ public class SongBase {
         return gridCoordinateMomentMap.get(songMoment);
     }
 
+    public final GridCoordinate getMomentGridCoordinate(int  momentNumber) {
+        computeSongMoments();
+        momentNumber = Math.min(Math.max(momentNumber, 0), songMoments.size()-1);
+        SongMoment songMoment = songMoments.get(momentNumber);
+        return gridCoordinateMomentMap.get(songMoment);
+    }
+
 
     public final void debugSongMoments() {
         computeSongMoments();
@@ -1676,17 +1683,17 @@ public class SongBase {
         sb.append("<table id=\"" + tableName + "\" class=\"" + CssConstants.style + "chordTable\">\n");
 
         ArrayList<String> innerHtml = null;
-        int sequenceNumber = 0;
+        int momentNumber = 0;
         int rowStartSequenceNumber = 0;
         int j = 0;
         LyricSection lyricSection = null;
         SongMoment songMoment;
         computeSongMoments();
         for (int safety = 0; safety < 10000; safety++) {
-            if (sequenceNumber >= songMoments.size())
+            if (momentNumber >= songMoments.size())
                 break;
 
-            songMoment = songMoments.get(sequenceNumber);
+            songMoment = songMoments.get(momentNumber);
             lyricSection = songMoment.getLyricSection();
             SectionVersion sectionVersion = lyricSection.getSectionVersion();
             sb.append("<tr><td class='" + CssConstants.style + "sectionLabel' >").
@@ -1705,7 +1712,7 @@ public class SongBase {
             for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
                 if (chordSection.getSectionVersion().equals(lyricSection.getSectionVersion())) {
                     innerHtml = chordSection.generateInnerHtml(key, tran, true);
-                    rowStartSequenceNumber = sequenceNumber;
+                    rowStartSequenceNumber = momentNumber;
                     j = 0;
                     break;
                 }
@@ -1728,18 +1735,18 @@ public class SongBase {
                         break;
                     case "\n":
                         sb.append("</tr>\n<tr><td></td>");
-                        if (rowStartSequenceNumber < sequenceNumber) {
+                        if (rowStartSequenceNumber < momentNumber) {
                             sb.append("<td colspan=\"10\">" +
-                                    "<canvas id=\"bassLine" + rowStartSequenceNumber + "-" + (sequenceNumber - 1)
+                                    "<canvas id=\"bassLine" + rowStartSequenceNumber + "-" + (momentNumber - 1)
                                     + "\" width=\"900\" height=\"150\" style=\"border:1px solid #000000;\"/></tr>");
-                            rowStartSequenceNumber = sequenceNumber;
+                            rowStartSequenceNumber = momentNumber;
                         }
                         break;
                     default:
                         //  increment for next time
-                        sequenceNumber++;
-                        if (sequenceNumber < songMoments.size())
-                            songMoment = songMoments.get(sequenceNumber);
+                        momentNumber++;
+                        if (momentNumber < songMoments.size())
+                            songMoment = songMoments.get(momentNumber);
                         break;
                 }
             }

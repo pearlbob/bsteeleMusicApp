@@ -183,7 +183,7 @@ public class SingerView
             case playing:
                 //  add highlights
                 if (songUpdate.getMeasure() >= 0) {
-                    String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getSectionNumber());
+                    String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
                     Element le = singer.getElementById(lyricsCellId);
                     if (le != null) {
                         le.getStyle().setBackgroundColor(highlightColor);
