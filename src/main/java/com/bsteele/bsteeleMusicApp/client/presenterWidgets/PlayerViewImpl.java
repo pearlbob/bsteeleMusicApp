@@ -14,6 +14,7 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
+import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
@@ -166,11 +167,12 @@ public class PlayerViewImpl
         }
 
         if (songUpdate.getState() != lastState) {
-//            switch (lastState) {
-//                case idle:
-//                    resetScroll(chordsScrollPanel);
-//                    break;
-//            }
+            switch (lastState) {
+                case idle:
+                    lastScrollLineY = 0;
+                    resetScroll(chordsScrollPanel);
+                    break;
+            }
             lastState = songUpdate.getState();
 
             setEnables();
@@ -194,12 +196,13 @@ public class PlayerViewImpl
 //                break;
 //        }
 
-        if ( song == null || !song.equals(songUpdate.getSong())) {
+        if (song == null || !song.equals(songUpdate.getSong())) {
             song = songUpdate.getSong();
 
             switch (songUpdate.getState()) {
                 default:
                 case idle:
+                    lastScrollLineY = 0;
                     scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
                         @Override
                         public void execute() {
@@ -243,6 +246,18 @@ public class PlayerViewImpl
                     }
                 }
             }
+
+            //  scroll into view
+            r = gridCoordinate.getRow();
+            if (r < playerFlexTable.getRowCount()) {
+                int c = 0;
+                if (c < playerFlexTable.getCellCount(r)) {
+                    Element e = formatter.getElement(r, c);
+                    if (e != null) {
+                        scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundElement.getAbsoluteTop());
+                    }
+                }
+            }
         }
     }
 
@@ -276,6 +291,7 @@ public class PlayerViewImpl
                 playStopButton.setText("Play");
                 //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
                 statusLabel.setVisible(false);
+                scrollForLineAt(0); //  hide
                 break;
         }
     }
@@ -353,8 +369,7 @@ public class PlayerViewImpl
             statusLabel.setText(song.songMomentStatus(songUpdate.getMomentNumber())
                     + " " + chordsScrollPanel.getVerticalScrollPosition()
             );
-        }
-        catch ( Exception ex ){
+        } catch (Exception ex) {
             //  this is bad
             logger.severe(ex.getMessage());
         }
@@ -445,8 +460,15 @@ public class PlayerViewImpl
         ctx.moveTo(0.0, y);
         ctx.lineTo(w, y);
         ctx.stroke();
+    }
+
+    private final void scrollForLineAt(double y) {
+        if (y <= lastScrollLineY)
+            return;
+        lastScrollLineY = y;
 
         //  scroll if required
+        double h = playerBackgroundElement.getClientHeight();
         int maxH = chordsScrollPanel.getOffsetHeight();
         int midH = maxH / 2;
         if (y < midH)
@@ -488,6 +510,7 @@ public class PlayerViewImpl
     private int lastMeasureNumber;
     private FlexTable playerFlexTable;
     private double lastHorizontalLineY;
+    private double lastScrollLineY;
 
 
     public static final String highlightColor = "#e4c9ff";

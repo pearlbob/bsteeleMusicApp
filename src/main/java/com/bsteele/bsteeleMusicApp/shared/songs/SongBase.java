@@ -79,6 +79,7 @@ public class SongBase {
         logger.fine("lyricSections size: " + lyricSections.size());
         Integer sectionCount = null;
         HashMap<SectionVersion, Integer> sectionVersionCountMap = new HashMap<>();
+        chordSectionBeats.clear();
         int beatNumber = 0;
         for (LyricSection lyricSection : lyricSections) {
             ChordSection chordSection = findChordSection(lyricSection);
@@ -97,6 +98,7 @@ public class SongBase {
             ArrayList<Phrase> phrases = chordSection.getPhrases();
             if (phrases != null) {
                 int phraseIndex = 0;
+                int sectionVersionBeats = 0;
                 for (Phrase phrase : phrases) {
                     if (phrase.isRepeat()) {
                         MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
@@ -117,6 +119,7 @@ public class SongBase {
                                             measureIndex, measure, repeat, repeatCycleBeats, limit, sectionCount));
                                     measureIndex++;
                                     beatNumber += measure.getBeatCount();
+                                    sectionVersionBeats += measure.getBeatCount();
                                 }
                             }
                         }
@@ -132,30 +135,38 @@ public class SongBase {
                                         measureIndex, measure, 0, 0, 0, sectionCount));
                                 measureIndex++;
                                 beatNumber += measure.getBeatCount();
+                                sectionVersionBeats += measure.getBeatCount();
                             }
                         }
                     }
                     phraseIndex++;
                 }
-            }
 
+                for (SectionVersion sv : matchingSectionVersions(sectionVersion)) {
+                    chordSectionBeats.put(sv, sectionVersionBeats);
+                }
+            }
         }
 
 
         {
             //  generate song moment grid coordinate map for play to display purposes
             gridCoordinateMomentMap.clear();
+            chordSectionRows.clear();
 
             LyricSection lastLyricSection = null;
-            int row = -1;
+            int row = 0;
             int baseChordRow = 0;
             int maxChordRow = 0;
             for (SongMoment songMoment : getSongMoments()) {
 
-                int repeat = songMoment.getRepeat();
                 if (lastLyricSection != songMoment.getLyricSection()) {
+                    if ( lastLyricSection != null) {
+                        int rows = maxChordRow - baseChordRow + 1;
+                        chordSectionRows.put(lastLyricSection.getSectionVersion(), rows);
+                        row += rows;
+                    }
                     lastLyricSection = songMoment.getLyricSection();
-                    row += (maxChordRow - baseChordRow) + 1;
                     GridCoordinate sectionGridCoordinate =
                             getGridCoordinate(new ChordSectionLocation(lastLyricSection.getSectionVersion()));
 
@@ -179,6 +190,11 @@ public class SongBase {
                         + " " + songMoment.getMeasure().toMarkup()
                         + (songMoment.getRepeatMax() > 1 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax() : "")
                 );
+            }
+            //  push the last one in
+            if (lastLyricSection != null) {
+                int rows = maxChordRow - baseChordRow + 1;
+                chordSectionRows.put(lastLyricSection.getSectionVersion(), rows);
             }
         }
     }
@@ -2760,6 +2776,22 @@ public class SongBase {
         return fileVersionNumber;
     }
 
+    public final int getChordSectionBeats(SectionVersion sectionVersion) {
+        computeSongMoments();
+        Integer ret = chordSectionBeats.get(sectionVersion);
+        if (ret == null)
+            return 0;
+        return ret;
+    }
+
+    public final int getChordSectionRows(SectionVersion sectionVersion) {
+        computeSongMoments();
+        Integer ret = chordSectionRows.get(sectionVersion);
+        if (ret == null)
+            return 0;
+        return ret;
+    }
+
     /**
      * Compute a relative complexity index for the song
      *
@@ -3099,6 +3131,8 @@ public class SongBase {
     private transient HashMap<ChordSectionLocation, GridCoordinate> gridChordSectionLocationCoordinateMap = new HashMap<>();
 
     private transient HashMap<SongMoment, GridCoordinate> gridCoordinateMomentMap = new HashMap<>();
+    private transient HashMap<SectionVersion, Integer> chordSectionBeats = new HashMap<>();
+    private transient HashMap<SectionVersion, Integer> chordSectionRows = new HashMap<>();
 
 
     private ChordSectionLocation currentChordSectionLocation;
@@ -3118,7 +3152,7 @@ public class SongBase {
     private double lastModifiedTime;
 
     private static final int minBpm = 50;
-    private static final int maxBpm = 400;
+    private static final int maxBpm = 1400;
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 

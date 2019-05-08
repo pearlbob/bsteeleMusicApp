@@ -838,6 +838,47 @@ public class SongBaseTest
     }
 
     @Test
+    public void testChordSectionBeats() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "verse: C2: V2: A B C D Ab Bb Eb Db prechorus: D E F F# o:chorus: G D C G x3 T: A",
+                "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \nv: nope\nc: yes\nv: nope\nt:\no: last line of outro\n");
+        try {
+            assertEquals(8 * 4, a.getChordSectionBeats(SectionVersion.parse("v:")));
+            assertEquals(8 * 4, a.getChordSectionBeats(SectionVersion.parse("c2:")));
+            assertEquals(8 * 4, a.getChordSectionBeats(SectionVersion.parse("v2:")));
+            assertEquals(4 * 3 * 4, a.getChordSectionBeats(SectionVersion.parse("o:")));
+            assertEquals(4, a.getChordSectionBeats(SectionVersion.parse("t:")));
+        } catch (ParseException pe) {
+            fail(pe.getMessage());
+        }
+    }
+
+    @Test
+    public void testChordSectionRows() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "verse: C2: V2: A B C D Ab Bb Eb Db prechorus: D E F F# o:chorus: G D C G x3 T: A",
+                "i:\nv: bob, bob\npc: nope\nc: sing \nC2: d\nV2:df\nv: nope\nc: yes\nv: nope\nt:\no: last line of outro\n");
+        try {
+            assertEquals(2, a.getChordSectionRows(SectionVersion.parse("v:")));
+            assertEquals(2, a.getChordSectionRows(SectionVersion.parse("c2:")));
+            assertEquals(2, a.getChordSectionRows(SectionVersion.parse("v2:")));
+            assertEquals(1, a.getChordSectionRows(SectionVersion.parse("o:")));
+            assertEquals(1, a.getChordSectionRows(SectionVersion.parse("t:")));
+            assertEquals(0, a.getChordSectionRows(SectionVersion.parse("v3:")));
+        } catch (ParseException pe) {
+            fail(pe.getMessage());
+        }
+    }
+
+    @Test
     public void testSongMomentGridding() {
         int beatsPerBar = 4;
         SongBase a;
@@ -850,19 +891,19 @@ public class SongBaseTest
             //  verify repeats stay on correct row
             SongMoment songMoment;
 
-            for ( int momentNumber = 0; momentNumber<4; momentNumber++) {
+            for (int momentNumber = 0; momentNumber < 4; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 4; momentNumber<6; momentNumber++) {
+            for (int momentNumber = 4; momentNumber < 6; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 6; momentNumber<10; momentNumber++) {
+            for (int momentNumber = 6; momentNumber < 10; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 10; momentNumber<12; momentNumber++) {
+            for (int momentNumber = 10; momentNumber < 12; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
@@ -899,35 +940,35 @@ public class SongBaseTest
             //  verify repeats stay on correct row
             SongMoment songMoment;
 
-            for ( int momentNumber = 0; momentNumber<8; momentNumber++) {
+            for (int momentNumber = 0; momentNumber < 8; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 8; momentNumber<12; momentNumber++) {
+            for (int momentNumber = 8; momentNumber < 12; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 12; momentNumber<16; momentNumber++) {
+            for (int momentNumber = 12; momentNumber < 16; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(2, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 16; momentNumber<28; momentNumber++) {
+            for (int momentNumber = 16; momentNumber < 28; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(3, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 28; momentNumber<36; momentNumber++) {
+            for (int momentNumber = 28; momentNumber < 36; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(4, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
-            for ( int momentNumber = 48; momentNumber<56; momentNumber++) {
+            for (int momentNumber = 48; momentNumber < 56; momentNumber++) {
                 songMoment = a.getSongMoments().get(momentNumber);
                 assertEquals(6, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
         }
 
 
-
     }
+
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *

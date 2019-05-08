@@ -52,6 +52,10 @@ public class LyricSection {
         lyricsLines.add(lyricsLine);
     }
 
+    @Override
+    public String toString() {
+        return sectionVersion.toString();
+    }
 
     /**
      * Get the song's default drum sectionVersion.
