@@ -137,8 +137,10 @@ public class SongUpdate {
         if (momentNumber >= songMoments.size())
             return false;
 
-        SongMoment songMoment = songMoments.get(momentNumber);
-        sectionVersion = songMoment.getLyricSection().getSectionVersion();
+        {
+            SongMoment moment = songMoments.get(momentNumber);
+            sectionVersion = moment.getLyricSection().getSectionVersion();
+        }
 
         sectionId = sectionVersion.toString();
 

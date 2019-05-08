@@ -79,6 +79,7 @@ public class SongBase {
         logger.fine("lyricSections size: " + lyricSections.size());
         Integer sectionCount = null;
         HashMap<SectionVersion, Integer> sectionVersionCountMap = new HashMap<>();
+        int beatNumber = 0;
         for (LyricSection lyricSection : lyricSections) {
             ChordSection chordSection = findChordSection(lyricSection);
             if (chordSection == null)
@@ -103,13 +104,19 @@ public class SongBase {
                         for (int repeat = 0; repeat < limit; repeat++) {
                             ArrayList<Measure> measures = measureRepeat.getMeasures();
                             if (measures != null) {
+                                int repeatCycleBeats = 0;
+                                for (Measure measure : measures) {
+                                    repeatCycleBeats += measure.getBeatCount();
+                                }
                                 int measureIndex = 0;
                                 for (Measure measure : measures) {
                                     songMoments.add(new SongMoment(
                                             songMoments.size(),  //  size prior to add
+                                            beatNumber,
                                             lyricSection, chordSection, phraseIndex, phrase,
-                                            measureIndex, measure, repeat, limit, sectionCount));
+                                            measureIndex, measure, repeat, repeatCycleBeats, limit, sectionCount));
                                     measureIndex++;
+                                    beatNumber += measure.getBeatCount();
                                 }
                             }
                         }
@@ -120,9 +127,11 @@ public class SongBase {
                             for (Measure measure : measures) {
                                 songMoments.add(new SongMoment(
                                         songMoments.size(),  //  size prior to add
+                                        beatNumber,
                                         lyricSection, chordSection, phraseIndex, phrase,
-                                        measureIndex, measure, 0, 0, sectionCount));
+                                        measureIndex, measure, 0, 0, 0, sectionCount));
                                 measureIndex++;
+                                beatNumber += measure.getBeatCount();
                             }
                         }
                     }
@@ -135,35 +144,35 @@ public class SongBase {
 
         {
             //  generate song moment grid coordinate map for play to display purposes
-            momentGridCoordinateMap.clear();
             gridCoordinateMomentMap.clear();
 
             LyricSection lastLyricSection = null;
             int row = -1;
-            int lastBaseRow = -1;
-            int lastRepeat = -1;
+            int baseChordRow = 0;
+            int maxChordRow = 0;
             for (SongMoment songMoment : getSongMoments()) {
 
+                int repeat = songMoment.getRepeat();
                 if (lastLyricSection != songMoment.getLyricSection()) {
                     lastLyricSection = songMoment.getLyricSection();
-                    lastBaseRow = -1;
+                    row += (maxChordRow - baseChordRow) + 1;
+                    GridCoordinate sectionGridCoordinate =
+                            getGridCoordinate(new ChordSectionLocation(lastLyricSection.getSectionVersion()));
+
+                    baseChordRow = sectionGridCoordinate.getRow();
+                    maxChordRow = baseChordRow;
                 }
 
                 //  use the change of chord section rows to trigger moment grid row change
                 GridCoordinate gridCoordinate = getGridCoordinate(songMoment.getChordSectionLocation());
-                int baseChordRow = gridCoordinate.getRow();
-                int repeat = songMoment.getRepeat();
-                if (baseChordRow != lastBaseRow || repeat != lastRepeat) {
-                    row++;
-                    lastBaseRow = baseChordRow;
-                    lastRepeat = repeat;
-                }
+                maxChordRow = Math.max(maxChordRow, gridCoordinate.getRow());
 
-                GridCoordinate momentGridCoordinate = new GridCoordinate(row, gridCoordinate.getCol());
-                momentGridCoordinateMap.put(momentGridCoordinate, songMoment);
+                GridCoordinate momentGridCoordinate = new GridCoordinate(
+                        row + (gridCoordinate.getRow() - baseChordRow), gridCoordinate.getCol());
+                logger.finer(songMoment.toString() + ": " + momentGridCoordinate.toString());
                 gridCoordinateMomentMap.put(songMoment, momentGridCoordinate);
 
-                logger.finest("build: " + songMoment.getSequenceNumber()
+                logger.finer("moment: " + songMoment.getSequenceNumber()
                         + ": " + songMoment.getChordSectionLocation().toString()
                         + "#" + songMoment.getSectionCount()
                         + " m:" + momentGridCoordinate
@@ -174,19 +183,14 @@ public class SongBase {
         }
     }
 
-    public final SongMoment getSongMoment(GridCoordinate momentGridCoordinate) {
-        computeSongMoments();
-        return momentGridCoordinateMap.get(momentGridCoordinate);
-    }
-
     public final GridCoordinate getMomentGridCoordinate(SongMoment songMoment) {
         computeSongMoments();
         return gridCoordinateMomentMap.get(songMoment);
     }
 
-    public final GridCoordinate getMomentGridCoordinate(int  momentNumber) {
+    public final GridCoordinate getMomentGridCoordinate(int momentNumber) {
         computeSongMoments();
-        momentNumber = Math.min(Math.max(momentNumber, 0), songMoments.size()-1);
+        momentNumber = Math.min(Math.max(momentNumber, 0), songMoments.size() - 1);
         SongMoment songMoment = songMoments.get(momentNumber);
         return gridCoordinateMomentMap.get(songMoment);
     }
@@ -194,8 +198,9 @@ public class SongBase {
 
     public final void debugSongMoments() {
         computeSongMoments();
-        for (GridCoordinate momentGridCoordinate : new TreeSet<>(momentGridCoordinateMap.keySet())) {
-            SongMoment songMoment = momentGridCoordinateMap.get(momentGridCoordinate);
+
+        for (SongMoment songMoment : songMoments) {
+            GridCoordinate momentGridCoordinate = getMomentGridCoordinate(songMoment.getSequenceNumber());
             logger.finer(songMoment.getSequenceNumber()
                     + ": " + songMoment.getChordSectionLocation().toString()
                     + "#" + songMoment.getSectionCount()
@@ -204,6 +209,21 @@ public class SongBase {
                     + (songMoment.getRepeatMax() > 1 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax() : "")
             );
         }
+    }
+
+    public final String songMomentStatus(int momentNumber) {
+        if (songMoments == null)
+            return "unknown";
+
+        momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
+        SongMoment songMoment = songMoments.get(momentNumber);
+        return (songMoment.getSequenceNumber()
+                + ": " + songMoment.getChordSectionLocation().toString()
+                + "#" + songMoment.getSectionCount()
+                + " " + songMoment.getMeasure().toMarkup()
+                + (songMoment.getRepeatMax() > 1 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax() : "")
+                + " " + gridCoordinateMomentMap.get(songMoment).toString()
+        );
     }
 
     /**
@@ -718,7 +738,7 @@ public class SongBase {
 
         if (logger.getLevel() != null && logger.getLevel().intValue() <= Level.FINEST.intValue()) {
             logger.fine("gridCoordinateChordSectionLocationMap: ");
-            for (GridCoordinate coordinate : gridCoordinateChordSectionLocationMap.keySet()) {
+            for (GridCoordinate coordinate : new TreeSet<GridCoordinate>(gridCoordinateChordSectionLocationMap.keySet())) {
                 logger.fine("  " + coordinate.toString() + ": " + gridCoordinateChordSectionLocationMap.get(coordinate));
             }
         }
@@ -3078,7 +3098,6 @@ public class SongBase {
     private transient HashMap<GridCoordinate, ChordSectionLocation> gridCoordinateChordSectionLocationMap = new HashMap<>();
     private transient HashMap<ChordSectionLocation, GridCoordinate> gridChordSectionLocationCoordinateMap = new HashMap<>();
 
-    private transient HashMap<GridCoordinate, SongMoment> momentGridCoordinateMap = new HashMap<>();
     private transient HashMap<SongMoment, GridCoordinate> gridCoordinateMomentMap = new HashMap<>();
 
 
@@ -3104,6 +3123,6 @@ public class SongBase {
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 
     static {
-//        logger.setLevel(Level.FINE);
+        // logger.setLevel(Level.FINER);
     }
 }

@@ -14,6 +14,7 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
@@ -30,6 +31,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -79,7 +81,10 @@ public class PlayerViewImpl
     Button prevSongButton;
 
     @UiField
-    CanvasElement audioBeatDisplayCanvas;
+    Label statusLabel;
+
+//    @UiField
+//    CanvasElement audioBeatDisplayCanvas;
 
     @UiField
     ScrollPanel chordsScrollPanel;
@@ -102,7 +107,7 @@ public class PlayerViewImpl
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
-        audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
+       // audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
@@ -112,30 +117,22 @@ public class PlayerViewImpl
                         songPlayMaster.stopSong();
                         break;
                     case idle:
-                        SongUpdate songUpdate = new SongUpdate();
-                        songUpdate.setSong(song.copySong());
-                        songUpdate.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
-                        songUpdate.setCurrentKey(currentKey);
-                        songPlayMaster.playSongUpdate(songUpdate);
+                        SongUpdate songUpdateCopy = new SongUpdate();
+                        songUpdateCopy.setSong(song.copySong());
+                        songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                        songUpdateCopy.setCurrentKey(currentKey);
+                        songPlayMaster.playSongUpdate(songUpdateCopy);
                         break;
                 }
             }
         });
 
-        originalKeyButton.addClickHandler((ClickEvent event) -> {
-            setCurrentKey(songUpdate.getSong().getKey());
-        });
+        originalKeyButton.addClickHandler((ClickEvent event) -> setCurrentKey(songUpdate.getSong().getKey()));
 
-        keyUpButton.addClickHandler((ClickEvent event) -> {
-            stepCurrentKey(+1);
-        });
-        keyDownButton.addClickHandler((ClickEvent event) -> {
-            stepCurrentKey(-1);
-        });
+        keyUpButton.addClickHandler((ClickEvent event) -> stepCurrentKey(+1));
+        keyDownButton.addClickHandler((ClickEvent event) -> stepCurrentKey(-1));
 
-        currentBpmEntry.addChangeHandler((event) -> {
-            setCurrentBpm(currentBpmEntry.getValue());
-        });
+        currentBpmEntry.addChangeHandler((event) -> setCurrentBpm(currentBpmEntry.getValue()));
 
         Event.sinkEvents(bpmSelect, Event.ONCHANGE);
         Event.setEventListener(bpmSelect, (Event event) -> {
@@ -144,15 +141,13 @@ public class PlayerViewImpl
             }
         });
 
-        prevSongButton.addClickHandler((ClickEvent event) -> {
-            eventBus.fireEvent(new NextSongEvent(false));
-        });
-        nextSongButton.addClickHandler((ClickEvent event) -> {
-            eventBus.fireEvent(new NextSongEvent());
-        });
+        prevSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent(false)));
+        nextSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent()));
 
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
+
+        statusLabel.setVisible(false);
     }
 
     @Override
@@ -205,8 +200,6 @@ public class PlayerViewImpl
             @Override
             public void execute() {
                 resetScroll(chordsScrollPanel);
-//                onSongRender();
-                //renderHorizontalLineAt(0);
             }
         });
 
@@ -226,7 +219,8 @@ public class PlayerViewImpl
         lastHorizontalLineY = 0;
 
         if (song != null && playerFlexTable != null) {
-            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songUpdate.getMomentNumber());
+            SongMoment songMoment = song.getSongMoments().get(songUpdate.getMomentNumber());
+            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songMoment);
 
             FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
             int r = gridCoordinate.getRow();
@@ -266,11 +260,13 @@ public class PlayerViewImpl
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
-                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
+                //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
+                statusLabel.setVisible(true);
                 break;
             case idle:
                 playStopButton.setText("Play");
-                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
+                //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
+                statusLabel.setVisible(false);
                 break;
         }
     }
@@ -343,7 +339,8 @@ public class PlayerViewImpl
 
         //  auto scroll
 
-
+        //  status
+       statusLabel.setText( song.songMomentStatus( songUpdate.getMomentNumber()));
     }
 
     private void syncKey(Key key) {

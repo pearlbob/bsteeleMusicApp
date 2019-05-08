@@ -83,36 +83,42 @@ public class MeasureTest extends TestCase {
                 m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
+                assertEquals(4, m.getBeatCount());
             }
             {
                 s = "F.";
                 m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
+                assertEquals(2, m.getBeatCount());
             }
             {
                 s = "F.";
                 m = Measure.parse(s, 2);
                 assertNotNull(m);
                 assertEquals("F", m.toMarkup());
+                assertEquals(2, m.getBeatCount());
             }
             {
                 s = "F..";
                 m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
+                assertEquals(3, m.getBeatCount());
             }
             {
                 s = "F...";
                 m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals("F", m.toMarkup());
+                assertEquals(4, m.getBeatCount());
             }
             {
                 s = "A..B";
                 m = Measure.parse(s, 4);
                 assertNotNull(m);
                 assertEquals(s, m.toMarkup());
+                assertEquals(4, m.getBeatCount());
             }
             {
                 s = "AB..";

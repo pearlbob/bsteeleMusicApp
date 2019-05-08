@@ -8,10 +8,11 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
  */
 public class SongMoment implements Comparable<SongMoment> {
 
-    SongMoment(int sequenceNumber, LyricSection lyricSection,
+    SongMoment(int sequenceNumber, int beatNumber, LyricSection lyricSection,
                ChordSection chordSection, int phraseIndex, Phrase phrase, int measureIndex, Measure measure,
-               int repeat, int repeatMax, int sectionCount) {
+               int repeat, int repeatCycleBeats, int repeatMax, int sectionCount) {
         this.sequenceNumber = sequenceNumber;
+        this.beatNumber = beatNumber;
         this.lyricSection = lyricSection;
         this.chordSection = chordSection;
         this.phraseIndex = phraseIndex;
@@ -19,12 +20,17 @@ public class SongMoment implements Comparable<SongMoment> {
         this.measureIndex = measureIndex;
         this.measure = measure;
         this.repeat = repeat;
+        this.repeatCycleBeats = repeatCycleBeats;
         this.repeatMax = repeatMax;
         this.sectionCount = sectionCount;
     }
 
     public final int getSequenceNumber() {
         return sequenceNumber;
+    }
+
+    public int getBeatNumber() {
+        return beatNumber;
     }
 
     public final LyricSection getLyricSection() {
@@ -56,6 +62,10 @@ public class SongMoment implements Comparable<SongMoment> {
         return repeat;
     }
 
+    public int getRepeatCycleBeats() {
+        return repeatCycleBeats;
+    }
+
     public final int getRepeatMax() {
         return repeatMax;
     }
@@ -81,16 +91,18 @@ public class SongMoment implements Comparable<SongMoment> {
 
     @Override
     public String toString() {
-        return sequenceNumber + ": "+getChordSectionLocation().toString() + "#" + sectionCount;
+        return sequenceNumber + ": " + getChordSectionLocation().toString() + "#" + sectionCount;
     }
 
 
     private transient ChordSectionLocation chordSectionLocation;
 
     private final int sequenceNumber;
+    private final int beatNumber;   //  total beat count from start of song to the start of the moment
 
-    private final int repeat;
+    private final int repeat;       //  current iteration from 0 to repeatMax - 1
     private final int repeatMax;
+    private final int repeatCycleBeats;   //  number of beats in one cycle of the repeat
 
     private final LyricSection lyricSection;
     private final ChordSection chordSection;

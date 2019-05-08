@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import junit.framework.TestCase;
@@ -831,17 +832,102 @@ public class SongBaseTest
             assertEquals(count, songMoment.getSequenceNumber());
             GridCoordinate momentGridCoordinate = a.getMomentGridCoordinate(songMoment);
             assertNotNull(momentGridCoordinate);
-            logger.finer(momentGridCoordinate.toString());
-            SongMoment songMomentFound = a.getSongMoment(momentGridCoordinate);
-            assertNotNull(songMomentFound);
-            logger.finest( songMoment.toString());
-            logger.finest( songMomentFound.toString());
-            assertEquals(songMoment.getChordSectionLocation(), songMomentFound.getChordSectionLocation());
 
             count++;
         }
     }
 
+    @Test
+    public void testSongMomentGridding() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: A B C D E F  x2  ",
+                "i:\n");
+        {
+            //  verify repeats stay on correct row
+            SongMoment songMoment;
+
+            for ( int momentNumber = 0; momentNumber<4; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 4; momentNumber<6; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 6; momentNumber<10; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 10; momentNumber<12; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+        }
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "verse: C2: V2: A B C D  x2  prechorus: D E F F# G# A# B C o:chorus: G D C G x3 T: A",
+                "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \nv: nope\nc: yes\nv: nope\nt:\no: last line of outro\n");
+        a.debugSongMoments();
+
+//        {
+//            //  verify beats total as expected
+//            int beats = 0;
+//            for (SongMoment songMoment : a.getSongMoments()) {
+//                assertEquals(beats, songMoment.getBeatNumber());
+//                beats += songMoment.getMeasure().getBeatCount();
+//            }
+//        }
+        {
+            int count = 0;
+            for (SongMoment songMoment : a.getSongMoments()) {
+                logger.fine(" ");
+                logger.fine(songMoment.toString());
+                assertEquals(count, songMoment.getSequenceNumber());
+                GridCoordinate momentGridCoordinate = a.getMomentGridCoordinate(songMoment);
+                assertNotNull(momentGridCoordinate);
+                logger.finer(momentGridCoordinate.toString());
+
+                count++;
+            }
+        }
+        {
+            //  verify repeats stay on correct row
+            SongMoment songMoment;
+
+            for ( int momentNumber = 0; momentNumber<8; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 8; momentNumber<12; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 12; momentNumber<16; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(2, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 16; momentNumber<28; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(3, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 28; momentNumber<36; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(4, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+            for ( int momentNumber = 48; momentNumber<56; momentNumber++) {
+                songMoment = a.getSongMoments().get(momentNumber);
+                assertEquals(6, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
+            }
+        }
+
+
+
+    }
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *
