@@ -6,7 +6,7 @@
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
     <g:DockLayoutPanel unit="PX">
-        <g:north size='60'>
+        <g:north size='70'>
             <g:HTMLPanel>
                 <g:Button ui:field="playStopButton">Play</g:Button>
                 Key:
@@ -54,6 +54,7 @@
                 <g:Anchor ui:field="title" styleName="{resources.style.songTitle}" target="_blank"/>
                 by
                 <g:Anchor ui:field="artist" target="_blank"/>
+                <g:Label ui:field="statusLabel"/>
 
                 <!--    note the reverse order due to right justification of the last item  -->
                 <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"
@@ -77,7 +78,6 @@
                     </g:HTMLPanel>
 
                     <g:HTMLPanel>
-                        <g:Label ui:field="statusLabel"/>
 <!--                        <canvas ui:field="audioBeatDisplayCanvas" height="45"-->
 <!--                                title="Beat display of audio.">-->
 <!--                            Your browser does not support the HTML5 canvas tag.-->

@@ -274,13 +274,9 @@ public class SongUpdateTest extends GWTTestCase {
         SongUpdate instance2 = new SongUpdate();
         assertTrue(instance.hashCode() == instance2.hashCode());
         instance.setBeat(14);
-//    assertTrue(instance.hashCode() != instance2.hashCode());
-//    instance2.setBeat(14);
-//    assertTrue(instance.hashCode() == instance2.hashCode());
-//    instance.setTitle("foo");
-//    assertFalse(instance.hashCode() == instance2.hashCode());
-//    instance2.setTitle("foo");
-//    assertTrue(instance.hashCode() == instance2.hashCode());
+    assertTrue(instance.hashCode() != instance2.hashCode());
+    instance2.setBeat(14);
+    assertTrue(instance.hashCode() == instance2.hashCode());
     }
 
     /**
@@ -299,10 +295,6 @@ public class SongUpdateTest extends GWTTestCase {
         assertEquals(instance.equals(instance2), false);
         instance2.setBeat(14);
         assertEquals(instance.equals(instance2), true);
-//    instance.setTitle("foo");
-//    assertEquals(instance.equals(instance2), false);
-//    instance2.setTitle("foo");
-//    assertEquals(instance.equals(instance2), true);
     }
 
     @Override

@@ -179,8 +179,8 @@ public class ChordSectionLocation {
                         + (hasPhraseIndex ? phraseIndex + (hasMeasureIndex ? ":" + measureIndex : "") : "");
             else {
                 StringBuilder sb = new StringBuilder();
-                for (SectionVersion sectionVersion : labelSectionVersions) {
-                    sb.append(sectionVersion.toString()).append(" ");
+                for (SectionVersion sv : labelSectionVersions) {
+                    sb.append(sv.toString()).append(" ");
                 }
                 id = sb.toString();
             }

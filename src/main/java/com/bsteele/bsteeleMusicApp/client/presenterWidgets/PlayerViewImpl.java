@@ -107,7 +107,7 @@ public class PlayerViewImpl
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
-       // audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
+        // audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
@@ -166,11 +166,11 @@ public class PlayerViewImpl
         }
 
         if (songUpdate.getState() != lastState) {
-            switch (lastState) {
-                case idle:
-                    resetScroll(chordsScrollPanel);
-                    break;
-            }
+//            switch (lastState) {
+//                case idle:
+//                    resetScroll(chordsScrollPanel);
+//                    break;
+//            }
             lastState = songUpdate.getState();
 
             setEnables();
@@ -194,14 +194,23 @@ public class PlayerViewImpl
 //                break;
 //        }
 
-        song = songUpdate.getSong();
+        if ( song == null || !song.equals(songUpdate.getSong())) {
+            song = songUpdate.getSong();
 
-        scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
-            @Override
-            public void execute() {
-                resetScroll(chordsScrollPanel);
+            switch (songUpdate.getState()) {
+                default:
+                case idle:
+                    scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+                        @Override
+                        public void execute() {
+                            resetScroll(chordsScrollPanel);
+                        }
+                    });
+                    break;
+                case playing:
+                    break;
             }
-        });
+        }
 
         //  load new data even if the identity has not changed
         setAnchors(title, artist);
@@ -276,29 +285,30 @@ public class PlayerViewImpl
         if (song == null)
             return;
 
+        try {
 //        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
 //                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
 
-        {
-            Widget parent = player.getParent();
-            double parentWidth = parent.getOffsetWidth();
-            double parentHeight = parent.getOffsetHeight();
-            if (parentWidth != chordsParentWidth) {
-                chordsParentWidth = parentWidth;
-                chordsDirty = true;
+            {
+                Widget parent = player.getParent();
+                double parentWidth = parent.getOffsetWidth();
+                double parentHeight = parent.getOffsetHeight();
+                if (parentWidth != chordsParentWidth) {
+                    chordsParentWidth = parentWidth;
+                    chordsDirty = true;
+                }
+                if (parentHeight != chordsParentHeight) {
+                    chordsParentHeight = parentHeight;
+                    chordsDirty = true;
+                }
             }
-            if (parentHeight != chordsParentHeight) {
-                chordsParentHeight = parentHeight;
+
+            if (event.getMeasureNumber() != lastMeasureNumber) {
                 chordsDirty = true;
+                lastMeasureNumber = event.getMeasureNumber();
             }
-        }
 
-        if (event.getMeasureNumber() != lastMeasureNumber) {
-            chordsDirty = true;
-            lastMeasureNumber = event.getMeasureNumber();
-        }
-
-        if (chordsDirty) {
+            if (chordsDirty) {
 
 //            //  turn off all highlights
 //            if (lastChordElement != null) {
@@ -334,13 +344,20 @@ public class PlayerViewImpl
 //                    break;
 //            }
 
-            chordsDirty = false;
+                chordsDirty = false;
+            }
+
+            //  auto scroll
+
+            //  status
+            statusLabel.setText(song.songMomentStatus(songUpdate.getMomentNumber())
+                    + " " + chordsScrollPanel.getVerticalScrollPosition()
+            );
         }
-
-        //  auto scroll
-
-        //  status
-       statusLabel.setText( song.songMomentStatus( songUpdate.getMomentNumber()));
+        catch ( Exception ex ){
+            //  this is bad
+            logger.severe(ex.getMessage());
+        }
     }
 
     private void syncKey(Key key) {
@@ -411,16 +428,16 @@ public class PlayerViewImpl
             return;
         lastHorizontalLineY = y;
 
-        logger.finest("y: "+y);
+        logger.finest("y: " + y);
 
         Context2d ctx = playerBackgroundElement.getContext2d();
         CanvasElement canvasElement = ctx.getCanvas();
-        canvasElement.setWidth(canvasElement.getClientWidth());
-        canvasElement.setHeight(canvasElement.getClientHeight());
+        double w = canvasElement.getClientWidth();
+        double h = canvasElement.getClientHeight();
+        canvasElement.setWidth((int) w);
+        canvasElement.setHeight((int) h);
 
         ctx.setFillStyle("#f5f0e1");    //  fixme: one location for background constant
-        double w = canvasElement.getWidth();
-        double h = canvasElement.getHeight();
         ctx.fillRect(0.0, 0.0, w, h);
         ctx.setStrokeStyle("black");
         ctx.setLineWidth(1.5);
@@ -428,6 +445,16 @@ public class PlayerViewImpl
         ctx.moveTo(0.0, y);
         ctx.lineTo(w, y);
         ctx.stroke();
+
+        //  scroll if required
+        int maxH = chordsScrollPanel.getOffsetHeight();
+        int midH = maxH / 2;
+        if (y < midH)
+            chordsScrollPanel.setVerticalScrollPosition(0);
+        else if (y > h - midH)
+            chordsScrollPanel.setVerticalScrollPosition((int) (h - midH));
+        else
+            chordsScrollPanel.setVerticalScrollPosition((int) (y - midH));
     }
 
     protected final void onSongRender() {
@@ -478,7 +505,7 @@ public class PlayerViewImpl
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
     static {
-          // logger.setLevel(Level.FINE);
+        // logger.setLevel(Level.FINE);
     }
 
 }

@@ -126,23 +126,23 @@ public class SongUpdate {
         if (songMoments == null)
             return false;
 
-        if (momentNumber >= songMoments.size())
+        if (momentNumber >= songMoments.size()-1)
             return false;
 
         //  increment to the next moment
         momentNumber++;
         measure++;
 
-        //  validate where we've landed after the increment
-        if (momentNumber >= songMoments.size())
-            return false;
-
+        try
         {
             SongMoment moment = songMoments.get(momentNumber);
             sectionVersion = moment.getLyricSection().getSectionVersion();
-        }
 
-        sectionId = sectionVersion.toString();
+            sectionId = sectionVersion.toString();
+        }
+        catch ( ArrayIndexOutOfBoundsException aiob){
+            return false;
+        }
 
         return true;
     }

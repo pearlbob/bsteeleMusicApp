@@ -874,14 +874,14 @@ public class SongBaseTest
                 "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \nv: nope\nc: yes\nv: nope\nt:\no: last line of outro\n");
         a.debugSongMoments();
 
-//        {
-//            //  verify beats total as expected
-//            int beats = 0;
-//            for (SongMoment songMoment : a.getSongMoments()) {
-//                assertEquals(beats, songMoment.getBeatNumber());
-//                beats += songMoment.getMeasure().getBeatCount();
-//            }
-//        }
+        {
+            //  verify beats total as expected
+            int beats = 0;
+            for (SongMoment songMoment : a.getSongMoments()) {
+                assertEquals(beats, songMoment.getBeatNumber());
+                beats += songMoment.getMeasure().getBeatCount();
+            }
+        }
         {
             int count = 0;
             for (SongMoment songMoment : a.getSongMoments()) {
