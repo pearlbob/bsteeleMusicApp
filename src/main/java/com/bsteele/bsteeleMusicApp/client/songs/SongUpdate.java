@@ -53,22 +53,17 @@ public class SongUpdate {
         return state;
     }
 
-    /**
-     * @param measure the measure to set
-     */
-    public void setMeasure(int measure) {
-        measureSet(measure);
-    }
 
     /**
-     * Move the update indicators to the given measure.
+     * Move the update indicators to the given measureNumber.
+     * Should only be used to reposition the moment number.
+     * Normally use nextMeasureNumber().
      *
-     * @param m the measure to move to
+     * @param m the measureNumber to move to
      */
-    private void measureSet(int m) {
+    public void setMeasureNumber(int m) {
         momentNumber = 0;
-        sectionVersion = Section.getDefaultVersion();
-        //  special for first measure
+        sectionVersion = Section.getDefaultVersion(); //  special for first measureNumber
 
         if (m >= 0
                 && song != null
@@ -79,7 +74,7 @@ public class SongUpdate {
             sectionVersion = songMoment.getLyricSection().getSectionVersion();
         }
         sectionId = sectionVersion.toString();
-        logger.fine("measureSet() from " + measure + " to " + m);
+        logger.fine("setMeasureNumber() from " + measureNumber + " to " + m);
         chordSectionRow = 0;
         chordSectionColumn = 0;
         repeatCurrent = 0;
@@ -87,12 +82,12 @@ public class SongUpdate {
         repeatFirstRow = -1;
         repeatLastRow = -1;
         repeatLastCol = -1;
-        measure = 0;
+        measureNumber = 0;
 
         beat = 0;
 
         if (m == 0) {
-            measure = 0;  //    we're done from the above
+            measureNumber = 0;  //    we're done from the above
             momentNumber = 0;
         } else if (m > 0) {
             if (song == null || song.getSongMoments() == null || song.getSongMoments().isEmpty())
@@ -103,22 +98,22 @@ public class SongUpdate {
             }
         } else {
             //  leave negative measures as they are
-            measure = m;
-            momentNumber = 0;
+            measureNumber = m;
+            momentNumber = m;
         }
     }
 
     /**
-     * Walk to the next measure.
+     * Walk to the next measureNumber.
      *
-     * @return true if the measure exists
+     * @return true if the measureNumber exists
      */
-    public final boolean nextMeasure() {
-        logger.fine("nextMeasure() from " + measure);
-        if (measure < 0) {
-            measure++;
-            if (measure == 0)
-                measureSet(0);
+    public final boolean nextMeasureNumber() {
+        logger.fine("nextMeasureNumber() from " + measureNumber);
+        if (measureNumber < 0) {
+            measureNumber++;
+            if (measureNumber == 0)
+                setMeasureNumber(0);
             return true;
         }
 
@@ -126,21 +121,19 @@ public class SongUpdate {
         if (songMoments == null)
             return false;
 
-        if (momentNumber >= songMoments.size()-1)
+        if (momentNumber >= songMoments.size() - 1)
             return false;
 
         //  increment to the next moment
         momentNumber++;
-        measure++;
+        measureNumber = momentNumber;
 
-        try
-        {
+        try {
             SongMoment moment = songMoments.get(momentNumber);
             sectionVersion = moment.getLyricSection().getSectionVersion();
 
             sectionId = sectionVersion.toString();
-        }
-        catch ( ArrayIndexOutOfBoundsException aiob){
+        } catch (ArrayIndexOutOfBoundsException aiob) {
             return false;
         }
 
@@ -200,15 +193,22 @@ public class SongUpdate {
     }
 
     /**
-     * Measure number from start of song Starts at zero.
+     * Measure index from start of song starts at zero.
+     * The measureNumber will be negative in play prior to the song start.
      *
-     * @return the index of the current measure in time
+     * @return the index of the current measureNumber in time
      */
-    public final int getMeasure() {
-        return measure;
+    public final int getMeasureNumber() {
+        return measureNumber;
     }
 
-
+    /**
+     * Return the typical, default duration for the default beats per bar and the beats per minute.
+     * Due to variation in measureNumber beats, this should not be used!
+     *
+     * @return the typical, default duration
+     */
+    @Deprecated
     public final double getMeasureDuration() {
         if (song == null)
             return 2;
@@ -216,7 +216,7 @@ public class SongUpdate {
     }
 
     /**
-     * Beat number from start of the current measure. Starts at zero and goes to
+     * Beat number from start of the current measureNumber. Starts at zero and goes to
      * beatsPerBar - 1
      *
      * @return the current beat
@@ -334,8 +334,8 @@ public class SongUpdate {
             return "new song: " + other.song.getTitle() + ", " + other.song.getArtist();
         if (sectionId != null && other.sectionId != null && !sectionId.equals(other.sectionId))
             return "new momentNumber: " + other.getMomentNumber();
-        if (measure != other.measure)
-            return "new measure: " + other.measure;
+        if (measureNumber != other.measureNumber)
+            return "new measureNumber: " + other.measureNumber;
         if (!currentKey.equals(other.currentKey))
             return "new key: " + other.currentKey;
         if (!currentKey.equals(other.currentKey))
@@ -369,7 +369,7 @@ public class SongUpdate {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("SongUpdate: ");
-        sb.append(getMeasure());
+        sb.append(getMeasureNumber());
         sb.append(" ").append(getMomentNumber());
         sb.append(" ").append(momentNumber);
         sb.append(" (").append(chordSectionRow).append(",").append(chordSectionColumn).append(")");
@@ -413,8 +413,8 @@ public class SongUpdate {
                     songUpdate.setSong(Song.fromJsonObject(jv.isObject()));
                     break;
                 //  momentNumber sequencing details should be found by local processing
-                case "measure":
-                    songUpdate.measure = JsonUtil.toInt(jv);
+                case "measureNumber":
+                    songUpdate.measureNumber = JsonUtil.toInt(jv);
                     break;
                 case "beat":
                     songUpdate.beat = JsonUtil.toInt(jv);
@@ -427,7 +427,7 @@ public class SongUpdate {
                     break;
             }
         }
-        songUpdate.measureSet(songUpdate.measure);
+        songUpdate.setMeasureNumber(songUpdate.measureNumber);
         return songUpdate;
     }
 
@@ -448,8 +448,8 @@ public class SongUpdate {
                     .append(song.toJson())
                     .append(",\n");
         //  momentNumber sequencing details should be found by local processing
-        sb.append("\"measure\": ")
-                .append(getMeasure())
+        sb.append("\"measureNumber\": ")
+                .append(getMeasureNumber())
                 .append(",\n")
                 .append("\"beat\": ")
                 .append(getBeat())
@@ -481,7 +481,7 @@ public class SongUpdate {
         hash = (83 * hash + this.repeatFirstRow) % (1 << 31);
         hash = (83 * hash + this.repeatLastRow) % (1 << 31);
         hash = (83 * hash + this.repeatLastCol) % (1 << 31);
-        hash = (83 * hash + this.measure) % (1 << 31);
+        hash = (83 * hash + this.measureNumber) % (1 << 31);
         hash = (83 * hash + this.beat) % (1 << 31);
         hash = (83 * hash + this.beatsPerMeasure) % (1 << 31);
         hash = (83 * hash + this.currentBeatsPerMinute) % (1 << 31);
@@ -574,7 +574,7 @@ public class SongUpdate {
     private int repeatLastRow;
     private int repeatLastCol;
 
-    private int measure;
+    private int measureNumber;
 
     //  play values
     private int beat;

@@ -145,7 +145,8 @@ class CommonPlayViewImpl
     protected Element lastLyricsElement;
     protected Song song;
 
-    protected static Key currentKey;
+    protected Key currentKey;
+    protected Key lastKey;
     protected int halfStepOffset = 0;
     private static int currentBpm;
     protected SongUpdate songUpdate = new SongUpdate();

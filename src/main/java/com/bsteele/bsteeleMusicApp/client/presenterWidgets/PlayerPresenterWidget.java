@@ -3,10 +3,13 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongUpdateEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.home.AppTab;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -19,7 +22,8 @@ import com.gwtplatform.mvp.client.View;
 public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget.MyView>
         implements
         SongUpdateEventHandler,
-        MusicAnimationEventHandler {
+        MusicAnimationEventHandler,
+        HomeTabEventHandler {
 
 
     public interface MyView extends View {
@@ -27,6 +31,8 @@ public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget
         void onSongUpdate(SongUpdate songUpdate);
 
         void onMusicAnimationEvent(MusicAnimationEvent event);
+
+        void setActive(boolean isActive);
     }
 
     @Inject
@@ -42,6 +48,7 @@ public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget
     protected void onBind() {
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(MusicAnimationEvent.TYPE, this);
+        eventBus.addHandler(HomeTabEvent.TYPE, this);
     }
 
     @Override
@@ -53,6 +60,11 @@ public class PlayerPresenterWidget extends PresenterWidget<PlayerPresenterWidget
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
         if (isVisible())
             view.onMusicAnimationEvent(event);
+    }
+
+    @Override
+    public void onHomeTab(HomeTabEvent event) {
+        view.setActive(event.getTab() == AppTab.player);
     }
 
     private final EventBus eventBus;

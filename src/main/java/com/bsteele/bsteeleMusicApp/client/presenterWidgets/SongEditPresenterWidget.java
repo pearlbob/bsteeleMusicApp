@@ -40,9 +40,11 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
         public HandlerRegistration SongRemoveEventHandler(
                 SongRemoveEventHandler handler);
 
-        void setSongEdit(Song song);
+        void onSongUpdate(Song song);
 
         public void measureFocus();
+
+        void setActive(boolean isActive);
     }
 
     @Inject
@@ -73,7 +75,7 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
 
     @Override
     public void onSongUpdate(SongUpdateEvent event) {
-        view.setSongEdit(event.getSongUpdate().getSong());
+        view.onSongUpdate(event.getSongUpdate().getSong());
     }
 
 
@@ -85,9 +87,7 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
 
     @Override
     public void onHomeTab(HomeTabEvent event) {
-        if (event.getTab() == AppTab.edit) {
-            view.measureFocus();
-        }
+        view.setActive(event.getTab() == AppTab.edit);
     }
 
 

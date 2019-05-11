@@ -168,6 +168,9 @@ public class BassViewImpl
 
         this.songUpdate = songUpdate;
 
+        if ( !isActive)
+            return;
+
         labelPlayStop();
 
         if (lastRepeatElement != null) {
@@ -265,72 +268,72 @@ public class BassViewImpl
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        if (song == null)
-            return;
-
-        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
-
-        {
-            Widget parent = bass.getParent();
-            double parentWidth = parent.getOffsetWidth();
-            double parentHeight = parent.getOffsetHeight();
-            if (parentWidth != chordsParentWidth) {
-                chordsParentWidth = parentWidth;
-                chordsDirty = true;
-            }
-            if (parentHeight != chordsParentHeight) {
-                chordsParentHeight = parentHeight;
-                chordsDirty = true;
-            }
-        }
-
-        if (event.getMeasureNumber() != lastMeasureNumber) {
-            chordsDirty = true;
-            lastMeasureNumber = event.getMeasureNumber();
-        }
-
-        if (chordsDirty) {
-
-            //  turn off all highlights
-            if (lastChordElement != null) {
-                lastChordElement.getStyle().clearBackgroundColor();
-                lastChordElement = null;
-            }
-            if (lastLyricsElement != null) {
-                lastLyricsElement.getStyle().clearBackgroundColor();
-                lastLyricsElement = null;
-            }
-
-            //  high light chord and lyrics
-            switch (songUpdate.getState()) {
-                case playing:
-                    //  add highlights
-                    if (songUpdate.getMeasure() >= 0) {
-                        String chordCellId = prefix + songUpdate.getMomentNumber()
-                                + Song.genChordId(songUpdate.getSectionVersion(),
-                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-                        //GWT.log(chordCellId );
-                        Element ce = bass.getElementById(chordCellId);
-                        if (ce != null) {
-                            ce.getStyle().setBackgroundColor(highlightColor);
-                            lastChordElement = ce;
-                        }
-                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
-                        Element le = bass.getElementById(lyricsCellId);
-                        if (le != null) {
-                            le.getStyle().setBackgroundColor(highlightColor);
-                            lastLyricsElement = le;
-                        }
-                    }
-                    break;
-            }
-
-            chordsDirty = false;
-        }
-
-        //  auto scroll
-        autoScroll(chordsScrollPanel, bass);
+//        if (song == null  || !isActive)
+//            return;
+//
+//        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+//                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+//
+//        {
+//            Widget parent = bass.getParent();
+//            double parentWidth = parent.getOffsetWidth();
+//            double parentHeight = parent.getOffsetHeight();
+//            if (parentWidth != chordsParentWidth) {
+//                chordsParentWidth = parentWidth;
+//                chordsDirty = true;
+//            }
+//            if (parentHeight != chordsParentHeight) {
+//                chordsParentHeight = parentHeight;
+//                chordsDirty = true;
+//            }
+//        }
+//
+//        if (event.getMeasureNumber() != lastMeasureNumber) {
+//            chordsDirty = true;
+//            lastMeasureNumber = event.getMeasureNumber();
+//        }
+//
+//        if (chordsDirty) {
+//
+//            //  turn off all highlights
+//            if (lastChordElement != null) {
+//                lastChordElement.getStyle().clearBackgroundColor();
+//                lastChordElement = null;
+//            }
+//            if (lastLyricsElement != null) {
+//                lastLyricsElement.getStyle().clearBackgroundColor();
+//                lastLyricsElement = null;
+//            }
+//
+//            //  high light chord and lyrics
+//            switch (songUpdate.getState()) {
+//                case playing:
+//                    //  add highlights
+//                    if (songUpdate.getMeasure() >= 0) {
+//                        String chordCellId = prefix + songUpdate.getMomentNumber()
+//                                + Song.genChordId(songUpdate.getSectionVersion(),
+//                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+//                        //GWT.log(chordCellId );
+//                        Element ce = bass.getElementById(chordCellId);
+//                        if (ce != null) {
+//                            ce.getStyle().setBackgroundColor(highlightColor);
+//                            lastChordElement = ce;
+//                        }
+//                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
+//                        Element le = bass.getElementById(lyricsCellId);
+//                        if (le != null) {
+//                            le.getStyle().setBackgroundColor(highlightColor);
+//                            lastLyricsElement = le;
+//                        }
+//                    }
+//                    break;
+//            }
+//
+//            chordsDirty = false;
+//        }
+//
+//        //  auto scroll
+//        autoScroll(chordsScrollPanel, bass);
 
     }
 
@@ -456,6 +459,7 @@ public class BassViewImpl
     private Element lastRepeatElement;
     private int lastRepeatTotal;
     private int lastMeasureNumber;
+    private boolean isActive = false;
 
 
     public static final String highlightColor = "#e4c9ff";

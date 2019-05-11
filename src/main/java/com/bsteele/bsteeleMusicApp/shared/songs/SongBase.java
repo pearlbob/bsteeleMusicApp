@@ -13,7 +13,6 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -68,10 +67,11 @@ public class SongBase {
      * repeat ends, repeat counts, section headers, etc. are ignored.
      */
     private final void computeSongMoments() {
-        if (songMoments != null)
+        if (!songMoments.isEmpty())
             return;
 
-        songMoments = new ArrayList<>();
+        songMoments.clear();
+        beatsToMoment.clear();
 
         if (lyricSections == null)
             return;
@@ -161,7 +161,7 @@ public class SongBase {
             for (SongMoment songMoment : getSongMoments()) {
 
                 if (lastLyricSection != songMoment.getLyricSection()) {
-                    if ( lastLyricSection != null) {
+                    if (lastLyricSection != null) {
                         int rows = maxChordRow - baseChordRow + 1;
                         chordSectionRows.put(lastLyricSection.getSectionVersion(), rows);
                         row += rows;
@@ -197,6 +197,17 @@ public class SongBase {
                 chordSectionRows.put(lastLyricSection.getSectionVersion(), rows);
             }
         }
+
+        {
+            //  install the beats to moment lookup entries
+            int beat = 0;
+            for (SongMoment songMoment : songMoments) {
+                int limit = songMoment.getMeasure().getBeatCount();
+                for (int b = 0; b < limit; b++)
+                    beatsToMoment.put(beat++, songMoment);
+            }
+        }
+
     }
 
     public final GridCoordinate getMomentGridCoordinate(SongMoment songMoment) {
@@ -228,8 +239,12 @@ public class SongBase {
     }
 
     public final String songMomentStatus(int momentNumber) {
-        if (songMoments == null)
+        if (songMoments.isEmpty())
             return "unknown";
+
+        if ( momentNumber < 0 ){
+            return "preroll at "+momentNumber;
+        }
 
         momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
         SongMoment songMoment = songMoments.get(momentNumber);
@@ -807,7 +822,7 @@ public class SongBase {
         chordSectionLocationGrid = null;
         complexity = 0;
         chordsAsMarkup = null;
-        songMoments = null;
+        songMoments.clear();
         duration = 0;
         totalBeats = 0;
     }
@@ -2768,6 +2783,24 @@ public class SongBase {
         return songMoments;
     }
 
+    public final double getSongTimeAtMoment(int momentNumber) {
+        computeSongMoments();
+        momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
+        return songMoments.get(momentNumber).getBeatNumber() * getBeatsPerMinute() / 60.0;
+    }
+
+    public final int getSongMomentNumberAtTime(double songTime) {
+        computeSongMoments();
+        int songBeat = (int) Math.floor(songTime * getDefaultBpm() / 60.0);
+        if ( songBeat < 0){
+            return songBeat/beatsPerBar;    //  smooth measure based lead in
+        }
+        if ( songBeat >= beatsToMoment.size() )
+            return Integer.MAX_VALUE;
+
+        return beatsToMoment.get(songBeat).getSequenceNumber();
+    }
+
     public final ArrayList<LyricSection> getLyricSections() {
         return lyricSections;
     }
@@ -2959,7 +2992,7 @@ public class SongBase {
          */
         @Override
         public int compare(SongBase o1, SongBase o2) {
-            return o1.defaultCompareTo(o2);
+            return o1.compareBySongId(o2);
         }
     }
 
@@ -2984,7 +3017,7 @@ public class SongBase {
             if (ret != 0) {
                 return ret;
             }
-            return o1.defaultCompareTo(o2);
+            return o1.compareBySongId(o2);
         }
 
     }
@@ -3018,7 +3051,7 @@ public class SongBase {
     public static final boolean containsSongTitleAndArtist(Collection<? extends SongBase> collection, SongBase
             song) {
         for (SongBase collectionSong : collection) {
-            if (song.defaultCompareTo(collectionSong) == 0)
+            if (song.compareBySongId(collectionSong) == 0)
                 return true;
         }
         return false;
@@ -3031,25 +3064,13 @@ public class SongBase {
      * @param o the other song base to compare with
      * @return true if title and artist are equal
      */
-    private int defaultCompareTo(SongBase o) {
+    public int compareBySongId(SongBase o) {
+        if (o == null)
+            return -1;
         int ret = getSongId().compareTo(o.getSongId());
         if (ret != 0) {
             return ret;
         }
-        ret = getArtist().compareTo(o.getArtist());
-        if (ret != 0) {
-            return ret;
-        }
-
-//    //  more?  if so, changes in lyrics will be a new "song"
-//    ret = getLyricsAsString().compareTo(o.getLyricsAsString());
-//    if (ret != 0) {
-//      return ret;
-//    }
-//    ret = getChordsAsString().compareTo(o.getChordsAsString());
-//    if (ret != 0) {
-//      return ret;
-//    }
         return 0;
     }
 
@@ -3059,6 +3080,12 @@ public class SongBase {
             return false;
         if (!getArtist().equals(o.getArtist()))
             return false;
+        if (getCoverArtist() != null) {
+            if (!getCoverArtist().equals(o.getCoverArtist()))
+                return false;
+        } else if (o.getCoverArtist() != null) {
+            return false;
+        }
         if (!getCopyright().equals(o.getCopyright()))
             return false;
         if (!getKey().equals(o.getKey()))
@@ -3142,6 +3169,8 @@ public class SongBase {
     private transient String chordsAsMarkup;
     private transient String message;
     private ArrayList<SongMoment> songMoments = new ArrayList<>();
+    private HashMap<Integer, SongMoment> beatsToMoment = new HashMap<>();
+
     private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
     private String rawLyrics = "";
     private LegacyDrumSection drumSection = new LegacyDrumSection();

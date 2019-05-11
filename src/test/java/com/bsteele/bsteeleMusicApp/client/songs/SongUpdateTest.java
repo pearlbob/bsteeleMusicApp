@@ -86,7 +86,7 @@ public class SongUpdateTest extends GWTTestCase {
         System.out.println("getMeasure");
         SongUpdate instance = new SongUpdate();
         int expResult = 0;
-        int result = instance.getMeasure();
+        int result = instance.getMeasureNumber();
         assertEquals(expResult, result);
     }
 
@@ -182,7 +182,7 @@ public class SongUpdateTest extends GWTTestCase {
         System.out.println("setMeasure");
         int measure = 0;
         SongUpdate instance = new SongUpdate();
-        instance.setMeasure(measure);
+        instance.setMeasureNumber(measure);
     }
 
     /**

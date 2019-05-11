@@ -29,7 +29,7 @@ public class SongMoment implements Comparable<SongMoment> {
         return sequenceNumber;
     }
 
-    public int getBeatNumber() {
+    public final int getBeatNumber() {
         return beatNumber;
     }
 

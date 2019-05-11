@@ -4,6 +4,9 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.home.AppTab;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
@@ -185,6 +188,9 @@ public class LyricsAndChordsViewImpl
 
         this.songUpdate = songUpdate;
 
+        if (!isActive)
+            return;
+
         labelPlayStop();
 
         if (lastRepeatElement != null) {
@@ -277,67 +283,74 @@ public class LyricsAndChordsViewImpl
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        if (song == null)
-            return;
-
-        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
-
-        {
-            Widget parent = chordsFlexTable.getParent();
-            double parentWidth = parent.getOffsetWidth();
-            double parentHeight = parent.getOffsetHeight();
-            if (parentWidth != chordsParentWidth) {
-                chordsParentWidth = parentWidth;
-                chordsDirty = true;
-            }
-            if (parentHeight != chordsParentHeight) {
-                chordsParentHeight = parentHeight;
-                chordsDirty = true;
-            }
-        }
-
-        if (chordsDirty) {
-
-            //  turn off all highlights
-            if (lastChordElement != null) {
-                lastChordElement.getStyle().clearBackgroundColor();
-                lastChordElement = null;
-            }
-            if (lastLyricsElement != null) {
-                lastLyricsElement.getStyle().clearBackgroundColor();
-                lastLyricsElement = null;
-            }
-            if (event.getMeasureNumber() != lastMeasureNumber) {
-                chordsDirty = true;
-                lastMeasureNumber = event.getMeasureNumber();
-            }
-
-            switch (songUpdate.getState()) {
-                case playing:
-                    //  add highlights
-//                    if (songUpdate.getMeasure() >= 0) {
-//                        SectionVersion v = song.getChordSectionVersion(songUpdate.getSectionVersion());
-//                        String chordCellId = prefix + Song.genChordId(v,
-//                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+//        if (song == null || !isActive)
+//            return;
 //
-//                        Element ce = chordsFlexTable.getElementById(chordCellId);
-//                        if (ce != null) {
-//                            ce.getStyle().setBackgroundColor(highlightColor);
-//                            lastChordElement = ce;
+//        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+//                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+//
+//        {
+//            Widget parent = chordsFlexTable.getParent();
+//            double parentWidth = parent.getOffsetWidth();
+//            double parentHeight = parent.getOffsetHeight();
+//            if (parentWidth != chordsParentWidth) {
+//                chordsParentWidth = parentWidth;
+//                chordsDirty = true;
 //            }
-//                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
-//                        Element le = lyrics.getElementById(lyricsCellId);
-//                        if (le != null) {
-//                            le.getStyle().setBackgroundColor(highlightColor);
-//                            lastLyricsElement = le;
+//            if (parentHeight != chordsParentHeight) {
+//                chordsParentHeight = parentHeight;
+//                chordsDirty = true;
 //            }
+//        }
+//
+//        if (chordsDirty) {
+//
+//            //  turn off all highlights
+//            if (lastChordElement != null) {
+//                lastChordElement.getStyle().clearBackgroundColor();
+//                lastChordElement = null;
 //            }
-                    break;
-            }
+//            if (lastLyricsElement != null) {
+//                lastLyricsElement.getStyle().clearBackgroundColor();
+//                lastLyricsElement = null;
+//            }
+//            if (event.getMeasureNumber() != lastMeasureNumber) {
+//                chordsDirty = true;
+//                lastMeasureNumber = event.getMeasureNumber();
+//            }
+//
+//            switch (songUpdate.getState()) {
+//                case playing:
+//                    //  add highlights
+////                    if (songUpdate.getMeasure() >= 0) {
+////                        SectionVersion v = song.getChordSectionVersion(songUpdate.getSectionVersion());
+////                        String chordCellId = prefix + Song.genChordId(v,
+////                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+////
+////                        Element ce = chordsFlexTable.getElementById(chordCellId);
+////                        if (ce != null) {
+////                            ce.getStyle().setBackgroundColor(highlightColor);
+////                            lastChordElement = ce;
+////            }
+////                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
+////                        Element le = lyrics.getElementById(lyricsCellId);
+////                        if (le != null) {
+////                            le.getStyle().setBackgroundColor(highlightColor);
+////                            lastLyricsElement = le;
+////            }
+////            }
+//                    break;
+//            }
+//
+//            resizeChords();
+//        }
+    }
 
-            resizeChords();
-        }
+    @Override
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+        if (isActive)
+            onSongUpdate(songUpdate);
     }
 
     private void transposeToOffset() {
@@ -381,7 +394,7 @@ public class LyricsAndChordsViewImpl
                 int rLimit = grid.getRowCount();
                 if (forceChordsFontSize || chordsFontSize != size) {
                     //  fixme: demands all chord fonts be the same size
-                    song.transpose( chordsFlexTable, halfStepOffset, chordsFontSize);
+                    song.transpose(chordsFlexTable, halfStepOffset, chordsFontSize);
 
                     for (int r = 0; r < rLimit; r++) {
                         ArrayList<ChordSectionLocation> row = grid.getRow(r);
@@ -471,6 +484,7 @@ public class LyricsAndChordsViewImpl
     private int lastRepeatTotal;
     private int lastMeasureNumber;
     private int updateCount;
+    private boolean isActive = false;
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;

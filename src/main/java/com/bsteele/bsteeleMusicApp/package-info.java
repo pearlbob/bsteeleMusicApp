@@ -5,6 +5,10 @@
  * Package level java doc description here?
  * <p>
  * Package level java doc description here?
+ * <p>
+ * Package level java doc description here?
+ * <p>
+ * Package level java doc description here?
  */
 
 /**
@@ -13,27 +17,20 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-fixme: elminate com.google.gwt.json.client.JSON*
-fixme: multiple sections on a single Phrase
-fixme: bass view is damaged and old design
-todo: complete chord addressing
-todo: do measure addressing
-todo: implement local storage songs... and their removal
+
+fixme: odd scrolling after a play and a return to the play list
+fixme: scrolling during play, up and down
+
 todo: write allSongs.songlyrics sanity check for download from Bodhi
-fixme: eliminate date on allSongs.songlyrics
 fixme: redo key guess
 todo: add minor keys
-todo: song complexity index
-todo: eliminate dots if they follow the default pattern eg. "E.A." in 4/4 becomes "EA"
 todo: user select of 2,3,4,5 or 6 measures per line?
-todo: x2 and x3 exploded
-todo: dashes automatically enforced?
-fixme: africa display
-fixme: Measure.parse() behavior on errors
-todo: comments in chords!  make them more obvious, horizontal spacing
+todo: x2 and x3 exploded/collapsed
+todo: use webstorage for last bpm, key, singer, leads
 
-todo: use webstorage for user name
-____fixme: double delete => "  ) (  "
+fixme: elminate com.google.gwt.json.client.JSON*
+fixme: bass view is damaged and old design
+todo: implement local storage songs... and their removal
 fixme: how to delete a repeat marker?... and a repeat?
 todo: edit view, click to the right of chord table should select last in row
 fixme: player view on born to run

@@ -769,13 +769,13 @@ public class SongEditView
     }
 
     private final void clearSong() {
-        setSongEdit(Song.createEmptySong());
+        onSongUpdate(Song.createEmptySong());
         displaySong();
         checkSong();
     }
 
     @Override
-    public void setSongEdit(Song newSong) {
+    public void onSongUpdate(Song newSong) {
         if (newSong == null)
             return;
 
@@ -788,6 +788,8 @@ public class SongEditView
             return;
 
         this.song = newSong.copySong();
+        if ( !isActive)
+            return;
 
         titleEntry.setText(song.getTitle());
         artistEntry.setText(song.getArtist());
@@ -1330,6 +1332,15 @@ public class SongEditView
         Scheduler.get().scheduleFinally(() -> measureEntry.setFocus(true));
     }
 
+    @Override
+    public void setActive(boolean isActive) {
+        this.isActive= isActive;
+        if ( isActive) {
+            setSong(song);
+            measureFocus();
+        }
+    }
+
     private boolean areHintsHidden = true;
     private ArrayList<Measure> recentMeasures = new ArrayList<>();
     private HashMap<ChordDescriptor, Button> chordDescriptorMap = new HashMap<>();
@@ -1337,6 +1348,7 @@ public class SongEditView
     private Key key = Key.getDefault();
     private Song song;
     private GridCoordinate lastGridCoordinate = new GridCoordinate(0, 0);
+    private boolean isActive = false;
     private static final int fontsize = 32;
     private final HandlerManager handlerManager;
     private static final Document document = Document.get();

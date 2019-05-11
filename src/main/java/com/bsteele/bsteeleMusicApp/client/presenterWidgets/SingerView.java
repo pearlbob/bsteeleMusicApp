@@ -50,7 +50,7 @@ public class SingerView
     Anchor title;
 
     @UiField
-    Anchor  artist;
+    Anchor artist;
 
     @UiField
     Button nextSongButton;
@@ -103,6 +103,9 @@ public class SingerView
 
         this.songUpdate = songUpdate;
 
+        if (!isActive)
+            return;
+
         labelPlayStop();
 
         if (songUpdate.getState() != lastState) {
@@ -117,7 +120,7 @@ public class SingerView
 
         syncCurrentKey(songUpdate.getCurrentKey());
         syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
-        
+
         if (song == null || !song.equals(songUpdate.getSong())) {
             scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
                 @Override
@@ -128,7 +131,7 @@ public class SingerView
 
             song = songUpdate.getSong();
 
-            setAnchors(title,artist);
+            setAnchors(title, artist);
             copyright.setInnerHTML(song.getCopyright());
 
             timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
@@ -166,41 +169,43 @@ public class SingerView
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        if (song == null)
-            return;
-
-        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
-
-        //  turn off all highlights
-        if (lastLyricsElement != null) {
-            lastLyricsElement.getStyle().clearBackgroundColor();
-            lastLyricsElement = null;
-        }
-
-        //  high light chord and lyrics
-        switch (songUpdate.getState()) {
-            case playing:
-                //  add highlights
-                if (songUpdate.getMeasure() >= 0) {
-                    String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
-                    Element le = singer.getElementById(lyricsCellId);
-                    if (le != null) {
-                        le.getStyle().setBackgroundColor(highlightColor);
-                        lastLyricsElement = le;
-                    }
-                }
-                break;
-        }
-
-        //  auto scroll
-        autoScroll(lyricsScrollPanel, singer);
+//        if (song == null  || !isActive)
+//            return;
+//
+//        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
+//                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+//
+//        //  turn off all highlights
+//        if (lastLyricsElement != null) {
+//            lastLyricsElement.getStyle().clearBackgroundColor();
+//            lastLyricsElement = null;
+//        }
+//
+//        //  high light chord and lyrics
+//        switch (songUpdate.getState()) {
+//            case playing:
+//                //  add highlights
+//                if (songUpdate.getMeasure() >= 0) {
+//                    String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
+//                    Element le = singer.getElementById(lyricsCellId);
+//                    if (le != null) {
+//                        le.getStyle().setBackgroundColor(highlightColor);
+//                        lastLyricsElement = le;
+//                    }
+//                }
+//                break;
+//        }
+//
+//        //  auto scroll
+//        autoScroll(lyricsScrollPanel, singer);
     }
 
     private AudioBeatDisplay audioBeatDisplay;
+    private boolean isActive = false;
 
     public static final String highlightColor = "#e4c9ff";
     private static String prefix = "singer";
+
     private static final Scheduler scheduler = Scheduler.get();
     private static final Document document = Document.get();
     private static final Logger logger = Logger.getLogger(SingerView.class.getName());

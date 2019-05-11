@@ -159,6 +159,9 @@ public class PlayerViewImpl
 
         this.songUpdate = songUpdate;
 
+        if (!isActive)
+            return;
+
         labelPlayStop();
 
         if (lastRepeatElement != null) {
@@ -166,10 +169,11 @@ public class PlayerViewImpl
             lastRepeatElement = null;
         }
 
+        //  reset display at a stop
         if (songUpdate.getState() != lastState) {
             switch (lastState) {
                 case idle:
-                    lastScrollLineY = 0;
+                    renderHorizontalLineAt(0);
                     resetScroll(chordsScrollPanel);
                     break;
             }
@@ -202,13 +206,8 @@ public class PlayerViewImpl
             switch (songUpdate.getState()) {
                 default:
                 case idle:
-                    lastScrollLineY = 0;
-                    scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            resetScroll(chordsScrollPanel);
-                        }
-                    });
+                    renderHorizontalLineAt(0);      //  typically off screen
+                    scrollForLineAt(0);     //  to the top
                     break;
                 case playing:
                     break;
@@ -228,37 +227,43 @@ public class PlayerViewImpl
 
         chordsFontSize = 0;     //    will never match, forces the fontSize set
         chordsDirty = true;   //  done by syncKey()
-        lastHorizontalLineY = 0;
 
-        if (song != null && playerFlexTable != null) {
-            SongMoment songMoment = song.getSongMoments().get(songUpdate.getMomentNumber());
-            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songMoment);
+        if (song != null && playerFlexTable != null)
+            switch (songUpdate.getState()) {
+                case playing:
+                    if (songUpdate.getMomentNumber() < 0) {
+                        renderHorizontalLineAt(0);      //  typically off screen
+                        scrollForLineAt(0);     //  to the top
+                    } else {
+                        SongMoment songMoment = song.getSongMoments().get(songUpdate.getMomentNumber());
+                        GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songMoment);
 
-            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
-            int r = gridCoordinate.getRow();
-            if (r < playerFlexTable.getRowCount()) {
-                int c = gridCoordinate.getCol();
-                if (c < playerFlexTable.getCellCount(r)) {
-                    Element e = formatter.getElement(r, c);
-                    if (e != null) {
-                        renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
-                                - playerBackgroundElement.getAbsoluteTop());
+                        FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
+                        int r = gridCoordinate.getRow();
+                        if (r < playerFlexTable.getRowCount()) {
+                            int c = gridCoordinate.getCol();
+                            if (c < playerFlexTable.getCellCount(r)) {
+                                Element e = formatter.getElement(r, c);
+                                if (e != null) {
+                                    renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
+                                            - playerBackgroundElement.getAbsoluteTop());
+                                }
+                            }
+                        }
+
+                        //  scroll into view
+                        r = gridCoordinate.getRow();
+                        if (r < playerFlexTable.getRowCount()) {
+                            int c = 0;
+                            if (c < playerFlexTable.getCellCount(r)) {
+                                Element e = formatter.getElement(r, c);
+                                if (e != null) {
+                                    scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundElement.getAbsoluteTop());
+                                }
+                            }
+                        }
                     }
-                }
             }
-
-            //  scroll into view
-            r = gridCoordinate.getRow();
-            if (r < playerFlexTable.getRowCount()) {
-                int c = 0;
-                if (c < playerFlexTable.getCellCount(r)) {
-                    Element e = formatter.getElement(r, c);
-                    if (e != null) {
-                        scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundElement.getAbsoluteTop());
-                    }
-                }
-            }
-        }
     }
 
     private void setEnables() {
@@ -299,6 +304,9 @@ public class PlayerViewImpl
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
         if (song == null)
+            return;
+
+        if (!isActive)
             return;
 
         try {
@@ -373,6 +381,17 @@ public class PlayerViewImpl
             //  this is bad
             logger.severe(ex.getMessage());
         }
+
+        scrollForLineAnimation();
+    }
+
+    @Override
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+        if (isActive) {
+            lastKey = null;    //  force update
+            onSongUpdate(songUpdate);
+        }
     }
 
     private void syncKey(Key key) {
@@ -384,6 +403,11 @@ public class PlayerViewImpl
 
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
         keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
+
+        if (currentKey == lastKey) {
+            return;
+        }
+        lastKey = currentKey;
 
         player.clear();
 
@@ -441,31 +465,48 @@ public class PlayerViewImpl
     private final void renderHorizontalLineAt(double y) {
         if (y == lastHorizontalLineY)
             return;
-        lastHorizontalLineY = y;
 
         logger.finest("y: " + y);
-
         Context2d ctx = playerBackgroundElement.getContext2d();
         CanvasElement canvasElement = ctx.getCanvas();
         double w = canvasElement.getClientWidth();
         double h = canvasElement.getClientHeight();
-        canvasElement.setWidth((int) w);
-        canvasElement.setHeight((int) h);
+        if (w != canvasElement.getWidth() || h != canvasElement.getHeight()) {
+            canvasElement.setWidth((int) w);
+            canvasElement.setHeight((int) h);
+        }
 
-        ctx.setFillStyle("#f5f0e1");    //  fixme: one location for background constant
-        ctx.fillRect(0.0, 0.0, w, h);
+        ctx.clearRect(0.0, lastHorizontalLineY - 1, w, 3);
+
         ctx.setStrokeStyle("black");
         ctx.setLineWidth(1.5);
         ctx.beginPath();
         ctx.moveTo(0.0, y);
         ctx.lineTo(w, y);
         ctx.stroke();
+
+        lastHorizontalLineY = y;
+    }
+
+    private final void resetScrollForLineAt(double y) {
+        scrollForLineY = lastScrollLineY = y;
     }
 
     private final void scrollForLineAt(double y) {
         if (y <= lastScrollLineY)
             return;
-        lastScrollLineY = y;
+        scrollForLineY = y;
+    }
+
+    private final void scrollForLineAnimation() {
+
+        if (Math.abs(scrollForLineY - lastScrollLineY) <= 1)
+            lastScrollLineY = scrollForLineY;
+        else {
+            lastScrollLineY += 0.5;
+        }
+        double y = lastScrollLineY;
+
 
         //  scroll if required
         double h = playerBackgroundElement.getClientHeight();
@@ -510,6 +551,7 @@ public class PlayerViewImpl
     private int lastMeasureNumber;
     private FlexTable playerFlexTable;
     private double lastHorizontalLineY;
+    private double scrollForLineY;
     private double lastScrollLineY;
 
 
@@ -520,6 +562,7 @@ public class PlayerViewImpl
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
+    private boolean isActive = false;
     private static final String prefix = "player";
     private static final Scheduler scheduler = Scheduler.get();
     private static final AppOptions appOptions = AppOptions.getInstance();

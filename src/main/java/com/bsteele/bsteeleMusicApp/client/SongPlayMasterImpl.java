@@ -14,7 +14,6 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.google.gwt.animation.client.AnimationScheduler;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.json.client.JSONException;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -22,6 +21,7 @@ import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
 import java.text.ParseException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -59,57 +59,58 @@ public class SongPlayMasterImpl
                     ? dt : systemToAudioOffset * pass + (1 - pass) * dt;
         }
         double tn = t + systemToAudioOffset;
-//        if (Math.abs(tn - systemT) > 0.005)
-//            logger.info("dt: " + (tn - systemT));
+        if (Math.abs(tn - systemT) > 0.005)
+            logger.finer("dt: " + (tn - systemT));
 
         int measureNumber = Integer.MIN_VALUE;
-        if (audioFilePlayer != null) {
-            switch (requestedState) {
-                case idle:
-                    switch (state) {
-                        case playing:
-                            //  stop
-                            audioFilePlayer.stop();
-                            songOutUpdate.setState(SongUpdate.State.idle);
-                            eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
-                            bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
-                            state = requestedState;
-                            break;
-                    }
-                    break;
-                case playing:
-                    switch (state) {
-                        case idle:
-                            //  start
-                            state = requestedState;
-                            break;
-                    }
-                    break;
-            }
 
-            switch (state) {
-                case playing:
-                    //  distribute the time update locally
-                    songLocalUpdate(tn);
+        //  deal with state transitions
+        switch (requestedState) {
+            case idle:
+                switch (state) {
+                    case playing:
+                        //  stop
+                        audioFilePlayer.stop();
+                        songOutUpdate.setState(SongUpdate.State.idle);
+                        eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+                        bSteeleMusicIO.sendMessage(songOutUpdate.toJson());
+                        state = requestedState;
+                        break;
+                }
+                break;
+            case playing:
+                switch (state) {
+                    case idle:
+                        //  start
+                        state = requestedState;
+                        break;
+                }
+                break;
+        }
 
-                    double measureDuration = songOutUpdate.getMeasureDuration();
-                    measureNumber = (int) (Math.floor(tn / measureDuration));
-                    thisMeasureStart = measureNumber * measureDuration + (t0 - systemToAudioOffset);
-                    if (nextMeasureStart - thisMeasureStart < measureDuration / 2) {
-                        //  schedule the audio one measure early
-                        nextMeasureStart = thisMeasureStart + measureDuration;
+        //  work the current state
+        switch (state) {
+            case playing:
+                //  distribute the time update locally
+                songMomentUpdate(tn);
 
-                        beatTheDrums(defaultDrumSelection);
+//                double measureDuration = songOutUpdate.getMeasureDuration();
+//                measureNumber = (int) (Math.floor(tn / measureDuration));
+//                thisMeasureStart = measureNumber * measureDuration + (t0 - systemToAudioOffset);
+//                if (nextMeasureStart - thisMeasureStart < measureDuration / 2) {
+//                    //  schedule the audio one measure early
+//                    nextMeasureStart = thisMeasureStart + measureDuration;
+//
+////                    beatTheDrums(defaultDrumSelection);   //  fixme
+//
+////                    sendStatus("measureNumber", measureNumber);
+////                    sendMeasureDurationStatus(tn);
+//                }
 
-                        sendStatus("measureNumber", measureNumber);
-                        sendMeasureDurationStatus(tn);
-                    }
-                    
-                    break;
-                default:
-                    lastSystemT = systemT;
-                    break;
-            }
+                break;
+            default:
+                lastSystemT = systemT;
+                break;
         }
 
         //  tell everyone else it's animation time
@@ -125,32 +126,37 @@ public class SongPlayMasterImpl
     }
 
     /**
+     * Push the song's play forward in time based on the song's start time and the timing of the song's measures.
+     *
      * @param t system time
      */
-    private void songLocalUpdate(double t) {
-        double songT = songOutUpdate.getEventTime();
+    private void songMomentUpdate(double t) {
+        double songT0 = songOutUpdate.getEventTime();
 
-        double measureDuration = songOutUpdate.getMeasureDuration();
-        int m = (int) Math.floor((t - songT) / measureDuration);
-        if (m == songOutUpdate.getMeasure())
-            return;     //  that measure has already been updated
+        int lastMomentNumber = songOutUpdate.getMomentNumber();
 
-        logger.fine("t: " + t + ", m: " + m + " != " + songOutUpdate.getMeasure());
+        int momentNumber = songOutUpdate.getSong().getSongMomentNumberAtTime(t - songT0);
 
-        if (m <= 0) {
-            //  preRoll
-            songOutUpdate.setMeasure(m);
+        if (momentNumber <= 0) {
+            //  preRoll or first
+            songOutUpdate.setMeasureNumber(momentNumber);
         } else {
-            while (m > songOutUpdate.getMeasure()) {
-                if (!songOutUpdate.nextMeasure()) {
+            while (momentNumber > songOutUpdate.getMeasureNumber()) {
+                if (!songOutUpdate.nextMeasureNumber()) {
                     stopSong();
                     break;
                 }
             }
         }
-        eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
 
-        logger.fine("local update done: m: " + m + ", " + songOutUpdate.getMeasure());
+        //  distribute the change
+        if (lastMomentNumber != momentNumber) {
+            eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+
+            logger.fine("t: " + (t - songT0)
+                    + " = m#: " + momentNumber
+            );
+        }
     }
 
     private void beatTheDrums(LegacyDrumMeasure drumSelection) {
@@ -273,7 +279,7 @@ public class SongPlayMasterImpl
                 Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
                         //  add margin into the future
                         + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
-        songOutUpdate.setMeasure(-preRoll);
+        songOutUpdate.setMeasureNumber(-preRoll);
         songOutUpdate.setState(SongUpdate.State.playing);
 
         issueSongUpdate(songOutUpdate);
@@ -381,4 +387,8 @@ public class SongPlayMasterImpl
     private double lastSystemT;
 
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
+
+    static {
+        logger.setLevel(Level.FINE);
+    }
 }
