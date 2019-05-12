@@ -135,7 +135,8 @@ public class SongPlayMasterImpl
 
         int lastMomentNumber = songOutUpdate.getMomentNumber();
 
-        int momentNumber = songOutUpdate.getSong().getSongMomentNumberAtTime(t - songT0);
+        int momentNumber = songOutUpdate.getSong().getSongMomentNumberAtTime(
+                songOutUpdate.getCurrentBeatsPerMinute(), t - songT0);
 
         if (momentNumber <= 0) {
             //  preRoll or first

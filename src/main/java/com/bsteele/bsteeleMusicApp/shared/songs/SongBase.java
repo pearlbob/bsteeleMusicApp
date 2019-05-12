@@ -2789,14 +2789,17 @@ public class SongBase {
         return songMoments.get(momentNumber).getBeatNumber() * getBeatsPerMinute() / 60.0;
     }
 
-    public final int getSongMomentNumberAtTime(double songTime) {
+    public final int getSongMomentNumberAtTime(int bpm, double songTime) {
+        if ( bpm <= 0)
+            return Integer.MAX_VALUE;       //  we're done with this song play
+
         computeSongMoments();
-        int songBeat = (int) Math.floor(songTime * getDefaultBpm() / 60.0);
+        int songBeat = (int) Math.floor(songTime *  bpm /60.0);
         if ( songBeat < 0){
-            return songBeat/beatsPerBar;    //  smooth measure based lead in
+            return songBeat/beatsPerBar;    //  constant measure based lead in
         }
         if ( songBeat >= beatsToMoment.size() )
-            return Integer.MAX_VALUE;
+            return Integer.MAX_VALUE;       //  we're done with this song play
 
         return beatsToMoment.get(songBeat).getSequenceNumber();
     }

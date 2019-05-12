@@ -174,11 +174,19 @@ public class PlayerViewImpl
             switch (lastState) {
                 case idle:
                     renderHorizontalLineAt(0);
-                    resetScroll(chordsScrollPanel);
+                    resetScrollForLineAt(0);
+                    break;
+                case playing:
+                    renderHorizontalLineAt(0);
                     break;
             }
             lastState = songUpdate.getState();
 
+            switch (lastState) {    //  the new one now
+                case playing:
+                    resetScrollForLineAt(0);
+                    break;
+            }
             setEnables();
         }
 
@@ -203,30 +211,21 @@ public class PlayerViewImpl
         if (song == null || !song.equals(songUpdate.getSong())) {
             song = songUpdate.getSong();
 
-            switch (songUpdate.getState()) {
-                default:
-                case idle:
-                    renderHorizontalLineAt(0);      //  typically off screen
-                    scrollForLineAt(0);     //  to the top
-                    break;
-                case playing:
-                    break;
-            }
+
+            //  load new data even if the identity has not changed
+            setAnchors(title, artist);
+            copyright.setInnerHTML(song.getCopyright());
+
+            timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+
+            syncCurrentKey(songUpdate.getCurrentKey());
+            syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
+
+            syncKey(songUpdate.getCurrentKey());
+
+            chordsFontSize = 0;     //    will never match, forces the fontSize set
+            chordsDirty = true;   //  done by syncKey()
         }
-
-        //  load new data even if the identity has not changed
-        setAnchors(title, artist);
-        copyright.setInnerHTML(song.getCopyright());
-
-        timeSignature.setInnerHTML(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
-
-        syncCurrentKey(songUpdate.getCurrentKey());
-        syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
-
-        syncKey(songUpdate.getCurrentKey());
-
-        chordsFontSize = 0;     //    will never match, forces the fontSize set
-        chordsDirty = true;   //  done by syncKey()
 
         if (song != null && playerFlexTable != null)
             switch (songUpdate.getState()) {
@@ -343,10 +342,10 @@ public class PlayerViewImpl
 //                lastLyricsElement.getStyle().clearBackgroundColor();
 //                lastLyricsElement = null;
 //            }
-//
-//            //  high light chord and lyrics
-//            switch (songUpdate.getState()) {
-//                case playing:
+
+            //  high light chord and lyrics
+            switch (songUpdate.getState()) {
+                case playing:
 //                    //  add highlights
 //                    if (songUpdate.getMeasure() >= 0) {
 //                        String chordCellId = prefix + songUpdate.getMomentNumber() + Song.genChordId(songUpdate
@@ -365,13 +364,18 @@ public class PlayerViewImpl
 //                            lastLyricsElement = le;
 //                        }
 //                    }
-//                    break;
-//            }
+                    break;
+            }
 
                 chordsDirty = false;
             }
 
             //  auto scroll
+            switch (songUpdate.getState()) {
+                case playing:
+                    scrollForLineAnimation();
+                    break;
+            }
 
             //  status
             statusLabel.setText(song.songMomentStatus(songUpdate.getMomentNumber())
@@ -381,8 +385,6 @@ public class PlayerViewImpl
             //  this is bad
             logger.severe(ex.getMessage());
         }
-
-        scrollForLineAnimation();
     }
 
     @Override
@@ -478,12 +480,14 @@ public class PlayerViewImpl
 
         ctx.clearRect(0.0, lastHorizontalLineY - 1, w, 3);
 
-        ctx.setStrokeStyle("black");
-        ctx.setLineWidth(1.5);
-        ctx.beginPath();
-        ctx.moveTo(0.0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
+        if ( y > 0 ) {
+            ctx.setStrokeStyle("black");
+            ctx.setLineWidth(1.5);
+            ctx.beginPath();
+            ctx.moveTo(0.0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+        }
 
         lastHorizontalLineY = y;
     }
