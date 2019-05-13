@@ -347,10 +347,6 @@ public class PlayerViewImpl
             if (chordsDirty) {
 
 //            //  turn off all highlights
-//            if (lastChordElement != null) {
-//                lastChordElement.getStyle().clearBackgroundColor();
-//                lastChordElement = null;
-//            }
 //            if (lastLyricsElement != null) {
 //                lastLyricsElement.getStyle().clearBackgroundColor();
 //                lastLyricsElement = null;
@@ -359,20 +355,21 @@ public class PlayerViewImpl
                 //  high light chord and lyrics
                 switch (songUpdate.getState()) {
                     case playing:
+                        //  turn off the prior highlight
+                        if (lastChordElement != null) {
+                            lastChordElement.getStyle().clearBackgroundColor();
+                            lastChordElement = null;
+                        }
+
                         //  add highlights
-                        if (songUpdate.getMomentNumber() >= 0) {
-                            String chordCellId = songUpdate.getMomentNumber()
-                                    + SongBase.genChordId(songUpdate.getSectionVersion(),
-                                    songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-                            //GWT.log(chordCellId );
-                            Element ce = player.getElementById(chordCellId);
-                            if (ce != null) {
-                                //  turn off the prior highlight
-                                if (lastChordElement != null) {
-                                    lastChordElement.getStyle().clearBackgroundColor();
-                                }
-                                ce.getStyle().setBackgroundColor(highlightColor);
-                                lastChordElement = ce;
+                        if (appOptions.isPlayWithMeasureIndicator() && songUpdate.getMomentNumber() >= 0) {
+                            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songUpdate.getMomentNumber());
+                            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
+                            Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
+
+                            if (e != null) {
+                                e.getStyle().setBackgroundColor(highlightColor);
+                                lastChordElement = e;
                             }
 //                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
 //                        Element le = player.getElementById(lyricsCellId);
@@ -394,9 +391,13 @@ public class PlayerViewImpl
             }
 
             //  status
-            statusLabel.setText(song.songMomentStatus(songUpdate.getMomentNumber())
-                    + " " + chordsScrollPanel.getVerticalScrollPosition()
-            );
+            String status =  song.songMomentStatus(event.getBeatNumber(), songUpdate.getMomentNumber());
+            if (appOptions.isDebug())
+                statusLabel.setText(status
+                        + " " + chordsScrollPanel.getVerticalScrollPosition()
+                );
+            else
+                statusLabel.setText(status);
         } catch (
                 Exception ex) {
             //  this is bad

@@ -11,6 +11,15 @@ public class AppOptions {
         return instance;
     }
 
+
+    public boolean isCountIn() {
+        return countIn;
+    }
+
+    public void setCountIn(boolean countIn) {
+        this.countIn = countIn;
+    }
+
     public boolean isDashAllMeasureRepetitions() {
         return dashAllMeasureRepetitions;
     }
@@ -46,9 +55,11 @@ public class AppOptions {
 
     private static AppOptions instance = new AppOptions();
 
+    private boolean countIn = true;
     private boolean dashAllMeasureRepetitions = true;
     private boolean debug = false;
     private boolean playWithLineIndicator = true;
     private boolean playWithMeasureIndicator = true;
+
 
 }

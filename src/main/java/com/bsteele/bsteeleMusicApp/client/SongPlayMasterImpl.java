@@ -13,7 +13,9 @@ import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONException;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -62,8 +64,6 @@ public class SongPlayMasterImpl
         if (Math.abs(tn - systemT) > 0.005)
             logger.finer("dt: " + (tn - systemT));
 
-        int measureNumber = Integer.MIN_VALUE;
-
         //  deal with state transitions
         switch (requestedState) {
             case idle:
@@ -92,7 +92,7 @@ public class SongPlayMasterImpl
         switch (state) {
             case playing:
                 //  distribute the time update locally
-                songMomentUpdate(tn);
+           //     songMomentUpdate(tn);
 
 //                double measureDuration = songOutUpdate.getMeasureDuration();
 //                measureNumber = (int) (Math.floor(tn / measureDuration));
@@ -113,11 +113,26 @@ public class SongPlayMasterImpl
                 break;
         }
 
-        //  tell everyone else it's animation time
-        eventBus.fireEvent(new MusicAnimationEvent(tn, measureNumber));
-
         //  get ready for next time
         timer.requestAnimationFrame(this);
+
+
+        //  tell everyone else it's animation time
+        scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+            @Override
+            public void execute() {
+                switch (state) {
+                    case playing:
+                        //  distribute the time update locally
+                        songMomentUpdate(tn);
+                        break;
+                }
+                eventBus.fireEvent(new MusicAnimationEvent(tn,
+                        SongBase.getBeatNumberAtTime(songOutUpdate.getCurrentBeatsPerMinute(),
+                                tn-songOutUpdate.getEventTime()),
+                        songOutUpdate.getMomentNumber()));
+            }
+        });
     }
 
     @Override
@@ -386,6 +401,7 @@ public class SongPlayMasterImpl
     private double systemToAudioOffset;
     private static double pass = 0.95;
     private double lastSystemT;
+    private static final Scheduler scheduler = Scheduler.get();
 
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 

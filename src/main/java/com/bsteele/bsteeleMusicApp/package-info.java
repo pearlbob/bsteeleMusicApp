@@ -17,10 +17,13 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
-
+todo: countin
+todo: audio
+todo: tap to bpm
 fixme: odd scrolling after a play and a return to the play list
 fixme: scrolling during play, up and down
 
+fixme: change of song should scroll to top on next filtered song
 todo: write allSongs.songlyrics sanity check for download from Bodhi
 fixme: redo key guess
 todo: add minor keys
@@ -28,7 +31,7 @@ todo: user select of 2,3,4,5 or 6 measures per line?
 todo: x2 and x3 exploded/collapsed
 todo: use webstorage for last bpm, key, singer, leads
 
-fixme: elminate com.google.gwt.json.client.JSON*
+fixme: eliminate com.google.gwt.json.client.JSON*
 fixme: bass view is damaged and old design
 todo: implement local storage songs... and their removal
 fixme: how to delete a repeat marker?... and a repeat?

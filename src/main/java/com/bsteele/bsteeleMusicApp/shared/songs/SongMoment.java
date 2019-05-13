@@ -62,7 +62,7 @@ public class SongMoment implements Comparable<SongMoment> {
         return repeat;
     }
 
-    public  final int getRepeatCycleBeats() {
+    public final int getRepeatCycleBeats() {
         return repeatCycleBeats;
     }
 

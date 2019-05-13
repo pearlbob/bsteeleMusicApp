@@ -6,7 +6,7 @@
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
     <g:DockLayoutPanel unit="PX">
-        <g:north size='70'>
+        <g:north size='80'>
             <g:HTMLPanel>
                 <g:Button ui:field="playStopButton">Play</g:Button>
                 Key:
@@ -54,7 +54,7 @@
                 <g:Anchor ui:field="title" styleName="{resources.style.songTitle}" target="_blank"/>
                 by
                 <g:Anchor ui:field="artist" target="_blank"/>
-                <g:Label ui:field="statusLabel"/>
+
 
                 <!--    note the reverse order due to right justification of the last item  -->
                 <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"
@@ -63,6 +63,8 @@
                 <g:Button ui:field="prevSongButton" styleName="{resources.style.rightJustified}"
                           title="Click for previous song in filtered song list.">&#x25C0;
                 </g:Button>
+                <br/>
+                <g:Label ui:field="statusLabel" styleName="{resources.style.label}"/>
             </g:HTMLPanel>
 
         </g:north>
@@ -78,10 +80,10 @@
                     </g:HTMLPanel>
 
                     <g:HTMLPanel>
-<!--                        <canvas ui:field="audioBeatDisplayCanvas" height="45"-->
-<!--                                title="Beat display of audio.">-->
-<!--                            Your browser does not support the HTML5 canvas tag.-->
-<!--                        </canvas>-->
+                        <!--                        <canvas ui:field="audioBeatDisplayCanvas" height="45"-->
+                        <!--                                title="Beat display of audio.">-->
+                        <!--                            Your browser does not support the HTML5 canvas tag.-->
+                        <!--                        </canvas>-->
                         <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
 
                         <p>

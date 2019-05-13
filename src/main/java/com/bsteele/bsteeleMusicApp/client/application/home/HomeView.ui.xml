@@ -63,36 +63,23 @@
                             <g:header size='3'>Options</g:header>
                             <g:ScrollPanel>
                                 <g:HTMLPanel>
-                                    <paper-icon-item ui:field="menuClearAll">
-                                        <iron-icon icon="delete" item-icon=""/>
-                                        <div>Clear All</div>
-                                    </paper-icon-item>
-                                    <paper-icon-item ui:field="menuClearDone">
-                                        <iron-icon icon="clear" item-icon=""/>
-                                        <div>Clear Done</div>
-                                    </paper-icon-item>
-                                    <paper-icon-item ui:field="menuSettings">
-                                        <iron-icon icon="settings" item-icon=""/>
-                                        <div>Settings</div>
-                                    </paper-icon-item>
-                                    <paper-icon-item ui:field="menuAbout">
-                                        <iron-icon icon="help" item-icon=""/>
-                                        <div>About</div>
-                                    </paper-icon-item>
-                                    <g:Tree ui:field="optionTree">
-                                        <g:TreeItem text="Display">
-                                            <g:CheckBox ui:field="countIn" text="Count-In" checked="true"/>
-                                            <g:CheckBox ui:field="alwaysCount" text="Always Count"/>
-                                            <g:CheckBox ui:field="flashOn1" text="Flash on beat one"/>
-                                        </g:TreeItem>
-                                    </g:Tree>
+                                    <!--                                    <paper-icon-item ui:field="menuAbout">-->
+                                    <!--                                        <iron-icon icon="help" item-icon=""/>-->
+                                    <!--                                        <div>About</div>-->
+                                    <!--                                    </paper-icon-item>-->
+                                    <br/>
+                                    <g:RadioButton ui:field="countIn"
+                                                   name="countIn">Count In
+                                    </g:RadioButton>
                                     <br/>
                                     <g:RadioButton ui:field="dashAllMeasureRepetitions"
                                                    name="dashAllMeasureRepetitions">Dash All Measure Repetitions
                                     </g:RadioButton>
+                                    <br/>
                                     <g:RadioButton ui:field="playWithLineIndicator"
                                                    name="playWithLineIndicator">Play with line indicator
                                     </g:RadioButton>
+                                    <br/>
                                     <g:RadioButton ui:field="playWithMeasureIndicator"
                                                    name="playWithMeasureIndicator">Play with measure indicator
                                     </g:RadioButton>

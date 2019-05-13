@@ -96,6 +96,7 @@ public class SongBase {
             sectionVersionCountMap.put(sectionVersion, sectionCount);
 
             ArrayList<Phrase> phrases = chordSection.getPhrases();
+            int sectionSequenceNumber = songMoments.size();  //  size prior to add
             if (phrases != null) {
                 int phraseIndex = 0;
                 int sectionVersionBeats = 0;
@@ -238,7 +239,7 @@ public class SongBase {
         }
     }
 
-    public final String songMomentStatus(int momentNumber) {
+    public final String songMomentStatus(int beatNumber, int momentNumber) {
         if (songMoments.isEmpty())
             return "unknown";
 
@@ -248,13 +249,24 @@ public class SongBase {
 
         momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
         SongMoment songMoment = songMoments.get(momentNumber);
-        return (songMoment.getSequenceNumber()
-                + ": " + songMoment.getChordSectionLocation().toString()
-                + "#" + songMoment.getSectionCount()
-                + " " + songMoment.getMeasure().toMarkup()
-                + (songMoment.getRepeatMax() > 1 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax() : "")
-                + " " + gridCoordinateMomentMap.get(songMoment).toString()
-        );
+
+        String ret =
+                ((beatNumber - songMoment.getBeatNumber()) + 1)
+                        + " "
+                        + songMoment.getMeasure().toMarkup()
+                        + (songMoment.getRepeatMax() > 1
+                        ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
+                        : "");
+
+        if (appOptions.isDebug())
+            ret = songMoment.getSequenceNumber()
+                    + ": " + songMoment.getChordSectionLocation().toString()
+                    + "#" + songMoment.getSectionCount()
+                    + " "
+                    + ret
+                    + " " + gridCoordinateMomentMap.get(songMoment).toString()
+                    ;
+        return ret;
     }
 
     /**
@@ -1874,7 +1886,7 @@ public class SongBase {
                         lyrics += rowStart + version.toString()
                                 + "</td><td class=\"" + CssConstants.style + "lyrics" + version.getSection()
                                 .getAbbreviation() + "Class\""
-                                + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
+                                + ">";
                         sectionIndex++;
                         whiteSpace = ""; //  ignore white space
                         state = 0;
@@ -1904,7 +1916,7 @@ public class SongBase {
                                         + Section.getDefaultVersion().toString()
                                         + "</td><td class=\"" + CssConstants.style + "lyrics"
                                         + Section.getDefaultVersion().getSection().getAbbreviation() + "Class\""
-                                        + " id=\"" + prefix + genLyricsId(sectionIndex) + "\">";
+                                        + ">";
                                 isSection = true;
                             }
                             lyrics += whiteSpace + c;
@@ -1998,31 +2010,6 @@ public class SongBase {
 
         //  safety with lazy eval
         clearCachedValues();
-    }
-
-    /**
-     * Utility to generate a lyrics section sequence id
-     *
-     * @param sectionIndex the lyrics section index
-     * @return a lyrics section sequence id
-     */
-    public static final String genLyricsId(int sectionIndex) {
-        return "L." + sectionIndex;
-    }
-
-    /**
-     * Utility to generate a chord section id
-     *
-     * @param displaySectionVersion chord section version
-     * @param row                   cell row
-     * @param col                   cell column
-     * @return the generated chord section id
-     */
-    public static final String genChordId(SectionVersion displaySectionVersion, int row, int col) {
-        if (displaySectionVersion == null)
-            return "";
-        return "C."     //  chords
-                + displaySectionVersion.toString() + row + '.' + col;
     }
 
     public final void transpose(FlexTable flexTable, int halfSteps, int fontSize) {
@@ -2173,11 +2160,6 @@ public class SongBase {
                         + (measureNode.isComment() && !measureNode.isRepeat()
                         ? "sectionCommentClass"
                         : "section" + abbreviation + "Class"));
-
-                formatter.getElement(flexRow, c).setId(
-                        (measureNode.isComment() || measureNode.isRepeat()
-                                ? ""
-                                : genChordId(chordSection.getSectionVersion(), r, c)));
             }
 
             firstRow = false;
@@ -2793,15 +2775,24 @@ public class SongBase {
         return songMoments.get(momentNumber).getBeatNumber() * getBeatsPerMinute() / 60.0;
     }
 
+    public static final int getBeatNumberAtTime(int bpm, double songTime) {
+        if (bpm <= 0)
+            return Integer.MAX_VALUE;       //  we're done with this song play
+
+        int songBeat = (int) Math.floor(songTime * bpm / 60.0);
+        return songBeat;
+    }
+
     public final int getSongMomentNumberAtTime(int bpm, double songTime) {
         if (bpm <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 
-        computeSongMoments();
-        int songBeat = (int) Math.floor(songTime * bpm / 60.0);
+        int songBeat = getBeatNumberAtTime(bpm, songTime);
         if (songBeat < 0) {
             return songBeat / beatsPerBar;    //  constant measure based lead in
         }
+
+        computeSongMoments();
         if (songBeat >= beatsToMoment.size())
             return Integer.MAX_VALUE;       //  we're done with this song play
 

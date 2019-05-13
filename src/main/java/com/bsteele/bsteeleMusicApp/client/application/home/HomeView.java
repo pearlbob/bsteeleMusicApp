@@ -67,6 +67,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     SimplePanel drumOptions;
 
     @UiField
+    RadioButton countIn;
+    @UiField
     RadioButton dashAllMeasureRepetitions;
     @UiField
     RadioButton playWithLineIndicator;
@@ -209,6 +211,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             }
         }
 
+        countIn.setValue(appOptions.isCountIn());
+        countIn.addClickHandler((ClickEvent e) -> {
+            appOptions.setCountIn(!appOptions.isCountIn());
+            countIn.setValue(appOptions.isCountIn());
+        });
         dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
         dashAllMeasureRepetitions.addClickHandler((ClickEvent e) -> {
             appOptions.setDashAllMeasureRepetitions(!appOptions.isDashAllMeasureRepetitions());

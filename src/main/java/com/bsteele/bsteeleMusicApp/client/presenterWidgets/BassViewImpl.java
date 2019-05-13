@@ -195,14 +195,14 @@ public class BassViewImpl
                 break;
             case playing:
                 if (songUpdate.getRepeatTotal() > 0) {
-                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
-                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
-                    Element re = bass.getElementById(id);
-                    if (re != null) {
-                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
-                        lastRepeatElement = re;
-                        lastRepeatTotal = songUpdate.getRepeatTotal();
-                    }
+//                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
+//                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
+//                    Element re = bass.getElementById(id);
+//                    if (re != null) {
+//                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
+//                        lastRepeatElement = re;
+//                        lastRepeatTotal = songUpdate.getRepeatTotal();
+//                    }
                 }
                 break;
         }
