@@ -240,23 +240,33 @@ public class SongBase {
     }
 
     public final String songMomentStatus(int beatNumber, int momentNumber) {
+        computeSongMoments();
         if (songMoments.isEmpty())
             return "unknown";
 
         if (momentNumber < 0) {
-            return "preroll at " + momentNumber;
+            beatNumber %= getBeatsPerBar();
+            if (beatNumber < 0)
+                beatNumber += getBeatsPerBar();
+            beatNumber++;
+            return beatNumber + " preroll at " + momentNumber;
         }
 
         momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
         SongMoment songMoment = songMoments.get(momentNumber);
+        Measure measure = songMoment.getMeasure();
 
-        String ret =
-                ((beatNumber - songMoment.getBeatNumber()) + 1)
-                        + " "
-                        + songMoment.getMeasure().toMarkup()
-                        + (songMoment.getRepeatMax() > 1
-                        ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
-                        : "");
+        beatNumber %= measure.getBeatCount();
+        if (beatNumber < 0)
+            beatNumber += measure.getBeatCount();
+        beatNumber++;
+
+        String ret = beatNumber
+                + " "
+                + measure.toMarkup()
+                + (songMoment.getRepeatMax() > 1
+                ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
+                : "");
 
         if (appOptions.isDebug())
             ret = songMoment.getSequenceNumber()

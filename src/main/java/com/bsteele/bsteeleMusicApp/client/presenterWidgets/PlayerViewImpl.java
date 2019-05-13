@@ -257,7 +257,8 @@ public class PlayerViewImpl
                                     Element e = formatter.getElement(r, c);
                                     if (e != null) {
                                         renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
-                                                - playerBackgroundElement.getAbsoluteTop());
+                                                - playerBackgroundElement.getAbsoluteTop()
+                                                + 3);
                                     }
                                 }
                             }
@@ -391,13 +392,19 @@ public class PlayerViewImpl
             }
 
             //  status
-            String status =  song.songMomentStatus(event.getBeatNumber(), songUpdate.getMomentNumber());
-            if (appOptions.isDebug())
-                statusLabel.setText(status
-                        + " " + chordsScrollPanel.getVerticalScrollPosition()
-                );
-            else
-                statusLabel.setText(status);
+            switch (songUpdate.getState()) {
+                case playing:
+                    String status = song.songMomentStatus(event.getBeatNumber(), songUpdate.getMomentNumber());
+                    if (appOptions.isDebug()) {
+                        status = status + " " + chordsScrollPanel.getVerticalScrollPosition();
+                    }
+                    if (!status.equals(lastStatus)) {
+                        statusLabel.setText(status);
+                        logger.info(status);
+                        lastStatus = status;
+                    }
+                    break;
+            }
         } catch (
                 Exception ex) {
             //  this is bad
@@ -497,11 +504,12 @@ public class PlayerViewImpl
             canvasElement.setHeight((int) h);
         }
 
-        ctx.clearRect(0.0, lastHorizontalLineY - 1, w, 3);
+        final int lineWidth = 5;
+        ctx.clearRect(0.0, lastHorizontalLineY - lineWidth / 2 - 1, w, lineWidth + 2);
 
         if (y > 0) {
-            ctx.setStrokeStyle("black");
-            ctx.setLineWidth(1.5);
+            ctx.setStrokeStyle("darkGray");
+            ctx.setLineWidth(lineWidth);
             ctx.beginPath();
             ctx.moveTo(0.0, y);
             ctx.lineTo(w, y);
@@ -576,6 +584,7 @@ public class PlayerViewImpl
     private double lastHorizontalLineY;
     private double scrollForLineY;
     private double lastScrollLineY;
+    private String lastStatus;
 
 
     public static final String highlightColor = "#e4c9ff";
