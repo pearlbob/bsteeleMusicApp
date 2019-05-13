@@ -154,7 +154,7 @@ public class SongPlayMasterImpl
         if (lastMomentNumber != momentNumber) {
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
 
-            logger.fine("t: " + (t - songT0)
+            logger.finer("t: " + (t - songT0)
                     + " = m#: " + momentNumber
             );
         }
@@ -390,6 +390,6 @@ public class SongPlayMasterImpl
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 
     static {
-        logger.setLevel(Level.FINE);
+       // logger.setLevel(Level.FINE);
     }
 }

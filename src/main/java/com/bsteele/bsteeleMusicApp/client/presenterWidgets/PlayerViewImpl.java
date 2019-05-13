@@ -15,6 +15,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
@@ -186,6 +187,13 @@ public class PlayerViewImpl
                 case playing:
                     resetScrollForLineAt(0);
                     break;
+                case idle:
+                    //  turn off the prior highlight
+                    if (lastChordElement != null) {
+                        lastChordElement.getStyle().clearBackgroundColor();
+                        lastChordElement = null;
+                    }
+                    break;
             }
             setEnables();
         }
@@ -208,7 +216,10 @@ public class PlayerViewImpl
 //                break;
 //        }
 
-        if (song == null || !song.equals(songUpdate.getSong())) {
+        if (song == null
+                || !song.equals(songUpdate.getSong())
+                || !songUpdate.getCurrentKey().equals(lastKey)
+        ) {
             song = songUpdate.getSong();
 
 
@@ -236,22 +247,24 @@ public class PlayerViewImpl
                     } else {
                         SongMoment songMoment = song.getSongMoments().get(songUpdate.getMomentNumber());
                         GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songMoment);
-
                         FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
-                        int r = gridCoordinate.getRow();
-                        if (r < playerFlexTable.getRowCount()) {
-                            int c = gridCoordinate.getCol();
-                            if (c < playerFlexTable.getCellCount(r)) {
-                                Element e = formatter.getElement(r, c);
-                                if (e != null) {
-                                    renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
-                                            - playerBackgroundElement.getAbsoluteTop());
+
+                        if (appOptions.isPlayWithLineIndicator()) {
+                            int r = gridCoordinate.getRow();
+                            if (r < playerFlexTable.getRowCount()) {
+                                int c = gridCoordinate.getCol();
+                                if (c < playerFlexTable.getCellCount(r)) {
+                                    Element e = formatter.getElement(r, c);
+                                    if (e != null) {
+                                        renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
+                                                - playerBackgroundElement.getAbsoluteTop());
+                                    }
                                 }
                             }
                         }
 
                         //  scroll into view
-                        r = gridCoordinate.getRow();
+                        int r = gridCoordinate.getRow();
                         if (r < playerFlexTable.getRowCount()) {
                             int c = 0;
                             if (c < playerFlexTable.getCellCount(r)) {
@@ -343,29 +356,32 @@ public class PlayerViewImpl
 //                lastLyricsElement = null;
 //            }
 
-            //  high light chord and lyrics
-            switch (songUpdate.getState()) {
-                case playing:
-//                    //  add highlights
-//                    if (songUpdate.getMeasure() >= 0) {
-//                        String chordCellId = prefix + songUpdate.getMomentNumber() + Song.genChordId(songUpdate
-//                                        .getSectionVersion(),
-//                                songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
-//                        //GWT.log(chordCellId );
-//                        Element ce = player.getElementById(chordCellId);
-//                        if (ce != null) {
-//                            ce.getStyle().setBackgroundColor(highlightColor);
-//                            lastChordElement = ce;
-//                        }
+                //  high light chord and lyrics
+                switch (songUpdate.getState()) {
+                    case playing:
+                        //  add highlights
+                        if (songUpdate.getMomentNumber() >= 0) {
+                            String chordCellId = songUpdate.getMomentNumber()
+                                    + SongBase.genChordId(songUpdate.getSectionVersion(),
+                                    songUpdate.getChordSectionRow(), songUpdate.getChordSectionColumn());
+                            //GWT.log(chordCellId );
+                            Element ce = player.getElementById(chordCellId);
+                            if (ce != null) {
+                                //  turn off the prior highlight
+                                if (lastChordElement != null) {
+                                    lastChordElement.getStyle().clearBackgroundColor();
+                                }
+                                ce.getStyle().setBackgroundColor(highlightColor);
+                                lastChordElement = ce;
+                            }
 //                        String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
 //                        Element le = player.getElementById(lyricsCellId);
 //                        if (le != null) {
 //                            le.getStyle().setBackgroundColor(highlightColor);
 //                            lastLyricsElement = le;
-//                        }
-//                    }
-                    break;
-            }
+                        }
+                        break;
+                }
 
                 chordsDirty = false;
             }
@@ -381,7 +397,8 @@ public class PlayerViewImpl
             statusLabel.setText(song.songMomentStatus(songUpdate.getMomentNumber())
                     + " " + chordsScrollPanel.getVerticalScrollPosition()
             );
-        } catch (Exception ex) {
+        } catch (
+                Exception ex) {
             //  this is bad
             logger.severe(ex.getMessage());
         }
@@ -465,7 +482,8 @@ public class PlayerViewImpl
     }
 
     private final void renderHorizontalLineAt(double y) {
-        if (y == lastHorizontalLineY)
+        if (y == lastHorizontalLineY
+                || !appOptions.isPlayWithLineIndicator())
             return;
 
         logger.finest("y: " + y);
@@ -480,7 +498,7 @@ public class PlayerViewImpl
 
         ctx.clearRect(0.0, lastHorizontalLineY - 1, w, 3);
 
-        if ( y > 0 ) {
+        if (y > 0) {
             ctx.setStrokeStyle("black");
             ctx.setLineWidth(1.5);
             ctx.beginPath();
@@ -567,7 +585,6 @@ public class PlayerViewImpl
     private static final int lyricsMaxFontSize = 28;
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
     private boolean isActive = false;
-    private static final String prefix = "player";
     private static final Scheduler scheduler = Scheduler.get();
     private static final AppOptions appOptions = AppOptions.getInstance();
 

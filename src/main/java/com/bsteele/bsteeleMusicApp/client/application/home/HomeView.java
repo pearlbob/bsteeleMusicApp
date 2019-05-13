@@ -69,6 +69,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @UiField
     RadioButton dashAllMeasureRepetitions;
     @UiField
+    RadioButton playWithLineIndicator;
+    @UiField
+    RadioButton  playWithMeasureIndicator;
+
+    @UiField
     RadioButton debug;
 
     @UiField
@@ -208,6 +213,16 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         dashAllMeasureRepetitions.addClickHandler((ClickEvent e) -> {
             appOptions.setDashAllMeasureRepetitions(!appOptions.isDashAllMeasureRepetitions());
             dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
+        });
+        playWithLineIndicator.setValue(appOptions.isPlayWithLineIndicator());
+        playWithLineIndicator.addClickHandler((ClickEvent e) -> {
+            appOptions.setPlayWithLineIndicator(!appOptions.isPlayWithLineIndicator());
+            playWithLineIndicator.setValue(appOptions.isPlayWithLineIndicator());
+        });
+        playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
+        playWithMeasureIndicator.addClickHandler((ClickEvent e) -> {
+            appOptions.setPlayWithMeasureIndicator(!appOptions.isPlayWithMeasureIndicator());
+            playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
         });
         debug.setValue(appOptions.isDebug());
         debug.addClickHandler((ClickEvent e) -> {

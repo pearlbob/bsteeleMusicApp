@@ -90,6 +90,12 @@
                                     <g:RadioButton ui:field="dashAllMeasureRepetitions"
                                                    name="dashAllMeasureRepetitions">Dash All Measure Repetitions
                                     </g:RadioButton>
+                                    <g:RadioButton ui:field="playWithLineIndicator"
+                                                   name="playWithLineIndicator">Play with line indicator
+                                    </g:RadioButton>
+                                    <g:RadioButton ui:field="playWithMeasureIndicator"
+                                                   name="playWithMeasureIndicator">Play with measure indicator
+                                    </g:RadioButton>
                                     <br/>
                                     <g:RadioButton ui:field="debug" name="debug">debug</g:RadioButton>
                                     <br/>

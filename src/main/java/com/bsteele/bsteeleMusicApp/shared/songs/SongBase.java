@@ -242,8 +242,8 @@ public class SongBase {
         if (songMoments.isEmpty())
             return "unknown";
 
-        if ( momentNumber < 0 ){
-            return "preroll at "+momentNumber;
+        if (momentNumber < 0) {
+            return "preroll at " + momentNumber;
         }
 
         momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
@@ -2021,7 +2021,8 @@ public class SongBase {
     public static final String genChordId(SectionVersion displaySectionVersion, int row, int col) {
         if (displaySectionVersion == null)
             return "";
-        return "C." + displaySectionVersion.toString() + '.' + row + '.' + col;
+        return "C."     //  chords
+                + displaySectionVersion.toString() + row + '.' + col;
     }
 
     public final void transpose(FlexTable flexTable, int halfSteps, int fontSize) {
@@ -2061,7 +2062,7 @@ public class SongBase {
      *
      * @param chordSection the given chord section
      * @param flexTable    the flex table to populate
-     * @param halfSteps    the number of tranposition halfSteps to apply
+     * @param halfSteps    the number of transposition halfSteps to apply
      * @param fontSize     the pixel size of the font
      * @param append       true if the chord section is to be added to existing flex table data
      */
@@ -2112,8 +2113,8 @@ public class SongBase {
             ArrayList<ChordSectionLocation> row = grid.getRow(r);
             int colLimit = row.size();
             String lastValue = "";
-            for (int col = 0; col < colLimit; col++) {
-                ChordSectionLocation loc = row.get(col);
+            for (int c = 0; c < colLimit; c++) {
+                ChordSectionLocation loc = row.get(c);
                 if (loc == null)
                     continue;
 
@@ -2122,11 +2123,11 @@ public class SongBase {
 
                 //  expect comment to span the row
                 if (measureNode.isComment() && !measureNode.isRepeat()) {   //fixme: better identification of repeat marker
-                    formatter.setColSpan(flexRow, col, MusicConstant.measuresPerDisplayRow);
+                    formatter.setColSpan(flexRow, c, MusicConstant.measuresPerDisplayRow);
                 }
 
                 String s = "";
-                switch (col) {
+                switch (c) {
                     case 0:
                         if (!sectionVersion.equals(loc.getSectionVersion()))
                             return;
@@ -2153,27 +2154,30 @@ public class SongBase {
                 }
                 //  enforce the - on repeated measures
                 if (appOptions.isDashAllMeasureRepetitions()
-                        && col > 0
-                        && col <= MusicConstant.measuresPerDisplayRow
+                        && c > 0
+                        && c <= MusicConstant.measuresPerDisplayRow
                         && s.equals(lastValue)
                         && !(measureNode instanceof MeasureComment)) {
                     s = "-";
-                    formatter.addStyleName(flexRow, col, CssConstants.style + "textCenter");
+                    formatter.addStyleName(flexRow, c, CssConstants.style + "textCenter");
                 } else
                     lastValue = s;
 
                 //formatter.setAlignment(flexRow, c, ALIGN_CENTER, ALIGN_BOTTOM);   //  as per Shari, comment out
-                flexTable.setHTML(flexRow, col,
+                flexTable.setHTML(flexRow, c,
                         "<span style=\"font-size: " + fontSize + "px;\">"
                                 + s
                                 + "</span>"
                 );
-                formatter.addStyleName(flexRow, col, CssConstants.style
+                formatter.addStyleName(flexRow, c, CssConstants.style
                         + (measureNode.isComment() && !measureNode.isRepeat()
                         ? "sectionCommentClass"
                         : "section" + abbreviation + "Class"));
 
-                formatter.getElement(flexRow, col).setId((measureNode.isComment() || measureNode.isRepeat() ? "" : "C."));
+                formatter.getElement(flexRow, c).setId(
+                        (measureNode.isComment() || measureNode.isRepeat()
+                                ? ""
+                                : genChordId(chordSection.getSectionVersion(), r, c)));
             }
 
             firstRow = false;
@@ -2790,15 +2794,15 @@ public class SongBase {
     }
 
     public final int getSongMomentNumberAtTime(int bpm, double songTime) {
-        if ( bpm <= 0)
+        if (bpm <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 
         computeSongMoments();
-        int songBeat = (int) Math.floor(songTime *  bpm /60.0);
-        if ( songBeat < 0){
-            return songBeat/beatsPerBar;    //  constant measure based lead in
+        int songBeat = (int) Math.floor(songTime * bpm / 60.0);
+        if (songBeat < 0) {
+            return songBeat / beatsPerBar;    //  constant measure based lead in
         }
-        if ( songBeat >= beatsToMoment.size() )
+        if (songBeat >= beatsToMoment.size())
             return Integer.MAX_VALUE;       //  we're done with this song play
 
         return beatsToMoment.get(songBeat).getSequenceNumber();
