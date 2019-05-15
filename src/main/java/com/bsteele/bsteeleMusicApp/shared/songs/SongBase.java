@@ -159,7 +159,7 @@ public class SongBase {
             int row = 0;
             int baseChordRow = 0;
             int maxChordRow = 0;
-            for (SongMoment songMoment : getSongMoments()) {
+            for (SongMoment songMoment : songMoments ) {
 
                 if (lastLyricSection != songMoment.getLyricSection()) {
                     if (lastLyricSection != null) {
