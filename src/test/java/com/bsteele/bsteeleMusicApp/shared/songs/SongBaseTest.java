@@ -969,6 +969,65 @@ public class SongBaseTest
 
     }
 
+    @Test
+    public void testGetBeatNumberAtTime() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: A B C D E F  x2  ",
+                "i:\n");
+
+        for (int bpm = 60; bpm < 132; bpm++) {
+            double dt = 60.0 / (2 * bpm);
+
+            int expected = -12;
+            int count = 0;
+            for (double t = (-8 * 3) * dt; t < (8 * 3) * dt; t += dt) {
+                logger.fine(bpm + " " + t + ": " + expected + "  " + a.getBeatNumberAtTime(bpm, t));
+                assertEquals(expected, a.getBeatNumberAtTime(bpm, t));
+                count++;
+                if (count > 1) {
+                    count = 0;
+                    expected++;
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testGetSongMomentNumberAtTime() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: A B C D E F  x2  ",
+                "i:\n");
+
+        for (int bpm = 60; bpm < 132; bpm++) {
+            double dt = 60.0 / (2 * bpm);
+
+            int expected = -3;
+            int count = 0;
+            for (double t = -8 * 3 * dt; t < 8 * 3 * dt; t += dt) {
+                logger.fine(t
+                        + " = " + (t / dt) + " x dt "
+                        + "  " + expected
+                        + "  @" + count
+                        + "  b:" + a.getBeatNumberAtTime(bpm, t)
+                        + ": " + a.getSongMomentNumberAtTime(bpm, t));
+                assertEquals(expected, a.getSongMomentNumberAtTime(bpm, t));
+                count++;
+                if (count >= 8) {
+                    count = 0;
+                    expected++;
+                }
+            }
+        }
+    }
+
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
      *

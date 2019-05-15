@@ -262,8 +262,8 @@ public class SongBase {
         beatNumber++;
 
         String ret = beatNumber
-                + " "
-                + measure.toMarkup()
+                + " "+songMoment.getChordSection().getSectionVersion().toString()
+                + " " + measure.toMarkup()
                 + (songMoment.getRepeatMax() > 1
                 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
                 : "");
@@ -2789,7 +2789,9 @@ public class SongBase {
         if (bpm <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 
-        int songBeat = (int) Math.floor(songTime * bpm / 60.0);
+        int songBeat = (int) Math.round(songTime < 0
+                ? Math.ceil(songTime * bpm / 60.0 - 0.5 - 1e-10)
+                : Math.floor(songTime * bpm / 60.0 + 0.5 - 1e-10));
         return songBeat;
     }
 
@@ -2799,7 +2801,7 @@ public class SongBase {
 
         int songBeat = getBeatNumberAtTime(bpm, songTime);
         if (songBeat < 0) {
-            return songBeat / beatsPerBar;    //  constant measure based lead in
+            return -1 + (int) Math.round((songBeat + 1) / beatsPerBar + 0.5 - 1e-10);    //  constant measure based lead in
         }
 
         computeSongMoments();

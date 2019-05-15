@@ -14,8 +14,6 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
-import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
-import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
@@ -216,12 +214,11 @@ public class PlayerViewImpl
 //                break;
 //        }
 
-        if (song == null
-                || !song.equals(songUpdate.getSong())
+        boolean isSongDiff = (song == null || !song.equals(songUpdate.getSong()));
+        if (isSongDiff
                 || !songUpdate.getCurrentKey().equals(lastKey)
         ) {
             song = songUpdate.getSong();
-
 
             //  load new data even if the identity has not changed
             setAnchors(title, artist);
@@ -232,10 +229,15 @@ public class PlayerViewImpl
             syncCurrentKey(songUpdate.getCurrentKey());
             syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
 
+            if (isSongDiff)
+                lastKey = null; //  force update on song change
             syncKey(songUpdate.getCurrentKey());
 
             chordsFontSize = 0;     //    will never match, forces the fontSize set
             chordsDirty = true;   //  done by syncKey()
+
+            if (isSongDiff)
+                resetScrollForLineAt(0);
         }
 
         if (song != null && playerFlexTable != null)
@@ -287,6 +289,9 @@ public class PlayerViewImpl
         keyDownButton.setEnabled(enable);
         currentBpmEntry.setEnabled(enable);
         bpmSelect.setDisabled(!enable);
+
+        nextSongButton.setEnabled(enable);
+        prevSongButton.setEnabled(enable);
     }
 
     private void syncCurrentKey(Key key) {
@@ -400,7 +405,7 @@ public class PlayerViewImpl
                     }
                     if (!status.equals(lastStatus)) {
                         statusLabel.setText(status);
-                        logger.info(status);
+                        logger.finer(status);
                         lastStatus = status;
                     }
                     break;
@@ -521,6 +526,7 @@ public class PlayerViewImpl
 
     private final void resetScrollForLineAt(double y) {
         scrollForLineY = lastScrollLineY = y;
+        chordsScrollPanel.setVerticalScrollPosition((int) y);
     }
 
     private final void scrollForLineAt(double y) {
