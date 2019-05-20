@@ -159,7 +159,7 @@ public class SongBase {
             int row = 0;
             int baseChordRow = 0;
             int maxChordRow = 0;
-            for (SongMoment songMoment : songMoments ) {
+            for (SongMoment songMoment : songMoments) {
 
                 if (lastLyricSection != songMoment.getLyricSection()) {
                     if (lastLyricSection != null) {
@@ -262,7 +262,7 @@ public class SongBase {
         beatNumber++;
 
         String ret = beatNumber
-                + " "+songMoment.getChordSection().getSectionVersion().toString()
+                + " " + songMoment.getChordSection().getSectionVersion().toString()
                 + " " + measure.toMarkup()
                 + (songMoment.getRepeatMax() > 1
                 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
@@ -2809,6 +2809,18 @@ public class SongBase {
             return Integer.MAX_VALUE;       //  we're done with this song play
 
         return beatsToMoment.get(songBeat).getSequenceNumber();
+    }
+
+    public final SongMoment getSongMomentAtRow(int rowIndex) {
+        if (rowIndex < 0)
+            return null;
+        computeSongMoments();
+        for (SongMoment songMoment : songMoments) {
+            //  return the first moment on this row
+            if (rowIndex == getMomentGridCoordinate(songMoment).getRow())
+                return songMoment;
+        }
+        return null;
     }
 
     public final ArrayList<LyricSection> getLyricSections() {

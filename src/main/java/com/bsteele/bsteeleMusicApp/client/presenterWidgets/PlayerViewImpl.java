@@ -148,6 +148,43 @@ public class PlayerViewImpl
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
 
         statusLabel.setVisible(false);
+
+        chordsScrollPanel.addScrollHandler(handler -> {
+            if (songUpdate == null || song == null)
+                return;     //  defense
+
+            switch (songUpdate.getState()) {
+                case playing:
+                case idle:      //  fixme: temp
+                    int h = chordsScrollPanel.getVerticalScrollPosition()
+                            + playerBackgroundElement.getAbsoluteTop()
+                            + chordsScrollPanel.getOffsetHeight()/2;
+                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
+                    int rowIndex = 0;
+                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
+                        Element e = formatter.getElement(rowIndex);
+                        if (h >= e.getAbsoluteTop() && h <= e.getAbsoluteBottom()) {
+                            logger.finer("row: " + rowIndex);
+                            break;
+                        }
+                        logger.finest( h+": "+e.getAbsoluteTop()+" "+e.getAbsoluteBottom());
+                        if ( h < e.getAbsoluteBottom())
+                            break;
+                    }
+
+                    logger.fine("scroll: " + chordsScrollPanel.getVerticalScrollPosition()
+                            + " r: "+rowIndex
+                            + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
+                            + " h: " + chordsScrollPanel.getOffsetHeight()
+                            + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
+                    );
+
+                    SongMoment songMoment =          song.getSongMomentAtRow( rowIndex);
+                    if ( songMoment != null )
+                        logger.info(songMoment.toString());
+                    break;
+            }
+        });
     }
 
     @Override
