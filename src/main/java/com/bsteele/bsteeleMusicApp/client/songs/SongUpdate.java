@@ -96,6 +96,7 @@ public class SongUpdate {
                 //  walk forward to correct moment
                 momentNumber = Math.max(0, Math.min(m, song.getSongMoments().size() - 1));
             }
+            measureNumber = momentNumber;
         } else {
             //  leave negative measures as they are
             measureNumber = m;
@@ -204,12 +205,11 @@ public class SongUpdate {
 
     /**
      * Return the typical, default duration for the default beats per bar and the beats per minute.
-     * Due to variation in measureNumber beats, this should not be used!
+     * Due to variation in measureNumber beats, this should not be used anywhere but pre-roll!
      *
      * @return the typical, default duration
      */
-    @Deprecated
-    public final double getMeasureDuration() {
+    public final double getDefaultMeasureDuration() {
         if (song == null)
             return 2;
         return song.getBeatsPerBar() * 60.0 / (currentBeatsPerMinute == 0 ? 30 : currentBeatsPerMinute);

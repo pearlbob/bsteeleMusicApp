@@ -72,7 +72,7 @@
             <g:ScrollPanel ui:field="chordsScrollPanel" height="100%" width="100%">
                 <g:AbsolutePanel width="100%" height="100%">
                     <g:HTMLPanel width="100%" height="100%" styleName="{resources.style.playChordsBackground}">
-                        <canvas ui:field="playerBackgroundElement"
+                        <canvas ui:field="playerBackgroundCanvasElement"
                                 style="position:absolute; width:100%; height:100%; left:0; top:0; z-index:-1;"
                                 title="Background for song scrolling.">Your browser does not support the HTML5 canvas
                             tag.

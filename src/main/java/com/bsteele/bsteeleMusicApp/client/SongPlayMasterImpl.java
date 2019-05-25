@@ -14,6 +14,7 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONException;
@@ -23,7 +24,6 @@ import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
 import java.text.ParseException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -92,9 +92,9 @@ public class SongPlayMasterImpl
         switch (state) {
             case playing:
                 //  distribute the time update locally
-           //     songMomentUpdate(tn);
+                //     songMomentUpdate(tn);
 
-//                double measureDuration = songOutUpdate.getMeasureDuration();
+//                double measureDuration = songOutUpdate.getDefaultMeasureDuration();
 //                measureNumber = (int) (Math.floor(tn / measureDuration));
 //                thisMeasureStart = measureNumber * measureDuration + (t0 - systemToAudioOffset);
 //                if (nextMeasureStart - thisMeasureStart < measureDuration / 2) {
@@ -129,7 +129,7 @@ public class SongPlayMasterImpl
                 }
                 eventBus.fireEvent(new MusicAnimationEvent(tn,
                         SongBase.getBeatNumberAtTime(songOutUpdate.getCurrentBeatsPerMinute(),
-                                tn-songOutUpdate.getEventTime()),
+                                tn - songOutUpdate.getEventTime()),
                         songOutUpdate.getMomentNumber()));
             }
         });
@@ -178,7 +178,7 @@ public class SongPlayMasterImpl
     private void beatTheDrums(LegacyDrumMeasure drumSelection) {
         Song song = songOutUpdate.getSong();
         int beatsPerBar = song.getBeatsPerBar();
-        double measureDuration = songOutUpdate.getMeasureDuration();
+        double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         {
 
             String drum = drumSelection.getHighHat();
@@ -290,7 +290,7 @@ public class SongPlayMasterImpl
     public void playSongUpdate(SongUpdate songUpdate) {
         songOutUpdate = songUpdate;
 
-        double measureDuration = songOutUpdate.getMeasureDuration();
+        double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         songOutUpdate.setEventTime(
                 Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
                         //  add margin into the future
@@ -301,6 +301,25 @@ public class SongPlayMasterImpl
         issueSongUpdate(songOutUpdate);
         requestedState = SongUpdate.State.playing;
     }
+
+    @Override
+    public void playSlideSongToMomentNumber(int momentNumber) {
+        if (songOutUpdate == null
+                || songOutUpdate.getState() != SongUpdate.State.playing
+                || songOutUpdate.getMeasureNumber() <= 0
+                || songOutUpdate.getMeasureNumber() == momentNumber
+        )
+            return;
+
+        Song song = songOutUpdate.getSong();
+        SongMoment songMoment = song.getSongMoment(momentNumber);
+        songOutUpdate.setEventTime(
+                Math.floor((System.currentTimeMillis() / 1000.0)
+                        - songMoment.getBeatNumber() * 60.0 / song.getBeatsPerMinute()));
+        songOutUpdate.setMeasureNumber(songMoment.getSequenceNumber());
+        issueSongUpdate(songOutUpdate);
+    }
+
 
     @Override
     public void play(Song song) {
@@ -316,10 +335,6 @@ public class SongPlayMasterImpl
         requestedState = SongUpdate.State.playing;
     }
 
-    public final void setSelection(int first, int last) {
-        this.firstSection = first;
-        this.lastSection = last;
-    }
 
 //    public void setSong(Song song) {
 //        this.song = song;
@@ -378,9 +393,6 @@ public class SongPlayMasterImpl
         eventBus.fireEvent(new StatusEvent(name, value));
     }
 
-    private int firstSection;
-    private int lastSection;
-
     private AudioFilePlayer audioFilePlayer;
     private AnimationScheduler timer;
 
@@ -406,6 +418,6 @@ public class SongPlayMasterImpl
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 
     static {
-       // logger.setLevel(Level.FINE);
+        // logger.setLevel(Level.FINE);
     }
 }

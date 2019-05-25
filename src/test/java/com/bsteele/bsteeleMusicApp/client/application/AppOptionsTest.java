@@ -12,6 +12,7 @@ public class AppOptionsTest {
     @Test
     public void toJson() {
         AppOptions appOptions = AppOptions.getInstance();
+        int lastHash = 0;
         ArrayList<Boolean> booleanValues = new ArrayList<>();
         booleanValues.add(true);
         booleanValues.add(false);
@@ -26,11 +27,16 @@ public class AppOptionsTest {
                             appOptions.setPlayWithLineIndicator(playWithLineIndicator);
                             appOptions.setPlayWithMeasureIndicator(playWithMeasureIndicator);
                             appOptions.setDebug(debug);
+                            int hash = appOptions.hashCode();
+                            assertNotEquals(hash, lastHash);
+                            lastHash = hash;
 
                             String json = appOptions.toJson();
                             appOptions.fromJson(appOptions.toJson());
+                            assertEquals(hash, appOptions.hashCode());
                             String json2 = appOptions.toJson();
                             assertEquals(json, json2);
+                            assertEquals(hash, appOptions.hashCode());
                         }
                     }
                 }

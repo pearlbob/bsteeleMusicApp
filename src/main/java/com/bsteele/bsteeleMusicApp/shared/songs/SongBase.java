@@ -2779,6 +2779,14 @@ public class SongBase {
         return songMoments;
     }
 
+    public final SongMoment getSongMoment(int momentNumber) {
+        computeSongMoments();
+        if (songMoments.isEmpty())
+            return null;
+        momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
+        return songMoments.get(momentNumber);
+    }
+
     public final double getSongTimeAtMoment(int momentNumber) {
         computeSongMoments();
         momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));

@@ -26,7 +26,7 @@ public interface SongPlayMaster {
 
     public void continueSong();
 
-    public void setSelection(int first, int last);
+    public void playSlideSongToMomentNumber( int momentNumber );
 
     public void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

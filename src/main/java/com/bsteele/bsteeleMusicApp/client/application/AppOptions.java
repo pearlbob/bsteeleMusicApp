@@ -112,6 +112,17 @@ public class AppOptions {
         }
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = (83 * hash + Boolean.valueOf(countIn).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(dashAllMeasureRepetitions).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(playWithLineIndicator).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(playWithMeasureIndicator).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(debug).hashCode()) % (1 << 31);
+        return hash;
+    }
+
     private static AppOptions instance = new AppOptions();
 
     private boolean countIn = true;

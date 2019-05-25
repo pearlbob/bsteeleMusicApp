@@ -104,7 +104,7 @@
                                     Section:
                                 </td>
                                 <td>
-                                    <g:Button ui:field="sectionI" styleName="{resources.style.lyricsIClass}">Intro
+                                    <g:Button ui:field="sectionI" styleName="{resources.style.lyricsIClass}">Intro/Instrumental
                                     </g:Button>
                                     <g:Button ui:field="sectionV" styleName="{resources.style.lyricsVClass}">Verse
                                     </g:Button>

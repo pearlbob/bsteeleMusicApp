@@ -93,7 +93,7 @@ public class PlayerViewImpl
     HTMLPanel player;
 
     @UiField
-    CanvasElement playerBackgroundElement;
+    CanvasElement playerBackgroundCanvasElement;
 
     @UiField
     SpanElement copyright;
@@ -106,6 +106,7 @@ public class PlayerViewImpl
     PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
+
 
         // audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
@@ -157,31 +158,36 @@ public class PlayerViewImpl
                 case playing:
                 case idle:      //  fixme: temp
                     int h = chordsScrollPanel.getVerticalScrollPosition()
-                            + playerBackgroundElement.getAbsoluteTop()
-                            + chordsScrollPanel.getOffsetHeight()/2;
-                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
-                    int rowIndex = 0;
-                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
-                        Element e = formatter.getElement(rowIndex);
-                        if (h >= e.getAbsoluteTop() && h <= e.getAbsoluteBottom()) {
-                            logger.finer("row: " + rowIndex);
-                            break;
-                        }
-                        logger.finest( h+": "+e.getAbsoluteTop()+" "+e.getAbsoluteBottom());
-                        if ( h < e.getAbsoluteBottom())
-                            break;
-                    }
-
-                    logger.fine("scroll: " + chordsScrollPanel.getVerticalScrollPosition()
-                            + " r: "+rowIndex
-                            + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
-                            + " h: " + chordsScrollPanel.getOffsetHeight()
-                            + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
-                    );
-
-                    SongMoment songMoment =          song.getSongMomentAtRow( rowIndex);
-                    if ( songMoment != null )
-                        logger.info(songMoment.toString());
+                            + chordsScrollPanel.getOffsetHeight() / 2;
+                    if (h < lastScrollLineY || h > scrollForLineY)
+                        logger.info("h: " + h + " " + lastScrollLineY + "/" + scrollForLineY);
+//                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
+//                    int rowIndex = 0;
+//                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
+//                        Element e = formatter.getElement(rowIndex);
+//                        if (h >= e.getAbsoluteTop() && h <= e.getAbsoluteBottom()) {
+//                            logger.finer("row: " + rowIndex);
+//                            break;
+//                        }
+//                        logger.finest(h + ": " + e.getAbsoluteTop() + " " + e.getAbsoluteBottom());
+//                        if (h < e.getAbsoluteBottom())
+//                            break;
+//                    }
+//
+//
+//                    logger.fine("scroll: " + chordsScrollPanel.getVerticalScrollPosition()
+//                            + " r: " + rowIndex
+//                            + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
+//                            + " h: " + chordsScrollPanel.getOffsetHeight()
+//                            + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
+//                    );
+//
+//                    SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
+//                    if (songMoment != null) {
+//                        ////fixme now:   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
+//                        logger.info(songMoment.toString()
+//                        );
+//                    }
                     break;
             }
         });
@@ -296,21 +302,22 @@ public class PlayerViewImpl
                                     Element e = formatter.getElement(r, c);
                                     if (e != null) {
                                         renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
-                                                - playerBackgroundElement.getAbsoluteTop()
+                                                - playerBackgroundCanvasElement.getAbsoluteTop()
                                                 + 3);
                                     }
                                 }
                             }
                         }
 
-                        //  scroll into view
+                        //  scroll the row into view
                         int r = gridCoordinate.getRow();
                         if (r < playerFlexTable.getRowCount()) {
-                            int c = 0;
-                            if (c < playerFlexTable.getCellCount(r)) {
+                            int limit = playerFlexTable.getCellCount(r);
+                            for (int c = 0; c < limit; c++) {
                                 Element e = formatter.getElement(r, c);
                                 if (e != null) {
-                                    scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundElement.getAbsoluteTop());
+                                    scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundCanvasElement.getAbsoluteTop());
+                                    break;
                                 }
                             }
                         }
@@ -526,7 +533,7 @@ public class PlayerViewImpl
 
                 logger.info("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ")");
                 Element e = cell.getElement();
-                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundElement.getAbsoluteTop());
+                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundCanvasElement.getAbsoluteTop());
             });
         }
     }
@@ -537,7 +544,7 @@ public class PlayerViewImpl
             return;
 
         logger.finest("y: " + y);
-        Context2d ctx = playerBackgroundElement.getContext2d();
+        Context2d ctx = playerBackgroundCanvasElement.getContext2d();
         CanvasElement canvasElement = ctx.getCanvas();
         double w = canvasElement.getClientWidth();
         double h = canvasElement.getClientHeight();
@@ -583,7 +590,7 @@ public class PlayerViewImpl
 
 
         //  scroll if required
-        double h = playerBackgroundElement.getClientHeight();
+        double h = playerBackgroundCanvasElement.getClientHeight();
         int maxH = chordsScrollPanel.getOffsetHeight();
         int midH = maxH / 2;
         if (y < midH)
