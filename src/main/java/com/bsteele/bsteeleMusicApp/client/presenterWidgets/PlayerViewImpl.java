@@ -122,6 +122,7 @@ public class PlayerViewImpl
                         songUpdateCopy.setSong(song.copySong());
                         songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
                         songUpdateCopy.setCurrentKey(currentKey);
+                        verticalScrollPositionOffset = 0;
                         songPlayMaster.playSongUpdate(songUpdateCopy);
                         break;
                 }
@@ -157,10 +158,20 @@ public class PlayerViewImpl
             switch (songUpdate.getState()) {
                 case playing:
                 case idle:      //  fixme: temp
-                    int h = chordsScrollPanel.getVerticalScrollPosition()
-                            + chordsScrollPanel.getOffsetHeight() / 2;
-                    if (h < lastScrollLineY || h > scrollForLineY)
-                        logger.info("h: " + h + " " + lastScrollLineY + "/" + scrollForLineY);
+                    int h = chordsScrollPanel.getVerticalScrollPosition();
+                    int delta = h-lastVerticalScrollPosition;
+                    lastVerticalScrollPosition = h;
+
+                    if (Math.abs(delta) == 0) {
+                        //  nothing to do
+                        break;
+                    }
+                    verticalScrollPositionOffset += delta;
+                    logger.finer("h: " + h + " " + delta + " " + verticalScrollPositionOffset);
+
+                    //     h  += chordsScrollPanel.getOffsetHeight() / 2;
+                    //  if (h < lastScrollLineY || h > scrollForLineY)
+
 //                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
 //                    int rowIndex = 0;
 //                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
@@ -571,9 +582,11 @@ public class PlayerViewImpl
     private final void resetScrollForLineAt(double y) {
         scrollForLineY = lastScrollLineY = y;
         chordsScrollPanel.setVerticalScrollPosition((int) y);
+        lastVerticalScrollPosition = (int) y;
     }
 
     private final void scrollForLineAt(double y) {
+        //  don't auto scroll backwards
         if (y <= lastScrollLineY)
             return;
         scrollForLineY = y;
@@ -584,7 +597,7 @@ public class PlayerViewImpl
         if (Math.abs(scrollForLineY - lastScrollLineY) <= 1)
             lastScrollLineY = scrollForLineY;
         else {
-            lastScrollLineY += 0.5;
+            lastScrollLineY += 0.75;
         }
         double y = lastScrollLineY;
 
@@ -593,12 +606,15 @@ public class PlayerViewImpl
         double h = playerBackgroundCanvasElement.getClientHeight();
         int maxH = chordsScrollPanel.getOffsetHeight();
         int midH = maxH / 2;
+        y += verticalScrollPositionOffset;
         if (y < midH)
-            chordsScrollPanel.setVerticalScrollPosition(0);
+            y = 0;
         else if (y > h - midH)
-            chordsScrollPanel.setVerticalScrollPosition((int) (h - midH));
+            y = (h - midH);
         else
-            chordsScrollPanel.setVerticalScrollPosition((int) (y - midH));
+            y = (y - midH);
+        lastVerticalScrollPosition = (int) Math.round(y);
+        chordsScrollPanel.setVerticalScrollPosition(lastVerticalScrollPosition);
     }
 
     protected final void onSongRender() {
@@ -634,6 +650,8 @@ public class PlayerViewImpl
     private double lastHorizontalLineY;
     private double scrollForLineY;
     private double lastScrollLineY;
+    private int lastVerticalScrollPosition;
+    private int verticalScrollPositionOffset;
     private String lastStatus;
 
 
