@@ -96,7 +96,6 @@ public class SongBase {
             sectionVersionCountMap.put(sectionVersion, sectionCount);
 
             ArrayList<Phrase> phrases = chordSection.getPhrases();
-            int sectionSequenceNumber = songMoments.size();  //  size prior to add
             if (phrases != null) {
                 int phraseIndex = 0;
                 int sectionVersionBeats = 0;
@@ -115,7 +114,7 @@ public class SongBase {
                                 for (Measure measure : measures) {
                                     songMoments.add(new SongMoment(
                                             songMoments.size(),  //  size prior to add
-                                            beatNumber,
+                                            beatNumber, sectionVersionBeats,
                                             lyricSection, chordSection, phraseIndex, phrase,
                                             measureIndex, measure, repeat, repeatCycleBeats, limit, sectionCount));
                                     measureIndex++;
@@ -131,7 +130,7 @@ public class SongBase {
                             for (Measure measure : measures) {
                                 songMoments.add(new SongMoment(
                                         songMoments.size(),  //  size prior to add
-                                        beatNumber,
+                                        beatNumber, sectionVersionBeats,
                                         lyricSection, chordSection, phraseIndex, phrase,
                                         measureIndex, measure, 0, 0, 0, sectionCount));
                                 measureIndex++;
@@ -274,7 +273,11 @@ public class SongBase {
                     + "#" + songMoment.getSectionCount()
                     + " "
                     + ret
+                    + " b: " + (beatNumber + songMoment.getBeatNumber())
+                    + " = " + (beatNumber + songMoment.getSetionBeatNumber())
+                    + "/" + getChordSectionBeats(songMoment.getChordSectionLocation().getSectionVersion())
                     + " " + gridCoordinateMomentMap.get(songMoment).toString()
+
                     ;
         return ret;
     }
@@ -2839,7 +2842,15 @@ public class SongBase {
         return fileVersionNumber;
     }
 
+    public final int getChordSectionBeats(ChordSectionLocation chordSectionLocation) {
+        if (chordSectionLocation == null)
+            return 0;
+        return getChordSectionBeats(chordSectionLocation.getSectionVersion());
+    }
+
     public final int getChordSectionBeats(SectionVersion sectionVersion) {
+        if (sectionVersion == null)
+            return 0;
         computeSongMoments();
         Integer ret = chordSectionBeats.get(sectionVersion);
         if (ret == null)
@@ -3211,7 +3222,7 @@ public class SongBase {
     private double lastModifiedTime;
 
     private static final int minBpm = 50;
-    private static final int maxBpm = 1400;
+    private static final int maxBpm = 400;
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 

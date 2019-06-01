@@ -8,11 +8,14 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
  */
 public class SongMoment implements Comparable<SongMoment> {
 
-    SongMoment(int sequenceNumber, int beatNumber, LyricSection lyricSection,
+    SongMoment(int sequenceNumber, int beatNumber, int setionBeatNumber,
+               LyricSection lyricSection,
                ChordSection chordSection, int phraseIndex, Phrase phrase, int measureIndex, Measure measure,
                int repeat, int repeatCycleBeats, int repeatMax, int sectionCount) {
         this.sequenceNumber = sequenceNumber;
         this.beatNumber = beatNumber;
+        this.setionBeatNumber = setionBeatNumber;
+
         this.lyricSection = lyricSection;
         this.chordSection = chordSection;
         this.phraseIndex = phraseIndex;
@@ -31,6 +34,10 @@ public class SongMoment implements Comparable<SongMoment> {
 
     public final int getBeatNumber() {
         return beatNumber;
+    }
+
+    public int getSetionBeatNumber() {
+        return setionBeatNumber;
     }
 
     public final LyricSection getLyricSection() {
@@ -102,6 +109,7 @@ public class SongMoment implements Comparable<SongMoment> {
 
     private final int sequenceNumber;
     private final int beatNumber;   //  total beat count from start of song to the start of the moment
+    private final int setionBeatNumber;   //  total beat count from start of the current section to the start of the moment
 
     private final int repeat;       //  current iteration from 0 to repeatMax - 1
     private final int repeatMax;

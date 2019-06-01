@@ -39,6 +39,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -159,7 +160,7 @@ public class PlayerViewImpl
                 case playing:
                 case idle:      //  fixme: temp
                     int h = chordsScrollPanel.getVerticalScrollPosition();
-                    int delta = h-lastVerticalScrollPosition;
+                    int delta = h - lastVerticalScrollPosition;
                     lastVerticalScrollPosition = h;
 
                     if (Math.abs(delta) == 0) {
@@ -291,7 +292,13 @@ public class PlayerViewImpl
             chordsDirty = true;   //  done by syncKey()
 
             if (isSongDiff)
-                resetScrollForLineAt(0);
+                scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        resetScrollForLineAt(0);
+                    }
+                });
+
         }
 
         if (song != null && playerFlexTable != null)
@@ -312,7 +319,10 @@ public class PlayerViewImpl
                                 if (c < playerFlexTable.getCellCount(r)) {
                                     Element e = formatter.getElement(r, c);
                                     if (e != null) {
-                                        renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2
+                                        int sectionBeats = song.getChordSectionBeats(songMoment.getChordSectionLocation());
+                                        double ratio = (sectionBeats == 0 ? 0.5 : (double) songMoment.getSetionBeatNumber() / sectionBeats);
+                                        renderHorizontalLineAt(
+                                                e.getAbsoluteTop() + ratio*( e.getAbsoluteBottom() - e.getAbsoluteTop())
                                                 - playerBackgroundCanvasElement.getAbsoluteTop()
                                                 + 3);
                                     }
@@ -617,26 +627,26 @@ public class PlayerViewImpl
         chordsScrollPanel.setVerticalScrollPosition(lastVerticalScrollPosition);
     }
 
-    protected final void onSongRender() {
-        if (playerFlexTable != null) {
-            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
-            logger.fine("player table rows: " + playerFlexTable.getRowCount());
-            for (int r = 0; r < playerFlexTable.getRowCount(); r++) {
-                int cols = playerFlexTable.getCellCount(r);
-                for (int c = 0; c < cols; c++) {
-
-                    Element element = formatter.getElement(r, c);
-                    if (element == null)
-                        continue;
-
-                    logger.finer("  measure( " + c + ", " + r + "): top "
-                            + element.getAbsoluteBottom() + "-" + element.getAbsoluteTop() + " = "
-                            + (element.getAbsoluteBottom() - element.getAbsoluteTop()));
-                }
-            }
-        }
-        renderHorizontalLineAt(0);
-    }
+//    protected final void onSongRender() {
+//        if (playerFlexTable != null) {
+//            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
+//            logger.fine("player table rows: " + playerFlexTable.getRowCount());
+//            for (int r = 0; r < playerFlexTable.getRowCount(); r++) {
+//                int cols = playerFlexTable.getCellCount(r);
+//                for (int c = 0; c < cols; c++) {
+//
+//                    Element element = formatter.getElement(r, c);
+//                    if (element == null)
+//                        continue;
+//
+//                    logger.finer("  measure( " + c + ", " + r + "): top "
+//                            + element.getAbsoluteBottom() + "-" + element.getAbsoluteTop() + " = "
+//                            + (element.getAbsoluteBottom() - element.getAbsoluteTop()));
+//                }
+//            }
+//        }
+//        renderHorizontalLineAt(0);
+//    }
 
     private AudioBeatDisplay audioBeatDisplay;
 
