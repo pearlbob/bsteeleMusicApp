@@ -89,35 +89,6 @@ class CommonPlayViewImpl
         songPlayMaster.issueSongUpdate(songUpdate);
     }
 
-    protected void autoScroll(ScrollPanel scrollPanel, HTMLPanel htmlPanel) {
-//        switch (songUpdate.getState()) {
-//            case playing:
-//                if (song.getTotalBeats() == 0 || htmlPanel.getOffsetHeight() == 0)
-//                    break;
-//
-//                //  auto scroll
-//                int max = scrollPanel.getMaximumVerticalScrollPosition();
-//                int h = scrollPanel.getElement().getScrollHeight() - max;
-//
-//                scrollPosition += (max + 1.25 * h) / (60.0 * song.getTotalBeats() * 60 / songUpdate.getCurrentBeatsPerMinute());
-//                scrollPosition = Math.min(max + h / 2, scrollPosition);
-//                //GWT.log("scroll: " + Double.toString(scrollPosition) + "  m: " + Integer.toString(max) + "  h: " + Integer.toString(h));
-//                int position = (int) Math.rint(scrollPosition);
-//                position = Math.max(0, Math.min(position - h / 2, max));
-//                int currentPosition = scrollPanel.getVerticalScrollPosition();
-//                if (Math.abs(currentPosition - position) > 8) {
-//                    scrollPosition = currentPosition;    // let the human override the scroll
-//                    lastScrollPosition = (int) Math.rint(scrollPosition);
-//                } else if (position != lastScrollPosition && scrollDelay > 1) {
-//                    lastScrollPosition = position;
-//                    scrollPanel.setVerticalScrollPosition(position);
-//                    scrollDelay = 0;
-//                    // GWT.log("bass scroll: " + Double.toString(scrollPosition) + "  " + Integer.toString(max));
-//                }
-//                scrollDelay++;
-//                break;
-//        }
-    }
 
     protected void resetScroll(ScrollPanel scrollPanel) {
         scrollPosition = 0;

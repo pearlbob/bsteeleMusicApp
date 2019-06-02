@@ -75,7 +75,9 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
 
     @Override
     public void onSongUpdate(SongUpdateEvent event) {
-        view.onSongUpdate(event.getSongUpdate().getSong());
+        song = event.getSongUpdate().getSong();
+        if (active)
+            view.onSongUpdate(song);
     }
 
 
@@ -87,10 +89,16 @@ public class SongEditPresenterWidget extends PresenterWidget<SongEditPresenterWi
 
     @Override
     public void onHomeTab(HomeTabEvent event) {
-        view.setActive(event.getTab() == AppTab.edit);
+        boolean wasActive = active;
+        active = (event.getTab() == AppTab.edit);
+        view.setActive(active);
+        if (!wasActive && active)
+            view.onSongUpdate(song);
     }
 
 
     private final EventBus eventBus;
     private final MyView view;
+    private boolean active = false;
+    private Song song;
 }

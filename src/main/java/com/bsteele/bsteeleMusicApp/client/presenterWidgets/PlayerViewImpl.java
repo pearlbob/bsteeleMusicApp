@@ -159,47 +159,58 @@ public class PlayerViewImpl
             switch (songUpdate.getState()) {
                 case playing:
                 case idle:      //  fixme: temp
-                    int h = chordsScrollPanel.getVerticalScrollPosition();
-                    int delta = h - lastVerticalScrollPosition;
-                    lastVerticalScrollPosition = h;
+                    int verticalScrollPosition = chordsScrollPanel.getVerticalScrollPosition();
+                    int delta = verticalScrollPosition - lastVerticalScrollPosition;
+                    logger.finer("delta: "+delta);
+                    lastVerticalScrollPosition = verticalScrollPosition;
 
                     if (Math.abs(delta) == 0) {
                         //  nothing to do
                         break;
                     }
                     verticalScrollPositionOffset += delta;
-                    logger.finer("h: " + h + " " + delta + " " + verticalScrollPositionOffset);
+                    int vp = verticalScrollPosition + verticalScrollPositionOffset;
+                    if ( vp < chordsScrollPanel.getMinimumVerticalScrollPosition())
+                        vp = chordsScrollPanel.getMinimumVerticalScrollPosition();
+                    else if ( vp > chordsScrollPanel.getMaximumVerticalScrollPosition())
+                        vp = chordsScrollPanel.getMaximumVerticalScrollPosition();
+                    verticalScrollPositionOffset = vp - lastVerticalScrollPosition;
+
+                    logger.finer("vp: " + verticalScrollPosition + " " + delta + " " + verticalScrollPositionOffset);
 
                     //     h  += chordsScrollPanel.getOffsetHeight() / 2;
                     //  if (h < lastScrollLineY || h > scrollForLineY)
 
-//                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
-//                    int rowIndex = 0;
-//                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
-//                        Element e = formatter.getElement(rowIndex);
-//                        if (h >= e.getAbsoluteTop() && h <= e.getAbsoluteBottom()) {
-//                            logger.finer("row: " + rowIndex);
-//                            break;
-//                        }
-//                        logger.finest(h + ": " + e.getAbsoluteTop() + " " + e.getAbsoluteBottom());
-//                        if (h < e.getAbsoluteBottom())
-//                            break;
-//                    }
-//
-//
-//                    logger.fine("scroll: " + chordsScrollPanel.getVerticalScrollPosition()
-//                            + " r: " + rowIndex
-//                            + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
-//                            + " h: " + chordsScrollPanel.getOffsetHeight()
-//                            + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
-//                    );
-//
-//                    SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
-//                    if (songMoment != null) {
-//                        ////fixme now:   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
-//                        logger.info(songMoment.toString()
-//                        );
-//                    }
+                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
+                    int rowIndex = 0;
+
+                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
+                        Element e = formatter.getElement(rowIndex);
+                        if (vp >= e.getAbsoluteTop() && vp <= e.getAbsoluteBottom()) {
+                            logger.finer("row: " + rowIndex);
+                            break;
+                        }
+                        logger.finest(verticalScrollPosition + ": " + e.getAbsoluteTop() + " " + e.getAbsoluteBottom());
+                        if (verticalScrollPosition < e.getAbsoluteBottom())
+                            break;
+                    }
+
+
+                    logger.fine("scroll: " + verticalScrollPosition +
+                            " vs "+vp
+                            + " d: " + delta
+                            + " r: " + rowIndex
+                            + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
+                            + " height: " + chordsScrollPanel.getOffsetHeight()
+                            + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
+                    );
+
+                    SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
+                    if (songMoment != null) {
+                        ////fixme now:   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
+                        logger.info("sm: ("+(songMoment.getSequenceNumber()-songUpdate.getMomentNumber())+") "+songMoment.toString()
+                        );
+                    }
                     break;
             }
         });
@@ -298,7 +309,6 @@ public class PlayerViewImpl
                         resetScrollForLineAt(0);
                     }
                 });
-
         }
 
         if (song != null && playerFlexTable != null)
@@ -603,11 +613,12 @@ public class PlayerViewImpl
     }
 
     private final void scrollForLineAnimation() {
+        final  double delta = 0.45;
 
-        if (Math.abs(scrollForLineY - lastScrollLineY) <= 1)
+        if (Math.abs(scrollForLineY - lastScrollLineY) <= delta)
             lastScrollLineY = scrollForLineY;
         else {
-            lastScrollLineY += 0.75;
+            lastScrollLineY += delta;
         }
         double y = lastScrollLineY;
 
@@ -616,15 +627,21 @@ public class PlayerViewImpl
         double h = playerBackgroundCanvasElement.getClientHeight();
         int maxH = chordsScrollPanel.getOffsetHeight();
         int midH = maxH / 2;
-        y += verticalScrollPositionOffset;
+        //  fixme: y += verticalScrollPositionOffset;
         if (y < midH)
             y = 0;
         else if (y > h - midH)
             y = (h - midH);
         else
             y = (y - midH);
-        lastVerticalScrollPosition = (int) Math.round(y);
-        chordsScrollPanel.setVerticalScrollPosition(lastVerticalScrollPosition);
+
+        //  output if different
+        int vp = (int) Math.round(y);
+        if ( vp != lastVerticalScrollPosition) {
+            chordsScrollPanel.setVerticalScrollPosition(lastVerticalScrollPosition);
+            lastVerticalScrollPosition = vp;
+            logger.finer("lastScrollLineY: " + lastScrollLineY + " to " + lastVerticalScrollPosition);
+        }
     }
 
 //    protected final void onSongRender() {
@@ -680,7 +697,7 @@ public class PlayerViewImpl
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
     static {
-        // logger.setLevel(Level.FINE);
+        logger.setLevel(Level.FINE);
     }
 
 }
