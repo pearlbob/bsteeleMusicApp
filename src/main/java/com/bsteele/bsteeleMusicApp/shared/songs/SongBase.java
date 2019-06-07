@@ -3,7 +3,6 @@
  */
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
 import com.bsteele.bsteeleMusicApp.client.songs.Metadata;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumSection;
@@ -151,7 +150,7 @@ public class SongBase {
 
         {
             //  generate song moment grid coordinate map for play to display purposes
-            gridCoordinateMomentMap.clear();
+            songMomentGridCoordinateHashMap.clear();
             chordSectionRows.clear();
 
             LyricSection lastLyricSection = null;
@@ -181,7 +180,7 @@ public class SongBase {
                 GridCoordinate momentGridCoordinate = new GridCoordinate(
                         row + (gridCoordinate.getRow() - baseChordRow), gridCoordinate.getCol());
                 logger.finer(songMoment.toString() + ": " + momentGridCoordinate.toString());
-                gridCoordinateMomentMap.put(songMoment, momentGridCoordinate);
+                songMomentGridCoordinateHashMap.put(songMoment, momentGridCoordinate);
 
                 logger.finer("moment: " + songMoment.getSequenceNumber()
                         + ": " + songMoment.getChordSectionLocation().toString()
@@ -212,14 +211,14 @@ public class SongBase {
 
     public final GridCoordinate getMomentGridCoordinate(SongMoment songMoment) {
         computeSongMoments();
-        return gridCoordinateMomentMap.get(songMoment);
+        return songMomentGridCoordinateHashMap.get(songMoment);
     }
 
     public final GridCoordinate getMomentGridCoordinate(int momentNumber) {
         computeSongMoments();
         momentNumber = Math.min(Math.max(momentNumber, 0), songMoments.size() - 1);
         SongMoment songMoment = songMoments.get(momentNumber);
-        return gridCoordinateMomentMap.get(songMoment);
+        return songMomentGridCoordinateHashMap.get(songMoment);
     }
 
 
@@ -274,9 +273,9 @@ public class SongBase {
                     + " "
                     + ret
                     + " b: " + (beatNumber + songMoment.getBeatNumber())
-                    + " = " + (beatNumber + songMoment.getSetionBeatNumber())
+                    + " = " + (beatNumber + songMoment.getSectionBeatNumber())
                     + "/" + getChordSectionBeats(songMoment.getChordSectionLocation().getSectionVersion())
-                    + " " + gridCoordinateMomentMap.get(songMoment).toString()
+                    + " " + songMomentGridCoordinateHashMap.get(songMoment).toString()
 
                     ;
         return ret;
@@ -2822,6 +2821,11 @@ public class SongBase {
         return beatsToMoment.get(songBeat).getSequenceNumber();
     }
 
+    /** Return the first moment on the given row
+     *
+     * @param rowIndex the given row
+     * @return the first moment on the given row
+     */
     public final SongMoment getSongMomentAtRow(int rowIndex) {
         if (rowIndex < 0)
             return null;
@@ -3198,7 +3202,7 @@ public class SongBase {
     private transient HashMap<GridCoordinate, ChordSectionLocation> gridCoordinateChordSectionLocationMap = new HashMap<>();
     private transient HashMap<ChordSectionLocation, GridCoordinate> gridChordSectionLocationCoordinateMap = new HashMap<>();
 
-    private transient HashMap<SongMoment, GridCoordinate> gridCoordinateMomentMap = new HashMap<>();
+    private transient HashMap<SongMoment, GridCoordinate> songMomentGridCoordinateHashMap = new HashMap<>();
     private transient HashMap<SectionVersion, Integer> chordSectionBeats = new HashMap<>();
     private transient HashMap<SectionVersion, Integer> chordSectionRows = new HashMap<>();
 

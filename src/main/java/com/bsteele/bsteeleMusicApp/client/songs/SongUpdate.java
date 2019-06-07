@@ -28,6 +28,10 @@ import java.util.logging.Logger;
 @JsType
 public class SongUpdate {
 
+    public SongMoment getSongMoment() {
+        return songMoment;
+    }
+
     public enum State {
         playing,
         idle;

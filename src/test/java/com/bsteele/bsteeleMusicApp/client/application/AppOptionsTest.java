@@ -1,11 +1,13 @@
 package com.bsteele.bsteeleMusicApp.client.application;
 
+import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class AppOptionsTest {
 

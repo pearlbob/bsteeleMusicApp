@@ -1,6 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
-import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
+import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
@@ -233,7 +233,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         });
         debug.setValue(appOptions.isDebug());
         debug.addClickHandler((ClickEvent e) -> {
-            AppOptions.getInstance().setDebug(!appOptions.isDebug());
+            GWTAppOptions.getInstance().setDebug(!appOptions.isDebug());
             debug.setValue(appOptions.isDebug());
         });
 
@@ -296,5 +296,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
     private HashMap<String, String> statusMap = new HashMap<>();
     private AppTab lastPlayTab = AppTab.player;
-       private static final AppOptions appOptions = AppOptions.getInstance();
+       private static final GWTAppOptions appOptions = GWTAppOptions.getInstance();
 }

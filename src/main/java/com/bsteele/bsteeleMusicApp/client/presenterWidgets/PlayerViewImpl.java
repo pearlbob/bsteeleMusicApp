@@ -5,7 +5,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
-import com.bsteele.bsteeleMusicApp.client.application.AppOptions;
+import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
@@ -161,7 +161,7 @@ public class PlayerViewImpl
                 case idle:      //  fixme: temp
                     int verticalScrollPosition = chordsScrollPanel.getVerticalScrollPosition();
                     int delta = verticalScrollPosition - lastVerticalScrollPosition;
-                    logger.finer("delta: "+delta);
+                    logger.finer("delta: " + delta);
                     lastVerticalScrollPosition = verticalScrollPosition;
 
                     if (Math.abs(delta) == 0) {
@@ -170,9 +170,9 @@ public class PlayerViewImpl
                     }
                     verticalScrollPositionOffset += delta;
                     int vp = verticalScrollPosition + verticalScrollPositionOffset;
-                    if ( vp < chordsScrollPanel.getMinimumVerticalScrollPosition())
+                    if (vp < chordsScrollPanel.getMinimumVerticalScrollPosition())
                         vp = chordsScrollPanel.getMinimumVerticalScrollPosition();
-                    else if ( vp > chordsScrollPanel.getMaximumVerticalScrollPosition())
+                    else if (vp > chordsScrollPanel.getMaximumVerticalScrollPosition())
                         vp = chordsScrollPanel.getMaximumVerticalScrollPosition();
                     verticalScrollPositionOffset = vp - lastVerticalScrollPosition;
 
@@ -196,8 +196,8 @@ public class PlayerViewImpl
                     }
 
 
-                    logger.fine("scroll: " + verticalScrollPosition +
-                            " vs "+vp
+                    logger.finer("scroll: " + verticalScrollPosition +
+                            " vs " + vp
                             + " d: " + delta
                             + " r: " + rowIndex
                             + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
@@ -205,11 +205,18 @@ public class PlayerViewImpl
                             + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
                     );
 
-                    SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
-                    if (songMoment != null) {
-                        ////fixme now:   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
-                        logger.info("sm: ("+(songMoment.getSequenceNumber()-songUpdate.getMomentNumber())+") "+songMoment.toString()
-                        );
+                    if (songUpdate.getSongMoment() != null) {
+                        int momentRow = song.getMomentGridCoordinate(songUpdate.getMomentNumber()).getRow();
+                        if (momentRow != rowIndex) {
+                            SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
+                            if (songMoment != null) {
+                                ////fixme now:   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
+                                logger.info("sm: (" + songMoment.getSequenceNumber()
+                                        +" vs "+ songUpdate.getMomentNumber()
+                                        + ", d: " + verticalScrollPositionOffset+ ") " + songMoment.toString()
+                                );
+                            }
+                        }
                     }
                     break;
             }
@@ -330,11 +337,11 @@ public class PlayerViewImpl
                                     Element e = formatter.getElement(r, c);
                                     if (e != null) {
                                         int sectionBeats = song.getChordSectionBeats(songMoment.getChordSectionLocation());
-                                        double ratio = (sectionBeats == 0 ? 0.5 : (double) songMoment.getSetionBeatNumber() / sectionBeats);
+                                        double ratio = (sectionBeats == 0 ? 0.5 : (double) songMoment.getSectionBeatNumber() / sectionBeats);
                                         renderHorizontalLineAt(
-                                                e.getAbsoluteTop() + ratio*( e.getAbsoluteBottom() - e.getAbsoluteTop())
-                                                - playerBackgroundCanvasElement.getAbsoluteTop()
-                                                + 3);
+                                                e.getAbsoluteTop() + ratio * (e.getAbsoluteBottom() - e.getAbsoluteTop())
+                                                        - playerBackgroundCanvasElement.getAbsoluteTop()
+                                                        + 3);
                                     }
                                 }
                             }
@@ -613,7 +620,7 @@ public class PlayerViewImpl
     }
 
     private final void scrollForLineAnimation() {
-        final  double delta = 0.45;
+        final double delta = 0.45;
 
         if (Math.abs(scrollForLineY - lastScrollLineY) <= delta)
             lastScrollLineY = scrollForLineY;
@@ -637,7 +644,7 @@ public class PlayerViewImpl
 
         //  output if different
         int vp = (int) Math.round(y);
-        if ( vp != lastVerticalScrollPosition) {
+        if (vp != lastVerticalScrollPosition) {
             chordsScrollPanel.setVerticalScrollPosition(lastVerticalScrollPosition);
             lastVerticalScrollPosition = vp;
             logger.finer("lastScrollLineY: " + lastScrollLineY + " to " + lastVerticalScrollPosition);
@@ -691,7 +698,7 @@ public class PlayerViewImpl
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
     private boolean isActive = false;
     private static final Scheduler scheduler = Scheduler.get();
-    private static final AppOptions appOptions = AppOptions.getInstance();
+    private static final GWTAppOptions appOptions = GWTAppOptions.getInstance();
 
 
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());

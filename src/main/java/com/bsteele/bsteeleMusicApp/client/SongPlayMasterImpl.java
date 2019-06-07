@@ -176,8 +176,8 @@ public class SongPlayMasterImpl
     }
 
     private void beatTheDrums(LegacyDrumMeasure drumSelection) {
-        Song song = songOutUpdate.getSong();
-        int beatsPerBar = song.getBeatsPerBar();
+        SongBase songBase = songOutUpdate.getSong();
+        int beatsPerBar = songBase.getBeatsPerBar();
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         {
 
@@ -311,11 +311,11 @@ public class SongPlayMasterImpl
         )
             return;
 
-        Song song = songOutUpdate.getSong();
-        SongMoment songMoment = song.getSongMoment(momentNumber);
+        SongBase songBase = songOutUpdate.getSong();
+        SongMoment songMoment = songBase.getSongMoment(momentNumber);
         songOutUpdate.setEventTime(
                 Math.floor((System.currentTimeMillis() / 1000.0)
-                        - songMoment.getBeatNumber() * 60.0 / song.getBeatsPerMinute()));
+                        - songMoment.getBeatNumber() * 60.0 / songBase.getBeatsPerMinute()));
         songOutUpdate.setMeasureNumber(songMoment.getSequenceNumber());
         issueSongUpdate(songOutUpdate);
     }

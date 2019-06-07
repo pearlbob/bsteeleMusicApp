@@ -12,21 +12,21 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
  */
 public interface SongPlayMaster {
 
-    public void initialize();
+     void initialize();
 
-    public void onMessage(double systemT, String data);
+     void onMessage(double systemT, String data);
 
-    public void stopSong();
+     void stopSong();
 
-    public void playSongUpdate(SongUpdate songUpdate);
+     void playSongUpdate(SongUpdate songUpdate);
 
-    public void issueSongUpdate(SongUpdate songUpdate);
+     void issueSongUpdate(SongUpdate songUpdate);
 
-    public void play( Song song );
+     void play( Song song );
 
-    public void continueSong();
+     void continueSong();
 
-    public void playSlideSongToMomentNumber( int momentNumber );
+     void playSlideSongToMomentNumber( int momentNumber );
 
-    public void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
+     void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

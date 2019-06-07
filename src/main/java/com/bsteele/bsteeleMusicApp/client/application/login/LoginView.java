@@ -41,8 +41,6 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers> implements Lo
 
         Storage localStorage = Storage.getLocalStorageIfSupported();
 
-        //localStorage.removeItem("username");  //  testing only
-
         String name = localStorage.getItem("username");
         if (name != null)
             username.setText(name);

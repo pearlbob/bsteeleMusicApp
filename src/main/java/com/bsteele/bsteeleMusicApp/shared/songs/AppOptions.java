@@ -1,15 +1,14 @@
-package com.bsteele.bsteeleMusicApp.client.application;
+package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
-
-import java.util.logging.Logger;
+import com.google.gwt.storage.client.Storage;
 
 public class AppOptions {
 
-    //make the constructor private so that this class cannot be instantiated externally
-    private AppOptions() {
+    //make the constructor protected so that this class cannot be instantiated externally
+    protected AppOptions() {
     }
 
     //Get the only object available
@@ -24,6 +23,7 @@ public class AppOptions {
 
     public void setCountIn(boolean countIn) {
         this.countIn = countIn;
+        save();
     }
 
     public boolean isDashAllMeasureRepetitions() {
@@ -32,6 +32,7 @@ public class AppOptions {
 
     public void setDashAllMeasureRepetitions(boolean dashAllMeasureRepetitions) {
         this.dashAllMeasureRepetitions = dashAllMeasureRepetitions;
+        save();
     }
 
     public boolean isDebug() {
@@ -40,6 +41,7 @@ public class AppOptions {
 
     public void setDebug(boolean debug) {
         this.debug = debug;
+        save();
     }
 
 
@@ -49,6 +51,7 @@ public class AppOptions {
 
     public void setPlayWithLineIndicator(boolean playWithLineIndicator) {
         this.playWithLineIndicator = playWithLineIndicator;
+        save();
     }
 
     public boolean isPlayWithMeasureIndicator() {
@@ -57,6 +60,7 @@ public class AppOptions {
 
     public void setPlayWithMeasureIndicator(boolean playWithMeasureIndicator) {
         this.playWithMeasureIndicator = playWithMeasureIndicator;
+        save();
     }
 
     public String toJson() {
@@ -77,12 +81,10 @@ public class AppOptions {
         if (mr != null) {
             // parse
             String dataString = mr.getGroup(1);
-            logger.fine(dataString);
             final RegExp commaExp = RegExp.compile(",");    //  fixme: will match commas in data!
             final RegExp jsonNameValueExp = RegExp.compile("\\s*\"(\\w+)\"\\:\\s*\"(\\w+)\"\\s*");
             SplitResult splitResult = commaExp.split(dataString, 10);       //  worry about the limit here
             for (int i = 0; i < splitResult.length(); i++) {
-                logger.fine(splitResult.get(i));
 
                 mr = jsonNameValueExp.exec(splitResult.get(i));
                 if (mr != null) {
@@ -91,7 +93,6 @@ public class AppOptions {
                     switch (name) {
                         case "countIn":
                             b = Boolean.parseBoolean(mr.getGroup(2));
-                            logger.fine("countin: " + b);
                             setCountIn(b);
                             break;
                         case "dashAllMeasureRepetitions":
@@ -112,6 +113,10 @@ public class AppOptions {
         }
     }
 
+    protected void save() {
+        //   for override
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -123,7 +128,7 @@ public class AppOptions {
         return hash;
     }
 
-    private static AppOptions instance = new AppOptions();
+    protected static AppOptions instance = new AppOptions();
 
     private boolean countIn = true;
     private boolean dashAllMeasureRepetitions = true;
@@ -131,5 +136,5 @@ public class AppOptions {
     private boolean playWithMeasureIndicator = true;
     private boolean debug = false;
 
-    private static final Logger logger = Logger.getLogger(AppOptions.class.getName());
+    //  logger doesn't seem appropriate here  private static final Logger logger = Logger.getLogger(AppOptions.class.getName());
 }
