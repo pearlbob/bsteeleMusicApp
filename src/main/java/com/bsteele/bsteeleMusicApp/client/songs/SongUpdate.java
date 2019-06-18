@@ -61,11 +61,10 @@ public class SongUpdate {
     /**
      * Move the update indicators to the given measureNumber.
      * Should only be used to reposition the moment number.
-     * Normally use nextMeasureNumber().
      *
      * @param m the measureNumber to move to
      */
-    public void setMeasureNumber(int m) {
+    public final void setMeasureNumber(int m) {
         momentNumber = 0;
         sectionVersion = Section.getDefaultVersion(); //  special for first measureNumber
 

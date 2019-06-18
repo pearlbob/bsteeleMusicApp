@@ -15,6 +15,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongPlayer;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONException;
@@ -51,9 +52,8 @@ public class SongPlayMasterImpl
     public void execute(double systemT) {
         //  do this first to get the best time alignment
         double t = audioFilePlayer.getCurrentTime();
-        double t0 = songOutUpdate.getEventTime();
 
-        systemT /= 1000;      //  use seconds internally
+        systemT /= 1000;      //  use units of seconds internally
 
         {   //  find offset from system to audio time, integrate over time
             double dt = systemT - t;
@@ -124,7 +124,7 @@ public class SongPlayMasterImpl
                 switch (state) {
                     case playing:
                         //  distribute the time update locally
-                        songMomentUpdate(tn);
+                        songMomentUpdate(t);
                         break;
                 }
                 eventBus.fireEvent(new MusicAnimationEvent(tn,
@@ -146,32 +146,20 @@ public class SongPlayMasterImpl
      * @param t system time
      */
     private void songMomentUpdate(double t) {
-        double songT0 = songOutUpdate.getEventTime();
-
         int lastMomentNumber = songOutUpdate.getMomentNumber();
 
-        int momentNumber = songOutUpdate.getSong().getSongMomentNumberAtTime( t - songT0);
-
-        if (momentNumber <= 0) {
-            //  preRoll or first
-            songOutUpdate.setMeasureNumber(momentNumber);
-        } else {
-            while (momentNumber > songOutUpdate.getMeasureNumber()) {
-                if (!songOutUpdate.nextMeasureNumber()) {
-                    stopSong();
-                    break;
-                }
-            }
-        }
+        int momentNumber = songPlayer.getMomentNumberAt(t);
 
         //  distribute the change
         if (lastMomentNumber != momentNumber) {
+            songOutUpdate.setMeasureNumber(momentNumber);
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
 
-            logger.finer("t: " + (t - songT0)
-                    + " = m#: " + momentNumber
+            logger.finer("t: " + t + " = m#: " + momentNumber
             );
         }
+        if ( songPlayer.isDone())
+            stopSong();
     }
 
     private void beatTheDrums(LegacyDrumMeasure drumSelection) {
@@ -290,11 +278,14 @@ public class SongPlayMasterImpl
         songOutUpdate = songUpdate;
 
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
+        double t0 = audioFilePlayer.getCurrentTime();
         songOutUpdate.setEventTime(
-                Math.floor((System.currentTimeMillis() / 1000.0) / measureDuration) * measureDuration
+                Math.floor( t0 / measureDuration) * measureDuration
                         //  add margin into the future
                         + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
         songOutUpdate.setMeasureNumber(-preRoll);
+        songPlayer = new SongPlayer(songOutUpdate.getSong());
+        songPlayer.setMomentNumber(t0, -preRoll);
         songOutUpdate.setState(SongUpdate.State.playing);
 
         issueSongUpdate(songOutUpdate);
@@ -413,6 +404,7 @@ public class SongPlayMasterImpl
     private static double pass = 0.95;
     private double lastSystemT;
     private static final Scheduler scheduler = Scheduler.get();
+    private SongPlayer songPlayer;
 
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 
