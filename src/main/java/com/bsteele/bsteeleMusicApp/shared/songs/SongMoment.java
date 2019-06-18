@@ -97,8 +97,9 @@ public class SongMoment implements Comparable<SongMoment> {
     @Override
     public String toString() {
         return sequenceNumber + ": " + getChordSectionLocation().toString() + "#" + sectionCount
-                + " "+measure.toMarkup()
-                + " beat "+getBeatNumber()
+                + " " + measure.toMarkup()
+                + " beat " + getBeatNumber()
+                + (repeatMax > 1 ? " " + repeat + "/" + repeatMax : "")
                 ;
     }
 

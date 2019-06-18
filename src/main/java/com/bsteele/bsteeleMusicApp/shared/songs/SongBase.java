@@ -2613,6 +2613,18 @@ public class SongBase {
         return defaultBpm;
     }
 
+    public final double getDefaultTimePerBar() {
+        if ( defaultBpm == 0 )
+            return 1;
+        return beatsPerBar * 60.0 / defaultBpm;
+    }
+
+    public final double getSecondsPerBeat(){
+        if ( defaultBpm == 0 )
+            return 1;
+        return 60.0 / defaultBpm;
+    }
+
     /**
      * Set the song default beats per minute.
      *
@@ -2769,10 +2781,12 @@ public class SongBase {
     }
 
     public final double getDuration() {
+        computeDuration();
         return duration;
     }
 
     public final int getTotalBeats() {
+        computeDuration();
         return totalBeats;
     }
 
@@ -2783,9 +2797,8 @@ public class SongBase {
 
     public final SongMoment getSongMoment(int momentNumber) {
         computeSongMoments();
-        if (songMoments.isEmpty())
+        if (songMoments.isEmpty()|| momentNumber < 0 || momentNumber >= songMoments.size() )
             return null;
-        momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
         return songMoments.get(momentNumber);
     }
 
@@ -2800,16 +2813,16 @@ public class SongBase {
             return Integer.MAX_VALUE;       //  we're done with this song play
 
         int songBeat = (int) Math.round(songTime < 0
-                ? Math.ceil(songTime * bpm / 60.0 - 0.5 - 1e-10)
-                : Math.floor(songTime * bpm / 60.0 + 0.5 - 1e-10));
+                ? Math.ceil(songTime * bpm / 60.0 )
+                : Math.floor(songTime * bpm / 60.0 ));
         return songBeat;
     }
 
-    public final int getSongMomentNumberAtTime(int bpm, double songTime) {
-        if (bpm <= 0)
+    public final int getSongMomentNumberAtTime( double songTime) {
+        if (getBeatsPerMinute() <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 
-        int songBeat = getBeatNumberAtTime(bpm, songTime);
+        int songBeat = getBeatNumberAtTime( getBeatsPerMinute(), songTime);
         if (songBeat < 0) {
             return -1 + (int) Math.round((songBeat + 1) / beatsPerBar + 0.5 - 1e-10);    //  constant measure based lead in
         }
@@ -2910,7 +2923,7 @@ public class SongBase {
         parseLyrics();
     }
 
-    public final void setTotalBeats(int totalBeats) {
+    protected final void setTotalBeats(int totalBeats) {
         this.totalBeats = totalBeats;
     }
 

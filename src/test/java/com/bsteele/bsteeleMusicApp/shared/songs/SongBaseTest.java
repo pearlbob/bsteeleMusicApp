@@ -1,6 +1,5 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import junit.framework.TestCase;
@@ -1001,12 +1000,12 @@ public class SongBaseTest
         int beatsPerBar = 4;
         SongBase a;
 
-        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
-                100, beatsPerBar, 4,
-                "I: A B C D E F  x2  ",
-                "i:\n");
-
         for (int bpm = 60; bpm < 132; bpm++) {
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    bpm, beatsPerBar, 4,
+                    "I: A B C D E F  x2  ",
+                    "i:\n");
+
             double dt = 60.0 / (2 * bpm);
 
             int expected = -3;
@@ -1017,8 +1016,10 @@ public class SongBaseTest
                         + "  " + expected
                         + "  @" + count
                         + "  b:" + a.getBeatNumberAtTime(bpm, t)
-                        + ": " + a.getSongMomentNumberAtTime(bpm, t));
-                assertEquals(expected, a.getSongMomentNumberAtTime(bpm, t));
+                        + ": " + a.getSongMomentNumberAtTime( t)
+                        + ", bpm: " + bpm
+                );
+                assertEquals(expected, a.getSongMomentNumberAtTime(t));
                 count++;
                 if (count >= 8) {
                     count = 0;
@@ -1065,12 +1066,6 @@ public class SongBaseTest
 
         return song;
     }
-
-//    @Override
-//    public String getModuleName()
-//    {
-//        return "com.bsteele.bsteeleMusicApp.BSteeleMusicAppJUnit";
-//    }
 
     private static Logger logger = Logger.getLogger(SongBaseTest.class.getName());
 }
