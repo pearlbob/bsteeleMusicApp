@@ -14,7 +14,6 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
-import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongPlayer;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.Scheduler;
@@ -25,6 +24,7 @@ import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
 import java.text.ParseException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -128,8 +128,7 @@ public class SongPlayMasterImpl
                         break;
                 }
                 eventBus.fireEvent(new MusicAnimationEvent(tn,
-                        SongBase.getBeatNumberAtTime(songOutUpdate.getCurrentBeatsPerMinute(),
-                                tn - songOutUpdate.getEventTime()),
+                        0,  //  fixme: now
                         songOutUpdate.getMomentNumber()));
             }
         });
@@ -152,8 +151,9 @@ public class SongPlayMasterImpl
 
         //  distribute the change
         if (lastMomentNumber != momentNumber) {
-            songOutUpdate.setMeasureNumber(momentNumber);
+            songOutUpdate.setMomentNumber(momentNumber);
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+            logger.fine("songMomentUpdate: "+songOutUpdate.toString());
 
             logger.finer("t: " + t + " = m#: " + momentNumber
             );
@@ -249,6 +249,8 @@ public class SongPlayMasterImpl
 
             songOutUpdate = songInUpdate;
             requestedState = songOutUpdate.getState();
+
+            logger.fine("onMessage: "+songOutUpdate.toString());
         } catch (JSONException | ParseException ex) {
             logger.info(ex.getMessage());
         }
@@ -268,9 +270,11 @@ public class SongPlayMasterImpl
     }
 
     public final void issueSongUpdate(SongUpdate songUpdate) {
-        if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson()))
+        if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson())) {
             //  issue the song update locally if there is no communication with the server
             eventBus.fireEvent(new SongUpdateEvent(songUpdate));
+            logger.fine("issueSongUpdate: "+songUpdate.toString());
+        }
     }
 
     @Override
@@ -279,11 +283,7 @@ public class SongPlayMasterImpl
 
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         double t0 = audioFilePlayer.getCurrentTime();
-        songOutUpdate.setEventTime(
-                Math.floor( t0 / measureDuration) * measureDuration
-                        //  add margin into the future
-                        + (preRoll + 1) * measureDuration); //   fixme: adjust for adjustable runnup
-        songOutUpdate.setMeasureNumber(-preRoll);
+        songOutUpdate.setMomentNumber(-preRoll);
         songPlayer = new SongPlayer(songOutUpdate.getSong());
         songPlayer.setMomentNumber(t0, -preRoll);
         songOutUpdate.setState(SongUpdate.State.playing);
@@ -296,18 +296,13 @@ public class SongPlayMasterImpl
     public void playSlideSongToMomentNumber(int momentNumber) {
         if (songOutUpdate == null
                 || songOutUpdate.getState() != SongUpdate.State.playing
-                || songOutUpdate.getMeasureNumber() <= 0
-                || songOutUpdate.getMeasureNumber() == momentNumber
+                || songPlayer == null
+                || songOutUpdate.getMomentNumber() <= 0     //  not during preroll
+                || songOutUpdate.getMomentNumber() == momentNumber
         )
             return;
 
-        SongBase songBase = songOutUpdate.getSong();
-        SongMoment songMoment = songBase.getSongMoment(momentNumber);
-        songOutUpdate.setEventTime(
-                Math.floor((System.currentTimeMillis() / 1000.0)
-                        - songMoment.getBeatNumber() * 60.0 / songBase.getBeatsPerMinute()));
-        songOutUpdate.setMeasureNumber(songMoment.getSequenceNumber());
-        issueSongUpdate(songOutUpdate);
+        songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), momentNumber);
     }
 
 
@@ -409,6 +404,6 @@ public class SongPlayMasterImpl
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 
     static {
-        // logger.setLevel(Level.FINE);
+         logger.setLevel(Level.FINE);
     }
 }

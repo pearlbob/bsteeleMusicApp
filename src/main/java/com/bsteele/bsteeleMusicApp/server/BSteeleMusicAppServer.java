@@ -25,8 +25,8 @@ public class BSteeleMusicAppServer {
 
     public BSteeleMusicAppServer() {
         logger.log(Level.INFO, "BSteeleMusicAppServer()");
-        //System.out.println("BSteeleMusicAppServer()");
-        //GWT.log( "GWT.log(BSteeleMusicAppServer())");
+        System.out.println("BSteeleMusicAppServer()");
+        logger.info("logger info()");
     }
 
     @OnOpen
@@ -40,10 +40,10 @@ public class BSteeleMusicAppServer {
         if ( message == null || message.length() <= 0 )
             return;
 
-        //     flip any message back to all registered peers
-        for (final Session peer : peers) {
-                peer.getAsyncRemote().sendText(message);
-        }
+        //   fixme:  flip any message back to all registered peers
+//        for (final Session peer : peers) {
+//                peer.getAsyncRemote().sendText(message);
+//        }
 
         logger.log(Level.INFO, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
                 message.substring(0,Math.min(message.length(),40)).replaceAll("\n"," "),
@@ -65,4 +65,8 @@ public class BSteeleMusicAppServer {
 
     private static final Logger logger = Logger.getLogger(BSteeleMusicAppServer.class.getName());
     private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
+
+    static {
+         logger.setLevel(Level.FINER);
+    }
 }

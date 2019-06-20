@@ -188,24 +188,6 @@ public class BassViewImpl
             setEnables();
         }
 
-        //  turn on highlights if required
-        switch (songUpdate.getState()) {
-            case idle:
-                break;
-            case playing:
-                if (songUpdate.getRepeatTotal() > 0) {
-//                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
-//                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
-//                    Element re = bass.getElementById(id);
-//                    if (re != null) {
-//                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
-//                        lastRepeatElement = re;
-//                        lastRepeatTotal = songUpdate.getRepeatTotal();
-//                    }
-                }
-                break;
-        }
-
         if (song != null && !song.equals(songUpdate.getSong())) {
             scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {
                 @Override

@@ -3,7 +3,6 @@
  */
 package com.bsteele.bsteeleMusicApp.client.songs;
 
-import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.junit.client.GWTTestCase;
 import org.junit.AfterClass;
@@ -29,64 +28,14 @@ public class SongUpdateTest extends GWTTestCase {
     }
 
     /**
-     * Test of getEventTime method, of class SongUpdate.
-     */
-    @Test
-    public void testGetEventTime() {
-        System.out.println("getEventTime");
-        SongUpdate instance = new SongUpdate();
-        long expResult = System.currentTimeMillis();
-        instance.setEventTime(expResult);
-        double result = instance.getEventTime();
-        assertEquals(expResult, result, 0.0);
-    }
-
-
-    /**
-     * Test of getSectionCount method, of class SongUpdate.
-     */
-    @Test
-    public void testGetSectionCount() {
-        System.out.println("getSectionCount");
-        SongUpdate instance = new SongUpdate();
-        int expResult = 0;
-        int result = instance.getSectionCount();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getChordSectionRow method, of class SongUpdate.
-     */
-    @Test
-    public void testGetChordSectionRow() {
-        System.out.println("getChordSectionRow");
-        SongUpdate instance = new SongUpdate();
-        int expResult = 0;
-        int result = instance.getChordSectionRow();
-        assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of getRepeatCurrent method, of class SongUpdate.
-     */
-    @Test
-    public void testGetChordSectionCurrentRepeat() {
-        System.out.println("getRepeatCurrent");
-        SongUpdate instance = new SongUpdate();
-        int expResult = 0;
-        int result = instance.getRepeatCurrent();
-        assertEquals(expResult, result);
-    }
-
-    /**
      * Test of getMeasure method, of class SongUpdate.
      */
     @Test
-    public void testGetMeasure() {
-        System.out.println("getMeasure");
+    public void testGetMomentNumber() {
+        System.out.println("getMomentNumber");
         SongUpdate instance = new SongUpdate();
         int expResult = 0;
-        int result = instance.getMeasureNumber();
+        int result = instance.getMomentNumber();
         assertEquals(expResult, result);
     }
 
@@ -126,53 +75,9 @@ public class SongUpdateTest extends GWTTestCase {
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of setEventTime method, of class SongUpdate.
-     */
-    @Test
-    public void testSetEventTime() {
-        System.out.println("setEventTime");
-        long eventTime = 0;
-        SongUpdate instance = new SongUpdate();
-        instance.setEventTime(eventTime);
-    }
-
   /*
   todo: test setSong(), getSong()
    */
-
-    /**
-     * Test of setSectionCount method, of class SongUpdate.
-     */
-    @Test
-    public void testSetSectionCount() {
-        System.out.println("setSectionCount");
-        int sectionCount = 0;
-        SongUpdate instance = new SongUpdate();
-        instance.setSectionCount(sectionCount);
-    }
-
-    /**
-     * Test of setChordSectionRow method, of class SongUpdate.
-     */
-    @Test
-    public void testSetChordSectionRow() {
-        System.out.println("setChordSectionRow");
-        int chordSectionRow = 0;
-        SongUpdate instance = new SongUpdate();
-        instance.setChordSectionRow(chordSectionRow);
-    }
-
-    /**
-     * Test of setRepeatCurrent method, of class SongUpdate.
-     */
-    @Test
-    public void testSetChordSectionCurrentRepeat() {
-        System.out.println("setRepeatCurrent");
-        int chordSectionCurrentRepeat = 0;
-        SongUpdate instance = new SongUpdate();
-        instance.setRepeatCurrent(chordSectionCurrentRepeat);
-    }
 
     /**
      * Test of setMeasure method, of class SongUpdate.
@@ -182,7 +87,7 @@ public class SongUpdateTest extends GWTTestCase {
         System.out.println("setMeasure");
         int measure = 0;
         SongUpdate instance = new SongUpdate();
-        instance.setMeasureNumber(measure);
+        instance.setMomentNumber(measure);
     }
 
     /**

@@ -1036,7 +1036,7 @@ public class SongEditView
             newSong = Song.checkSong(titleEntry.getText(), artistEntry.getText(),
                     copyrightEntry.getText(),
                     newKey, bpmEntry.getText(), beatsPerBar, unitsPerMeasure,
-                    song.toMarkup(), lyricsTextEntry.getValue(), song.getLastModifiedTime());
+                    song.toMarkup(), lyricsTextEntry.getValue());
             warn(newSong.getMessage());
             //  worry about the location spec changing after parsing above
             newSong.setCurrentChordSectionLocation(newSong.getChordSectionLocation(

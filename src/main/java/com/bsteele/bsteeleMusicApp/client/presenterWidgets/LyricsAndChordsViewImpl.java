@@ -198,24 +198,6 @@ public class LyricsAndChordsViewImpl
             setEnables();
         }
 
-        //  turn on highlights if required
-        switch (songUpdate.getState()) {
-            case idle:
-                break;
-            case playing:
-                if (songUpdate.getRepeatTotal() > 0) {
-//                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
-//                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
-//                    Element re = lyrics.getElementById(id);
-//                    if (re != null) {
-//                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
-//                        lastRepeatElement = re;
-//                        lastRepeatTotal = songUpdate.getRepeatTotal();
-//                    }
-                }
-                break;
-        }
-
         song = songUpdate.getSong();
 
         scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {

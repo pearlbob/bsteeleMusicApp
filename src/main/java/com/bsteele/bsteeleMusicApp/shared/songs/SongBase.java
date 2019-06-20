@@ -259,7 +259,8 @@ public class SongBase {
             beatNumber += measure.getBeatCount();
         beatNumber++;
 
-        String ret = beatNumber
+        String ret = momentNumber
+                + " " +beatNumber
                 + " " + songMoment.getChordSection().getSectionVersion().toString()
                 + " " + measure.toMarkup()
                 + (songMoment.getRepeatMax() > 1
@@ -804,10 +805,10 @@ public class SongBase {
     }
 
     /**
-     * Find all matches to the give section version, including the given section version itself
+     * Find all matches to the given section version, including the given section version itself
      *
-     * @param multSectionVersion
-     * @return
+     * @param multSectionVersion section version to match
+     * @return set of matching section versions
      */
     private TreeSet<SectionVersion> matchingSectionVersions(SectionVersion multSectionVersion) {
         TreeSet<SectionVersion> ret = new TreeSet<>();
@@ -2064,6 +2065,7 @@ public class SongBase {
      * @param halfSteps    the number of transposition halfSteps to apply
      * @param fontSize     the pixel size of the font
      * @param append       true if the chord section is to be added to existing flex table data
+     * @param isSingleSection       true if the chord section the only one of this section
      */
     private final void transpose(final ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize,
                                  boolean append, boolean isSingleSection) {
@@ -2287,7 +2289,7 @@ public class SongBase {
         return checkSong(getTitle(), getArtist(), getCopyright(),
                 getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
                 Integer.toString(getUnitsPerMeasure()),
-                toMarkup(), getRawLyrics(), getLastModifiedTime());
+                toMarkup(), getRawLyrics());
     }
 
     /**
@@ -2308,7 +2310,7 @@ public class SongBase {
      */
     public static final Song checkSong(String title, String artist, String copyright,
                                        Key key, String bpmEntry, String beatsPerBarEntry, String unitsPerMeasureEntry,
-                                       String chordsTextEntry, String lyricsTextEntry, double lastLastModifiedTime)
+                                       String chordsTextEntry, String lyricsTextEntry)
             throws ParseException {
         if (title == null || title.length() <= 0) {
             throw new ParseException("no song title given!", 0);

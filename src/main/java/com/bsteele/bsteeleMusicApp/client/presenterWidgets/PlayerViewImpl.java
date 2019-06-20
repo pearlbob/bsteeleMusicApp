@@ -210,7 +210,7 @@ public class PlayerViewImpl
                         if (momentRow != rowIndex) {
                             SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
                             if (songMoment != null) {
-                                ////fixme now:   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
+                                   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
                                 logger.info("sm: (" + songMoment.getSequenceNumber()
                                         +" vs "+ songUpdate.getMomentNumber()
                                         + ", d: " + verticalScrollPositionOffset+ ") " + songMoment.toString()
@@ -268,24 +268,6 @@ public class PlayerViewImpl
             }
             setEnables();
         }
-
-        //  turn on highlights if required
-//        switch (songUpdate.getState()) {
-//            case idle:
-//                break;
-//            case playing:
-//                if (songUpdate.getRepeatTotal() > 0) {
-//                    final String id = prefix + Song.genChordId(songUpdate.getSectionVersion(),
-//                            songUpdate.getRepeatLastRow(), songUpdate.getRepeatLastCol());
-//                    Element re = player.getElementById(id);
-//                    if (re != null) {
-//                        re.setInnerText("x" + (songUpdate.getRepeatCurrent() + 1) + "/" + songUpdate.getRepeatTotal());
-//                        lastRepeatElement = re;
-//                        lastRepeatTotal = songUpdate.getRepeatTotal();
-//                    }
-//                }
-//                break;
-//        }
 
         boolean isSongDiff = (song == null || !song.equals(songUpdate.getSong()));
         if (isSongDiff
