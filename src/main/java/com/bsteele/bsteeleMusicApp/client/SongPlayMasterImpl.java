@@ -304,6 +304,7 @@ public class SongPlayMasterImpl
             return;
 
         songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), momentNumber);
+        songOutUpdate.setMomentNumber(momentNumber);
     }
 
 

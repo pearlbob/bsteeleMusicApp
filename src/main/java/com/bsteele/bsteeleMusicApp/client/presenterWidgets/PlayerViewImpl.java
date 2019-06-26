@@ -178,21 +178,20 @@ public class PlayerViewImpl
 
                     logger.finer("vp: " + verticalScrollPosition + " " + delta + " " + verticalScrollPositionOffset);
 
-                    //     h  += chordsScrollPanel.getOffsetHeight() / 2;
-                    //  if (h < lastScrollLineY || h > scrollForLineY)
+                    int    h2  = chordsScrollPanel.getOffsetHeight() / 2;
 
                     HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
                     int rowIndex = 0;
-
                     for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
                         Element e = formatter.getElement(rowIndex);
-                        if (vp >= e.getAbsoluteTop() && vp <= e.getAbsoluteBottom()) {
-                            logger.finer("row: " + rowIndex);
+                         logger.finer(verticalScrollPosition + ": " + e.getOffsetTop() + " " + e.getOffsetHeight());
+                        if (verticalScrollPosition +h2 >= e.getOffsetTop()
+                                && verticalScrollPosition +h2 <= e.getOffsetTop() + e.getOffsetHeight()) {
+                            //  invalidate values too small
+                            if (e.getOffsetTop() < h2)
+                                rowIndex = 0;
                             break;
                         }
-                        logger.finest(verticalScrollPosition + ": " + e.getAbsoluteTop() + " " + e.getAbsoluteBottom());
-                        if (verticalScrollPosition < e.getAbsoluteBottom())
-                            break;
                     }
 
 
@@ -200,20 +199,21 @@ public class PlayerViewImpl
                             " vs " + vp
                             + " d: " + delta
                             + " r: " + rowIndex
+                            + " h2: " + h2
                             + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
                             + " height: " + chordsScrollPanel.getOffsetHeight()
                             + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
                     );
 
-                    if (songUpdate.getSongMoment() != null) {
+                    if (songUpdate.getSongMoment() != null && rowIndex > 0) {
                         int momentRow = song.getMomentGridCoordinate(songUpdate.getMomentNumber()).getRow();
                         if (momentRow != rowIndex) {
                             SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
                             if (songMoment != null) {
-                                   songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
-                                logger.info("sm: (" + songMoment.getSequenceNumber()
-                                        +" vs "+ songUpdate.getMomentNumber()
-                                        + ", d: " + verticalScrollPositionOffset+ ") " + songMoment.toString()
+                                    songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
+                                logger.fine("sm: " + momentRow + " " + rowIndex + "(" + songMoment.getSequenceNumber()
+                                        + " vs " + songUpdate.getMomentNumber()
+                                        + ", d: " + verticalScrollPositionOffset + ") " + songMoment.toString()
                                 );
                             }
                         }
@@ -308,7 +308,7 @@ public class PlayerViewImpl
                         scrollForLineAt(0);     //  to the top
                     } else {
                         SongMoment songMoment = song.getSongMoment(songUpdate.getMomentNumber());
-                        if ( songMoment == null )
+                        if (songMoment == null)
                             break;
                         GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songMoment);
                         FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
@@ -601,15 +601,16 @@ public class PlayerViewImpl
 
     private final void scrollForLineAt(double y) {
         //  don't auto scroll backwards
-        if (y <= lastScrollLineY)
-            return;
+//        if (y <= lastScrollLineY)
+//            return;
         scrollForLineY = y;
     }
 
     private final void scrollForLineAnimation() {
-        final double delta = 0.45;
+        double d = scrollForLineY - lastScrollLineY;
+        final double delta = (d >= 0 ? 1 : -1)*(Math.abs(d) > 2 ? 0.75 : 0.25);
 
-        if (Math.abs(scrollForLineY - lastScrollLineY) <= delta)
+        if (Math.abs(d) < Math.abs(delta))
             lastScrollLineY = scrollForLineY;
         else {
             lastScrollLineY += delta;
@@ -691,7 +692,7 @@ public class PlayerViewImpl
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());
 
     static {
-        logger.setLevel(Level.FINE);
+        //  logger.setLevel(Level.FINE);
     }
 
 }
