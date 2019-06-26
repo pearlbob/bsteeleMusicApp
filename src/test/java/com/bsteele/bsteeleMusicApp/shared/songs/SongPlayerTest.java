@@ -53,7 +53,7 @@ public class SongPlayerTest {
                 );
                 logger.fine("t: " + t + " = " + (t / (secondsPerBeat * beatsPerBar)) + " bars" + " = " + (t / secondsPerBeat) + " beats");
                 double dt = 60.0 / (clocksPerBeat * bpm);
-                logger.fine("dt: " + dt + " s");
+                logger.finest("dt: " + dt + " s");
                 logger.fine("limit: " + limit + " = " + (limit * dt) + " s"
                         + " = " + (limit * dt / (secondsPerBeat * beatsPerBar)) + " bars"
                         + " = " + (limit * dt / secondsPerBeat) + " beats");
@@ -116,10 +116,12 @@ public class SongPlayerTest {
                     int beat = songPlayer.getBeat(t);
                     if (beat != lastBeat) {
                         assertEquals(expectedBeat, beat);
+                        assertEquals(expectedBeat, songPlayer.getBeatFraction(t), dt + 1.0 / clocksPerBeat + 0.0001);
                         expectedBeat = (expectedBeat + 1) % beatsPerBar;
                         logger.fine("t: " + t + ", m: " + (songMoment != null ? songMoment.getMeasure() : null) + ", beat: " + beat);
                         lastBeat = beat;
                     }
+                    logger.finer("t: " + t + ", m: " + (songMoment != null ? songMoment.getMeasure() : null) + ", beat: " + beat + ", beatFraction: " + songPlayer.getBeatFraction(t));
                 }
 
                 logger.fine("t: " + t);

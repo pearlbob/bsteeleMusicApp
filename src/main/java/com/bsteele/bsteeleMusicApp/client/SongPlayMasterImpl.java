@@ -281,6 +281,7 @@ public class SongPlayMasterImpl
     public void playSongUpdate(SongUpdate songUpdate) {
         songOutUpdate = songUpdate;
 
+        songOutUpdate.getSong().setBeatsPerMinute(songOutUpdate.getCurrentBeatsPerMinute());    //  fixme: should this be done here?
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         double t0 = audioFilePlayer.getCurrentTime();
         songOutUpdate.setMomentNumber(-preRoll);
