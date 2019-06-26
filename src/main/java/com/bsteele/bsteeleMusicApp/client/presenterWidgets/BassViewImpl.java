@@ -386,7 +386,9 @@ public class BassViewImpl
                 scoreCtx.setFillStyle("#000000");
                 scoreCtx.setFont("12px sans-serif");
                 for (int m = firstMoment; m < lastMoment; m++) {
-                    SongMoment songMoment = song.getSongMoments().get(m);
+                    SongMoment songMoment = song.getSongMoment(m);
+                    if ( songMoment == null )
+                        continue;
                     scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber() + 1),
                             barStart + (m - firstMoment) * barWidth + hSpace, scoreTop - hSpace / 2);
                 }
@@ -397,7 +399,9 @@ public class BassViewImpl
             scoreCtx.setFillStyle("#000000");
             scoreCtx.setFont("bold 15px sans-serif");
             for (int m = firstMoment; m < lastMoment; m++) {
-                SongMoment songMoment = song.getSongMoments().get(m);
+                SongMoment songMoment = song.getSongMoment(m);
+                if ( songMoment == null )
+                    continue;
                 scoreCtx.fillText(song.findMeasureNode(songMoment.getChordSectionLocation()).toString(), barStart + (m - firstMoment) * barWidth,
                         scoreLineHeight);
 

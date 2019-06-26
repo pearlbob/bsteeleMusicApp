@@ -215,9 +215,9 @@ public class SongBase {
     }
 
     public final GridCoordinate getMomentGridCoordinate(int momentNumber) {
-        computeSongMoments();
-        momentNumber = Math.min(Math.max(momentNumber, 0), songMoments.size() - 1);
-        SongMoment songMoment = songMoments.get(momentNumber);
+        SongMoment songMoment = getSongMoment(momentNumber);
+        if ( songMoment== null )
+            return null;
         return songMomentGridCoordinateHashMap.get(songMoment);
     }
 
@@ -250,8 +250,10 @@ public class SongBase {
             return beatNumber + " preroll at " + momentNumber;
         }
 
-        momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
-        SongMoment songMoment = songMoments.get(momentNumber);
+        SongMoment songMoment = getSongMoment(momentNumber);
+        if ( songMoment == null )
+            return "none: "+momentNumber;
+
         Measure measure = songMoment.getMeasure();
 
         beatNumber %= measure.getBeatCount();
@@ -1766,10 +1768,9 @@ public class SongBase {
         SongMoment songMoment;
         computeSongMoments();
         for (int safety = 0; safety < 10000; safety++) {
-            if (momentNumber >= songMoments.size())
+            songMoment = getSongMoment(momentNumber);
+            if( songMoment == null )
                 break;
-
-            songMoment = songMoments.get(momentNumber);
             lyricSection = songMoment.getLyricSection();
             SectionVersion sectionVersion = lyricSection.getSectionVersion();
             sb.append("<tr><td class='" + CssConstants.style + "sectionLabel' >").
@@ -1821,8 +1822,6 @@ public class SongBase {
                     default:
                         //  increment for next time
                         momentNumber++;
-                        if (momentNumber < songMoments.size())
-                            songMoment = songMoments.get(momentNumber);
                         break;
                 }
             }
@@ -2792,7 +2791,11 @@ public class SongBase {
         return totalBeats;
     }
 
-    public final ArrayList<SongMoment> getSongMoments() {
+    public final int getSongMomentsSize() {
+        return getSongMoments().size();
+    }
+
+    private final ArrayList<SongMoment>  getSongMoments() {
         computeSongMoments();
         return songMoments;
     }
@@ -2805,9 +2808,10 @@ public class SongBase {
     }
 
     public final double getSongTimeAtMoment(int momentNumber) {
-        computeSongMoments();
-        momentNumber = Math.max(0, Math.min(songMoments.size() - 1, momentNumber));
-        return songMoments.get(momentNumber).getBeatNumber() * getBeatsPerMinute() / 60.0;
+        SongMoment songMoment = getSongMoment( momentNumber);
+        if ( songMoment == null )
+            return 0;
+        return songMoment.getBeatNumber() * getBeatsPerMinute() / 60.0;
     }
 
     public static final int getBeatNumberAtTime(int bpm, double songTime) {

@@ -175,7 +175,7 @@ public class SongBaseTest
 
                     logger.fine("chords: " + chords);
 
-                    SongMoment songMoment = a.getSongMoments().get(i);
+                    SongMoment songMoment = a.getSongMoment(i);
                     logger.fine("songMoment: " + songMoment.toString());
                     logger.finest("ChordSectionLocation: " + songMoment.getChordSectionLocation().toString());
                 }
@@ -826,7 +826,10 @@ public class SongBaseTest
         a.debugSongMoments();
 
         int count = 0;
-        for (SongMoment songMoment : a.getSongMoments()) {
+        for ( int momentNumber = 0; momentNumber < a.getSongMomentsSize(); momentNumber++) {
+            SongMoment songMoment= a.getSongMoment(momentNumber);
+            if ( songMoment == null )
+                break;
             logger.fine(songMoment.toString());
             assertEquals(count, songMoment.getSequenceNumber());
             GridCoordinate momentGridCoordinate = a.getMomentGridCoordinate(songMoment);
@@ -891,19 +894,19 @@ public class SongBaseTest
             SongMoment songMoment;
 
             for (int momentNumber = 0; momentNumber < 4; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 4; momentNumber < 6; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 6; momentNumber < 10; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 10; momentNumber < 12; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
         }
@@ -917,14 +920,20 @@ public class SongBaseTest
         {
             //  verify beats total as expected
             int beats = 0;
-            for (SongMoment songMoment : a.getSongMoments()) {
+            for ( int momentNumber = 0; momentNumber < a.getSongMomentsSize(); momentNumber++) {
+                SongMoment songMoment= a.getSongMoment(momentNumber);
+                if ( songMoment == null )
+                    break;
                 assertEquals(beats, songMoment.getBeatNumber());
                 beats += songMoment.getMeasure().getBeatCount();
             }
         }
         {
             int count = 0;
-            for (SongMoment songMoment : a.getSongMoments()) {
+            for ( int momentNumber = 0; momentNumber < a.getSongMomentsSize(); momentNumber++) {
+                SongMoment songMoment= a.getSongMoment(momentNumber);
+                if ( songMoment == null )
+                    break;
                 logger.fine(" ");
                 logger.fine(songMoment.toString());
                 assertEquals(count, songMoment.getSequenceNumber());
@@ -940,27 +949,27 @@ public class SongBaseTest
             SongMoment songMoment;
 
             for (int momentNumber = 0; momentNumber < 8; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(0, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 8; momentNumber < 12; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(1, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 12; momentNumber < 16; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(2, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 16; momentNumber < 28; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(3, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 28; momentNumber < 36; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(4, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
             for (int momentNumber = 48; momentNumber < 56; momentNumber++) {
-                songMoment = a.getSongMoments().get(momentNumber);
+                songMoment = a.getSongMoment(momentNumber);
                 assertEquals(6, a.getMomentGridCoordinate(songMoment.getSequenceNumber()).getRow());
             }
         }

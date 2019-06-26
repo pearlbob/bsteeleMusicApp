@@ -307,7 +307,9 @@ public class PlayerViewImpl
                         renderHorizontalLineAt(0);      //  typically off screen
                         scrollForLineAt(0);     //  to the top
                     } else {
-                        SongMoment songMoment = song.getSongMoments().get(songUpdate.getMomentNumber());
+                        SongMoment songMoment = song.getSongMoment(songUpdate.getMomentNumber());
+                        if ( songMoment == null )
+                            break;
                         GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songMoment);
                         FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
 
@@ -432,7 +434,10 @@ public class PlayerViewImpl
                         }
 
                         //  add highlights
-                        if (appOptions.isPlayWithMeasureIndicator() && songUpdate.getMomentNumber() >= 0) {
+                        if (appOptions.isPlayWithMeasureIndicator()
+                                && songUpdate.getMomentNumber() >= 0
+                                && songUpdate.getMomentNumber() < song.getSongMomentsSize()
+                        ) {
                             GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songUpdate.getMomentNumber());
                             FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
                             Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());

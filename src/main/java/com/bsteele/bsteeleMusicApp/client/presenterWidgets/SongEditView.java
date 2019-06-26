@@ -788,7 +788,7 @@ public class SongEditView
             return;
 
         this.song = newSong.copySong();
-        if ( !isActive)
+        if (!isActive)
             return;
 
         titleEntry.setText(song.getTitle());
@@ -1205,7 +1205,9 @@ public class SongEditView
         HashMap<Measure, Integer> measureMap = new HashMap<>();
         {
             Measure measure;
-            for (SongMoment songMoment : song.getSongMoments()) {
+            for (int momentNumber = 0; momentNumber < song.getSongMomentsSize(); momentNumber++) {
+                SongMoment songMoment = song.getSongMoment(momentNumber);
+                if (songMoment == null) break;
                 MeasureNode measureNode = song.findMeasureNode(songMoment.getChordSectionLocation());
                 if (measureNode == null)
                     continue;
@@ -1334,8 +1336,8 @@ public class SongEditView
 
     @Override
     public void setActive(boolean isActive) {
-        this.isActive= isActive;
-        if ( isActive) {
+        this.isActive = isActive;
+        if (isActive) {
             setSong(song);
             measureFocus();
         }

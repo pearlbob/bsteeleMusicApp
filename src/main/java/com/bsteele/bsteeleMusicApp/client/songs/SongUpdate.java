@@ -81,22 +81,21 @@ public class SongUpdate {
             songMoment = null;
             return;
         }
-        ArrayList<SongMoment> songMoments = song.getSongMoments();
-        if (song.getSongMoments() == null || song.getSongMoments().isEmpty()) {
+        if (song.getSongMomentsSize() == 0) {
             momentNumber = 0;
             songMoment = null;
             return;
         }
 
         //  past the end and we're done
-        if ( m >= song.getSongMoments().size() ){
+        if ( m >= song.getSongMomentsSize() ){
             momentNumber = Integer.MAX_VALUE;
             songMoment = null;
             return;
         }
 
         momentNumber = m;
-        songMoment = songMoments.get(momentNumber);
+        songMoment = song.getSongMoment(momentNumber);
     }
 
     public final Song getSong() {

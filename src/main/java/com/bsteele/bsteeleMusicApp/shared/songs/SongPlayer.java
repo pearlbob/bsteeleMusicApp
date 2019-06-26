@@ -26,14 +26,20 @@ public class SongPlayer {
             momentNumber = 0;
 
         } else if (m > 0) {
-            if (songBase == null || songBase.getSongMoments() == null || songBase.getSongMoments().isEmpty()) {
+            if (songBase == null || songBase.getSongMomentsSize() == 0) {
                 momentNumber = 0;
-            } else if (m >= songBase.getSongMoments().size()) {
+            } else if (m >= songBase.getSongMomentsSize()) {
                 momentNumber = Integer.MAX_VALUE;
             } else {
                 //  walk forward to the correct moment
-                momentNumber = m;
-                t0 = t - songBase.getSongMoment(momentNumber).getBeatNumber() * songBase.getSecondsPerBeat();
+                SongMoment songMoment = songBase.getSongMoment(m);
+                if (songMoment != null) {
+                    momentNumber = m;
+                    t0 = t - songMoment.getBeatNumber() * songBase.getSecondsPerBeat();
+                } else {
+                    momentNumber = Integer.MAX_VALUE;
+                    t0 = 0;
+                }
             }
         } else {
             //  leave negative measures as they are
@@ -61,7 +67,7 @@ public class SongPlayer {
         t -= t0;
         if (t < 0)
             return (int) Math.floor(t / songBase.getDefaultTimePerBar());
-        momentNumber = songBase.getSongMomentNumberAtTime(t );
+        momentNumber = songBase.getSongMomentNumberAtTime(t);
         return momentNumber;
     }
 
@@ -72,8 +78,11 @@ public class SongPlayer {
      * @return the beat number within the current moment
      */
     public final int getBeat(double t) {
+        if (momentNumber >= songBase.getSongMomentsSize())
+            return 0;
+
         int beatsPerBar = songBase.getBeatsPerBar();
-        if ( beatsPerBar== 0)
+        if (beatsPerBar == 0)
             return 0;
         final double beatDuration = songBase.getDefaultTimePerBar() / beatsPerBar;
 
@@ -81,11 +90,40 @@ public class SongPlayer {
         int ret = (int) Math.floor(t / beatDuration);
 
         SongMoment songMoment = songBase.getSongMoment(momentNumber);
-        if ( songMoment != null ) {
+        if (songMoment != null) {
             ret -= songMoment.getBeatNumber();
             ret %= songMoment.getMeasure().getBeatCount();
-        }
-        else
+        } else
+            ret %= songBase.getBeatsPerBar();
+
+        if (ret < 0)
+            ret += songBase.getBeatsPerBar();
+        return ret;
+    }
+
+    /**
+     * Assumes moment number has already been determined.
+     *
+     * @param t time in seconds
+     * @return the beat number within the current moment
+     */
+    public final double getBeatFraction(double t) {
+        if (momentNumber >= songBase.getSongMomentsSize())
+            return 0;
+
+        int beatsPerBar = songBase.getBeatsPerBar();
+        if (beatsPerBar == 0)
+            return 0;
+        final double beatDuration = songBase.getDefaultTimePerBar() / beatsPerBar;
+
+        t -= t0;
+        double ret = t / beatDuration;
+
+        SongMoment songMoment = songBase.getSongMoment(momentNumber);
+        if (songMoment != null) {
+            ret -= songMoment.getBeatNumber();
+            ret %= songMoment.getMeasure().getBeatCount();
+        } else
             ret %= songBase.getBeatsPerBar();
 
         if (ret < 0)

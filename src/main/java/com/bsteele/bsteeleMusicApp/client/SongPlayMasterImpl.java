@@ -128,7 +128,7 @@ public class SongPlayMasterImpl
                         break;
                 }
                 eventBus.fireEvent(new MusicAnimationEvent(tn,
-                        songPlayer.getBeat(t),
+                        (songPlayer == null ? 0 : songPlayer.getBeat(t)),
                         songOutUpdate.getMomentNumber()));
             }
         });
@@ -153,12 +153,12 @@ public class SongPlayMasterImpl
         if (lastMomentNumber != momentNumber) {
             songOutUpdate.setMomentNumber(momentNumber);
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
-            logger.finest("songMomentUpdate: "+songOutUpdate.toString());
+            logger.finest("songMomentUpdate: " + songOutUpdate.toString());
 
             logger.finer("t: " + t + " = m#: " + momentNumber
             );
         }
-        if ( songPlayer.isDone())
+        if (songPlayer.isDone())
             stopSong();
     }
 
@@ -250,7 +250,7 @@ public class SongPlayMasterImpl
             songOutUpdate = songInUpdate;
             requestedState = songOutUpdate.getState();
 
-            logger.fine("onMessage: "+songOutUpdate.toString());
+            logger.fine("onMessage: " + songOutUpdate.toString());
         } catch (JSONException | ParseException ex) {
             logger.info(ex.getMessage());
         }
@@ -273,7 +273,7 @@ public class SongPlayMasterImpl
         if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson())) {
             //  issue the song update locally if there is no communication with the server
             eventBus.fireEvent(new SongUpdateEvent(songUpdate));
-            logger.fine("issueSongUpdate: "+songUpdate.toString());
+            logger.fine("issueSongUpdate: " + songUpdate.toString());
         }
     }
 
@@ -404,6 +404,6 @@ public class SongPlayMasterImpl
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 
     static {
-         logger.setLevel(Level.FINE);
+        logger.setLevel(Level.FINE);
     }
 }

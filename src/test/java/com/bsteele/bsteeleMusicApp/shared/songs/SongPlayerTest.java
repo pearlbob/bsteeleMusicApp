@@ -90,7 +90,7 @@ public class SongPlayerTest {
                 logger.fine("short done");
 
                 //  reset the current moment
-                int newMomentNumber = (int) (a.getSongMoments().size() * fraction);
+                int newMomentNumber = (int) (a.getSongMomentsSize() * fraction);
                 lastMomentNumber = newMomentNumber - 1;
                 songPlayer.setMomentNumber(t, newMomentNumber);
                 for (; i < limit; i++) {
