@@ -17,10 +17,12 @@ public class SongPlayerTest {
         };
 
         final int clocksPerBeat = 10;
+
         SongBase a;
 
         for (double fraction : fractions)
             for (int bpm = 60; bpm <= 120; bpm++) {
+                int expectedBeat = 0;
                 logger.fine("fraction: " + fraction + ", bpm: " + bpm);
                 a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                         bpm, beatsPerBar, 4,
@@ -57,7 +59,9 @@ public class SongPlayerTest {
                         + " = " + (limit * dt / secondsPerBeat) + " beats");
                 logger.fine("TotalBeats: " + a.getTotalBeats());
 
+                //  play song for a while
                 int i = 0;
+                int lastBeat = -1;
                 for (; i < shortLimit; i++) {
                     t += dt;
                     int momentNumber = songPlayer.getMomentNumberAt(t);
@@ -72,9 +76,20 @@ public class SongPlayerTest {
                         }
                     }
                     lastMomentNumber = momentNumber;
-                    logger.finest("t: " + t + ", m: " + momentNumber + " " + a.getSongMoment(momentNumber));
-                }
+                    SongMoment songMoment = a.getSongMoment(momentNumber);
+                    logger.finest("t: " + t + ", m: " + momentNumber + " " + songMoment);
 
+                    int beat = songPlayer.getBeat(t);
+                    if (beat != lastBeat) {
+                        assertEquals(expectedBeat, beat);
+                        expectedBeat = (expectedBeat + 1) % beatsPerBar;
+                        logger.fine("t: " + t + ", m: " + (songMoment != null ? songMoment.getMeasure() : null) + ", beat: " + beat);
+                        lastBeat = beat;
+                    }
+                }
+                logger.fine("short done");
+
+                //  reset the current moment
                 int newMomentNumber = (int) (a.getSongMoments().size() * fraction);
                 lastMomentNumber = newMomentNumber - 1;
                 songPlayer.setMomentNumber(t, newMomentNumber);
@@ -91,12 +106,24 @@ public class SongPlayerTest {
                                 //  should be one more than last moment or at end
                                 assertEquals(lastMomentNumber + 1, momentNumber);
                         }
+                        lastMomentNumber = momentNumber;
                     }
-                    lastMomentNumber = momentNumber;
+
                     logger.finest("t: " + t + ", m: " + momentNumber + " " + a.getSongMoment(momentNumber));
+
+                    SongMoment songMoment = a.getSongMoment(momentNumber);
+                    logger.finest("t: " + t + ", m: " + momentNumber + " " + songMoment);
+                    int beat = songPlayer.getBeat(t);
+                    if (beat != lastBeat) {
+                        assertEquals(expectedBeat, beat);
+                        expectedBeat = (expectedBeat + 1) % beatsPerBar;
+                        logger.fine("t: " + t + ", m: " + (songMoment != null ? songMoment.getMeasure() : null) + ", beat: " + beat);
+                        lastBeat = beat;
+                    }
                 }
 
                 logger.fine("t: " + t);
+                logger.fine("done");
             }
     }
 

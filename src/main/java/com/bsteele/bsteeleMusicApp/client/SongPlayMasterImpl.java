@@ -128,7 +128,7 @@ public class SongPlayMasterImpl
                         break;
                 }
                 eventBus.fireEvent(new MusicAnimationEvent(tn,
-                        0,  //  fixme: now
+                        songPlayer.getBeat(t),
                         songOutUpdate.getMomentNumber()));
             }
         });
@@ -153,7 +153,7 @@ public class SongPlayMasterImpl
         if (lastMomentNumber != momentNumber) {
             songOutUpdate.setMomentNumber(momentNumber);
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
-            logger.fine("songMomentUpdate: "+songOutUpdate.toString());
+            logger.finest("songMomentUpdate: "+songOutUpdate.toString());
 
             logger.finer("t: " + t + " = m#: " + momentNumber
             );

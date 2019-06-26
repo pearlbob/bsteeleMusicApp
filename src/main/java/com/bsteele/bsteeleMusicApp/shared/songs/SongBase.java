@@ -260,7 +260,7 @@ public class SongBase {
         beatNumber++;
 
         String ret = momentNumber
-                + " " +beatNumber
+                + " " + beatNumber
                 + " " + songMoment.getChordSection().getSectionVersion().toString()
                 + " " + measure.toMarkup()
                 + (songMoment.getRepeatMax() > 1
@@ -2060,12 +2060,12 @@ public class SongBase {
     /**
      * Install the given chord section into the given flex table
      *
-     * @param chordSection the given chord section
-     * @param flexTable    the flex table to populate
-     * @param halfSteps    the number of transposition halfSteps to apply
-     * @param fontSize     the pixel size of the font
-     * @param append       true if the chord section is to be added to existing flex table data
-     * @param isSingleSection       true if the chord section the only one of this section
+     * @param chordSection    the given chord section
+     * @param flexTable       the flex table to populate
+     * @param halfSteps       the number of transposition halfSteps to apply
+     * @param fontSize        the pixel size of the font
+     * @param append          true if the chord section is to be added to existing flex table data
+     * @param isSingleSection true if the chord section the only one of this section
      */
     private final void transpose(final ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize,
                                  boolean append, boolean isSingleSection) {
@@ -2616,13 +2616,13 @@ public class SongBase {
     }
 
     public final double getDefaultTimePerBar() {
-        if ( defaultBpm == 0 )
+        if (defaultBpm == 0)
             return 1;
         return beatsPerBar * 60.0 / defaultBpm;
     }
 
-    public final double getSecondsPerBeat(){
-        if ( defaultBpm == 0 )
+    public final double getSecondsPerBeat() {
+        if (defaultBpm == 0)
             return 1;
         return 60.0 / defaultBpm;
     }
@@ -2799,7 +2799,7 @@ public class SongBase {
 
     public final SongMoment getSongMoment(int momentNumber) {
         computeSongMoments();
-        if (songMoments.isEmpty()|| momentNumber < 0 || momentNumber >= songMoments.size() )
+        if (songMoments.isEmpty() || momentNumber < 0 || momentNumber >= songMoments.size())
             return null;
         return songMoments.get(momentNumber);
     }
@@ -2815,16 +2815,16 @@ public class SongBase {
             return Integer.MAX_VALUE;       //  we're done with this song play
 
         int songBeat = (int) Math.round(songTime < 0
-                ? Math.ceil(songTime * bpm / 60.0 )
-                : Math.floor(songTime * bpm / 60.0 ));
+                ? Math.ceil(songTime * bpm / 60.0)
+                : Math.floor(songTime * bpm / 60.0));
         return songBeat;
     }
 
-    public final int getSongMomentNumberAtTime( double songTime) {
+    public final int getSongMomentNumberAtTime(double songTime) {
         if (getBeatsPerMinute() <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 
-        int songBeat = getBeatNumberAtTime( getBeatsPerMinute(), songTime);
+        int songBeat = getBeatNumberAtTime(getBeatsPerMinute(), songTime);
         if (songBeat < 0) {
             return -1 + (int) Math.round((songBeat + 1) / beatsPerBar + 0.5 - 1e-10);    //  constant measure based lead in
         }
@@ -2836,7 +2836,8 @@ public class SongBase {
         return beatsToMoment.get(songBeat).getSequenceNumber();
     }
 
-    /** Return the first moment on the given row
+    /**
+     * Return the first moment on the given row
      *
      * @param rowIndex the given row
      * @return the first moment on the given row

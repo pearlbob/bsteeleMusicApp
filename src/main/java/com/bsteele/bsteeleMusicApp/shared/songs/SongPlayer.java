@@ -48,7 +48,7 @@ public class SongPlayer {
     }
 
     public boolean isDone() {
-        return momentNumber== Integer.MAX_VALUE;
+        return momentNumber == Integer.MAX_VALUE;
     }
 
     /**
@@ -58,10 +58,39 @@ public class SongPlayer {
      * @return the moment number
      */
     public final int getMomentNumberAt(double t) {
+        t -= t0;
         if (t < 0)
             return (int) Math.floor(t / songBase.getDefaultTimePerBar());
-        momentNumber = songBase.getSongMomentNumberAtTime(t - t0);
+        momentNumber = songBase.getSongMomentNumberAtTime(t );
         return momentNumber;
+    }
+
+    /**
+     * Assumes moment number has already been determined.
+     *
+     * @param t time in seconds
+     * @return the beat number within the current moment
+     */
+    public final int getBeat(double t) {
+        int beatsPerBar = songBase.getBeatsPerBar();
+        if ( beatsPerBar== 0)
+            return 0;
+        final double beatDuration = songBase.getDefaultTimePerBar() / beatsPerBar;
+
+        t -= t0;
+        int ret = (int) Math.floor(t / beatDuration);
+
+        SongMoment songMoment = songBase.getSongMoment(momentNumber);
+        if ( songMoment != null ) {
+            ret -= songMoment.getBeatNumber();
+            ret %= songMoment.getMeasure().getBeatCount();
+        }
+        else
+            ret %= songBase.getBeatsPerBar();
+
+        if (ret < 0)
+            ret += songBase.getBeatsPerBar();
+        return ret;
     }
 
     public final double getT0() {
