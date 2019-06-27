@@ -216,7 +216,7 @@ public class SongBase {
 
     public final GridCoordinate getMomentGridCoordinate(int momentNumber) {
         SongMoment songMoment = getSongMoment(momentNumber);
-        if ( songMoment== null )
+        if (songMoment == null)
             return null;
         return songMomentGridCoordinateHashMap.get(songMoment);
     }
@@ -251,8 +251,8 @@ public class SongBase {
         }
 
         SongMoment songMoment = getSongMoment(momentNumber);
-        if ( songMoment == null )
-            return "none: "+momentNumber;
+        if (songMoment == null)
+            return "none: " + momentNumber;
 
         Measure measure = songMoment.getMeasure();
 
@@ -1769,7 +1769,7 @@ public class SongBase {
         computeSongMoments();
         for (int safety = 0; safety < 10000; safety++) {
             songMoment = getSongMoment(momentNumber);
-            if( songMoment == null )
+            if (songMoment == null)
                 break;
             lyricSection = songMoment.getLyricSection();
             SectionVersion sectionVersion = lyricSection.getSectionVersion();
@@ -2795,7 +2795,7 @@ public class SongBase {
         return getSongMoments().size();
     }
 
-    private final ArrayList<SongMoment>  getSongMoments() {
+    private final ArrayList<SongMoment> getSongMoments() {
         computeSongMoments();
         return songMoments;
     }
@@ -2808,8 +2808,8 @@ public class SongBase {
     }
 
     public final double getSongTimeAtMoment(int momentNumber) {
-        SongMoment songMoment = getSongMoment( momentNumber);
-        if ( songMoment == null )
+        SongMoment songMoment = getSongMoment(momentNumber);
+        if (songMoment == null)
             return 0;
         return songMoment.getBeatNumber() * getBeatsPerMinute() / 60.0;
     }
@@ -2818,9 +2818,7 @@ public class SongBase {
         if (bpm <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 
-        int songBeat = (int) Math.round(songTime < 0
-                ? Math.ceil(songTime * bpm / 60.0)
-                : Math.floor(songTime * bpm / 60.0));
+        int songBeat = (int) Math.round(Math.floor(songTime * bpm / 60.0));
         return songBeat;
     }
 
@@ -2830,7 +2828,7 @@ public class SongBase {
 
         int songBeat = getBeatNumberAtTime(getBeatsPerMinute(), songTime);
         if (songBeat < 0) {
-            return -1 + (int) Math.round((songBeat + 1) / beatsPerBar + 0.5 - 1e-10);    //  constant measure based lead in
+            return (songBeat - beatsPerBar + 1) / beatsPerBar;    //  constant measure based lead in
         }
 
         computeSongMoments();
