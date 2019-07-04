@@ -13,7 +13,9 @@ import com.bsteele.bsteeleMusicApp.client.jsTypes.AudioFilePlayer;
 import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongPlayer;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.core.client.Scheduler;
@@ -293,17 +295,30 @@ public class SongPlayMasterImpl
     }
 
     @Override
-    public void playSlideSongToMomentNumber(int momentNumber) {
+    public void playSongOffsetRowNumber(int offset) {
         if (songOutUpdate == null
                 || songOutUpdate.getState() != SongUpdate.State.playing
                 || songPlayer == null
-                || songOutUpdate.getMomentNumber() <= 0     //  not during preroll
-                || songOutUpdate.getMomentNumber() == momentNumber  //  nothing to do
+                || offset == 0 //  nothing to do
         )
             return;
 
-        songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), momentNumber);
-        songOutUpdate.setMomentNumber(momentNumber);
+        int momentNumber = songOutUpdate.getMomentNumber();
+        if (momentNumber <= 0)     //  not during preroll
+            return;
+
+        SongBase song = songOutUpdate.getSong();
+        GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songOutUpdate.getMomentNumber());
+        if (gridCoordinate == null)
+            return;
+
+        int momentRow = gridCoordinate.getRow();
+        SongMoment songMoment = song.getSongMomentAtRow(momentRow + offset);
+        if (songMoment == null)
+            return;
+
+        songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());
+        songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
     }
 

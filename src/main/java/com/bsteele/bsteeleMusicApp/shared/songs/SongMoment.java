@@ -6,11 +6,11 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
  */
 public class SongMoment implements Comparable<SongMoment> {
 
-    SongMoment(int sequenceNumber, int beatNumber, int sectionBeatNumber,
+    SongMoment(int momentNumber, int beatNumber, int sectionBeatNumber,
                LyricSection lyricSection,
                ChordSection chordSection, int phraseIndex, Phrase phrase, int measureIndex, Measure measure,
                int repeat, int repeatCycleBeats, int repeatMax, int sectionCount) {
-        this.sequenceNumber = sequenceNumber;
+        this.momentNumber = momentNumber;
         this.beatNumber = beatNumber;
         this.sectionBeatNumber = sectionBeatNumber;
 
@@ -26,8 +26,8 @@ public class SongMoment implements Comparable<SongMoment> {
         this.sectionCount = sectionCount;
     }
 
-    public final int getSequenceNumber() {
-        return sequenceNumber;
+    public final int getMomentNumber() {
+        return momentNumber;
     }
 
     public final int getBeatNumber() {
@@ -82,9 +82,9 @@ public class SongMoment implements Comparable<SongMoment> {
 
     @Override
     public int compareTo(SongMoment o) {
-        if (sequenceNumber == o.sequenceNumber)
+        if (momentNumber == o.momentNumber)
             return 0;
-        return sequenceNumber < o.sequenceNumber ? -1 : 1;
+        return momentNumber < o.momentNumber ? -1 : 1;
     }
 
 
@@ -96,7 +96,7 @@ public class SongMoment implements Comparable<SongMoment> {
 
     @Override
     public String toString() {
-        return sequenceNumber + ": " + getChordSectionLocation().toString() + "#" + sectionCount
+        return momentNumber + ": " + getChordSectionLocation().toString() + "#" + sectionCount
                 + " " + measure.toMarkup()
                 + " beat " + getBeatNumber()
                 + (repeatMax > 1 ? " " + repeat + "/" + repeatMax : "")
@@ -106,7 +106,7 @@ public class SongMoment implements Comparable<SongMoment> {
 
     private transient ChordSectionLocation chordSectionLocation;
 
-    private final int sequenceNumber;
+    private final int momentNumber;
     private final int beatNumber;   //  total beat count from start of song to the start of the moment
     private final int sectionBeatNumber;   //  total beat count from start of the current section to the start of the moment
 

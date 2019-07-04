@@ -182,7 +182,7 @@ public class SongBase {
                 logger.finer(songMoment.toString() + ": " + momentGridCoordinate.toString());
                 songMomentGridCoordinateHashMap.put(songMoment, momentGridCoordinate);
 
-                logger.finer("moment: " + songMoment.getSequenceNumber()
+                logger.finer("moment: " + songMoment.getMomentNumber()
                         + ": " + songMoment.getChordSectionLocation().toString()
                         + "#" + songMoment.getSectionCount()
                         + " m:" + momentGridCoordinate
@@ -226,8 +226,8 @@ public class SongBase {
         computeSongMoments();
 
         for (SongMoment songMoment : songMoments) {
-            GridCoordinate momentGridCoordinate = getMomentGridCoordinate(songMoment.getSequenceNumber());
-            logger.finer(songMoment.getSequenceNumber()
+            GridCoordinate momentGridCoordinate = getMomentGridCoordinate(songMoment.getMomentNumber());
+            logger.finer(songMoment.getMomentNumber()
                     + ": " + songMoment.getChordSectionLocation().toString()
                     + "#" + songMoment.getSectionCount()
                     + " m:" + momentGridCoordinate
@@ -270,7 +270,7 @@ public class SongBase {
                 : "");
 
         if (appOptions.isDebug())
-            ret = songMoment.getSequenceNumber()
+            ret = songMoment.getMomentNumber()
                     + ": " + songMoment.getChordSectionLocation().toString()
                     + "#" + songMoment.getSectionCount()
                     + " "
@@ -2835,7 +2835,7 @@ public class SongBase {
         if (songBeat >= beatsToMoment.size())
             return Integer.MAX_VALUE;       //  we're done with this song play
 
-        return beatsToMoment.get(songBeat).getSequenceNumber();
+        return beatsToMoment.get(songBeat).getMomentNumber();
     }
 
     /**

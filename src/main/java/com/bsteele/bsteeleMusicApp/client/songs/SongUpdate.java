@@ -12,7 +12,6 @@ import com.google.gwt.json.client.JSONValue;
 import jsinterop.annotations.JsType;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -231,7 +230,7 @@ public class SongUpdate {
         StringBuilder sb = new StringBuilder("SongUpdate: ");
         sb.append(getMomentNumber());
         if (songMoment != null) {
-            sb.append(" ").append(songMoment.getSequenceNumber()).append(" ").append(songMoment.getBeatNumber())
+            sb.append(" ").append(songMoment.getMomentNumber()).append(" ").append(songMoment.getBeatNumber())
                     .append(" ").append(songMoment.getMeasure().toString());
             if (songMoment.getRepeatMax() > 0)
                 sb.append(" ").append((songMoment.getRepeat() + 1)).append("/").append(songMoment.getRepeatMax());

@@ -389,7 +389,7 @@ public class BassViewImpl
                     SongMoment songMoment = song.getSongMoment(m);
                     if ( songMoment == null )
                         continue;
-                    scoreCtx.fillText(Integer.toString(songMoment.getSequenceNumber() + 1),
+                    scoreCtx.fillText(Integer.toString(songMoment.getMomentNumber() + 1),
                             barStart + (m - firstMoment) * barWidth + hSpace, scoreTop - hSpace / 2);
                 }
             }

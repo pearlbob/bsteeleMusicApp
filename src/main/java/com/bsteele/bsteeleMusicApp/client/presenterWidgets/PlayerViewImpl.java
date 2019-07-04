@@ -97,6 +97,9 @@ public class PlayerViewImpl
     @UiField(provided = true)
     Canvas playerBackgroundCanvas;
 
+    /**
+     * An HTML trick:  a transparent canvas used to capture the scroll panel input when in play auto-scroll
+     */
     @UiField(provided = true)
     Canvas playerTopCover;
 
@@ -154,19 +157,23 @@ public class PlayerViewImpl
                 case playing:
                     switch (handler.getNativeKeyCode()) {
                         case KeyCodes.KEY_DOWN:
-                            logger.info("down");
+                            logger.finer("down");
+                            songPlayMaster.playSongOffsetRowNumber(1);
                             break;
                         case KeyCodes.KEY_UP:
-                            logger.info("up");
+                            logger.finer("up");
+                            songPlayMaster.playSongOffsetRowNumber(-1);
                             break;
                         case KeyCodes.KEY_RIGHT:
-                            logger.info("right");
+                            logger.finer("right");
+                            songPlayMaster.playSongOffsetRowNumber(1);
                             break;
                         case KeyCodes.KEY_LEFT:
-                            logger.info("left");
+                            logger.finer("left");
+                            songPlayMaster.playSongOffsetRowNumber(-1);
                             break;
                         case KeyCodes.KEY_SPACE:
-                            logger.info("space");
+                            logger.finer("space");
                             togglePlayStop();
                             break;
                         default:
@@ -188,21 +195,10 @@ public class PlayerViewImpl
             if (songUpdate == null || song == null)
                 return;     //  defense
 
-            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songUpdate.getMomentNumber());
-            if (gridCoordinate != null) {
-                int momentRow = gridCoordinate.getRow();
-                int d = (handler.getDeltaY() < 0 ? -1 : 1);
-                SongMoment songMoment = song.getSongMomentAtRow(momentRow + d);
-                if (songMoment != null) {
-                    songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
-                    logger.fine("sm: " + momentRow + " (" + songMoment.getSequenceNumber()
-                            + " vs " + songUpdate.getMomentNumber()
-                            + ", d: " + d + ") " + songMoment.toString()
-                    );
-                }
+            int d = (handler.getDeltaY() < 0 ? -1 : 1);
+            songPlayMaster.playSongOffsetRowNumber(d);
 
-                logger.finer("playerTopCover.addMouseWheelHandler: " + handler.getDeltaY());
-            }
+            logger.finer("playerTopCover.addMouseWheelHandler: " + handler.getDeltaY());
         });
     }
 
@@ -612,7 +608,7 @@ public class PlayerViewImpl
         double d = scrollForLineY - lastScrollLineY;
         final double minDelta = 0.05;
         final double maxDelta = 1.5;
-        final double delta = (d >= 0 ? 1 : -1) * Math.min((Math.abs(d)/4 * minDelta),maxDelta);
+        final double delta = (d >= 0 ? 1 : -1) * Math.min((Math.abs(d) / 4 * minDelta), maxDelta);
 
         if (Math.abs(d) <= minDelta)
             lastScrollLineY = scrollForLineY;
