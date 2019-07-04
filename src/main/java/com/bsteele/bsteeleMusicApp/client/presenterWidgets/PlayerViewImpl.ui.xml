@@ -1,7 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder
         xmlns:ui="urn:ui:com.google.gwt.uibinder"
-        xmlns:g="urn:import:com.google.gwt.user.client.ui">
+        xmlns:g="urn:import:com.google.gwt.user.client.ui"
+        xmlns:gc="urn:import:com.google.gwt.canvas.client"
+>
 
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
@@ -69,30 +71,31 @@
 
         </g:north>
         <g:center>
-            <g:ScrollPanel ui:field="chordsScrollPanel" height="100%" width="100%">
-                <g:AbsolutePanel width="100%" height="100%">
-                    <g:HTMLPanel width="100%" height="100%" styleName="{resources.style.playChordsBackground}">
-                        <canvas ui:field="playerBackgroundCanvasElement"
-                                style="position:absolute; width:100%; height:100%; left:0; top:0; z-index:-1;"
-                                title="Background for song scrolling.">Your browser does not support the HTML5 canvas
-                            tag.
-                        </canvas>
-                    </g:HTMLPanel>
+            <g:AbsolutePanel>
+                <g:at left='0' top='0'>
+                    <g:ScrollPanel ui:field="chordsScrollPanel" height="100%" width="100%">
+                        <g:AbsolutePanel width="100%" height="100%">
+                            <gc:Canvas ui:field="playerBackgroundCanvas"
+                                       styleName="{resources.style.playChordsBackground}"
+                                       title="Background for song scrolling."/>
+                            <g:HTMLPanel>
+                                <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
 
-                    <g:HTMLPanel>
-                        <!--                        <canvas ui:field="audioBeatDisplayCanvas" height="45"-->
-                        <!--                                title="Beat display of audio.">-->
-                        <!--                            Your browser does not support the HTML5 canvas tag.-->
-                        <!--                        </canvas>-->
-                        <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
+                                <p>
+                                    Copyright
+                                    <span ui:field="copyright"/>
+                                </p>
+                            </g:HTMLPanel>
+                        </g:AbsolutePanel>
+                    </g:ScrollPanel>
+                </g:at>
+                <g:at left='0' top='0'>
+                    <gc:Canvas ui:field="playerTopCover" width="100%" height="100%"
+                               styleName="{resources.style.playTopCover}"
+                    />
+                </g:at>
 
-                        <p>
-                            Copyright
-                            <span ui:field="copyright"/>
-                        </p>
-                    </g:HTMLPanel>
-                </g:AbsolutePanel>
-            </g:ScrollPanel>
+            </g:AbsolutePanel>
 
 
         </g:center>

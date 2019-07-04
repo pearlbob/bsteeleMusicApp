@@ -277,6 +277,9 @@ td[editSelect=append] {
 /*  css for play background canvas  */
 .playChordsBackground {
         position:absolute;
+        left:0; top:0;
+        width: 100%;
+            height: 100%;
         z-index:-1;
         }
 /*  css for play foreground lyrics and chords   */
@@ -284,4 +287,8 @@ td[editSelect=append] {
         position:relative;
         z-index:0;
         }
+/*  css for top cover over the slider, in absolute panel   */
+.playTopCover {
+       z-index:1;
+       }
 

@@ -154,7 +154,6 @@ public class SongPlayMasterImpl
             songOutUpdate.setMomentNumber(momentNumber);
             eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
             logger.finest("songMomentUpdate: " + songOutUpdate.toString());
-
             logger.finer("t: " + t + " = m#: " + momentNumber
             );
         }
@@ -299,12 +298,13 @@ public class SongPlayMasterImpl
                 || songOutUpdate.getState() != SongUpdate.State.playing
                 || songPlayer == null
                 || songOutUpdate.getMomentNumber() <= 0     //  not during preroll
-                || songOutUpdate.getMomentNumber() == momentNumber
+                || songOutUpdate.getMomentNumber() == momentNumber  //  nothing to do
         )
             return;
 
         songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), momentNumber);
         songOutUpdate.setMomentNumber(momentNumber);
+        eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
     }
 
 

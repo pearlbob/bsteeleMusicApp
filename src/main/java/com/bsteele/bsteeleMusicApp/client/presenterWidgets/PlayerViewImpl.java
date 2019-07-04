@@ -15,6 +15,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
+import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
@@ -23,6 +24,7 @@ import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
@@ -39,7 +41,6 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -93,8 +94,11 @@ public class PlayerViewImpl
     @UiField
     HTMLPanel player;
 
-    @UiField
-    CanvasElement playerBackgroundCanvasElement;
+    @UiField(provided = true)
+    Canvas playerBackgroundCanvas;
+
+    @UiField(provided = true)
+    Canvas playerTopCover;
 
     @UiField
     SpanElement copyright;
@@ -106,6 +110,10 @@ public class PlayerViewImpl
     @Inject
     PlayerViewImpl(final EventBus eventBus, Binder binder, SongPlayMaster songPlayMaster) {
         super(eventBus, songPlayMaster);
+
+        playerBackgroundCanvas = Canvas.createIfSupported();
+        playerTopCover = Canvas.createIfSupported();
+
         initWidget(binder.createAndBindUi(this));
 
 
@@ -113,21 +121,7 @@ public class PlayerViewImpl
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
-            if (song != null) {
-                switch (songUpdate.getState()) {
-                    case playing:
-                        songPlayMaster.stopSong();
-                        break;
-                    case idle:
-                        SongUpdate songUpdateCopy = new SongUpdate();
-                        songUpdateCopy.setSong(song.copySong());
-                        songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
-                        songUpdateCopy.setCurrentKey(currentKey);
-                        verticalScrollPositionOffset = 0;
-                        songPlayMaster.playSongUpdate(songUpdateCopy);
-                        break;
-                }
-            }
+            togglePlayStop();
         });
 
         originalKeyButton.addClickHandler((ClickEvent event) -> setCurrentKey(songUpdate.getSong().getKey()));
@@ -152,75 +146,83 @@ public class PlayerViewImpl
 
         statusLabel.setVisible(false);
 
-        chordsScrollPanel.addScrollHandler(handler -> {
+        playerTopCover.addKeyDownHandler(handler -> {
             if (songUpdate == null || song == null)
                 return;     //  defense
 
             switch (songUpdate.getState()) {
                 case playing:
-                case idle:      //  fixme: temp
-                    int verticalScrollPosition = chordsScrollPanel.getVerticalScrollPosition();
-                    int delta = verticalScrollPosition - lastVerticalScrollPosition;
-                    logger.finer("delta: " + delta);
-                    lastVerticalScrollPosition = verticalScrollPosition;
-
-                    if (Math.abs(delta) == 0) {
-                        //  nothing to do
-                        break;
-                    }
-                    verticalScrollPositionOffset += delta;
-                    int vp = verticalScrollPosition + verticalScrollPositionOffset;
-                    if (vp < chordsScrollPanel.getMinimumVerticalScrollPosition())
-                        vp = chordsScrollPanel.getMinimumVerticalScrollPosition();
-                    else if (vp > chordsScrollPanel.getMaximumVerticalScrollPosition())
-                        vp = chordsScrollPanel.getMaximumVerticalScrollPosition();
-                    verticalScrollPositionOffset = vp - lastVerticalScrollPosition;
-
-                    logger.finer("vp: " + verticalScrollPosition + " " + delta + " " + verticalScrollPositionOffset);
-
-                    int    h2  = chordsScrollPanel.getOffsetHeight() / 2;
-
-                    HTMLTable.RowFormatter formatter = playerFlexTable.getRowFormatter();
-                    int rowIndex = 0;
-                    for (; rowIndex < playerFlexTable.getRowCount(); rowIndex++) {
-                        Element e = formatter.getElement(rowIndex);
-                         logger.finer(verticalScrollPosition + ": " + e.getOffsetTop() + " " + e.getOffsetHeight());
-                        if (verticalScrollPosition +h2 >= e.getOffsetTop()
-                                && verticalScrollPosition +h2 <= e.getOffsetTop() + e.getOffsetHeight()) {
-                            //  invalidate values too small
-                            if (e.getOffsetTop() < h2)
-                                rowIndex = 0;
+                    switch (handler.getNativeKeyCode()) {
+                        case KeyCodes.KEY_DOWN:
+                            logger.info("down");
                             break;
-                        }
+                        case KeyCodes.KEY_UP:
+                            logger.info("up");
+                            break;
+                        case KeyCodes.KEY_RIGHT:
+                            logger.info("right");
+                            break;
+                        case KeyCodes.KEY_LEFT:
+                            logger.info("left");
+                            break;
+                        case KeyCodes.KEY_SPACE:
+                            logger.info("space");
+                            togglePlayStop();
+                            break;
+                        default:
+                            logger.info("playerTopCover.addKeyDownHandler: " + Integer.toString(handler.getNativeKeyCode()));
+                            break;
                     }
-
-
-                    logger.finer("scroll: " + verticalScrollPosition +
-                            " vs " + vp
-                            + " d: " + delta
-                            + " r: " + rowIndex
-                            + " h2: " + h2
-                            + " min: " + chordsScrollPanel.getMinimumVerticalScrollPosition()
-                            + " height: " + chordsScrollPanel.getOffsetHeight()
-                            + " max: " + chordsScrollPanel.getMaximumVerticalScrollPosition()
-                    );
-
-                    if (songUpdate.getSongMoment() != null && rowIndex > 0) {
-                        int momentRow = song.getMomentGridCoordinate(songUpdate.getMomentNumber()).getRow();
-                        if (momentRow != rowIndex) {
-                            SongMoment songMoment = song.getSongMomentAtRow(rowIndex);
-                            if (songMoment != null) {
-                                    songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
-                                logger.fine("sm: " + momentRow + " " + rowIndex + "(" + songMoment.getSequenceNumber()
-                                        + " vs " + songUpdate.getMomentNumber()
-                                        + ", d: " + verticalScrollPositionOffset + ") " + songMoment.toString()
-                                );
-                            }
-                        }
+                    break;
+                case idle:
+                    switch (handler.getNativeKeyCode()) {
+                        case KeyCodes.KEY_SPACE:
+                            logger.info("space");
+                            togglePlayStop();
+                            break;
                     }
                     break;
             }
         });
+        playerTopCover.addMouseWheelHandler(handler -> {
+            if (songUpdate == null || song == null)
+                return;     //  defense
+
+            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songUpdate.getMomentNumber());
+            if (gridCoordinate != null) {
+                int momentRow = gridCoordinate.getRow();
+                int d = (handler.getDeltaY() < 0 ? -1 : 1);
+                SongMoment songMoment = song.getSongMomentAtRow(momentRow + d);
+                if (songMoment != null) {
+                    songPlayMaster.playSlideSongToMomentNumber(songMoment.getSequenceNumber());
+                    logger.fine("sm: " + momentRow + " (" + songMoment.getSequenceNumber()
+                            + " vs " + songUpdate.getMomentNumber()
+                            + ", d: " + d + ") " + songMoment.toString()
+                    );
+                }
+
+                logger.finer("playerTopCover.addMouseWheelHandler: " + handler.getDeltaY());
+            }
+        });
+    }
+
+    private void togglePlayStop() {
+        if (song != null) {
+            switch (songUpdate.getState()) {
+                case playing:
+                    songPlayMaster.stopSong();
+                    break;
+                case idle:
+                    SongUpdate songUpdateCopy = new SongUpdate();
+                    songUpdateCopy.setSong(song.copySong());
+                    songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                    songUpdateCopy.setCurrentKey(currentKey);
+                    verticalScrollPositionOffset = 0;
+                    songPlayMaster.playSongUpdate(songUpdateCopy);
+                    playerTopCover.setFocus(true);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -324,7 +326,7 @@ public class PlayerViewImpl
                                         double ratio = (sectionBeats == 0 ? 0.5 : (double) songMoment.getSectionBeatNumber() / sectionBeats);
                                         renderHorizontalLineAt(
                                                 e.getAbsoluteTop() + ratio * (e.getAbsoluteBottom() - e.getAbsoluteTop())
-                                                        - playerBackgroundCanvasElement.getAbsoluteTop()
+                                                        - playerBackgroundCanvas.getAbsoluteTop()
                                                         + 3);
                                     }
                                 }
@@ -338,7 +340,7 @@ public class PlayerViewImpl
                             for (int c = 0; c < limit; c++) {
                                 Element e = formatter.getElement(r, c);
                                 if (e != null) {
-                                    scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundCanvasElement.getAbsoluteTop());
+                                    scrollForLineAt(e.getAbsoluteBottom() - playerBackgroundCanvas.getAbsoluteTop());
                                     break;
                                 }
                             }
@@ -369,18 +371,21 @@ public class PlayerViewImpl
         bpmSelect.setSelectedIndex(0);
     }
 
-    private void labelPlayStop() {
+    private void labelPlayStop() // fixme: rename
+    {
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
                 //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
                 statusLabel.setVisible(true);
+                playerTopCover.getCanvasElement().getStyle().setZIndex(1);
                 break;
             case idle:
                 playStopButton.setText("Play");
                 //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
                 statusLabel.setVisible(false);
                 scrollForLineAt(0); //  hide
+                playerTopCover.getCanvasElement().getStyle().setZIndex(-2);
                 break;
         }
     }
@@ -558,7 +563,7 @@ public class PlayerViewImpl
 
                 logger.info("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ")");
                 Element e = cell.getElement();
-                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundCanvasElement.getAbsoluteTop());
+                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundCanvas.getAbsoluteTop());
             });
         }
     }
@@ -569,7 +574,7 @@ public class PlayerViewImpl
             return;
 
         logger.finest("y: " + y);
-        Context2d ctx = playerBackgroundCanvasElement.getContext2d();
+        Context2d ctx = playerBackgroundCanvas.getContext2d();
         CanvasElement canvasElement = ctx.getCanvas();
         double w = canvasElement.getClientWidth();
         double h = canvasElement.getClientHeight();
@@ -600,17 +605,16 @@ public class PlayerViewImpl
     }
 
     private final void scrollForLineAt(double y) {
-        //  don't auto scroll backwards
-//        if (y <= lastScrollLineY)
-//            return;
         scrollForLineY = y;
     }
 
     private final void scrollForLineAnimation() {
         double d = scrollForLineY - lastScrollLineY;
-        final double delta = (d >= 0 ? 1 : -1)*(Math.abs(d) > 2 ? 0.75 : 0.25);
+        final double minDelta = 0.05;
+        final double maxDelta = 1.5;
+        final double delta = (d >= 0 ? 1 : -1) * Math.min((Math.abs(d)/4 * minDelta),maxDelta);
 
-        if (Math.abs(d) < Math.abs(delta))
+        if (Math.abs(d) <= minDelta)
             lastScrollLineY = scrollForLineY;
         else {
             lastScrollLineY += delta;
@@ -619,7 +623,7 @@ public class PlayerViewImpl
 
 
         //  scroll if required
-        double h = playerBackgroundCanvasElement.getClientHeight();
+        double h = playerBackgroundCanvas.getOffsetHeight();
         int maxH = chordsScrollPanel.getOffsetHeight();
         int midH = maxH / 2;
         //  fixme: y += verticalScrollPositionOffset;
@@ -672,7 +676,7 @@ public class PlayerViewImpl
     private double lastHorizontalLineY;
     private double scrollForLineY;
     private double lastScrollLineY;
-    private int lastVerticalScrollPosition;
+    private int lastVerticalScrollPosition = 0;
     private int verticalScrollPositionOffset;
     private String lastStatus;
 
