@@ -597,7 +597,7 @@ public class PlayerViewImpl
     private final void resetScrollForLineAt(double y) {
         scrollForLineY = lastScrollLineY = y;
         chordsScrollPanel.setVerticalScrollPosition((int) y);
-        lastVerticalScrollPosition = (int) y;
+        lastVerticalScrollPosition = Integer.MIN_VALUE;
     }
 
     private final void scrollForLineAt(double y) {
@@ -605,60 +605,40 @@ public class PlayerViewImpl
     }
 
     private final void scrollForLineAnimation() {
-        double d = scrollForLineY - lastScrollLineY;
+        final double d = scrollForLineY - lastScrollLineY;
         final double minDelta = 0.05;
         final double maxDelta = 1.5;
         final double delta = (d >= 0 ? 1 : -1) * Math.min((Math.abs(d) / 4 * minDelta), maxDelta);
+        final double h = playerBackgroundCanvas.getOffsetHeight();
+        final int maxH = chordsScrollPanel.getOffsetHeight();
+        final int midH = maxH / 2;
 
-        if (Math.abs(d) <= minDelta)
+        if (Math.abs(d) <= minDelta     //  too small to scroll
+                || Math.abs(d) > midH  //  too large to scroll
+        )
             lastScrollLineY = scrollForLineY;
-        else {
+        else
+
             lastScrollLineY += delta;
-        }
+
         double y = lastScrollLineY;
 
-
         //  scroll if required
-        double h = playerBackgroundCanvas.getOffsetHeight();
-        int maxH = chordsScrollPanel.getOffsetHeight();
-        int midH = maxH / 2;
-        //  fixme: y += verticalScrollPositionOffset;
         if (y < midH)
-            y = 0;
+            y = 0;      //  at the top
         else if (y > h - midH)
-            y = (h - midH);
+            y = (h - midH);     //  at the bottom
         else
             y = (y - midH);
 
         //  output if different
         int vp = (int) Math.round(y);
         if (vp != lastVerticalScrollPosition) {
-            chordsScrollPanel.setVerticalScrollPosition(lastVerticalScrollPosition);
+            chordsScrollPanel.setVerticalScrollPosition(vp);
             lastVerticalScrollPosition = vp;
             logger.finer("lastScrollLineY: " + lastScrollLineY + " to " + lastVerticalScrollPosition);
         }
     }
-
-//    protected final void onSongRender() {
-//        if (playerFlexTable != null) {
-//            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
-//            logger.fine("player table rows: " + playerFlexTable.getRowCount());
-//            for (int r = 0; r < playerFlexTable.getRowCount(); r++) {
-//                int cols = playerFlexTable.getCellCount(r);
-//                for (int c = 0; c < cols; c++) {
-//
-//                    Element element = formatter.getElement(r, c);
-//                    if (element == null)
-//                        continue;
-//
-//                    logger.finer("  measure( " + c + ", " + r + "): top "
-//                            + element.getAbsoluteBottom() + "-" + element.getAbsoluteTop() + " = "
-//                            + (element.getAbsoluteBottom() - element.getAbsoluteTop()));
-//                }
-//            }
-//        }
-//        renderHorizontalLineAt(0);
-//    }
 
     private AudioBeatDisplay audioBeatDisplay;
 
