@@ -2333,11 +2333,11 @@ public class SongBase {
         //  check bpm
         final RegExp twoOrThreeDigitsRegexp = RegExp.compile("^\\d{2,3}$");
         if (!twoOrThreeDigitsRegexp.test(bpmEntry)) {
-            throw new ParseException("BPM has to be a number from " + minBpm + " to " + maxBpm, 0);
+            throw new ParseException("BPM has to be a number from " + MusicConstant.minBpm + " to " + MusicConstant.maxBpm, 0);
         }
         int bpm = Integer.parseInt(bpmEntry);
-        if (bpm < minBpm || bpm > maxBpm) {
-            throw new ParseException("BPM has to be a number from " + minBpm + " to " + maxBpm, 0);
+        if (bpm < MusicConstant.minBpm || bpm > MusicConstant.maxBpm) {
+            throw new ParseException("BPM has to be a number from " + MusicConstant.minBpm + " to " + MusicConstant.maxBpm, 0);
         }
 
         //  check beats per bar
@@ -3242,9 +3242,6 @@ public class SongBase {
     private static final AppOptions appOptions = AppOptions.getInstance();
 
     private double lastModifiedTime;
-
-    private static final int minBpm = 50;
-    private static final int maxBpm = 400;
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 

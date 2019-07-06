@@ -28,5 +28,7 @@ public interface SongPlayMaster {
 
      void playSongOffsetRowNumber( int offset );
 
+     void playSongSetRowNumber(int row);
+
      void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

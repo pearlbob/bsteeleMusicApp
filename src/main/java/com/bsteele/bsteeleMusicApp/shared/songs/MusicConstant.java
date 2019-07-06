@@ -33,6 +33,9 @@ public class MusicConstant {
 
     public static final int measuresPerDisplayRow = 4;
 
+    public static final int minBpm = 50;
+    public static final int maxBpm = 400;
+
 
     //  has to be ahead of it's use since it's static
     private static final ChordDescriptor majorDiatonicChordModifiers[] =

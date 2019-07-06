@@ -14,6 +14,7 @@ import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
+import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -132,12 +133,32 @@ public class PlayerViewImpl
         keyUpButton.addClickHandler((ClickEvent event) -> stepCurrentKey(+1));
         keyDownButton.addClickHandler((ClickEvent event) -> stepCurrentKey(-1));
 
-        currentBpmEntry.addChangeHandler((event) -> setCurrentBpm(currentBpmEntry.getValue()));
+
+        currentBpmEntry.setTitle("Hint: Click the text entry then tap the space bar at the desired rate.");
+        currentBpmEntry.addChangeHandler((event) -> {
+            try {
+                setCurrentBpm(currentBpmEntry.getValue());
+            } catch (NumberFormatException nfe) {
+                logger.info("bad BPM: <" + currentBpmEntry.getValue() + ">");
+            }
+        });
+        currentBpmEntry.addKeyPressHandler(handler -> {
+            switch (handler.getCharCode()) {
+                default:
+                    logger.info("bpm key: " + handler.getCharCode());
+                    break;
+                case KeyCodes.KEY_SPACE:
+                    handler.preventDefault();
+                    tapToTempo();
+                    break;
+            }
+        });
 
         Event.sinkEvents(bpmSelect, Event.ONCHANGE);
         Event.setEventListener(bpmSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
                 setCurrentBpm(bpmSelect.getValue());
+                currentBpmEntry.setValue(Integer.toString(getCurrentBpm()));
             }
         });
 
@@ -173,19 +194,17 @@ public class PlayerViewImpl
                             songPlayMaster.playSongOffsetRowNumber(-1);
                             break;
                         case KeyCodes.KEY_SPACE:
-                            logger.finer("space");
-                            togglePlayStop();
+                            processSpaceKey(handler.isControlKeyDown());
                             break;
                         default:
                             logger.info("playerTopCover.addKeyDownHandler: " + Integer.toString(handler.getNativeKeyCode()));
                             break;
                     }
                     break;
-                case idle:
+                case idle:      //  fixme: not active in idle!
                     switch (handler.getNativeKeyCode()) {
                         case KeyCodes.KEY_SPACE:
-                            logger.info("space");
-                            togglePlayStop();
+                            processSpaceKey(handler.isControlKeyDown());
                             break;
                     }
                     break;
@@ -200,6 +219,34 @@ public class PlayerViewImpl
 
             logger.finer("playerTopCover.addMouseWheelHandler: " + handler.getDeltaY());
         });
+    }
+
+    private void processSpaceKey(boolean isControlKeyDown) {
+        logger.finer("space");
+        if (isControlKeyDown)
+            tapToTempo();
+        else
+            togglePlayStop();
+    }
+
+    private void tapToTempo() {
+        double tap = System.currentTimeMillis();
+        double delta = tap - lastTap;
+
+        if (delta > 0) {
+            double rawBPM = 60 * 1000 / delta;
+            double filteredBPM = Math.max(MusicConstant.minBpm, Math.min(MusicConstant.maxBpm, rawBPM));
+            if (filteredBPM != rawBPM)
+                tapCount = 0;
+            else
+                tapCount++;
+            smoothedBPM = smoothedBPM * (1 - smoothedBPMPass) + filteredBPM * smoothedBPMPass;
+
+            logger.finer("tapToTempo(): " + delta / 1000 + " s = " + smoothedBPM + " bpm  (" + filteredBPM + "), count: " + tapCount);
+            if (tapCount >= 5)
+                currentBpmEntry.setValue(Integer.toString((int) smoothedBPM));
+        }
+        lastTap = tap;
     }
 
     private void togglePlayStop() {
@@ -565,8 +612,7 @@ public class PlayerViewImpl
     }
 
     private final void renderHorizontalLineAt(double y) {
-        if (y == lastHorizontalLineY
-                || !appOptions.isPlayWithLineIndicator())
+        if (y == lastHorizontalLineY)
             return;
 
         logger.finest("y: " + y);
@@ -581,6 +627,9 @@ public class PlayerViewImpl
 
         final int lineWidth = 5;
         ctx.clearRect(0.0, lastHorizontalLineY - lineWidth / 2 - 1, w, lineWidth + 2);
+
+        if (!appOptions.isPlayWithLineIndicator())
+            return;     //  got cleared one time
 
         if (y > 0) {
             ctx.setStrokeStyle("darkGray");

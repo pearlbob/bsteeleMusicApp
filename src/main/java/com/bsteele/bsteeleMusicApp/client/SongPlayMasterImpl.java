@@ -322,6 +322,30 @@ public class SongPlayMasterImpl
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
     }
 
+    @Override
+    public void playSongSetRowNumber(int row) {
+        if (songOutUpdate == null
+                || songOutUpdate.getState() != SongUpdate.State.playing
+                || songPlayer == null
+        )
+            return;
+
+        int momentNumber = songOutUpdate.getMomentNumber();
+        if (momentNumber <= 0)     //  not during preroll
+            return;
+
+        SongBase song = songOutUpdate.getSong();
+        if (song == null)
+            return;
+        SongMoment songMoment = song.getSongMomentAtRow(row);
+        if (songMoment == null)
+            return;
+
+        songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());
+        songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
+        eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+    }
+
 
     @Override
     public void play(Song song) {

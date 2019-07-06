@@ -1,0 +1,19 @@
+#!/bin/tcsh
+#set echo; set verbose
+
+echo  this script expects to run after bsteeleMusicApp_lyrics_update
+
+set bsteeleMusicAppHome=/home/bob/GitHub/bsteeleMusicApp
+
+set f=allSongs.songlyrics
+set localBeta=/var/www/html/public_html/beta
+set date=`date -Iseconds`
+
+#	expect to be in the root directory of the project
+cd $bsteeleMusicAppHome
+
+#	copy from local beta
+scp $localBeta/$f ${user}@${mac}:/Library/Tomcat/webapps/bsteeleMusicApp/$f
+
+exit $status
+

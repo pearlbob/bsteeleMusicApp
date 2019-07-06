@@ -65,24 +65,6 @@ endif
 echo mvn javadoc:aggregate
 
 
-#	strip the client classes from the war
-#	they should all be in the .js after gwt
-set tmp=`mktemp -d /tmp/bsteeleMusicApp_tmp.XXXXXXXXXX`
-cd $tmp
-jar -xf $finalWar
-#if ( 0 ) then 
-#	#	obfuscate the java classes
-#	java -jar /home/bob/my/installs/proguard/proguard/lib/proguard.jar @$git/bsteeleMusicApp_proguard \
-#		-injars WEB-INF/classes -outjars WEB-INF/pgclasses.jar
-#	if ( $status != 0 ) exit -1;
-#endif
-rm -rf WEB-INF/classes/com/bsteele/bsteeleMusicApp/client
-jar -cfm $finalWar META-INF/MANIFEST.MF *
-
-cd $cwd
-rm -rf $tmp
-
-
 #	generate app on localhost web
 #	note: with github, it really doesn't need to be in google_drive
 rm -rf $dst/$app	#	wow!
