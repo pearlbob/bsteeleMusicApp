@@ -86,8 +86,8 @@ public class PlayerViewImpl
     @UiField
     Label statusLabel;
 
-//    @UiField
-//    CanvasElement audioBeatDisplayCanvas;
+    @UiField
+    CanvasElement audioBeatDisplayCanvas;
 
     @UiField
     ScrollPanel chordsScrollPanel;
@@ -121,7 +121,7 @@ public class PlayerViewImpl
         initWidget(binder.createAndBindUi(this));
 
 
-        // audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
+        audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
@@ -134,7 +134,7 @@ public class PlayerViewImpl
         keyDownButton.addClickHandler((ClickEvent event) -> stepCurrentKey(-1));
 
 
-        currentBpmEntry.setTitle("Hint: Click the text entry then tap the space bar at the desired rate.");
+        //currentBpmEntry.setTitle("Hint: Click the text entry then tap the space bar at the desired rate.");
         currentBpmEntry.addChangeHandler((event) -> {
             try {
                 setCurrentBpm(currentBpmEntry.getValue());
@@ -147,10 +147,29 @@ public class PlayerViewImpl
                 default:
                     logger.info("bpm key: " + handler.getCharCode());
                     break;
-                case KeyCodes.KEY_SPACE:
-                    handler.preventDefault();
-                    tapToTempo();
+                case KeyCodes.KEY_UP:
+                case KeyCodes.KEY_RIGHT:
+                    try {
+                        setCurrentBpm(Integer.parseInt(currentBpmEntry.getValue()) + 1);
+                        handler.preventDefault();
+                    } catch (NumberFormatException nfe) {
+                        logger.info("bad BPM: <" + currentBpmEntry.getValue() + ">");
+                    }
                     break;
+                case KeyCodes.KEY_DOWN:
+                case KeyCodes.KEY_LEFT:
+                    try {
+                        setCurrentBpm(Integer.parseInt(currentBpmEntry.getValue()) - 1);
+                        handler.preventDefault();
+                    } catch (NumberFormatException nfe) {
+                        logger.info("bad BPM: <" + currentBpmEntry.getValue() + ">");
+                    }
+                    break;
+
+//                case KeyCodes.KEY_SPACE:
+//                    handler.preventDefault();
+//                    tapToTempo();
+//                    break;
             }
         });
 
@@ -419,13 +438,13 @@ public class PlayerViewImpl
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
-                //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
+                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
                 statusLabel.setVisible(true);
                 playerTopCover.getCanvasElement().getStyle().setZIndex(1);
                 break;
             case idle:
                 playStopButton.setText("Play");
-                //audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
+                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
                 statusLabel.setVisible(false);
                 scrollForLineAt(0); //  hide
                 playerTopCover.getCanvasElement().getStyle().setZIndex(-2);
@@ -442,8 +461,8 @@ public class PlayerViewImpl
             return;
 
         try {
-//        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
-//                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+            audioBeatDisplay.update(event.getT(), songUpdate.getMomentNumber(),
+                    songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
 
             {
                 Widget parent = player.getParent();
@@ -466,11 +485,11 @@ public class PlayerViewImpl
 
             if (chordsDirty) {
 
-//            //  turn off all highlights
-//            if (lastLyricsElement != null) {
-//                lastLyricsElement.getStyle().clearBackgroundColor();
-//                lastLyricsElement = null;
-//            }
+            //  turn off all highlights
+            if (lastLyricsElement != null) {
+                lastLyricsElement.getStyle().clearBackgroundColor();
+                lastLyricsElement = null;
+            }
 
                 //  high light chord and lyrics
                 switch (songUpdate.getState()) {

@@ -65,7 +65,7 @@ public class SongBase {
      * All repeats are expanded.  Measure node such as comments,
      * repeat ends, repeat counts, section headers, etc. are ignored.
      */
-    private final void computeSongMoments() {
+     final void computeSongMoments() {
         if (!songMoments.isEmpty())
             return;
 

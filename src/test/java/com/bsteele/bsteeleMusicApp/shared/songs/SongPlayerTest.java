@@ -109,7 +109,8 @@ public class SongPlayerTest {
                         lastMomentNumber = momentNumber;
                     }
 
-                    logger.finest("t: " + t + ", m: " + momentNumber + " " + a.getSongMoment(momentNumber));
+                    logger.finest("t: " + t
+                            + ", m: " + momentNumber + " " + a.getSongMoment(momentNumber));
 
                     SongMoment songMoment = a.getSongMoment(momentNumber);
                     logger.finest("t: " + t + ", m: " + momentNumber + " " + songMoment);
@@ -121,7 +122,10 @@ public class SongPlayerTest {
                         logger.fine("t: " + t + ", m: " + (songMoment != null ? songMoment.getMeasure() : null) + ", beat: " + beat);
                         lastBeat = beat;
                     }
-                    logger.finer("t: " + t + ", m: " + (songMoment != null ? songMoment.getMeasure() : null) + ", beat: " + beat + ", beatFraction: " + songPlayer.getBeatFraction(t));
+                    logger.finer("t: " + t
+                            + ", m: " + (songMoment != null ? songMoment.getMeasure() : null)
+                            + ", beat: " + beat
+                            + ", beatFraction: " + songPlayer.getBeatFraction(t));
                 }
 
                 logger.fine("t: " + t);
@@ -185,6 +189,38 @@ public class SongPlayerTest {
             }
             logger.fine("t: " + t);
         }
+    }
+
+    @Test
+    public void testSectionSequenceChanges() {
+
+//        int songMinutes = 4;
+//        double eMax = 0;
+//
+//        for (int bpm = 179; bpm <= 180; bpm++) {
+//
+//            double beatT = 60.0/bpm;
+//            double songDurationS = bpm * songMinutes;
+//
+//
+//            int beatCount = 0;
+//            for ( double t = 0; t < songDurationS; beatCount++, t+= beatT){
+//
+//                double e = Math.abs(beatCount*beatT - t);
+//                if ( e > eMax ){
+//                    logger.info("bpm: "+bpm+", t: "+t+", e: "+e);
+//                    eMax = e;
+//                }
+//
+//            }
+//        }
+//        //  in 4 minutes
+//        //  53:45.728 INFO   : bpm: 179, t: 715.9776536313118, e: 2.6943780540023E-11
+//        //  in 400 minutes
+//        //  56:32.805 INFO   : bpm: 179, t: 71599.4413411908, e: 4.0869053918868303E-7
+//        //  double rounding errors too small to worry about
+//        //  but restart base time on song play start
+
     }
 
     private static Logger logger = Logger.getLogger(SongPlayerTest.class.getName());

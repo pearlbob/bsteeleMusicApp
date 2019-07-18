@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 public class SongPlayer {
     public SongPlayer(@Nonnull SongBase songBase) {
         this.songBase = songBase;
+        songBase.computeSongMoments();  //  compute song moments off of realtime constraints
     }
 
     /**
