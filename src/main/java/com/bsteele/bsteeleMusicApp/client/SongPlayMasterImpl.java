@@ -131,6 +131,7 @@ public class SongPlayMasterImpl
                 }
                 eventBus.fireEvent(new MusicAnimationEvent(tn,
                         (songPlayer == null ? 0 : songPlayer.getBeat(t)),
+                        (songPlayer == null ? 0 : songPlayer.getBeatFraction(t)),
                         songOutUpdate.getMomentNumber()));
             }
         });

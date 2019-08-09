@@ -79,7 +79,7 @@
                                        styleName="{resources.style.playChordsBackground}"
                                        title="Background for song scrolling."/>
                             <g:HTMLPanel>
-                                <canvas ui:field="audioBeatDisplayCanvas" height="45"
+                                <canvas ui:field="audioBeatDisplayCanvas" height="60"
                                         title="Beat display of audio.">
                                     Your browser does not support the HTML5 canvas tag.
                                 </canvas>

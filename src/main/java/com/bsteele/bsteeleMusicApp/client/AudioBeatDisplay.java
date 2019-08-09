@@ -3,17 +3,18 @@
  */
 package com.bsteele.bsteeleMusicApp.client;
 
-import com.bsteele.bsteeleMusicApp.shared.util.Util;
+import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.CanvasElement;
+
+import java.util.logging.Logger;
 
 /**
  * @author bob
  */
 public class AudioBeatDisplay {
-
-    private AudioBeatDisplay() {
-    }
 
     public AudioBeatDisplay(CanvasElement canvasElement) {
         initialize(canvasElement);
@@ -36,26 +37,17 @@ public class AudioBeatDisplay {
         ctx.fillRect(0, 0, canvasElement.getWidth(), canvasElement.getHeight());
     }
 
-    public void update(final double currentTime, final int momentNumber,
-                       final int bpm, final boolean doSubBeat, final int requestedBeatsPerBar) {
-
-        int beatsPerBar = (requestedBeatsPerBar <= 0 ? 4 : requestedBeatsPerBar);
-        double sPerBeat = 60.0 / bpm;
-        double sPerBar = beatsPerBar * sPerBeat;
-        double barT = Util.mod(currentTime, sPerBar);
-        int beat = (int) Math.floor(beatsPerBar * barT / sPerBar);
-        double beatT = barT % (sPerBar / beatsPerBar);
-        boolean beatFlash = (beatT < sPerBeat / 2);
+    public final void update(final SongUpdate songUpdate, final int beatNumber, final double beatFraction) {
 
         int w = canvas.getWidth();
         int h = canvas.getHeight();
 
         //  background
-        String startColor = backgroundColor;
+        String startColor = gray;
         {
-            //GWT.log("b: "+beat+", "+lastBeatFlash);
+            //GWT.log("b: "+beatNumber);
 
-            switch (momentNumber) {
+            switch (songUpdate.getMomentNumber()) {
                 case -2:
                     startColor = orange;
                     break;
@@ -65,29 +57,41 @@ public class AudioBeatDisplay {
                 case 0:
                     startColor = lawnGreen;
                     break;
+                default:
+                    startColor = "#000000";
+                    break;
             }
         }
-        String beatColor = ((beat == 0 && beatFlash) ? beat1FlashColor : startColor);
+        logger.finest("b: " + beatNumber + " " + beatFraction);
 
-        ctx.setFillStyle(beatColor);
+        ctx.setFillStyle(backgroundColor);
+        final int radius = 7;
         double padding = w * 0.15;
-        ctx.fillRect(padding, 0, w - 2 * padding, h);
+        int bounceH = h - 2 * radius - radius;
+        ctx.fillRect(padding, 0, w, h);
 
         //  text
-        ctx.setFillStyle("#000000");
-        ctx.setFont("bold 40px sans-serif");
-        ctx.fillText(Integer.toString(beat + 1), w / 2, h * 3 / 4 + 2);
-//
-//            //GWT.log("t: "+(currentTime-lastT)+", b: "+beat+", "+beatColor);
-//            //lastT=  currentTime;
-//        }
+//        ctx.setFillStyle("#000000");
+//        ctx.setFont("bold 40px sans-serif");
+//        ctx.fillText(Double.toString(beatNumber + 1 + beatFraction), w / 2, h * 3 / 4 + 2);
+
+        ctx.setFillStyle(startColor);
+        ctx.beginPath();
+
+        double x = beatFraction - 0.5;
+        ctx.arc(padding + radius + bounceH * (beatNumber + beatFraction), h - radius - (-4 * x * x + 1) * bounceH
+                , radius, 0, Math.PI * 2);
+        ctx.fill();
     }
 
-    private static final String beat1FlashColor = "#dc8aff";
+    private static final String gray = "#808080";
     private static final String orange = "#FFA500";
     private static final String red = "#FF0000";
     private static final String lawnGreen = "#7CFC00";
     private static final String backgroundColor = "#FFFDF6";
     private CanvasElement canvas;
     private Context2d ctx;
+    private static final CssColor ballColor = CssColor.make(255, 0, 0);
+
+    private static Logger logger = Logger.getLogger(AudioBeatDisplay.class.getName());
 }

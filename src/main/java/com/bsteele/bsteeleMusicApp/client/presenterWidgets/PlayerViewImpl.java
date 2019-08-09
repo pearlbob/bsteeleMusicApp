@@ -461,8 +461,7 @@ public class PlayerViewImpl
             return;
 
         try {
-            audioBeatDisplay.update(event.getT(), songUpdate.getMomentNumber(),
-                    songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
+            audioBeatDisplay.update(songUpdate, event.getBeatNumber(), event.getBeatFraction() );
 
             {
                 Widget parent = player.getParent();
