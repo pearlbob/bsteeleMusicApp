@@ -119,10 +119,15 @@ public class SongPlayer {
 
         t -= t0;
         double ret = t % beatDuration;
-        if ( ret < 0 )
+        if (ret < 0)
             ret += beatDuration;
 
         return ret / beatDuration;
+    }
+
+    public final int getBeatCount() {
+        SongMoment songMoment = songBase.getSongMoment(momentNumber);
+        return songMoment != null ? songMoment.getMeasure().getBeatCount() : songBase.getBeatsPerBar();
     }
 
     public final double getT0() {

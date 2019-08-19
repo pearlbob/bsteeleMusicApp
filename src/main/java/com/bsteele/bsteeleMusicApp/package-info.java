@@ -17,6 +17,7 @@
 package com.bsteele.bsteeleMusicApp;
 
 /*
+fixme: Cannot read property 'getSectionVersion__Lcom_bsteele_bsteeleMusicApp_shared_songs_SectionVersion_2
 todo: audio
 todo: tap to bpm
 fixme: scrolling during play, up and down

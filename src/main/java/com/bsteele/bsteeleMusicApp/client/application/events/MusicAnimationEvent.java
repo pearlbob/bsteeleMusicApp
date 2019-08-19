@@ -12,11 +12,13 @@ public class MusicAnimationEvent extends GwtEvent<MusicAnimationEventHandler> {
 
     private final double t; //  units: seconds
     private final int measureNumber;
+    private final int beatCount;
     private final int beatNumber;
     private final double beatFraction;
 
-    public MusicAnimationEvent(double t, int beatNumber, double beatFraction, int measureNumber) {
+    public MusicAnimationEvent(double t, int beatCount, int beatNumber, double beatFraction, int measureNumber) {
         this.t = t;
+        this.beatCount = beatCount;
         this.beatNumber = beatNumber;
         this.beatFraction = beatFraction;
         this.measureNumber = measureNumber;
@@ -34,6 +36,10 @@ public class MusicAnimationEvent extends GwtEvent<MusicAnimationEventHandler> {
 
     public double getT() {
         return t;
+    }
+
+    public int getBeatCount() {
+        return beatCount;
     }
 
     public int getBeatNumber() {

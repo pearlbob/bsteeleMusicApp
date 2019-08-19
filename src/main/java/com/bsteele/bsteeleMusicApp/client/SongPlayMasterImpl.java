@@ -127,12 +127,14 @@ public class SongPlayMasterImpl
                     case playing:
                         //  distribute the time update locally
                         songMomentUpdate(t);
+                        eventBus.fireEvent(new MusicAnimationEvent(tn,
+                                (songPlayer == null ? 0 : songPlayer.getBeatCount()),
+                                (songPlayer == null ? 0 : songPlayer.getBeat(t)),
+                                (songPlayer == null ? 0 : songPlayer.getBeatFraction(t)),
+                                songOutUpdate.getMomentNumber()));
                         break;
                 }
-                eventBus.fireEvent(new MusicAnimationEvent(tn,
-                        (songPlayer == null ? 0 : songPlayer.getBeat(t)),
-                        (songPlayer == null ? 0 : songPlayer.getBeatFraction(t)),
-                        songOutUpdate.getMomentNumber()));
+
             }
         });
     }

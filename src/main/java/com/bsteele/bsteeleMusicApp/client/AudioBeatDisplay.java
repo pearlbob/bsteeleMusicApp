@@ -4,7 +4,6 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
-import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.CssColor;
 import com.google.gwt.dom.client.CanvasElement;
@@ -37,7 +36,9 @@ public class AudioBeatDisplay {
         ctx.fillRect(0, 0, canvasElement.getWidth(), canvasElement.getHeight());
     }
 
-    public final void update(final SongUpdate songUpdate, final int beatNumber, final double beatFraction) {
+    public final void update(final SongUpdate songUpdate, final int beatCount, final int beatNumber, final double beatFraction) {
+
+        //  fixme:  only can on an as needed basis
 
         int w = canvas.getWidth();
         int h = canvas.getHeight();
@@ -58,32 +59,40 @@ public class AudioBeatDisplay {
                     startColor = lawnGreen;
                     break;
                 default:
-                    startColor = "#000000";
+                    if (songUpdate.getMomentNumber() > 0)
+                        //  normal
+                        startColor = black;
                     break;
             }
         }
-        logger.finest("b: " + beatNumber + " " + beatFraction);
+        //logger.finest("b: " + beatNumber + " " + beatFraction);
 
         ctx.setFillStyle(backgroundColor);
         final int radius = 7;
-        double padding = w * 0.15;
+        double padding = w * 0.25;
         int bounceH = h - 2 * radius - radius;
-        ctx.fillRect(padding, 0, w, h);
+        ctx.fillRect(0, 0, w, h);
 
         //  text
-//        ctx.setFillStyle("#000000");
-//        ctx.setFont("bold 40px sans-serif");
-//        ctx.fillText(Double.toString(beatNumber + 1 + beatFraction), w / 2, h * 3 / 4 + 2);
+        ctx.setFillStyle("#000000");
+        ctx.setFont("bold 40px sans-serif");
+        ctx.fillText(Integer.toString(beatNumber + 1), 4, h * 3 / 4 + 2);
 
         ctx.setFillStyle(startColor);
         ctx.beginPath();
 
         double x = beatFraction - 0.5;
-        ctx.arc(padding + radius + bounceH * (beatNumber + beatFraction), h - radius - (-4 * x * x + 1) * bounceH
+        double dx = (beatNumber == beatCount - 1
+                ? (beatCount - 1) * (1 - beatFraction)
+                : beatNumber % beatCount + beatFraction);
+        //  logger.info( "dx: "+dx+", n: "+beatNumber);
+        ctx.arc(padding + radius + bounceH / 2 * dx
+                , h - radius - (-4 * x * x + 1) * bounceH
                 , radius, 0, Math.PI * 2);
         ctx.fill();
     }
 
+    private static final String black = "#000000";
     private static final String gray = "#808080";
     private static final String orange = "#FFA500";
     private static final String red = "#FF0000";
