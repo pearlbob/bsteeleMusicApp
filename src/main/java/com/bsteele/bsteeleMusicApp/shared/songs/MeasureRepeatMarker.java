@@ -37,6 +37,10 @@ public class MeasureRepeatMarker extends Measure {
         return repeats < o.repeats ? -1 : (repeats > o.repeats ? 1 : 0);
     }
 
+    public boolean isEndOfRow() {
+        return true;
+    }
+
     @Override
     public String toString() {
         return "x" + getRepeats();

@@ -135,7 +135,7 @@ public class Phrase extends MeasureNode {
     }
 
 
-     MeasureNode findMeasureNode(MeasureNode measureNode) {
+    MeasureNode findMeasureNode(MeasureNode measureNode) {
         for (Measure m : measures) {
             if (m == measureNode)
                 return m;
@@ -461,6 +461,23 @@ public class Phrase extends MeasureNode {
         StringBuilder sb = new StringBuilder();
         for (Measure measure : measures) {
             sb.append(measure.toString()).append(" ");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String toJson() {
+        if (measures == null || measures.isEmpty())
+            return "[]";
+
+        StringBuilder sb = new StringBuilder();
+        if (!measures.isEmpty()) {
+            Measure lastMeasure = measures.get(measures.size() - 1);
+            for (Measure measure : measures) {
+                sb.append(measure.toJson());
+                if (measure != lastMeasure && !measure.isEndOfRow())
+                    sb.append(" ");
+            }
         }
         return sb.toString();
     }

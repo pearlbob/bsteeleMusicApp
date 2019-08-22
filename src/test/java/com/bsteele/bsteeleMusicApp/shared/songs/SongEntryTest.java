@@ -26,8 +26,9 @@ public class SongEntryTest
                     "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
                     "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
 
-            assertEquals("I: []", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("i:"))));
+            assertEquals("GD.C ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("gd.c"))));
 
+            assertEquals("I: []", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("i:"))));
 
             assertEquals("DmE ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("dme"))));
             assertEquals("Dmaj ", MeasureNode.concatMarkup(a.parseChordEntry(SongBase.entryToUppercase("dmaj"))));

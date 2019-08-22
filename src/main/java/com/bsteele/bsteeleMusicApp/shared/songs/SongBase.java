@@ -65,7 +65,7 @@ public class SongBase {
      * All repeats are expanded.  Measure node such as comments,
      * repeat ends, repeat counts, section headers, etc. are ignored.
      */
-     final void computeSongMoments() {
+    final void computeSongMoments() {
         if (!songMoments.isEmpty())
             return;
 
@@ -437,6 +437,8 @@ public class SongBase {
                     //  reset on sequential reset characters
                     if (Character.isWhitespace(c)
                             || c == '/'
+                            || c == '.'
+                            || c == ','
                             || c == ':'
                             || c == '#'
                             || c == MusicConstant.flatChar
@@ -647,7 +649,7 @@ public class SongBase {
         //  grid each section
         int row = 0;
         int col = 0;
-        int measuresPerline = 4;    //  fixme: should be dynamic, read from each phrase
+        final int measuresPerline = 8;
         final int offset = 1;       //  offset of phrase start from section start
         //  use a separate set to avoid modifying a set
         TreeSet<SectionVersion> sectionVersionsToDo = new TreeSet<>(chordSectionMap.keySet());
@@ -740,8 +742,10 @@ public class SongBase {
                             continue;
                         }
 
-                        //  limit line length to the measures per line
-                        if (col >= offset + measuresPerline) {
+
+                        if ((lastMeasure != null && lastMeasure.isEndOfRow())
+                                || col >= offset + measuresPerline  //  limit line length to the measures per line
+                        ) {
                             //  put an end of line marker on multiline repeats
                             if (phrase.isRepeat()) {
                                 grid.set(col++, row, new ChordSectionLocation(sectionVersion, phraseIndex,
@@ -860,7 +864,7 @@ public class SongBase {
         StringBuilder sb = new StringBuilder();
 
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
-            sb.append(chordSection.toString());
+            sb.append(chordSection.toJson());
             sb.append("\n");
         }
         chordsAsMarkup = sb.toString();

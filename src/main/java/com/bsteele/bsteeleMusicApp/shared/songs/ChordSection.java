@@ -185,6 +185,18 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 //  ignore
             }
 
+            //  consume unused commas
+            {
+                final RegExp commaRegexp = RegExp.compile(followingCommaRegexpPattern);
+                String s = markedString.remainingStringLimited(10);
+                logger.finest("s: " + s);
+                MatchResult mr = commaRegexp.exec(s);
+                if (mr != null) {
+                    markedString.consume(mr.getGroup(0).length());
+                    continue;
+                }
+            }
+
             try {
                 //  look for a comment
                 MeasureComment measureComment = MeasureComment.parse(markedString);
@@ -220,7 +232,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                 } else
                     logger.info("here: " + s);
             }
-            logger.info( "can't figure out: " + markedString.toString());
+            logger.info("can't figure out: " + markedString.toString());
             throw new ParseException("can't figure out: " + markedString.toString(), 0);   //  all whitespace
         }
 
@@ -539,6 +551,22 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sb.toString();
     }
 
+    @Override
+    public String toJson() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSectionVersion().toString()).append("\n");
+        if (phrases == null || phrases.isEmpty()) {
+            sb.append("[]");
+        } else
+            for (Phrase phrase : phrases) {
+                String s = phrase.toJson();
+                sb.append(s);
+                if (!s.endsWith("\n"))
+                    sb.append("\n");
+            }
+        return sb.toString();
+    }
+
     /**
      * Old style markup
      *
@@ -597,4 +625,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     //private Integer bpm;
     //private Integer beatsPerBar;
     private static final Logger logger = Logger.getLogger(ChordSection.class.getName());
+
+    private static final String followingCommaRegexpPattern = "^\\s*,";
 }

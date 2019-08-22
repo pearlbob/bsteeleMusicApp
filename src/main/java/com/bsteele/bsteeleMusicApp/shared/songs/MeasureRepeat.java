@@ -49,6 +49,7 @@ public class MeasureRepeat extends Phrase {
         boolean barFound = false;
         for (int i = 0; i < 1e3; i++) {   //  safety
             Util.stripLeadingSpaces(markedString);
+            logger.finest("repeat parsing: "+markedString.remainingStringLimited(10));
             if (markedString.isEmpty()) {
                 markedString.resetToMark(initialMark);
                 throw new ParseException("no data to parse", 0);
@@ -57,6 +58,10 @@ public class MeasureRepeat extends Phrase {
             //  extend the search for a repeat only if the line ends with a |
             if (markedString.charAt(0) == '|') {
                 barFound = true;
+                markedString.consume(1);
+                continue;
+            }
+            if ( barFound && markedString.charAt(0) == ',') {
                 markedString.consume(1);
                 continue;
             }
@@ -294,6 +299,11 @@ public class MeasureRepeat extends Phrase {
     @Override
     public String toMarkup() {
         return "[" + (getMeasures().isEmpty() ? "" : super.toMarkup()) + "] x" + getRepeats() + " ";
+    }
+
+    @Override
+    public String toJson() {
+        return "[" + (getMeasures().isEmpty() ? "" : super.toJson()) + "] x" + getRepeats();
     }
 
     @Override

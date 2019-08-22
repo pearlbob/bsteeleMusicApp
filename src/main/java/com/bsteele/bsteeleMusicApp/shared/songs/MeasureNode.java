@@ -113,6 +113,13 @@ public abstract class MeasureNode {
     }
 
     /**
+     * Export to JSON
+     *
+     * @return JSON formatted string without character escapes
+     */
+    public abstract String toJson();
+
+    /**
      * The id to uniquely identify this measureNode in the song.
      *
      * @return the id

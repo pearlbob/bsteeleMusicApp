@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 
 import javax.annotation.Nonnull;
 import java.text.ParseException;
@@ -76,7 +78,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      *
      * @param markedString input string buffer
      * @param beatsPerBar  beats per bar
-     * @param priorMeasure  the prior measure, in case of -
+     * @param priorMeasure the prior measure, in case of -
      * @return the measure for the parsing
      * @throws ParseException thrown if parsing fails
      */
@@ -89,7 +91,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
         ArrayList<Chord> chords = new ArrayList<>();
         Measure ret = null;
-        for (int i = 0; i < 8; i++)    //  safety
+        for (int i = 0; i < 32; i++)    //  safety
         {
             if (markedString.isEmpty())
                 break;
@@ -111,6 +113,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                     markedString.getNextChar();
                     break;
                 }
+
                 //  see if this is a repeat measure
                 if (chords.isEmpty() && markedString.charAt(0) == '-' && priorMeasure != null) {
                     ret = new Measure(beatsPerBar, priorMeasure.getChords());
@@ -125,6 +128,14 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
         if (ret == null)
             ret = new Measure(beatsPerBar, chords);
+
+        //  process end of row markers
+        final RegExp sectionRegexp = RegExp.compile(followingCommaRegexpPattern);
+        MatchResult mr = sectionRegexp.exec(markedString.toString());
+        if (mr != null) {
+            markedString.consume(mr.getGroup(0).length());
+            ret.setEndOfRow(true);
+        }
 
         return ret;
     }
@@ -281,13 +292,22 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
     @Override
     public String toMarkup() {
+        return toMarkup(',');
+    }
+
+    @Override
+    public String toJson() {
+        return toMarkup('\n');
+    }
+
+    private final String toMarkup(char endOfRowChar) {
         if (chords != null && !chords.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (Chord chord : chords) {
                 sb.append(chord.toString());
             }
-            if ( isEndOfRow())
-                sb.append(", ");
+            if (endOfRowChar > 0 && isEndOfRow())
+                sb.append(endOfRowChar);
             return sb.toString();
         }
         return "X";  // no chords
@@ -359,5 +379,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
     public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
     public static final Measure defaultMeasure = new Measure(4, emptyChordList);
+
+    private static final String followingCommaRegexpPattern = "^\\s*,";
 
 }

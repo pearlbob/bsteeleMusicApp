@@ -118,6 +118,11 @@ public class MeasureComment extends Measure {
     }
 
     @Override
+    public String toJson() {
+        return toString();
+    }
+
+    @Override
     public boolean isEndOfRow(){
         return true;
     }

@@ -23,9 +23,16 @@ public class MeasureRepeatTest {
                 //  expected
             }
 
-            String s = "[A B C D ] x2 ";
+            String s = "A B C D |\n E F G Gb x2 ";
             MarkedString markedString = new MarkedString(s);
             MeasureRepeat refRepeat = MeasureRepeat.parse(markedString, 0, 4, null);
+            assertNotNull(refRepeat);
+            assertEquals("[A B C D E F G G♭ ] x2 ", refRepeat.toMarkup());
+            assertEquals(0, markedString.available());
+
+            s = "[A B C D ] x2 ";
+            markedString = new MarkedString(s);
+            refRepeat = MeasureRepeat.parse(markedString, 0, 4, null);
             assertNotNull(refRepeat);
             assertEquals(s, refRepeat.toMarkup());
             assertEquals(0, markedString.available());

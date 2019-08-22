@@ -270,7 +270,7 @@ public class Song extends SongBase implements Comparable<Song> {
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < jaLimit; i++) {
                             sb.append(ja.get(i).isString().stringValue());
-                            sb.append("\n");
+                            sb.append(",\n");       //  brutal way to transcribe the new line without the chaos of a newline character
                         }
                         song.parseChords(sb.toString());
                     } else {
