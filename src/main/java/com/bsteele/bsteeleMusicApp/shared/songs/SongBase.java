@@ -2429,19 +2429,19 @@ public class SongBase {
             }
         }
 
-        newSong.setMessage(null);
-
         if (newSong.getMessage() == null) {
             for (ChordSection chordSection : newSong.getChordSections()) {
                 for (Phrase phrase : chordSection.getPhrases()) {
                     for (Measure measure : phrase.getMeasures()) {
                         if (measure.isComment()) {
-                            newSong.setMessage("chords should not have comments: see " + chordSection.toString());
+                            throw new ParseException("chords should not have comments: see " + chordSection.toString(), 0);
                         }
                     }
                 }
             }
         }
+
+        newSong.setMessage(null);
 
         if (newSong.getMessage() == null) {
             //  an early song with default (no) structure?

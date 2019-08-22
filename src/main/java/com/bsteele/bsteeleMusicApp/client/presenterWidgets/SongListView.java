@@ -178,9 +178,10 @@ public class SongListView
                 try {
                     Song newSong = song.checkSong();
 
-                    //  include commented songs
-                    if (newSong.getMessage() != null)
-                        sortedSongs.add(song);
+//  do not            //  include commented songs
+//                    if (newSong.getMessage() != null)
+//                        sortedSongs.add(song);
+
                 } catch (ParseException pe) {
                     //  parse error
                     sortedSongs.add(song);

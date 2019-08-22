@@ -117,5 +117,10 @@ public class MeasureComment extends Measure {
         return comment == null || comment.length() <= 0 ? "" : "(" + comment + ")";
     }
 
+    @Override
+    public boolean isEndOfRow(){
+        return true;
+    }
+
     private final String comment;
 }

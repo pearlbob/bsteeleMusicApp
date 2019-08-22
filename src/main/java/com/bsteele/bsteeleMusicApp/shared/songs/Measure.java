@@ -46,6 +46,8 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             chords.add(new Chord(chord));
         }
         this.chords = chords;
+
+        this.endOfRow = measure.endOfRow;
     }
 
     protected Measure() {
@@ -269,6 +271,14 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
 
+    public boolean isEndOfRow() {
+        return endOfRow;
+    }
+
+    public void setEndOfRow(boolean endOfRow) {
+        this.endOfRow = endOfRow;
+    }
+
     @Override
     public String toMarkup() {
         if (chords != null && !chords.isEmpty()) {
@@ -276,6 +286,8 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             for (Chord chord : chords) {
                 sb.append(chord.toString());
             }
+            if ( isEndOfRow())
+                sb.append(", ");
             return sb.toString();
         }
         return "X";  // no chords
@@ -342,8 +354,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
     private int beatCount = 4;  //  default only
+    private boolean endOfRow = false;
     private ArrayList<Chord> chords = new ArrayList<>();
 
     public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
     public static final Measure defaultMeasure = new Measure(4, emptyChordList);
+
 }

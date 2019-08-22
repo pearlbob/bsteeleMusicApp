@@ -45,21 +45,18 @@ public class AudioBeatDisplay {
 
         //  background
         String startColor = gray;
-        {
-            //GWT.log("b: "+beatNumber);
 
-            switch (songUpdate.getMomentNumber()) {
+        {
+            int n = songUpdate.getMomentNumber();
+            switch (n) {
                 case -2:
                     startColor = orange;
                     break;
                 case -1:
                     startColor = red;
                     break;
-                case 0:
-                    startColor = lawnGreen;
-                    break;
                 default:
-                    if (songUpdate.getMomentNumber() > 0)
+                    if (n >= 0)
                         //  normal
                         startColor = black;
                     break;
@@ -96,7 +93,7 @@ public class AudioBeatDisplay {
     private static final String gray = "#808080";
     private static final String orange = "#FFA500";
     private static final String red = "#FF0000";
-    private static final String lawnGreen = "#7CFC00";
+    //private static final String lawnGreen = "#7CFC00";
     private static final String backgroundColor = "#FFFDF6";
     private CanvasElement canvas;
     private Context2d ctx;
