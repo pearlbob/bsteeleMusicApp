@@ -18,6 +18,14 @@ public class MeasureTest extends TestCase {
         Measure m;
         try {
             {
+                s = "X.";
+
+                m = Measure.parse(s, 4);
+                assertNotNull(m);
+                //  explicit measure short of beats is left as specified
+                assertEquals(s, m.toMarkup());
+            }
+            {
                 s = "GD.C";
                 m = Measure.parse(s, 4);
                 assertNotNull(m);

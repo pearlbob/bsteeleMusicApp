@@ -68,7 +68,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         ArrayList<Phrase> phrases = new ArrayList<>();
         ArrayList<Measure> measures = new ArrayList<>();
         ArrayList<Measure> lineMeasures = new ArrayList<>();
-        boolean repeatMarker = false;
+      //  boolean repeatMarker = false;
         Measure lastMeasure = null;
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
         {
@@ -79,59 +79,6 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             //  quit if next section found
             if (Section.lookahead(markedString))
                 break;
-
-            //  look for a repeat marker
-            if (markedString.charAt(0) == '|') {
-                if (!measures.isEmpty()) {
-                    //  add measures prior to the repeat to the output
-                    phrases.add(new Phrase(measures, phrases.size()));
-                    measures = new ArrayList<>();
-                }
-                repeatMarker = true;
-                markedString.consume(1);
-                continue;
-            }
-
-            //  look for a repeat end
-            if (markedString.charAt(0) == 'x') {
-                repeatMarker = false;
-                markedString.consume(1);
-
-                //  look for repeat count
-                Util.stripLeadingSpaces(markedString);
-                if (markedString == null || markedString.isEmpty())
-                    break;
-
-                final RegExp oneOrMoreDigitsRegexp = RegExp.compile("^(\\d+)");
-                MatchResult mr = oneOrMoreDigitsRegexp.exec(markedString.toString());
-                if (mr != null) {
-                    if (!measures.isEmpty()) {
-                        //  add measures prior to the single line repeat to the output
-                        phrases.add(new Phrase(measures, phrases.size()));
-                        measures = new ArrayList<>();
-                    }
-                    String ns = mr.getGroup(1);
-                    markedString.consume(ns.length());
-                    int repeatTotal = Integer.parseInt(ns);
-                    phrases.add(new MeasureRepeat(lineMeasures, phrases.size(), repeatTotal));
-                    lineMeasures = new ArrayList<>();
-                }
-                continue;
-            }
-
-            //  use a newline as the default repeat marker
-            if (markedString.charAt(0) == '\n') {
-                if (!repeatMarker) {
-                    //  add line of measures to output collection
-                    for (Measure m : lineMeasures)
-                        measures.add(m);
-                    lineMeasures = new ArrayList<>();
-                }
-                //  consume the newline
-                markedString.consume(1);
-                continue;
-            }
-
 
             try {
                 //  look for a block repeat
@@ -200,6 +147,9 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
             try {
                 //  look for a comment
                 MeasureComment measureComment = MeasureComment.parse(markedString);
+                for (Measure m : lineMeasures)
+                    measures.add(m);
+                lineMeasures.clear();
                 lineMeasures.add(measureComment);
                 continue;
             } catch (ParseException pex) {
@@ -227,6 +177,9 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
                     s = s.trim();   //  in case there is white space inside unbalanced parens
 
                     MeasureComment measureComment = new MeasureComment(s);
+                    for (Measure m : lineMeasures)
+                        measures.add(m);
+                    lineMeasures.clear();
                     lineMeasures.add(measureComment);
                     continue;
                 } else

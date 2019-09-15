@@ -15,7 +15,7 @@ public class PitchTest
     @Test
     public void testPitch() {
         if (false
-            //|| true
+            || true
                 ) {
             //  print table
             for (Pitch p : Pitch.values()) {

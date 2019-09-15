@@ -49,7 +49,7 @@ public class SectionVersionTest {
 
                     sectionVersion = SectionVersion.parse(markedString);
 
-                    assertEquals(chords, markedString.toString());
+                    assertEquals(chords.trim(), markedString.toString().trim());
                     assertNotNull(sectionVersion);
                     assertEquals(section, sectionVersion.getSection());
                     assertEquals(i, sectionVersion.getVersion());

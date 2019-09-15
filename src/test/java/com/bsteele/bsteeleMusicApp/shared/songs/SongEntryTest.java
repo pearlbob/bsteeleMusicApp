@@ -1,8 +1,5 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.client.songs.Song;
-import com.bsteele.bsteeleMusicApp.client.util.StringTripleToHtmlTable;
-import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -21,7 +18,7 @@ public class SongEntryTest
             int beatsPerBar = 4;
             SongBase a;
 
-             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, beatsPerBar, 4,
                     "verse: A B C D prechorus: D E F F# chorus: G D C G x3",
                     "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
@@ -200,6 +197,70 @@ public class SongEntryTest
             fail();
         }
 
+    }
+
+
+    private String testMarkupString(String chords) {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                chords,
+                "i:\nv: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro");
+        String originalTransport = a.chordsToJsonTransportString();
+        String originalMarkup = a.toMarkup();
+        a.parseChordEntry(a.toMarkup());    //  re-load the markup as the chords
+
+        String parsedMarkup = a.toMarkup();
+        String parsedTransport = a.chordsToJsonTransportString();
+
+        //  verify nothing has changed
+        logger.info(originalMarkup);
+        logger.info(a.toMarkup());
+        logger.fine(parsedMarkup);
+        assertEquals(originalMarkup, parsedMarkup);
+
+        logger.info(originalTransport);
+        logger.fine(parsedTransport);
+        assertEquals(originalTransport, parsedTransport);
+
+        return parsedMarkup;
+    }
+
+    private void testTransportString(String chords) {
+        String parsedMarkup = testMarkupString(chords);
+        //  verify the in equals the out after parsing
+        assertEquals(chords, parsedMarkup);
+    }
+
+
+    @Test
+    public void testTransportString() {
+        testMarkupString("C:Am - C -\nGG C GG C x2");
+        testTransportString("V: A B C D, B C  PC: D E F F♯  C: [G D, C G ] x3  ");
+        testTransportString("V: A B C D  ");
+        testTransportString("V: [G D C G ] x3  ");
+        testTransportString("V: [G D C G ] x3 D E F G  ");
+        testTransportString("V: A B C D [G D C G ] x3 D E F G  ");
+        testTransportString("V: A B C D [G D C G ] x3  ");
+    }
+
+    @Test
+    public void testMarkupString() {
+        testMarkupString("V: A B C D\nB C\nPC: D E F F♯\nC: [G D C G ] x3  ");
+//        testMarkupString("V: A B C D B C\nPC: D E F F♯\nC: G D C G  x3  ");
+//        testMarkupString("V: A B C D\nB C\nPC: D E F F♯\nC: G D C G B C D G x3  ");
+//        testMarkupString("V: A B C D\nB C\nPC: D E F F♯\nC: G D C G B C D G A B C D x3  ");
+//        testMarkupString("V: A B C D\nB C\nPC: D E F F♯\nC: G D C G |\nB C D G x3  ");
+//        testMarkupString("V: A B C D\nB C\nPC: D E F F♯\nC: G D C G |\nB C D G x3  ");
+//        testMarkupString("C:Am - C -,GG C GG C x2");
+//        testMarkupString("C:Am - C -\nGG C GG C x2");
+//        testMarkupString("C:\nG-G- -D-C --C- -D-D x3\nAm - C -\nGG C GG C x2");
+//        testMarkupString("V: A B C D B C PC: D E F F♯,  C: [G D C G ,] x3  ");
+//        testMarkupString("V: A B C D, B C PC: D E F F♯,  C: [G D C G ] x3  ");
+//        testMarkupString("V: A B C D, [G D C G ] x3  ");
+//        testMarkupString("V: A B C D, [G D C G ] x3 D E F G,  ");
     }
 
     private static Logger logger = Logger.getLogger(SongEntryTest.class.getName());

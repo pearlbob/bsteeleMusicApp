@@ -364,7 +364,7 @@ public class Song extends SongBase implements Comparable<Song> {
 
         //  chord content
         boolean first = true;
-        for (String s : chordsToTransportString().split("\n")) {
+        for (String s : chordsToJsonTransportString().split("\n")) {
             if (s.length() == 0)  //  json is not happy with empty array elements
                 continue;
             if (first) {
@@ -374,7 +374,6 @@ public class Song extends SongBase implements Comparable<Song> {
             }
             sb.append("\t");
             sb.append(JsonUtil.encode(s));
-            sb.append("");
         }
         sb.append("\n    ],\n")
                 .append("\"lyrics\": \n")

@@ -27,7 +27,7 @@ public class MeasureRepeatTest {
             MarkedString markedString = new MarkedString(s);
             MeasureRepeat refRepeat = MeasureRepeat.parse(markedString, 0, 4, null);
             assertNotNull(refRepeat);
-            assertEquals("[A B C D E F G G♭ ] x2 ", refRepeat.toMarkup());
+            assertEquals("[A B C D, E F G G♭ ] x2 ", refRepeat.toMarkup());
             assertEquals(0, markedString.available());
 
             s = "[A B C D ] x2 ";

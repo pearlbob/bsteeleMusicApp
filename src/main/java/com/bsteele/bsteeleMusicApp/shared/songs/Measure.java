@@ -1,6 +1,5 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
-import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -68,10 +67,10 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return parse(new MarkedString(s), beatsPerBar, null);
     }
 
-    static final Measure parse(MarkedString markedString, int beatsPerBar)
-            throws ParseException {
-        return parse(markedString, beatsPerBar, null);
-    }
+//    static final Measure parse(MarkedString markedString, int beatsPerBar)
+//            throws ParseException {
+//        return parse(markedString, beatsPerBar, null);
+//    }
 
     /**
      * Parse a measure from the input string
@@ -130,7 +129,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             ret = new Measure(beatsPerBar, chords);
 
         //  process end of row markers
-        final RegExp sectionRegexp = RegExp.compile(followingCommaRegexpPattern);
+        final RegExp sectionRegexp = RegExp.compile(followingNewLineOrCommaRegexpPattern);
         MatchResult mr = sectionRegexp.exec(markedString.toString());
         if (mr != null) {
             markedString.consume(mr.getGroup(0).length());
@@ -297,7 +296,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
 
     @Override
     public String toJson() {
-        return toMarkup('\n');
+        return toMarkup('\000');
     }
 
     private final String toMarkup(char endOfRowChar) {
@@ -380,6 +379,5 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     public static final ArrayList<Chord> emptyChordList = new ArrayList<>();
     public static final Measure defaultMeasure = new Measure(4, emptyChordList);
 
-    private static final String followingCommaRegexpPattern = "^\\s*,";
-
+    private static final String followingNewLineOrCommaRegexpPattern = "^\\s*(,|\\n)";
 }

@@ -49,7 +49,7 @@ public class MeasureRepeat extends Phrase {
         boolean barFound = false;
         for (int i = 0; i < 1e3; i++) {   //  safety
             Util.stripLeadingSpaces(markedString);
-            logger.finest("repeat parsing: "+markedString.remainingStringLimited(10));
+            logger.finest("repeat parsing: " + markedString.remainingStringLimited(10));
             if (markedString.isEmpty()) {
                 markedString.resetToMark(initialMark);
                 throw new ParseException("no data to parse", 0);
@@ -59,9 +59,11 @@ public class MeasureRepeat extends Phrase {
             if (markedString.charAt(0) == '|') {
                 barFound = true;
                 markedString.consume(1);
+                if (!measures.isEmpty())
+                    measures.get(measures.size() - 1).setEndOfRow(true);
                 continue;
             }
-            if ( barFound && markedString.charAt(0) == ',') {
+            if (barFound && markedString.charAt(0) == ',') {
                 markedString.consume(1);
                 continue;
             }
@@ -81,8 +83,12 @@ public class MeasureRepeat extends Phrase {
 
             int mark = markedString.mark();
             try {
-                priorMeasure = Measure.parse(markedString, beatsPerBar, priorMeasure);
-                measures.add(priorMeasure);
+                Measure measure = Measure.parse(markedString, beatsPerBar, priorMeasure);
+                if (!hasBracket && measure.isEndOfRow()) {
+                    throw new ParseException("repeat not found", 0);//  this is not a repeat!
+                }
+                priorMeasure = measure;
+                measures.add(measure);
                 barFound = false;
                 continue;
             } catch (ParseException pex) {
@@ -106,6 +112,8 @@ public class MeasureRepeat extends Phrase {
         MatchResult mr = repeatExp.exec(markedString.toString());
         if (mr != null) {
             int repeats = Integer.parseInt(mr.getGroup(1));
+            if (!measures.isEmpty())
+                measures.get(measures.size() - 1).setEndOfRow(false);
             MeasureRepeat ret = new MeasureRepeat(measures, phraseIndex, repeats);
             logger.finer("new measure repeat: " + ret.toMarkup());
             markedString.consume(mr.getGroup(0).length());
@@ -303,7 +311,28 @@ public class MeasureRepeat extends Phrase {
 
     @Override
     public String toJson() {
-        return "[" + (getMeasures().isEmpty() ? "" : super.toJson()) + "] x" + getRepeats();
+        if (measures == null || measures.isEmpty())
+            return " ";
+
+        StringBuilder sb = new StringBuilder();
+        if (!measures.isEmpty()) {
+            int rowCount = 0;
+            Measure lastMeasure = measures.get(measures.size() - 1);
+            for (Measure measure : measures) {
+                sb.append(measure.toJson());
+                if (measure == lastMeasure) {
+                    if (rowCount > 0)
+                        sb.append(" |");
+                    sb.append(" x" + getRepeats() + "\n");
+                    break;
+                } else if (measure.isEndOfRow()) {
+                    sb.append(" |\n");
+                    rowCount++;
+                } else
+                    sb.append(" ");
+            }
+        }
+        return sb.toString();
     }
 
     @Override

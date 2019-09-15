@@ -40,11 +40,13 @@ public class Phrase extends MeasureNode {
             throw new ParseException("no data to parse", 0);
 
         ArrayList<Measure> measures = new ArrayList<>();
+        ArrayList<Measure> lineMeasures = new ArrayList<>();
 
         Util.stripLeadingSpaces(markedString);
 
         //  look for a set of measures and comments
         int initialMark = markedString.mark();
+        int rowMark = markedString.mark();
 
         boolean hasBracket = markedString.charAt(0) == '[';
         if (hasBracket)
@@ -60,15 +62,39 @@ public class Phrase extends MeasureNode {
                 break;
 
             try {
-                priorMeasure = Measure.parse(markedString, beatsPerBar, priorMeasure);
-                measures.add(priorMeasure);
+                Measure measure = Measure.parse(markedString, beatsPerBar, priorMeasure);
+                priorMeasure = measure;
+                lineMeasures.add(measure);
+
+                //  we found an end of row so this row is a part of a phrase
+                if (measure.isEndOfRow()) {
+                    measures.addAll(lineMeasures);
+                    lineMeasures.clear();
+                    rowMark = markedString.mark();
+                }
                 continue;
             } catch (ParseException pex) {
             }
 
+            if (!hasBracket) {
+                //  look for repeat marker
+                Util.stripLeadingSpaces(markedString);
+
+                //  note: commas or newlines will have been consumed by the measure parse
+                char c = markedString.charAt(0);
+                if (c == '|' || c == 'x') {
+                    lineMeasures.clear();
+                    markedString.resetToMark(rowMark);
+                    break;  //  we've found a repeat so the phrase was done the row above
+                }
+            }
+
             //  force junk into a comment
             try {
-                measures.add(MeasureComment.parse(markedString));
+                Measure measure = MeasureComment.parse(markedString);
+                measures.addAll(lineMeasures);
+                measures.add(measure);
+                lineMeasures.clear();
                 priorMeasure = null;
                 continue;
             } catch (ParseException pex) {
@@ -77,14 +103,38 @@ public class Phrase extends MeasureNode {
             //  end of bracketed phrase
             if (hasBracket && markedString.charAt(0) == ']') {
                 markedString.consume(1);
+                break;
             }
 
             break;
         }
 
+        //  look for repeat marker
+        Util.stripLeadingSpaces(markedString);
+
+        //  note: commas or newlines will have been consumed by the measure parse
+        if (markedString.available() > 0) {
+            char c = markedString.charAt(0);
+            if (c == '|' || c == 'x')
+                if (measures.isEmpty()) {
+                    //  no phrase found
+                    markedString.resetToMark(initialMark);
+                    throw new ParseException("no measures found in parse", 0);  //  we've found a repeat so the phrase is appropriate
+                } else {
+                    //  repeat found after prior rows
+                    lineMeasures.clear();
+                    markedString.resetToMark(rowMark);
+                }
+        }
+
+        //  collect the last row
+        measures.addAll(lineMeasures);
+
         //  note: bracketed phrases can be empty
-        if (!hasBracket && measures.isEmpty())
+        if (!hasBracket && measures.isEmpty()) {
+            markedString.resetToMark(initialMark);
             throw new ParseException("no measures found in parse", 0);
+        }
 
         return new Phrase(measures, phraseIndex);
     }
@@ -460,7 +510,7 @@ public class Phrase extends MeasureNode {
 
         StringBuilder sb = new StringBuilder();
         for (Measure measure : measures) {
-            sb.append(measure.toString()).append(" ");
+            sb.append(measure.toMarkup()).append(" ");
         }
         return sb.toString();
     }
@@ -468,14 +518,19 @@ public class Phrase extends MeasureNode {
     @Override
     public String toJson() {
         if (measures == null || measures.isEmpty())
-            return "[]";
+            return " ";
 
         StringBuilder sb = new StringBuilder();
         if (!measures.isEmpty()) {
             Measure lastMeasure = measures.get(measures.size() - 1);
             for (Measure measure : measures) {
                 sb.append(measure.toJson());
-                if (measure != lastMeasure && !measure.isEndOfRow())
+                if (measure == lastMeasure) {
+                    sb.append("\n");
+                    break;
+                } else if (measure.isEndOfRow()) {
+                    sb.append("\n");
+                } else
                     sb.append(" ");
             }
         }

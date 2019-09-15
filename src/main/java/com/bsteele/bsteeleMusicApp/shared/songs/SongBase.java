@@ -349,6 +349,12 @@ public class SongBase {
         normal;
     }
 
+    /**
+     * Try to promote lower case characters to uppercase when they appear to be musical notes
+     *
+     * @param entry the string to process
+     * @return the results after promotion to uppercase
+     */
     public static final String entryToUppercase(String entry) {
         StringBuilder sb = new StringBuilder();
 
@@ -536,7 +542,9 @@ public class SongBase {
                 logger.finest(markedString.toString());
 
                 int mark = markedString.mark();
+
                 try {
+                    //  if it's a full section (or multiple sections) it will all be handled here
                     chordSection = ChordSection.parse(markedString, beatsPerBar, true);
 
                     //  look for multiple sections defined at once
@@ -556,6 +564,8 @@ public class SongBase {
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
                 }
+
+                //  see if it's a complete repeat
                 try {
                     ret.add(MeasureRepeat.parse(markedString, phaseIndex, beatsPerBar, null));
                     phaseIndex++;
@@ -563,6 +573,7 @@ public class SongBase {
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
                 }
+                //  see if it's a phrase
                 try {
                     ret.add(Phrase.parse(markedString, phaseIndex, beatsPerBar, getCurrentChordSectionLocationMeasure()));
                     phaseIndex++;
@@ -570,12 +581,14 @@ public class SongBase {
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
                 }
+                //  see if it's a single measure
                 try {
                     ret.add(Measure.parse(markedString, beatsPerBar, getCurrentChordSectionLocationMeasure()));
                     continue;
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
                 }
+                //  see if it's a comment
                 try {
                     ret.add(MeasureComment.parse(markedString));
                     phaseIndex++;
@@ -583,8 +596,7 @@ public class SongBase {
                 } catch (ParseException pex) {
                     markedString.resetToMark(mark);
                 }
-
-                //  entry not understood, force it to be a comment
+                //  the entry not understood, force it to be a comment
                 {
                     int commentIndex = markedString.indexOf(" ");
                     if (commentIndex < 0) {
@@ -647,10 +659,10 @@ public class SongBase {
         gridChordSectionLocationCoordinateMap = new HashMap<>();
 
         //  grid each section
-        int row = 0;
-        int col = 0;
-        final int measuresPerline = 8;
         final int offset = 1;       //  offset of phrase start from section start
+        int row = 0;
+        int col = offset;
+
         //  use a separate set to avoid modifying a set
         TreeSet<SectionVersion> sectionVersionsToDo = new TreeSet<>(chordSectionMap.keySet());
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
@@ -662,10 +674,10 @@ public class SongBase {
             sectionVersionsToDo.remove(sectionVersion);
 
             //  start each section on it's own line
-            if (col != 0) {
+            if (col != offset) {
                 row++;
-                col = 0;
             }
+            col = 0;
 
             logger.finest("gridding: " + sectionVersion.toString() + " (" + col + ", " + row + ")");
 
@@ -702,6 +714,9 @@ public class SongBase {
 
                 Phrase phrase = chordSection.getPhrase(phraseIndex);
 
+                //  default to max measures per row
+                final int measuresPerline = 8;
+
                 //  grid each measure of the phrase
                 boolean repeatExtensionUsed = false;
                 int phraseSize = phrase.getMeasures().size();
@@ -720,13 +735,29 @@ public class SongBase {
                 } else {
                     Measure lastMeasure;
                     Measure measure = null;
+                    int maxCol = offset;
+                    {
+                        int currentCol = 0;
+                        for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
+                            measure = phrase.getMeasure(measureIndex);
+                            if (measure.isComment())
+                                continue;
+                            currentCol++;
+                            if (measure.isEndOfRow()) {
+                                if (currentCol > maxCol)
+                                    maxCol = currentCol;
+                                currentCol = offset;
+                            }
+                        }
+                        if (currentCol > maxCol)
+                            maxCol = currentCol;
+                    }
                     for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
 
                         //  place comments on their own line, don't upset the col location
                         //  expect the outout to span the row
                         lastMeasure = measure;
                         measure = phrase.getMeasure(measureIndex);
-
                         if (measure.isComment()) {
                             if (col > offset && lastMeasure != null && !lastMeasure.isComment())
                                 row++;
@@ -755,8 +786,10 @@ public class SongBase {
                                         )));
                                 repeatExtensionUsed = true;
                             }
-                            row++;
-                            col = offset;
+                            if (col > offset) {
+                                row++;
+                                col = offset;
+                            }
                         }
 
                         {
@@ -770,8 +803,7 @@ public class SongBase {
 
                         //  put the repeat on the end of the last line of the repeat
                         if (phrase.isRepeat() && measureIndex == phraseSize - 1) {
-                            //  fill row to measures per line
-                            col = offset + measuresPerline;
+                            col = maxCol + 1;
 
                             //  close the multiline repeat marker
                             if (repeatExtensionUsed) {
@@ -792,6 +824,8 @@ public class SongBase {
                                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
                                 grid.set(col++, row, loc);
                             }
+                            row++;
+                            col = offset;
                         }
                     }
                 }
@@ -801,7 +835,11 @@ public class SongBase {
         if (logger.getLevel() != null && logger.getLevel().intValue() <= Level.FINEST.intValue()) {
             logger.fine("gridCoordinateChordSectionLocationMap: ");
             for (GridCoordinate coordinate : new TreeSet<GridCoordinate>(gridCoordinateChordSectionLocationMap.keySet())) {
-                logger.fine("  " + coordinate.toString() + ": " + gridCoordinateChordSectionLocationMap.get(coordinate));
+                logger.fine(" " + coordinate.toString()
+                        + " " + gridCoordinateChordSectionLocationMap.get(coordinate)
+                        + " -> " + findMeasureNode(gridCoordinateChordSectionLocationMap.get(coordinate)).toMarkup()
+                        )
+                ;
             }
         }
 
@@ -858,17 +896,13 @@ public class SongBase {
         totalBeats = 0;
     }
 
-    protected final String chordsToTransportString() {
-        if (chordsAsMarkup != null)
-            return chordsAsMarkup;
+    protected final String chordsToJsonTransportString() {
         StringBuilder sb = new StringBuilder();
 
         for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
             sb.append(chordSection.toJson());
-            sb.append("\n");
         }
-        chordsAsMarkup = sb.toString();
-        return chordsAsMarkup;
+        return sb.toString();
     }
 
     public final String toMarkup() {

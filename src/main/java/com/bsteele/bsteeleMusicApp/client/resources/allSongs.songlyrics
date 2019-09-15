@@ -20,6 +20,86 @@
     ]
 }
 },
+{ "file": "15 Days Under the Hood.songlyrics", "lastModifiedDate": 1568253112897, "song": 
+{
+"title": "15 Days Under the Hood",
+"artist": "New Riders of The Purple Sage",
+"copyright": "written by Jack Tempchin & Warren Hughey",
+"key": "E",
+"defaultBpm": 106,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"v:",
+	"E E B E",
+	"E E B E",
+	"A A E E",
+	"A A B EB",
+	"",
+	"b:",
+	"A A E E",
+	"A A B B",
+	"",
+	"o:",
+	"B EB",
+	"B E"
+    ],
+"lyrics": 
+    [
+	"v:",
+	"Well if life is one great big automobile, I’ve been...",
+	"15 days under the hood.",
+	"Sometimes it’s hard to believe it’s really real. ",
+	"15 days under the hood.",
+	"Well I’m way down here with my feet in the air.",
+	"I’ve got grease and oil and muck all in my hair,",
+	"And I don’t talk much anymore, I mostly just swear. I've been...",
+	"15 days under the hood.",
+	"",
+	"v:",
+	"Well, I’m awful hungry, I wish I had something to eat.",
+	"15 days under the hood.",
+	"But I spent all but a dollar on Valvoline.",
+	"15 days under the hood.",
+	"Well I’m lucky I saved a buck to get something to eat.",
+	"Too bad I spent it later on wheel bearing grease.",
+	"The cops just told me to get my car off the street.",
+	"15 days under the hood.",
+	"",
+	"b:",
+	"Well, I went upstairs to put on some clean pants",
+	"To go to the junk yard for a vacuum and fan.",
+	"I was just getting ready to climb into my shirt, ",
+	"When I remembered I couldn’t go because my car didn’t work!!!!",
+	"",
+	"v:",
+	"Well, I’ve been trying to this accelerator cable free.",
+	"15 days under the hood.",
+	"Andy Granatelli’s on the radio shillin' STP.",
+	"15 days under the hood.",
+	"Well, I was using my flashlight to find the timing chain,",
+	"When I cracked my knuckles and now I’m in great pain,",
+	"It’s awful cold and it’s starting to rain. It's been...",
+	"15 days under the hood.",
+	"",
+	"b: [instrumental]",
+	"",
+	"v:",
+	"Let me tell you, friends, what is wrong with me:",
+	"15 days under the hood.",
+	"I just dropped a transmission on my knee.",
+	"15 days under the hood.",
+	"I got water in the oil and transmission fluid,",
+	"Burnt valves, vapor-lock, and worn brake shoes,",
+	"I got the dead battery, broken fan belt blues. I've been...",
+	"15 days under the hood.",
+	"",
+	"o:",
+	"15 days under the hood.",
+	"15 days under the hood."
+    ]
+}
+},
 { "file": "25 or 6 to 4 (3).songlyrics", "lastModifiedDate": 1548296878134, "song": 
 {
 "title": "25 or 6 to 4",
@@ -13310,7 +13390,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "Come Undone.songlyrics", "lastModifiedDate": 1558993428997, "song": 
 {
 "title": "Come Undone",
 "artist": "Duran Duran",
@@ -13321,12 +13401,10 @@
 "chords": 
     [
 	"V: Bm A G A X4",
-	"",
-	"ch:",
 	"G G F#m F#m",
 	"G G A A",
 	"",
-	"Br: Bm A G A",
+	"C: Bm A G A",
 	"Bm A G A",
 	"G G A A",
 	"",
@@ -13343,13 +13421,12 @@
 	"Oh, it'll take a little time",
 	"Might take a little crime",
 	"To come undone now",
-	"ch:",
 	"We'll try to stay blind",
 	"To the hope and fear outside",
 	"Hey child, stay wilder than the wind",
 	"And blow me into cry",
 	"",
-	"br: Who do you need, who do you love",
+	"C: Who do you need, who do you love",
 	"When you come undone?",
 	"Who do you need, who do you love",
 	"When you come undone?",
@@ -13363,7 +13440,6 @@
 	"Lost, in a snow filled sky",
 	"We'll make it alright",
 	"To come undone now",
-	"ch:",
 	"We'll try to stay blind",
 	"To the hope and fear outside",
 	"Hey child, stay wilder than the wind",
@@ -15881,7 +15957,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "Dear Mr. Fantasy.songlyrics", "lastModifiedDate": 1548291901051, "song": 
 {
 "title": "Dear Mr. Fantasy",
 "artist": "Traffic",
@@ -15892,21 +15968,21 @@
 "chords": 
     [
 	"",
-	"I: A Asus4 G D ",
+	"I: A Asus4 G D A",
 	"",
-	"V: A  G D A  x4",
+	"V: A Asus4 G D A -  4x",
 	"",
 	"Br: ",
-	"F#m A -  x3",
+	"F#m A -  3x",
 	"F#m G E7",
 	"",
-	"V: A A G D A  x2",
+	"V: A Asus4 G D A -  2x",
 	"",
-	"V: A  G D A   x8",
+	"V: A Asus4 G D A -  8x",
 	"",
-	"V: A  G D A   x4",
+	"V: A Asus4 G D A -  4x",
 	"",
-	"O: A  G D A  x8"
+	"O: A Asus4 G D A -  8x"
     ],
 "lyrics": 
     [
@@ -24158,6 +24234,88 @@
     ]
 }
 },
+{ "file": "Game of Love (8).songlyrics", "lastModifiedDate": 1530493577189, "song": 
+{
+"title": "Game of Love",
+"artist": "Michelle Branch",
+"copyright": "Branch",
+"key": "G",
+"defaultBpm": 106,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"I:",
+	"Em7 D Em7 D",
+	"Em7 D G A",
+	"v:",
+	"Em7 D Em7 D",
+	"Em7 D Em7 D",
+	"pc:",
+	"Em7 D G A",
+	"Em7 F#m G A",
+	"",
+	"ch:",
+	"Em7 D Em7 D",
+	"Em7 D Em7 A",
+	"Br:",
+	"Em7 D G A",
+	"Bm7 F#m7 G A",
+	"Em7 F#m7 G A"
+    ],
+"lyrics": 
+    [
+	"I:",
+	"v:",
+	"Tell me just what you want me to be",
+	"One kiss and boom you're the only one for me",
+	"pc:",
+	"So please tell me why don't you come around no more",
+	"Cause right now I'm crying outside the door of your candy store",
+	"ch:",
+	"It just takes a little bit of this, a little bit of that",
+	"It started with a kiss,now we're up to bat",
+	"A little bit of laughs,a little bit of pain",
+	"I'm telling you, my babe,it's all in the game of ",
+	"v:",
+	"Love is, whatever you make it to be",
+	"Sunshine instead of this cold,lonely sea",
+	"pc:",
+	"So please baby try to use me for what I'm good for",
+	"It ain't sayin' goodbye. It's knocking down the door, of your candy store",
+	"ch:",
+	"It just takes a little bit of this,a little bit of that",
+	"It started with a kiss,now we're up to bat",
+	"A little bit of laughs,a little bit of pain",
+	"I'm telling you, my babe,it's all in the game of ",
+	"BR:",
+	"Love",
+	"It's all in this game of love",
+	"You roll me,control me",
+	"Console me,please hold me",
+	"You guide me,divide me",
+	"Into what...",
+	"I:",
+	"Make me feel good, yeah",
+	"I:",
+	"pc:",
+	"So please tell me, why don't you come around no more",
+	"Cause right now I'm dying,outside the door, of your lovin store",
+	"ch:",
+	"It just takes a little bit of this,a little bit of that",
+	"It started with a kiss,now we're up to bat",
+	"A little bit of laughs,a little bit of pain",
+	"I'm telling you, my babe,it's all in the game of love",
+	"I:",
+	"It's all in this game of love",
+	"It's all in the name of love",
+	"Lets play the game of love",
+	"I:",
+	"Roll me,control me",
+	"Please hold me",
+	"(make me feel good, yeah)"
+    ]
+}
+},
 { "file": "Game of Love (5).songlyrics", "lastModifiedDate": 1527468902701, "song": 
 {
 "title": "Game of Love",
@@ -30348,7 +30506,7 @@
 "copyright": "Sony/ATV Music Publishing LLC",
 "key": "C",
 "defaultBpm": 100,
-"timeSignature": "6/8",
+"timeSignature": "4/4",
 "chords": 
     [
 	"v:",
@@ -31346,16 +31504,11 @@
 	"C: F7 - Am7 -",
 	"D7 - G#7 G7",
 	"",
-	"",
-	"V2: ",
-	"C7 - A7 -",
-	"F Fm  ",
-	"C7 FFm C7 FFm",
-	"C7 FFm C"
+	"O: C7 F C7 F",
+	"C7 -"
     ],
 "lyrics": 
     [
-	"v: (intro)",
 	"V: I call your name ",
 	"but you're not there",
 	"Was I to blame for being unfair",
@@ -31375,18 +31528,17 @@
 	"I never weep at night",
 	"I call your name",
 	"",
-	"v1: (instrumental)",
-	"",
 	"C: Don't you know I can't take it",
 	"I don't know who can",
 	"I'm not going to make it",
 	"I'm not that kind of man.",
 	"",
-	"V2: Oh, I can't sleep at night",
+	"V1: Oh, I can't sleep at night",
 	"But just the same",
 	"I never weep at night",
 	"I call your name",
-	" I call your name",
+	"",
+	"O: I call your name",
 	"I call your name",
 	"I call your name"
     ]
@@ -45345,11 +45497,26 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"C G/B F F ",
-	"C G Am F"
+	"",
+	"v:",
+	"C C/B F F x2",
+	"",
+	"pc:",
+	"",
+	"Am Am G G ",
+	"F F F F x2",
+	"",
+	"ch:",
+	"",
+	"C F Am G x4",
+	"",
+	"i:",
+	"C F Am G x2"
     ],
 "lyrics": 
     [
+	"v: (instrumental intro)",
+	"v:",
 	"I'm coming out of my cage",
 	"And I've been doing just fine",
 	"Gotta gotta be down",
@@ -45358,6 +45525,7 @@
 	"How did it end up like this?",
 	"It was only a kiss",
 	"It was only a kiss",
+	"v:",
 	"Now I'm falling asleep",
 	"And she's calling a cab",
 	"While he's having a smoke",
@@ -45365,11 +45533,14 @@
 	"Now they're going to bed",
 	"And my stomach is sick",
 	"And it's all in my head",
-	"But she's touching his chest now",
+	"But she's touching his ",
+	"pc:",
+	"chest now",
 	"He takes off her dress now",
 	"Let me go",
 	"And I just can't look it's killing me",
 	"And taking control",
+	"ch:",
 	"Jealousy, turning saints into the sea",
 	"Swimming through sick lullabies",
 	"Choking on your alibis",
@@ -45377,6 +45548,8 @@
 	"Destiny is calling me",
 	"Open up my eager eyes",
 	"'Cause I'm Mr Brightside",
+	"i:",
+	"v:",
 	"I'm coming out of my cage",
 	"And I've been doing just fine",
 	"Gotta gotta be down",
@@ -45385,6 +45558,7 @@
 	"How did it end up like this?",
 	"It was only a kiss",
 	"It was only a kiss",
+	"v:",
 	"Now I'm falling asleep",
 	"And she's calling a cab",
 	"While he's having a smoke",
@@ -45392,11 +45566,14 @@
 	"Now they're going to bed",
 	"And my stomach is sick",
 	"And it's all in my head",
-	"But she's touching his chest now",
+	"But she's touching his ",
+	"pc:",
+	"chest now",
 	"He takes off her dress now",
 	"Let me go",
 	"'Cause I just can't look it's killing me",
 	"And taking control",
+	"ch:",
 	"Jealousy, turning saints into the sea",
 	"Swimming through sick lullabies",
 	"Choking on your alibis",
@@ -45404,6 +45581,7 @@
 	"Destiny is calling me",
 	"Open up my eager eyes",
 	"'Cause I'm Mr Brightside",
+	"i:",
 	"I never",
 	"I never",
 	"I never",
@@ -51946,6 +52124,87 @@
     ]
 }
 },
+{ "file": "Prisoner of my Memories.songlyrics", "lastModifiedDate": 1566780576617, "song": 
+{
+"title": "Prisoner of my Memories",
+"artist": "Vicki",
+"copyright": "2018",
+"key": "Eb",
+"defaultBpm": 90,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"",
+	"I:",
+	" Cm Gm A♭ B♭",
+	"V:",
+	" Cm Gm A♭ B♭ x2",
+	"PC:",
+	" E♭B♭ A♭B♭ E♭B♭ A♭B♭",
+	"C:",
+	" CmGm A♭B♭ CmGm A♭B♭ x2",
+	"A:",
+	" CmB♭ A♭B♭ CmB♭ A♭B♭"
+    ],
+"lyrics": 
+    [
+	"I:",
+	"I:",
+	"V:",
+	"There I go again,thinking about you,",
+	"Dreaming about your love",
+	"I can't forget the touch of",
+	"Your lips, on mine",
+	"PC:",
+	"These thoughts of you keep coming back",
+	"Reminding me of when we were together",
+	"CH:",
+	"I'm a prisoner of my memories",
+	"Those endless visions of you",
+	"Yes I'm a prisoner of my memories",
+	"All those sweet dreams of you",
+	"A:",
+	"No matter what I do",
+	"It not that easy to forget",
+	"I:",
+	"V:",
+	"I see you sometimes as you walk by me",
+	"With someone new",
+	"As far as I can tell, it seems to me",
+	"You don't even know that I exist",
+	"PC:",
+	"These thoughts of you keep flooding back",
+	"Reminding me of when we were together.",
+	"CH:",
+	"I'm a prisoner of my memories",
+	"Those endless visions of you",
+	"Yes I'm a prisoner of my memories",
+	"All those sweet dreams of you",
+	"A:",
+	"No matter what I do",
+	"It not that easy to forget",
+	"I:",
+	"V:",
+	"It was easy for you, to let me go",
+	"Without a second thought",
+	"When it comes to me no matter what I do",
+	"Its not that easy to forget",
+	"PC:",
+	"These thoughts of you keep flooding back",
+	"Reminding me of when we were together",
+	"",
+	"CH:",
+	"I'm a prisoner of my memories",
+	"Those endless visions of you",
+	"Yes I'm a prisoner of my memories",
+	"All those sweet dreams of you",
+	"A:",
+	"No matter what I do",
+	"It not that easy to forget",
+	"I:"
+    ]
+}
+},
 { "file": "Prodigal Son (2).songlyrics", "lastModifiedDate": 1548216916360, "song": 
 {
 "title": "Prodigal Son",
@@ -53944,7 +54203,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "River, The (1).songlyrics", "lastModifiedDate": 1540941525067, "song": 
 {
 "title": "River, The",
 "artist": "KT Tunstall",
@@ -53977,7 +54236,7 @@
 	"BR:",
 	"Em Em G D",
 	"A A",
-	"Em Em G G",
+	"En Em G G",
 	"G G",
 	"",
 	"T:",
@@ -54147,7 +54406,7 @@
     ]
 }
 },
-{ "file": "Rock Me Baby (2).songlyrics", "lastModifiedDate": 1561938943731, "song": 
+{ "file": "Rock Me Baby (3).songlyrics", "lastModifiedDate": 1534385455866, "song": 
 {
 "title": "Rock Me Baby",
 "artist": "B.B. King",
@@ -54160,7 +54419,7 @@
 	"v:",
 	"G G G G",
 	"C C G G",
-	"D C G D/G"
+	"D C G D/[GD..]"
     ],
 "lyrics": 
     [
@@ -56485,27 +56744,12 @@
 "timeSignature": "4/4",
 "chords": 
     [
-	"i:",
-	"Dm7 Dm7 Bb Bb ",
-	"F F F F/E x2",
-	"",
-	"v:",
-	"Dm7 Dm7 Bb Bb ",
-	"F F F F/E x4",
-	"",
-	"ch:",
-	"Bb Bb Bb Bb",
-	"F F F F",
-	"Bb Bb Bb Bb",
-	"F F F F ",
-	"C C C7 C7",
-	"F F Bb Bb",
-	"F F F F/E"
+	"Dm Bb F F  - F/E -  x4",
+	"Bb -  F F  - F/E -  x2",
+	"C  C7 F Bb F F   - F/E -"
     ],
 "lyrics": 
     [
-	"i:",
-	"v:",
 	"Come up to meet you, tell you I'm sorry",
 	"You don't know how lovely you are",
 	"I had to find you",
@@ -56517,13 +56761,11 @@
 	"Running in circles",
 	"Coming up tails",
 	"Heads on a science apart",
-	"ch:",
 	"Nobody said it was easy",
 	"It's such a shame for us to part",
 	"Nobody said it was easy",
 	"No one ever said it would be this hard",
 	"Oh, take me back to the start",
-	"v:",
 	"I was just guessing",
 	"At numbers and figures",
 	"Pulling the puzzles apart",
@@ -56536,14 +56778,12 @@
 	"Running in circles",
 	"Chasing our tails",
 	"Coming back as we are",
-	"ch:",
 	"Nobody said it was easy",
 	"Oh, it's such a shame for us to part",
 	"Nobody said it was easy",
 	"No one ever said it would be so hard",
 	"I'm going back to the start",
-	"v: (instrumental line)",
-	"Oh x4"
+	"Oh [x4]"
     ]
 }
 },
@@ -56949,7 +57189,7 @@
     ]
 }
 },
-{ "file": "Sentimental Journey.songlyrics", "lastModifiedDate": 1564018562518, "song": 
+{ "file": "Sentimental Journey (1).songlyrics", "lastModifiedDate": 1568253122831, "song": 
 {
 "title": "Sentimental Journey",
 "artist": "Doris Day",
@@ -56974,7 +57214,7 @@
 	"v1:",
 	"C6 C6 C6 G7",
 	"C6 F7 C6 G7.",
-	"C6F7 C6G7 C6",
+	"C6F7 C6 G7. C6",
 	"",
 	"b1:",
 	"F6 F6 C6 C6",
@@ -57252,7 +57492,7 @@
     ]
 }
 },
-{ "file": "She Bleeds (8) (1).songlyrics", "lastModifiedDate": 1564366884350, "song": 
+{ "file": "She Bleeds (9).songlyrics", "lastModifiedDate": 1560066530976, "song": 
 {
 "title": "She Bleeds",
 "artist": "EMF",
@@ -60410,18 +60650,14 @@
 	"Db7 C7 Fm7 -  ",
 	"c:",
 	"Eb7 - Fm7 -",
-	"Eb7Db7 C7 Fm7 -",
-	"",
-	"t:",
-	"Fm7 - Eb7 -",
-	"Db7 C7 Fm7 -  "
+	"Eb7Db7 C7 Fm7 -"
     ],
 "lyrics": 
     [
-	"V:",
+	"V;",
 	"V:",
 	"C:",
-	"t:"
+	"V:"
     ]
 }
 },
@@ -63540,7 +63776,7 @@
     ]
 }
 },
-{ "file": "Sunny  (1).songlyrics", "lastModifiedDate": 1563305099402, "song": 
+{ "file": "Sunny  (2).songlyrics", "lastModifiedDate": 1563305099402, "song": 
 {
 "title": "Sunny ",
 "artist": "Bobby Hebb",
@@ -63553,7 +63789,7 @@
 	"v:Am C7 F7 E7",
 	"Am C7 F7 E7",
 	"Am Am6 FM7 Bb7 ",
-	"E7 E7 Am FE7 ",
+	"E7 E7 F7 Am ",
 	"   "
     ],
 "lyrics": 
@@ -64030,117 +64266,58 @@
     ]
 }
 },
-{ "file": "Sweet Dreams.songlyrics", "lastModifiedDate": 1561341035022, "song": 
+{ "file": "", "lastModifiedDate": 0, "song": 
 {
 "title": "Sweet Dreams",
 "artist": "Eurythmics",
-"copyright": "1983 RCA",
+"copyright": "Sony/ATV Music Publishing LLC, Warner/Chappell Music, Inc",
 "key": "C",
 "defaultBpm": 100,
 "timeSignature": "4/4",
 "chords": 
     [
-	"I1: ",
-	"Cm Cm G# G x2",
-	"",
-	"V:",
-	"Cm Cm G# G x4",
-	"",
-	"C1:",
-	"Cm Cm G# G x4",
-	"",
-	"I2:",
-	"G# G# G# G",
-	"Cm Cm Fm Fm",
-	"G# G# G G",
-	"",
-	"BR:",
-	"Cm Cm F F ",
-	"Cm Cm F F ",
-	"Cm Cm F F ",
-	"Cm Cm F X ",
-	"",
-	"I3:",
-	"Cm Cm G# G x4",
-	"",
-	"C2:",
-	"X X X X x4",
-	"",
-	"O:",
-	"Cm Cm G# G x4"
+	"Am CAm F E",
+	"F  E C  C/G F E ",
+	"Am F Am F     x2"
     ],
 "lyrics": 
     [
-	"I1: (Instrumental)",
-	"",
-	"C1:",
 	"Sweet dreams are made of this",
 	"Who am I to disagree?",
 	"I travel the world and the seven seas",
 	"Everybody's looking for something",
-	"",
-	"V:",
 	"Some of them want to use you",
 	"Some of them want to get used by you",
 	"Some of them want to abuse you",
 	"Some of them want to be abused",
-	"",
-	"I2:",
-	"(Instrumental) Oooh, hey",
-	"",
-	"C1:",
 	"Sweet dreams are made of this",
 	"Who am I to disagree?",
 	"I travel the world and the seven seas",
 	"Everybody's looking for something",
-	"",
-	"I2:",
-	"(Instrumental) Oooh, hey",
-	"",
-	"BR:",
-	"Hold your head up, keep your head up (movin' on)",
-	"Hold your head up (movin' on) keep your head up (movin' on)",
-	"Hold your head up (movin' on) keep your head up (movin' on)",
-	"Hold your head up (movin' on) keep your head up",
-	"",
-	"I3:",
-	"(Instrumental)",
-	"",
-	"V:",
+	"Hold your head up, keep your head up, movin' on",
+	"Hold your head up, movin' on, keep your head up, movin' on",
+	"Hold your head up, movin' on, keep your head up, movin' on",
+	"Hold your head up, movin' on, keep your head up",
 	"Some of them want to use you",
 	"Some of them want to get used by you",
 	"Some of them want to abuse you",
 	"Some of them want to be abused",
-	"",
-	"I2:",
-	"(Instrumental) Aah, ooh",
-	"",
-	"C1:",
 	"Sweet dreams are made of this",
 	"Who am I to disagree?",
 	"I travel the world and the seven seas",
 	"Everybody's looking for something",
-	"",
-	"C2:",
 	"Sweet dreams are made of this",
 	"Who am I to disagree?",
 	"I travel the world and the seven seas",
 	"Everybody's looking for something",
-	"",
-	"C1:",
 	"Sweet dreams are made of this",
 	"Who am I to disagree?",
 	"I travel the world and the seven seas",
 	"Everybody's looking for something",
-	"",
-	"C1:",
 	"Sweet dreams are made of this",
 	"Who am I to disagree?",
 	"I travel the world and the seven seas",
-	"Everybody's looking for something",
-	"",
-	"O:",
-	"(Instrumental)"
+	"Everybody's looking for something"
     ]
 }
 },
@@ -69512,7 +69689,7 @@
     ]
 }
 },
-{ "file": "Uncle John's Band (1).songlyrics", "lastModifiedDate": 1561938894555, "song": 
+{ "file": "Uncle John's Band (10).songlyrics", "lastModifiedDate": 1549426974149, "song": 
 {
 "title": "Uncle John's Band",
 "artist": "Grateful Dead",
@@ -69527,8 +69704,8 @@
 	"GBm CD GBm CD",
 	"",
 	"v:",
-	"G G C..G",
-	"G G C..G",
+	"G G C.. G",
+	"G G C.. G",
 	"Am Em C D",
 	"CD.. G..DC GD G",
 	"G G",
@@ -69609,7 +69786,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "Under the Boardwalk.songlyrics", "lastModifiedDate": 1531361598832, "song": 
 {
 "title": "Under the Boardwalk",
 "artist": "Drifters, The",
@@ -69650,9 +69827,8 @@
 	"(Under the boardwalk) We'll be falling in love",
 	"Under the boardwalk, boardwalk",
 	"v: (instrumental)",
-	"Oh, under the boardwalk, down by the sea, yeah",
+	"ch:Oh, under the boardwalk, down by the sea, yeah",
 	"On a blanket with my baby is where I'll be",
-	"ch:",
 	"(Under the boardwalk) Out of the sun",
 	"(Under the boardwalk) We'll be havin' some fun",
 	"(Under the boardwalk) People walking above",
@@ -70952,7 +71128,7 @@
     ]
 }
 },
-{ "file": "", "lastModifiedDate": 0, "song": 
+{ "file": "Walls (1).songlyrics", "lastModifiedDate": 1557696696557, "song": 
 {
 "title": "Walls",
 "artist": "Tom Petty & the Heartbreakers",
@@ -70964,15 +71140,17 @@
     [
 	"v:",
 	"D - Bm -",
-	"G - A - ",
+	"G - A - x2",
 	"",
 	"v1:",
+	"D - Bm -",
+	"G - A - ",
 	"D - Bm -",
 	"G - A X ",
 	"",
 	"c:",
-	"G D G D",
-	"Em Bm A D"
+	"GD GD",
+	"EmBm AD"
     ],
 "lyrics": 
     [
@@ -72906,7 +73084,7 @@
     ]
 }
 },
-{ "file": "When you say nothing at all (1).songlyrics", "lastModifiedDate": 1541989820069, "song": 
+{ "file": "When you say nothing at all (2).songlyrics", "lastModifiedDate": 1541989820069, "song": 
 {
 "title": "When you say nothing at all",
 "artist": "Ronan Keating",
@@ -72926,33 +73104,26 @@
 	"Eb Bb Ab Bb",
 	"PC:",
 	"Ab Ab Bb Bb",
-	"Eb Bb Ab Bb Bb Bb Bb",
+	"Eb Bb Ab ",
+	"Bb Bb Bb Bb",
 	"Ch:",
 	"Eb Bb Ab Bb",
 	"Eb Bb Ab Bb",
-	"Eb Bb Ab Bb",
-	"Bb Bb Bb Bb",
+	"Eb Bb Ab Ab",
+	"Bb Bb Ab Bb",
 	"Ab Ab Bb Bb",
 	"PC2:",
 	"Ab Ab Bb Bb",
 	"Eb Bb Ab Bb Bb",
-	"Ch2:",
-	"Eb Bb Ab Bb",
-	"Eb Bb Ab Bb",
-	"Eb Bb Ab Ab",
-	"Bb Bb Bb Bb ",
-	"Ab Ab Bb Bb",
+	"",
 	"a:",
 	"Eb Bb Ab Bb",
 	"Eb Bb Ab Bb",
 	"Eb Bb Ab Ab",
 	"Bb Bb Bb Bb ",
 	"O:",
-	"Eb Bb Ab Bb",
 	"Eb Bb Ab Ab ",
-	"Eb Bb Ab Ab ",
-	"Bb Bb Bb Bb",
-	"Ab Ab Ab Ab"
+	"Eb Bb Ab Ab "
     ],
 "lyrics": 
     [
@@ -72968,25 +73139,26 @@
 	"There's a truth in your eyes sayin' you'll never leave me",
 	"The touch of your hand says you'll catch me if ever I fall",
 	"You say it best when you say nothing at all",
+	"i:",
 	"V:",
 	"All day long I can hear people talking out loud",
 	"But when you hold me near, you drown out the crowd",
 	"PC2:",
 	"Old Mr. Webster could never define",
 	"What's being said between your heart and mine",
-	"CH2:",
+	"CH:",
 	"The smile on your face lets me know that you need me",
 	"There's a truth in your eyes sayin' you'll never leave me",
 	"The touch of your hand says you'll catch me if ever I fall",
 	"You say it best when you say nothing at all",
 	"a:",
-	"O:",
+	"ch:",
 	"The smile on your face lets me know that you need me",
 	"There's a truth in your eyes sayin' you'll never leave me",
 	"The touch of your hand says you'll catch me if ever I fall",
 	"You say it best when you say nothing at all",
-	"I:",
-	"I:"
+	"o:",
+	"o:"
     ]
 }
 },
@@ -73563,7 +73735,90 @@
     ]
 }
 },
-{ "file": "White Key Blues (2).songlyrics", "lastModifiedDate": 1527130339952, "song": 
+{ "file": "White Flag.songlyrics", "lastModifiedDate": 1566780609410, "song": 
+{
+"title": "White Flag",
+"artist": "Dido",
+"copyright": "Warner Chappell",
+"key": "F",
+"defaultBpm": 106,
+"timeSignature": "4/4",
+"chords": 
+    [
+	"I:",
+	"F F Am Am",
+	"V:",
+	"Dm Dm Am Am",
+	"Dm Dm Am Am",
+	"PC:",
+	"C C Gm Am",
+	"C:",
+	"Bb F Gm Dm",
+	"Bb F C Gm",
+	"B:",
+	"F F Am Am",
+	"Gm7 Gm7 C C"
+    ],
+"lyrics": 
+    [
+	"I:",
+	"V:",
+	"I know you think that I shouldn't still love you",
+	"Or tell you that",
+	"But if I didn't say it, well I'd still have felt it",
+	"Where's the sense in that?",
+	"PC:",
+	"I promise I'm not trying to make your life harder",
+	"Or return to where we were",
+	"C:",
+	"I will go down with this ship",
+	"And I won't put my hands up and surrender",
+	"There will be no white flag above my door",
+	"I'm in love and always will be",
+	"V:",
+	"I know I left too much mess and",
+	"Destruction to come back again",
+	"And I caused nothing but trouble",
+	"I understand if you can't talk to me again",
+	"PC:",
+	"And if you live by the rules of it's over",
+	"Then I'm sure that that makes sense",
+	"C:",
+	"I will go down with this ship",
+	"And I won't put my hands up and surrender",
+	"There will be no white flag above my door",
+	"I'm in love and always will be",
+	"B:",
+	"And when we meet",
+	"Which I'm sure we will",
+	"All that was there",
+	"Will be there still",
+	"I'll let it pass",
+	"And hold my tongue",
+	"And you will think",
+	"That I've moved on",
+	"C:",
+	"I will go down with this ship",
+	"And I won't put my hands up and surrender",
+	"There will be no white flag above my door",
+	"I'm in love and always will be",
+	"C:",
+	"I will go down with this ship",
+	"And I won't put my hands up and surrender",
+	"There will be no white flag above my door",
+	"I'm in love and always will be",
+	"C:",
+	"I will go down with this ship",
+	"And I won't put my hands up and surrender",
+	"There will be no white flag above my door",
+	"I'm in love and always will be",
+	"Source: LyricFind",
+	"Songwriters: Dido Armstrong / Richard W. Jr. Nowels / Rollo Armstrong",
+	"White Flag lyrics © Warner Chappell Music, Inc"
+    ]
+}
+},
+{ "file": "", "lastModifiedDate": 0, "song": 
 {
 "title": "White Key Blues",
 "artist": "Bob Steele",
@@ -73574,7 +73829,7 @@
 "chords": 
     [
 	"V:",
-	"C C C C",
+	"C F C C",
 	"F F C C",
 	"G F C G"
     ],

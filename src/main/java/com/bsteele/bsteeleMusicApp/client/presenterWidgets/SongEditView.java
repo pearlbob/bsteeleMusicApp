@@ -650,6 +650,8 @@ public class SongEditView
             song = Song.createEmptySong();
 
         //  speed entry enhancement
+        logger.fine( "entryToUppercase: "+SongBase.entryToUppercase(entry));
+        logger.fine( "parseChordEntry: "+song.parseChordEntry(SongBase.entryToUppercase(entry)));
         String upperEntry = MeasureNode.concatMarkup(song.parseChordEntry(SongBase.entryToUppercase(entry)));
         if (upperEntry.equals(entry))
             measureEntryCorrection.getElement().setInnerHTML(nbsp);

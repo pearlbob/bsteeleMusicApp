@@ -134,6 +134,10 @@ public class SongEditTest extends TestCase {
             post(MeasureEditType.append, "PC:", "PC: []");
 
 
+            startingChords("V: (Prechorus) C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
+            pre(MeasureEditType.delete, "V:0:0", "(Prechorus)", "null");
+            resultChords("V: C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
+
             startingChords("V: (Verse) [C♯m A♭ F A♭ ] x4 (Prechorus) C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
             pre(MeasureEditType.delete, "V:0:0", "(Verse)", "null");
             resultChords("V: [C♯m A♭ F A♭ ] x4 (Prechorus) C (C/) (chorus) [C G B♭ F ] x4 (Tag Chorus)  ");
@@ -188,21 +192,16 @@ public class SongEditTest extends TestCase {
             startingChords("V: C F C C F F C C G F C G  ");
             //                 0 1 2 3 4 5 6 7 8 9 0 1
             pre(MeasureEditType.replace, "V:0:6", "C", "[] x2 ");
-            resultChords("V: C F C C [F F C C ] x2 G F C G  ");
+            resultChords("V: [C F C C F F C C ] x2 G F C G  ");
             //               0 1 2 3  4 5 6 7      8 9 0 1
             //               0 1 2 3  0 1 2 3      0 1 2 3
-            post(MeasureEditType.append, "V:1", "[F F C C ] x2");
+            post(MeasureEditType.append, "V:0", "[C F C C F F C C ] x2");
 
             startingChords("V: C F C C F F C C G F C G  ");
             //                 0 1 2 3 4 5 6 7 8 9 0 1
             pre(MeasureEditType.replace, "V:0:6", "C", "[] x3 ");
-            resultChords("V: C F C C [F F C C ] x3 G F C G  ");
-            post(MeasureEditType.append, "V:1", "[F F C C ] x3");
-
-            startingChords("V: C F C C F F C C [G F C D ] x2  ");
-            pre(MeasureEditType.replace, "V:0:3", "C", "[] x2 ");
-            resultChords("V: [C F C C ] x2 F F C C [G F C D ] x2  ");
-            post(MeasureEditType.append, "V:0", "[C F C C ] x2");
+            resultChords("V: [C F C C F F C C ] x3 G F C G  ");
+            post(MeasureEditType.append, "V:0", "[C F C C F F C C ] x3");
 
             startingChords("I:  V:  ");
             pre(MeasureEditType.append, "V:", "V: []", "Dm ");
