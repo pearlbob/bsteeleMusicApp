@@ -735,6 +735,8 @@ public class SongBase {
                 } else {
                     Measure lastMeasure;
                     Measure measure = null;
+
+                    //  compute the max number of columns for this phrase
                     int maxCol = offset;
                     {
                         int currentCol = 0;
@@ -751,11 +753,15 @@ public class SongBase {
                         }
                         if (currentCol > maxCol)
                             maxCol = currentCol;
+                        maxCol = Math.min(maxCol, measuresPerline + 1);
                     }
+
+                    //  place each measure in the grid
                     for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
 
-                        //  place comments on their own line, don't upset the col location
-                        //  expect the outout to span the row
+                        //  place comments on their own line
+                        //  don't upset the col location
+                        //  expect the output to span the row
                         lastMeasure = measure;
                         measure = phrase.getMeasure(measureIndex);
                         if (measure.isComment()) {
@@ -777,6 +783,10 @@ public class SongBase {
                         if ((lastMeasure != null && lastMeasure.isEndOfRow())
                                 || col >= offset + measuresPerline  //  limit line length to the measures per line
                         ) {
+                            //  fill the row with nulls if the row is shorter then the others in this phrase
+                            while ( col < maxCol )
+                                grid.set(col++, row, null );
+
                             //  put an end of line marker on multiline repeats
                             if (phrase.isRepeat()) {
                                 grid.set(col++, row, new ChordSectionLocation(sectionVersion, phraseIndex,
@@ -803,7 +813,7 @@ public class SongBase {
 
                         //  put the repeat on the end of the last line of the repeat
                         if (phrase.isRepeat() && measureIndex == phraseSize - 1) {
-                            col = maxCol + 1;
+                            col = maxCol;
 
                             //  close the multiline repeat marker
                             if (repeatExtensionUsed) {
@@ -815,7 +825,9 @@ public class SongBase {
                                 grid.set(col++, row, loc);
 
                                 repeatExtensionUsed = false;
-                            }
+                            } else
+                                col++;    //  point past the end of the row
+
                             {
                                 //  add repeat indicator
                                 ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
@@ -838,7 +850,7 @@ public class SongBase {
                 logger.fine(" " + coordinate.toString()
                         + " " + gridCoordinateChordSectionLocationMap.get(coordinate)
                         + " -> " + findMeasureNode(gridCoordinateChordSectionLocationMap.get(coordinate)).toMarkup()
-                        )
+                )
                 ;
             }
         }
@@ -2153,11 +2165,15 @@ public class SongBase {
             String lastValue = "";
             for (int c = 0; c < colLimit; c++) {
                 ChordSectionLocation loc = row.get(c);
-                if (loc == null)
+                final int flexRow = r + offset;
+
+                if (loc == null) {
+                    flexTable.setHTML(flexRow, c, " ");
                     continue;
+                }
 
                 MeasureNode measureNode = findMeasureNode(loc);
-                final int flexRow = r + offset;
+
 
                 //  expect comment to span the row
                 if (measureNode.isComment() && !measureNode.isRepeat()) {   //fixme: better identification of repeat marker

@@ -1,5 +1,7 @@
 package com.bsteele.bsteeleMusicApp.shared.songs;
 
+import com.bsteele.bsteeleMusicApp.shared.Grid;
+import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
 import com.bsteele.bsteeleMusicApp.shared.util.MarkedString;
 import org.junit.Test;
 
@@ -122,6 +124,402 @@ public class MeasureRepeatTest {
         loc = new ChordSectionLocation(chordSection.getSectionVersion(), 0);
         logger.fine(loc.toString());
         assertEquals("V3:0", loc.toString());
+    }
+
+    @Test
+    public void testGridMapping() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: [A B , Ab Bb Eb, D C G G# ] x3 T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(0);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(9, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(0, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 2));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("B", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 3));
+            assertNull(measureNode);
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNull(measureNode);
+
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 3));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Eb", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 4));
+            assertNull(measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 4));
+            assertNull(measureNode);
+
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("G#", a.getBeatsPerBar()), measureNode);
+
+            ChordSectionLocation chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.repeatLowerRight, chordSectionLocation.getMarker());
+            chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: E F F# G [A B C D Ab Bb Eb Db D C G Gb D C G# A#] x3 T: A",
+                //         1 2 3  4  1 2 3 4 5  6  7  8  1 2 3 4  5 6 7  8
+                //                                       9 101112 131415 16
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(1);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(16, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(1, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("D", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Gb", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 7));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("G#", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 8));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A#", a.getBeatsPerBar()), measureNode);
+
+            ChordSectionLocation chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 8+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.repeatLowerRight, chordSectionLocation.getMarker());
+            chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 8+1+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: A B C D x3 T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(0);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(4, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(0, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("D", a.getBeatsPerBar()), measureNode);
+
+            ChordSectionLocation   chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(0, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: [A B C D] x3 T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(0);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(4, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(0, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("D", a.getBeatsPerBar()), measureNode);
+
+            ChordSectionLocation   chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(0, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: [A B C D, Ab Bb Eb Db, D C G G# ] x3 T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(0);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(12, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(0, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("D", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Db", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("G#", a.getBeatsPerBar()), measureNode);
+
+            ChordSectionLocation chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.repeatLowerRight, chordSectionLocation.getMarker());
+            chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: [A B C D, Ab Bb Eb Db, D C G# ] x3 T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(0);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(11, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(0, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("D", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Db", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 3));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("G#", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 4));
+            assertNull(measureNode);
+
+            ChordSectionLocation chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.repeatLowerRight, chordSectionLocation.getMarker());
+            chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: [A B C D, Ab Bb Eb Db, D C G G# ] x3 E F F# G T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(0);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(12, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(0, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Db", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("D", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Db", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("G#", a.getBeatsPerBar()), measureNode);
+            ChordSectionLocation chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.repeatLowerRight, chordSectionLocation.getMarker());
+            chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(2, 4+1+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
+
+
+        a = SongBaseTest.createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v: E F F# Gb [A B C D, Ab Bb Eb Db, D C G G# ] x3 T: A",
+                "i:\nv: bob, bob, bob berand\nt: last line \n");
+        a.debugSongMoments();
+
+        try {
+            ChordSection cs = ChordSection.parse("v:", a.getBeatsPerBar());
+            ChordSection chordSection = a.findChordSection(cs.getSectionVersion());
+            assertNotNull(chordSection);
+            Phrase phrase = chordSection.getPhrase(1);
+            assertTrue(phrase.isRepeat());
+
+            MeasureRepeat measureRepeat = (MeasureRepeat) phrase;
+            assertEquals(12, measureRepeat.size());
+
+            Grid<ChordSectionLocation> grid = a.getChordSectionLocationGrid();
+            MeasureNode measureNode = a.findMeasureNode(new GridCoordinate(1, 1));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("A", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(0, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Gb", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(1, 3));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("C", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(2, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("Db", a.getBeatsPerBar()), measureNode);
+
+            measureNode = a.findMeasureNode(new GridCoordinate(3, 4));
+            assertNotNull(measureNode);
+            assertEquals(Measure.parse("G#", a.getBeatsPerBar()), measureNode);
+
+            ChordSectionLocation chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(3, 4+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.repeatLowerRight, chordSectionLocation.getMarker());
+            chordSectionLocation = a.getChordSectionLocation(new GridCoordinate(3, 4+1+1));
+            assertNotNull(chordSectionLocation);
+            assertEquals(ChordSectionLocation.Marker.none, chordSectionLocation.getMarker());
+            measureNode =  a.findMeasureNode(chordSectionLocation);
+            assertNotNull(measureNode);
+            assertTrue(measureNode.isRepeat());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            fail();
+        }
+
+
+
     }
 
     private static Logger logger = Logger.getLogger(MeasureRepeatTest.class.getName());

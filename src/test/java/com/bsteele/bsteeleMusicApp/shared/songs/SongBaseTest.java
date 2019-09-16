@@ -1060,7 +1060,7 @@ public class SongBaseTest
      * @param lyrics
      * @return
      */
-    public static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
+    static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
                                                 @NotNull String copyright,
                                                 @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
                                                 @NotNull String chords, @NotNull String lyrics) {
