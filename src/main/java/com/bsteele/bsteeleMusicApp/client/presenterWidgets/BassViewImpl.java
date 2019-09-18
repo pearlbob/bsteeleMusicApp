@@ -151,8 +151,8 @@ public class BassViewImpl
         });
 
         saveButton.addClickHandler((ClickEvent event) -> {
-            BassFile bassFile = new BassFile();
-            bassFile.writeBassFile(song);
+//            BassFile bassFile = new BassFile();
+//            bassFile.writeBassFile(song);
         });
 
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);

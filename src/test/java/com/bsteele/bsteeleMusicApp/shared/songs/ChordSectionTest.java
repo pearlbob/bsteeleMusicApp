@@ -52,7 +52,7 @@ public class ChordSectionTest extends TestCase {
                         beatsPerBar);
                 assertNotNull(chordSection);
                 logger.fine(chordSection.toMarkup());
-                assertEquals("V: D G D D, [D G D D ] x3 C A C A, C..A D D, ", chordSection.toMarkup());
+                assertEquals("V: D G D D [D G D D ] x3 C A C A, C..A D D ", chordSection.toMarkup());
             }
             {
                 //  comment only

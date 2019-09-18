@@ -136,6 +136,9 @@ public class Phrase extends MeasureNode {
             throw new ParseException("no measures found in parse", 0);
         }
 
+        if ( !measures.isEmpty())
+            measures.get(measures.size()-1).setEndOfRow(false);
+
         return new Phrase(measures, phraseIndex);
     }
 

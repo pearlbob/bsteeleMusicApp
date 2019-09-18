@@ -53,52 +53,52 @@ public class BassFile {
         boolean first = true;
         Key key = song.getKey();
         for (int keyCount = 0; keyCount < MusicConstant.halfStepsPerOctave; keyCount++) {
-            for (int tonicNumber = 0; tonicNumber < MusicConstant.MajorDiatonic.values().length; tonicNumber++) {
-                sb.append("\n");
-
-                ScaleChord scaleChord = key.getMajorDiatonicByDegree(tonicNumber);
-
-                ArrayList<Chord> chords = new ArrayList<>();
-                chords.add(new Chord(scaleChord));
-                Measure measure = new Measure(beatsPerBar, chords);
-                Bar bar = new Bar();
-                bar.setMeasure(measure);
-                {
-                    ArrayList<Note> notes = new ArrayList<>();
-                    Pitch root = Pitch.findPitch(scaleChord.getScaleNote(), Pitch.E1);
-                    TreeSet<ChordComponent> chordComponents = scaleChord.getChordComponents();
-                    ChordComponent chordComponent = chordComponents.first();
-                    int count = 1;
-                    for (; count <= 4 && chordComponent != null; count++) {
-                        int halfSteps = chordComponent.getHalfSteps();
-                        notes.add(new Note(root.offsetByHalfSteps(halfSteps
-                                + (count == 4 && halfSteps <= g3ScaleNoteHalfStep - MusicConstant.halfStepsPerOctave
-                                ? MusicConstant.halfStepsPerOctave : 0)
-                        ),
-                                NoteDuration.whole));
-                        chordComponent = chordComponents.higher(chordComponent);
-                    }
-                    while (count <= 4) {
-                        notes.add(new Note(root.offsetByHalfSteps((count == 4 ? MusicConstant.halfStepsPerOctave : 0)),
-                                NoteDuration.whole));
-                        count++;
-                    }
-                    bar.setNotes(notes);
-                }
-
-                //  output
-                double beatCount = 0;
-                String lyrics = key.toString() + " " + MusicConstant.MajorDiatonic.values()[tonicNumber].name();
-                for (Note note : bar.getNotes()) {
-                    if (first)
-                        first = false;
-                    else
-                        sb.append(",\n");
-                    sb.append(noteToString(bar.getChordAtBeat(beatCount), note, lyrics));
-                    beatCount += note.getDuration();
-                    lyrics = "";
-                }
-            }
+//            for (int tonicNumber = 0; tonicNumber < MusicConstant.MajorDiatonic.values().length; tonicNumber++) {
+//                sb.append("\n");
+//
+//                ScaleChord scaleChord = key.getMajorDiatonicByDegree(tonicNumber);
+//
+//                ArrayList<Chord> chords = new ArrayList<>();
+//                chords.add(new Chord(scaleChord));
+//                Measure measure = new Measure(beatsPerBar, chords);
+//                Bar bar = new Bar();
+//                bar.setMeasure(measure);
+//                {
+//                    ArrayList<Note> notes = new ArrayList<>();
+//                    Pitch root = Pitch.findPitch(scaleChord.getScaleNote(), Pitch.E1);
+//                    TreeSet<ChordComponent> chordComponents = scaleChord.getChordComponents();
+//                    ChordComponent chordComponent = chordComponents.first();
+//                    int count = 1;
+//                    for (; count <= 4 && chordComponent != null; count++) {
+//                        int halfSteps = chordComponent.getHalfSteps();
+//                        notes.add(new Note(root.offsetByHalfSteps(halfSteps
+//                                + (count == 4 && halfSteps <= g3ScaleNoteHalfStep - MusicConstant.halfStepsPerOctave
+//                                ? MusicConstant.halfStepsPerOctave : 0)
+//                        ),
+//                                NoteDuration.whole));
+//                        chordComponent = chordComponents.higher(chordComponent);
+//                    }
+//                    while (count <= 4) {
+//                        notes.add(new Note(root.offsetByHalfSteps((count == 4 ? MusicConstant.halfStepsPerOctave : 0)),
+//                                NoteDuration.whole));
+//                        count++;
+//                    }
+//                    bar.setNotes(notes);
+//                }
+//
+//                //  output
+//                double beatCount = 0;
+//                String lyrics = key.toString() + " " + MusicConstant.MajorDiatonic.values()[tonicNumber].name();
+//                for (Note note : bar.getNotes()) {
+//                    if (first)
+//                        first = false;
+//                    else
+//                        sb.append(",\n");
+//                    sb.append(noteToString(bar.getChordAtBeat(beatCount), note, lyrics));
+//                    beatCount += note.getDuration();
+//                    lyrics = "";
+//                }
+//            }
 
             //  step the key
             key = key.nextKeyByFifth();

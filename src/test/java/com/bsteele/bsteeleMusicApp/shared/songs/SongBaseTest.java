@@ -609,6 +609,8 @@ public class SongBaseTest
     public void testOddSongs() {
         SongBase a;
         int beatsPerBar = 4;
+        ChordSectionLocation location;
+
         try {
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, beatsPerBar, 4,
@@ -617,7 +619,7 @@ public class SongBaseTest
                             " x12",
                     "o: nothing");
             logger.fine(a.logGrid());
-            ChordSectionLocation location = new ChordSectionLocation(new SectionVersion(Section.outro), 0, 3);
+            location = new ChordSectionLocation(new SectionVersion(Section.outro), 0, 3);
             MeasureNode measureNode = a.findMeasureNode(location);
             logger.fine(measureNode.toMarkup());
             assertEquals(Measure.parse("B♭maj7", beatsPerBar), measureNode);
@@ -711,13 +713,39 @@ public class SongBaseTest
 
         try {
 
+            //  see that section identifiers are on first phrase row
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, beatsPerBar, 4,
+                    "I: [Am Am/G Am/F♯ FE ] x4  v: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ",
+                    "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here o: end here");
+
+            logger.finer(a.toMarkup());
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("I:0:0")));
+
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("I:")));
+            assertEquals(new GridCoordinate(1, 0), a.getGridCoordinate(ChordSectionLocation.parse("V:")));
+            assertEquals(new GridCoordinate(2, 0), a.getGridCoordinate(ChordSectionLocation.parse("C:")));
+
+            //  see that section identifiers are on first phrase row
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    100, beatsPerBar, 4,
+                    "I: Am Am/G Am/F♯ FE, A B C D, v: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ",
+                    "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here o: end here");
+
+            logger.finer(a.logGrid());
+            assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("I:0:0")));
+
+            assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("I:")));
+            assertEquals(new GridCoordinate(2, 0), a.getGridCoordinate(ChordSectionLocation.parse("V:")));
+            assertEquals(new GridCoordinate(3, 0), a.getGridCoordinate(ChordSectionLocation.parse("C:")));
+
+
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     100, beatsPerBar, 4,
                     "I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ",
                     "i:\nv: bob, bob, bob berand\nv: nope\nc: sing chorus here");
 
             logger.finer(a.toMarkup());
-
             assertEquals(new GridCoordinate(0, 1), a.getGridCoordinate(ChordSectionLocation.parse("V:0:0")));
 
             assertEquals(new GridCoordinate(0, 0), a.getGridCoordinate(ChordSectionLocation.parse("I:")));
@@ -1061,9 +1089,9 @@ public class SongBaseTest
      * @return
      */
     static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
-                                                @NotNull String copyright,
-                                                @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
-                                                @NotNull String chords, @NotNull String lyrics) {
+                                         @NotNull String copyright,
+                                         @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                         @NotNull String chords, @NotNull String lyrics) {
         SongBase song = new SongBase();
         song.setTitle(title);
         song.setArtist(artist);

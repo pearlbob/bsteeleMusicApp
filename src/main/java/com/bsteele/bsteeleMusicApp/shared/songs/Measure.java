@@ -29,27 +29,27 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
      * @param beatCount the beat count for the measure
      * @param chords    the chords to be played over this measure
      */
-    public Measure(int beatCount, ArrayList<Chord> chords) {
+    Measure(int beatCount, ArrayList<Chord> chords) {
         this.beatCount = beatCount;
         this.chords = chords;
         allocateTheBeats();
     }
 
-    public Measure(Measure measure) {
-        if (measure == null)
-            return;
-
-        this.beatCount = measure.beatCount;
-
-        //  deep copy
-        ArrayList<Chord> chords = new ArrayList<>(measure.chords.size());
-        for (Chord chord : measure.chords) {
-            chords.add(new Chord(chord));
-        }
-        this.chords = chords;
-
-        this.endOfRow = measure.endOfRow;
-    }
+//    public Measure(Measure measure) {
+//        if (measure == null)
+//            return;
+//
+//        this.beatCount = measure.beatCount;
+//
+//        //  deep copy
+//        ArrayList<Chord> chords = new ArrayList<>(measure.chords.size());
+//        for (Chord chord : measure.chords) {
+//            chords.add(new Chord(chord));
+//        }
+//        this.chords = chords;
+//
+//        this.endOfRow = measure.endOfRow;
+//    }
 
     protected Measure() {
         beatCount = 0;
@@ -106,7 +106,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
             } catch (ParseException pex) {
                 markedString.resetTo(mark);
 
-                //  see if this is a chord less measure
+                //  see if this is a chordless measure
                 if (markedString.charAt(0) == 'X') {
                     ret = new Measure(beatsPerBar, emptyChordList);
                     markedString.getNextChar();
@@ -285,7 +285,7 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return endOfRow;
     }
 
-    public void setEndOfRow(boolean endOfRow) {
+    public final void setEndOfRow(boolean endOfRow) {
         this.endOfRow = endOfRow;
     }
 

@@ -700,7 +700,8 @@ public class SongBase {
                 ChordSectionLocation loc = new ChordSectionLocation(matchingSectionVersions);
                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                grid.set(col++, row, loc);
+                grid.set(col, row, loc);
+                col = offset;
                 sectionVersionsToDo.removeAll(matchingSectionVersions);
             }
 
@@ -981,21 +982,21 @@ public class SongBase {
         return null;
     }
 
-    /**
-     * Add the given section version to the song chords
-     *
-     * @param sectionVersion the given section to add
-     * @return true if the section version was added
-     */
-    public final boolean addSectionVersion(SectionVersion sectionVersion) {
-        if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
-            return false;
-        chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
-        clearCachedValues();
-        setCurrentChordSectionLocation(new ChordSectionLocation(sectionVersion));
-        setCurrentMeasureEditType(MeasureEditType.append);
-        return true;
-    }
+//    /**
+//     * Add the given section version to the song chords
+//     *
+//     * @param sectionVersion the given section to add
+//     * @return true if the section version was added
+//     */
+//    public final boolean addSectionVersion(SectionVersion sectionVersion) {
+//        if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
+//            return false;
+//        chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
+//        clearCachedValues();
+//        setCurrentChordSectionLocation(new ChordSectionLocation(sectionVersion));
+//        setCurrentMeasureEditType(MeasureEditType.append);
+//        return true;
+//    }
 
 
     private final boolean deleteCurrentChordSectionLocation() {
