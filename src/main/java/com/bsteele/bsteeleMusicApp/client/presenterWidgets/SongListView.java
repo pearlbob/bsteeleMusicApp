@@ -256,18 +256,20 @@ public class SongListView
                 Song oldSong = allSongs.floor(song);
                 if (oldSong.equals(song))
                     return false;
-                if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
-                    message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
-                    popupOver(message, oldSong, song);
-                    logger.info(message);
-                    return false;
-                }
+//                  if (!force && Song.compareByVersionNumber(oldSong, song) > 0)
+//                {
+//                    message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
+//                    popupOver(message, oldSong, song);
+//                    logger.info(message);
+//                    return false;
+//                }
 
                 if (force) {
                     allSongs.remove(oldSong);  //  remove any prior version
                     return allSongs.add(song);
                 }
-                message = "song parse: \"" + song.toString() + "\" replaces: \"" + oldSong.toString() + "\"";
+
+                message = "Should: \"" + song.toString() + "\" replace: \"" + oldSong.toString() + "\" ?";
                 popupOver(message, oldSong, song);
                 logger.info(message);
                 return false;

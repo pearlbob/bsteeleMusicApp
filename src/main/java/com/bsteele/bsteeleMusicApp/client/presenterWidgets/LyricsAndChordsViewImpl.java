@@ -43,6 +43,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -260,9 +261,9 @@ public class LyricsAndChordsViewImpl
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-//        if (song == null || !isActive)
-//            return;
-//
+        if (song == null || !isActive)
+            return;
+
 //        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
 //                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
 //
@@ -279,8 +280,17 @@ public class LyricsAndChordsViewImpl
 //                chordsDirty = true;
 //            }
 //        }
-//
-//        if (chordsDirty) {
+
+        //  see if the slider has moved
+        {
+            int w = split.getWidget(0).getOffsetWidth();
+            if ( w != lastSplitterSize) {
+                lastSplitterSize = w;
+                chordsDirty = true;
+            }
+        }
+
+        if (chordsDirty) {
 //
 //            //  turn off all highlights
 //            if (lastChordElement != null) {
@@ -319,8 +329,8 @@ public class LyricsAndChordsViewImpl
 //                    break;
 //            }
 //
-//            resizeChords();
-//        }
+            resizeChords();
+        }
     }
 
     @Override
@@ -462,6 +472,7 @@ public class LyricsAndChordsViewImpl
     private int lastMeasureNumber;
     private int updateCount;
     private boolean isActive = false;
+    private int lastSplitterSize;
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;
@@ -474,4 +485,7 @@ public class LyricsAndChordsViewImpl
     private static final Scheduler scheduler = Scheduler.get();
     private static final Logger logger = Logger.getLogger(LyricsAndChordsViewImpl.class.getName());
 
+    static {
+//        logger.setLevel(Level.FINER);
+    }
 }

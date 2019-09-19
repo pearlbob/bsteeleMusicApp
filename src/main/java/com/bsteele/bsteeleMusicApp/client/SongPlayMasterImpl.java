@@ -133,6 +133,11 @@ public class SongPlayMasterImpl
                                 (songPlayer == null ? 0 : songPlayer.getBeatFraction(t)),
                                 songOutUpdate.getMomentNumber()));
                         break;
+                    default:
+                        //  distribute the animation time update locally
+                        eventBus.fireEvent(new MusicAnimationEvent(tn,
+                                0,0,0, 0));
+                        break;
                 }
 
             }
@@ -448,6 +453,6 @@ public class SongPlayMasterImpl
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 
     static {
-        logger.setLevel(Level.FINE);
+        //logger.setLevel(Level.FINE);
     }
 }
