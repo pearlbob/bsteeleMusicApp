@@ -539,7 +539,7 @@ public class SongBase {
                 Util.stripLeadingWhitespace(markedString);
                 if (markedString.isEmpty())
                     break;
-                logger.finest(markedString.toString());
+                logger.info("parseChordEntry: "+markedString.toString());
 
                 int mark = markedString.mark();
 
@@ -734,7 +734,7 @@ public class SongBase {
                         grid.set(col++, row, loc);
                     }
                 } else {
-                    Measure lastMeasure;
+
                     Measure measure = null;
 
                     //  compute the max number of columns for this phrase
@@ -758,12 +758,12 @@ public class SongBase {
                     }
 
                     //  place each measure in the grid
+                    Measure lastMeasure = null;
                     for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
 
                         //  place comments on their own line
                         //  don't upset the col location
                         //  expect the output to span the row
-                        lastMeasure = measure;
                         measure = phrase.getMeasure(measureIndex);
                         if (measure.isComment()) {
                             if (col > offset && lastMeasure != null && !lastMeasure.isComment())
@@ -840,6 +840,8 @@ public class SongBase {
                             row++;
                             col = offset;
                         }
+
+                        lastMeasure = measure;
                     }
                 }
             }
@@ -1075,8 +1077,8 @@ public class SongBase {
     }
 
     private final void preMod(MeasureNode measureNode) {
-        logger.info("startingChords(\"" + toMarkup() + "\");");
-        logger.info(" pre(MeasureEditType." + getCurrentMeasureEditType().name()
+        logger.fine("startingChords(\"" + toMarkup() + "\");");
+        logger.fine(" pre(MeasureEditType." + getCurrentMeasureEditType().name()
                 + ", \"" + getCurrentChordSectionLocation().toString() + "\""
                 + ", \""
                 + (getCurrentChordSectionLocationMeasureNode() == null
@@ -1086,8 +1088,8 @@ public class SongBase {
     }
 
     private final void postMod() {
-        logger.info("resultChords(\"" + toMarkup() + "\");");
-        logger.info("post(MeasureEditType." + getCurrentMeasureEditType().name()
+        logger.fine("resultChords(\"" + toMarkup() + "\");");
+        logger.fine("post(MeasureEditType." + getCurrentMeasureEditType().name()
                 + ", \"" + getCurrentChordSectionLocation().toString() + "\""
                 + ", \"" + (getCurrentChordSectionLocationMeasureNode() == null
                 ? "null"
@@ -1151,7 +1153,7 @@ public class SongBase {
             }
         }
 
-        //  default to insert if
+        //  default to insert if empty
         if (chordSection.getPhrases().isEmpty()) {
             chordSection.getPhrases().add(new Phrase(new ArrayList<>(), 0));
             //fixme?  editType = MeasureEditType.insert;
