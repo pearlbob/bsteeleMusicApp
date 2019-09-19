@@ -817,6 +817,8 @@ public class SongEditView
         setUndoRedoEnables();
         setSectionAddEnables();
 
+        measureEntry.setValue("");
+
         logger.fine(song.toMarkup());
     }
 

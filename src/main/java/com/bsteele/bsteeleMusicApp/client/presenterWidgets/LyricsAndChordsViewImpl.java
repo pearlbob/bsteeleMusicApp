@@ -284,7 +284,7 @@ public class LyricsAndChordsViewImpl
         //  see if the slider has moved
         {
             int w = split.getWidget(0).getOffsetWidth();
-            if ( w != lastSplitterSize) {
+            if (w != lastSplitterSize) {
                 lastSplitterSize = w;
                 chordsDirty = true;
             }
@@ -366,14 +366,16 @@ public class LyricsAndChordsViewImpl
             int tableHeight = chordsFlexTable.getOffsetHeight();
             FlexTable.FlexCellFormatter formatter = chordsFlexTable.getFlexCellFormatter();
 
+            logger.finer("parent: (" + parentWidth + ", " + parentHeight + ")"
+                    + ", table: (" + tableWidth + ", " + tableHeight + ")"
+            );
+
             if (forceChordsFontSize
                     || parentWidth < tableWidth
                     || parentHeight < tableHeight
                     || parentWidth > (1 + 8.0 / chordsFontSize) * tableWidth) {
                 double ratio = Math.min(parentWidth / tableWidth,
                         parentHeight / tableHeight);
-                logger.finer("wratio: " + (parentWidth / tableWidth)
-                        + ", hratio: " + (parentHeight / tableHeight));
 
                 int size = (int) Math.floor(Math.max(chordsMinFontSize, Math.min(chordsFontSize * ratio,
                         chordsMaxFontSize)));
@@ -398,9 +400,15 @@ public class LyricsAndChordsViewImpl
                     }
                     chordsFontSize = size;
                 }
-                //sendStatus("chords ratio", Double.toString(ratio) + ", size: " + Double.toString(size));
+                logger.fine("chords ratio: " + ratio);
 
-                chordsDirty = !((ratio >= 1 && ratio <= (1 + 20.0 / chordsFontSize))
+                double maxRatio = 1.1;//(1 + 3.0 / chordsFontSize);
+                logger.fine("ratio: " + ratio
+                        +" <= maxRatio: " + maxRatio
+                        +", chordsFontSize: " + chordsFontSize
+                );
+
+                chordsDirty = !((ratio >= 1 && ratio <= maxRatio)
                         || chordsFontSize == chordsMinFontSize
                         || chordsFontSize == chordsMaxFontSize)
                         || forceChordsFontSize;

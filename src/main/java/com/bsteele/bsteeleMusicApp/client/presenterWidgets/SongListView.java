@@ -250,33 +250,32 @@ public class SongListView
 
     @Override
     public boolean addToSongList(Song song, boolean force) {
-        if (song != null) {
-            if (allSongs.contains(song)) {
-                String message;
-                Song oldSong = allSongs.floor(song);
-                if (oldSong.equals(song))
-                    return false;
-//                  if (!force && Song.compareByVersionNumber(oldSong, song) > 0)
-//                {
-//                    message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
-//                    popupOver(message, oldSong, song);
-//                    logger.info(message);
-//                    return false;
-//                }
+        if (song == null)
+            return false;
 
-                if (force) {
-                    allSongs.remove(oldSong);  //  remove any prior version
-                    return allSongs.add(song);
-                }
-
-                message = "Should: \"" + song.toString() + "\" replace: \"" + oldSong.toString() + "\" ?";
-                popupOver(message, oldSong, song);
-                logger.info(message);
+        if (allSongs.contains(song)) {
+            String message;
+            Song oldSong = allSongs.floor(song);
+            if (oldSong.equals(song))
                 return false;
+//            if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
+//                message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
+//                popupOver(message, oldSong, song);
+//                logger.info(message);
+//                return false;
+//            }
+
+            if (force) {
+                allSongs.remove(oldSong);  //  remove any prior version
+                return allSongs.add(song);
             }
-            return allSongs.add(song);
+
+            message = "Should: \"" + song.toString() + "\" replace: \"" + oldSong.toString() + "\" ?";
+            popupOver(message, oldSong, song);
+            logger.info(message);
+            return false;
         }
-        return false;
+        return allSongs.add(song);
     }
 
     @Override
