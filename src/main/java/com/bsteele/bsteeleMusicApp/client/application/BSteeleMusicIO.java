@@ -17,7 +17,6 @@ import static jsinterop.annotations.JsPackage.GLOBAL;
  */
 public class BSteeleMusicIO {
     /**
-     *
      * @param songPlayMaster the song play master to transport
      */
     @Inject
@@ -25,11 +24,13 @@ public class BSteeleMusicIO {
 
         this.songPlayMaster = songPlayMaster;
         String url = getWebSocketURL();
-        GWT.log("url: " + url);
+        if (url != null) {
+            GWT.log("url: " + url);
 
-        socket = new WebSocket(url);
-        socket.onerror = new SocketErrorFunction();
-        socket.onmessage = new SocketReceiveFunction();
+            socket = new WebSocket(url);
+            socket.onerror = new SocketErrorFunction();
+            socket.onmessage = new SocketReceiveFunction();
+        }
 
         songPlayMaster.setBSteeleMusicIO(this);
 
@@ -38,6 +39,9 @@ public class BSteeleMusicIO {
 
     private String getWebSocketURL() {
         String url = GWT.getHostPageBaseURL();
+        if (url == null || url.startsWith("http://127.0.0.1:8888/"))
+            return null;
+
         logger.fine("GWT.getHostPageBaseURL(): " + url);
         url = url.replaceFirst("bsteeleMusicApp", "");  //  due to jetty startup
         url = url.replaceFirst("^http\\:", "ws:");
@@ -67,14 +71,15 @@ public class BSteeleMusicIO {
 
         @Override
         public Object call(Object event) {
-            GWT.log("error: socket readyState: " + socket.readyState);
+            if (socket != null)
+                logger.info("error: socket readyState: " + socket.readyState);
             isSocketOpen = isSocketOpen();
             return event;
         }
     }
 
-    private boolean isSocketOpen(){
-        return socket != null && socket.readyState == 1 ;
+    private boolean isSocketOpen() {
+        return socket != null && socket.readyState == 1;
     }
 
     @JsType(isNative = true, name = "Object", namespace = GLOBAL)
@@ -102,9 +107,9 @@ public class BSteeleMusicIO {
 
 //        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
 //                + " at my " + System.currentTimeMillis());
-        if ( !isSocketOpen())
+        if (!isSocketOpen())
             return false;
-        
+
         socket.send(message);
         return true;
     }

@@ -67,6 +67,6 @@ public class BSteeleMusicAppServer {
     private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 
     static {
-         logger.setLevel(Level.FINER);
+//         logger.setLevel(Level.FINER);
     }
 }

@@ -37,8 +37,8 @@ public class SongEditTest extends TestCase {
             startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G F F  O: Dm C B B♭ A  ");
             pre(MeasureEditType.replace, "C:", "C: F F C C G G F F ",
                     "C: F F C C G G C B F F ");
-            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C B F F  O: Dm C B B♭ A  ");
-            post(MeasureEditType.append, "C:", "C: F F C C G G C B F F ");
+            resultChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C, G G C B, F F  O: Dm C B B♭ A  ");
+            post(MeasureEditType.append, "C:", "C: F F C C, G G C B, F F ");
 
             startingChords("I: V: [Am Am/G Am/F♯ FE ] x4  I2: [Am Am/G Am/F♯ FE ] x2  C: F F C C G G C B F F  O: Dm C B B♭ A  ");
             pre(MeasureEditType.delete, "C:0:7", "B", "null");

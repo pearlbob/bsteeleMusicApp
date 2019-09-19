@@ -539,7 +539,7 @@ public class SongBase {
                 Util.stripLeadingWhitespace(markedString);
                 if (markedString.isEmpty())
                     break;
-                logger.info("parseChordEntry: "+markedString.toString());
+                logger.finer("parseChordEntry: " + markedString.toString());
 
                 int mark = markedString.mark();
 
@@ -612,6 +612,34 @@ public class SongBase {
             //  add trailing empty sections... without a following non-empty section
             for (ChordSection wasEmptyChordSection : emptyChordSections)
                 ret.add(wasEmptyChordSection);
+        }
+
+        //  try to help add row separations
+        //  default to rows of 4 if there are 8 or more measures
+        if (ret.size() > 0 && ret.get(0) instanceof ChordSection) {
+            ChordSection chordSection = (ChordSection) ret.get(0);
+            for (Phrase phrase : chordSection.getPhrases()) {
+                boolean hasEndOfRow = false;
+                for (Measure measure : phrase.getMeasures()) {
+                    if (measure.isComment())
+                        continue;
+                    if (measure.isEndOfRow()) {
+                        hasEndOfRow = true;
+                        break;
+                    }
+                }
+                if (!hasEndOfRow && phrase.size() >= 8 ) {
+                    int i = 0;
+                    for (Measure measure : phrase.getMeasures()) {
+                        if (measure.isComment())
+                            continue;
+                        i++;
+                        if (i % 4 == 0 ) {
+                            measure.setEndOfRow(true);
+                        }
+                    }
+                }
+            }
         }
 
         return ret;
@@ -740,10 +768,10 @@ public class SongBase {
                     //  compute the max number of columns for this phrase
                     int maxCol = offset;
                     {
-                        int currentCol = 0;
+                        int currentCol = offset;
                         for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
                             measure = phrase.getMeasure(measureIndex);
-                            if (measure.isComment())
+                            if (measure.isComment())    //  comments get their own row
                                 continue;
                             currentCol++;
                             if (measure.isEndOfRow()) {
@@ -785,8 +813,8 @@ public class SongBase {
                                 || col >= offset + measuresPerline  //  limit line length to the measures per line
                         ) {
                             //  fill the row with nulls if the row is shorter then the others in this phrase
-                            while ( col < maxCol )
-                                grid.set(col++, row, null );
+                            while (col < maxCol)
+                                grid.set(col++, row, null);
 
                             //  put an end of line marker on multiline repeats
                             if (phrase.isRepeat()) {
@@ -826,8 +854,7 @@ public class SongBase {
                                 grid.set(col++, row, loc);
 
                                 repeatExtensionUsed = false;
-                            } else
-                                col++;    //  point past the end of the row
+                            }
 
                             {
                                 //  add repeat indicator

@@ -215,6 +215,20 @@ public class SongBaseTest
         } catch (ParseException e) {
             fail();
         }
+
+        //  auto rows of 4 when 8 or more measures entered at once
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, 4, 4, "i: v: t:",
+                "i: dude v: bob, bob, bob berand");
+
+        assertTrue(a.edit(a.parseChordEntry("I: A B C D A B C D")));
+        try {
+            assertEquals("I: A B C D, A B C D,", a.findChordSection("I:").toMarkup().trim());
+        } catch (ParseException e) {
+            fail();
+        }
+
+
     }
 
     @Test
