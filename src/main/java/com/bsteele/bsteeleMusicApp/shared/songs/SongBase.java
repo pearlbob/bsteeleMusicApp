@@ -628,13 +628,13 @@ public class SongBase {
                         break;
                     }
                 }
-                if (!hasEndOfRow && phrase.size() >= 8 ) {
+                if (!hasEndOfRow && phrase.size() >= 8) {
                     int i = 0;
                     for (Measure measure : phrase.getMeasures()) {
                         if (measure.isComment())
                             continue;
                         i++;
-                        if (i % 4 == 0 ) {
+                        if (i % 4 == 0) {
                             measure.setEndOfRow(true);
                         }
                     }
@@ -733,142 +733,148 @@ public class SongBase {
                 sectionVersionsToDo.removeAll(matchingSectionVersions);
             }
 
-            //  grid each phrase
-            for (int phraseIndex = 0; phraseIndex < chordSection.getPhrases().size(); phraseIndex++) {
-                //  start each phrase on it's own line
-                if (col > offset) {
-                    row++;
-                    col = offset;
-                }
-
-                Phrase phrase = chordSection.getPhrase(phraseIndex);
-
-                //  default to max measures per row
-                final int measuresPerline = 8;
-
-                //  grid each measure of the phrase
-                boolean repeatExtensionUsed = false;
-                int phraseSize = phrase.getMeasures().size();
-                if (phraseSize == 0 && phrase.isRepeat()) {
-                    //  special case: deal with empty repeat
-                    //  fill row to measures per line
-                    col = offset + measuresPerline - 1;
-                    {
-                        //  add repeat indicator
-                        ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
-                        GridCoordinate coordinate = new GridCoordinate(row, col);
-                        gridCoordinateChordSectionLocationMap.put(coordinate, loc);
-                        gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                        grid.set(col++, row, loc);
-                    }
-                } else {
-
-                    Measure measure = null;
-
-                    //  compute the max number of columns for this phrase
-                    int maxCol = offset;
-                    {
-                        int currentCol = offset;
-                        for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
-                            measure = phrase.getMeasure(measureIndex);
-                            if (measure.isComment())    //  comments get their own row
-                                continue;
-                            currentCol++;
-                            if (measure.isEndOfRow()) {
-                                if (currentCol > maxCol)
-                                    maxCol = currentCol;
-                                currentCol = offset;
-                            }
-                        }
-                        if (currentCol > maxCol)
-                            maxCol = currentCol;
-                        maxCol = Math.min(maxCol, measuresPerline + 1);
+            //  allow for empty sections... on entry
+            if (chordSection.getPhrases().isEmpty()) {
+                row++;
+                col = offset;
+            } else {
+                //  grid each phrase
+                for (int phraseIndex = 0; phraseIndex < chordSection.getPhrases().size(); phraseIndex++) {
+                    //  start each phrase on it's own line
+                    if (col > offset) {
+                        row++;
+                        col = offset;
                     }
 
-                    //  place each measure in the grid
-                    Measure lastMeasure = null;
-                    for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
+                    Phrase phrase = chordSection.getPhrase(phraseIndex);
 
-                        //  place comments on their own line
-                        //  don't upset the col location
-                        //  expect the output to span the row
-                        measure = phrase.getMeasure(measureIndex);
-                        if (measure.isComment()) {
-                            if (col > offset && lastMeasure != null && !lastMeasure.isComment())
-                                row++;
-                            ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
-                            grid.set(offset, row, loc);
-                            GridCoordinate coordinate = new GridCoordinate(row, offset);
-                            gridCoordinateChordSectionLocationMap.put(coordinate, loc);
-                            gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                            if (measureIndex < phraseSize - 1)
-                                row++;
-                            else
-                                col = offset + measuresPerline;    //  prep for next phrase
-                            continue;
-                        }
+                    //  default to max measures per row
+                    final int measuresPerline = 8;
 
-
-                        if ((lastMeasure != null && lastMeasure.isEndOfRow())
-                                || col >= offset + measuresPerline  //  limit line length to the measures per line
-                        ) {
-                            //  fill the row with nulls if the row is shorter then the others in this phrase
-                            while (col < maxCol)
-                                grid.set(col++, row, null);
-
-                            //  put an end of line marker on multiline repeats
-                            if (phrase.isRepeat()) {
-                                grid.set(col++, row, new ChordSectionLocation(sectionVersion, phraseIndex,
-                                        (repeatExtensionUsed
-                                                ? ChordSectionLocation.Marker.repeatMiddleRight
-                                                : ChordSectionLocation.Marker.repeatUpperRight
-                                        )));
-                                repeatExtensionUsed = true;
-                            }
-                            if (col > offset) {
-                                row++;
-                                col = offset;
-                            }
-                        }
-
+                    //  grid each measure of the phrase
+                    boolean repeatExtensionUsed = false;
+                    int phraseSize = phrase.getMeasures().size();
+                    if (phraseSize == 0 && phrase.isRepeat()) {
+                        //  special case: deal with empty repeat
+                        //  fill row to measures per line
+                        col = offset + measuresPerline - 1;
                         {
-                            //  grid the measure with it's location
-                            ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
+                            //  add repeat indicator
+                            ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
                             GridCoordinate coordinate = new GridCoordinate(row, col);
                             gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                             gridChordSectionLocationCoordinateMap.put(loc, coordinate);
                             grid.set(col++, row, loc);
                         }
+                    } else {
 
-                        //  put the repeat on the end of the last line of the repeat
-                        if (phrase.isRepeat() && measureIndex == phraseSize - 1) {
-                            col = maxCol;
+                        Measure measure = null;
 
-                            //  close the multiline repeat marker
-                            if (repeatExtensionUsed) {
-                                ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex,
-                                        ChordSectionLocation.Marker.repeatLowerRight);
-                                GridCoordinate coordinate = new GridCoordinate(row, col);
+                        //  compute the max number of columns for this phrase
+                        int maxCol = offset;
+                        {
+                            int currentCol = offset;
+                            for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
+                                measure = phrase.getMeasure(measureIndex);
+                                if (measure.isComment())    //  comments get their own row
+                                    continue;
+                                currentCol++;
+                                if (measure.isEndOfRow()) {
+                                    if (currentCol > maxCol)
+                                        maxCol = currentCol;
+                                    currentCol = offset;
+                                }
+                            }
+                            if (currentCol > maxCol)
+                                maxCol = currentCol;
+                            maxCol = Math.min(maxCol, measuresPerline + 1);
+                        }
+
+                        //  place each measure in the grid
+                        Measure lastMeasure = null;
+                        for (int measureIndex = 0; measureIndex < phraseSize; measureIndex++) {
+
+                            //  place comments on their own line
+                            //  don't upset the col location
+                            //  expect the output to span the row
+                            measure = phrase.getMeasure(measureIndex);
+                            if (measure.isComment()) {
+                                if (col > offset && lastMeasure != null && !lastMeasure.isComment())
+                                    row++;
+                                ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
+                                grid.set(offset, row, loc);
+                                GridCoordinate coordinate = new GridCoordinate(row, offset);
                                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
-                                grid.set(col++, row, loc);
+                                if (measureIndex < phraseSize - 1)
+                                    row++;
+                                else
+                                    col = offset + measuresPerline;    //  prep for next phrase
+                                continue;
+                            }
 
-                                repeatExtensionUsed = false;
+
+                            if ((lastMeasure != null && lastMeasure.isEndOfRow())
+                                    || col >= offset + measuresPerline  //  limit line length to the measures per line
+                            ) {
+                                //  fill the row with nulls if the row is shorter then the others in this phrase
+                                while (col < maxCol)
+                                    grid.set(col++, row, null);
+
+                                //  put an end of line marker on multiline repeats
+                                if (phrase.isRepeat()) {
+                                    grid.set(col++, row, new ChordSectionLocation(sectionVersion, phraseIndex,
+                                            (repeatExtensionUsed
+                                                    ? ChordSectionLocation.Marker.repeatMiddleRight
+                                                    : ChordSectionLocation.Marker.repeatUpperRight
+                                            )));
+                                    repeatExtensionUsed = true;
+                                }
+                                if (col > offset) {
+                                    row++;
+                                    col = offset;
+                                }
                             }
 
                             {
-                                //  add repeat indicator
-                                ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
+                                //  grid the measure with it's location
+                                ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex, measureIndex);
                                 GridCoordinate coordinate = new GridCoordinate(row, col);
                                 gridCoordinateChordSectionLocationMap.put(coordinate, loc);
                                 gridChordSectionLocationCoordinateMap.put(loc, coordinate);
                                 grid.set(col++, row, loc);
                             }
-                            row++;
-                            col = offset;
-                        }
 
-                        lastMeasure = measure;
+                            //  put the repeat on the end of the last line of the repeat
+                            if (phrase.isRepeat() && measureIndex == phraseSize - 1) {
+                                col = maxCol;
+
+                                //  close the multiline repeat marker
+                                if (repeatExtensionUsed) {
+                                    ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex,
+                                            ChordSectionLocation.Marker.repeatLowerRight);
+                                    GridCoordinate coordinate = new GridCoordinate(row, col);
+                                    gridCoordinateChordSectionLocationMap.put(coordinate, loc);
+                                    gridChordSectionLocationCoordinateMap.put(loc, coordinate);
+                                    grid.set(col++, row, loc);
+
+                                    repeatExtensionUsed = false;
+                                }
+
+                                {
+                                    //  add repeat indicator
+                                    ChordSectionLocation loc = new ChordSectionLocation(sectionVersion, phraseIndex);
+                                    GridCoordinate coordinate = new GridCoordinate(row, col);
+                                    gridCoordinateChordSectionLocationMap.put(coordinate, loc);
+                                    gridChordSectionLocationCoordinateMap.put(loc, coordinate);
+                                    grid.set(col++, row, loc);
+                                }
+                                row++;
+                                col = offset;
+                            }
+
+                            lastMeasure = measure;
+                        }
                     }
                 }
             }
@@ -1011,21 +1017,21 @@ public class SongBase {
         return null;
     }
 
-//    /**
-//     * Add the given section version to the song chords
-//     *
-//     * @param sectionVersion the given section to add
-//     * @return true if the section version was added
-//     */
-//    public final boolean addSectionVersion(SectionVersion sectionVersion) {
-//        if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
-//            return false;
-//        chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
-//        clearCachedValues();
-//        setCurrentChordSectionLocation(new ChordSectionLocation(sectionVersion));
-//        setCurrentMeasureEditType(MeasureEditType.append);
-//        return true;
-//    }
+    /**
+     * Add the given section version to the song chords
+     *
+     * @param sectionVersion the given section to add
+     * @return true if the section version was added
+     */
+    public final boolean addSectionVersion(SectionVersion sectionVersion) {
+        if (sectionVersion == null || chordSectionMap.containsKey(sectionVersion))
+            return false;
+        chordSectionMap.put(sectionVersion, new ChordSection(sectionVersion));
+        clearCachedValues();
+        setCurrentChordSectionLocation(new ChordSectionLocation(sectionVersion));
+        setCurrentMeasureEditType(MeasureEditType.append);
+        return true;
+    }
 
 
     private final boolean deleteCurrentChordSectionLocation() {

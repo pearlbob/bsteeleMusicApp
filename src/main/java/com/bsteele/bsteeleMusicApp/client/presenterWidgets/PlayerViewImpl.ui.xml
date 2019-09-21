@@ -8,7 +8,7 @@
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
     <g:DockLayoutPanel unit="PX">
-        <g:north size='80'>
+        <g:north size='120'>
             <g:HTMLPanel>
                 <g:Button ui:field="playStopButton">Play</g:Button>
                 Key:
@@ -66,6 +66,10 @@
                           title="Click for previous song in filtered song list.">&#x25C0;
                 </g:Button>
                 <br/>
+                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="150" style="float: left; margin: 10px;"
+                        title="Beat display of audio.">
+                    Your browser does not support the HTML5 canvas tag.
+                </canvas>
                 <g:Label ui:field="statusLabel" styleName="{resources.style.label}"/>
             </g:HTMLPanel>
 
@@ -79,10 +83,6 @@
                                        styleName="{resources.style.playChordsBackground}"
                                        title="Background for song scrolling."/>
                             <g:HTMLPanel>
-                                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="150"
-                                        title="Beat display of audio.">
-                                    Your browser does not support the HTML5 canvas tag.
-                                </canvas>
                                 <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
 
                                 <p>

@@ -20,7 +20,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
      *
      * @param section the type of {@link Section} for this new section version.
      */
-    SectionVersion(@NotNull Section section) {
+    public SectionVersion(@NotNull Section section) {
         this(section, 0);
     }
 
@@ -31,7 +31,7 @@ public class SectionVersion implements Comparable<SectionVersion> {
      * @param version the number used to identify this variation.  By convention,
      *                a zero value will not be expressed to the user and thus will be the default variation.
      */
-    SectionVersion(@NotNull Section section, int version) {
+    public SectionVersion(@NotNull Section section, int version) {
         this.section = section;
         this.version = version;
         name = section.getAbbreviation() + (version > 0 ? Integer.toString(version) : "");

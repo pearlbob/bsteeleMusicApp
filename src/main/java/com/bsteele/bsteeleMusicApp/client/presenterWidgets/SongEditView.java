@@ -25,6 +25,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.Phrase;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleChord;
 import com.bsteele.bsteeleMusicApp.shared.songs.ScaleNote;
 import com.bsteele.bsteeleMusicApp.shared.songs.Section;
+import com.bsteele.bsteeleMusicApp.shared.songs.SectionVersion;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.util.UndoStack;
@@ -399,41 +400,36 @@ public class SongEditView
         });
 
         sectionI.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.intro.getAbbreviation());
+            processSectionEntry(Section.intro);
         });
         sectionV.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.verse.getAbbreviation());
+            processSectionEntry(Section.verse);
         });
         sectionPC.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.preChorus.getAbbreviation());
+            processSectionEntry(Section.preChorus);
         });
         sectionC.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.chorus.getAbbreviation());
+            processSectionEntry(Section.chorus);
         });
         sectionBr.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.bridge.getAbbreviation());
+            processSectionEntry(Section.bridge);
         });
         sectionO.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.outro.getAbbreviation());
+            processSectionEntry(Section.outro);
         });
         sectionA.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.a.getAbbreviation());
+            processSectionEntry(Section.a);
         });
         sectionB.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.b.getAbbreviation());
+            processSectionEntry(Section.b);
         });
         sectionCo.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.coda.getAbbreviation());
+            processSectionEntry(Section.coda);
         });
         sectionT.addClickHandler((ClickEvent event) -> {
-            processSectionEntry(Section.tag.getAbbreviation());
+            processSectionEntry(Section.tag);
         });
         Event.sinkEvents(sectionVersionSelect, Event.ONCHANGE);
-        Event.setEventListener(sectionVersionSelect, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
-                setSectionAddEnables();
-            }
-        });
 
         //  chord entry
         chordsI.addClickHandler((ClickEvent event) -> {
@@ -650,8 +646,8 @@ public class SongEditView
             song = Song.createEmptySong();
 
         //  speed entry enhancement
-        logger.fine( "entryToUppercase: "+SongBase.entryToUppercase(entry));
-        logger.fine( "parseChordEntry: "+song.parseChordEntry(SongBase.entryToUppercase(entry)));
+        logger.fine("entryToUppercase: " + SongBase.entryToUppercase(entry));
+        logger.fine("parseChordEntry: " + song.parseChordEntry(SongBase.entryToUppercase(entry)));
         String upperEntry = MeasureNode.concatMarkup(song.parseChordEntry(SongBase.entryToUppercase(entry)));
         if (upperEntry.equals(entry))
             measureEntryCorrection.getElement().setInnerHTML(nbsp);
@@ -669,16 +665,18 @@ public class SongEditView
         processChordEntry(entry);
     }
 
-    private boolean processSectionEntry(String entry) {
-        boolean ret = processChordEntry(
-                entry
-                        + (sectionVersionSelect.getSelectedIndex() > 0 ? sectionVersionSelect.getValue() : "")
-                        + ":"
-        );
-        if (ret) {
-            sectionVersionSelect.setSelectedIndex(0);
-        }
-        return ret;
+    private boolean processSectionEntry(Section section) {
+        if (section == null || song == null)
+            return false;
+
+        SectionVersion sectionVersion = new SectionVersion(section, sectionVersionSelect.getSelectedIndex());
+        ChordSection chordSection = song.getChordSection(sectionVersion);
+        if (chordSection != null)
+            measureEntry.setValue(chordSection.toMarkup());
+        else
+            measureEntry.setValue(sectionVersion.toString());
+        measureFocus();
+        return true;
     }
 
     private boolean processChordEntry(String input) {
@@ -697,7 +695,6 @@ public class SongEditView
                 undoStackPushSong();
                 findMostCommonScaleChords();
                 updateCurrentChordEditLocation();
-                setSectionAddEnables();
             }
         }
 
@@ -815,7 +812,6 @@ public class SongEditView
         checkSong();
 
         setUndoRedoEnables();
-        setSectionAddEnables();
 
         measureEntry.setValue("");
 
@@ -840,21 +836,6 @@ public class SongEditView
     private final void setUndoRedoEnables() {
         undo.setEnabled(undoStack.canUndo());
         redo.setEnabled(undoStack.canRedo());
-    }
-
-    private final void setSectionAddEnables() {
-        int v = sectionVersionSelect.getSelectedIndex();    //  fixme: weak correlation?
-
-        sectionI.setEnabled(song == null || !song.hasSectionVersion(Section.intro, v));
-        sectionV.setEnabled(song == null || !song.hasSectionVersion(Section.verse, v));
-        sectionPC.setEnabled(song == null || !song.hasSectionVersion(Section.preChorus, v));
-        sectionC.setEnabled(song == null || !song.hasSectionVersion(Section.chorus, v));
-        sectionBr.setEnabled(song == null || !song.hasSectionVersion(Section.bridge, v));
-        sectionO.setEnabled(song == null || !song.hasSectionVersion(Section.outro, v));
-        sectionA.setEnabled(song == null || !song.hasSectionVersion(Section.a, v));
-        sectionB.setEnabled(song == null || !song.hasSectionVersion(Section.b, v));
-        sectionCo.setEnabled(song == null || !song.hasSectionVersion(Section.coda, v));
-        sectionT.setEnabled(song == null || !song.hasSectionVersion(Section.tag, v));
     }
 
     /**

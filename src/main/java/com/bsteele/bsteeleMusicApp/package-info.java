@@ -23,6 +23,19 @@ todo: tap to bpm
 fixme: scrolling during play, up and down
 
 
+todo: Have singer sing into phone version of app, using headphones with mic attachment.
+    Sing against pitch tuner, and go up chromatically.
+       Have pitch tuner hold for 5 seconds only when it is happy, and only record while on pitch.
+         3 seconds on pitch required.
+           This results, after the exercise, in a full series of isolated 3 second chromatic notes in the singer's range.
+              Every singer is different, and has a different range.
+todo:
+    Bonus:  Each singer gets validation and proof of their range.
+      Could even have a sub-section which uses classical categorization to tell singer they're officially a 'spetzo tenor' or whatever.
+todo: What you sing won't matter, because you're going to cut off everything not on pitch.
+   You won't get a real note, just an 'aaah' sound without a dipthong at the beginning.
+      It'll sound more like an organ, but what are you gonna do?
+
 todo: write allSongs.songlyrics sanity check for download from Bodhi
 todo: add minor keys
 fixme: redo key guess
