@@ -95,7 +95,7 @@ public class BSteeleMusicIO {
             return false;
 
         if (socket == null) {
-            logger.info("socket is null");
+            logger.fine("socket is null");
             return false;
         }
 //        if ( !isSocketOpen) {

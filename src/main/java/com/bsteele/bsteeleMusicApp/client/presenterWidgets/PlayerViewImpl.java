@@ -457,11 +457,12 @@ public class PlayerViewImpl
         if (song == null)
             return;
 
-        if (!isActive)
+        String sDisplay = audioBeatDisplayCanvas.getStyle().getDisplay();
+        if (!isActive || "none".equals(sDisplay))
             return;
 
         try {
-            audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction() );
+            audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction());
 
             {
                 Widget parent = player.getParent();
@@ -484,11 +485,11 @@ public class PlayerViewImpl
 
             if (chordsDirty) {
 
-            //  turn off all highlights
-            if (lastLyricsElement != null) {
-                lastLyricsElement.getStyle().clearBackgroundColor();
-                lastLyricsElement = null;
-            }
+                //  turn off all highlights
+                if (lastLyricsElement != null) {
+                    lastLyricsElement.getStyle().clearBackgroundColor();
+                    lastLyricsElement = null;
+                }
 
                 //  high light chord and lyrics
                 switch (songUpdate.getState()) {

@@ -66,7 +66,7 @@
                           title="Click for previous song in filtered song list.">&#x25C0;
                 </g:Button>
                 <br/>
-                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="150" style="float: left; margin: 10px;"
+                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250" style="float: left; margin: 10px;"
                         title="Beat display of audio.">
                     Your browser does not support the HTML5 canvas tag.
                 </canvas>

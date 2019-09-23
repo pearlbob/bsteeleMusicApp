@@ -66,7 +66,8 @@ public class AudioBeatDisplay {
 
         ctx.setFillStyle(backgroundColor);
         final int radius = 7;
-        double padding = w * 0.25;
+        final double padding = w * 0.15;
+        final double dw = (w - 2 * padding) / 6;
         int bounceH = h - 2 * radius - radius;
         ctx.fillRect(0, 0, w, h);
 
@@ -75,22 +76,43 @@ public class AudioBeatDisplay {
         ctx.setFont("bold 40px sans-serif");
         ctx.fillText(Integer.toString(beatNumber + 1), 4, h * 3 / 4 + 2);
 
+        ctx.setFillStyle(lightGray);
+        ctx.fillRect(padding + radius, 0, dw, h);
+        switch (beatCount) {
+            default:
+            case 2:
+                break;
+            case 3:
+                ctx.fillRect(padding + radius + 2 * dw, 0, 3, h);
+                break;
+            case 4:
+                ctx.fillRect(padding + radius + 2 * dw, 0, dw, h);
+                break;
+            case 6:
+                ctx.fillRect(padding + radius + 2 * dw, 0, dw, h);
+                ctx.fillRect(padding + radius + 4 * dw, 0, dw, h);
+                break;
+        }
+
         ctx.setFillStyle(startColor);
-        ctx.beginPath();
+
 
         double x = beatFraction - 0.5;
         double dx = (beatNumber == beatCount - 1
                 ? (beatCount - 1) * (1 - beatFraction)
                 : beatNumber % beatCount + beatFraction);
         //  logger.info( "dx: "+dx+", n: "+beatNumber);
-        ctx.arc(padding + radius + bounceH / 2 * dx
+        ctx.beginPath();
+        ctx.arc(padding + radius + dw * dx
                 , h - radius - (-4 * x * x + 1) * bounceH
                 , radius, 0, Math.PI * 2);
+        ctx.closePath();
         ctx.fill();
     }
 
     private static final String black = "#000000";
     private static final String gray = "#808080";
+    private static final String lightGray = "#e8e8e8";
     private static final String orange = "#FFA500";
     private static final String red = "#FF0000";
     //private static final String lawnGreen = "#7CFC00";
