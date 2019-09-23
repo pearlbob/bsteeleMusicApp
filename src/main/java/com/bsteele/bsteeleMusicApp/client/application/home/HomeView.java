@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler
 import com.bsteele.bsteeleMusicApp.client.application.events.StatusEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
+import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
@@ -73,7 +74,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @UiField
     RadioButton playWithLineIndicator;
     @UiField
-    RadioButton  playWithMeasureIndicator;
+    RadioButton playWithMeasureIndicator;
 
     @UiField
     RadioButton debug;
@@ -296,5 +297,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
     private HashMap<String, String> statusMap = new HashMap<>();
     private AppTab lastPlayTab = AppTab.player;
-       private static final GWTAppOptions appOptions = GWTAppOptions.getInstance();
+    private static final AppOptions appOptions = GWTAppOptions.getInstance();
 }

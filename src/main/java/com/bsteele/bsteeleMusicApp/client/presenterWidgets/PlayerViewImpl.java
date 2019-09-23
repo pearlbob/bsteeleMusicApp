@@ -11,6 +11,7 @@ import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
+import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
 import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
@@ -734,7 +735,7 @@ public class PlayerViewImpl
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
     private boolean isActive = false;
     private static final Scheduler scheduler = Scheduler.get();
-    private static final GWTAppOptions appOptions = GWTAppOptions.getInstance();
+    private static final AppOptions appOptions = GWTAppOptions.getInstance();
 
 
     private static final Logger logger = Logger.getLogger(PlayerViewImpl.class.getName());

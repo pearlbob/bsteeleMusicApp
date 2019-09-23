@@ -76,6 +76,9 @@ public class AppOptions {
     }
 
     public void fromJson(String json) {
+        if ( json == null )
+            return;
+
         final RegExp jsonArrayExp = RegExp.compile("^\\w*\\[(.*)\\]\\w*$");
         MatchResult mr = jsonArrayExp.exec(json);
         if (mr != null) {
@@ -113,8 +116,13 @@ public class AppOptions {
         }
     }
 
-    protected void save() {
-        //   for override
+    public void registerSaveCallback(SaveCallback saveCallback) {
+        this.saveCallback = saveCallback;
+    }
+
+    private void save() {
+        if (saveCallback != null)
+            saveCallback.save();
     }
 
     @Override
@@ -130,6 +138,11 @@ public class AppOptions {
 
     protected static AppOptions instance = new AppOptions();
 
+    public interface SaveCallback {
+        void save();
+    }
+
+    private SaveCallback saveCallback;
     private boolean countIn = true;
     private boolean dashAllMeasureRepetitions = true;
     private boolean playWithLineIndicator = true;

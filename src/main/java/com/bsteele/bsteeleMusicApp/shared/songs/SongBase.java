@@ -2242,6 +2242,7 @@ public class SongBase {
                         abbreviation = chordSection.getSection().getAbbreviation();
                         break;
                 }
+
                 //  enforce the - on repeated measures
                 if (appOptions.isDashAllMeasureRepetitions()
                         && c > 0
