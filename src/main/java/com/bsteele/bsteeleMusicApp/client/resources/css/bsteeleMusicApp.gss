@@ -248,6 +248,26 @@ td[id*="L."]{
 .label {
     font-size: 26px;
     font-weight: bold;
+    display: inline-block;
+    vertical-align: bottom;
+    margin: 10px;
+ }
+.playMeasureLabel {
+    font-size: 52px;
+    font-weight: bold;
+    display: inline-block;
+    width: 200px;
+    vertical-align: bottom;
+    margin: 10px;
+}
+.playNextMeasureLabel {
+    font-size: 28px;
+    font-weight: bold;
+    width: 150px;
+    display: inline-block;
+    vertical-align: bottom;
+    margin: 10px;
+    color: gray;
 }
 
 .rightJustified {

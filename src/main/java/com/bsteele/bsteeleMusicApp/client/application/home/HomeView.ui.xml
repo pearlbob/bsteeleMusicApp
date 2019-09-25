@@ -84,6 +84,14 @@
                                                    name="playWithMeasureIndicator">Play with measure indicator
                                     </g:RadioButton>
                                     <br/>
+                                    <g:RadioButton ui:field="playWithBouncingBall"
+                                                   name="playWithBouncingBall">Play with bouncing ball
+                                    </g:RadioButton>
+                                    <br/>
+                                    <g:RadioButton ui:field="playWithMeasureLabel"
+                                                   name="playWithMeasureLabel">Play with measure display
+                                    </g:RadioButton>
+                                    <br/>
                                     <g:RadioButton ui:field="debug" name="debug">debug</g:RadioButton>
                                     <br/>
                                     <g:Button ui:field="showAllScales">Show all scales</g:Button>

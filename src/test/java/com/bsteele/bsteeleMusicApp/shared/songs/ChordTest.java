@@ -133,5 +133,27 @@ public class ChordTest extends TestCase {
         }
     }
 
+
+    @Test
+    public void testSimpleChordTranspose() {
+        int count = 0;
+        for (Key key : new Key[]{ Key.C, Key.G  })
+            for (ScaleNote sn : ScaleNote.values())
+                for (int halfSteps = 0; halfSteps < 12; halfSteps++) {
+
+                    ScaleNote snHalfSteps = sn.transpose(key, halfSteps);
+
+                    logger.fine(sn + " " + halfSteps
+                            + " in key " + key
+                            + " +> "+ snHalfSteps
+                    );
+//                                assertEquals(Chord.parse(snHalfSteps + chordDescriptor.getShortName(), beatsPerBar),
+//                                        Chord.parse(sn + chordDescriptor.getShortName(), beatsPerBar)
+//                                                .transpose(key, halfSteps));
+                    count++;
+                }
+        logger.fine("transpose count: " + count);
+    }
+
     private Logger logger = Logger.getLogger(ChordTest.class.getName());
 }

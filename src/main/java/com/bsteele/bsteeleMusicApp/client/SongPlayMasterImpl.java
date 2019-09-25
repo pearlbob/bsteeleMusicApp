@@ -4,6 +4,7 @@
 package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
+import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
@@ -14,6 +15,7 @@ import com.bsteele.bsteeleMusicApp.client.legacy.LegacyDrumMeasure;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
+import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongPlayer;
@@ -136,7 +138,7 @@ public class SongPlayMasterImpl
                     default:
                         //  distribute the animation time update locally
                         eventBus.fireEvent(new MusicAnimationEvent(tn,
-                                0,0,0, 0));
+                                0, 0, 0, 0));
                         break;
                 }
 
@@ -293,9 +295,10 @@ public class SongPlayMasterImpl
         songOutUpdate.getSong().setBeatsPerMinute(songOutUpdate.getCurrentBeatsPerMinute());    //  fixme: should this be done here?
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         double t0 = audioFilePlayer.getCurrentTime();
-        songOutUpdate.setMomentNumber(-preRoll);
+        int countIn = appOptions.isCountIn() ? -preRoll : -1;
+        songOutUpdate.setMomentNumber(countIn);
         songPlayer = new SongPlayer(songOutUpdate.getSong());
-        songPlayer.setMomentNumber(t0, -preRoll);
+        songPlayer.setMomentNumber(t0, countIn);
         songOutUpdate.setState(SongUpdate.State.playing);
 
         issueSongUpdate(songOutUpdate);
@@ -449,6 +452,7 @@ public class SongPlayMasterImpl
     private double lastSystemT;
     private static final Scheduler scheduler = Scheduler.get();
     private SongPlayer songPlayer;
+    private static final AppOptions appOptions = GWTAppOptions.getInstance();
 
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 

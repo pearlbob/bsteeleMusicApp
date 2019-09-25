@@ -98,6 +98,10 @@ public interface AppResources extends ClientBundle {
 
         String label();
 
+        String playMeasureLabel();
+
+        String playNextMeasureLabel();
+
         String errorLabel();
 
         String textCenter();

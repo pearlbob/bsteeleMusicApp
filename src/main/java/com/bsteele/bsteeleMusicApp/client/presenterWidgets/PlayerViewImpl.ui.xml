@@ -66,11 +66,13 @@
                           title="Click for previous song in filtered song list.">&#x25C0;
                 </g:Button>
                 <br/>
-                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250" style="float: left; margin: 10px;"
+                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250" style="display: inline-block; margin: 10px;"
                         title="Beat display of audio.">
                     Your browser does not support the HTML5 canvas tag.
                 </canvas>
-                <g:Label ui:field="statusLabel" styleName="{resources.style.label}"/>
+                <g:Label ui:field="playMeasureLabel" styleName="{resources.style.playMeasureLabel}"/>
+                <g:Label ui:field="playNextMeasureLabel" styleName="{resources.style.playNextMeasureLabel}"/>
+                <g:Label ui:field="playStatusLabel" styleName="{resources.style.label}"/>
             </g:HTMLPanel>
 
         </g:north>

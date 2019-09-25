@@ -75,6 +75,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     RadioButton playWithLineIndicator;
     @UiField
     RadioButton playWithMeasureIndicator;
+    @UiField
+    RadioButton playWithBouncingBall;
+    @UiField
+    RadioButton playWithMeasureLabel;
 
     @UiField
     RadioButton debug;
@@ -231,6 +235,16 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         playWithMeasureIndicator.addClickHandler((ClickEvent e) -> {
             appOptions.setPlayWithMeasureIndicator(!appOptions.isPlayWithMeasureIndicator());
             playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
+        });
+        playWithBouncingBall.setValue(appOptions.isPlayWithBouncingBall());
+        playWithBouncingBall.addClickHandler((ClickEvent e) -> {
+            appOptions.setPlayWithBouncingBall(!appOptions.isPlayWithBouncingBall());
+            playWithBouncingBall.setValue(appOptions.isPlayWithBouncingBall());
+        });
+        playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
+        playWithMeasureLabel.addClickHandler((ClickEvent e) -> {
+            appOptions.setPlayWithMeasureLabel(!appOptions.isPlayWithMeasureLabel());
+            playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
         });
         debug.setValue(appOptions.isDebug());
         debug.addClickHandler((ClickEvent e) -> {

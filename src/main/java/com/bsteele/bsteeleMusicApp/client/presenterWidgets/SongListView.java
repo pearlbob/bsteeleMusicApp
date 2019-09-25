@@ -369,18 +369,32 @@ public class SongListView
         }
         displaySongList(filteredSongs);
 
-        {
-            if (listBySelect.getValue() == "title") {
-                //  roll the songs on an empty title select
-                if (search == "" && songGrid.getOffsetHeight() > 0) {
-                    songListScrollOffset = songListScrollOffset + songGrid.getOffsetHeight() / 20;
-                    if (songListScrollOffset > songGrid.getOffsetHeight())
+        if ("title".equals(listBySelect.getValue()) && search == "") {
+
+            scheduler.scheduleDeferred(new Scheduler.ScheduledCommand() {   //  fixme: takes too long to execute... according to chrome
+                //  fixme: try caching the grid based on search term, complexityFilter.  clear on song add/remove
+                @Override
+                public void execute() {
+
+                    //  collect the full height
+                    {
+                        int h = songGrid.getOffsetHeight();
+                        if (h > 0)
+                            gridHeight = h;
+                    }
+
+                    //  roll the songs on an empty title select
+                    if (gridHeight > 0) {
+                        songListScrollOffset = songListScrollOffset + gridHeight / 20;
+                        if (songListScrollOffset > gridHeight)
+                            songListScrollOffset = 0;
+                    } else
                         songListScrollOffset = 0;
-                } else
-                    songListScrollOffset = 0;
-            } else
-                songListScrollOffset = 0;
-            songListScrollPanel.setVerticalScrollPosition(songListScrollOffset);// in pixels
+
+                    songListScrollPanel.setVerticalScrollPosition(songListScrollOffset);// in pixels
+                    logger.finest("songListScrollOffset: " + songListScrollOffset);
+                }
+            });
         }
     }
 
@@ -513,6 +527,8 @@ public class SongListView
     private Song selectedSong;
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
     private int songListScrollOffset = 0;
+    private int gridHeight;
+    private static final Scheduler scheduler = Scheduler.get();
 
     private static final Song[] emptySongArray = new Song[0];
 

@@ -237,17 +237,31 @@ public class SongBase {
         }
     }
 
+    public final String songMomentMeasure(int momentNumber, Key key, int halfStepOffset) {
+        computeSongMoments();
+        if (momentNumber < 0 || songMoments.isEmpty() || momentNumber > songMoments.size() - 1)
+            return "";
+        return songMoments.get(momentNumber).getMeasure().transpose(key, halfStepOffset);
+    }
+
+    public final String songNextMomentMeasure(int momentNumber, Key key, int halfStepOffset) {
+        computeSongMoments();
+        if (momentNumber < -1 || songMoments.isEmpty() || momentNumber > songMoments.size() - 2)
+            return "";
+        return songMoments.get(momentNumber + 1).getMeasure().transpose(key, halfStepOffset);
+    }
+
     public final String songMomentStatus(int beatNumber, int momentNumber) {
         computeSongMoments();
         if (songMoments.isEmpty())
             return "unknown";
 
         if (momentNumber < 0) {
-            beatNumber %= getBeatsPerBar();
-            if (beatNumber < 0)
-                beatNumber += getBeatsPerBar();
-            beatNumber++;
-            return beatNumber + " preroll at " + momentNumber;
+//            beatNumber %= getBeatsPerBar();
+//            if (beatNumber < 0)
+//                beatNumber += getBeatsPerBar();
+//            beatNumber++;
+            return "count in " + -momentNumber;
         }
 
         SongMoment songMoment = getSongMoment(momentNumber);
@@ -261,11 +275,7 @@ public class SongBase {
             beatNumber += measure.getBeatCount();
         beatNumber++;
 
-        String ret = momentNumber
-                + " " + beatNumber
-                + " " + songMoment.getChordSection().getSectionVersion().toString()
-                + " " + measure.toMarkup()
-                + (songMoment.getRepeatMax() > 1
+        String ret = (songMoment.getRepeatMax() > 1
                 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
                 : "");
 
@@ -279,7 +289,6 @@ public class SongBase {
                     + " = " + (beatNumber + songMoment.getSectionBeatNumber())
                     + "/" + getChordSectionBeats(songMoment.getChordSectionLocation().getSectionVersion())
                     + " " + songMomentGridCoordinateHashMap.get(songMoment).toString()
-
                     ;
         return ret;
     }

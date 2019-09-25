@@ -66,24 +66,26 @@ public class AudioBeatDisplay {
 
         ctx.setFillStyle(backgroundColor);
         final int radius = 7;
-        final double padding = w * 0.15;
+        final double padding = w * 0.05;
         final double dw = (w - 2 * padding) / 6;
         int bounceH = h - 2 * radius - radius;
         ctx.fillRect(0, 0, w, h);
 
         //  text
-        ctx.setFillStyle("#000000");
-        ctx.setFont("bold 40px sans-serif");
-        ctx.fillText(Integer.toString(beatNumber + 1), 4, h * 3 / 4 + 2);
+        if ( false) {
+            ctx.setFillStyle("#000000");
+            ctx.setFont("bold 40px sans-serif");
+            ctx.fillText(Integer.toString(beatNumber + 1), 4, h * 3 / 4 + 2);
+        }
 
         ctx.setFillStyle(lightGray);
-        ctx.fillRect(padding + radius, 0, dw, h);
+        ctx.fillRect(padding + radius, 0, dw, h);   //  first one is always there
         switch (beatCount) {
             default:
             case 2:
                 break;
             case 3:
-                ctx.fillRect(padding + radius + 2 * dw, 0, 3, h);
+                ctx.fillRect(padding + radius + 2 * dw, 0, dw/3, h);
                 break;
             case 4:
                 ctx.fillRect(padding + radius + 2 * dw, 0, dw, h);
@@ -116,7 +118,7 @@ public class AudioBeatDisplay {
     private static final String orange = "#FFA500";
     private static final String red = "#FF0000";
     //private static final String lawnGreen = "#7CFC00";
-    private static final String backgroundColor = "#FFFDF6";
+    private static final String backgroundColor = "#f5f0e1";
     private CanvasElement canvas;
     private Context2d ctx;
     private static final CssColor ballColor = CssColor.make(255, 0, 0);

@@ -85,7 +85,13 @@ public class PlayerViewImpl
     Button prevSongButton;
 
     @UiField
-    Label statusLabel;
+    Label playMeasureLabel;
+
+    @UiField
+    Label playNextMeasureLabel;
+
+    @UiField
+    Label playStatusLabel;
 
     @UiField
     CanvasElement audioBeatDisplayCanvas;
@@ -188,7 +194,7 @@ public class PlayerViewImpl
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
 
-        statusLabel.setVisible(false);
+        playStatusLabel.setVisible(false);
 
         playerTopCover.addKeyDownHandler(handler -> {
             if (songUpdate == null || song == null)
@@ -273,14 +279,18 @@ public class PlayerViewImpl
         if (song != null) {
             switch (songUpdate.getState()) {
                 case playing:
+                    //  get set for a stop
                     songPlayMaster.stopSong();
+                    playMeasureLabel.setText("");
+                    playNextMeasureLabel.setText("");
+                    playStatusLabel.setText("");
                     break;
                 case idle:
+                    //  get set for a play
                     SongUpdate songUpdateCopy = new SongUpdate();
                     songUpdateCopy.setSong(song.copySong());
                     songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
                     songUpdateCopy.setCurrentKey(currentKey);
-                    verticalScrollPositionOffset = 0;
                     songPlayMaster.playSongUpdate(songUpdateCopy);
                     playerTopCover.setFocus(true);
                     break;
@@ -439,14 +449,17 @@ public class PlayerViewImpl
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
-                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
-                statusLabel.setVisible(true);
+                audioBeatDisplayCanvas.getStyle().setDisplay(
+                        appOptions.isPlayWithBouncingBall()
+                                ? Style.Display.INLINE_BLOCK
+                                : Style.Display.NONE);
+                playStatusLabel.setVisible(true);
                 playerTopCover.getCanvasElement().getStyle().setZIndex(1);
                 break;
             case idle:
                 playStopButton.setText("Play");
                 audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
-                statusLabel.setVisible(false);
+                playStatusLabel.setVisible(false);
                 scrollForLineAt(0); //  hide
                 playerTopCover.getCanvasElement().getStyle().setZIndex(-2);
                 break;
@@ -458,12 +471,12 @@ public class PlayerViewImpl
         if (song == null)
             return;
 
-        String sDisplay = audioBeatDisplayCanvas.getStyle().getDisplay();
-        if (!isActive || "none".equals(sDisplay))
+        if (!isActive)
             return;
 
         try {
-            audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction());
+            if (appOptions.isPlayWithBouncingBall())
+                audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction());
 
             {
                 Widget parent = player.getParent();
@@ -536,12 +549,17 @@ public class PlayerViewImpl
             //  status
             switch (songUpdate.getState()) {
                 case playing:
-                    String status = song.songMomentStatus(event.getBeatNumber(), songUpdate.getMomentNumber());
-                    if (appOptions.isDebug()) {
-                        status = status + " " + chordsScrollPanel.getVerticalScrollPosition();
+                    if (appOptions.isPlayWithMeasureLabel()) {
+                        int tran = currentKey.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
+                        playMeasureLabel.setText(song.songMomentMeasure(songUpdate.getMomentNumber(),
+                                currentKey, tran));
+                        playNextMeasureLabel.setText(song.songNextMomentMeasure(songUpdate.getMomentNumber(),
+                                currentKey, tran));
                     }
+
+                    String status = song.songMomentStatus(event.getBeatNumber(), songUpdate.getMomentNumber());
                     if (!status.equals(lastStatus)) {
-                        statusLabel.setText(status);
+                        playStatusLabel.setText(status);
                         logger.finer(status);
                         lastStatus = status;
                     }
@@ -722,7 +740,6 @@ public class PlayerViewImpl
     private double scrollForLineY;
     private double lastScrollLineY;
     private int lastVerticalScrollPosition = 0;
-    private int verticalScrollPositionOffset;
     private String lastStatus;
 
 

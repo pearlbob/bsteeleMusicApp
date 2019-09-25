@@ -70,6 +70,8 @@ public class AppOptions {
         sb.append("\"dashAllMeasureRepetitions\": \"" + dashAllMeasureRepetitions + "\", ");
         sb.append("\"playWithLineIndicator\": \"" + playWithLineIndicator + "\", ");
         sb.append("\"playWithMeasureIndicator\": \"" + playWithMeasureIndicator + "\", ");
+        sb.append("\"playWithBouncingBall\": \"" + playWithBouncingBall + "\", ");
+        sb.append("\"playWithMeasureLabel\": \"" + playWithMeasureLabel + "\", ");
         sb.append("\"debug\": \"" + debug + "\"");      //  no comma at end
         sb.append(" ]");
         return sb.toString();
@@ -107,6 +109,12 @@ public class AppOptions {
                         case "playWithMeasureIndicator":
                             setPlayWithMeasureIndicator(Boolean.parseBoolean(mr.getGroup(2)));
                             break;
+                        case "playWithBouncingBall":
+                            setPlayWithBouncingBall(Boolean.parseBoolean(mr.getGroup(2)));
+                            break;
+                        case "playWithMeasureLabel":
+                            setPlayWithMeasureLabel(Boolean.parseBoolean(mr.getGroup(2)));
+                            break;
                         case "debug":
                             setDebug(Boolean.parseBoolean(mr.getGroup(2)));
                             break;
@@ -132,11 +140,31 @@ public class AppOptions {
         hash = (83 * hash + Boolean.valueOf(dashAllMeasureRepetitions).hashCode()) % (1 << 31);
         hash = (83 * hash + Boolean.valueOf(playWithLineIndicator).hashCode()) % (1 << 31);
         hash = (83 * hash + Boolean.valueOf(playWithMeasureIndicator).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(playWithBouncingBall).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(playWithMeasureLabel).hashCode()) % (1 << 31);
         hash = (83 * hash + Boolean.valueOf(debug).hashCode()) % (1 << 31);
         return hash;
     }
 
     protected static AppOptions instance = new AppOptions();
+
+    public boolean isPlayWithBouncingBall() {
+        return playWithBouncingBall;
+    }
+
+    public void setPlayWithBouncingBall(boolean playWithBouncingBall) {
+        this.playWithBouncingBall = playWithBouncingBall;
+        save();
+    }
+
+    public boolean isPlayWithMeasureLabel() {
+        return playWithMeasureLabel;
+    }
+
+    public void setPlayWithMeasureLabel(boolean playWithMeasureLabel) {
+        this.playWithMeasureLabel = playWithMeasureLabel;
+        save();
+    }
 
     public interface SaveCallback {
         void save();
@@ -147,6 +175,8 @@ public class AppOptions {
     private boolean dashAllMeasureRepetitions = true;
     private boolean playWithLineIndicator = true;
     private boolean playWithMeasureIndicator = true;
+    private boolean playWithBouncingBall = true;
+    private boolean playWithMeasureLabel = true;
     private boolean debug = false;
 
     //  logger doesn't seem appropriate here  private static final Logger logger = Logger.getLogger(AppOptions.class.getName());
