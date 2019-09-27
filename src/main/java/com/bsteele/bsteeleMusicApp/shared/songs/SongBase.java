@@ -275,7 +275,8 @@ public class SongBase {
             beatNumber += measure.getBeatCount();
         beatNumber++;
 
-        String ret = (songMoment.getRepeatMax() > 1
+        String ret = songMoment.getChordSection().getSectionVersion().toString()
+                + (songMoment.getRepeatMax() > 1
                 ? " " + (songMoment.getRepeat() + 1) + "/" + songMoment.getRepeatMax()
                 : "");
 

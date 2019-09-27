@@ -25,6 +25,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
@@ -52,6 +53,7 @@ import javax.inject.Inject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
@@ -231,8 +233,11 @@ public class SongListView
 
     @Override
     public void saveAllSongsAs(String fileName) {
+        Date now = new Date();
+        DateTimeFormat fmt = DateTimeFormat.getFormat("yyyyMMdd_HHmmss");
+
         String data = Song.toJson(allSongs);
-        saveSongAs(fileName, data);
+        saveSongAs("allSongs_" + fmt.format(now) + ".songlyrics", data);
     }
 
 

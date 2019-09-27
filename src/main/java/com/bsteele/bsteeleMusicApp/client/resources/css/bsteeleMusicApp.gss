@@ -256,7 +256,7 @@ td[id*="L."]{
     font-size: 52px;
     font-weight: bold;
     display: inline-block;
-    width: 200px;
+    width: 280px;
     vertical-align: bottom;
     margin: 10px;
 }

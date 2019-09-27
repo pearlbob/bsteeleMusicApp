@@ -65,7 +65,7 @@ public class AudioBeatDisplay {
         //logger.finest("b: " + beatNumber + " " + beatFraction);
 
         ctx.setFillStyle(backgroundColor);
-        final int radius = 7;
+        final int radius = 9;
         final double padding = w * 0.05;
         final double dw = (w - 2 * padding) / 6;
         int bounceH = h - 2 * radius - radius;
