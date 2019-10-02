@@ -14,15 +14,16 @@ import java.util.TreeSet;
  * The modifier to a chord specification that describes the basic type of chord.
  * Typical values are major, minor, dominant7, etc.
  * <p>
- * Try:  https://www.scales-chords.com/chord/piano/c
+ * Try:  https://www.scales-chords.com/chord/
  */
 public enum ChordDescriptor {
-    //  longest short names first!
+    //  longest short names must come first!
     //  avoid starting descriptors with b, #, s to avoid confusion with scale notes
     sevenSus4("7sus4", "R 4 5 m7"),    // Dominant 7th chord with the 3rd replaced by the 4th. Suspended chords are neither major or minor.
     sevenSus2("7sus2", "R 2 5 m7"),
     sevenSus("7sus", "R 5 m7"),
 
+    maug("maug", "R m3 3 #5"),
     dominant13("13", "R 3 5 m7 9 11 13"),
     dominant11("11", "R 3 5 m7 9 11"),
     mmaj7("mmaj7","R m3 5 7"),
@@ -43,6 +44,7 @@ public enum ChordDescriptor {
     dimMasculineOrdinalIndicator7("º7", "R m3 b5 6"),
     diminishedAsCircle("" + MusicConstant.diminishedCircle, "R m3 b5"),
     diminished("dim", "R m3 b5"),
+
 
     augmented5("aug5", "R 3 #5"),
     augmented7("aug7", "R 3 #5 m7"),

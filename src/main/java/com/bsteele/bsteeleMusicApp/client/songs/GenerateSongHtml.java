@@ -32,6 +32,8 @@ public class GenerateSongHtml {
                         "</tr>");
 
         for (ScaleNote sn : ScaleNote.values()) {
+            if (sn.isSilent())
+                continue;
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 ScaleChord builtScaleChord = new ScaleChord(sn, cd);
 
@@ -484,7 +486,7 @@ public class GenerateSongHtml {
         {
             boolean first = true;
             for (ScaleNote scaleNote : ScaleNote.values()) {
-                if ( scaleNote== ScaleNote.X)
+                if (scaleNote.isSilent())
                     continue;
                 if (first)
                     first = false;
@@ -529,7 +531,7 @@ public class GenerateSongHtml {
                 "the number of counts indicated by the number.</p>\n");
         sb.append("<p>A repeat can also be represented by bracketed measures followed by an 'x' and a number is a repeat.\n" +
                 "  Bracketed measures start with square bracket '[', have an arbitrary number of measures followed" +
-                        " by a closing square bracket ']'."+
+                " by a closing square bracket ']'." +
                 "  A new line is not required in this case.  That is a new collection of measures can lead the bracketing\n" +
                 " and follow the bracketing.  There is no restrictions on the number of measures in the bracketed" +
                 " repeat.  The multi-line separator bar '|' should not be used.</p>\n");

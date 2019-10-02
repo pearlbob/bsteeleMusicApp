@@ -88,12 +88,14 @@ public enum ScaleNote {
             scaleNoteString = base + mod;
             scaleNoteHtml = base + modHtml;
             scaleNoteMarkup = base + markup;
+            isSilent = false;
         } else {
             scaleNoteString = name();//    should only happen on X
             scaleNoteHtml = name();
             scaleNoteMarkup = name();
             isSharp = false;
             isFlat = false;
+            isSilent = true;
         }
     }
 
@@ -141,7 +143,7 @@ public enum ScaleNote {
 
         char c = markedString.charAt(0);
         if (c < 'A' || c > 'G') {
-            if ( c == 'X') {
+            if (c == 'X') {
                 markedString.getNextChar();
                 return ScaleNote.X;
             }
@@ -174,7 +176,7 @@ public enum ScaleNote {
     }
 
     public final ScaleNote transpose(Key key, int steps) {
-        if ( this == ScaleNote.X )
+        if (this == ScaleNote.X)
             return ScaleNote.X;
         return key.getScaleNoteByHalfStep(halfStep + steps);
     }
@@ -232,6 +234,10 @@ public enum ScaleNote {
         return isFlat;
     }
 
+    public boolean isSilent() {
+        return isSilent;
+    }
+
     /**
      * Return the scale note's flat alias if it is a sharp
      * or the sharp alias if the scale note is a flat.
@@ -250,6 +256,8 @@ public enum ScaleNote {
     private ScaleNote alias;
     private final boolean isSharp;
     private final boolean isFlat;
+    private final boolean isSilent;
+
 
     private static final ScaleNote sharps[] = {
             A, As, B, C, Cs, D, Ds, E, F, Fs, G, Gs

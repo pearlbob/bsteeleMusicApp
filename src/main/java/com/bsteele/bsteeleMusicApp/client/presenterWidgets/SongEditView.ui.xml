@@ -253,6 +253,7 @@
                         in parenthesis.
                         When the entry is correct, the characters will be removed from the comment and will be
                         returned to their correct position in the entry.
+                        A capital X (X) is used to indicate no chord.
                     </li>
                     <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                     <li>Notice that this can get problematic around the lower case b. Should the entry "bbm7"
@@ -328,6 +329,12 @@
                     <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
                         For example A/G would mean a G for the bass, an A chord for the other instruments.
                         The bass note is a single note, not a chord.
+                    </li>
+                    <li>
+                        Row repeats are indicated by a lower case x followed by a number 2 or more.
+                        Multiple rows can be repeated by placing an opening square bracket ([) in front of the
+                        first measure of the first row and a closing square bracket (]) after the last
+                        measure before the x and the digits.
                     </li>
                     <li>Sample measures to use:
                         <ul>
