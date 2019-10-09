@@ -19,6 +19,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -68,20 +69,20 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     SimplePanel drumOptions;
 
     @UiField
-    RadioButton countIn;
+    CheckBox countIn;
     @UiField
-    RadioButton dashAllMeasureRepetitions;
+    CheckBox dashAllMeasureRepetitions;
     @UiField
-    RadioButton playWithLineIndicator;
+    CheckBox playWithLineIndicator;
     @UiField
-    RadioButton playWithMeasureIndicator;
+    CheckBox playWithMeasureIndicator;
     @UiField
-    RadioButton playWithBouncingBall;
+    CheckBox playWithBouncingBall;
     @UiField
-    RadioButton playWithMeasureLabel;
+    CheckBox playWithMeasureLabel;
 
     @UiField
-    RadioButton debug;
+    CheckBox debug;
 
     @UiField
     Button showAllScales;

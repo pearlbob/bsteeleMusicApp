@@ -86,7 +86,6 @@
                                        title="Background for song scrolling."/>
                             <g:HTMLPanel>
                                 <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
-
                                 <p>
                                     Copyright
                                     <span ui:field="copyright"/>

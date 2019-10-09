@@ -63,36 +63,32 @@
                             <g:header size='3'>Options</g:header>
                             <g:ScrollPanel>
                                 <g:HTMLPanel>
-                                    <!--                                    <paper-icon-item ui:field="menuAbout">-->
-                                    <!--                                        <iron-icon icon="help" item-icon=""/>-->
-                                    <!--                                        <div>About</div>-->
-                                    <!--                                    </paper-icon-item>-->
                                     <br/>
-                                    <g:RadioButton ui:field="countIn"
+                                    <g:CheckBox ui:field="countIn"
                                                    name="countIn">Count In
-                                    </g:RadioButton>
+                                    </g:CheckBox>
                                     <br/>
-                                    <g:RadioButton ui:field="dashAllMeasureRepetitions"
+                                    <g:CheckBox ui:field="dashAllMeasureRepetitions"
                                                    name="dashAllMeasureRepetitions">Dash All Measure Repetitions
-                                    </g:RadioButton>
+                                    </g:CheckBox>
                                     <br/>
-                                    <g:RadioButton ui:field="playWithLineIndicator"
+                                    <g:CheckBox ui:field="playWithLineIndicator"
                                                    name="playWithLineIndicator">Play with line indicator
-                                    </g:RadioButton>
+                                    </g:CheckBox>
                                     <br/>
-                                    <g:RadioButton ui:field="playWithMeasureIndicator"
+                                    <g:CheckBox ui:field="playWithMeasureIndicator"
                                                    name="playWithMeasureIndicator">Play with measure indicator
-                                    </g:RadioButton>
+                                    </g:CheckBox>
                                     <br/>
-                                    <g:RadioButton ui:field="playWithBouncingBall"
+                                    <g:CheckBox ui:field="playWithBouncingBall"
                                                    name="playWithBouncingBall">Play with bouncing ball
-                                    </g:RadioButton>
+                                    </g:CheckBox>
                                     <br/>
-                                    <g:RadioButton ui:field="playWithMeasureLabel"
+                                    <g:CheckBox ui:field="playWithMeasureLabel"
                                                    name="playWithMeasureLabel">Play with measure display
-                                    </g:RadioButton>
+                                    </g:CheckBox>
                                     <br/>
-                                    <g:RadioButton ui:field="debug" name="debug">debug</g:RadioButton>
+                                    <g:CheckBox ui:field="debug" name="debug">debug</g:CheckBox>
                                     <br/>
                                     <g:Button ui:field="showAllScales">Show all scales</g:Button>
                                     <g:HTML ui:field="allScales"/>

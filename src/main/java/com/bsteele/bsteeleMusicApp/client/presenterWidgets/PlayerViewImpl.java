@@ -363,7 +363,7 @@ public class PlayerViewImpl
                 lastKey = null; //  force update on song change
             syncKey(songUpdate.getCurrentKey());
 
-            chordsFontSize = 0;     //    will never match, forces the fontSize set
+            //chordsFontSize = 0;     //    will never match, forces the fontSize set
             chordsDirty = true;   //  done by syncKey()
 
             if (isSongDiff)
@@ -612,7 +612,7 @@ public class PlayerViewImpl
                 logger.finest("pre  tran: " + flexTable.getRowCount()
                         + (firstRow > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
                 song.transpose(song.getChordSection(lyricSection.getSectionVersion()),
-                        flexTable, tran, lyricsDefaultFontSize, true);
+                        flexTable, tran, chordsFontSize, true);
                 logger.finest("post tran: " + flexTable.getRowCount()
                         + (flexTable.getRowCount() > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
                 StringBuilder sb = new StringBuilder();
@@ -746,7 +746,7 @@ public class PlayerViewImpl
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;
     private static final int chordsMaxFontSize = 52;
-    private int chordsFontSize = chordsMaxFontSize;
+    private static int chordsFontSize = 42;
     private static final int lyricsMinFontSize = 8;
     private static final int lyricsMaxFontSize = 28;
     private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
