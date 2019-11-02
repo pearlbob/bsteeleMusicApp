@@ -73,7 +73,8 @@ if ( $status || $force != 0 ) then
 
 	#	copy to test resource
 	set testDst=src/test/java/com/bsteele/bsteeleMusicApp/client/resources/$f
-	cp $src $testDst
+	# fixme: random crap should not to testing without verification!
+	#cp $src $testDst
 
 	#	copy to github project, commit and push
 	cp $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f

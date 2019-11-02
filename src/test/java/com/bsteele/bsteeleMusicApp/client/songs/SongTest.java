@@ -91,14 +91,16 @@ public class SongTest
 //                    }
                     logger.fine(song1.toJson());
                     Song song2 = Song.fromJson(song1.toJson()).get(0);
-                    logger.fine("song2: " + song2.toJson());
+                    logger.fine("song1: " + song1.toJson());
                     logger.fine("song to 2: " + song2.toJson());
                     assertTrue(song.compareTo(song2) == 0);
                     logger.fine("song1 to 2: " + song2.toJson());
 
                     assertTrue(song1.compareTo(song2) == 0);
-                    logger.fine("song1 equals 2: " + song2.toJson());
+                    logger.finest("song1 compares to 2 ");
+                    logger.fine("song1 equals 2?: " + song2.toJson());
                     assertTrue(song1.equals(song2));
+                    logger.finest("song1 equals to 2 ");
                 }
             }
         }

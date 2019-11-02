@@ -3269,7 +3269,6 @@ public class SongBase {
 
     @Override
     public boolean equals(Object obj) {
-        //  fixme: song equals should include all fields
         if (obj == null) {
             return false;
         }

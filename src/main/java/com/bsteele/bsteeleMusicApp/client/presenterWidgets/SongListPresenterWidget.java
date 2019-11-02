@@ -83,7 +83,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        String url = GWT.getHostPageBaseURL()+ "allSongs.songlyrics";
+        String url = (GWT.getHostPageBaseURL()+ "allSongs.songlyrics").replace("/beta","");
         if (url.matches("^http://127.0.0.1.*") || url.matches("^http://local.host.*")) {
             //  expedite debugging
             defaultAllSongs();
