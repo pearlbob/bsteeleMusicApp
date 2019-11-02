@@ -193,52 +193,69 @@ public class SongPlayerTest {
 
     @Test
     public void testSectionSequenceChanges() {
-
         int beatsPerBar = 4;
-
-        final int clocksPerBeat = 10;
+        int songMinutes = 4;
         SongBase a;
+        final int clocksPerBeat = 1;
 
-        for (int bpm = 60; bpm <= 120; bpm+=120) {
+        for (int bpm = 106; bpm <= 106; bpm++) {
+
+            double beatT = 60.0 / bpm;
+            double songDurationS = bpm * songMinutes;
+
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     bpm, beatsPerBar, 4,
                     "i: A A# B C verse: A B C D prechorus: D E F F# chorus: G D C G x3 o: D C G D",
                     "i:\n"
-                            + "v: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro"
+                            + "v: bob, bob, bob berand\npc: nope\nc: sing chorus here\nc: sing chorus again"
+                            + "\no: last line of outro"
             );
-          int limit =  a.getSongMomentsSize();
-          for ( int i = 0; i < limit; i++ ){
-              SongMoment songMoment=      a.getSongMoment(i);
-          }
+
+            SongPlayer songPlayer = new SongPlayer(a);
+
+            int lastMomentNumber = -2;
+            double secondsPerBeat = 60.0 / bpm;
+            double t = 10.8; // lastMomentNumber * beatsPerBar * secondsPerBeat;
+            songPlayer.setMomentNumber(t, lastMomentNumber);
+
+            int limit = (int) (
+                    (Math.abs(lastMomentNumber * beatsPerBar) +
+                            a.getTotalBeats()
+                            + 2 * beatsPerBar + 1
+                    )
+                            * clocksPerBeat
+            );
+            double dt = 60.0 / (clocksPerBeat * bpm);
+
+            for (int i = 0; i < limit; i++) {
+                t += dt;
+                int momentNumber = songPlayer.getMomentNumberAt(t);
+
+                SongMoment songMoment = a.getSongMoment(momentNumber);
+                if (songMoment != null) {
+                    songMoment.getChordSectionLocation();
+                }
+
+                double d = (t - songPlayer.getT0()) / dt;
+
+                int f = 0;
+                SongMoment sm = a.getFirstSongMomentInSection(momentNumber);
+                if ( sm != null )
+                    f = sm.getMomentNumber();
+                int l = Integer.MAX_VALUE;
+                sm = a.getLastSongMomentInSection(momentNumber);
+                if ( sm != null )
+                    l = sm.getMomentNumber();
+                logger.fine("t: " + (int) Math.round(d)
+                        + "  " + t
+                        + ", b: " + songPlayer.getBeat(t)
+                        + ", m: " + songMoment
+                        + ", f: " + f
+                        + ", l: " + l
+                );
+            }
+            logger.fine("t: " + t);
         }
-
-//        int songMinutes = 4;
-//        double eMax = 0;
-//
-//        for (int bpm = 179; bpm <= 180; bpm++) {
-//
-//            double beatT = 60.0/bpm;
-//            double songDurationS = bpm * songMinutes;
-//
-//
-//            int beatCount = 0;
-//            for ( double t = 0; t < songDurationS; beatCount++, t+= beatT){
-//
-//                double e = Math.abs(beatCount*beatT - t);
-//                if ( e > eMax ){
-//                    logger.info("bpm: "+bpm+", t: "+t+", e: "+e);
-//                    eMax = e;
-//                }
-//
-//            }
-//        }
-//        //  in 4 minutes
-//        //  53:45.728 INFO   : bpm: 179, t: 715.9776536313118, e: 2.6943780540023E-11
-//        //  in 400 minutes
-//        //  56:32.805 INFO   : bpm: 179, t: 71599.4413411908, e: 4.0869053918868303E-7
-//        //  double rounding errors too small to worry about
-//        //  but restart base time on song play start
-
     }
 
     private static Logger logger = Logger.getLogger(SongPlayerTest.class.getName());

@@ -2908,6 +2908,41 @@ public class SongBase {
         return songMoments.get(momentNumber);
     }
 
+    public final SongMoment getFirstSongMomentInSection(int momentNumber) {
+        SongMoment songMoment = getSongMoment(momentNumber);
+        if (songMoment == null)
+            return null;
+
+        SongMoment firstSongMoment = songMoment;
+        String id = songMoment.getChordSection().getId();
+        for (int m = momentNumber - 1; m >= 0; m--) {
+            SongMoment sm = songMoments.get(m);
+            if (!id.equals(sm.getChordSection().getId())
+                    || sm.getSectionCount() != firstSongMoment.getSectionCount())
+                return firstSongMoment;
+            firstSongMoment = sm;
+        }
+        return firstSongMoment;
+    }
+
+    public final SongMoment getLastSongMomentInSection(int momentNumber) {
+        SongMoment songMoment = getSongMoment(momentNumber);
+        if (songMoment == null)
+            return null;
+
+        SongMoment lastSongMoment = songMoment;
+        String id = songMoment.getChordSection().getId();
+        int limit = songMoments.size();
+        for (int m = momentNumber + 1; m < limit; m++) {
+            SongMoment sm = songMoments.get(m);
+            if (!id.equals(sm.getChordSection().getId())
+                    || sm.getSectionCount() != lastSongMoment.getSectionCount())
+                return lastSongMoment;
+            lastSongMoment = sm;
+        }
+        return lastSongMoment;
+    }
+
     public final double getSongTimeAtMoment(int momentNumber) {
         SongMoment songMoment = getSongMoment(momentNumber);
         if (songMoment == null)
