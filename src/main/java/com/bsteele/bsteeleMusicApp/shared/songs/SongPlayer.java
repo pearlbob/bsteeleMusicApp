@@ -25,7 +25,6 @@ public class SongPlayer {
         if (m == 0) {
             //    we're done
             momentNumber = 0;
-
         } else if (m > 0) {
             if (songBase == null || songBase.getSongMomentsSize() == 0) {
                 momentNumber = 0;
@@ -135,6 +134,8 @@ public class SongPlayer {
     }
 
     private int momentNumber;
+    private Integer skipFromNumber = null;
+    private Integer skipToNumber = null;
     private double t0;
     private SongBase songBase;
 
