@@ -68,7 +68,7 @@ public class SongPlayer {
         t -= t0;
         if (t < 0)
             return (int) Math.floor(t / songBase.getDefaultTimePerBar());
-        momentNumber = songBase.getSongMomentNumberAtTime(t);
+        momentNumber = songBase.getSongMomentNumberAtSongTime(t);
         return momentNumber;
     }
 

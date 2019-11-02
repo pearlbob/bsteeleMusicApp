@@ -1063,13 +1063,13 @@ public class SongBaseTest
             int expected = -3;
             int count = 0;
             for (double t = -8 * 3 * dt; t < 8 * 3 * dt; t += dt) {
-                int result = a.getSongMomentNumberAtTime(t);
+                int result = a.getSongMomentNumberAtSongTime(t);
                 logger.fine(t
                         + " = " + (t / dt) + " x dt "
                         + "  " + expected
                         + "  @" + count
                         + "  b:" + a.getBeatNumberAtTime(bpm, t)
-                        + ": " + a.getSongMomentNumberAtTime(t)
+                        + ": " + a.getSongMomentNumberAtSongTime(t)
                         + ", bpm: " + bpm
                 );
                 if (expected != result) {

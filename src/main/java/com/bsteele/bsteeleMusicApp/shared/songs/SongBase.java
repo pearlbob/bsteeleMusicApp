@@ -2923,7 +2923,7 @@ public class SongBase {
         return songBeat;
     }
 
-    public final int getSongMomentNumberAtTime(double songTime) {
+    public final int getSongMomentNumberAtSongTime(double songTime) {
         if (getBeatsPerMinute() <= 0)
             return Integer.MAX_VALUE;       //  we're done with this song play
 

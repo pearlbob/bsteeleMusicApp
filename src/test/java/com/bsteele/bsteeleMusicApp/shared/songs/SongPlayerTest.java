@@ -194,6 +194,24 @@ public class SongPlayerTest {
     @Test
     public void testSectionSequenceChanges() {
 
+        int beatsPerBar = 4;
+
+        final int clocksPerBeat = 10;
+        SongBase a;
+
+        for (int bpm = 60; bpm <= 120; bpm+=120) {
+            a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                    bpm, beatsPerBar, 4,
+                    "i: A A# B C verse: A B C D prechorus: D E F F# chorus: G D C G x3 o: D C G D",
+                    "i:\n"
+                            + "v: bob, bob, bob berand\npc: nope\nc: sing chorus here \no: last line of outro"
+            );
+          int limit =  a.getSongMomentsSize();
+          for ( int i = 0; i < limit; i++ ){
+              SongMoment songMoment=      a.getSongMoment(i);
+          }
+        }
+
 //        int songMinutes = 4;
 //        double eMax = 0;
 //
