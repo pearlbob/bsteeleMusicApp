@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.TreeSet;
 import java.util.logging.Logger;
 
 import static com.bsteele.bsteeleMusicApp.shared.songs.SongBaseTest.createSongBase;
@@ -194,14 +196,11 @@ public class SongPlayerTest {
     @Test
     public void testSectionSequenceChanges() {
         int beatsPerBar = 4;
-        int songMinutes = 4;
         SongBase a;
-        final int clocksPerBeat = 1;
+        final int clocksPerBeat = 2;
 
-        for (int bpm = 106; bpm <= 106; bpm++) {
 
-            double beatT = 60.0 / bpm;
-            double songDurationS = bpm * songMinutes;
+        for (int bpm = 106; bpm <= 126; bpm++) {
 
             a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
                     bpm, beatsPerBar, 4,
@@ -211,50 +210,95 @@ public class SongPlayerTest {
                             + "\no: last line of outro"
             );
 
-            SongPlayer songPlayer = new SongPlayer(a);
+            for (int skip = 0; skip < a.getSongMomentsSize(); skip++) {
+                logger.fine("bpm: "+bpm+", skip: "+skip);
 
-            int lastMomentNumber = -2;
-            double secondsPerBeat = 60.0 / bpm;
-            double t = 10.8; // lastMomentNumber * beatsPerBar * secondsPerBeat;
-            songPlayer.setMomentNumber(t, lastMomentNumber);
+//                //  find section transitions
+//                TreeSet<SongMoment> firstSongMomentsInSection = new TreeSet<>();
+//                for (int m = 0; m < a.getSongMomentsSize(); m++) {
+//                    SongMoment songMoment = a.getSongMoment(m);
+//                    firstSongMomentsInSection.add(a.getFirstSongMomentInSection(m));
+//                }
+//                for (SongMoment songMoment : firstSongMomentsInSection) {
+//                    logger.finer(songMoment.toString());
+//                }
 
-            int limit = (int) (
-                    (Math.abs(lastMomentNumber * beatsPerBar) +
-                            a.getTotalBeats()
-                            + 2 * beatsPerBar + 1
-                    )
-                            * clocksPerBeat
-            );
-            double dt = 60.0 / (clocksPerBeat * bpm);
+                SongPlayer songPlayer = new SongPlayer(a);
 
-            for (int i = 0; i < limit; i++) {
-                t += dt;
-                int momentNumber = songPlayer.getMomentNumberAt(t);
+                int lastMomentNumber = -2;
+                double secondsPerBeat = 60.0 / bpm;
+                double t = 10.8; // lastMomentNumber * beatsPerBar * secondsPerBeat;
+                songPlayer.setMomentNumber(t, lastMomentNumber);
 
-                SongMoment songMoment = a.getSongMoment(momentNumber);
-                if (songMoment != null) {
-                    songMoment.getChordSectionLocation();
+                int limit = (int) (
+                        2 * (Math.abs(lastMomentNumber * beatsPerBar) +
+                                a.getTotalBeats()
+                                + 2 * beatsPerBar + 1
+                        )
+                                * clocksPerBeat
+                );
+                double dt = 60.0 / (clocksPerBeat * bpm);
+
+                int skipTrigger = skip;
+                int lastBeat = beatsPerBar - 1;
+                HashMap<Integer, Integer> momentCounts = new HashMap<>();
+                for (int i = 0; i < limit; i++) {
+                    t += dt;
+
+                    int momentNumber = songPlayer.getMomentNumberAt(t);
+                    int beat = songPlayer.getBeat(t);
+                    if (beat == lastBeat)
+                        continue;
+                    assertTrue((lastBeat + 1) % beatsPerBar == beat);
+                    lastBeat = beat;
+                    if (momentNumber != lastMomentNumber) {
+                        //  record the moments
+                        momentCounts.put(momentNumber, (momentCounts.containsKey(momentNumber)) ? momentCounts.get(momentNumber) + 1 : 1);
+                        lastMomentNumber = momentNumber;
+                    }
+
+
+                    SongMoment songMoment = a.getSongMoment(momentNumber);
+                    if (songMoment != null) {
+                        //songMoment.getChordSectionLocation();
+                        if (skipTrigger > 0 && songMoment.getMomentNumber() >= skipTrigger) {
+                            songPlayer.jumpSectionToFirstSongMomentInSection(skipTrigger);
+                            skipTrigger = 0;
+                        }
+                    }
+
+                    int f = 0;
+                    SongMoment sm = a.getFirstSongMomentInSection(momentNumber);
+                    if (sm != null)
+                        f = sm.getMomentNumber();
+                    int l = Integer.MAX_VALUE;
+                    sm = a.getLastSongMomentInSection(momentNumber);
+                    if (sm != null)
+                        l = sm.getMomentNumber();
+
+                    logger.finest("t: " + (int) Math.round((t - songPlayer.getT0()) / dt)
+                            //  + "  " + t
+                            + ", b: " + songPlayer.getBeat(t)
+                            + ", m: " + (songMoment == null ? "null" : songMoment.toString())
+                            + ", f: " + f
+                            + ", l: " + l
+                    );
                 }
 
-                double d = (t - songPlayer.getT0()) / dt;
-
-                int f = 0;
-                SongMoment sm = a.getFirstSongMomentInSection(momentNumber);
-                if ( sm != null )
-                    f = sm.getMomentNumber();
-                int l = Integer.MAX_VALUE;
-                sm = a.getLastSongMomentInSection(momentNumber);
-                if ( sm != null )
-                    l = sm.getMomentNumber();
-                logger.fine("t: " + (int) Math.round(d)
-                        + "  " + t
-                        + ", b: " + songPlayer.getBeat(t)
-                        + ", m: " + songMoment
-                        + ", f: " + f
-                        + ", l: " + l
-                );
+                {
+                    SongMoment firstSongMomentInSection = a.getFirstSongMomentInSection(skip);
+                    SongMoment lastSongMomentInSection = a.getLastSongMomentInSection(skip);
+                    for (int i : momentCounts.keySet()) {
+                        int count = momentCounts.get(i);
+                        if (count > 1) {
+                            logger.finer("dup: " + i + " " + count);
+                            assertTrue(i >= firstSongMomentInSection.getMomentNumber());
+                            assertTrue(i <= lastSongMomentInSection.getMomentNumber());
+                        }
+                    }
+                }
+                logger.fine("t: " + t);
             }
-            logger.fine("t: " + t);
         }
     }
 

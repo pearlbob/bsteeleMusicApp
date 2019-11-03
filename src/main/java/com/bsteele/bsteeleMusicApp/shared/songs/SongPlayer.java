@@ -64,10 +64,16 @@ public class SongPlayer {
      * @return the moment number
      */
     public final int getMomentNumberAt(double t) {
-        t -= t0;
-        if (t < 0)
-            return (int) Math.floor(t / songBase.getDefaultTimePerBar());
-        momentNumber = songBase.getSongMomentNumberAtSongTime(t);
+        double tn = t - t0;
+        if (tn < 0)
+            return (int) Math.floor(tn / songBase.getDefaultTimePerBar());
+        momentNumber = songBase.getSongMomentNumberAtSongTime(tn);
+
+        if (skipFromNumber != null && momentNumber == skipFromNumber) {
+            skipFromNumber = null;
+            setMomentNumber(t, skipToNumber);
+        }
+
         return momentNumber;
     }
 
@@ -99,6 +105,11 @@ public class SongPlayer {
         if (ret < 0)
             ret += songBase.getBeatsPerBar();
         return ret;
+    }
+
+    public final void jumpSectionToFirstSongMomentInSection(int to) {
+        skipFromNumber = songBase.getLastSongMomentInSection(momentNumber).getMomentNumber() + 1;
+        skipToNumber = songBase.getFirstSongMomentInSection(to).getMomentNumber();
     }
 
     /**
