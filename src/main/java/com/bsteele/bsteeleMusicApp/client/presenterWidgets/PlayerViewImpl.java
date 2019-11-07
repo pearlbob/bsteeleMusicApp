@@ -638,13 +638,25 @@ public class PlayerViewImpl
             player.add(flexTable);
 
             playerFlexTable.addClickHandler(clickEvent -> {
-                logger.fine("singleClick");
+                logger.info("singleClick");
+                if (song == null || playerFlexTable == null)
+                    return;
 
                 HTMLTable.Cell cell = playerFlexTable.getCellForEvent(clickEvent);
+                if (cell == null)
+                    return;
 
-                logger.info("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ")");
-                Element e = cell.getElement();
-                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundCanvas.getAbsoluteTop());
+                SongMoment songMoment = song.getSongMomentAtRow(cell.getRowIndex());
+                if (songMoment != null) {
+                    songMoment = song.getFirstSongMomentInSection(songMoment.getMomentNumber());
+                    if (songMoment != null) {
+                        logger.info("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ") " + songMoment.toString());
+                        if (songPlayMaster != null)
+                            songPlayMaster.jumpSectionToFirstSongMomentInSection(songMoment.getMomentNumber());
+                    }
+                }
+//                Element e = cell.getElement();
+//                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundCanvas.getAbsoluteTop());
             });
         }
     }

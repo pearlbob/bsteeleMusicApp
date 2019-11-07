@@ -357,6 +357,12 @@ public class SongPlayMasterImpl
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
     }
 
+    @Override
+    public void jumpSectionToFirstSongMomentInSection(int momentNumber) {
+        if (songPlayer != null)
+            songPlayer.jumpSectionToFirstSongMomentInSection(momentNumber);
+    }
+
 
     @Override
     public void play(Song song) {

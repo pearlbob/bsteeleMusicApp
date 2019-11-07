@@ -12,23 +12,25 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
  */
 public interface SongPlayMaster {
 
-     void initialize();
+    void initialize();
 
-     void onMessage(double systemT, String data);
+    void onMessage(double systemT, String data);
 
-     void stopSong();
+    void stopSong();
 
-     void playSongUpdate(SongUpdate songUpdate);
+    void playSongUpdate(SongUpdate songUpdate);
 
-     void issueSongUpdate(SongUpdate songUpdate);
+    void issueSongUpdate(SongUpdate songUpdate);
 
-     void play( Song song );
+    void play(Song song);
 
-     void continueSong();
+    void continueSong();
 
-     void playSongOffsetRowNumber( int offset );
+    void playSongOffsetRowNumber(int offset);
 
-     void playSongSetRowNumber(int row);
+    void playSongSetRowNumber(int row);
 
-     void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
+    void jumpSectionToFirstSongMomentInSection(int momentNumber);
+
+    void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

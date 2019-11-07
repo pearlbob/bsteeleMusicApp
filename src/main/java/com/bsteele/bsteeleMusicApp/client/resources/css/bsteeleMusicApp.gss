@@ -310,5 +310,6 @@ td[editSelect=append] {
 /*  css for top cover over the slider, in absolute panel   */
 .playTopCover {
        z-index:1;
+       pointer-events: none;
        }
 

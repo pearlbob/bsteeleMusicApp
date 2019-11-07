@@ -62,7 +62,7 @@ if ( $stat != 0 ) then
 endif
 
 #	generate javadoc
-echo mvn javadoc:aggregate
+mvn javadoc:aggregate
 
 
 #	generate app on localhost web

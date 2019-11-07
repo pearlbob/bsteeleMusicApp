@@ -12,9 +12,10 @@ public class SongPlayer {
 
     /**
      * Move the update indicators to the given measureNumber.
-     * Should only be used to reposition the moment number.
+     * Should only be used to reposition the moment number in time.
      * Normally use nextMeasureNumber().
      *
+     * @param t the time to match the given moment number
      * @param m the measureNumber to move to
      */
     public final void setMomentNumber(double t, int m) {
@@ -48,7 +49,10 @@ public class SongPlayer {
         }
     }
 
-
+    /**
+     * Getter
+     * @return the current moment number
+     */
     public final int getMomentNumber() {
         return momentNumber;
     }

@@ -27,6 +27,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.inject.Inject;
@@ -83,7 +84,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
         this.eventBus = eventBus;
         this.view = view;
 
-        String url = (GWT.getHostPageBaseURL()+ "allSongs.songlyrics").replace("/beta","");
+        String url = (GWT.getHostPageBaseURL() + "allSongs.songlyrics").replace("/beta", "");
         if (url.matches("^http://127.0.0.1.*") || url.matches("^http://local.host.*")) {
             //  expedite debugging
             defaultAllSongs();
@@ -201,6 +202,7 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
 
     private void addJsonToSongList(String jsonString) throws ParseException {
         if (jsonString != null && jsonString.length() > 0) {
+            int parseExceptions = 0;
             JSONValue jv = JSONParser.parseStrict(jsonString);
             if (jv != null) {
                 JSONArray ja = jv.isArray();
@@ -209,9 +211,18 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     //  order by oldest first
                     TreeSet<Song> sortedSet = new TreeSet<>(Song.getComparatorByType(
                             Song.ComparatorType.versionNumber));
+                    logger.fine( "jaLimit: "+jaLimit);
                     for (int i = 0; i < jaLimit; i++) {
-                        sortedSet.add(Song.fromJsonObject(ja.get(i).isObject()));
+                        JSONObject object = ja.get(i).isObject();
+                        try {
+                            sortedSet.add(Song.fromJsonObject(object));
+                        } catch (ParseException pe) {
+                            logger.severe("parse error: " + object.toString());
+                            parseExceptions++;
+                        }
                     }
+                    logger.fine( "sortedSet: "+sortedSet.size());
+
                     //  add to all songs
                     for (Song song : sortedSet) {
                         //  note: the highest number song will be added last
@@ -221,6 +232,8 @@ public class SongListPresenterWidget extends PresenterWidget<SongListPresenterWi
                     view.displaySongList();
                 }
             }
+            if (parseExceptions > 0)
+                throw new ParseException("parse error count: " + parseExceptions, 0);
         }
     }
 

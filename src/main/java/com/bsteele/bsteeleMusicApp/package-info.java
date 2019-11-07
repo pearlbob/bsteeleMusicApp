@@ -12,7 +12,8 @@
  */
 
 /**
- * Package level java doc description here?
+ * This music app is designed to allow players of nearly any level
+ * to play music together.
  */
 package com.bsteele.bsteeleMusicApp;
 
