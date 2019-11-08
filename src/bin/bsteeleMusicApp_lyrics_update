@@ -5,6 +5,9 @@
 #	it should always be left operational every evening
 #	or the crontab should be shutdown.
 
+echo 'FIX ME: update not in use now!'
+exit -1
+
 
 set force=0
 while ( $#argv > 0 )
