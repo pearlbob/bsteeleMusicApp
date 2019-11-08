@@ -110,6 +110,8 @@ public interface AppResources extends ClientBundle {
 
         String playChordsBackground();
 
+        String jumpBackground();
+
         String playChordsForeground();
 
         String playTopCover();

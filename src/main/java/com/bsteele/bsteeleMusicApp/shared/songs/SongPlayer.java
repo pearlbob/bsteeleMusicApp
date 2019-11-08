@@ -111,9 +111,10 @@ public class SongPlayer {
         return ret;
     }
 
-    public final void jumpSectionToFirstSongMomentInSection(int to) {
+    public final int jumpSectionToFirstSongMomentInSection(int to) {
         skipFromNumber = songBase.getLastSongMomentInSection(momentNumber).getMomentNumber() + 1;
         skipToNumber = songBase.getFirstSongMomentInSection(to).getMomentNumber();
+        return skipToNumber;
     }
 
     /**

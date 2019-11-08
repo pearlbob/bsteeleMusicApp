@@ -105,6 +105,9 @@ public class PlayerViewImpl
     @UiField(provided = true)
     Canvas playerBackgroundCanvas;
 
+    @UiField(provided = true)
+    Canvas jumpBackgroundCanvas;
+
     /**
      * An HTML trick:  a transparent canvas used to capture the scroll panel input when in play auto-scroll
      */
@@ -123,6 +126,7 @@ public class PlayerViewImpl
         super(eventBus, songPlayMaster);
 
         playerBackgroundCanvas = Canvas.createIfSupported();
+        jumpBackgroundCanvas = Canvas.createIfSupported();
         playerTopCover = Canvas.createIfSupported();
 
         initWidget(binder.createAndBindUi(this));
@@ -461,7 +465,8 @@ public class PlayerViewImpl
                 audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
                 playStatusLabel.setVisible(false);
                 scrollForLineAt(0); //  hide
-                playerTopCover.getCanvasElement().getStyle().setZIndex(-2);
+                playerTopCover.getCanvasElement().getStyle().setZIndex(-10);
+                jumpMomentNumber = null;
                 break;
         }
     }
@@ -565,6 +570,45 @@ public class PlayerViewImpl
                     }
                     break;
             }
+
+            if (songPlayMaster == null
+                    || (jumpMomentNumber != null && jumpMomentNumber == songPlayMaster.getMomentNumber()))
+                jumpMomentNumber = null;
+
+            //  section jump indicator
+            if (jumpMomentNumber != null) {
+                Context2d ctx = jumpBackgroundCanvas.getContext2d();
+                CanvasElement canvasElement = ctx.getCanvas();
+                double w = canvasElement.getClientWidth();
+                double h = canvasElement.getClientHeight();
+                if (w != canvasElement.getWidth() || h != canvasElement.getHeight()) {
+                    canvasElement.setWidth((int) w);
+                    canvasElement.setHeight((int) h);
+                }
+                ctx.clearRect(0.0, 0.0, w, h);
+
+                ctx.setFillStyle("lightGray");
+                //ctx.setGlobalAlpha(0.5);
+                ctx.beginPath();
+                ctx.moveTo(0.0, jumpSectionFromY);
+                ctx.lineTo(jumpSectionMaxX, jumpSectionFromY);
+                ctx.lineTo(0.0, jumpSectionToY);
+                ctx.closePath();
+                ctx.fill();
+                ctx.setGlobalAlpha(1.0);
+                lastJumpSectionToY = -1;
+            } else if (jumpSectionToY != lastJumpSectionToY) {
+                Context2d ctx = jumpBackgroundCanvas.getContext2d();
+                CanvasElement canvasElement = ctx.getCanvas();
+                double w = canvasElement.getClientWidth();
+                double h = canvasElement.getClientHeight();
+                if (w != canvasElement.getWidth() || h != canvasElement.getHeight()) {
+                    canvasElement.setWidth((int) w);
+                    canvasElement.setHeight((int) h);
+                }
+                ctx.clearRect(0.0, 0.0, w, h);
+                lastJumpSectionToY = jumpSectionToY;
+            }
         } catch (
                 Exception ex) {
             //  this is bad
@@ -651,8 +695,27 @@ public class PlayerViewImpl
                     songMoment = song.getFirstSongMomentInSection(songMoment.getMomentNumber());
                     if (songMoment != null) {
                         logger.info("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ") " + songMoment.toString());
-                        if (songPlayMaster != null)
-                            songPlayMaster.jumpSectionToFirstSongMomentInSection(songMoment.getMomentNumber());
+                        if (songPlayMaster != null) {
+                            SongMoment fromMoment = song.getLastSongMomentInSection(songPlayMaster.getMomentNumber());
+                            if (fromMoment == null) {
+                                jumpSectionFromY = 0;
+                                jumpSectionToY = 0;
+                            } else {
+                                GridCoordinate coordinate = song.getMomentGridCoordinate(fromMoment.getMomentNumber());
+                                FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
+
+                                Element element = flexCellFormatter.getElement(coordinate.getRow(),
+                                        playerFlexTable.getCellCount(coordinate.getRow()) - 1);
+                                jumpSectionMaxX = element.getAbsoluteRight();
+
+                                element = flexCellFormatter.getElement(coordinate.getRow(), coordinate.getCol());
+                                jumpSectionFromY = element.getAbsoluteBottom() - playerBackgroundCanvas.getAbsoluteTop();
+
+                                jumpSectionToY = cell.getElement().getAbsoluteTop() - playerBackgroundCanvas.getAbsoluteTop();
+                            }
+
+                            jumpMomentNumber = songPlayMaster.jumpSectionToFirstSongMomentInSection(songMoment.getMomentNumber());
+                        }
                     }
                 }
 //                Element e = cell.getElement();
@@ -753,6 +816,11 @@ public class PlayerViewImpl
     private double lastScrollLineY;
     private int lastVerticalScrollPosition = 0;
     private String lastStatus;
+    private Integer jumpMomentNumber = null;
+    private int jumpSectionFromY = 0;
+    private int jumpSectionToY = 0;
+    private int lastJumpSectionToY = -1;
+    private int jumpSectionMaxX = 10;
 
 
     public static final String highlightColor = "#e4c9ff";

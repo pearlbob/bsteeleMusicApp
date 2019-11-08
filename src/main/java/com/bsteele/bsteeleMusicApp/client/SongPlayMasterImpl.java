@@ -358,9 +358,17 @@ public class SongPlayMasterImpl
     }
 
     @Override
-    public void jumpSectionToFirstSongMomentInSection(int momentNumber) {
+    public int jumpSectionToFirstSongMomentInSection(int momentNumber) {
         if (songPlayer != null)
-            songPlayer.jumpSectionToFirstSongMomentInSection(momentNumber);
+            return songPlayer.jumpSectionToFirstSongMomentInSection(momentNumber);
+        return 0;
+    }
+
+    @Override
+    public int getMomentNumber() {
+        if (songPlayer == null)
+            return 0;
+        return songPlayer.getMomentNumber();
     }
 
 

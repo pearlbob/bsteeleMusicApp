@@ -84,6 +84,9 @@
                             <gc:Canvas ui:field="playerBackgroundCanvas"
                                        styleName="{resources.style.playChordsBackground}"
                                        title="Background for song scrolling."/>
+                            <gc:Canvas ui:field="jumpBackgroundCanvas"
+                                       styleName="{resources.style.jumpBackground}"
+                                       title="Background for song scrolling."/>
                             <g:HTMLPanel>
                                 <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
                                 <p>
