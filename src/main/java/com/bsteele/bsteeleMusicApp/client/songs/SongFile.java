@@ -76,6 +76,4 @@ public class SongFile implements Comparable<SongFile>
     private final File file;
     private final String songTitle;
     private final int versionNumber;
-
-
 }

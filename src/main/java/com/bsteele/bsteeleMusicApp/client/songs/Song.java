@@ -297,6 +297,9 @@ public class Song extends SongBase implements Comparable<Song> {
                         song.setLastModifiedTime(jn.doubleValue());
                     }
                     break;
+                case "user":
+                    song.setUser(jv.isString().stringValue());
+                    break;
             }
         }
         return song;
@@ -341,6 +344,9 @@ public class Song extends SongBase implements Comparable<Song> {
                 .append(",\n")
                 .append("\"artist\": ")
                 .append(JsonUtil.encode(getArtist()))
+                .append(",\n")
+                .append("\"user\": ")
+                .append(JsonUtil.encode(getUser()))
                 .append(",\n")
                 .append("\"lastModifiedDate\": ")
                 .append(getLastModifiedTime())

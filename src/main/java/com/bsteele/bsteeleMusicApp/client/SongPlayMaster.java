@@ -30,9 +30,11 @@ public interface SongPlayMaster {
 
     void playSongSetRowNumber(int row);
 
-    int jumpSectionToFirstSongMomentInSection(int momentNumber);
+    Integer jumpSectionToFirstSongMomentInSection(int momentNumber);
 
     int getMomentNumber();
+
+    Integer getSkipToNumber();
 
     void setBSteeleMusicIO(BSteeleMusicIO bSteeleMusicIO);
 }

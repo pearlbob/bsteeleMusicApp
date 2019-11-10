@@ -352,6 +352,14 @@ public class SongBase {
         this.lastModifiedTime = lastModifiedTime;
     }
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     private enum UpperCaseState {
         initial,
         flatIsPossible,
@@ -3335,6 +3343,7 @@ public class SongBase {
     private String title = "Unknown";
     private SongId songId = new SongId();
     private String artist = "Unknown";
+    private String user = "Unknown";
     private String coverArtist = "";
     private String copyright = "Unknown";
     private transient String fileName;

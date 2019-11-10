@@ -51,6 +51,7 @@ public class SongPlayer {
 
     /**
      * Getter
+     *
      * @return the current moment number
      */
     public final int getMomentNumber() {
@@ -76,6 +77,7 @@ public class SongPlayer {
         if (skipFromNumber != null && momentNumber == skipFromNumber) {
             skipFromNumber = null;
             setMomentNumber(t, skipToNumber);
+            skipToNumber = null;
         }
 
         return momentNumber;
@@ -112,8 +114,13 @@ public class SongPlayer {
     }
 
     public final int jumpSectionToFirstSongMomentInSection(int to) {
-        skipFromNumber = songBase.getLastSongMomentInSection(momentNumber).getMomentNumber() + 1;
-        skipToNumber = songBase.getFirstSongMomentInSection(to).getMomentNumber();
+        SongMoment songMoment = songBase.getLastSongMomentInSection(momentNumber);
+        skipFromNumber = (songMoment == null ? 0 : songMoment.getMomentNumber() + 1);
+        songMoment = songBase.getFirstSongMomentInSection(to);
+        if (songMoment != null)
+            skipToNumber = songMoment.getMomentNumber();
+        else
+            skipToNumber = null;
         return skipToNumber;
     }
 
@@ -145,6 +152,10 @@ public class SongPlayer {
         return songMoment != null ? songMoment.getMeasure().getBeatCount() : songBase.getBeatsPerBar();
     }
 
+    public Integer getSkipToNumber() {
+        return skipToNumber;
+    }
+
     public final double getT0() {
         return t0;
     }
@@ -156,4 +167,5 @@ public class SongPlayer {
     private SongBase songBase;
 
     private static final Logger logger = Logger.getLogger(SongPlayer.class.getName());
+
 }

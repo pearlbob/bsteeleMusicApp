@@ -42,7 +42,7 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers> implements Lo
         Storage localStorage = Storage.getLocalStorageIfSupported();
 
         String name = localStorage.getItem("username");
-        if (name != null)
+        if (name != null  && name.length() > 0)
             username.setText(name);
         else {
             username.setText(defaultUsername);

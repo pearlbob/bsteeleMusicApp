@@ -50,6 +50,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -1066,6 +1067,7 @@ public class SongEditView
         Song newSong = checkSong();
 
         if (newSong != null) {
+            newSong.setUser(localStorage.getItem("username"));
             logger.fine(newSong.toJson());
             fireSongSubmission(newSong);
         }
@@ -1341,6 +1343,7 @@ public class SongEditView
     private static final Document document = Document.get();
     private static final String nbsp = "&nbsp;";
     private final EventBus eventBus;    //  is actually used
+    private Storage localStorage = Storage.getLocalStorageIfSupported();
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
 //    static {
