@@ -133,6 +133,10 @@ public class SongUpdate {
         return beat;
     }
 
+    public final double getBeatDuration(){
+        return 60.0 / song.getDefaultBpm();
+    }
+
     /**
      * @return the beatsPerMeasure
      */

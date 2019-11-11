@@ -28,7 +28,6 @@ import com.gwtplatform.mvp.client.HandlerContainerImpl;
 import jsinterop.annotations.JsType;
 
 import java.text.ParseException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -96,22 +95,23 @@ public class SongPlayMasterImpl
         switch (state) {
             case playing:
                 //  distribute the time update locally
-                //     songMomentUpdate(tn);
+                //songMomentUpdate(tn);
 
-//                double measureDuration = songOutUpdate.getDefaultMeasureDuration();
-//                measureNumber = (int) (Math.floor(tn / measureDuration));
-//                thisMeasureStart = measureNumber * measureDuration + (t0 - systemToAudioOffset);
-//                if (nextMeasureStart - thisMeasureStart < measureDuration / 2) {
-//                    //  schedule the audio one measure early
-//                    nextMeasureStart = thisMeasureStart + measureDuration;
-//
-////                    beatTheDrums(defaultDrumSelection);   //  fixme
-//
-////                    sendStatus("measureNumber", measureNumber);
-////                    sendMeasureDurationStatus(tn);
-//                }
+            {
+                int mn = songPlayer.peekMomentNumberAt(t);
+                int advanceMomentNumber = songPlayer.peekMomentNumberAt(t + songOutUpdate.getBeatDuration());
+                if (advanceMomentNumber != mn && advanceMomentNumber != lastAdvanceMomentNumber) {
+                    logger.finest("mn: " + mn + ", send next: " + advanceMomentNumber);
+                    lastAdvanceMomentNumber = advanceMomentNumber;
+                    beatTheDrums(defaultDrumSelection, advanceMomentNumber);
+                }
+                if (mn != lastMomentNumber) {
+                    lastMomentNumber = mn;
+                    logger.finest("mn: " + mn + ", next: " + advanceMomentNumber);
+                }
+            }
 
-                break;
+            break;
             default:
                 lastSystemT = systemT;
                 break;
@@ -173,7 +173,7 @@ public class SongPlayMasterImpl
             stopSong();
     }
 
-    private void beatTheDrums(LegacyDrumMeasure drumSelection) {
+    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber ) {
         SongBase songBase = songOutUpdate.getSong();
         int beatsPerBar = songBase.getBeatsPerBar();
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
@@ -474,6 +474,9 @@ public class SongPlayMasterImpl
     private static final Scheduler scheduler = Scheduler.get();
     private SongPlayer songPlayer;
     private static final AppOptions appOptions = GWTAppOptions.getInstance();
+
+    private int lastMomentNumber;
+    private int lastAdvanceMomentNumber;
 
     private static final Logger logger = Logger.getLogger(SongPlayMasterImpl.class.getName());
 

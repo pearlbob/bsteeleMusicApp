@@ -2741,6 +2741,10 @@ public class SongBase {
      * @param bpm the defaultBpm to set
      */
     public final void setBeatsPerMinute(int bpm) {
+        if ( bpm < 20 )
+            bpm = 20;
+        else if ( bpm > 1000 )
+            bpm = 1000;
         this.defaultBpm = bpm;
     }
 
@@ -2759,6 +2763,9 @@ public class SongBase {
      * @param beatsPerBar the beatsPerBar to set
      */
     public final void setBeatsPerBar(int beatsPerBar) {
+        //  never divide by zero
+        if (beatsPerBar <= 1)
+            beatsPerBar = 2;
         this.beatsPerBar = beatsPerBar;
         clearCachedValues();
     }

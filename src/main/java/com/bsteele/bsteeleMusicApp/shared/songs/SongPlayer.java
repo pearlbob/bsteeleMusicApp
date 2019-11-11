@@ -83,6 +83,18 @@ public class SongPlayer {
         return momentNumber;
     }
 
+    public final int peekMomentNumberAt(double t) {
+        double tn = t - t0;
+        if (tn < 0)
+            return (int) Math.floor(tn / songBase.getDefaultTimePerBar());
+        int mn = songBase.getSongMomentNumberAtSongTime(tn);
+
+        if (skipFromNumber != null && mn == skipFromNumber) {
+            mn = skipToNumber;
+        }
+        return mn;
+    }
+
     /**
      * Assumes moment number has already been determined.
      *
