@@ -173,34 +173,43 @@ public class SongPlayMasterImpl
             stopSong();
     }
 
-    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber ) {
+    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber) {
         SongBase songBase = songOutUpdate.getSong();
-        int beatsPerBar = songBase.getBeatsPerBar();
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
-        {
+        SongMoment songMoment = songBase.getSongMoment(momentNumber);
+        if (songMoment == null)
+            return;
+        int beatsPerBar = songMoment.getMeasure().getBeatCount();
 
+        double start = songPlayer.getT0() + songMoment.getBeatNumber() * songBase.getSecondsPerBeat();
+        //logger.finer("drum: start: " + start + ", t: " + audioFilePlayer.getCurrentTime());
+        final double audioMargin = 0.002;
+        {
             String drum = drumSelection.getHighHat();
             if (drum != null && drum.length() > 0) {
-                int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
+                int divisionsPerBeat = drum.length() / songBase.getBeatsPerBar();   //  truncate by int division
                 int limit = divisionsPerBeat * beatsPerBar;
-                double drumbeatDuration = measureDuration / limit;
+                //logger.finest("divisionsPerBeat: " + divisionsPerBeat + ", limit: " + limit + ", len: " + drum.length());
+                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar()*divisionsPerBeat);
+                //logger.finer("drum: "+drum+", drumbeatDivisionDuration: " + drumbeatDivisionDuration);
                 String highHat = highHat1;
 
                 for (int b = 0; b < limit; b++) {
                     switch (drum.charAt(b)) {
                         case 'x':
-                            audioFilePlayer.play(highHat, nextMeasureStart + b * drumbeatDuration,
-                                    drumbeatDuration - 0.002);
+                            audioFilePlayer.play(highHat, start + b * drumbeatDivisionDuration,
+                                    drumbeatDivisionDuration - audioMargin);
+                            //logger.finer("b at: "+(start + b * drumbeatDivisionDuration));
                             highHat = highHat3;
                             break;
                         case 'X':
-                            audioFilePlayer.play(highHat1, nextMeasureStart + b * drumbeatDuration,
-                                    swing * drumbeatDuration - 0.002);
-                            highHat = highHat3;
+                            audioFilePlayer.play(highHat1, start + b * drumbeatDivisionDuration,
+                                    swing * drumbeatDivisionDuration - audioMargin);
+                            highHat = highHat1;
                             break;
                         case 's':
-                            audioFilePlayer.play(highHat, nextMeasureStart + (b + (swing - 1)) * drumbeatDuration,
-                                    (swing - 1) * drumbeatDuration - 0.002);
+                            audioFilePlayer.play(highHat, start + (b + (swing - 1)) * drumbeatDivisionDuration,
+                                    (swing - 1) * drumbeatDivisionDuration - audioMargin);
                             highHat = highHat3;
                             break;
                     }
@@ -210,16 +219,16 @@ public class SongPlayMasterImpl
         {
             String drum = drumSelection.getSnare();
             if (drum != null && drum.length() > 0) {
-                int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
+                int divisionsPerBeat = drum.length() / songBase.getBeatsPerBar();   //  truncate by int division
                 int limit = divisionsPerBeat * beatsPerBar;
-                double drumbeatDuration = measureDuration / limit;
+                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar()*divisionsPerBeat);
 
                 for (int b = 0; b < limit; b++) {
                     switch (drum.charAt(b)) {
                         case 'X':
                         case 'x':
-                            audioFilePlayer.play(snare, nextMeasureStart + b * drumbeatDuration,
-                                    drumbeatDuration - 0.002);
+                            audioFilePlayer.play(snare, nextMeasureStart + b * drumbeatDivisionDuration,
+                                    drumbeatDivisionDuration - 0.002);
                             break;
                     }
                 }
@@ -228,22 +237,21 @@ public class SongPlayMasterImpl
         {
             String drum = drumSelection.getKick();
             if (drum != null && drum.length() > 0) {
-                int divisionsPerBeat = drum.length() / beatsPerBar;   //  truncate by int division
+                int divisionsPerBeat = drum.length() / songBase.getBeatsPerBar();   //  truncate by int division
                 int limit = divisionsPerBeat * beatsPerBar;
-                double drumbeatDuration = measureDuration / limit;
+                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar()*divisionsPerBeat);
 
                 for (int b = 0; b < limit; b++) {
                     switch (drum.charAt(b)) {
                         case 'X':
                         case 'x':
-                            audioFilePlayer.play(kick, nextMeasureStart + b * drumbeatDuration,
-                                    drumbeatDuration - 0.002);
+                            audioFilePlayer.play(kick, nextMeasureStart + b * drumbeatDivisionDuration,
+                                    drumbeatDivisionDuration - 0.002);
                             break;
                     }
                 }
             }
         }
-        //logger.info("<" + drumSelection.toString());
     }
 
     @Override
@@ -328,7 +336,7 @@ public class SongPlayMasterImpl
         if (songMoment == null)
             return;
 
-        songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());
+        songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());//  fixme: this is wrong, current time should be calculated from existing t0
         songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
     }

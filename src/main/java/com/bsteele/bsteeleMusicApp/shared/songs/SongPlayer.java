@@ -20,7 +20,7 @@ public class SongPlayer {
      */
     public final void setMomentNumber(double t, int m) {
 
-        logger.fine("setMomentNumber() from " + momentNumber + " to " + m);
+        //logger.info("setMomentNumber() from " + momentNumber + " to " + m+" at "+t);
 
         t0 = t; //  default only
         if (m == 0) {
@@ -47,6 +47,7 @@ public class SongPlayer {
             momentNumber = m;
             t0 = t + Math.abs(momentNumber) * songBase.getDefaultTimePerBar();
         }
+        //logger.info("setMomentNumber() t0: " + t0);
     }
 
     /**
