@@ -126,6 +126,7 @@ public class LegacyDrumMeasure {
 
     public void setHighHat(String highHat) {
         this.highHat = (highHat == null ? "" : highHat);
+        isSilent = null;
     }
 
     public String getSnare() {
@@ -134,6 +135,7 @@ public class LegacyDrumMeasure {
 
     public void setSnare(String snare) {
         this.snare = (snare == null ? "" : snare);
+        isSilent = null;
     }
 
     public String getKick() {
@@ -142,10 +144,15 @@ public class LegacyDrumMeasure {
 
     public void setKick(String kick) {
         this.kick = (kick == null ? "" : kick);
+        isSilent = null;
     }
 
     public boolean isSilent() {
-        return !(highHat.matches(".*[xX].*") || snare.matches(".*[xX].*") || kick.matches(".*[xX].*"));
+        if (isSilent == null)
+            isSilent = !(highHat.matches(".*[xX].*")
+                    || snare.matches(".*[xX].*")
+                    || kick.matches(".*[xX].*"));
+        return isSilent;
     }
 
     @Override
@@ -156,4 +163,5 @@ public class LegacyDrumMeasure {
     private String highHat = "";
     private String snare = "";
     private String kick = "";
+    private Boolean isSilent;
 }

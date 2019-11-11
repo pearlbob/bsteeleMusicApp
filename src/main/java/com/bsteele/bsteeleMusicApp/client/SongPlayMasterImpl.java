@@ -101,9 +101,9 @@ public class SongPlayMasterImpl
                 int mn = songPlayer.peekMomentNumberAt(t);
                 int advanceMomentNumber = songPlayer.peekMomentNumberAt(t + songOutUpdate.getBeatDuration());
                 if (advanceMomentNumber != mn && advanceMomentNumber != lastAdvanceMomentNumber) {
-                    logger.finest("mn: " + mn + ", send next: " + advanceMomentNumber);
+                    //logger.info("mn: " + mn + ", send next: " + advanceMomentNumber);
                     lastAdvanceMomentNumber = advanceMomentNumber;
-                    beatTheDrums(defaultDrumSelection, advanceMomentNumber);
+                    beatTheDrums(defaultDrumSelection, advanceMomentNumber, songPlayer.getPeekMomentT0(advanceMomentNumber));
                 }
                 if (mn != lastMomentNumber) {
                     lastMomentNumber = mn;
@@ -178,7 +178,7 @@ public class SongPlayMasterImpl
             stopSong();
     }
 
-    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber) {
+    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber, double myT0 ) {
         if ( (drumSelection==null || drumSelection.isSilent()) && momentNumber < 0 ){
             drumSelection = countInDrumSelection;
         }
@@ -189,7 +189,7 @@ public class SongPlayMasterImpl
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
 
         int beatsPerBar = songBase.getBeatsPerBar();
-        double start = songPlayer.getT0() - systemAudioLatency;
+        double start = myT0 - systemAudioLatency;
 
         SongMoment songMoment = songBase.getSongMoment(momentNumber);
         if (songMoment != null) {
@@ -200,7 +200,7 @@ public class SongPlayMasterImpl
             start += momentNumber * beatsPerBar * songBase.getSecondsPerBeat();
         }
 
-        //logger.finer("drum: start: " + start + ", t: " + audioFilePlayer.getCurrentTime());
+        //logger.info("drum: start: " + start + ", t: " + audioFilePlayer.getCurrentTime());
         final double audioMargin = 0.002;
         {
             String drum = drumSelection.getHighHat();
@@ -320,7 +320,8 @@ public class SongPlayMasterImpl
 
         songOutUpdate.getSong().setBeatsPerMinute(songOutUpdate.getCurrentBeatsPerMinute());    //  fixme: should this be done here?
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
-        double t0 = audioFilePlayer.getCurrentTime();
+        double t0 = audioFilePlayer.getCurrentTime()
+                + 2 * songOutUpdate.getBeatDuration();  //  delay just enough to get the audio rolling
         int countIn = appOptions.isCountIn() ? -preRoll : -1;
         songOutUpdate.setMomentNumber(countIn);
         songPlayer = new SongPlayer(songOutUpdate.getSong());

@@ -59,6 +59,7 @@ public class SongPlayer {
         return momentNumber;
     }
 
+
     public boolean isDone() {
         return momentNumber == Integer.MAX_VALUE;
     }
@@ -94,6 +95,18 @@ public class SongPlayer {
             mn = skipToNumber;
         }
         return mn;
+    }
+
+    public final double getPeekMomentT0(int mn) {
+        if ( skipToNumber==null)
+            return t0;
+        //logger.info( "getPeekMomentT0: mn: "+mn+" vs "+skipFromNumber);
+        if (mn == skipToNumber) {
+            return t0 + (songBase.getSongMoment(skipFromNumber).getBeatNumber()
+                    - songBase.getSongMoment(skipToNumber).getBeatNumber())
+                    * songBase.getSecondsPerBeat();
+        }
+        return t0;
     }
 
     /**
