@@ -134,6 +134,11 @@ public class SongPlayMasterImpl
                                 (songPlayer == null ? 0 : songPlayer.getBeat(t)),
                                 (songPlayer == null ? 0 : songPlayer.getBeatFraction(t)),
                                 songOutUpdate.getMomentNumber()));
+//                        if (songPlayer != null)
+//                            logger.info("anim: " + t
+//                                    + ", "   + songPlayer.getBeatCount()
+//                                    + ", " + songPlayer.getBeat(t)
+//                                    + ", " + songPlayer.getBeatFraction(t));
                         break;
                     default:
                         //  distribute the animation time update locally
@@ -181,7 +186,8 @@ public class SongPlayMasterImpl
             return;
         int beatsPerBar = songMoment.getMeasure().getBeatCount();
 
-        double start = songPlayer.getT0() + songMoment.getBeatNumber() * songBase.getSecondsPerBeat();
+        double start = songPlayer.getT0() + songMoment.getBeatNumber() * songBase.getSecondsPerBeat()
+                - systemAudioLatency;
         //logger.finer("drum: start: " + start + ", t: " + audioFilePlayer.getCurrentTime());
         final double audioMargin = 0.002;
         {
@@ -190,7 +196,7 @@ public class SongPlayMasterImpl
                 int divisionsPerBeat = drum.length() / songBase.getBeatsPerBar();   //  truncate by int division
                 int limit = divisionsPerBeat * beatsPerBar;
                 //logger.finest("divisionsPerBeat: " + divisionsPerBeat + ", limit: " + limit + ", len: " + drum.length());
-                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar()*divisionsPerBeat);
+                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar() * divisionsPerBeat);
                 //logger.finer("drum: "+drum+", drumbeatDivisionDuration: " + drumbeatDivisionDuration);
                 String highHat = highHat1;
 
@@ -199,7 +205,7 @@ public class SongPlayMasterImpl
                         case 'x':
                             audioFilePlayer.play(highHat, start + b * drumbeatDivisionDuration,
                                     drumbeatDivisionDuration - audioMargin);
-                            //logger.finer("b at: "+(start + b * drumbeatDivisionDuration));
+                            //logger.info("b at: "+(start+ systemAudioLatency + b * drumbeatDivisionDuration));
                             highHat = highHat3;
                             break;
                         case 'X':
@@ -221,13 +227,13 @@ public class SongPlayMasterImpl
             if (drum != null && drum.length() > 0) {
                 int divisionsPerBeat = drum.length() / songBase.getBeatsPerBar();   //  truncate by int division
                 int limit = divisionsPerBeat * beatsPerBar;
-                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar()*divisionsPerBeat);
+                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar() * divisionsPerBeat);
 
                 for (int b = 0; b < limit; b++) {
                     switch (drum.charAt(b)) {
                         case 'X':
                         case 'x':
-                            audioFilePlayer.play(snare, nextMeasureStart + b * drumbeatDivisionDuration,
+                            audioFilePlayer.play(snare, start + b * drumbeatDivisionDuration,
                                     drumbeatDivisionDuration - 0.002);
                             break;
                     }
@@ -239,13 +245,13 @@ public class SongPlayMasterImpl
             if (drum != null && drum.length() > 0) {
                 int divisionsPerBeat = drum.length() / songBase.getBeatsPerBar();   //  truncate by int division
                 int limit = divisionsPerBeat * beatsPerBar;
-                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar()*divisionsPerBeat);
+                double drumbeatDivisionDuration = measureDuration / (songBase.getBeatsPerBar() * divisionsPerBeat);
 
                 for (int b = 0; b < limit; b++) {
                     switch (drum.charAt(b)) {
                         case 'X':
                         case 'x':
-                            audioFilePlayer.play(kick, nextMeasureStart + b * drumbeatDivisionDuration,
+                            audioFilePlayer.play(kick, start + b * drumbeatDivisionDuration,
                                     drumbeatDivisionDuration - 0.002);
                             break;
                     }
@@ -429,7 +435,8 @@ public class SongPlayMasterImpl
         audioFilePlayer.bufferFile(kick);
         audioFilePlayer.bufferFile(snare);
 
-        logger.info("Latency: " + audioFilePlayer.getBaseLatency()
+        systemAudioLatency = audioFilePlayer.getBaseLatency();
+        logger.fine("Latency: " + systemAudioLatency
                 + ", " + audioFilePlayer.getOutputLatency()
         );
 
@@ -462,8 +469,6 @@ public class SongPlayMasterImpl
     private AudioFilePlayer audioFilePlayer;
     private AnimationScheduler timer;
 
-    private double thisMeasureStart;
-    private double nextMeasureStart;
     private SongUpdate songOutUpdate = new SongUpdate();
     private SongUpdate.State requestedState = SongUpdate.State.idle;
     private SongUpdate.State state = SongUpdate.State.idle;
@@ -477,6 +482,7 @@ public class SongPlayMasterImpl
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;
     private double systemToAudioOffset;
+    private double systemAudioLatency;
     private static double pass = 0.95;
     private double lastSystemT;
     private static final Scheduler scheduler = Scheduler.get();
