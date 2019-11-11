@@ -179,15 +179,27 @@ public class SongPlayMasterImpl
     }
 
     private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber) {
+        if ( (drumSelection==null || drumSelection.isSilent()) && momentNumber < 0 ){
+            drumSelection = countInDrumSelection;
+        }
+        if ( drumSelection == null )
+            return;
+
         SongBase songBase = songOutUpdate.getSong();
         double measureDuration = songOutUpdate.getDefaultMeasureDuration();
-        SongMoment songMoment = songBase.getSongMoment(momentNumber);
-        if (songMoment == null)
-            return;
-        int beatsPerBar = songMoment.getMeasure().getBeatCount();
 
-        double start = songPlayer.getT0() + songMoment.getBeatNumber() * songBase.getSecondsPerBeat()
-                - systemAudioLatency;
+        int beatsPerBar = songBase.getBeatsPerBar();
+        double start = songPlayer.getT0() - systemAudioLatency;
+
+        SongMoment songMoment = songBase.getSongMoment(momentNumber);
+        if (songMoment != null) {
+            start += songMoment.getBeatNumber() * songBase.getSecondsPerBeat();
+            beatsPerBar = songMoment.getMeasure().getBeatCount();
+        } else {
+            //  typically count in
+            start += momentNumber * beatsPerBar * songBase.getSecondsPerBeat();
+        }
+
         //logger.finer("drum: start: " + start + ", t: " + audioFilePlayer.getCurrentTime());
         final double audioMargin = 0.002;
         {
@@ -442,6 +454,9 @@ public class SongPlayMasterImpl
 
         //  fixme: should wait for end of audio buffer loading
 
+        countInDrumSelection.setHighHat("_xxxxx");
+        countInDrumSelection.setKick("x_____");
+
         //  use the animation timer to pump commands to the audio
         timer = AnimationScheduler.get();
         timer.requestAnimationFrame(this);
@@ -473,6 +488,7 @@ public class SongPlayMasterImpl
     private SongUpdate.State requestedState = SongUpdate.State.idle;
     private SongUpdate.State state = SongUpdate.State.idle;
     private LegacyDrumMeasure defaultDrumSelection = new LegacyDrumMeasure();
+    private LegacyDrumMeasure countInDrumSelection = new LegacyDrumMeasure();
     private static final String highHat1 = "images/hihat3.mp3";
     private static final String highHat3 = "images/hihat1.mp3";
     private static final String kick = "images/kick_4513.mp3";
