@@ -86,6 +86,8 @@ public interface AppResources extends ClientBundle {
 
         String smallIntEntry();
 
+        String inline();
+
         String longEntryLine();
 
         String lyricsAClass();

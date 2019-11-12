@@ -12,13 +12,12 @@ public class ApplicationModule extends AbstractPresenterModule {
     protected void configure() {
 
         bind(SongPlayMaster.class).to(SongPlayMasterImpl.class).asEagerSingleton();
-        
+
         install(new LoginModule());
         install(new HomeModule());
         //install(new SongsModule());
 
         bindPresenter(ApplicationPresenter.class, ApplicationPresenter.MyView.class, ApplicationView.class,
                 ApplicationPresenter.MyProxy.class);
-
     }
 }

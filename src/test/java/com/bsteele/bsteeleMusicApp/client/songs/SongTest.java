@@ -113,20 +113,20 @@ public class SongTest
     public void testCompare() {
 
         Song aNull = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         Comparator<Song> comparator = Song.getComparatorByType(Song.ComparatorType.lastModifiedDate);
 
         Song bNull = Song.createSong("B", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
 
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         a.setLastModifiedTime(1520605228000.0);
         Song c = Song.createSong("C", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         c.setLastModifiedTime(1520605228000.0);
         Song b = Song.createSong("B", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         b.resetLastModifiedDateToNow();
 
         logger.fine("aNull == aNull");
@@ -173,15 +173,15 @@ public class SongTest
         Comparator<Song> comparator = Song.getComparatorByType(Song.ComparatorType.versionNumber);
 
         Song a = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         Song a1 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         a1.setFileName("a (1).songlyrics");
         Song a9 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
         a9.setFileName("a (9).songlyrics");
         Song a10 = Song.createSong("A", "bob", "bsteele.com", Key.getDefault(),
-                100, 4, 4, "v: A B C D", "v: bob, bob, Barbara Ann");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, Barbara Ann");
         a10.setFileName("a (10).songlyrics");
 
         assertTrue(comparator.compare(a, a) == 0);

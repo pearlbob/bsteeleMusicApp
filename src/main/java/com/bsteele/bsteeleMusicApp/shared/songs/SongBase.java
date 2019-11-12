@@ -357,7 +357,7 @@ public class SongBase {
     }
 
     public void setUser(String user) {
-        this.user = user;
+        this.user = (user == null || user.length() <= 0) ? defaultUser : user;
     }
 
     private enum UpperCaseState {
@@ -2397,6 +2397,7 @@ public class SongBase {
         return checkSong(getTitle(), getArtist(), getCopyright(),
                 getKey(), Integer.toString(getDefaultBpm()), Integer.toString(getBeatsPerBar()),
                 Integer.toString(getUnitsPerMeasure()),
+                getUser(),
                 toMarkup(), getRawLyrics());
     }
 
@@ -2418,6 +2419,7 @@ public class SongBase {
      */
     public static final Song checkSong(String title, String artist, String copyright,
                                        Key key, String bpmEntry, String beatsPerBarEntry, String unitsPerMeasureEntry,
+                                       String user,
                                        String chordsTextEntry, String lyricsTextEntry)
             throws ParseException {
         if (title == null || title.length() <= 0) {
@@ -2495,6 +2497,7 @@ public class SongBase {
 
         Song newSong = Song.createSong(title, artist,
                 copyright, key, bpm, beatsPerBar, unitsPerMeasure,
+                user,
                 chordsTextEntry, lyricsTextEntry);
         newSong.resetLastModifiedDateToNow();
 
@@ -2741,9 +2744,9 @@ public class SongBase {
      * @param bpm the defaultBpm to set
      */
     public final void setBeatsPerMinute(int bpm) {
-        if ( bpm < 20 )
+        if (bpm < 20)
             bpm = 20;
-        else if ( bpm > 1000 )
+        else if (bpm > 1000)
             bpm = 1000;
         this.defaultBpm = bpm;
     }
@@ -3350,7 +3353,8 @@ public class SongBase {
     private String title = "Unknown";
     private SongId songId = new SongId();
     private String artist = "Unknown";
-    private String user = "Unknown";
+    private static final String defaultUser = "Unknown";
+    private String user = defaultUser;
     private String coverArtist = "";
     private String copyright = "Unknown";
     private transient String fileName;

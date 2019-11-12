@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongRemoveEventHandler;
@@ -50,7 +51,6 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -122,6 +122,9 @@ public class SongEditView
 
     @UiField
     SelectElement timeSignatureEntry;
+
+    @UiField
+    Label userLabel;
 
     @UiField
     Button sectionI;
@@ -797,6 +800,7 @@ public class SongEditView
         setKey(song.getKey());
         bpmEntry.setText(Integer.toString(song.getDefaultBpm()));
         timeSignatureEntry.setValue(song.getBeatsPerBar() + "/" + song.getUnitsPerMeasure());
+        userLabel.setText(song.getUser());
         lyricsTextEntry.setValue(song.getLyricsAsString());
         findMostCommonScaleChords();
         displaySong();
@@ -1022,6 +1026,7 @@ public class SongEditView
             newSong = Song.checkSong(titleEntry.getText(), artistEntry.getText(),
                     copyrightEntry.getText(),
                     newKey, bpmEntry.getText(), beatsPerBar, unitsPerMeasure,
+                    GwtLocalStorage.instance().getUserName(),
                     song.toMarkup(), lyricsTextEntry.getValue());
             warn(newSong.getMessage());
             //  worry about the location spec changing after parsing above
@@ -1067,7 +1072,7 @@ public class SongEditView
         Song newSong = checkSong();
 
         if (newSong != null) {
-            newSong.setUser(localStorage.getItem("username"));
+            newSong.setUser(GwtLocalStorage.instance().getUserName());
             logger.fine(newSong.toJson());
             fireSongSubmission(newSong);
         }
@@ -1343,7 +1348,6 @@ public class SongEditView
     private static final Document document = Document.get();
     private static final String nbsp = "&nbsp;";
     private final EventBus eventBus;    //  is actually used
-    private Storage localStorage = Storage.getLocalStorageIfSupported();
 
     private static final Logger logger = Logger.getLogger(SongEditView.class.getName());
 //    static {

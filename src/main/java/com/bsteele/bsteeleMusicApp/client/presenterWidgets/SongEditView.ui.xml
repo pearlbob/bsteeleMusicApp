@@ -73,6 +73,8 @@
                                 <option value="4/4" selected="selected">4/4</option>
                                 <option value="6/8">6/8</option>
                             </select>
+                              From:
+                            <g:Label ui:field="userLabel" styleName="{resources.style.inline}">Unknown</g:Label>
                         </p>
                     </td>
                 </tr>
@@ -351,7 +353,7 @@
                         Note that if you double click the section type, the entire section will be
                         available on the entry line for modification.
                         If two sections have identical content, they will appear as multiple types for the
-                        single content.  Define a different section content for one of the multiple sections
+                        single content. Define a different section content for one of the multiple sections
                         and it will be separated from the others.
                     </li>
                     <li>Control plus the arrow keys can help navigate in the chord entry once selected.

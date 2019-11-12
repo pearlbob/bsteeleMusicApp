@@ -28,7 +28,7 @@ public class BassFile {
         //  this.song = song;
 
         this.song = Song.createSong("A", "bob", "bsteele.com", Key.G,
-                100, 4, 4, "v: A B C D", "v: bob, bob, bob berand");
+                100, 4, 4, "bob", "v: A B C D", "v: bob, bob, bob berand");
 
         int beatsPerBar = song.getBeatsPerBar();
 

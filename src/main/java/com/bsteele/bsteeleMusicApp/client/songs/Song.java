@@ -54,6 +54,7 @@ public class Song extends SongBase implements Comparable<Song> {
     public static final Song createEmptySong() {
         return createSong("", "",
                 "", Key.C, 100, 4, 4,
+                "",
                 "", "");
     }
 
@@ -74,6 +75,7 @@ public class Song extends SongBase implements Comparable<Song> {
     public static final Song createSong(@NotNull String title, @NotNull String artist,
                                         @NotNull String copyright,
                                         @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                        String user,
                                         @NotNull String chords, @NotNull String lyrics) {
         Song song = new Song();
         song.setTitle(title);
@@ -83,6 +85,7 @@ public class Song extends SongBase implements Comparable<Song> {
         song.setBeatsPerMinute(bpm);
         song.setBeatsPerBar(beatsPerBar);
         song.setUnitsPerMeasure(unitsPerMeasure);
+        song.setUser(user);
         try {
             song.parseChords(chords);
         } catch (ParseException pex) {
@@ -101,6 +104,7 @@ public class Song extends SongBase implements Comparable<Song> {
     public final Song copySong() {
         Song ret = createSong(getTitle(), getArtist(),
                 getCopyright(), getKey(), getBeatsPerMinute(), getBeatsPerBar(), getUnitsPerMeasure(),
+                getUser(),
                 toMarkup(), getLyricsAsString());
         ret.setFileName(getFileName());
         ret.setLastModifiedTime(getLastModifiedTime());

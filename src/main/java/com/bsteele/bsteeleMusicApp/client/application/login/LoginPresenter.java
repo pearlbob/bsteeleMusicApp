@@ -5,8 +5,8 @@ package com.bsteele.bsteeleMusicApp.client.application.login;
 
 import com.bsteele.bsteeleMusicApp.client.application.ApplicationPresenter;
 import com.bsteele.bsteeleMusicApp.client.application.CurrentUser;
+import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.bsteele.bsteeleMusicApp.client.place.NameTokens;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -87,10 +87,7 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
             return false;
         }
 
-        Storage localStorage = Storage.getLocalStorageIfSupported();
-        if (localStorage == null)
-            return false;
-        localStorage.setItem("username", username);
+        GwtLocalStorage.instance().setUserName(username);
         return true;  //  fixme!   username.equals(USERNAME) && password.equals(PASSWORD);
     }
 }

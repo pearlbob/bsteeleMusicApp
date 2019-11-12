@@ -1,17 +1,14 @@
 package com.bsteele.bsteeleMusicApp.client.application;
 
 import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
-import com.google.gwt.regexp.shared.MatchResult;
-import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.regexp.shared.SplitResult;
-import com.google.gwt.storage.client.Storage;
+import com.bsteele.bsteeleMusicApp.shared.util.LocalStorage;
 
 public class GWTAppOptions implements AppOptions.SaveCallback {
 
     //make the constructor private so that this class cannot be instantiated externally
     private GWTAppOptions() {
         if (localStorage != null) {
-            appOptions.fromJson(localStorage.getItem(storageKey));
+            appOptions.fromJson(localStorage.getAppOptions());
             appOptions.registerSaveCallback(this);
         }
     }
@@ -22,16 +19,14 @@ public class GWTAppOptions implements AppOptions.SaveCallback {
     }
 
     public void save() {
-        if (storageKey == null)
-            return;
-        localStorage.setItem(storageKey, appOptions.toJson());
+        localStorage.setAppOptions(appOptions.toJson());
     }
 
-    private Storage localStorage = Storage.getLocalStorageIfSupported();
-    private final String storageKey = AppOptions.class.getSimpleName();     //  use name from super
+    private LocalStorage localStorage = GwtLocalStorage.instance();
 
     private static AppOptions appOptions = AppOptions.getInstance();
     private static GWTAppOptions instance = new GWTAppOptions();    //  singleton
+
 
     //  logger doesn't seem appropriate here  private static final Logger logger = Logger.getLogger(AppOptions.class.getName());
 }

@@ -1,10 +1,10 @@
 
 package com.bsteele.bsteeleMusicApp.client.application.login;
 
+import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.storage.client.Storage;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -39,9 +39,7 @@ public class LoginView extends ViewWithUiHandlers<LoginUiHandlers> implements Lo
 
         username.addAttachHandler(this);
 
-        Storage localStorage = Storage.getLocalStorageIfSupported();
-
-        String name = localStorage.getItem("username");
+        String name = GwtLocalStorage.instance().getUserName();
         if (name != null  && name.length() > 0)
             username.setText(name);
         else {
