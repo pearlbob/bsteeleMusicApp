@@ -118,13 +118,13 @@
                                     </g:Button>
                                     <g:Button ui:field="sectionO" styleName="{resources.style.lyricsOClass}">Outro
                                     </g:Button>
-                                    <g:Button ui:field="sectionA" styleName="{resources.style.lyricsOClass}">Section A
+                                    <g:Button ui:field="sectionA" styleName="{resources.style.lyricsAClass}">Section A
                                     </g:Button>
-                                    <g:Button ui:field="sectionB" styleName="{resources.style.lyricsOClass}">Section B
+                                    <g:Button ui:field="sectionB" styleName="{resources.style.lyricsBClass}">Section B
                                     </g:Button>
-                                    <g:Button ui:field="sectionCo" styleName="{resources.style.lyricsOClass}">Coda
+                                    <g:Button ui:field="sectionCo" styleName="{resources.style.lyricsCoClass}">Coda
                                     </g:Button>
-                                    <g:Button ui:field="sectionT" styleName="{resources.style.lyricsOClass}">Tag
+                                    <g:Button ui:field="sectionT" styleName="{resources.style.lyricsTClass}">Tag
                                     </g:Button>
                                 </td>
                             </tr>

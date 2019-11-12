@@ -8,6 +8,7 @@ import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
+import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
@@ -248,6 +249,62 @@ public class PlayerViewImpl
             songPlayMaster.playSongOffsetRowNumber(d);
 
             logger.finer("playerTopCover.addMouseWheelHandler: " + handler.getDeltaY());
+        });
+        playerTopCover.addClickHandler((clickEvent) -> {
+            if (song == null || playerFlexTable == null)
+                return;
+
+            int y = clickEvent.getY() + playerTopCover.getAbsoluteTop();
+
+            FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
+            int rowLimit = playerFlexTable.getRowCount();
+            int foundRow = rowLimit-1;  //  worst case
+            for (int r = 0; r < rowLimit; r++) {
+                Element e = flexCellFormatter.getElement(r, 0);
+                //logger.info("playerTopCover y: " + y +": "+ r + ": " + e.getAbsoluteTop() + " to " + e.getAbsoluteBottom());
+                if ( y <= e.getAbsoluteBottom()) {
+                    foundRow = r;
+                    break;
+                }
+            }
+            logger.info("foundRow: " + foundRow);
+
+            SongMoment songMoment = song.getSongMomentAtRow(foundRow);
+            if (songMoment != null) {
+                songMoment = song.getFirstSongMomentInSection(songMoment.getMomentNumber());
+                if (songMoment != null) {
+                    if (songPlayMaster != null) {
+                        Element element;
+                        GridCoordinate coordinate;
+
+                        //  from location
+                        SongMoment fromMoment = song.getLastSongMomentInSection(songPlayMaster.getMomentNumber());
+                        if (fromMoment == null)
+                            jumpSectionFromY = 0;
+                        else {
+                            int fromMomentNumber = (fromMoment != null ? fromMoment.getMomentNumber() : 0);
+                            coordinate = song.getMomentGridCoordinate(fromMomentNumber);
+                            element = flexCellFormatter.getElement(coordinate.getRow(), coordinate.getCol());
+                            jumpSectionFromY = element.getAbsoluteBottom() - playerBackgroundCanvas.getAbsoluteTop();
+                        }
+
+                        //  to location
+                        coordinate = song.getMomentGridCoordinate(songMoment.getMomentNumber());
+                        element = flexCellFormatter.getElement(coordinate.getRow(), coordinate.getCol());
+                        jumpSectionToY = element.getAbsoluteTop() - playerBackgroundCanvas.getAbsoluteTop();
+
+                        //  width
+                        element = flexCellFormatter.getElement(coordinate.getRow(),
+                                playerFlexTable.getCellCount(coordinate.getRow()) - 1);
+                        jumpSectionMaxX = element.getAbsoluteLeft();
+
+                        logger.fine("jumpSectionToY: " + jumpSectionToY);
+
+                        jumpMomentNumber = songPlayMaster.jumpSectionToFirstSongMomentInSection(songMoment.getMomentNumber());
+                    }
+                }
+            }
+
         });
     }
 
@@ -673,57 +730,8 @@ public class PlayerViewImpl
             if (playerFlexTable != null)
                 playerFlexTable.removeFromParent();
             playerFlexTable = flexTable;
+            playerFlexTable.setStyleName(AppResources.INSTANCE.style().chordTable());
             player.add(flexTable);
-
-            playerFlexTable.addClickHandler(clickEvent -> {
-                logger.fine("singleClick");
-                if (song == null || playerFlexTable == null)
-                    return;
-
-                HTMLTable.Cell cell = playerFlexTable.getCellForEvent(clickEvent);
-                if (cell == null)
-                    return;
-
-                SongMoment songMoment = song.getSongMomentAtRow(cell.getRowIndex());
-                if (songMoment != null) {
-                    songMoment = song.getFirstSongMomentInSection(songMoment.getMomentNumber());
-                    if (songMoment != null) {
-                        logger.fine("click: (" + cell.getCellIndex() + ", " + cell.getRowIndex() + ") " + songMoment.toString());
-                        if (songPlayMaster != null) {
-                            Element element;
-                            GridCoordinate coordinate;
-                            FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
-
-                            //  from location
-                            SongMoment fromMoment = song.getLastSongMomentInSection(songPlayMaster.getMomentNumber());
-                            if (fromMoment == null)
-                                jumpSectionFromY = 0;
-                            else {
-                                int fromMomentNumber = (fromMoment != null ? fromMoment.getMomentNumber() : 0);
-                                coordinate = song.getMomentGridCoordinate(fromMomentNumber);
-                                element = flexCellFormatter.getElement(coordinate.getRow(), coordinate.getCol());
-                                jumpSectionFromY = element.getAbsoluteBottom() - playerBackgroundCanvas.getAbsoluteTop();
-                            }
-
-                            //  to location
-                            coordinate = song.getMomentGridCoordinate(songMoment.getMomentNumber());
-                            element = flexCellFormatter.getElement(coordinate.getRow(), coordinate.getCol());
-                            jumpSectionToY = element.getAbsoluteTop() - playerBackgroundCanvas.getAbsoluteTop();
-
-                            //  width
-                            element = flexCellFormatter.getElement(coordinate.getRow(),
-                                    playerFlexTable.getCellCount(coordinate.getRow()) - 1);
-                            jumpSectionMaxX = element.getAbsoluteLeft();
-
-                            logger.fine("jumpSectionToY: " + jumpSectionToY);
-
-                            jumpMomentNumber = songPlayMaster.jumpSectionToFirstSongMomentInSection(songMoment.getMomentNumber());
-                        }
-                    }
-                }
-//                Element e = cell.getElement();
-//                renderHorizontalLineAt((e.getAbsoluteTop() + e.getAbsoluteBottom()) / 2 - playerBackgroundCanvas.getAbsoluteTop());
-            });
         }
     }
 

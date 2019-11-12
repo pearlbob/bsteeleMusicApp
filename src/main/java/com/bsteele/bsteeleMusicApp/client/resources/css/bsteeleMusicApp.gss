@@ -110,7 +110,7 @@ iframe {
 .sectionAClass,
 .lyricsAClass
  {
-  background-color: #f5ebcd;
+  background-color: #f5e6b8;
 }
 
 .sectionBrClass,
@@ -175,6 +175,12 @@ iframe {
     width: 100%;
 }
 
+.songTitle
+{
+    font-size: 32px;
+    font-weight: bold;
+}
+
 table {
     margin: 5px;
     border-spacing: 12px;
@@ -184,26 +190,19 @@ th, td {
     padding: 2px;
 }
 
-.songTitle
-{
-    font-size: 32px;
-    font-weight: bold;
-}
 
 table.songList,
 table.lyricsTable {
     border-bottom: 1px solid black;
 }
 
-table.chordTable  {
-    border-spacing: 10px;
+.chordTable  {
+    border-spacing: 14px;
 }
-table th.chordTable, 
-table td.chordTable {
-    border-right: 1px solid black;
-    border-collapse: separate;
-    border-spacing: 4px;
-    font-size: 44px;
+.chordTable th,
+.chordTable td {
+    /*border-right: 2px solid black;*/
+    padding: 10px;
 }
 .sectionLabel
 {
@@ -317,6 +316,5 @@ td[editSelect=append] {
 /*  css for top cover over the slider, in absolute panel   */
 .playTopCover {
        z-index:1;
-       pointer-events: none;
        }
 
