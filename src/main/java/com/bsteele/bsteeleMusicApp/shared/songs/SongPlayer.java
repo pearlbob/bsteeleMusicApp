@@ -98,15 +98,14 @@ public class SongPlayer {
     }
 
     public final double getPeekMomentT0(int mn) {
-        if ( skipToNumber==null)
+        if (skipToNumber == null || mn != skipToNumber)
             return t0;
-        //logger.info( "getPeekMomentT0: mn: "+mn+" vs "+skipFromNumber);
-        if (mn == skipToNumber) {
-            return t0 + (songBase.getSongMoment(skipFromNumber).getBeatNumber()
-                    - songBase.getSongMoment(skipToNumber).getBeatNumber())
-                    * songBase.getSecondsPerBeat();
-        }
-        return t0;
+
+        int beatsToEnd = (skipFromNumber != Integer.MAX_VALUE
+                ? songBase.getSongMoment(skipFromNumber).getBeatNumber()
+                //  special case for last measure of song
+                : songBase.getTotalBeats());
+        return t0 + (beatsToEnd - songBase.getSongMoment(skipToNumber).getBeatNumber()) * songBase.getSecondsPerBeat();
     }
 
     /**
@@ -140,8 +139,14 @@ public class SongPlayer {
     }
 
     public final int jumpSectionToFirstSongMomentInSection(int to) {
+        //  figure out where we're skipping from
         SongMoment songMoment = songBase.getLastSongMomentInSection(momentNumber);
         skipFromNumber = (songMoment == null ? 0 : songMoment.getMomentNumber() + 1);
+
+        //  deal with repeat of last section
+        if (skipFromNumber >= songBase.getSongMomentsSize())
+            skipFromNumber = Integer.MAX_VALUE;
+
         songMoment = songBase.getFirstSongMomentInSection(to);
         if (songMoment != null)
             skipToNumber = songMoment.getMomentNumber();

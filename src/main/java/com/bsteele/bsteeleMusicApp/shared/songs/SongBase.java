@@ -2987,7 +2987,7 @@ public class SongBase {
 
         computeSongMoments();
         if (songBeat >= beatsToMoment.size())
-            return Integer.MAX_VALUE;       //  we're done with this song play
+            return Integer.MAX_VALUE;       //  we're done with the last measure of this song play
 
         return beatsToMoment.get(songBeat).getMomentNumber();
     }

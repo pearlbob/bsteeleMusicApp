@@ -211,7 +211,7 @@ public class SongPlayerTest {
             );
 
             for (int skip = 0; skip < a.getSongMomentsSize(); skip++) {
-                logger.fine("bpm: "+bpm+", skip: "+skip);
+
 
 //                //  find section transitions
 //                TreeSet<SongMoment> firstSongMomentsInSection = new TreeSet<>();
@@ -226,8 +226,7 @@ public class SongPlayerTest {
                 SongPlayer songPlayer = new SongPlayer(a);
 
                 int lastMomentNumber = -2;
-                double secondsPerBeat = 60.0 / bpm;
-                double t = 10.8; // lastMomentNumber * beatsPerBar * secondsPerBeat;
+                double t = 10.8;
                 songPlayer.setMomentNumber(t, lastMomentNumber);
 
                 int limit = (int) (
@@ -261,9 +260,9 @@ public class SongPlayerTest {
                     SongMoment songMoment = a.getSongMoment(momentNumber);
                     if (songMoment != null) {
                         //songMoment.getChordSectionLocation();
-                        if (skipTrigger > 0 && songMoment.getMomentNumber() >= skipTrigger) {
+                        if (skipTrigger >= 0 && songMoment.getMomentNumber() >= skipTrigger) {
                             songPlayer.jumpSectionToFirstSongMomentInSection(skipTrigger);
-                            skipTrigger = 0;
+                            skipTrigger = Integer.MIN_VALUE;
                         }
                     }
 
@@ -288,16 +287,23 @@ public class SongPlayerTest {
                 {
                     SongMoment firstSongMomentInSection = a.getFirstSongMomentInSection(skip);
                     SongMoment lastSongMomentInSection = a.getLastSongMomentInSection(skip);
+                    int dups = 0;
                     for (int i : momentCounts.keySet()) {
+                        if (i < 0)
+                            continue;
                         int count = momentCounts.get(i);
+                        logger.finest("count: " + i + " " + count);
                         if (count > 1) {
+                            dups++;
                             logger.finer("dup: " + i + " " + count);
                             assertTrue(i >= firstSongMomentInSection.getMomentNumber());
                             assertTrue(i <= lastSongMomentInSection.getMomentNumber());
                         }
                     }
+                    logger.fine("bpm: " + bpm + ", skip: " + skip + ", dups: " + dups);
+                    assertTrue(dups >= 4);
                 }
-                logger.fine("t: " + t);
+                logger.finer("t: " + t);
             }
         }
     }
