@@ -456,7 +456,7 @@ public class SongPlayMasterImpl
 
         //  fixme: should wait for end of audio buffer loading
 
-        countInDrumSelection.setHighHat("_xxxxx");
+        countInDrumSelection.setHighHat("xxxxxx");
         countInDrumSelection.setKick("x_____");
 
         //  use the animation timer to pump commands to the audio
