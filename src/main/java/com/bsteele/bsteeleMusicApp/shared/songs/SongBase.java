@@ -60,6 +60,46 @@ public class SongBase {
     }
 
     /**
+     * A convenience constructor used to enforce the minimum requirements for a song.
+     *
+     * @param title
+     * @param artist
+     * @param copyright
+     * @param key
+     * @param bpm
+     * @param beatsPerBar
+     * @param unitsPerMeasure
+     * @param chords
+     * @param lyricsToParse
+     * @return
+     * @throws ParseException parse exception
+     */
+    static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
+                                         @NotNull String copyright,
+                                         @NotNull Key key, int bpm, int beatsPerBar, int unitsPerMeasure,
+                                         @NotNull String chords, @NotNull String lyricsToParse)
+            throws ParseException {
+        SongBase song = new SongBase();
+        song.setTitle(title);
+        song.setArtist(artist);
+        song.setCopyright(copyright);
+        song.setKey(key);
+        song.setUnitsPerMeasure(unitsPerMeasure);
+        try {
+            song.parseChords(chords);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            throw new ParseException("chord parse error", 0);
+        }
+        song.setRawLyrics(lyricsToParse);
+
+        song.setBeatsPerMinute(bpm);
+        song.setBeatsPerBar(beatsPerBar);
+
+        return song;
+    }
+
+    /**
      * Compute the song moments list given the song's current state.
      * Moments are the temporal sequence of measures as the song is to be played.
      * All repeats are expanded.  Measure node such as comments,
@@ -493,6 +533,7 @@ public class SongBase {
      */
     protected final void parseChords(final String chords)
             throws ParseException {
+        this.chords = chords;   //  safety only
         measureNodes = new ArrayList<>();
         chordSectionMap = new HashMap<>();
         clearCachedValues();  //  force lazy eval
@@ -531,6 +572,7 @@ public class SongBase {
                     throw pex;
                 }
             }
+            this.chords = chordsToJsonTransportString();
         }
 
         setDefaultCurrentChordLocation();
@@ -1973,7 +2015,7 @@ public class SongBase {
         String rowEnd = "</td></tr>\n";
         String tableEnd = "</table>\n";
 
-        String lyrics = ""; //  table formatted
+        String htmlLyrics = ""; //  table formatted
         int state = 0;
         int sectionIndex = 0;
         boolean isSection = false;
@@ -1996,10 +2038,10 @@ public class SongBase {
                         SectionVersion version = SectionVersion.parse(markedString);
                         isSection = true;
 
-                        if (lyrics.length() > 0) {
-                            lyrics += rowEnd;
+                        if (htmlLyrics.length() > 0) {
+                            htmlLyrics += rowEnd;
                         }
-                        lyrics += rowStart + version.toString()
+                        htmlLyrics += rowStart + version.toString()
                                 + "</td><td class=\"" + CssConstants.style + "lyrics" + version.getSection()
                                 .getAbbreviation() + "Class\""
                                 + ">";
@@ -2021,21 +2063,21 @@ public class SongBase {
                             break;
                         case '\n':
                         case '\r':
-                            lyrics += c;
+                            htmlLyrics += c;
                             whiteSpace = ""; //  ignore trailing white space
                             state = 0;
                             break;
                         default:
                             if (!isSection) {
                                 //  deal with bad formatting
-                                lyrics += rowStart
+                                htmlLyrics += rowStart
                                         + Section.getDefaultVersion().toString()
                                         + "</td><td class=\"" + CssConstants.style + "lyrics"
                                         + Section.getDefaultVersion().getSection().getAbbreviation() + "Class\""
                                         + ">";
                                 isSection = true;
                             }
-                            lyrics += whiteSpace + c;
+                            htmlLyrics += whiteSpace + c;
                             whiteSpace = "";
                             break;
                     }
@@ -2044,18 +2086,18 @@ public class SongBase {
             markedString.consume(1);     //  consume parsed character
         }
 
-        lyrics = tableStart
-                + lyrics
+        htmlLyrics = tableStart
+                + htmlLyrics
                 + rowEnd
                 + tableEnd;
-        //GWT.log(lyrics);
-        return lyrics;
+        //GWT.log(htmlLyrics);
+        return htmlLyrics;
     }
 
     private final void parseLyrics() {
         int state = 0;
         String whiteSpace = "";
-        StringBuilder lyrics = new StringBuilder();
+        StringBuilder lyricsBuilder = new StringBuilder();
         LyricSection lyricSection = null;
 
         lyricSections = new ArrayList<>();
@@ -2104,13 +2146,13 @@ public class SongBase {
                                 lyricSection = new LyricSection();
                                 lyricSection.setSectionVersion(Section.getDefaultVersion());
                             }
-                            lyricSection.add(new LyricsLine(lyrics.toString()));
-                            lyrics = new StringBuilder();
+                            lyricSection.add(new LyricsLine(lyricsBuilder.toString()));
+                            lyricsBuilder = new StringBuilder();
                             whiteSpace = ""; //  ignore trailing white space
                             state = 0;
                             break;
                         default:
-                            lyrics.append(whiteSpace).append(c);
+                            lyricsBuilder.append(whiteSpace).append(c);
                             whiteSpace = "";
                             break;
                     }
@@ -2121,7 +2163,7 @@ public class SongBase {
         }
         //  last one is not terminated by another section
         if (lyricSection != null)
-            lyricSection.add(new LyricsLine(lyrics.toString()));
+            lyricSection.add(new LyricsLine(lyricsBuilder.toString()));
         lyricSections.add(lyricSection);
 
         //  safety with lazy eval
@@ -2410,6 +2452,7 @@ public class SongBase {
      * @param key                  the song's musical key
      * @param bpmEntry             the song's number of beats per minute
      * @param beatsPerBarEntry     the song's default number of beats per par
+     * @param user                 the app user's name
      * @param unitsPerMeasureEntry the inverse of the note duration fraction per entry, for exmple if each beat is
      *                             represented by a quarter note, the units per measure would be 4.
      * @param chordsTextEntry      the string transport form of the song's chord sequence description
@@ -3363,8 +3406,10 @@ public class SongBase {
     private int defaultBpm = 106;  //  beats per minute
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature numerator
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature denominator
+    private String timeSignature = unitsPerMeasure + "/" + beatsPerBar;//   fixme: doesn't update!!!!
     private transient double duration;    //  units of seconds
     private transient int totalBeats;
+    private String chords = "";
     private ArrayList<LyricSection> lyricSections = new ArrayList<>();
     private transient HashMap<SectionVersion, ChordSection> chordSectionMap = new HashMap<>();
     private transient HashMap<SectionVersion, GridCoordinate> chordSectionGridCoorinateMap = new HashMap<>();

@@ -68,6 +68,7 @@ public class Song extends SongBase implements Comparable<Song> {
      * @param bpm             bpm
      * @param beatsPerBar     beatsPerBar
      * @param unitsPerMeasure unitsPerMeasure
+     * @param user            the app user's name
      * @param chords          chords
      * @param lyrics          lyrics
      * @return the song created
