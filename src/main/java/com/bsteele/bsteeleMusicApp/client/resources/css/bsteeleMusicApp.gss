@@ -322,3 +322,7 @@ td[editSelect=append] {
     display: inline;
 }
 
+.focusPanel {
+    outline-color: rgba(0, 0, 0, 0.0);
+}
+

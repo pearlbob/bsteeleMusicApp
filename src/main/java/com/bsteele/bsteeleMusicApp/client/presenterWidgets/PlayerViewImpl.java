@@ -28,14 +28,15 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
@@ -51,7 +52,11 @@ import java.util.logging.Logger;
  */
 public class PlayerViewImpl
         extends CommonPlayViewImpl
-        implements PlayerPresenterWidget.MyView {
+        implements AttachEvent.Handler,
+        PlayerPresenterWidget.MyView {
+
+    @UiField
+    FocusPanel playerFocusPanel;
 
     @UiField
     Button playStopButton;
@@ -157,7 +162,7 @@ public class PlayerViewImpl
         currentBpmEntry.addKeyPressHandler(handler -> {
             switch (handler.getCharCode()) {
                 default:
-                    logger.info("bpm key: " + handler.getCharCode());
+                    logger.fine("bpm key: " + handler.getCharCode());
                     break;
                 case KeyCodes.KEY_UP:
                 case KeyCodes.KEY_RIGHT:
@@ -177,11 +182,6 @@ public class PlayerViewImpl
                         logger.info("bad BPM: <" + currentBpmEntry.getValue() + ">");
                     }
                     break;
-
-//                case KeyCodes.KEY_SPACE:
-//                    handler.preventDefault();
-//                    tapToTempo();
-//                    break;
             }
         });
 
@@ -201,7 +201,7 @@ public class PlayerViewImpl
 
         playStatusLabel.setVisible(false);
 
-        playerTopCover.addKeyDownHandler(handler -> {
+        playerFocusPanel.addKeyDownHandler(handler -> {
             if (songUpdate == null || song == null)
                 return;     //  defense
 
@@ -228,7 +228,7 @@ public class PlayerViewImpl
                             processSpaceKey(handler.isControlKeyDown());
                             break;
                         default:
-                            logger.info("playerTopCover.addKeyDownHandler: " + Integer.toString(handler.getNativeKeyCode()));
+                            logger.info("playerFocusPanel.addKeyDownHandler: " + Integer.toString(handler.getNativeKeyCode()));
                             break;
                     }
                     break;
@@ -254,15 +254,17 @@ public class PlayerViewImpl
             if (song == null || playerFlexTable == null)
                 return;
 
+            playerFocusPanel.setFocus(true);
+
             int y = clickEvent.getY() + playerTopCover.getAbsoluteTop();
 
             FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
             int rowLimit = playerFlexTable.getRowCount();
-            int foundRow = rowLimit-1;  //  worst case
+            int foundRow = rowLimit - 1;  //  worst case
             for (int r = 0; r < rowLimit; r++) {
                 Element e = flexCellFormatter.getElement(r, 0);
                 //logger.info("playerTopCover y: " + y +": "+ r + ": " + e.getAbsoluteTop() + " to " + e.getAbsoluteBottom());
-                if ( y <= e.getAbsoluteBottom()) {
+                if (y <= e.getAbsoluteBottom()) {
                     foundRow = r;
                     break;
                 }
@@ -308,6 +310,11 @@ public class PlayerViewImpl
         });
     }
 
+    @Override
+    public void onAttachOrDetach(AttachEvent event) {
+        playerFocusPanel.setFocus(true);
+    }
+
     private void processSpaceKey(boolean isControlKeyDown) {
         logger.finer("space");
         if (isControlKeyDown)
@@ -329,7 +336,7 @@ public class PlayerViewImpl
                 tapCount++;
             smoothedBPM = smoothedBPM * (1 - smoothedBPMPass) + filteredBPM * smoothedBPMPass;
 
-            logger.finer("tapToTempo(): " + delta / 1000 + " s = " + smoothedBPM + " bpm  (" + filteredBPM + "), count: " + tapCount);
+            logger.info("tapToTempo(): " + delta / 1000 + " s = " + smoothedBPM + " bpm  (" + filteredBPM + "), count: " + tapCount);
             if (tapCount >= 5)
                 currentBpmEntry.setValue(Integer.toString((int) smoothedBPM));
         }
@@ -353,7 +360,6 @@ public class PlayerViewImpl
                     songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
                     songUpdateCopy.setCurrentKey(currentKey);
                     songPlayMaster.playSongUpdate(songUpdateCopy);
-                    playerTopCover.setFocus(true);
                     break;
             }
         }
@@ -369,6 +375,8 @@ public class PlayerViewImpl
 
         if (!isActive)
             return;
+
+        playerFocusPanel.setFocus(true);
 
         labelPlayStop();
 
@@ -432,6 +440,7 @@ public class PlayerViewImpl
                     @Override
                     public void execute() {
                         resetScrollForLineAt(0);
+                        playerFocusPanel.setFocus(true);
                     }
                 });
         }
@@ -673,6 +682,7 @@ public class PlayerViewImpl
         if (isActive) {
             lastKey = null;    //  force update
             onSongUpdate(songUpdate);
+            playerFocusPanel.setFocus(true);
         }
     }
 

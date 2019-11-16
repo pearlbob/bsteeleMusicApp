@@ -117,6 +117,8 @@ public interface AppResources extends ClientBundle {
         String playChordsForeground();
 
         String playTopCover();
+
+        String focusPanel();
     }
 
     @Source("css/bsteeleMusicApp.gss")

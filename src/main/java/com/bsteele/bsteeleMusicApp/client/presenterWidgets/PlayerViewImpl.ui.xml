@@ -8,8 +8,14 @@
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
     <g:DockLayoutPanel unit="PX">
+        <g:south size='3'>
+            <!-- hide a focus panel on the bottom   -->
+            <g:FocusPanel ui:field="playerFocusPanel" styleName="{resources.style.focusPanel}">
+            </g:FocusPanel>
+        </g:south>
         <g:north size='120'>
             <g:HTMLPanel>
+
                 <g:Button ui:field="playStopButton">Play</g:Button>
                 Key:
                 <span ui:field="keyLabel"/>
@@ -66,7 +72,8 @@
                           title="Click for previous song in filtered song list.">&#x25C0;
                 </g:Button>
                 <br/>
-                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250" style="display: inline-block; margin: 10px;"
+                <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250"
+                        style="display: inline-block; margin: 10px;"
                         title="Beat display of audio.">
                     Your browser does not support the HTML5 canvas tag.
                 </canvas>
@@ -108,5 +115,6 @@
 
         </g:center>
     </g:DockLayoutPanel>
+
 
 </ui:UiBinder>
