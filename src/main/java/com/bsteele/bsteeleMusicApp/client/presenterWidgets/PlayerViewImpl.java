@@ -72,9 +72,10 @@ public class PlayerViewImpl
 
     @UiField
     TextBox currentBpmEntry;
-
     @UiField
-    SelectElement bpmSelect;
+    Button bpmUpButton;
+    @UiField
+    Button bpmDownButton;
 
     @UiField
     SpanElement timeSignature;
@@ -149,6 +150,18 @@ public class PlayerViewImpl
 
         keyUpButton.addClickHandler((ClickEvent event) -> stepCurrentKey(+1));
         keyDownButton.addClickHandler((ClickEvent event) -> stepCurrentKey(-1));
+        bpmUpButton.addClickHandler((ClickEvent event) -> {
+            stepCurrentBpm(+1);
+            syncCurrentBpm(getCurrentBpm());
+            updateCountIn();
+            playerFocusPanel.setFocus(true);
+        });
+        bpmDownButton.addClickHandler((ClickEvent event) -> {
+            stepCurrentBpm(-1);
+            syncCurrentBpm(getCurrentBpm());
+            updateCountIn();
+            playerFocusPanel.setFocus(true);
+        });
 
 
         //currentBpmEntry.setTitle("Hint: Click the text entry then tap the space bar at the desired rate.");
@@ -157,6 +170,7 @@ public class PlayerViewImpl
                 setCurrentBpm(currentBpmEntry.getValue());
             } catch (NumberFormatException nfe) {
                 logger.info("bad BPM: <" + currentBpmEntry.getValue() + ">");
+                playerFocusPanel.setFocus(true);
             }
         });
         currentBpmEntry.addKeyPressHandler(handler -> {
@@ -182,14 +196,6 @@ public class PlayerViewImpl
                         logger.info("bad BPM: <" + currentBpmEntry.getValue() + ">");
                     }
                     break;
-            }
-        });
-
-        Event.sinkEvents(bpmSelect, Event.ONCHANGE);
-        Event.setEventListener(bpmSelect, (Event event) -> {
-            if (Event.ONCHANGE == event.getTypeInt()) {
-                setCurrentBpm(bpmSelect.getValue());
-                currentBpmEntry.setValue(Integer.toString(getCurrentBpm()));
             }
         });
 
@@ -336,8 +342,8 @@ public class PlayerViewImpl
                 tapCount++;
             smoothedBPM = smoothedBPM * (1 - smoothedBPMPass) + filteredBPM * smoothedBPMPass;
 
-            logger.info("tapToTempo(): " + delta / 1000 + " s = " + smoothedBPM + " bpm  (" + filteredBPM + "), count: " + tapCount);
-            if (tapCount >= 5)
+            logger.fine("tapToTempo(): " + delta / 1000 + " s = " + smoothedBPM + " bpm  (" + filteredBPM + "), count: " + tapCount);
+            if (tapCount >= 3)
                 currentBpmEntry.setValue(Integer.toString((int) smoothedBPM));
         }
         lastTap = tap;
@@ -499,10 +505,14 @@ public class PlayerViewImpl
         keyUpButton.setEnabled(enable);
         keyDownButton.setEnabled(enable);
         currentBpmEntry.setEnabled(enable);
-        bpmSelect.setDisabled(!enable);
 
         nextSongButton.setEnabled(enable);
         prevSongButton.setEnabled(enable);
+
+        if (enable) {
+            bpmUpButton.setEnabled(enable);
+            bpmDownButton.setEnabled(enable);
+        }
     }
 
     private void syncCurrentKey(Key key) {
@@ -510,8 +520,8 @@ public class PlayerViewImpl
     }
 
     private void syncCurrentBpm(int bpm) {
+        setCurrentBpm(bpm);
         currentBpmEntry.setValue(Integer.toString(bpm));
-        bpmSelect.setSelectedIndex(0);
     }
 
     private void labelPlayStop() // fixme: rename
@@ -634,6 +644,11 @@ public class PlayerViewImpl
                         playStatusLabel.setText(status);
                         logger.finer(status);
                         lastStatus = status;
+                    }
+
+                    if (songPlayMaster.getMomentNumber() == 0) {
+                        bpmUpButton.setEnabled(false);
+                        bpmDownButton.setEnabled(false);
                     }
                     break;
             }
@@ -822,6 +837,21 @@ public class PlayerViewImpl
             logger.finer("lastScrollLineY: " + lastScrollLineY + " to " + lastVerticalScrollPosition);
         }
     }
+
+    private void updateCountIn() {
+        switch (songUpdate.getState()) {
+            case playing:
+                if (songPlayMaster.getMomentNumber() < 0) {
+                    SongUpdate songUpdateCopy = new SongUpdate();
+                    songUpdateCopy.setSong(song.copySong());
+                    songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                    songUpdateCopy.setCurrentKey(currentKey);
+                    songPlayMaster.playSongUpdate(songUpdateCopy);
+                }
+                break;
+        }
+    }
+
 
     private AudioBeatDisplay audioBeatDisplay;
 

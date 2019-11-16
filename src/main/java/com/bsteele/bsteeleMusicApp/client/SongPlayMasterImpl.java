@@ -178,11 +178,13 @@ public class SongPlayMasterImpl
             stopSong();
     }
 
-    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber, double myT0 ) {
-        if ( (drumSelection==null || drumSelection.isSilent()) && momentNumber < 0 ){
+    private void beatTheDrums(LegacyDrumMeasure drumSelection, int momentNumber, double myT0) {
+        if (momentNumber < 0 && !appOptions.isCountIn())
+            return;
+        if ((drumSelection == null || drumSelection.isSilent()) && momentNumber < 0) {
             drumSelection = countInDrumSelection;
         }
-        if ( drumSelection == null )
+        if (drumSelection == null)
             return;
 
         SongBase songBase = songOutUpdate.getSong();
@@ -319,9 +321,8 @@ public class SongPlayMasterImpl
         songOutUpdate = songUpdate;
 
         songOutUpdate.getSong().setBeatsPerMinute(songOutUpdate.getCurrentBeatsPerMinute());    //  fixme: should this be done here?
-        double measureDuration = songOutUpdate.getDefaultMeasureDuration();
         double t0 = audioFilePlayer.getCurrentTime()
-                + 2 * songOutUpdate.getBeatDuration();  //  delay just enough to get the audio rolling
+                + 1 * songOutUpdate.getBeatDuration();  //  delay just enough to get the audio rolling
         int countIn = appOptions.isCountIn() ? -preRoll : -1;
         songOutUpdate.setMomentNumber(countIn);
         songPlayer = new SongPlayer(songOutUpdate.getSong());
@@ -495,7 +496,7 @@ public class SongPlayMasterImpl
     private static final String kick = "images/kick_4513.mp3";
     private static final String snare = "images/snare_4405.mp3";
     private static final double swing = 1.5;
-    private static final int preRoll = 3;
+    private static final int preRoll = 4;
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;
     private double systemToAudioOffset;

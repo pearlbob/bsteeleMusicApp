@@ -70,6 +70,16 @@ class CommonPlayViewImpl
         setCurrentKey(Key.getKeyByHalfStep(key.getHalfStep() + halfStep));
     }
 
+
+    protected void stepCurrentBpm(int step) {
+        if (step == 0)
+            return;
+        int bpm = getCurrentBpm() + step;
+        setCurrentBpm(bpm < MusicConstant.minBpm
+                ? MusicConstant.minBpm
+                : (bpm > MusicConstant.maxBpm ? MusicConstant.maxBpm : bpm));
+    }
+
     protected void setCurrentBpm(String bpm) throws NumberFormatException {
         if (bpm == null)
             throw new NumberFormatException("BPM count missing");
@@ -77,10 +87,7 @@ class CommonPlayViewImpl
     }
 
     protected void setCurrentBpm(int bpm) {
-        if (currentBpm != bpm) {
-            currentBpm = bpm;
-            issueSongUpdate();
-        }
+        currentBpm = bpm;
     }
 
     protected int getCurrentBpm() {
@@ -132,9 +139,9 @@ class CommonPlayViewImpl
     protected static final String anchorUrlStart = "https://www.youtube.com/results?search_query=";
 
     protected double smoothedBPM = (MusicConstant.minBpm + MusicConstant.maxBpm) / 2;
-    private static int currentBpm  = (MusicConstant.minBpm + MusicConstant.maxBpm) / 2;
+    private static int currentBpm = (MusicConstant.minBpm + MusicConstant.maxBpm) / 2;
     protected final double smoothedBPMPass = 0.15;
-    protected  int  tapCount = 0;
+    protected int tapCount = 0;
     protected double lastTap = 0;
 
     private int lastScrollPosition = 0;
