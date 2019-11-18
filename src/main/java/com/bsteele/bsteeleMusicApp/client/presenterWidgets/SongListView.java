@@ -3,6 +3,7 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongReadEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
@@ -15,6 +16,7 @@ import com.bsteele.bsteeleMusicApp.client.songs.SongFile;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.util.ClientFileIO;
 import com.bsteele.bsteeleMusicApp.client.util.CssConstants;
+import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
 import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.core.client.JsDate;
 import com.google.gwt.core.client.Scheduler;
@@ -262,6 +264,14 @@ public class SongListView
             Song oldSong = allSongs.floor(song);
             if (oldSong.equals(song))
                 return false;
+            if (appOptions.isAlwaysUseTheNewestSongOnRead()) {
+                if (song.getLastModifiedTime() > oldSong.getLastModifiedTime())
+                    return false;
+                else {
+                    allSongs.remove(oldSong);  //  remove any prior version
+                    return allSongs.add(song);
+                }
+            }
 //            if (!force && Song.compareByVersionNumber(oldSong, song) > 0) {
 //                message = "song parse: \"" + song.toString() + "\" cannot replace: \"" + oldSong.toString() + "\"";
 //                popupOver(message, oldSong, song);
@@ -532,6 +542,7 @@ public class SongListView
     private Comparator<Song> songComparator = Song.getComparatorByType(Song.ComparatorType.title);
     private int songListScrollOffset = 0;
     private int gridHeight;
+    private static final AppOptions appOptions = GWTAppOptions.getInstance();
     private static final Scheduler scheduler = Scheduler.get();
 
     private static final Song[] emptySongArray = new Song[0];

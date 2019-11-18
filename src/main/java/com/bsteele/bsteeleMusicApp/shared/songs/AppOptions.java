@@ -3,7 +3,6 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
-import com.google.gwt.storage.client.Storage;
 
 public class AppOptions {
 
@@ -72,7 +71,8 @@ public class AppOptions {
         sb.append("\"playWithMeasureIndicator\": \"" + playWithMeasureIndicator + "\", ");
         sb.append("\"playWithBouncingBall\": \"" + playWithBouncingBall + "\", ");
         sb.append("\"playWithMeasureLabel\": \"" + playWithMeasureLabel + "\", ");
-        sb.append("\"debug\": \"" + debug + "\"");      //  no comma at end
+        sb.append("\"debug\": \"" + debug + "\",");
+        sb.append("\"alwaysUseTheNewestSongOnRead\": \"" + alwaysUseTheNewestSongOnRead + "\"");      //  no comma at end
         sb.append(" ]");
         return sb.toString();
     }
@@ -118,6 +118,9 @@ public class AppOptions {
                         case "debug":
                             setDebug(Boolean.parseBoolean(mr.getGroup(2)));
                             break;
+                        case "alwaysUseTheNewestSongOnRead":
+                            setAlwaysUseTheNewestSongOnRead(Boolean.parseBoolean(mr.getGroup(2)));
+                            break;
                     }
                 }
             }
@@ -143,6 +146,7 @@ public class AppOptions {
         hash = (83 * hash + Boolean.valueOf(playWithBouncingBall).hashCode()) % (1 << 31);
         hash = (83 * hash + Boolean.valueOf(playWithMeasureLabel).hashCode()) % (1 << 31);
         hash = (83 * hash + Boolean.valueOf(debug).hashCode()) % (1 << 31);
+        hash = (83 * hash + Boolean.valueOf(alwaysUseTheNewestSongOnRead).hashCode()) % (1 << 31);
         return hash;
     }
 
@@ -166,6 +170,15 @@ public class AppOptions {
         save();
     }
 
+    public boolean isAlwaysUseTheNewestSongOnRead() {
+        return alwaysUseTheNewestSongOnRead;
+    }
+
+    public void setAlwaysUseTheNewestSongOnRead(boolean alwaysUseTheNewestSongOnRead) {
+        this.alwaysUseTheNewestSongOnRead = alwaysUseTheNewestSongOnRead;
+        save();
+    }
+
     public interface SaveCallback {
         void save();
     }
@@ -178,6 +191,7 @@ public class AppOptions {
     private boolean playWithBouncingBall = true;
     private boolean playWithMeasureLabel = true;
     private boolean debug = false;
+    private boolean alwaysUseTheNewestSongOnRead = false;
 
     //  logger doesn't seem appropriate here  private static final Logger logger = Logger.getLogger(AppOptions.class.getName());
 }

@@ -88,6 +88,10 @@
                                                    name="playWithMeasureLabel">Play with measure display
                                     </g:CheckBox>
                                     <br/>
+                                    <g:CheckBox ui:field="alwaysUseTheNewestSongOnReadLabel"
+                                                name="alwaysUseTheNewestSongOnReadLabel">Always use the newest song on a file read
+                                    </g:CheckBox>
+                                    <br/>
                                     <g:CheckBox ui:field="debug" name="debug">debug</g:CheckBox>
                                     <br/>
                                     <g:Button ui:field="showAllScales">Show all scales</g:Button>

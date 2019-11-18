@@ -80,6 +80,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     CheckBox playWithBouncingBall;
     @UiField
     CheckBox playWithMeasureLabel;
+    @UiField
+    CheckBox alwaysUseTheNewestSongOnReadLabel;
 
     @UiField
     CheckBox debug;
@@ -246,6 +248,11 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         playWithMeasureLabel.addClickHandler((ClickEvent e) -> {
             appOptions.setPlayWithMeasureLabel(!appOptions.isPlayWithMeasureLabel());
             playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
+        });
+        alwaysUseTheNewestSongOnReadLabel.setValue(appOptions.isAlwaysUseTheNewestSongOnRead());
+        alwaysUseTheNewestSongOnReadLabel.addClickHandler((ClickEvent e) -> {
+            appOptions.setAlwaysUseTheNewestSongOnRead(!appOptions.isAlwaysUseTheNewestSongOnRead());
+            alwaysUseTheNewestSongOnReadLabel.setValue(appOptions.isAlwaysUseTheNewestSongOnRead());
         });
         debug.setValue(appOptions.isDebug());
         debug.addClickHandler((ClickEvent e) -> {
