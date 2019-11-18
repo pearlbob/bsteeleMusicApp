@@ -8,9 +8,9 @@
 <module rename-to='bsteelemusicapp'>
   <!-- Inherit our applications main module.                      -->
   <inherits name='com.bsteele.bsteeleMusicApp.BSteeleMusicApp'/>
-  
-<!--  <source path='client'/>
-  <source path='shared'/>-->
+
+  <!--  <source path='client'/>
+    <source path='shared'/>-->
 
   <!-- Specify the path to any remote services.                   -->
   <!--<servlet path="/bsteeleMusicApp/greet" class="com.bsteele.bsteeleMusicApp.server.GreetingServiceImpl" />-->

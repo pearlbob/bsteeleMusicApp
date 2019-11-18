@@ -2736,9 +2736,13 @@ public class SongBase {
     }
 
     private final void computeSongId() {
-        songId = new SongId("Song_" + title.replaceAll("\\W+", "")
+        songId = computeSongId(title, artist, coverArtist);
+    }
+
+    public static final SongId computeSongId(String title, String artist, String coverArtist) {
+        return new SongId("Song_" + title.replaceAll("\\W+", "")
                 + "_by_" + artist.replaceAll("\\W+", "")
-                + (coverArtist == null ? "" : "_coverBy_" + coverArtist));
+                + (coverArtist == null || coverArtist.length() <= 0 ? "" : "_coverBy_" + coverArtist));
     }
 
     /**

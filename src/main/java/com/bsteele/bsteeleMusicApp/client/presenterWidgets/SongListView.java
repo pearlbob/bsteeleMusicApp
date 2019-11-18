@@ -240,7 +240,6 @@ public class SongListView
         saveSongAs("allSongs_" + fmt.format(now) + ".songlyrics", data);
     }
 
-
     /**
      * Native function to write the song as JSON.
      *
