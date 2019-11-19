@@ -3358,13 +3358,25 @@ public class SongBase {
             return false;
         if (unitsPerMeasure != o.unitsPerMeasure)
             return false;
+        if (beatsPerBar != o.beatsPerBar)
+            return false;
         if (!toMarkup().equals(o.toMarkup()))
             return false;
         if (!rawLyrics.equals(o.rawLyrics))
             return false;
         if (!metadata.equals(o.metadata))
             return false;
+        if (lastModifiedTime != o.lastModifiedTime)
+            return false;
+
+        //  hmm, think about these
+        if (fileName != o.fileName)
+            return false;
+        if (fileVersionNumber != o.fileVersionNumber)
+            return false;
+
         return true;
+
     }
 
     @Override
@@ -3397,19 +3409,27 @@ public class SongBase {
         return hash;
     }
 
+    //  primary values
     private String title = "Unknown";
-    private SongId songId = new SongId();
     private String artist = "Unknown";
-    private static final String defaultUser = "Unknown";
     private String user = defaultUser;
     private String coverArtist = "";
     private String copyright = "Unknown";
-    private transient String fileName;
-    private transient int fileVersionNumber = 0;
     private Key key = Key.C;  //  default
     private int defaultBpm = 106;  //  beats per minute
     private int unitsPerMeasure = 4;//  units per measure, i.e. timeSignature numerator
     private int beatsPerBar = 4;  //  beats per bar, i.e. timeSignature denominator
+    private double lastModifiedTime;
+    private String rawLyrics = "";
+
+    //  meta data
+    private transient String fileName;
+
+    //  deprecated values
+    private transient int fileVersionNumber = 0;
+
+    //  computed values
+    private SongId songId = new SongId();
     private String timeSignature = unitsPerMeasure + "/" + beatsPerBar;//   fixme: doesn't update!!!!
     private transient double duration;    //  units of seconds
     private transient int totalBeats;
@@ -3423,11 +3443,9 @@ public class SongBase {
 
     private transient HashMap<GridCoordinate, ChordSectionLocation> gridCoordinateChordSectionLocationMap = new HashMap<>();
     private transient HashMap<ChordSectionLocation, GridCoordinate> gridChordSectionLocationCoordinateMap = new HashMap<>();
-
     private transient HashMap<SongMoment, GridCoordinate> songMomentGridCoordinateHashMap = new HashMap<>();
     private transient HashMap<SectionVersion, Integer> chordSectionBeats = new HashMap<>();
     private transient HashMap<SectionVersion, Integer> chordSectionRows = new HashMap<>();
-
 
     private ChordSectionLocation currentChordSectionLocation;
     private MeasureEditType currentMeasureEditType = MeasureEditType.append;
@@ -3439,13 +3457,12 @@ public class SongBase {
     private HashMap<Integer, SongMoment> beatsToMoment = new HashMap<>();
 
     private ArrayList<MeasureNode> measureNodes = new ArrayList<>();
-    private String rawLyrics = "";
+
     private LegacyDrumSection drumSection = new LegacyDrumSection();
     private Arrangement drumArrangement;    //  default
     private TreeSet<Metadata> metadata = new TreeSet<>();
     private static final AppOptions appOptions = AppOptions.getInstance();
-
-    private double lastModifiedTime;
+    private static final String defaultUser = "Unknown";
 
     private static final Logger logger = Logger.getLogger(SongBase.class.getName());
 

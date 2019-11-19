@@ -97,7 +97,11 @@ public class SongTest
                     logger.finest("song1 compares to 2 ");
                     logger.fine("song1 equals 2?: " + song2.toJson());
                     assertTrue(song1.equals(song2));
-                    logger.finest("song1 equals to 2 ");
+
+                    logger.fine(song.getSongId()+" song1 .markup equals to 2?");
+                    assertTrue(song1.toMarkup().equals(song2.toMarkup()));
+                    logger.fine("song.markup equals to 2?");
+                    assertTrue(song.getRawLyrics().equals(song2.getRawLyrics()));
                 }
             }
         }
