@@ -419,6 +419,11 @@ public class SongBase {
         UpperCaseState state = UpperCaseState.initial;
         for (int i = 0; i < entry.length(); i++) {
             char c = entry.charAt(i);
+
+            //  ignore newlines!
+            if( c == '\n')
+                continue;
+
             switch (state) {
                 case flatIsPossible:
                     if (c == 'b') {
@@ -428,7 +433,7 @@ public class SongBase {
                     }
                     //  fall through
                 case initial:
-                    if (c >= 'a' && c <= 'g') {
+                    if ((c >= 'A' && c <= 'G')||(c >= 'a' && c <= 'g')) {
                         if (i < entry.length() - 1) {
                             char sf = entry.charAt(i + 1);
                             switch (sf) {

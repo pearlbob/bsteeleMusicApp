@@ -15,8 +15,7 @@ public class MusicConstant {
     public static final char naturalChar = '\u266E';
     public static final char sharpChar = '\u266F';
     public static final char greekCapitalDelta = '\u0394';
-    public static final char whiteBullet = '\u25e6';
-    public static final char diminishedCircle = whiteBullet;
+    public static final char diminishedCircle = '\u00BA';
 
     public static final String flatHtml = "&#9837;";
     public static final String naturalHtml = "&#9838;";

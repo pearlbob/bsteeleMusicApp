@@ -37,11 +37,22 @@ public class ScaleChordTest extends TestCase {
 
                 assertEquals(sn, sc.getScaleNote());
 
-                for (ChordDescriptor cd : ChordDescriptor.values()) {
+                s = sn.toString() + "º";
+                sc = ScaleChord.parse(s);
+                assertEquals(sn, sc.getScaleNote());
+                assertEquals(ChordDescriptor.diminished, sc.getChordDescriptor());
+
+                s = sn.toString() + "º7";
+                sc = ScaleChord.parse(s);
+                assertEquals(sn, sc.getScaleNote());
+                assertEquals(ChordDescriptor.diminished7, sc.getChordDescriptor());
+
+               for (ChordDescriptor cd : ChordDescriptor.values()) {
                     s = sn.toString() + cd.getShortName();
                     sc = ScaleChord.parse(s);
                     assertEquals(sn, sc.getScaleNote());
-                    assertEquals(cd, sc.getChordDescriptor());
+                    ChordDescriptor chordDescriptor = sc.getChordDescriptor();
+                    assertEquals(cd.deAlias(), chordDescriptor);
 
                     s = sn.toString() + cd.getShortName();
                     sc = ScaleChord.parse(s);
@@ -50,7 +61,7 @@ public class ScaleChordTest extends TestCase {
 
                     assertEquals(sc, builtScaleChord);
                     assertEquals(sn, sc.getScaleNote());
-                    assertEquals(cd, sc.getChordDescriptor());
+                    assertEquals(cd.deAlias(), sc.getChordDescriptor());
 
                     ArrayList<ScaleChord> scaleChords = new ArrayList<>();
                     scaleChords.add(builtScaleChord);

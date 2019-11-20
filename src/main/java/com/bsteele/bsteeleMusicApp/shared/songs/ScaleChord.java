@@ -21,14 +21,14 @@ public class ScaleChord implements Comparable<ScaleChord> {
     public ScaleChord(@NotNull ScaleNote scaleNote,
                       @NotNull ChordDescriptor chordDescriptor) {
         this.scaleNote = scaleNote;
-        this.chordDescriptor = chordDescriptor;
+        this.chordDescriptor = chordDescriptor.deAlias();
     }
 
     private ScaleChord(@NotNull ScaleNote scaleNote,
                        @NotNull ChordDescriptor chordDescriptor,
                        int parseLength) {
         this.scaleNote = scaleNote;
-        this.chordDescriptor = chordDescriptor;
+        this.chordDescriptor = chordDescriptor.deAlias();;
     }
 
     public ScaleChord(@NotNull ScaleNote scaleNote) {

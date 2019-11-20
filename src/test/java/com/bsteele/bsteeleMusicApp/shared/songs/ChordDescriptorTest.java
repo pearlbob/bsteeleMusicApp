@@ -14,6 +14,8 @@ public class ChordDescriptorTest extends TestCase
 
     @Test
     public void testParse() {
+        assertEquals(ChordDescriptor.major7, ChordDescriptor.parse(""+MusicConstant.greekCapitalDelta));
+        assertEquals(ChordDescriptor.diminished, ChordDescriptor.parse(""+MusicConstant.diminishedCircle));
         assertEquals(ChordDescriptor.major, ChordDescriptor.parse(""));
         assertEquals(ChordDescriptor.minor, ChordDescriptor.parse("m"));
         assertEquals(ChordDescriptor.dominant7, ChordDescriptor.parse("7"));

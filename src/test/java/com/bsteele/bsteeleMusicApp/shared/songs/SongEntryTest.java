@@ -94,20 +94,22 @@ public class SongEntryTest
                         String actual = SongBase.entryToUppercase(m.toMarkup().toLowerCase());
 
                         //  fix the cheap hack from above
-                        if (chordDescriptor.toString().contains("M"))
+                        String cdString = chordDescriptor.deAlias().toString();
+                        if (cdString.contains("mmaj") || cdString.contains("maj"))
+                            ;       //  leave as is
+                        else if (cdString.contains("M"))
                             actual = actual.replace("m", "M");
-                        if (chordDescriptor.toString().contains("Δ"))
-                            actual = actual.replace("δ", "Δ");
-                        if (chordDescriptor.toString().contains("add9"))
+                        if (cdString.contains("add9"))
                             actual = actual.replace("Add9", "add9");
-                        if (chordDescriptor.toString().contains("flat5"))
+                        if (cdString.contains("flat5"))
                             actual = actual.replace("Flat5", "flat5");
-                        if (chordDescriptor.toString().contains("dim"))
+                        if (cdString.contains("dim"))
                             actual = actual.replace("Dim", "dim");
-                        if (chordDescriptor.toString().contains("aug"))
+                        if (cdString.contains("aug"))
                             actual = actual.replace("Aug", "aug");
 
-
+                        //if ( !m.toMarkup().equals(actual))
+                        //    System.out.println("here");
                         assertEquals(m.toMarkup(), actual);
                     }
                 }
@@ -261,6 +263,89 @@ public class SongEntryTest
 //        testMarkupString("V: A B C D, B C PC: D E F F♯,  C: [G D C G ] x3  ");
 //        testMarkupString("V: A B C D, [G D C G ] x3  ");
 //        testMarkupString("V: A B C D, [G D C G ] x3 D E F G,  ");
+    }
+
+    @Test
+    public void testAllChordsMarkupString() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+
+        assertEquals("A7#5", SongBase.entryToUppercase("A7#5"));
+        assertEquals("A7#5", SongBase.entryToUppercase("a7#5"));
+        assertEquals("Aº7", SongBase.entryToUppercase("aº7"));
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                generateAllChordsVerse(false),
+                "v: bob, bob, bob berand\n");
+        String chords = a.toMarkup();
+        logger.fine("a: " + chords);
+        SongBase b = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                chords.replaceAll("\n",""),
+                "v: bob, bob, bob berand\n");
+        logger.fine("b: " + b.toMarkup());
+        SongBase c = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "v:",
+                "v: bob, bob, bob berand\n");
+        //  enter measures to song c
+        ArrayList<MeasureNode> measureNodes =
+                c.parseChordEntry(SongBase.entryToUppercase(generateAllChordsVerse(true)
+                        //  a tougher test without commas, expects the default behavior is to add commas for 4 measure rows
+                        .replaceAll(",","")
+                ));
+                //c.parseChordEntry(SongBase.entryToUppercase(temp));
+        logger.fine( "measureNodes.size(): "+measureNodes.size());
+        for (MeasureNode measureNode : measureNodes) {
+            logger.finer( "  +"+measureNode.toMarkup());
+            assertTrue(c.edit(measureNode));
+        }
+        logger.fine("c: " + c.toMarkup());
+
+        assertTrue(a.toMarkup().equals(b.toMarkup()));
+        assertTrue(a.toMarkup().equals(c.toMarkup()));
+
+        assertTrue(a.equals(b));
+        assertTrue(a.equals(c));
+    }
+
+    private String generateAllChordsVerse(boolean lowerCase) {
+        StringBuilder sb = new StringBuilder("V: ");
+
+        int i = 0;
+        for (ScaleNote sn : ScaleNote.values()) {
+            if (sn == ScaleNote.X)
+                continue;
+
+            for (ChordDescriptor cd : ChordDescriptor.values()) {
+                sb.append(" ");
+                if (lowerCase) {
+                    sb.append(sn.toString().toLowerCase());
+                    switch (cd) {
+                        default:
+                            sb.append(cd.getShortName()//.toLowerCase()
+                            );
+                            break;
+                        //  chord descriptors that only work properly when capitalized
+                        case majorNine:
+                        case majorSeven:
+                            sb.append(cd.getShortName());
+                            break;
+                    }
+                } else {
+                    sb.append(sn.toString()).append(cd.getShortName());
+                }
+                if (++i > 3) {
+                    i = 0;
+                    sb.append(",\n");
+                }
+            }
+            break;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+        }
+        logger.finer("gen: " + sb.toString());
+        return sb.toString();
     }
 
     private static Logger logger = Logger.getLogger(SongEntryTest.class.getName());

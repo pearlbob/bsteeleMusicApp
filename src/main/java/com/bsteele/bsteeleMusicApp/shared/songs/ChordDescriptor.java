@@ -26,7 +26,7 @@ public enum ChordDescriptor {
     maug("maug", "R m3 3 #5"),
     dominant13("13", "R 3 5 m7 9 11 13"),
     dominant11("11", "R 3 5 m7 9 11"),
-    mmaj7("mmaj7","R m3 5 7"),
+    mmaj7("mmaj7", "R m3 5 7"),
     minor7b5("m7b5", "R m3 b5 m7"),
     msus2("msus2", "R 2 m3 5"),
     msus4("msus4", "R m3 4 5"),
@@ -41,10 +41,9 @@ public enum ChordDescriptor {
     six9("69", "R 2 3 5 6"),
     major6("6", "R 3 5 6"),
     diminished7("dim7", "R m3 b5 6"),
-    dimMasculineOrdinalIndicator7("º7", "R m3 b5 6"),
-    diminishedAsCircle("" + MusicConstant.diminishedCircle, "R m3 b5"),
+    dimMasculineOrdinalIndicator7("º7", "R m3 b5 6", diminished7),
     diminished("dim", "R m3 b5"),
-
+    diminishedAsCircle("" + MusicConstant.diminishedCircle, "R m3 b5", diminished),
 
     augmented5("aug5", "R 3 #5"),
     augmented7("aug7", "R 3 #5 m7"),
@@ -57,11 +56,13 @@ public enum ChordDescriptor {
     minor11("m11", "R m3 5 m7 11"),
     minor13("m13", "R m3 5 m7 13"),
     minor6("m6", "R m3 5 6"),
-    capMajor7("Maj7", "R 3 5 7"),
+
     major7("maj7", "R 3 5 7"),
+    deltaMajor7(""+MusicConstant.greekCapitalDelta, "R 3 5 7", major7),
+    capMajor7("Maj7", "R 3 5 7", major7),
+
     major9("maj9", "R 3 5 7 9"),
     maj("maj", "R 3 5"),
-    major7asDelta("" + MusicConstant.greekCapitalDelta, "R 3 5 7"),
     majorNine("M9", "R 3 5 7 9"),
     majorSeven("M7", "R 3 5 7"),
     suspendedSecond("2", "R 2 5"),     //  alias for  suspended2
@@ -71,7 +72,7 @@ public enum ChordDescriptor {
     dominant7("7", "R 3 5 m7"),
     minor("m", "R m3 5"),
     capMajor("M", "R 3 5"),
-    dimMasculineOrdinalIndicator("º", "R m3 b5"),
+    dimMasculineOrdinalIndicator("º", "R m3 b5", diminished),
 
     /**
      * Default chord descriptor.
@@ -81,6 +82,12 @@ public enum ChordDescriptor {
     ChordDescriptor(String shortName, String structure) {
         this.shortName = shortName;
         this.chordComponents = ChordComponent.parse(structure);
+    }
+
+    ChordDescriptor(String shortName, String structure, ChordDescriptor alias) {
+        this.shortName = shortName;
+        this.chordComponents = ChordComponent.parse(structure);
+        this.alias = alias;
     }
 
     static final ChordDescriptor parse(String s) {
@@ -93,21 +100,14 @@ public enum ChordDescriptor {
      * @param markedString the string buffer to parse
      * @return the matching chord descriptor
      */
-     static final ChordDescriptor parse(MarkedString markedString) {
+    static final ChordDescriptor parse(MarkedString markedString) {
         if (markedString != null && !markedString.isEmpty()) {
-            //  special for major7 thanks to John Coltrane
-//            if (s.charAt(0) == MusicConstant.greekCapitalDelta) {
-//                return ChordDescriptor.major7;
-//            }
-
-//            if (s.charAt(0) == MusicConstant.diminishedCircle)
-//                return ChordDescriptor.diminished;
-            final int maxLength = 25;  //  arbitrary cutoff
-            String match = markedString.remainingStringLimited( maxLength);
+            final int maxLength = 10;  //  arbitrary cutoff, larger than the max shortname
+            String match = markedString.remainingStringLimited(maxLength);
             for (ChordDescriptor cd : ChordDescriptor.values()) {
                 if (cd.getShortName().length() > 0 && match.startsWith(cd.getShortName())) {
-                    markedString.consume( cd.getShortName().length());
-                    return cd;
+                    markedString.consume(cd.getShortName().length());
+                    return cd.deAlias();
                 }
             }
         }
@@ -171,9 +171,16 @@ public enum ChordDescriptor {
         return chordComponents;
     }
 
+    public final ChordDescriptor deAlias(){
+        if ( alias!= null)
+            return alias;
+        return this;
+    }
 
     private String shortName;
     private final TreeSet<ChordComponent> chordComponents;
+    private ChordDescriptor alias = null;
+
     private static final ChordDescriptor[] primaryChordDescriptorsOrdered = {
             //  most common
             major,
@@ -259,5 +266,4 @@ public enum ChordDescriptor {
         }
         allChordDescriptorsOrdered = list.toArray(new ChordDescriptor[0]);
     }
-
 }
