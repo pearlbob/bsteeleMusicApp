@@ -248,14 +248,19 @@
                         The available section buttons will enter the correct abbreviation.
                         Section types can be followed with a digit to indicate a variation.
                     </li>
-                    <li>Chords must be in upper case! If they are not, the app will try to guess
+                    <li>Sections with the same content will automatically be placed in the same declaration.
+                        Row commas are not significant in the difference  i.e. commas don't create a difference.
+                    </li>
+                    <li>Chords ultimately must be in upper case. If they are not on entry, the app will try to guess
                         the capitalization for your input and place it on the line below the test entry box.
-                        What you see in the lower text will be what will be entered into the edit.
-                        Note that often the partial chord descriptor will be considered a comment, i.e. will be placed
-                        in parenthesis.
-                        When the entry is correct, the characters will be removed from the comment and will be
+                        What you see in the text below the entry box will be what will be entered into the edit.
+                        Note that often as you type, parts of a partial chord entry will be considered a comment,
+                        i.e. will be placed in parenthesis in the text below.
+                        When the chord entry is correct, the characters will be removed from the comment and will be
                         returned to their correct position in the entry.
-                        A capital X (X) is used to indicate no chord.
+                    </li>
+                    <li>
+                        A capital X is used to indicate no chord.
                     </li>
                     <li>Using a lower case b for a flat will work. A sharp sign (#) works as a sharp.</li>
                     <li>Notice that this can get problematic around the lower case b. Should the entry "bbm7"
@@ -311,32 +316,18 @@
                         m,
                         M and more.
                         And of course the major chord is assumed if there is no modifier!
-                        See the "Other chords" selection above.
+                        See the "Other chords" selection above or the "Show all chords" section of the Options tab.
                     </li>
                     <li>Spaces between chords indicate a new measure. Chords without spaces are within one
                         measure.
-                    </li>
-                    <li>Minus signs (-) can be used to indicate a repeated measure. It must have a space before
-                        and after it.
-                    </li>
-                    <li>Periods (.) can be used to repeat chords on another beat within the same meausure. For
-                        example,
-                        G..A would be three beats of G followed by one beat of A in the same measure.
-                    </li>
-                    <li>Commas (,) between measures can be used to indicate the end of a row of measures.
-                        The maximum number of measures allowed within a single row is 8.
-                        If there are no commas within a phrase of 8 or more measures, the phrase will
-                        automatically be split into rows of 4 measures.
                     </li>
                     <li>Forward slashes (/) can be used to indicate bass notes that differ from the chord.
                         For example A/G would mean a G for the bass, an A chord for the other instruments.
                         The bass note is a single note, not a chord.
                     </li>
-                    <li>
-                        Row repeats are indicated by a lower case x followed by a number 2 or more.
-                        Multiple rows can be repeated by placing an opening square bracket ([) in front of the
-                        first measure of the first row and a closing square bracket (]) after the last
-                        measure before the x and the digits.
+                    <li>Periods (.) can be used to repeat chords on another beat within the same meausure. For
+                        example,
+                        G..A would be three beats of G followed by one beat of A in the same measure.
                     </li>
                     <li>Sample measures to use:
                         <ul>
@@ -346,8 +337,27 @@
                             <li>DC D#Bb G#m7Gm7 Am/G G..A</li>
                         </ul>
                     </li>
+                    <li>Commas (,) between measures can be used to indicate the end of a row of measures.
+                        The maximum number of measures allowed within a single row is 8.
+                        If there are no commas within a phrase of 8 or more measures, the phrase will
+                        automatically be split into rows of 4 measures.
+                    </li>
+                    <li>Minus signs (-) can be used to indicate a repeated measure. There must be a space before
+                        and after it.
+                    </li>
+                    <li>
+                        Row repeats are indicated by a lower case x followed by a number 2 or more.
+                        Multiple rows can be repeated by placing an opening square bracket ([) in front of the
+                        first measure of the first row and a closing square bracket (]) after the last
+                        measure before the x and the digits.
+                    </li>
                     <li>Comments are not allowed in the chord section.
                         Chord input not understood will be placed in parenthesis, eg. "(this is not a chord sequence)".
+                    </li>
+                    <li>The red bar or measure highlight indicate where entry text will be entered.
+                        The radio buttons control the fine position of this indicator for inserting, replacing,
+                        or appending.  To delete a measure, select it and click Replace.  This activates the Delete button
+                        to delete it.  Note that the delete key will always apply to text entry.
                     </li>
                     <li>Double click a measure to select it for replacement or deletion.
                         Note that if you double click the section type, the entire section will be
@@ -362,6 +372,19 @@
                         In the lyrics section, anything else not recognized as a section identifier is
                         considered lyrics to the end of the line.
                         I suggest comments go into parenthesis.
+                    </li>
+                    <li>The buttons to the right of the displayed chords are active and there to minimize your typing.
+                    </li>
+                    <li>A trick:  Select a section similar to a new section you are about to enter.
+                        Copy the text from the entery area.  Delete the entry line.  Enter the new section identifier
+                        (I suggest the section buttons on the right).
+                        Paste the old text after the new section.  Make edit adjustments in the entry text
+                        and press the keyboard enter button.
+                    </li>
+                    <li>Another trick:  Write the chord section as you like in a text editor, copy the whole song's
+                        chords and paste into the entry line... complete with newlines.  All should be well.
+                    </li>
+                    <li>Don't forget the undo/redo keys!  Undo will even go backwards into the previously edited song.
                     </li>
                 </ul>
             </div>
