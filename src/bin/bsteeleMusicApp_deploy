@@ -1,5 +1,5 @@
 #!/bin/tcsh
-set echo; set verbose
+#set echo; set verbose
 
 set www=/var/www/html/public_html
 set app=bsteeleMusicApp
@@ -15,12 +15,8 @@ set localbeta=$www/$beta
 
 #	copy local beta to local deploy
 rm -rf $localdst
-rm -rf $localbeta/WEB-INF/classes
-
 mkdir $localdst
 cp -r $localbeta/* $localdst
-
-exit -1
 
 #	copy local beta to distribution point for raspberry pi's
 gsutil cp $www/$betaDir/${app}.war $lyricsDst/$lyricsWar
