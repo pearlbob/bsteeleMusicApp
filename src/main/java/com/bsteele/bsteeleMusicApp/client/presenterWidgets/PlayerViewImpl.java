@@ -248,13 +248,46 @@ public class PlayerViewImpl
             }
         });
         playerTopCover.addMouseWheelHandler(handler -> {
-            if (songUpdate == null || song == null)
+            if (songUpdate == null || song == null || playerFlexTable == null || songPlayMaster == null)
                 return;     //  defense
 
-            int d = (handler.getDeltaY() < 0 ? -1 : 1);
-            songPlayMaster.playSongOffsetRowNumber(d);
+            switch (songUpdate.getState()) {
+                case playing:
+                    break;
+                case idle:
+                    playScrollAccumulator = 0;
+                    return;
+            }
 
-            logger.finer("playerTopCover.addMouseWheelHandler: " + handler.getDeltaY());
+            int d = handler.getDeltaY();
+            if ((playScrollAccumulator < 0 && d > 0) || (playScrollAccumulator > 0 && d < 0))
+                playScrollAccumulator = 0;
+            playScrollAccumulator += d * 6 /*  gain    */;
+
+            GridCoordinate gridCoordinate = song.getMomentGridCoordinate(songPlayMaster.getMomentNumber());
+            if (gridCoordinate == null)
+                return;
+
+            FlexTable.FlexCellFormatter formatter = playerFlexTable.getFlexCellFormatter();
+            Element e = formatter.getElement(gridCoordinate.getRow(), gridCoordinate.getCol());
+            if (e == null)
+                return;
+
+            int h = e.getOffsetHeight();
+            if (playScrollAccumulator < -h) {
+                playScrollAccumulator += h;
+                songPlayMaster.playSongOffsetRowNumber(-1);
+                logger.fine("play scroll: bump -1");
+            } else if (playScrollAccumulator > h) {
+                playScrollAccumulator -= h;
+                songPlayMaster.playSongOffsetRowNumber(1);
+                logger.fine("play scroll: bump +1");
+            }
+
+            logger.finest("play scroll: " + handler.getDeltaY()
+                    + ", h: " + h
+                    + ", acc: " + playScrollAccumulator
+            );
         });
         playerTopCover.addClickHandler((clickEvent) -> {
             if (song == null || playerFlexTable == null)
@@ -351,6 +384,8 @@ public class PlayerViewImpl
 
     private void togglePlayStop() {
         if (song != null) {
+            playScrollAccumulator = 0;
+
             switch (songUpdate.getState()) {
                 case playing:
                     //  get set for a stop
@@ -360,7 +395,7 @@ public class PlayerViewImpl
                     playStatusLabel.setText("");
                     break;
                 case idle:
-                    //  get set for a play
+                    //  ask for a play
                     SongUpdate songUpdateCopy = new SongUpdate();
                     songUpdateCopy.setSong(song.copySong());
                     songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
@@ -816,7 +851,6 @@ public class PlayerViewImpl
         )
             lastScrollLineY = scrollForLineY;
         else
-
             lastScrollLineY += delta;
 
         double y = lastScrollLineY;
@@ -872,6 +906,7 @@ public class PlayerViewImpl
     private int jumpSectionToY = 0;
     private int lastJumpSectionToY = -1;
     private int jumpSectionMaxX = 10;
+    private int playScrollAccumulator = 0;
 
 
     public static final String highlightColor = "#e4c9ff";
