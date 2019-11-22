@@ -39,7 +39,10 @@ public class BSteeleMusicIO {
 
     private String getWebSocketURL() {
         String url = GWT.getHostPageBaseURL();
-        if (url == null || url.startsWith("http://127.0.0.1:8888/"))
+        if (url == null
+                || url.startsWith("http://127.0.0.1:8888/")
+                || url.startsWith("file://")
+        )
             return null;
 
         logger.fine("GWT.getHostPageBaseURL(): " + url);
