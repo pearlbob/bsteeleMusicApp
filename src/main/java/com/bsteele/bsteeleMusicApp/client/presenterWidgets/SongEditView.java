@@ -151,10 +151,13 @@ public class SongEditView
     SelectElement sectionVersionSelect;
 
     @UiField
-    TextBox measureEntry;
+    TextArea measureEntry;
 
     @UiField
     Label measureEntryCorrection;
+
+    @UiField
+    Button chordEnterButton;
 
     @UiField
     RadioButton editInsert;
@@ -336,18 +339,11 @@ public class SongEditView
                         break;
                 }
 
-            String entry = measureEntry.getValue();
-            if (entry.isEmpty())
-                return;
+            preProcessMeasureEntry();
+        });
 
-            switch (event.getNativeKeyCode()) {
-                case KeyCodes.KEY_ENTER:
-                    processMeasureEntry();
-                    break;
-                default:
-                    preProcessMeasureEntry();
-                    break;
-            }
+        chordEnterButton.addClickHandler((handler) -> {
+            processMeasureEntry();
         });
 
         editAppend.setValue(true);

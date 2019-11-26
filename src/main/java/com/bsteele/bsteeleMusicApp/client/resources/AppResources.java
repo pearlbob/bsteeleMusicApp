@@ -78,6 +78,8 @@ public interface AppResources extends ClientBundle {
 
         String chordsTextEntry();
 
+        String measureTextEntry();
+
         String lyricsTextEntry();
 
         String songList();

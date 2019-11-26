@@ -85,14 +85,17 @@
                     <td style="vertical-align:top" colspan="2">
                         Chords:
                         <br/>
-                        <g:TextBox ui:field="measureEntry" styleName="{resources.style.longEntryLine}"/>
+                        <g:TextArea ui:field="measureEntry" styleName="{resources.style.measureTextEntry}"/>
                         <br/>
                         <g:Label ui:field="measureEntryCorrection" styleName="{resources.style.longEntryLine}">&nbsp;
                         </g:Label>
+
                     </td>
                 </tr>
                 <tr>
                     <td style="vertical-align:top;" width="35%">
+                        <g:Button ui:field="chordEnterButton">Enter</g:Button>
+                        &nbsp;
                         <g:RadioButton ui:field="editInsert" name="EditPosition">Insert</g:RadioButton>
                         <g:RadioButton ui:field="editReplace" name="EditPosition">Replace</g:RadioButton>
                         <g:Button ui:field="editDelete">Delete</g:Button>

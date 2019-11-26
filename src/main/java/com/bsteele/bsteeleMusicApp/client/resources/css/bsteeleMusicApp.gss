@@ -216,6 +216,11 @@ table.lyricsTable {
 }
 .chords {
 }
+.measureTextEntry{
+    font-size: 24px;
+    width: 30em;
+    height: 5em;
+}
 .chordsTextEntry {
      font-size: large;
      width: 20em;
@@ -227,6 +232,7 @@ table.lyricsTable {
      width: 60em;
      height: 60em;
 }
+
 /*  chords  */
 td[id*="C."]{
     border-right: 1.5px solid black;

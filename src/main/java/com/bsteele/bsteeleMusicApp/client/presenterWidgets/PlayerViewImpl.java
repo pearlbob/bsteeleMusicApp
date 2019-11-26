@@ -22,6 +22,7 @@ import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -99,6 +100,9 @@ public class PlayerViewImpl
 
     @UiField
     Label playStatusLabel;
+
+    @UiField
+    DivElement playDivElement;
 
     @UiField
     CanvasElement audioBeatDisplayCanvas;
@@ -205,7 +209,8 @@ public class PlayerViewImpl
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
 
-        playStatusLabel.setVisible(false);
+       // playStatusLabel.setVisible(false);
+        playDivElement.getStyle().setDisplay(Style.Display.NONE);
 
         playerFocusPanel.addKeyDownHandler(handler -> {
             if (songUpdate == null || song == null)
@@ -564,23 +569,24 @@ public class PlayerViewImpl
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
-                audioBeatDisplayCanvas.getStyle().setDisplay(
-                        appOptions.isPlayWithBouncingBall()
-                                ? Style.Display.INLINE_BLOCK
-                                : Style.Display.NONE);
-                playStatusLabel.setVisible(true);
+               // playStatusLabel.setVisible(true);
                 playerTopCover.getCanvasElement().getStyle().setZIndex(1);
                 break;
             case idle:
                 playStopButton.setText("Play");
-                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
-                playStatusLabel.setVisible(false);
+//                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
+               // playStatusLabel.setVisible(false);
                 scrollForLineAt(0); //  hide
                 playerTopCover.getCanvasElement().getStyle().setZIndex(-10);
                 jumpMomentNumber = null;
                 jumpSectionToY = Integer.MIN_VALUE; //  force clearing of jump indicator
                 break;
         }
+
+        //  a better location for this?
+        playDivElement.getStyle().setDisplay(appOptions.isPlayWithBouncingBall()
+                ? Style.Display.INLINE_BLOCK
+                : Style.Display.NONE);
     }
 
     @Override

@@ -43,25 +43,7 @@ public class AudioBeatDisplay {
         int w = canvas.getWidth();
         int h = canvas.getHeight();
 
-        //  background
-        String startColor = gray;
 
-        {
-            int n = songUpdate.getMomentNumber();
-            switch (n) {
-                case -2:
-                    startColor = orange;
-                    break;
-                case -1:
-                    startColor = red;
-                    break;
-                default:
-                    if (n >= 0)
-                        //  normal
-                        startColor = black;
-                    break;
-            }
-        }
         //logger.finest("b: " + beatNumber + " " + beatFraction);
 
         ctx.setFillStyle(backgroundColor);
@@ -96,9 +78,25 @@ public class AudioBeatDisplay {
                 break;
         }
 
+        //  background
+        String startColor = gray;
+        {
+            int n = songUpdate.getMomentNumber();
+            switch (n) {
+                case -2:
+                    startColor = orange;
+                    break;
+                case -1:
+                    startColor = red;
+                    break;
+                default:
+                    if (n >= 0)
+                        //  normal
+                        startColor = black;
+                    break;
+            }
+        }
         ctx.setFillStyle(startColor);
-
-
         double x = beatFraction - 0.5;
         double dx = (beatNumber == beatCount - 1
                 ? (beatCount - 1) * (1 - beatFraction)

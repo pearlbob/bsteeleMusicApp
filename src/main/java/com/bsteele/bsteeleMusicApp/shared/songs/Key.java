@@ -267,7 +267,7 @@ public enum Key {
     public final ScaleNote getScaleNoteByHalfStep(int halfSteps) {
 
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
-        ScaleNote ret = (keyValue > 0)
+        ScaleNote ret = (keyValue >= 0)
                 ? ScaleNote.getSharpByHalfStep(halfSteps)
                 : ScaleNote.getFlatByHalfStep(halfSteps);
 
