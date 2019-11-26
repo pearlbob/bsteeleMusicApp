@@ -219,7 +219,7 @@ table.lyricsTable {
 .measureTextEntry{
     font-size: 24px;
     width: 30em;
-    height: 5em;
+    height: 8em;
 }
 .chordsTextEntry {
      font-size: large;

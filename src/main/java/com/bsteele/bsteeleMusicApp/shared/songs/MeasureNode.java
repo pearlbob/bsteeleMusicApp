@@ -78,6 +78,13 @@ public abstract class MeasureNode {
      */
     abstract public String toMarkup();
 
+    /**
+     * Represent the measure node to the user in a string form and entry ready.
+     *
+     * @return the string form created from the measure node's contents.
+     */
+    abstract public String toEntry();
+
 
     public static final String concatMarkup( ArrayList<MeasureNode> measureNodes){
         StringBuilder sb = new StringBuilder();

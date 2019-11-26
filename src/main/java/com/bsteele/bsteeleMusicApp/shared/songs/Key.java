@@ -294,7 +294,7 @@ public enum Key {
 
 
     public final boolean isSharp(){
-        return keyValue > 0;
+        return keyValue >= 0;
     }
 
 

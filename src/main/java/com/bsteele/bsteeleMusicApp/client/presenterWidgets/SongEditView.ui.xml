@@ -73,7 +73,7 @@
                                 <option value="4/4" selected="selected">4/4</option>
                                 <option value="6/8">6/8</option>
                             </select>
-                              From:
+                            From:
                             <g:Label ui:field="userLabel" styleName="{resources.style.inline}">Unknown</g:Label>
                         </p>
                     </td>
@@ -252,7 +252,7 @@
                         Section types can be followed with a digit to indicate a variation.
                     </li>
                     <li>Sections with the same content will automatically be placed in the same declaration.
-                        Row commas are not significant in the difference  i.e. commas don't create a difference.
+                        Row commas are not significant in the difference i.e. commas don't create a difference.
                     </li>
                     <li>Chords ultimately must be in upper case. If they are not on entry, the app will try to guess
                         the capitalization for your input and place it on the line below the test entry box.
@@ -357,10 +357,13 @@
                     <li>Comments are not allowed in the chord section.
                         Chord input not understood will be placed in parenthesis, eg. "(this is not a chord sequence)".
                     </li>
+                    <li>Since you can enter the return key to format your entry, you must us the Enter button
+                        to enter it into the song.
+                    </li>
                     <li>The red bar or measure highlight indicate where entry text will be entered.
                         The radio buttons control the fine position of this indicator for inserting, replacing,
-                        or appending.  To delete a measure, select it and click Replace.  This activates the Delete button
-                        to delete it.  Note that the delete key will always apply to text entry.
+                        or appending. To delete a measure, select it and click Replace. This activates the Delete button
+                        to delete it. Note that the delete key will always apply to text entry.
                     </li>
                     <li>Double click a measure to select it for replacement or deletion.
                         Note that if you double click the section type, the entire section will be
@@ -378,16 +381,16 @@
                     </li>
                     <li>The buttons to the right of the displayed chords are active and there to minimize your typing.
                     </li>
-                    <li>A trick:  Select a section similar to a new section you are about to enter.
-                        Copy the text from the entery area.  Delete the entry line.  Enter the new section identifier
+                    <li>A trick: Select a section similar to a new section you are about to enter.
+                        Copy the text from the entery area. Delete the entry line. Enter the new section identifier
                         (I suggest the section buttons on the right).
-                        Paste the old text after the new section.  Make edit adjustments in the entry text
+                        Paste the old text after the new section. Make edit adjustments in the entry text
                         and press the keyboard enter button.
                     </li>
-                    <li>Another trick:  Write the chord section as you like in a text editor, copy the whole song's
-                        chords and paste into the entry line... complete with newlines.  All should be well.
+                    <li>Another trick: Write the chord section as you like in a text editor, copy the whole song's
+                        chords and paste into the entry line... complete with newlines. All should be well.
                     </li>
-                    <li>Don't forget the undo/redo keys!  Undo will even go backwards into the previously edited song.
+                    <li>Don't forget the undo/redo keys! Undo will even go backwards into the previously edited song.
                     </li>
                 </ul>
             </div>

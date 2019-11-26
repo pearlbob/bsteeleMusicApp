@@ -310,6 +310,11 @@ public class MeasureRepeat extends Phrase {
     }
 
     @Override
+    public String toEntry() {
+        return "[" + (getMeasures().isEmpty() ? "" : super.toEntry()) + "] x" + getRepeats() + " ";
+    }
+
+    @Override
     public String toJson() {
         if (measures == null || measures.isEmpty())
             return " ";

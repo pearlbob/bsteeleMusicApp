@@ -516,6 +516,18 @@ public class Phrase extends MeasureNode {
     }
 
     @Override
+    public String toEntry() {
+        if (measures == null || measures.isEmpty())
+            return "[]";
+
+        StringBuilder sb = new StringBuilder();
+        for (Measure measure : measures) {
+            sb.append(measure.toEntry()).append(" ");
+        }
+        return sb.toString();
+    }
+
+    @Override
     public String toJson() {
         if (measures == null || measures.isEmpty())
             return " ";

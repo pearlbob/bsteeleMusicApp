@@ -505,6 +505,24 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     @Override
+    public String toEntry() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSectionVersion().toString()).append(" ");
+        sb.append(phrasesToEntry());
+        return sb.toString();
+    }
+
+    public String phrasesToEntry() {
+        if (phrases == null || phrases.isEmpty()) {
+            return "[]";
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Phrase phrase : phrases)
+            sb.append(phrase.toEntry());
+        return sb.toString();
+    }
+
+    @Override
     public String toJson() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString()).append("\n");

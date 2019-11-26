@@ -295,6 +295,11 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
     @Override
+    public String toEntry() {
+        return toMarkup('\n');
+    }
+
+    @Override
     public String toJson() {
         return toMarkup('\000');
     }
@@ -309,6 +314,8 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
                 sb.append(endOfRowChar);
             return sb.toString();
         }
+        if (endOfRowChar > 0 && isEndOfRow())
+            return "X" + endOfRowChar;
         return "X";  // no chords
     }
 

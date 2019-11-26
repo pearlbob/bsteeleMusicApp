@@ -420,9 +420,9 @@ public class SongBase {
         for (int i = 0; i < entry.length(); i++) {
             char c = entry.charAt(i);
 
-            //  ignore newlines!
+            //  map newlines!
             if( c == '\n')
-                continue;
+                c = ',';
 
             switch (state) {
                 case flatIsPossible:
@@ -1077,6 +1077,23 @@ public class SongBase {
                 MeasureNode measureNode = findMeasureNode(location);
                 if (measureNode != null)
                     return measureNode.toMarkup();
+            }
+        }
+        return null;
+    }
+
+    public final String toEntry(ChordSectionLocation location) {
+        StringBuilder sb = new StringBuilder();
+        if (location != null) {
+            if (location.isSection()) {
+                sb.append(location.toString());
+                sb.append(" ");
+                sb.append(getChordSection(location).phrasesToEntry());
+                return sb.toString();
+            } else {
+                MeasureNode measureNode = findMeasureNode(location);
+                if (measureNode != null)
+                    return measureNode.toEntry();
             }
         }
         return null;

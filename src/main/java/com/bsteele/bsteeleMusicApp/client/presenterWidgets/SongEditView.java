@@ -672,7 +672,7 @@ public class SongEditView
         SectionVersion sectionVersion = new SectionVersion(section, sectionVersionSelect.getSelectedIndex());
         ChordSection chordSection = song.getChordSection(sectionVersion);
         if (chordSection != null)
-            measureEntry.setValue(chordSection.toMarkup());
+            measureEntry.setValue(chordSection.toEntry());
         else
             measureEntry.setValue(sectionVersion.toString());
         measureFocus();
@@ -966,7 +966,7 @@ public class SongEditView
                 case delete:
                     e.setAttribute("editSelect", "replace");
                     e.getStyle().setBackgroundColor(selectedBorderColorValueString);
-                    measureEntry.setText(song.toMarkup(chordSectionLocation));
+                    measureEntry.setText(song.toEntry(chordSectionLocation));
                     break;
             }
         } catch (IndexOutOfBoundsException ioob) {
