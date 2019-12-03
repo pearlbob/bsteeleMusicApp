@@ -148,6 +148,8 @@ public class Chord implements Comparable<Chord> {
      * @param slashScaleNote the slash chord to set
      */
     final void setSlashScaleNote(ScaleNote slashScaleNote) {
+        if ( slashScaleNote==null)
+            return;
         this.slashScaleNote = slashScaleNote;
     }
 

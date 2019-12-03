@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.text.ParseException;
+import java.util.logging.Logger;
 
 /**
  * CopyRight 2018 bsteele.com
@@ -355,4 +356,64 @@ public class MeasureTest extends TestCase {
             }
         }
     }
+
+
+    @Test
+    public void testTransposeToKey() {
+        Measure m;
+        //  fixme: test multi chord measures
+        for (Key key : Key.values()) {
+            for (ScaleNote scaleNote : ScaleNote.values()) {
+                for (int beatsPerBar = 2; beatsPerBar <= 4; beatsPerBar++) {
+                    try {
+                        m = Measure.parse(scaleNote.toString(), beatsPerBar);
+                        m = (Measure) m.transposeToKey(key);
+                        for (Chord chord : m.getChords()) {
+                            ScaleNote sn = chord.getScaleChord().getScaleNote();
+
+                            logger.fine("key: " + key.toString() + " sn: " + sn.toString());
+                            if (sn.isNatural()) {
+                                assertFalse(sn.isSharp());
+                                assertFalse(sn.isFlat());
+                            } else {
+                                assertEquals(key.isSharp(), sn.isSharp());
+                                assertEquals(key.isSharp(), !sn.isFlat());
+                            }
+
+                            for (ScaleNote slash : ScaleNote.values()) {
+                                chord.setSlashScaleNote(slash);
+                                m = Measure.parse(chord.toString(), beatsPerBar);
+                                m = (Measure) m.transposeToKey(key);
+                                slash = m.getChords().get(0).getSlashScaleNote();
+
+                                logger.fine("key: " + key.toString()
+                                        + " m: " + m.toString()
+                                        + " sn: " + sn.toString()
+                                        + " slash: " + slash.toString());
+                                if (sn.isNatural()) {
+                                    assertFalse(sn.isSharp());
+                                    assertFalse(sn.isFlat());
+                                } else {
+                                    assertEquals(key.isSharp(), sn.isSharp());
+                                    assertEquals(key.isSharp(), !sn.isFlat());
+                                }
+                                if (slash.isNatural()) {
+                                    assertFalse(slash.isSharp());
+                                    assertFalse(slash.isFlat());
+                                } else {
+                                    assertEquals(key.isSharp(), slash.isSharp());
+                                    assertEquals(key.isSharp(), !slash.isFlat());
+                                }
+                            }
+                        }
+                    } catch (ParseException e) {
+                        fail();     //  parse failed
+                    }
+                }
+            }
+        }
+    }
+
+
+    private static Logger logger = Logger.getLogger(MeasureTest.class.getName());
 }
