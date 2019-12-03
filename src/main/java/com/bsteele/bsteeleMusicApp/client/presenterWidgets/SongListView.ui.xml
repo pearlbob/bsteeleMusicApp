@@ -4,36 +4,40 @@
 
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
-    <g:DockLayoutPanel ui:field="dockLayoutPanel" unit="EM">
-        <g:north size="3">
+    <g:DockLayoutPanel ui:field="dockLayoutPanel" unit="EM" width="100%" height="100%">
+        <g:north size="6">
             <g:HTMLPanel>
                 <div style="margin: 10px;">
-                    <span class="{resources.style.label}">Search:</span>
-                    <g:TextBox ui:field="songSearch"/>
-                    <g:Button text="X" ui:field="clearSearch"/>
-                    <select ui:field="filterByComplexity" >
-                        <option value="all" selected="selected">All</option>
-                        <option value="veryEasy" >Very Easy</option>
-                        <option value="easy" >Easy</option>
-                        <option value="moderate" >Moderate</option>
-                    </select>
-                    <select ui:field="listBySelect" >
-                        <option value="title" selected="selected">by Title</option>
-                        <option value="artist" >by Artist</option>
-                        <option value="lastModifiedDate" >by Modification Date</option>
-                        <option value="complexity" >by Complexity</option>
-                    </select>
-                    <span class="{resources.style.tooltip}">
+                    <p>
+                        <span class="{resources.style.label}">Search:</span>
+                        <g:TextBox ui:field="songSearch"/>
+                        <g:Button text="X" ui:field="clearSearch"/>
+                        <select ui:field="filterByComplexity">
+                            <option value="all" selected="selected">All</option>
+                            <option value="veryEasy">Very Easy</option>
+                            <option value="easy">Easy</option>
+                            <option value="moderate">Moderate</option>
+                        </select>
+                        <select ui:field="listBySelect">
+                            <option value="title" selected="selected">by Title</option>
+                            <option value="artist">by Artist</option>
+                            <option value="lastModifiedDate">by Modification Date</option>
+                            <option value="complexity">by Complexity</option>
+                        </select>
+                    </p>
+                    <p>
+                        <span class="{resources.style.tooltip}">
                         <span style="font-weight: bold;">Read Song Files:</span>
-                        <g:FileUpload ui:field="readSongFiles"/>
-                        <span class="{resources.style.tooltiptext}">&nbsp;
-                            Hint: Read many songs at once with select multiple (Shift-click),
-                            add to selection (Control-Click),
-                            or select all (Control-A).
-                            This will work well if all songs are in one directory/folder.
-                            On a Mac, substitute Command for Control.
+                            <g:FileUpload ui:field="readSongFiles"/>
+                            <span class="{resources.style.tooltiptext}">&nbsp;
+                                Hint: Read many songs at once with select multiple (Shift-click),
+                                add to selection (Control-Click),
+                                or select all (Control-A).
+                                This will work well if all songs are in one directory/folder.
+                                On a Mac, substitute Command for Control.
+                            </span>
                         </span>
-                    </span>
+                    </p>
                 </div>
             </g:HTMLPanel>
         </g:north>
@@ -44,7 +48,9 @@
                         <div class="{resources.style.songList}">
                             <g:Grid ui:field="songGrid"/>
                         </div>
-                        <p><g:Label ui:field="listCount" /></p>
+                        <p>
+                            <g:Label ui:field="listCount"/>
+                        </p>
                         <g:Button text="Test Parse" ui:field="testParse"/>&nbsp;
                         <g:Button text="Remove All" ui:field="removeAll"/>
                     </div>

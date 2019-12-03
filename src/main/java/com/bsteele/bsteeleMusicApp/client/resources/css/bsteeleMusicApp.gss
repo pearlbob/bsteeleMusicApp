@@ -255,7 +255,6 @@ td[id*="L."]{
     font-weight: bold;
     display: inline-block;
     vertical-align: bottom;
-    margin: 10px;
  }
 .playMeasureLabel {
     font-size: 52px;
@@ -330,5 +329,9 @@ td[editSelect=append] {
 
 .focusPanel {
     outline-color: rgba(0, 0, 0, 0.0);
+}
+.verticalPanel {
+    margin: 40px;
+    overflow: auto;
 }
 

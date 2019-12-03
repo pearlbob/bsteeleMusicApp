@@ -121,6 +121,8 @@ public interface AppResources extends ClientBundle {
         String playTopCover();
 
         String focusPanel();
+
+        String verticalPanel();
     }
 
     @Source("css/bsteeleMusicApp.gss")

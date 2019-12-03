@@ -507,7 +507,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     @Override
     public String toEntry() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getSectionVersion().toString()).append(" ");
+        sb.append(getSectionVersion().toString()).append("\n");
         sb.append(phrasesToEntry());
         return sb.toString();
     }

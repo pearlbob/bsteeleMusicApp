@@ -1087,7 +1087,7 @@ public class SongBase {
         if (location != null) {
             if (location.isSection()) {
                 sb.append(location.toString());
-                sb.append(" ");
+                sb.append("\n ");
                 sb.append(getChordSection(location).phrasesToEntry());
                 return sb.toString();
             } else {

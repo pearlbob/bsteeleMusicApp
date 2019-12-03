@@ -649,6 +649,12 @@ public class SongEditView
         logger.fine("entryToUppercase: " + SongBase.entryToUppercase(entry));
         logger.fine("parseChordEntry: " + song.parseChordEntry(SongBase.entryToUppercase(entry)));
         String upperEntry = MeasureNode.concatMarkup(song.parseChordEntry(SongBase.entryToUppercase(entry)));
+        upperEntry = upperEntry.trim();
+        entry = entry.trim()
+                .replaceAll("\t", " ")
+                .replaceAll(":\n", ":")
+                .replaceAll("  ", " ")
+                .replaceAll("\n", ",");
         if (upperEntry.equals(entry))
             measureEntryCorrection.getElement().setInnerHTML(nbsp);
         else

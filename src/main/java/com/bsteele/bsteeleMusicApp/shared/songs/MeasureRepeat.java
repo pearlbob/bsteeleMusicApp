@@ -311,7 +311,7 @@ public class MeasureRepeat extends Phrase {
 
     @Override
     public String toEntry() {
-        return "[" + (getMeasures().isEmpty() ? "" : super.toEntry()) + "] x" + getRepeats() + " ";
+        return "[" + (getMeasures().isEmpty() ? "" : super.toEntry()) + "] x" + getRepeats() + "\n ";
     }
 
     @Override
