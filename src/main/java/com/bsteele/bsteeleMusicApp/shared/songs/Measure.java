@@ -276,6 +276,22 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
         return "X";  // no chords
     }
 
+    @Override
+    public MeasureNode transposeToKey(@Nonnull Key key) {
+        if (chords != null && !chords.isEmpty()) {
+            ArrayList<Chord> newChords = new ArrayList<>();
+            for (Chord chord : chords) {
+                newChords.add(chord.transpose(key, 0));
+            }
+            if (newChords.equals(chords))
+                return this;
+            Measure ret = new Measure(beatCount, newChords);
+            ret.endOfRow = endOfRow;
+            return ret;
+        }
+        return this;
+    }
+
     public final boolean isEasyGuitarMeasure() {
         return chords != null && chords.size() == 1 && chords.get(0).getScaleChord().isEasyGuitarChord();
     }

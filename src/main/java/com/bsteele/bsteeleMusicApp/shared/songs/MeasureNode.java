@@ -72,6 +72,16 @@ public abstract class MeasureNode {
     public abstract String transpose(@Nonnull Key key, int halfSteps);
 
     /**
+     * If required, transpose the measure node to the given key.
+     * This is used to represent the scale note in the proper expression
+     * of flats or sharps.
+     *
+     * @param key the original key
+     * @return the transposition
+     */
+    public abstract MeasureNode transposeToKey(@Nonnull Key key);
+
+    /**
      * Represent the measure node to the user in a string form and from storage encoding.
      *
      * @return the string form created from the measure node's contents.
@@ -86,10 +96,10 @@ public abstract class MeasureNode {
     abstract public String toEntry();
 
 
-    public static final String concatMarkup( ArrayList<MeasureNode> measureNodes){
+    public static final String concatMarkup(ArrayList<MeasureNode> measureNodes) {
         StringBuilder sb = new StringBuilder();
-        if ( measureNodes != null )
-            for ( MeasureNode measureNode: measureNodes)
+        if (measureNodes != null)
+            for (MeasureNode measureNode : measureNodes)
                 sb.append(measureNode.toMarkup());
         return sb.toString();
     }
@@ -133,7 +143,7 @@ public abstract class MeasureNode {
      */
     public abstract String getId();
 
-    public enum MeasureNodeType{
+    public enum MeasureNodeType {
         section,
         repeat,
         phrase,
@@ -141,6 +151,7 @@ public abstract class MeasureNode {
         comment,
         decoration;
     }
+
     public abstract MeasureNodeType getMeasureNodeType();
 
 }

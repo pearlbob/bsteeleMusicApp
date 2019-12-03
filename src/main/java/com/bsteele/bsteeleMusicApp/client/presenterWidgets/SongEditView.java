@@ -678,7 +678,7 @@ public class SongEditView
         SectionVersion sectionVersion = new SectionVersion(section, sectionVersionSelect.getSelectedIndex());
         ChordSection chordSection = song.getChordSection(sectionVersion);
         if (chordSection != null)
-            measureEntry.setValue(chordSection.toEntry());
+            measureEntry.setValue(chordSection.transposeToKey(key).toEntry());
         else
             measureEntry.setValue(sectionVersion.toString());
         measureFocus();
@@ -697,7 +697,7 @@ public class SongEditView
         ArrayList<MeasureNode> measureNodes = song.parseChordEntry(input);
         for (MeasureNode measureNode : measureNodes) {
             if (song.edit(measureNode)) {
-                addRecentMeasureNode(measureNode);
+                addRecentMeasureNode(measureNode.transposeToKey(key));
                 undoStackPushSong();
                 findMostCommonScaleChords();
                 updateCurrentChordEditLocation();
@@ -963,10 +963,12 @@ public class SongEditView
                 case append:
                     e.setAttribute("editSelect", "append");
                     e.getStyle().setBackgroundColor(null);
+                    measureEntry.selectAll();
                     break;
                 case insert:
                     e.setAttribute("editSelect", "insert");
                     e.getStyle().setBackgroundColor(null);
+                    measureEntry.selectAll();
                     break;
                 case replace:
                 case delete:
@@ -980,8 +982,6 @@ public class SongEditView
             logger.fine(ioob.getMessage() + " at (" + gridCoordinate.getRow() + ", " + gridCoordinate.getCol() + ")");
             logger.fine(song.logGrid());
         }
-
-        measureEntry.selectAll();
     }
 
     /**
@@ -1091,6 +1091,7 @@ public class SongEditView
             OptionElement oe = list.getItem(i);
             oe.setSelected(oe.getValue().equals(keyValue));
         }
+        findMostCommonScaleChords();//  in case sharp or flat change
     }
 
     private void enterChord(ClickEvent event) {
@@ -1196,6 +1197,9 @@ public class SongEditView
                 common5
         };
 
+        if ( song==null)
+            return;
+
         HashMap<Measure, Integer> measureMap = new HashMap<>();
         {
             Measure measure;
@@ -1207,7 +1211,7 @@ public class SongEditView
                     continue;
                 switch (measureNode.getMeasureNodeType()) {
                     case measure:
-                        measure = (Measure) measureNode;
+                        measure = (Measure) measureNode.transposeToKey(key);
                         logger.finer(measure.toMarkup());
                         measureMap.put(measure, (measureMap.containsKey(measure) ? measureMap.get(measure).intValue() : 0) + 1);
                         break;

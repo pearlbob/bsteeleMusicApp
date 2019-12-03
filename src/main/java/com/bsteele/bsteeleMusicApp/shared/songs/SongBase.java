@@ -421,7 +421,7 @@ public class SongBase {
             char c = entry.charAt(i);
 
             //  map newlines!
-            if( c == '\n')
+            if (c == '\n')
                 c = ',';
 
             switch (state) {
@@ -433,7 +433,7 @@ public class SongBase {
                     }
                     //  fall through
                 case initial:
-                    if ((c >= 'A' && c <= 'G')||(c >= 'a' && c <= 'g')) {
+                    if ((c >= 'A' && c <= 'G') || (c >= 'a' && c <= 'g')) {
                         if (i < entry.length() - 1) {
                             char sf = entry.charAt(i + 1);
                             switch (sf) {
@@ -707,7 +707,12 @@ public class SongBase {
             }
         }
 
-        return ret;
+        //  deal with sharps and flats misapplied.
+        ArrayList<MeasureNode> transposed = new ArrayList<>();
+        for (MeasureNode measureNode : ret) {
+            transposed.add(measureNode.transposeToKey(key));
+        }
+        return transposed;
     }
 
     private void setDefaultCurrentChordLocation() {
@@ -1086,14 +1091,12 @@ public class SongBase {
         StringBuilder sb = new StringBuilder();
         if (location != null) {
             if (location.isSection()) {
-                sb.append(location.toString());
-                sb.append("\n ");
-                sb.append(getChordSection(location).phrasesToEntry());
+                sb.append(getChordSection(location).transposeToKey(key).toEntry());
                 return sb.toString();
             } else {
                 MeasureNode measureNode = findMeasureNode(location);
                 if (measureNode != null)
-                    return measureNode.toEntry();
+                    return measureNode.transposeToKey(key).toEntry();
             }
         }
         return null;
@@ -2291,7 +2294,6 @@ public class SongBase {
                 }
 
                 MeasureNode measureNode = findMeasureNode(loc);
-
 
                 //  expect comment to span the row
                 if (measureNode.isComment() && !measureNode.isRepeat()) {   //fixme: better identification of repeat marker

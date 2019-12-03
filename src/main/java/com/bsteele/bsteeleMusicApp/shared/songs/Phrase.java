@@ -184,6 +184,14 @@ public class Phrase extends MeasureNode {
         return "Phrase";   //  error
     }
 
+    @Override
+    public MeasureNode transposeToKey(@Nonnull Key key) {
+        ArrayList<Measure> newMeasures = new ArrayList<Measure>();
+        for ( Measure measure: measures)
+            newMeasures.add((Measure) measure.transposeToKey(key));
+        return new Phrase(newMeasures, phraseIndex);
+    }
+
 
     MeasureNode findMeasureNode(MeasureNode measureNode) {
         for (Measure m : measures) {
@@ -565,6 +573,7 @@ public class Phrase extends MeasureNode {
     final void setPhraseIndex(int phraseIndex) {
         this.phraseIndex = phraseIndex;
     }
+
 
     protected transient ArrayList<Measure> measures;
     private int phraseIndex;

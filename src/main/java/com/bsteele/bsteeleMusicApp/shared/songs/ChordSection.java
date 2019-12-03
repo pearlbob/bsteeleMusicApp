@@ -68,7 +68,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         ArrayList<Phrase> phrases = new ArrayList<>();
         ArrayList<Measure> measures = new ArrayList<>();
         ArrayList<Measure> lineMeasures = new ArrayList<>();
-      //  boolean repeatMarker = false;
+        //  boolean repeatMarker = false;
         Measure lastMeasure = null;
         for (int i = 0; i < 2000; i++)          //  arbitrary safety hard limit
         {
@@ -487,6 +487,17 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     }
 
     @Override
+    public MeasureNode transposeToKey(@Nonnull Key key) {
+        ArrayList<Phrase> newPhrases = null;
+        if (phrases != null) {
+            newPhrases = new ArrayList<>();
+            for (Phrase phrase : phrases)
+                newPhrases.add((Phrase) phrase.transposeToKey(key));
+        }
+        return new ChordSection(sectionVersion, newPhrases);
+    }
+
+    @Override
     public String toMarkup() {
         StringBuilder sb = new StringBuilder();
         sb.append(getSectionVersion().toString()).append(" ");
@@ -507,7 +518,7 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
     @Override
     public String toEntry() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getSectionVersion().toString()).append("\n");
+        sb.append(getSectionVersion().toString()).append("\n ");
         sb.append(phrasesToEntry());
         return sb.toString();
     }

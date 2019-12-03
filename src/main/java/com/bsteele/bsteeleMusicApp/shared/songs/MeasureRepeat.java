@@ -269,6 +269,14 @@ public class MeasureRepeat extends Phrase {
         return "x" + getRepeats();
     }
 
+    @Override
+    public MeasureNode transposeToKey(@Nonnull Key key) {
+        ArrayList<Measure> newMeasures = new ArrayList<Measure>();
+        for ( Measure measure: measures)
+            newMeasures.add((Measure) measure.transposeToKey(key));
+        return new MeasureRepeat(newMeasures, getPhraseIndex(), getRepeats());
+    }
+
     /**
      * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
