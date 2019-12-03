@@ -40,6 +40,8 @@ public class PitchTest
         assertEquals(Pitch.A4.getFrequency(), 440.0, 1e-20);
         assertEquals(Pitch.E4.getFrequency(), Pitch.E1.getFrequency() * 8, 1e-12);
         assertEquals(Pitch.A5.getFrequency(), 880.0, 1e-20);
+        assertEquals(Pitch.C6.getFrequency(), 1046.5022612023945, 1e-20);// human voice, saprano
+        assertEquals(Pitch.C8.getFrequency(), 4186.009044809578, 1e-20);//  piano
     }
 
     @Test
