@@ -5,8 +5,6 @@
 #	it should always be left operational every evening
 #	or the crontab should be shutdown.
 
-echo 'FIX ME: update not in use now!'
-exit -1
 
 
 set force=0
@@ -23,7 +21,7 @@ while ( $#argv > 0 )
 end
 
 
-set bsteeleMusicAppHome=/home/bob/GitHub/bsteeleMusicApp
+set bsteeleMusicAppHome=~bob/GitHub/bsteeleMusicApp
 
 set f=allSongs.songlyrics
 set bodhiDir=/home/bob/google_drive/bass/songlyrics/bodhi
@@ -33,13 +31,16 @@ set localBeta=/var/www/html/public_html/beta
 set date=`date -Iseconds`
 
 #	from Bodhi
-curl -s -G -o $bodhiDir/$f \
-        https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
-if ( $status != 0 ) then
-	set stat=$status
-	echo read of $storage failed $date\: $stat
-	exit $stat
-endif
+echo "not from bodhi on the cloud!"
+echo fixme
+set src=$bodhiDir/$f
+#curl -s -G -o $bodhiDir/$f \
+#        https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
+#if ( $status != 0 ) then
+#	set stat=$status
+#	echo read of $storage failed $date\: $stat
+#	exit $stat
+#endif
 
 #	sanity check
 echo "Todo: create a sanity check for imported allSongs.songlyrics, more than JSON parse"
@@ -52,12 +53,12 @@ if ( $status != 0 ) then
 	exit $stat
 endif
 
+echo song count: `grep 'title\": "' $src | wc -l`
 
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
 
 #	copy to required locations, if different
-set src=$bodhiDir/$f
 cmp -s $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 if ( $status || $force != 0 ) then
 	gsutil -q -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
