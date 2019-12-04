@@ -61,17 +61,21 @@ public class SongBase {
 
     /**
      * A convenience constructor used to enforce the minimum requirements for a song.
+     * <p>Note that this is the base class for a song object.
+     * The split from Song was done for testability reasons.
+     * It's much easier to test free of GWT.
+     * </p>
      *
-     * @param title
-     * @param artist
-     * @param copyright
-     * @param key
-     * @param bpm
-     * @param beatsPerBar
-     * @param unitsPerMeasure
-     * @param chords
-     * @param lyricsToParse
-     * @return
+     * @param title           song title
+     * @param artist          artist the song version is known for
+     * @param copyright       copyright of the song
+     * @param key             the key the chords represent
+     * @param bpm             beats per minute
+     * @param beatsPerBar     beats per bar, ie. the top of the time signature
+     * @param unitsPerMeasure sheet music units per measure, ie. the bottom of the time signature
+     * @param chords          string representation of the song chords on a per section basis
+     * @param lyricsToParse   lyrics and the associated section for them
+     * @return a song object
      * @throws ParseException parse exception
      */
     static final SongBase createSongBase(@NotNull String title, @NotNull String artist,
@@ -2449,6 +2453,25 @@ public class SongBase {
         }
 
         clearCachedValues();
+    }
+
+    /**
+     * Set the number of measures displayed per row
+     *
+     * @param measuresPerRow the number of measurese per row
+     * @return true if a change was made
+     */
+    public boolean setMeasuresPerRow(int measuresPerRow) {
+        if (measuresPerRow <= 0)
+            return false;
+
+        boolean ret = false;
+        for (ChordSection chordSection : new TreeSet<>(chordSectionMap.values())) {
+            ret = chordSection.setMeasuresPerRow(measuresPerRow) || ret;
+        }
+        if (ret)
+            clearCachedValues();
+        return ret;
     }
 
 

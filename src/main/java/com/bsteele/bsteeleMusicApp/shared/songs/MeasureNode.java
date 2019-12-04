@@ -73,8 +73,9 @@ public abstract class MeasureNode {
 
     /**
      * If required, transpose the measure node to the given key.
-     * This is used to represent the scale note in the proper expression
-     * of flats or sharps.
+     * This is used to represent the scale note(s) in the proper expression
+     * of flats or sharps based on the key.
+     * <p>Note that the key of C is considered sharp.</p>
      *
      * @param key the original key
      * @return the transposition
@@ -94,6 +95,13 @@ public abstract class MeasureNode {
      * @return the string form created from the measure node's contents.
      */
     abstract public String toEntry();
+
+    /**
+     * Set the measures per row to the given value;
+     * @param measuresPerRow the requested number of measures per row
+     * @return true if adjustment was required
+     */
+    abstract boolean setMeasuresPerRow(int measuresPerRow );
 
 
     public static final String concatMarkup(ArrayList<MeasureNode> measureNodes) {

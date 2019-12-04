@@ -246,6 +246,8 @@ public class SongEditView
     @UiField
     Button redo;
     @UiField
+    Button fourMeasuresPerRow;
+    @UiField
     Button showHints;
     @UiField
     DivElement editHints;
@@ -545,6 +547,13 @@ public class SongEditView
                 setSong(undoStack.redo());
                 measureFocus();
             }
+        });
+
+        fourMeasuresPerRow.addClickHandler((ClickEvent event) -> {
+           logger.fine("fourMeasuresPerRow");
+           if ( song != null && song.setMeasuresPerRow(4))
+               undoStackPushSong();
+               displaySong();
         });
 
         editHints.getStyle().setDisplay(Style.Display.NONE);

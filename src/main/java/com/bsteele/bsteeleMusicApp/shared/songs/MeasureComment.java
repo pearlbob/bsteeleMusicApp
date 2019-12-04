@@ -81,7 +81,6 @@ public class MeasureComment extends Measure {
         return toString();
     }
 
-
     public final String getComment() {
         return comment;
     }
@@ -110,6 +109,11 @@ public class MeasureComment extends Measure {
     @Override
     public String toMarkup() {
         return toString();
+    }
+
+    @Override
+    public String toEntry() {
+        return "\n"+ toString() + "\n";
     }
 
     @Override

@@ -316,6 +316,11 @@ public class Measure extends MeasureNode implements Comparable<Measure> {
     }
 
     @Override
+    boolean setMeasuresPerRow(int measuresPerRow) {
+        return false;
+    }
+
+    @Override
     public String toJson() {
         return toMarkup('\000');
     }

@@ -187,7 +187,7 @@ public class Phrase extends MeasureNode {
     @Override
     public MeasureNode transposeToKey(@Nonnull Key key) {
         ArrayList<Measure> newMeasures = new ArrayList<Measure>();
-        for ( Measure measure: measures)
+        for (Measure measure : measures)
             newMeasures.add((Measure) measure.transposeToKey(key));
         return new Phrase(newMeasures, phraseIndex);
     }
@@ -533,6 +533,37 @@ public class Phrase extends MeasureNode {
             sb.append(measure.toEntry()).append(" ");
         }
         return sb.toString();
+    }
+
+    @Override
+     boolean setMeasuresPerRow(int measuresPerRow) {
+        if (measuresPerRow <= 0)
+            return false;
+
+        boolean ret = false;
+        int i = 0;
+        if (measures != null && measures.size() > 0) {
+            Measure lastMeasure = measures.get(measures.size() - 1);
+            for (Measure measure : measures) {
+                if (measure.isComment())    //  comments get their own row
+                    continue;
+                if (i == measuresPerRow - 1 && measure != lastMeasure) {
+                    //  new row required
+                    if (!measure.isEndOfRow()) {
+                        measure.setEndOfRow(true);
+                        ret = true;
+                    }
+                } else {
+                    if (measure.isEndOfRow()) {
+                        measure.setEndOfRow(false);
+                        ret = true;
+                    }
+                }
+                i++;
+                i %= measuresPerRow;
+            }
+        }
+        return ret;
     }
 
     @Override

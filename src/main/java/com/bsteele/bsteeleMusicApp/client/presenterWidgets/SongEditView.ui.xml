@@ -235,6 +235,9 @@
                                 <td>
                                     <g:Button ui:field="undo">Undo</g:Button>
                                     <g:Button ui:field="redo">Redo</g:Button>
+                                    &nbsp;
+                                    <g:Button ui:field="fourMeasuresPerRow">4/row</g:Button>
+                                    &nbsp;
                                     <g:Button ui:field="showHints">Hints</g:Button>
                                 </td>
                             </tr>

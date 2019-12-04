@@ -2,6 +2,8 @@ package com.bsteele.bsteeleMusicApp.shared.songs;
 
 import com.bsteele.bsteeleMusicApp.shared.Grid;
 import com.bsteele.bsteeleMusicApp.shared.GridCoordinate;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -1011,6 +1013,83 @@ public class SongBaseTest
         }
 
 
+    }
+
+    @Test
+    public void testSetMeasuresPerRow() {
+        int beatsPerBar = 4;
+        SongBase a;
+
+        //  split a long repeat
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: A B C D E F G G# Ab Bb x2 \nc: D E F",
+                "i:\nc: sing chorus");
+        logger.finer(a.toMarkup());
+        assertTrue(a.setMeasuresPerRow(4));
+        logger.fine(a.toMarkup());
+        assertEquals("I: [A B C D, E F G G♯, A♭ B♭ ] x2  C: D E F", a.toMarkup().trim());
+        assertFalse(a.setMeasuresPerRow(4));
+
+        //  don't fix what's not broken
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: [A B C D, E F G G#, Ab Bb] x2 \nc: D E F",
+                "i:\nc: sing chorus");
+        logger.finer(a.toMarkup());
+        assertFalse(a.setMeasuresPerRow(4));
+        logger.fine(a.toMarkup());
+        assertEquals("I: [A B C D, E F G G♯, A♭ B♭ ] x2  C: D E F", a.toMarkup().trim());
+
+        //  take the comma off a repeat
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: [A B C D, E F G G#, ] x2 \nc: D E F",
+                "i:\nc: sing chorus");
+        logger.finer(a.toMarkup());
+        assertFalse(a.setMeasuresPerRow(4));
+        logger.fine(a.toMarkup());
+        assertEquals("I: [A B C D, E F G G♯ ] x2  C: D E F", a.toMarkup().trim());
+
+        //  not the first section
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: [A B C D ] x2 \nc: D E F A B C D, E F G G#",
+                "i:\nc: sing chorus");
+        logger.finer(a.toMarkup());
+        assertTrue(a.setMeasuresPerRow(4));
+        logger.fine(a.toMarkup());
+        assertEquals("I: [A B C D ] x2  C: D E F A, B C D E, F G G♯", a.toMarkup().trim());
+        assertFalse(a.setMeasuresPerRow(4));
+        assertEquals("I: [A B C D ] x2  C: D E F A, B C D E, F G G♯", a.toMarkup().trim());
+
+        //  take a last comma off
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: [A B C D ] x2 \nc: D E F A B C D E F G G#,",
+                "i:\nc: sing chorus");
+        logger.finer(a.toMarkup());
+        assertTrue(a.setMeasuresPerRow(4));
+        logger.fine(a.toMarkup());
+        assertEquals("I: [A B C D ] x2  C: D E F A, B C D E, F G G♯", a.toMarkup().trim());
+        assertFalse(a.setMeasuresPerRow(4));
+        assertEquals("I: [A B C D ] x2  C: D E F A, B C D E, F G G♯", a.toMarkup().trim());
+    }
+
+    private int countCommas(String s) {
+        final RegExp commaRegexp = RegExp.compile(",");
+
+        int count = 0;
+        for (; ; ) {
+            logger.finest("s: \"" + s + "\"");
+            MatchResult matchResult = commaRegexp.exec(s);
+            if (matchResult == null)
+                break;
+            logger.finest("index: " + matchResult.getIndex());
+            s = s.substring(matchResult.getIndex() + 1);
+            count++;
+        }
+        return count;
     }
 
     @Test

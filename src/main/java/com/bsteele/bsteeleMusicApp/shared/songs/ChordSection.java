@@ -523,6 +523,18 @@ public class ChordSection extends MeasureNode implements Comparable<ChordSection
         return sb.toString();
     }
 
+    @Override
+     boolean setMeasuresPerRow(int measuresPerRow) {
+        if (measuresPerRow <= 0)
+            return false;
+
+        boolean ret = false;
+        for (Phrase phrase : phrases) {
+            ret = ret || phrase.setMeasuresPerRow(measuresPerRow);
+        }
+        return ret;
+    }
+
     public String phrasesToEntry() {
         if (phrases == null || phrases.isEmpty()) {
             return "[]";
