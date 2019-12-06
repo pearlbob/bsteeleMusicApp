@@ -90,7 +90,7 @@ zip -r $app.zip *
 cd $cwd
 set gs=gs://www.bsteele.com/beta/$app
 gsutil -m rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
-gsutil -m setmeta -h "Cache-Control:public, max-age=60" -r $gs
+gsutil -m -q setmeta -h "Cache-Control:public, max-age=60" -r $gs
 gsutil -m -q acl -r ch -u AllUsers:R $gs
 
 if ( $isBeta != 0 ) then
