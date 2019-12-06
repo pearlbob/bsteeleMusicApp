@@ -83,6 +83,11 @@ cp $finalWar /opt/tomcat/webapps
 
 #	deploy on web
 rm -rf $dst/$app/WEB-INF/classes
+rm -rf $dst/$app/WEB-INF/lib
+cd $dst
+rm -rf $app.zip
+zip -r $app.zip *
+cd $cwd
 set gs=gs://www.bsteele.com/beta/$app
 gsutil -m rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
 gsutil -m setmeta -h "Cache-Control:public, max-age=60" -r $gs
