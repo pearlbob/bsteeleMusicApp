@@ -313,7 +313,7 @@ public class PlayerViewImpl
                     break;
                 }
             }
-            logger.info("foundRow: " + foundRow);
+            logger.fine("foundRow: " + foundRow);
 
             SongMoment songMoment = song.getSongMomentAtRow(foundRow);
             if (songMoment != null) {
@@ -600,6 +600,8 @@ public class PlayerViewImpl
         try {
             if (appOptions.isPlayWithBouncingBall())
                 audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction());
+            else
+                audioBeatDisplay.clear();
 
             {
                 Widget parent = player.getParent();

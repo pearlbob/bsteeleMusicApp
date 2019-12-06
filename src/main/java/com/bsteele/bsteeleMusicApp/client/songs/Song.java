@@ -87,11 +87,7 @@ public class Song extends SongBase implements Comparable<Song> {
         song.setBeatsPerBar(beatsPerBar);
         song.setUnitsPerMeasure(unitsPerMeasure);
         song.setUser(user);
-        try {
-            song.parseChords(chords);
-        } catch (ParseException pex) {
-            logger.info("unexpected: " + pex.getMessage());
-        }
+        song.setChords(chords);
         song.setRawLyrics(lyrics);
 
         return song;
@@ -277,9 +273,9 @@ public class Song extends SongBase implements Comparable<Song> {
                             sb.append(ja.get(i).isString().stringValue());
                             sb.append(", ");       //  brutal way to transcribe the new line without the chaos of a newline character
                         }
-                        song.parseChords(sb.toString());
+                        song.setChords(sb.toString());
                     } else {
-                        song.parseChords(jv.isString().stringValue());
+                        song.setChords(jv.isString().stringValue());
                     }
                     break;
                 case "lyrics":

@@ -356,6 +356,9 @@ public class SongPlayMasterImpl
         if (songMoment == null)
             return;
 
+        logger.fine( "bump from row "+gridCoordinate.getRow()
+                +" to row "+song.getMomentGridCoordinate(songOutUpdate.getMomentNumber()).getRow());
+
         songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());//  fixme: this is wrong, current time should be calculated from existing t0
         songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));

@@ -20,8 +20,8 @@ public class AudioBeatDisplay {
     }
 
     private void initialize(CanvasElement canvasElement) {
-        canvas = canvasElement;
-        ctx = canvas.getContext2d();
+        this.canvasElement = canvasElement;
+        ctx = this.canvasElement.getContext2d();
 
         //  fixme: there should be a way to get the color!
 //        for (Element e = canvasElement; e != null; e = e.getParentElement()) {
@@ -32,26 +32,37 @@ public class AudioBeatDisplay {
 //            }
 //        }
 
-        ctx.setFillStyle(backgroundColor);
-        ctx.fillRect(0, 0, canvasElement.getWidth(), canvasElement.getHeight());
+        clear();
+    }
+
+    public final void clear(){
+        if ( !isClear) {
+            ctx.setFillStyle(backgroundColor);
+            ctx.fillRect(0, 0, canvasElement.getWidth(), canvasElement.getHeight());
+            isClear = true;
+        }
     }
 
     public final void update(final SongUpdate songUpdate, final int beatCount, final int beatNumber, final double beatFraction) {
 
         //  fixme:  only can on an as needed basis
 
-        int w = canvas.getWidth();
-        int h = canvas.getHeight();
+        clear();
 
+        switch (songUpdate.getState()){
+            case idle:
+                return;
+        }
 
         //logger.finest("b: " + beatNumber + " " + beatFraction);
 
-        ctx.setFillStyle(backgroundColor);
+        int w = canvasElement.getWidth();
+        int h = canvasElement.getHeight();
         final int radius = 9;
         final double padding = w * 0.05;
         final double dw = (w - 2 * padding) / 6;
         int bounceH = h - 2 * radius - radius;
-        ctx.fillRect(0, 0, w, h);
+
 
         //  text
         if ( false) {
@@ -108,6 +119,8 @@ public class AudioBeatDisplay {
                 , radius, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
+
+        isClear=false;
     }
 
     private static final String black = "#000000";
@@ -117,9 +130,10 @@ public class AudioBeatDisplay {
     private static final String red = "#FF0000";
     //private static final String lawnGreen = "#7CFC00";
     private static final String backgroundColor = "#f5f0e1";
-    private CanvasElement canvas;
+    private CanvasElement canvasElement;
     private Context2d ctx;
     private static final CssColor ballColor = CssColor.make(255, 0, 0);
+    private boolean isClear = false;
 
     private static Logger logger = Logger.getLogger(AudioBeatDisplay.class.getName());
 }

@@ -1016,6 +1016,33 @@ public class SongBaseTest
     }
 
     @Test
+    public void testGetSongMomentAtRow() {
+
+        int beatsPerBar = 4;
+        SongBase a;
+
+        a = createSongBase("A", "bob", "bsteele.com", Key.getDefault(),
+                100, beatsPerBar, 4,
+                "I: [A B C D, E F]  x2 v: D C G G c: Ab Bb C Db o: G G G G ",
+                "i:\nv: verse\n c: chorus\nv: verse\n c: chorus\no: outro"
+        );
+        a.debugSongMoments();
+        logger.fine(a.toMarkup());
+        int size = a.getSongMomentsSize();
+        for (int momentNumber = 0; momentNumber < size; momentNumber++) {
+            SongMoment songMoment = a.getSongMoment(momentNumber);
+            GridCoordinate coordinate = a.getMomentGridCoordinate(songMoment);
+            SongMoment songMomentAtRow = a.getSongMomentAtRow(coordinate.getRow());
+            GridCoordinate coordinateAtRow = a.getMomentGridCoordinate(songMomentAtRow);
+            logger.fine("songMoment: " + songMoment.toString()
+                    + " at: " + coordinate.toString()
+                    + " atRow: " + coordinateAtRow.toString());
+            assertEquals(coordinate.getRow(), coordinateAtRow.getRow());
+            assertEquals(1, coordinateAtRow.getCol());
+        }
+    }
+
+    @Test
     public void testSetMeasuresPerRow() {
         int beatsPerBar = 4;
         SongBase a;
