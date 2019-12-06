@@ -89,10 +89,10 @@ cd $dst
 rm -rf $app.zip
 zip -r $app.zip *
 pwd
-exit -1#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 cd $cwd
 set gs=gs://www.bsteele.com/beta/$app
-gsutil -m rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
+echo gsutil -m rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
+exit -1#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 gsutil -m -q setmeta -h "Cache-Control:public, max-age=60" -r $gs
 gsutil -m -q acl -r ch -u AllUsers:R $gs
 
