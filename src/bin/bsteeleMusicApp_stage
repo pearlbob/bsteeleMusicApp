@@ -87,6 +87,7 @@ rm -rf $dst/$app/WEB-INF/lib
 cd $dst
 rm -rf $app.zip
 zip -r $app.zip *
+pwd
 cd $cwd
 set gs=gs://www.bsteele.com/beta/$app
 gsutil -m rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
