@@ -2,6 +2,7 @@
 set debug=0
 set isBeta=1
 
+
 while ( $#argv > 0 )
 	switch ( $1 )
 #	case '-beta':
@@ -88,6 +89,7 @@ cd $dst
 rm -rf $app.zip
 zip -r $app.zip *
 pwd
+exit -1#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 cd $cwd
 set gs=gs://www.bsteele.com/beta/$app
 gsutil -m rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
