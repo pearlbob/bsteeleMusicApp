@@ -20,6 +20,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.SongBase;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongPlayer;
 import com.google.gwt.animation.client.AnimationScheduler;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.json.client.JSONException;
 import com.google.inject.Inject;
@@ -356,8 +357,8 @@ public class SongPlayMasterImpl
         if (songMoment == null)
             return;
 
-        logger.fine( "bump from row "+gridCoordinate.getRow()
-                +" to row "+song.getMomentGridCoordinate(songOutUpdate.getMomentNumber()).getRow());
+        logger.fine("bump from row " + gridCoordinate.getRow()
+                + " to row " + song.getMomentGridCoordinate(songOutUpdate.getMomentNumber()).getRow());
 
         songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());//  fixme: this is wrong, current time should be calculated from existing t0
         songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
@@ -437,30 +438,35 @@ public class SongPlayMasterImpl
     public void initialize() {
         audioFilePlayer = new AudioFilePlayer();
 
-        //  prep the canned sounds
-        for (int i = 0; i <= 27; i++) {
-            audioFilePlayer.bufferFile("images/bass_" + i + ".mp3");
-        }
-        for (int i = 0; i <= 30; i++) {
-            audioFilePlayer.bufferFile("images/guitar_" + i + ".mp3");
-        }
-        for (int i = 1; i <= 4; i++) {
-            audioFilePlayer.bufferFile("images/count" + i + ".mp3");
-        }
-        audioFilePlayer.bufferFile(highHat1);
-        audioFilePlayer.bufferFile(highHat3);
-        audioFilePlayer.bufferFile(kick);
-        audioFilePlayer.bufferFile(snare);
+        //  verify we can find anything
+        String url = GWT.getHostPageBaseURL();
+        if (!url.matches("^file://.*")) {
 
-        systemAudioLatency = audioFilePlayer.getBaseLatency();
-        logger.fine("Latency: " + systemAudioLatency
-                + ", " + audioFilePlayer.getOutputLatency()
-        );
+            //  prep the canned sounds
+            for (int i = 0; i <= 27; i++) {
+                audioFilePlayer.bufferFile("images/bass_" + i + ".mp3");
+            }
+            for (int i = 0; i <= 30; i++) {
+                audioFilePlayer.bufferFile("images/guitar_" + i + ".mp3");
+            }
+            for (int i = 1; i <= 4; i++) {
+                audioFilePlayer.bufferFile("images/count" + i + ".mp3");
+            }
+            audioFilePlayer.bufferFile(highHat1);
+            audioFilePlayer.bufferFile(highHat3);
+            audioFilePlayer.bufferFile(kick);
+            audioFilePlayer.bufferFile(snare);
 
-        //  fixme: should wait for end of audio buffer loading
+            systemAudioLatency = audioFilePlayer.getBaseLatency();
+            logger.fine("Latency: " + systemAudioLatency
+                    + ", " + audioFilePlayer.getOutputLatency()
+            );
 
-        countInDrumSelection.setHighHat("xxxxxx");
-        countInDrumSelection.setKick("x_____");
+            //  fixme: should wait for end of audio buffer loading
+
+            countInDrumSelection.setHighHat("xxxxxx");
+            countInDrumSelection.setKick("x_____");
+        }
 
         //  use the animation timer to pump commands to the audio
         timer = AnimationScheduler.get();

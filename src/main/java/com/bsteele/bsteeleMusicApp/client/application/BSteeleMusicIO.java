@@ -39,6 +39,7 @@ public class BSteeleMusicIO {
 
     private String getWebSocketURL() {
         String url = GWT.getHostPageBaseURL();
+        logger.fine("raw base url: " + url);
         if (url == null
                 || url.startsWith("http://127.0.0.1:8888/")
                 || url.startsWith("file://")
@@ -51,7 +52,7 @@ public class BSteeleMusicIO {
         url = url.replaceFirst("^https\\:", "wss:");
         url += "bsteeleMusicApp/bsteeleMusic";
         url = url.replaceFirst("8888", "8082");//  fixme
-        logger.fine("url: " + url);
+        logger.fine("final url: " + url);
         return url;
     }
 
