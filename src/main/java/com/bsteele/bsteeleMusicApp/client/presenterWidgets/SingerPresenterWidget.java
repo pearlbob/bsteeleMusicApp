@@ -3,6 +3,9 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEvent;
+import com.bsteele.bsteeleMusicApp.client.application.events.HomeTabEventHandler;
+import com.bsteele.bsteeleMusicApp.client.application.home.AppTab;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEventHandler;
@@ -19,14 +22,17 @@ import com.gwtplatform.mvp.client.View;
 public class SingerPresenterWidget extends PresenterWidget<SingerPresenterWidget.MyView>
         implements
         SongUpdateEventHandler,
-        MusicAnimationEventHandler {
-
+        MusicAnimationEventHandler,
+        HomeTabEventHandler
+{
 
     public interface MyView extends View {
 
         void onSongUpdate(SongUpdate songUpdate);
 
         void onMusicAnimationEvent(MusicAnimationEvent event);
+
+        void setActive(boolean isActive);
     }
 
     @Inject
@@ -42,6 +48,7 @@ public class SingerPresenterWidget extends PresenterWidget<SingerPresenterWidget
     protected void onBind() {
         eventBus.addHandler(SongUpdateEvent.TYPE, this);
         eventBus.addHandler(MusicAnimationEvent.TYPE, this);
+        eventBus.addHandler(HomeTabEvent.TYPE, this);
     }
 
     @Override
@@ -53,6 +60,11 @@ public class SingerPresenterWidget extends PresenterWidget<SingerPresenterWidget
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
         if (isVisible())
             view.onMusicAnimationEvent(event);
+    }
+
+    @Override
+    public void onHomeTab(HomeTabEvent event) {
+        view.setActive(event.getTab() == AppTab.singer);
     }
 
     private final EventBus eventBus;

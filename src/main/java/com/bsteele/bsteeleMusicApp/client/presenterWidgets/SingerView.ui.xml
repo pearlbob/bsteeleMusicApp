@@ -11,7 +11,7 @@
                 Key:
                 <span ui:field="keyLabel"/>
                 BPM:
-                <span ui:field="currentBpm" />
+                <span ui:field="currentBpm"/>
                 Time:
                 <span ui:field="timeSignature"/>
                 &nbsp;&nbsp;
@@ -30,19 +30,12 @@
         </g:north>
         <g:center>
             <g:ScrollPanel ui:field="lyricsScrollPanel">
-                <g:HTMLPanel ui:field="lyricsContainer">
-                    <canvas ui:field="audioBeatDisplayCanvas" height="45"
-                            title="Beat display of audio.">
-                        Your browser does not support the HTML5 canvas tag.
-                    </canvas>
-
-                    <g:HTMLPanel>
-                        <g:HTMLPanel ui:field="singer" styleName="{resources.style.chords}"/>
-                        <p>
-                            Copyright
-                            <span ui:field="copyright"/>
-                        </p>
-                    </g:HTMLPanel>
+                <g:HTMLPanel>
+                    <g:HTMLPanel ui:field="singer" styleName="{resources.style.chords}"/>
+                    <p>
+                        Copyright
+                        <span ui:field="copyright"/>
+                    </p>
                 </g:HTMLPanel>
             </g:ScrollPanel>
         </g:center>

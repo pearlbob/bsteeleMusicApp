@@ -3,15 +3,12 @@
  */
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
-import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.bsteele.bsteeleMusicApp.client.songs.SongUpdate;
+import com.bsteele.bsteeleMusicApp.shared.songs.Key;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.dom.client.CanvasElement;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -59,12 +56,6 @@ public class SingerView
     ScrollPanel lyricsScrollPanel;
 
     @UiField
-    CanvasElement audioBeatDisplayCanvas;
-
-    @UiField
-    HTMLPanel lyricsContainer;
-
-    @UiField
     HTMLPanel singer;
 
     @UiField
@@ -79,9 +70,6 @@ public class SingerView
         super(eventBus, songPlayMaster);
         initWidget(binder.createAndBindUi(this));
 
-        audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
-        labelPlayStop();
-
         prevSongButton.addClickHandler((ClickEvent event) -> {
             eventBus.fireEvent(new NextSongEvent(false));
         });
@@ -91,6 +79,15 @@ public class SingerView
 
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
+    }
+
+
+    @Override
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+        if (isActive) {
+            onSongUpdate(songUpdate);
+        }
     }
 
     @Override
@@ -104,8 +101,6 @@ public class SingerView
         if (!isActive)
             return;
 
-        labelPlayStop();
-
         if (songUpdate.getState() != lastState) {
             switch (lastState) {
                 case idle:
@@ -114,7 +109,6 @@ public class SingerView
             }
             lastState = songUpdate.getState();
         }
-
 
         syncCurrentKey(songUpdate.getCurrentKey());
         syncCurrentBpm(songUpdate.getCurrentBeatsPerMinute());
@@ -129,6 +123,7 @@ public class SingerView
 
             song = songUpdate.getSong();
 
+            //  load new data even if the identity has not changed
             setAnchors(title, artist);
             copyright.setInnerHTML(song.getCopyright());
 
@@ -154,25 +149,14 @@ public class SingerView
         currentBpm.setInnerText(Integer.toString(bpm));
     }
 
-    private void labelPlayStop() {
-        switch (songUpdate.getState()) {
-            case playing:
-                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.INLINE);
-                break;
-            case idle:
-                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
-                break;
-        }
-    }
-
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-//        if (song == null  || !isActive)
-//            return;
-//
+        if (song == null || !isActive)
+            return;
+
 //        audioBeatDisplay.update(event.getT(), songUpdate.getEventTime(),
 //                songUpdate.getCurrentBeatsPerMinute(), false, song.getBeatsPerBar());
-//
+
 //        //  turn off all highlights
 //        if (lastLyricsElement != null) {
 //            lastLyricsElement.getStyle().clearBackgroundColor();
@@ -183,7 +167,7 @@ public class SingerView
 //        switch (songUpdate.getState()) {
 //            case playing:
 //                //  add highlights
-//                if (songUpdate.getMeasure() >= 0) {
+//                if (songUpdate.getMomentNumber() >= 0) {
 //                    String lyricsCellId = prefix + Song.genLyricsId(songUpdate.getMomentNumber());
 //                    Element le = singer.getElementById(lyricsCellId);
 //                    if (le != null) {
@@ -193,18 +177,15 @@ public class SingerView
 //                }
 //                break;
 //        }
-//
-//        //  auto scroll
-//        autoScroll(lyricsScrollPanel, singer);
     }
 
-    private AudioBeatDisplay audioBeatDisplay;
+
+    //  private AudioBeatDisplay audioBeatDisplay;
     private boolean isActive = false;
 
     public static final String highlightColor = "#e4c9ff";
     private static String prefix = "singer";
 
     private static final Scheduler scheduler = Scheduler.get();
-    private static final Document document = Document.get();
     private static final Logger logger = Logger.getLogger(SingerView.class.getName());
 }

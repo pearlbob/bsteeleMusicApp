@@ -2143,7 +2143,6 @@ public class SongBase {
                 + htmlLyrics
                 + rowEnd
                 + tableEnd;
-        //GWT.log(htmlLyrics);
         return htmlLyrics;
     }
 
