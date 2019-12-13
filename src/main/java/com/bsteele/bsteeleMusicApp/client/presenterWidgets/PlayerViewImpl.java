@@ -569,15 +569,11 @@ public class PlayerViewImpl
         switch (songUpdate.getState()) {
             case playing:
                 playStopButton.setText("Stop");
-               // playStatusLabel.setVisible(true);
                 playerTopCover.getCanvasElement().getStyle().setZIndex(1);
                 break;
             case idle:
                 playStopButton.setText("Play");
-//                audioBeatDisplayCanvas.getStyle().setDisplay(Style.Display.NONE);
-               // playStatusLabel.setVisible(false);
                 scrollForLineAt(0); //  hide
-                playerTopCover.getCanvasElement().getStyle().setZIndex(-10);
                 jumpMomentNumber = null;
                 jumpSectionToY = Integer.MIN_VALUE; //  force clearing of jump indicator
                 break;

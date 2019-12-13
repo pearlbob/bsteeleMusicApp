@@ -301,7 +301,7 @@ public class SongBase {
 
         SongMoment songMoment = getSongMoment(momentNumber);
         if (songMoment == null)
-            return "none: " + momentNumber;
+            return "";
 
         Measure measure = songMoment.getMeasure();
 
