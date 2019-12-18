@@ -119,8 +119,8 @@
                                     <p>
                                         Offline version:
                                         <ol>
-                                            <li>Download the bsteeleMusicApp.zip file
-                                                <a href="./bsteeleMusicApp.zip">here</a>.
+                                            <li>Download the bsteeleMusicApp.zip file from
+                                                <a href="./bsteeleMusicApp.zip" download="bsteeleMusicApp.zip">here</a>.
                                             </li>
                                             <li>Unzip (extract) the zip file.  It will create a folder
                                             named bsteeleMusicApp.
