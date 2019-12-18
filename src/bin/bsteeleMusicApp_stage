@@ -91,10 +91,7 @@ cd $dst/$app
 rm -rf $app.zip
 cd ..
 zip -q -r $app.zip $app
-mv $app.zip $app
-
-echo fixxxxxxxxxxxxxxxxxxxxxxxxxxxx me
-exit -1
+mv $app.zip $dst/$app
 
 #	send to beta web location
 cd $cwd
