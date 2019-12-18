@@ -87,9 +87,9 @@ rm -rf $dst/$app/WEB-INF/classes
 rm -rf $dst/$app/WEB-INF/lib
 
 #	generate zip for offline use
-cd $dst/$app
+cd $dst
 rm -rf $app.zip
-zip -q -r $app.zip *
+zip -q -r $app.zip $app
 
 #	send to beta web location
 cd $cwd
