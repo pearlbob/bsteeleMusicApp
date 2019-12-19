@@ -4,10 +4,10 @@
 
     <ui:with field="resources" type="com.bsteele.bsteeleMusicApp.client.resources.AppResources"/>
 
-    <g:DockLayoutPanel ui:field="dockLayoutPanel" unit="EM" width="100%" height="100%">
-        <g:north size="6">
+    <g:DockLayoutPanel ui:field="dockLayoutPanel" unit="PX" width="100%" height="100%">
+        <g:north size="150">
             <g:HTMLPanel>
-                <div style="margin: 10px;">
+                <div style="margin: 5px;">
                     <p>
                         <span class="{resources.style.label}">Search:</span>
                         <g:TextBox ui:field="songSearch"/>
