@@ -63,8 +63,7 @@
                                        styleName="{resources.style.jumpBackground}"
                                        title="Background for song scrolling."/>
                             <gc:Canvas ui:field="playerTopCover" width="100%" height="100%"
-                                       styleName="{resources.style.playTopCover}"
-                            />
+                                       styleName="{resources.style.playTopCover}"/>
                             <g:HTMLPanel>
                                 <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
                                 <p>
