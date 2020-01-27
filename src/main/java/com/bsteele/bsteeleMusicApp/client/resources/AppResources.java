@@ -10,7 +10,7 @@ import com.google.gwt.resources.client.TextResource;
 
 public interface AppResources extends ClientBundle {
 
-    public static final AppResources INSTANCE = GWT.create(AppResources.class);
+    AppResources INSTANCE = GWT.create(AppResources.class);
 
     interface Style extends CssResource {
 
@@ -123,6 +123,27 @@ public interface AppResources extends ClientBundle {
         String focusPanel();
 
         String verticalPanel();
+
+        @ClassName("gwt-DialogBox")
+        String gwtDialogBox();
+
+        @ClassName("gwt-TabLayoutPanelTabs")
+        String gwtTabLayoutPanelTabs();
+
+        @ClassName("gwt-SplitLayoutPanel")
+        String gwtSplitLayoutPanel();
+
+        @ClassName("gwt-FileUpload")
+        String gwtFileUpload();
+
+        @ClassName("gwt-TabLayoutPanel")
+        String gwtTabLayoutPanel();
+
+        @ClassName("gwt-H2")
+        String gwtH2();
+
+        @ClassName("gwt-H1")
+        String gwtH1();
     }
 
     @Source("css/bsteeleMusicApp.gss")

@@ -25,6 +25,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <compiler.style>DETAILED</compiler.style>
+
+        <!-- GWT -->
+        <gwt.version>2.8.2</gwt.version>
+        <gwtp.version>1.6</gwtp.version>
+        <gwt-material.version>2.2</gwt-material.version>
+
     </properties>
 
     <dependencyManagement>

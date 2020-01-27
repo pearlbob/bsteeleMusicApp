@@ -73,7 +73,7 @@ public class Util
     }
 
     /**
-     * Strip leading space and tabs but newline is not considered a space!
+     * Strip leading space and tabs.  newline is white space!
      *
      * @param markedString the string buffer to clip
      */

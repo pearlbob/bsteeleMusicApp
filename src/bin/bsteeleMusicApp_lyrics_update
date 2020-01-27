@@ -31,16 +31,14 @@ set localBeta=/var/www/html/public_html/beta
 set date=`date -Iseconds`
 
 #	from Bodhi
-echo "not from bodhi on the cloud!"
-echo fixme
 set src=$bodhiDir/$f
-#curl -s -G -o $bodhiDir/$f \
-#        https://storage.googleapis.com/allsongs.schillerstreetstudio.com/$f
-#if ( $status != 0 ) then
-#	set stat=$status
-#	echo read of $storage failed $date\: $stat
-#	exit $stat
-#endif
+curl -s -G -o $bodhiDir/$f \
+	https://storage.googleapis.com/songlyrics.bsteele.com/$f
+if ( $status != 0 ) then
+	set stat=$status
+	echo read of $storage failed $date\: $stat
+	exit $stat
+endif
 
 #	sanity check
 echo "Todo: create a sanity check for imported allSongs.songlyrics, more than JSON parse"
@@ -61,6 +59,8 @@ cd $bsteeleMusicAppHome
 #	copy to required locations, if different
 cmp -s $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 if ( $status || $force != 0 ) then
+
+	#	copy to web beta
 	gsutil -q -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
 	gsutil -q acl ch -u AllUsers:R $svrDst/$f
 

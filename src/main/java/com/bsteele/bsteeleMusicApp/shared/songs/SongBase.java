@@ -3180,7 +3180,10 @@ public class SongBase {
                             complexity++;
                 }
             }
+            //  more chord sections => more complex
             complexity += getChordSectionMap().values().size();
+
+            //  more different chords => more complex
             complexity += differentChords.size();
         }
         return complexity;

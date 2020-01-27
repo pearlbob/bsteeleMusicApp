@@ -80,5 +80,5 @@ public class SongReadPopup extends DialogBox {
     }
 
     private final HandlerManager handlerManager = new HandlerManager(this);
-    private static final Logger logger = Logger.getLogger(LyricsAndChordsViewImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(SongReadPopup.class.getName());
 }

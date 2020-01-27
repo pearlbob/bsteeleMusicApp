@@ -28,8 +28,6 @@
     
     <!--    gwtp    -->
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
-    <extend-configuration-property name="gin.ginjector.modules"
-                                   value="com.bsteele.bsteeleMusicApp.client.gin.ClientModule"/>
 
     <!-- Specify the paths for translatable code                    -->
     <source path='client'/>
@@ -77,5 +75,8 @@
 
     <set-property name="user.agent" value="safari" /> <!-- Webkit based browsers, usually Safari&Chrome-->
     <!--<extend-property name="user.agent" values="gecko1_8" /> &lt;!&ndash; Firefox 3.0+ &ndash;&gt;-->
+
+    <extend-configuration-property name="gin.ginjector.modules"
+                                   value="com.bsteele.bsteeleMusicApp.client.gin.ClientModule"/>
 
 </module>
