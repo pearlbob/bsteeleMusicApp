@@ -267,13 +267,12 @@ public class SongListView
             if (oldSong.equals(song))
                 return false;
 
-
             if (force) {
                 allSongs.remove(oldSong);  //  remove any prior version
                 return allSongs.add(song);
             }
             if (appOptions.isAlwaysUseTheNewestSongOnRead()) {
-                if (song.getLastModifiedTime() > oldSong.getLastModifiedTime())
+                if (song.getLastModifiedTime() < oldSong.getLastModifiedTime())
                     return false;
                 else {
                     allSongs.remove(oldSong);  //  remove any prior version
