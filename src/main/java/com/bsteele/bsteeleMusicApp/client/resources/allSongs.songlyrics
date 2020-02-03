@@ -2309,7 +2309,7 @@
 	"V:",
 	"B♭ B♭ B♭ B♭ x2",
 	"V2:",
-	"B♭ B♭ B♭ XXXX",
+	"B♭ B♭ B♭ X",
 	"B♭ B♭ B♭ B♭",
 	"PC:",
 	"B♭7 B♭7 B♭7sus4 E♭B♭",
@@ -5382,7 +5382,7 @@
 	"A D C D",
 	"A D C D",
 	"A C D DXXX",
-	"XXXX XXXX A A",
+	"X X A A",
 	"V2:",
 	"A D C D",
 	"A D C D",
@@ -9575,9 +9575,9 @@
 "chords": 
     [
 	"V:",
-	"XXXX CE♭FC XXXX CE♭FC",
-	"XXXX FG♯B♭F XXXX CE♭FC",
-	"XXXX B♭C♯E♭F XXXX CE♭FC",
+	"X CE♭FC X CE♭FC",
+	"X FG♯B♭F X CE♭FC",
+	"X B♭C♯E♭F X CE♭FC",
 	"G",
 	"C:",
 	"C C C C",
@@ -10655,7 +10655,7 @@
 	"G G D D",
 	"A A A A",
 	"O:",
-	"XXXX"
+	"X"
     ],
 "lyrics": 
     [
@@ -13264,7 +13264,7 @@
 	"F F7 B♭ B♭m",
 	"C C F F",
 	"O:",
-	"XX XX Cdim Cdim",
+	"X X Cdim Cdim",
 	"Cdim Cdim CX"
     ],
 "lyrics": 
@@ -13423,7 +13423,7 @@
 	"F F7 A♯ A♯m",
 	"C C F F",
 	"O:",
-	"XX XX Cdim Cdim",
+	"X X Cdim Cdim",
 	"Cdim Cdim CX"
     ],
 "lyrics": 
@@ -16689,7 +16689,7 @@
 	"F♯m F♯m A E |",
 	"F♯m F♯m D E | x2",
 	"V:",
-	"XXXX XXXX",
+	"X X",
 	"A A A E E E",
 	"D D D A |",
 	"A A A A | x2",
@@ -24281,13 +24281,13 @@
 "chords": 
     [
 	"I:",
-	"XXXX XXXX XXXX XXXX",
-	"XXXX XXXX XXXX XXXX",
+	"X X X X",
+	"X X X X",
 	"D D",
 	"V:",
 	"D D D A",
 	"D G DA D",
-	"D D..X XXXX",
+	"D D..X X",
 	"V1:",
 	"D D D A",
 	"D G DA D",
@@ -24298,7 +24298,7 @@
 	"Br:",
 	"GD AD GD AG",
 	"O:",
-	"XXXX DG DG DG",
+	"X DG DG DG",
 	"DG DG DG DG",
 	"DXXX DXXX DXXX DXXX"
     ],
@@ -25250,16 +25250,16 @@
 	"A♭ G♭ B♭m B♭m",
 	"D♭ D♭ B♭m B♭m",
 	"D♭ D♭ A♭ G♭",
-	"A♭ XXXX",
+	"A♭ X",
 	"V1:",
 	"B♭m B♭m D♭ D♭",
 	"B♭m B♭m D♭ D♭",
-	"A♭ G♭ A♭ XXXX",
+	"A♭ G♭ A♭ X",
 	"C:",
 	"G♭ G♭ B♭m B♭m",
 	"D♭ D♭ G♭ G♭",
 	"G♭ G♭ B♭m B♭m",
-	"A♭ G♭ XXXX",
+	"A♭ G♭ X",
 	"C2:",
 	"D♭ D♭ G♭ G♭",
 	"G♭ G♭ B♭m B♭m",
@@ -33993,7 +33993,7 @@
 "artist": "Pat Benatar",
 "user": "Unknown",
 "lastModifiedDate": 1551661458527,
-"copyright": "Xxxx",
+"copyright": "X",
 "key": "E",
 "defaultBpm": 106,
 "timeSignature": "4/4",
@@ -44307,8 +44307,8 @@
 "chords": 
     [
 	"V:",
-	"G Am C XXXX",
-	"C D G XXXX"
+	"G Am C X",
+	"C D G X"
     ],
 "lyrics": 
     [
@@ -51908,7 +51908,7 @@
 	"B♭ E♭/G A♭ E♭/G",
 	"B♭ B♭/D E♭ E♭",
 	"C2:",
-	"XXXX XXXX XXXX XXXX",
+	"X X X X",
 	"B♭/D E♭ Cm7",
 	"C3:",
 	"B♭ E♭/G A♭ E♭/G",
@@ -52692,7 +52692,7 @@
 "chords": 
     [
 	"I:",
-	"XX",
+	"X",
 	"V:",
 	"C GD C GD",
 	"C GD C GD",
@@ -53574,7 +53574,7 @@
 	"Br:",
 	"G G C G",
 	"O:",
-	"XXXX"
+	"X"
     ],
 "lyrics": 
     [
@@ -62820,7 +62820,7 @@
 	"E Esus4 E Esus4 x4",
 	"V2:",
 	"E Esus4 E Esus4 x3",
-	"E Esus4 E XXXX",
+	"E Esus4 E X",
 	"C:",
 	"E G A E",
 	"E G A E",
@@ -64928,16 +64928,16 @@
 "chords": 
     [
 	"I:",
-	"XXXX XXXX XXXX XXXX",
-	"XXXX",
+	"X X X X",
+	"X",
 	"V:",
-	"XXXX",
+	"X",
 	"V1:",
 	"Dm Dm Dm Dm",
 	"Dm Dm Dm Dm",
-	"XXXX XXXX XXXX XXXX",
+	"X X X X",
 	"PC:",
-	"XXXX",
+	"X",
 	"PC1:",
 	"Dm Dm G G",
 	"B♭ B♭ Dm Dm",
@@ -69962,7 +69962,7 @@
     ],
 "lyrics": 
     [
-	"I: XXXXX",
+	"I: XX",
 	"",
 	"V1: There's a young man that I know just turned twenty one",
 	"   Comes from down in southern Colorado",
@@ -79490,7 +79490,7 @@
 "chords": 
     [
 	"I:",
-	"XXXX XXXX XXXX XXXX x8",
+	"X X X X x8",
 	"V:",
 	"C F G C x2",
 	"O:",
@@ -80182,14 +80182,14 @@
 	"Dm Dm C C",
 	"Gm Gm Dm Dm",
 	"Gm Gm Dm G",
-	"XXXX",
+	"X",
 	"C:",
 	"Dm G Dm G",
 	"Dm G Dm A",
 	"DmC B♭C DmC B♭C",
 	"Br:",
 	"Dm Dm C♯m C♯m",
-	"GXFX E♭ XXXX",
+	"GXFX E♭ X",
 	"O:",
 	"DmC B♭C DmC B♭C",
 	"DmC B♭C DmC B♭C",
@@ -80386,7 +80386,7 @@
 	"Am C F7 E7",
 	"Am C F7 E7",
 	"C2:",
-	"XXXX XXXX B7 A♯7",
+	"X X B7 A♯7",
 	"Am C F7 E7",
 	"C3:",
 	"Am C B7 B♭7",
@@ -82199,7 +82199,7 @@
     [
 	"V:",
 	"E7 E7 A7 A7",
-	"D7 D7 G7XXX XXXX",
+	"D7 D7 G7XXX X",
 	"V1:",
 	"E7 E7 A7 A7",
 	"FCdim CA7 FG CA7",
@@ -82251,7 +82251,7 @@
     [
 	"V:",
 	"E7 E7 A7 A7",
-	"D7 D7 G7XXX XXXX",
+	"D7 D7 G7XXX X",
 	"V1:",
 	"E7 E7 A7 A7",
 	"FCdim CA7 FG CA7",
@@ -87828,7 +87828,7 @@
 	"EB F♯m F♯mB E x2",
 	"C:",
 	"DA E DA E",
-	"A E BXXX XXXX",
+	"A E BXXX X",
 	"C1:",
 	"DA E DA E",
 	"A E",
@@ -90927,7 +90927,7 @@
 "chords": 
     [
 	"I:",
-	"XXXX",
+	"X",
 	"V:",
 	"D A E A x3",
 	"C:",

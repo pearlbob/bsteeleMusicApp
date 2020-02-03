@@ -1,15 +1,10 @@
 package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEvent;
-import com.bsteele.bsteeleMusicApp.client.application.events.SongSubmissionEventHandler;
 import com.bsteele.bsteeleMusicApp.client.songs.Song;
 import com.bsteele.bsteeleMusicApp.client.util.StringTripleToHtmlTable;
 import com.bsteele.bsteeleMusicApp.shared.util.StringTriple;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
@@ -21,13 +16,25 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import java.util.logging.Logger;
 
 public class SongReadPopup extends DialogBox {
+    public enum SongReadResponseEnum{
+        keepTheOld,
+        useThenew,
+        cancel
+    }
+    public interface SongReadResponse{
+        void songReadResponse(SongReadResponseEnum value);
+    }
 
-    public SongReadPopup(String message, Song oldSong, Song newSong) {
+    public SongReadPopup(SongReadResponse songReadResponse) {
         // PopupPanel's constructor takes 'auto-hide' as its boolean parameter.
         // If this is set, the panel closes itself automatically when the user
         // clicks outside of it.
-        super(true);
+        super(false);
+        setModal(true);
+        this.songReadResponse = songReadResponse;
+    }
 
+    public void processSong(String message, Song oldSong, Song newSong) {
         // PopupPanel is a SimplePanel, so you have to set it's widget property to
         // whatever you want its contents to be.
 
@@ -45,25 +52,25 @@ public class SongReadPopup extends DialogBox {
 
         {
             HorizontalPanel horizontalPanel = new HorizontalPanel();
-            horizontalPanel.add(new Button("Keep existing version", new ClickHandler() {
-                public void onClick(ClickEvent event) {
+            horizontalPanel.add(new Button("Keep existing version", (ClickHandler) event -> {
+                logger.info("Keep existing: " + newSong.getTitle());
+                hide();
+                songReadResponse.songReadResponse(SongReadResponseEnum.keepTheOld);
+            }));
+            horizontalPanel.add(new Button("Use the newly read version", (ClickHandler) event -> {
+                try {
+                    logger.info("fired: " + newSong.getTitle());
+                    hide();
+                    songReadResponse.songReadResponse(SongReadResponseEnum.useThenew);
+                } catch (Exception ex) {
+                    logger.info("Exception on song submission: " + ex.getMessage());
                     hide();
                 }
             }));
-            horizontalPanel.add(new Button("Use the newly read version", new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    try {
-                        handlerManager.fireEvent(new SongSubmissionEvent(newSong, false));
-                    } catch (Exception ex){
-                        logger.info( "Exception on song submission: "+ex.getMessage());
-                    }
-                    hide();
-                }
-            }));
-            horizontalPanel.add(new Button("Cancel", new ClickHandler() {
-                public void onClick(ClickEvent event) {
-                    hide();
-                }
+            horizontalPanel.add(new Button("Cancel", (ClickHandler) event -> {
+                logger.info("Cancel: " + newSong.getTitle());
+                hide();
+                songReadResponse.songReadResponse(SongReadResponseEnum.cancel);
             }));
             vPanel.add(horizontalPanel);
         }
@@ -72,13 +79,6 @@ public class SongReadPopup extends DialogBox {
         show();
     }
 
-    public HandlerRegistration SongSubmissionEventHandler(SongSubmissionEventHandler handler) {
-        logger.info("pre handlerManager.getHandlerCount(): " + handlerManager.getHandlerCount(SongSubmissionEvent.TYPE));
-        HandlerRegistration handlerRegistration = handlerManager.addHandler(SongSubmissionEvent.TYPE, handler);
-        logger.info("post handlerManager.getHandlerCount(): " + handlerManager.getHandlerCount(SongSubmissionEvent.TYPE));
-        return handlerRegistration;
-    }
-
-    private final HandlerManager handlerManager = new HandlerManager(this);
+    private final SongReadResponse songReadResponse;
     private static final Logger logger = Logger.getLogger(SongReadPopup.class.getName());
 }
