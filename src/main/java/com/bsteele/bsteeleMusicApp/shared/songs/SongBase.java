@@ -3002,7 +3002,7 @@ public class SongBase {
     }
 
     public final String getFileName() {
-        return fileName;
+        return fileName == null ? "" : fileName;
     }
 
     public final void setFileName(String fileName) {
