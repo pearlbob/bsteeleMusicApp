@@ -124,6 +124,9 @@ public class Song extends SongBase implements Comparable<Song> {
             return ret;
         }
 
+        //  fix for damaged files
+        jsonString = jsonString.replaceAll("\": null,","\": \"\",");
+
         if (jsonString.startsWith("<")) {
             logger.warning("this can't be good: " + jsonString.substring(0, Math.min(25, jsonString.length())));
         }

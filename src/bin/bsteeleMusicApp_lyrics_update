@@ -32,8 +32,7 @@ set date=`date -Iseconds`
 
 #	from Bodhi
 set src=$bodhiDir/$f
-curl -s -G -o $bodhiDir/$f \
-	https://storage.googleapis.com/songlyrics.bsteele.com/$f
+gsutil cp gs://songlyrics.bsteele.com/$f $bodhiDir/$f
 if ( $status != 0 ) then
 	set stat=$status
 	echo read of $storage failed $date\: $stat
@@ -52,6 +51,7 @@ if ( $status != 0 ) then
 endif
 
 echo song count: `grep 'title\": "' $src | wc -l`
+
 
 #	expect to be in the root directory of the project
 cd $bsteeleMusicAppHome
