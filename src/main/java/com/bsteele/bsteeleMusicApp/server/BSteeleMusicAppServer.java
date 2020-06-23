@@ -41,11 +41,11 @@ public class BSteeleMusicAppServer {
             return;
 
         //   fixme:  flip any message back to all registered peers
-//        for (final Session peer : peers) {
-//                peer.getAsyncRemote().sendText(message);
-//        }
+        for (final Session peer : peers) {
+                peer.getAsyncRemote().sendText(message);
+        }
 
-        logger.log(Level.INFO, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
+        logger.log(Level.FINE, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
                 message.substring(0,Math.min(message.length(),40)).replaceAll("\n"," "),
                 peers.size(),
                 System.currentTimeMillis()});

@@ -6,6 +6,8 @@
 #	or the crontab should be shutdown.
 
 
+echo fix this before running
+exit -1
 
 set force=0
 while ( $#argv > 0 )
@@ -60,7 +62,7 @@ cd $bsteeleMusicAppHome
 cmp -s $src $bsteeleMusicAppHome/../allSongs.songlyrics/$f
 if ( $status || $force != 0 ) then
 
-	#	copy to web beta
+	#	copy to web
 	gsutil -q -h "Cache-Control:public,max-age=20" cp $src $svrDst/$f
 	gsutil -q acl ch -u AllUsers:R $svrDst/$f
 
