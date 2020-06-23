@@ -79,8 +79,8 @@ cd $cwd
 cp $finalWar $dst
 
 #	deploy on tomcat
-rm -f /opt/tomcat/webapps/$finalWar:t	#	avoid permission issues on the war file
-cp $finalWar /opt/tomcat/webapps
+rm -f $CATALINA_HOME/webapps/$finalWar:t	#	avoid permission issues on the war file
+cp $finalWar $CATALINA_HOME/webapps
 
 #	deploy on web
 rm -rf $dst/$app/WEB-INF/classes
