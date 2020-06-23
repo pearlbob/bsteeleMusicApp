@@ -62,6 +62,12 @@ if ( $stat != 0 ) then
 	exit $stat
 endif
 
+#	add allSongs.songlyrics
+pwd
+exit -1
+cp ../allSongs
+
+
 #	generate javadoc
 mvn javadoc:aggregate
 
