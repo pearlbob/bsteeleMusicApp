@@ -63,9 +63,12 @@ if ( $stat != 0 ) then
 endif
 
 #	add allSongs.songlyrics
+cd target
+cp ../../allSongs.songlyrics/allSongs.songlyrics .
+jar uf $app.war allSongs.songlyrics
+rm allSongs.songlyrics
 pwd
-exit -1
-cp ../allSongs
+cd ..
 
 
 #	generate javadoc
