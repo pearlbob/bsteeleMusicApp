@@ -78,12 +78,14 @@ class CommonPlayViewImpl
         setCurrentBpm(bpm < MusicConstant.minBpm
                 ? MusicConstant.minBpm
                 : (bpm > MusicConstant.maxBpm ? MusicConstant.maxBpm : bpm));
+        issueSongUpdate();
     }
 
     protected void setCurrentBpm(String bpm) throws NumberFormatException {
         if (bpm == null)
             throw new NumberFormatException("BPM count missing");
         setCurrentBpm(Integer.parseInt(bpm.trim()));
+        issueSongUpdate();
     }
 
     protected void setCurrentBpm(int bpm) {

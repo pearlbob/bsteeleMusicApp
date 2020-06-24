@@ -53,7 +53,7 @@ public class BSteeleMusicIO {
         url = url.replaceFirst("^http\\:", "ws:");
         url = url.replaceFirst("^https\\:", "wss:");
         url += "bsteeleMusicApp/bsteeleMusic";
-        url = url.replaceFirst("8888", "8082");//  fixme: devmode uses tomcat at 127.0.0.1:8082
+        url = url.replaceFirst("8888", "8080");//  fixme: devmode uses tomcat at 127.0.0.1:8080
         logger.fine("final url: " + url);
         return url;
     }
@@ -66,8 +66,7 @@ public class BSteeleMusicIO {
 
             OnMessageEvent me = (OnMessageEvent) event;
 
-            //GWT.log("message recv: " + me.data + " at my " + t);
-            logger.fine("message recv: " + me.data + " at my " + t);
+            logger.fine("message recv: " + me.data +" at " + dateTimeFormat.format(new Date(t)));
             songPlayMaster.onMessage(t / 1000.0, me.data);
             return event;
         }
@@ -111,10 +110,12 @@ public class BSteeleMusicIO {
 //            return true;
 //        }
 
-        logger.info("socket send: " + message.substring(0,Math.min(30,message.length()))
-                + " at " + dateTimeFormat.format(new Date()));
+
         if (!isSocketOpen())
             return false;
+
+        logger.info("socket send: " + message.substring(0,Math.min(30,message.length()))
+                + " at " + dateTimeFormat.format(new Date()));
 
         socket.send(message);
         return true;
