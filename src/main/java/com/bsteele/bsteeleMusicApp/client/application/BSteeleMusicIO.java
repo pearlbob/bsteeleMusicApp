@@ -4,9 +4,11 @@ import com.bsteele.bsteeleMusicApp.client.Function;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.jsTypes.WebSocket;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import jsinterop.annotations.JsType;
 
 import javax.inject.Inject;
+import java.util.Date;
 import java.util.logging.Logger;
 
 import static jsinterop.annotations.JsPackage.GLOBAL;
@@ -25,7 +27,7 @@ public class BSteeleMusicIO {
         this.songPlayMaster = songPlayMaster;
         String url = getWebSocketURL();
         if (url != null) {
-            GWT.log("url: " + url);
+           logger.fine("websocket url: " + url);
 
             socket = new WebSocket(url);
             socket.onerror = new SocketErrorFunction();
@@ -41,7 +43,7 @@ public class BSteeleMusicIO {
         String url = GWT.getHostPageBaseURL();
         logger.fine("raw base url: " + url);
         if (url == null
-                || url.startsWith("http://127.0.0.1:8888/")
+          //  || url.startsWith("http://127.0.0.1:8888/")
                 || url.startsWith("file://")
         )
             return null;
@@ -51,7 +53,7 @@ public class BSteeleMusicIO {
         url = url.replaceFirst("^http\\:", "ws:");
         url = url.replaceFirst("^https\\:", "wss:");
         url += "bsteeleMusicApp/bsteeleMusic";
-        url = url.replaceFirst("8888", "8082");//  fixme
+        url = url.replaceFirst("8888", "8082");//  fixme: devmode uses tomcat at 127.0.0.1:8082
         logger.fine("final url: " + url);
         return url;
     }
@@ -109,8 +111,8 @@ public class BSteeleMusicIO {
 //            return true;
 //        }
 
-//        GWT.log("socket send: " + message.substring(0,Math.min(30,message.length()))
-//                + " at my " + System.currentTimeMillis());
+        logger.info("socket send: " + message.substring(0,Math.min(30,message.length()))
+                + " at " + dateTimeFormat.format(new Date()));
         if (!isSocketOpen())
             return false;
 
@@ -121,5 +123,7 @@ public class BSteeleMusicIO {
     private final SongPlayMaster songPlayMaster;
     private static WebSocket socket;
     private static boolean isSocketOpen = true;
+    private final DateTimeFormat dateTimeFormat =  DateTimeFormat.getFormat("HH:mm:ss.SSS\"");
+
     private static final Logger logger = Logger.getLogger(BSteeleMusicIO.class.getName());
 }
