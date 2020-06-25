@@ -362,7 +362,7 @@ public class SongPlayMasterImpl
 
         songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());//  fixme: this is wrong, current time should be calculated from existing t0
         songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
-        logger.fine("play moment: "+Integer.toString(songOutUpdate.getMomentNumber()));
+        logger.fine("play moment: " + Integer.toString(songOutUpdate.getMomentNumber()));
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
     }
 

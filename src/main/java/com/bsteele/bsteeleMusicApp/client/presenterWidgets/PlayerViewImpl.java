@@ -209,7 +209,7 @@ public class PlayerViewImpl
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
 
-       // playStatusLabel.setVisible(false);
+        // playStatusLabel.setVisible(false);
         playDivElement.getStyle().setDisplay(Style.Display.NONE);
 
         playerFocusPanel.addKeyDownHandler(handler -> {
@@ -282,14 +282,14 @@ public class PlayerViewImpl
             if (playScrollAccumulator < -h) {
                 playScrollAccumulator += h;
                 songPlayMaster.playSongOffsetRowNumber(-1);
-                logger.fine("play scroll: bump -1");
+                logger.finest("play scroll: bump -1");
             } else if (playScrollAccumulator > h) {
                 playScrollAccumulator -= h;
                 songPlayMaster.playSongOffsetRowNumber(1);
-                logger.fine("play scroll: bump +1");
+                logger.finest("play scroll: bump +1");
             }
 
-            logger.finest("play scroll: " + handler.getDeltaY()
+            logger.fine("play scroll: " + handler.getDeltaY()
                     + ", h: " + h
                     + ", acc: " + playScrollAccumulator
             );
@@ -303,17 +303,7 @@ public class PlayerViewImpl
             int y = clickEvent.getY() + playerTopCover.getAbsoluteTop();
 
             FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
-            int rowLimit = playerFlexTable.getRowCount();
-            int foundRow = rowLimit - 1;  //  worst case
-            for (int r = 0; r < rowLimit; r++) {
-                Element e = flexCellFormatter.getElement(r, 0);
-                //logger.info("playerTopCover y: " + y +": "+ r + ": " + e.getAbsoluteTop() + " to " + e.getAbsoluteBottom());
-                if (y <= e.getAbsoluteBottom()) {
-                    foundRow = r;
-                    break;
-                }
-            }
-            logger.fine("foundRow: " + foundRow);
+            int foundRow = findPlayerFlexTableRow(y);
 
             SongMoment songMoment = song.getSongMomentAtRow(foundRow);
             if (songMoment != null) {
@@ -352,6 +342,31 @@ public class PlayerViewImpl
             }
 
         });
+    }
+
+    private int findPlayerFlexTableRow(int displayY) {
+        FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
+        int rowLimit = playerFlexTable.getRowCount();
+        int foundRow = rowLimit - 1;  //  worst case
+        for (int r = 0; r < rowLimit; r++) {
+            Element e = flexCellFormatter.getElement(r, 0);
+            //logger.info("playerTopCover y: " + y +": "+ r + ": " + e.getAbsoluteTop() + " to " + e.getAbsoluteBottom());
+            if (displayY <= e.getAbsoluteBottom()) {
+                foundRow = r;
+                break;
+            }
+        }
+        logger.fine("findPlayerFlexTableRow: " + foundRow);
+        return foundRow;
+    }
+
+    private int findDisplayY(int playerFlexTableRow) {
+        FlexTable.FlexCellFormatter flexCellFormatter = playerFlexTable.getFlexCellFormatter();
+        int row = Math.max(0, Math.min(playerFlexTableRow, playerFlexTable.getRowCount() - 1));
+        Element e = flexCellFormatter.getElement(row, 0);
+        if (e != null)
+            return e.getOffsetTop();
+        return 0;
     }
 
     @Override
@@ -413,9 +428,16 @@ public class PlayerViewImpl
 
     @Override
     public void onSongUpdate(SongUpdate songUpdate) {
+        onSongUpdate(songUpdate, false);
+    }
 
+    public void onSongUpdate(SongUpdate songUpdate, boolean force) {
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
+
+        if (!force && songUpdate.equals(this.songUpdate)) {
+            return;
+        }
 
         this.songUpdate = songUpdate;
 
@@ -462,6 +484,7 @@ public class PlayerViewImpl
         boolean isSongDiff = (song == null || !song.equals(songUpdate.getSong()));
         if (isSongDiff
                 || !songUpdate.getCurrentKey().equals(lastKey)
+                || songUpdate.getCurrentBeatsPerMinute() != getCurrentBpm()
         ) {
             song = songUpdate.getSong();
 
@@ -489,6 +512,12 @@ public class PlayerViewImpl
                         playerFocusPanel.setFocus(true);
                     }
                 });
+        } else if (songUpdate.getMomentNumber() != idleMomentNumber) {
+            idleMomentNumber = songUpdate.getMomentNumber();
+            int row = song.getMomentGridCoordinate(idleMomentNumber).getRow();
+            int displayY = findDisplayY(row);
+            logger.info("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
+            chordsScrollPanel.setVerticalScrollPosition(displayY);
         }
 
         if (song != null && playerFlexTable != null)
@@ -587,7 +616,7 @@ public class PlayerViewImpl
 
     @Override
     public void onMusicAnimationEvent(MusicAnimationEvent event) {
-        if (song == null)
+        if (song == null || playerFlexTable == null)
             return;
 
         if (!isActive)
@@ -660,10 +689,23 @@ public class PlayerViewImpl
                 chordsDirty = false;
             }
 
-            //  auto scroll
+
             switch (songUpdate.getState()) {
                 case playing:
+                    //  auto scroll
                     scrollForLineAnimation();
+                    break;
+                case idle:
+                    int playerFlexTableRow = findPlayerFlexTableRow(chordsScrollPanel.getVerticalScrollPosition());
+                    if (playerFlexTableRow != lastPlayerFlexTableRow) {
+                        lastPlayerFlexTableRow = playerFlexTableRow;
+                        logger.fine("playerFlexTableRow: " + playerFlexTableRow);
+                        SongMoment songMoment = song.getSongMomentAtRow(playerFlexTableRow);
+                        if (songMoment != null) {
+                            songUpdate.setMomentNumber(songMoment.getMomentNumber());
+                            songPlayMaster.issueSongUpdate(songUpdate);
+                        }
+                    }
                     break;
             }
 
@@ -734,8 +776,7 @@ public class PlayerViewImpl
     public void setActive(boolean isActive) {
         this.isActive = isActive;
         if (isActive) {
-            lastKey = null;    //  force update
-            onSongUpdate(songUpdate);
+            onSongUpdate(songUpdate, true);//  force update
             playerFocusPanel.setFocus(true);
         }
     }
@@ -758,7 +799,7 @@ public class PlayerViewImpl
         player.clear();
 
         ArrayList<LyricSection> lyricSections = song.getLyricSections();
-        {
+        if (!lyricSections.isEmpty()) {
             FlexTable flexTable = new FlexTable();
             FlexTable.FlexCellFormatter formatter = flexTable.getFlexCellFormatter();
             final int lyricsCol = song.getChordSectionLocationGridMaxColCount() + 1;
@@ -911,6 +952,8 @@ public class PlayerViewImpl
     private int lastJumpSectionToY = -1;
     private int jumpSectionMaxX = 10;
     private int playScrollAccumulator = 0;
+    private int lastPlayerFlexTableRow;
+    private int idleMomentNumber = 0;
 
 
     public static final String highlightColor = "#e4c9ff";

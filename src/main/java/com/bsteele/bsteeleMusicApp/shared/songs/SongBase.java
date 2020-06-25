@@ -2214,9 +2214,12 @@ public class SongBase {
             markedString.consume(1);
         }
         //  last one is not terminated by another section
-        if (lyricSection != null)
-            lyricSection.add(new LyricsLine(lyricsBuilder.toString()));
-        lyricSections.add(lyricSection);
+        if (lyricSection != null) {
+            if (lyricsBuilder.length() > 0) {
+                lyricSection.add(new LyricsLine(lyricsBuilder.toString()));
+            }
+            lyricSections.add(lyricSection);
+        }
 
         //  safety with lazy eval
         clearCachedValues();
