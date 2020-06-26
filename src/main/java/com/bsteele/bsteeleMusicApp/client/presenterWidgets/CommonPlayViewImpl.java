@@ -36,11 +36,13 @@ class CommonPlayViewImpl
                     songPlayMaster.stopSong();
                     break;
                 case idle:
-                    SongUpdate update = new SongUpdate();
-                    update.setSong(song.copySong());
-                    update.setCurrentBeatsPerMinute(currentBpm);
-                    update.setCurrentKey(currentKey);
-                    songPlayMaster.playSongUpdate(update);
+                    if (songPlayMaster.isLeader()) {
+                        SongUpdate update = new SongUpdate();
+                        update.setSong(song.copySong());
+                        update.setCurrentBeatsPerMinute(currentBpm);
+                        update.setCurrentKey(currentKey);
+                        songPlayMaster.playSongUpdate(update);
+                    }
                     break;
             }
         }

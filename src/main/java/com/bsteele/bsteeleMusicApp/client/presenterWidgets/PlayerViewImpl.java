@@ -416,11 +416,13 @@ public class PlayerViewImpl
                     break;
                 case idle:
                     //  ask for a play
-                    SongUpdate songUpdateCopy = new SongUpdate();
-                    songUpdateCopy.setSong(song.copySong());
-                    songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
-                    songUpdateCopy.setCurrentKey(currentKey);
-                    songPlayMaster.playSongUpdate(songUpdateCopy);
+                    if (songPlayMaster.isLeader()) {
+                        SongUpdate songUpdateCopy = new SongUpdate();
+                        songUpdateCopy.setSong(song.copySong());
+                        songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));
+                        songUpdateCopy.setCurrentKey(currentKey);
+                        songPlayMaster.playSongUpdate(songUpdateCopy);
+                    }
                     break;
             }
         }
@@ -689,7 +691,6 @@ public class PlayerViewImpl
                 chordsDirty = false;
             }
 
-
             switch (songUpdate.getState()) {
                 case playing:
                     //  auto scroll
@@ -920,7 +921,7 @@ public class PlayerViewImpl
     private void updateCountIn() {
         switch (songUpdate.getState()) {
             case playing:
-                if (songPlayMaster.getMomentNumber() < 0) {
+                if (songPlayMaster.getMomentNumber() < 0 && songPlayMaster.isLeader()) {
                     SongUpdate songUpdateCopy = new SongUpdate();
                     songUpdateCopy.setSong(song.copySong());
                     songUpdateCopy.setCurrentBeatsPerMinute(Integer.parseInt(currentBpmEntry.getValue()));

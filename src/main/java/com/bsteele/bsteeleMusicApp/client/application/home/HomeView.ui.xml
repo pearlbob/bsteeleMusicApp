@@ -63,84 +63,85 @@
                             <g:header size='3'>Options</g:header>
                             <g:ScrollPanel>
                                 <g:HTMLPanel>
-                                    <br/>
-                                    <g:CheckBox ui:field="countIn"
-                                                name="countIn">Count In
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="dashAllMeasureRepetitions"
-                                                name="dashAllMeasureRepetitions">Dash All Measure Repetitions
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="playWithLineIndicator"
-                                                name="playWithLineIndicator">Play with line indicator
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="playWithMeasureIndicator"
-                                                name="playWithMeasureIndicator">Play with measure indicator
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="playWithBouncingBall"
-                                                name="playWithBouncingBall">Play with bouncing ball
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="playWithMeasureLabel"
-                                                name="playWithMeasureLabel">Play with measure display
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="alwaysUseTheNewestSongOnReadLabel"
-                                                name="alwaysUseTheNewestSongOnReadLabel">Always use the newest song on a
-                                        file read
-                                    </g:CheckBox>
-                                    <br/>
-                                    <g:CheckBox ui:field="debug" name="debug">debug</g:CheckBox>
-                                    <br/>
-                                    <g:Button ui:field="showAllScales">Show all scales</g:Button>
-                                    <g:HTML ui:field="allScales"/>
-                                    <br/>
-                                    <g:Button ui:field="showAllChords">Show all chords</g:Button>
-                                    <g:HTML ui:field="allChords"/>
-                                    <br/>
-                                    <g:Button ui:field="showAllTonics">Show all Diatonic chords</g:Button>
-                                    <g:HTML ui:field="allTonics"/>
-                                    <br/>
-                                    <g:Button ui:field="showFileFormat">Show File Format</g:Button>
-                                    <g:HTML ui:field="fileFormat"/>
-                                    <br/>
-                                    <g:Button ui:field="showStatus">Show Status</g:Button>
-                                    <g:HTML ui:field="allStatus"/>
-                                    <p>
-                                        buildId:
-                                        <g:Label ui:field="buildId"/>
-                                    </p>
-                                    <p>
-                                        <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
-                                    </p>
-                                    <p>
-                                        Offline version:
-                                        <ol>
-                                            <li>Download the bsteeleMusicApp.zip file from
-                                                <a href="./bsteeleMusicApp.zip" download="bsteeleMusicApp.zip">here</a>.
-                                            </li>
-                                            <li>Unzip (extract) the zip file.  It will create a folder
+                                <br/>
+                                <g:CheckBox ui:field="countIn"
+                                            name="countIn">Count In
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="dashAllMeasureRepetitions"
+                                            name="dashAllMeasureRepetitions">Dash All Measure Repetitions
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="playWithLineIndicator"
+                                            name="playWithLineIndicator">Play with line indicator
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="playWithMeasureIndicator"
+                                            name="playWithMeasureIndicator">Play with measure indicator
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="playWithBouncingBall"
+                                            name="playWithBouncingBall">Play with bouncing ball
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="playWithMeasureLabel"
+                                            name="playWithMeasureLabel">Play with measure display
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="alwaysUseTheNewestSongOnReadLabel"
+                                            name="alwaysUseTheNewestSongOnReadLabel">Always use the newest song on a
+                                    file read
+                                </g:CheckBox>
+                                <br/>
+                                <g:CheckBox ui:field="debug" name="debug">debug</g:CheckBox>
+                                <br/>
+                                <g:Button ui:field="showAllScales">Show all scales</g:Button>
+                                <g:HTML ui:field="allScales"/>
+                                <br/>
+                                <g:Button ui:field="showAllChords">Show all chords</g:Button>
+                                <g:HTML ui:field="allChords"/>
+                                <br/>
+                                <g:Button ui:field="showAllTonics">Show all Diatonic chords</g:Button>
+                                <g:HTML ui:field="allTonics"/>
+                                <br/>
+                                <g:Button ui:field="showFileFormat">Show File Format</g:Button>
+                                <g:HTML ui:field="fileFormat"/>
+                                <br/>
+                                <g:Button ui:field="showStatus">Show Status</g:Button>
+                                <g:HTML ui:field="allStatus"/>
+                                <p>
+                                    buildId:
+                                    <g:Label ui:field="buildId"/>
+                                </p>
+                                <br/>
+                                <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
+                                <p>
+                                    Offline version:
+                                    <ol>
+                                        <li>Download the bsteeleMusicApp.zip file from
+                                            <a href="./bsteeleMusicApp.zip" download="bsteeleMusicApp.zip">here</a>.
+                                        </li>
+                                        <li>Unzip (extract) the zip file. It will create a folder
                                             named bsteeleMusicApp.
-                                            </li>
-                                            <li>Point your browser to the index.html file in the bsteeleMusicApp folder.
-                                               The link should be something like:
-                                                <code>file:///Users/bob/bsteeleMusicApp/index.html</code>.
-                                                The exact link will vary based on your operating system
-                                                and where you exported the zip file.
-                                                I suggest you bookmark the link for future use.
-                                            </li>
-                                            <li>Note: Browser will not associate this page with the web version
-                                            so things like your user name and options will have to be entered again.</li>
-                                            <li>You will have to manually re-download the app to get updates
+                                        </li>
+                                        <li>Point your browser to the index.html file in the bsteeleMusicApp folder.
+                                            The link should be something like:
+                                            <code>file:///Users/bob/bsteeleMusicApp/index.html</code>.
+                                            The exact link will vary based on your operating system
+                                            and where you exported the zip file.
+                                            I suggest you bookmark the link for future use.
+                                        </li>
+                                        <li>Note: Browser will not associate this page with the web version
+                                            so things like your user name and options will have to be entered again.
+                                        </li>
+                                        <li>You will have to manually re-download the app to get updates
                                             to your local offline copy for either app updates or song list updates.
-                                            </li>
-                                        </ol>
-                                    </p>
-                                </g:HTMLPanel>
-
+                                        </li>
+                                    </ol>
+                                </p>
+                                <br/>
+                                <g:Button ui:field="claimRemoteLeadership">Make me the leader</g:Button>
+                            </g:HTMLPanel>
                             </g:ScrollPanel>
                         </g:tab>
                     </g:TabLayoutPanel>

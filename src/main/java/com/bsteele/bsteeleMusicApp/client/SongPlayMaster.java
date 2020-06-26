@@ -30,6 +30,13 @@ public interface SongPlayMaster {
 
     void playSongSetRowNumber(int row);
 
+    boolean isLeader();
+
+    void setLeader(boolean value);
+
+    //  tally for contact with server
+    boolean isConnectedWithServer();
+
     Integer jumpSectionToFirstSongMomentInSection(int momentNumber);
 
     int getMomentNumber();

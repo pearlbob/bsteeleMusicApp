@@ -278,6 +278,7 @@ public class SongPlayMasterImpl
     @Override
     public void onMessage(double systemT, String data) {
         try {
+            isLeader = false;
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
             if (songInUpdate == null) {
                 logger.fine("PlayMaster null songInUpdate");
@@ -310,7 +311,7 @@ public class SongPlayMasterImpl
     }
 
     public final void issueSongUpdate(SongUpdate songUpdate) {
-        if (bSteeleMusicIO == null || !bSteeleMusicIO.sendMessage(songUpdate.toJson())) {
+        if (bSteeleMusicIO == null || (isLeader() && !bSteeleMusicIO.sendMessage(songUpdate.toJson()))) {
             //  issue the song update locally if there is no communication with the server
             eventBus.fireEvent(new SongUpdateEvent(songUpdate));
             logger.fine("issueSongUpdate: " + songUpdate.toString());
@@ -321,16 +322,18 @@ public class SongPlayMasterImpl
     public void playSongUpdate(SongUpdate songUpdate) {
         songOutUpdate = songUpdate;
 
-        songOutUpdate.getSong().setBeatsPerMinute(songOutUpdate.getCurrentBeatsPerMinute());    //  fixme: should this be done here?
-        double t0 = audioFilePlayer.getCurrentTime()
-                + 1 * songOutUpdate.getBeatDuration();  //  delay just enough to get the audio rolling
-        int countIn = appOptions.isCountIn() ? -preRoll : -1;
-        songOutUpdate.setMomentNumber(countIn);
-        songPlayer = new SongPlayer(songOutUpdate.getSong());
-        songPlayer.setMomentNumber(t0, countIn);
-        songOutUpdate.setState(SongUpdate.State.playing);
+        if (isLeader()) {
+            songOutUpdate.getSong().setBeatsPerMinute(songOutUpdate.getCurrentBeatsPerMinute());    //  fixme: should this be done here?
+            double t0 = audioFilePlayer.getCurrentTime()
+                    + 1 * songOutUpdate.getBeatDuration();  //  delay just enough to get the audio rolling
+            int countIn = appOptions.isCountIn() ? -preRoll : -1;
+            songOutUpdate.setMomentNumber(countIn);
+            songPlayer = new SongPlayer(songOutUpdate.getSong());
+            songPlayer.setMomentNumber(t0, countIn);
+            songOutUpdate.setState(SongUpdate.State.playing);
 
-        issueSongUpdate(songOutUpdate);
+            issueSongUpdate(songOutUpdate);
+        }
         requestedState = SongUpdate.State.playing;
     }
 
@@ -388,6 +391,21 @@ public class SongPlayMasterImpl
         songPlayer.setMomentNumber(audioFilePlayer.getCurrentTime(), songMoment.getMomentNumber());
         songOutUpdate.setMomentNumber(songMoment.getMomentNumber());
         eventBus.fireEvent(new SongUpdateEvent(songOutUpdate));
+    }
+
+    @Override
+    public boolean isLeader() {
+        return isLeader;
+    }
+
+    @Override
+    public void setLeader(boolean value) {
+        isLeader = value && isConnectedWithServer();
+    }
+
+    @Override
+    public boolean isConnectedWithServer() {
+        return bSteeleMusicIO != null;
     }
 
     @Override
@@ -509,6 +527,7 @@ public class SongPlayMasterImpl
     private static final int preRoll = 4;
     private final EventBus eventBus;
     private BSteeleMusicIO bSteeleMusicIO;
+    private boolean isLeader = false;
     private double systemToAudioOffset;
     private double systemAudioLatency;
     private static double pass = 0.95;

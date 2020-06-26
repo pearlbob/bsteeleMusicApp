@@ -1,5 +1,6 @@
 package com.bsteele.bsteeleMusicApp.client.application.home;
 
+import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.AllSongWriteEventHandler;
@@ -115,9 +116,14 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @UiField
     Button writeAllSongs;
 
+    @UiField
+    Button claimRemoteLeadership;
+
     @Inject
-    HomeView(Binder uiBinder) {
+    HomeView(Binder uiBinder, SongPlayMaster songPlayMaster) {
         initWidget(uiBinder.createAndBindUi(this));
+
+        this.songPlayMaster = songPlayMaster;
 
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
         bindSlot(HomePresenter.SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChords);
@@ -196,6 +202,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
         writeAllSongs.addClickHandler((ClickEvent event) -> {
             fireEvent(new AllSongWriteEvent());
+        });
+
+        claimRemoteLeadership.addClickHandler((ClickEvent event) -> {
+            songPlayMaster.setLeader(true);
         });
 
         buildId.setText(AppResources.INSTANCE.buildId().getText());
@@ -317,6 +327,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     }
 
     private final HandlerManager handlerManager;
+    protected final SongPlayMaster songPlayMaster;
 
     private HashMap<String, String> statusMap = new HashMap<>();
     private AppTab lastPlayTab = AppTab.player;

@@ -42,6 +42,7 @@ public class BSteeleMusicAppServer {
 
         //   fixme:  flip any message back to all registered peers
         for (final Session peer : peers) {
+            if ( peer != session)
                 peer.getAsyncRemote().sendText(message);
         }
 
