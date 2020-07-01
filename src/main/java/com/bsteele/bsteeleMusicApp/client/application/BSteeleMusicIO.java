@@ -83,7 +83,7 @@ public class BSteeleMusicIO {
         }
     }
 
-    private boolean isSocketOpen() {
+    public boolean isSocketOpen() {
         return socket != null && socket.readyState == 1;
     }
 
@@ -103,18 +103,11 @@ public class BSteeleMusicIO {
             logger.fine("socket is null");
             return false;
         }
-//        if ( !isSocketOpen) {
-//            //  socket down, run locally only
-//            GWT.log("socket readyState: " + socket.readyState);
-//            songPlayMaster.onMessage(System.currentTimeMillis() / 1000.0, message);
-//            return true;
-//        }
-
 
         if (!isSocketOpen())
             return false;
 
-        logger.info("socket send: " + message.substring(0,Math.min(30,message.length()))
+        logger.fine("socket send: " + message.substring(0,Math.min(30,message.length()))
                 + " at " + dateTimeFormat.format(new Date()));
 
         socket.send(message);

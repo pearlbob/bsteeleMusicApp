@@ -205,7 +205,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         });
 
         claimRemoteLeadership.addClickHandler((ClickEvent event) -> {
-            songPlayMaster.setLeader(true);
+            if (songPlayMaster.isConnectedWithServer()) {
+                songPlayMaster.setLeader(!songPlayMaster.isLeader());
+            }
+            claimRemoteLeadershipRefresh();
         });
 
         buildId.setText(AppResources.INSTANCE.buildId().getText());
@@ -274,6 +277,14 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         //  hide debug if not local
         if (GWT.getHostPageBaseURL().matches(".*127.0.0.1:8888"))
             debug.setVisible(false);
+    }
+
+    private void claimRemoteLeadershipRefresh() {
+        if (songPlayMaster.isConnectedWithServer()) {
+            claimRemoteLeadership.setText(songPlayMaster.isLeader() ? "Abdicate my leadership" : "Make me the leader");
+        } else {
+            claimRemoteLeadership.setText("Sever not found");
+        }
     }
 
     @Override

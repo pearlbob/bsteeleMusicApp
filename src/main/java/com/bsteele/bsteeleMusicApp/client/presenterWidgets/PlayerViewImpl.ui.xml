@@ -47,6 +47,7 @@
                     <g:Label ui:field="playMeasureLabel" styleName="{resources.style.playMeasureLabel}"/>
                     <g:Label ui:field="playNextMeasureLabel" styleName="{resources.style.playNextMeasureLabel}"/>
                     <g:Label ui:field="playStatusLabel" styleName="{resources.style.label}"/>
+                    <g:Label ui:field="leaderLabel" styleName="{resources.style.label}"/>
                 </div>
             </g:HTMLPanel>
 

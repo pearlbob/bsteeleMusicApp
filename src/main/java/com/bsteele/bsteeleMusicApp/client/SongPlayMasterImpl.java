@@ -5,6 +5,7 @@ package com.bsteele.bsteeleMusicApp.client;
 
 import com.bsteele.bsteeleMusicApp.client.application.BSteeleMusicIO;
 import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
+import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.DefaultDrumSelectEventHandler;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
@@ -311,11 +312,12 @@ public class SongPlayMasterImpl
     }
 
     public final void issueSongUpdate(SongUpdate songUpdate) {
-        if (bSteeleMusicIO == null || (isLeader() && !bSteeleMusicIO.sendMessage(songUpdate.toJson()))) {
-            //  issue the song update locally if there is no communication with the server
-            eventBus.fireEvent(new SongUpdateEvent(songUpdate));
-            logger.fine("issueSongUpdate: " + songUpdate.toString());
+        if (isLeader() ){
+            songUpdate.setUser(            GwtLocalStorage.instance().getUserName());
+            bSteeleMusicIO.sendMessage(songUpdate.toJson());
+            logger.fine("leader "+songUpdate.getUser()+" issueSongUpdate: " + songUpdate.toString());
         }
+        eventBus.fireEvent(new SongUpdateEvent(songUpdate));
     }
 
     @Override
@@ -405,7 +407,7 @@ public class SongPlayMasterImpl
 
     @Override
     public boolean isConnectedWithServer() {
-        return bSteeleMusicIO != null;
+        return bSteeleMusicIO != null && bSteeleMusicIO.isSocketOpen();
     }
 
     @Override

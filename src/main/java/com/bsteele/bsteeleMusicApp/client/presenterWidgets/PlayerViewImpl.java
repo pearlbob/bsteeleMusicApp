@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
+import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
@@ -100,6 +101,9 @@ public class PlayerViewImpl
 
     @UiField
     Label playStatusLabel;
+
+    @UiField
+    Label leaderLabel;
 
     @UiField
     DivElement playDivElement;
@@ -210,6 +214,7 @@ public class PlayerViewImpl
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
 
         // playStatusLabel.setVisible(false);
+        leaderLabel.setText("");
         playDivElement.getStyle().setDisplay(Style.Display.NONE);
 
         playerFocusPanel.addKeyDownHandler(handler -> {
@@ -350,8 +355,9 @@ public class PlayerViewImpl
         int foundRow = rowLimit - 1;  //  worst case
         for (int r = 0; r < rowLimit; r++) {
             Element e = flexCellFormatter.getElement(r, 0);
-            //logger.info("playerTopCover y: " + y +": "+ r + ": " + e.getAbsoluteTop() + " to " + e.getAbsoluteBottom());
-            if (displayY <= e.getAbsoluteBottom()) {
+            int bottom = e.getOffsetTop() + e.getOffsetHeight();
+            //logger.info("playerTopCover y: " + displayY +": "+ r + ": " + e.getAbsoluteTop() + " to " + e.getAbsoluteBottom());
+            if (displayY <= bottom) {
                 foundRow = r;
                 break;
             }
@@ -449,6 +455,9 @@ public class PlayerViewImpl
         playerFocusPanel.setFocus(true);
 
         labelPlayStop();
+        leaderLabel.setText(songPlayMaster.isLeader()
+                ? "Leader"
+                : (songPlayMaster.isConnectedWithServer() ? "following " + songUpdate.getUser() : ""));
 
         if (lastRepeatElement != null) {
             lastRepeatElement.setInnerText("x" + lastRepeatTotal);
@@ -518,7 +527,7 @@ public class PlayerViewImpl
             idleMomentNumber = songUpdate.getMomentNumber();
             int row = song.getMomentGridCoordinate(idleMomentNumber).getRow();
             int displayY = findDisplayY(row);
-            logger.info("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
+            logger.fine("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
             chordsScrollPanel.setVerticalScrollPosition(displayY);
         }
 
@@ -705,6 +714,8 @@ public class PlayerViewImpl
                         if (songMoment != null) {
                             songUpdate.setMomentNumber(songMoment.getMomentNumber());
                             songPlayMaster.issueSongUpdate(songUpdate);
+                            if (songPlayMaster.isLeader())
+                                logger.fine("leader update to moment: " + songMoment.getMomentNumber());
                         }
                     }
                     break;

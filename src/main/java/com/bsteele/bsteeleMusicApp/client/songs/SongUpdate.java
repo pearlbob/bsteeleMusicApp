@@ -87,7 +87,7 @@ public class SongUpdate {
         }
 
         //  past the end and we're done
-        if ( m >= song.getSongMomentsSize() ){
+        if (m >= song.getSongMomentsSize()) {
             momentNumber = Integer.MAX_VALUE;
             songMoment = null;
             return;
@@ -133,7 +133,7 @@ public class SongUpdate {
         return beat;
     }
 
-    public final double getBeatDuration(){
+    public final double getBeatDuration() {
         return 60.0 / song.getDefaultBpm();
     }
 
@@ -191,6 +191,15 @@ public class SongUpdate {
 
     public final void setCurrentKey(Key currentKey) {
         this.currentKey = currentKey;
+    }
+
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
 
@@ -288,6 +297,9 @@ public class SongUpdate {
                 case "currentBeatsPerMinute":
                     songUpdate.currentBeatsPerMinute = JsonUtil.toInt(jv);
                     break;
+                case "user":
+                    songUpdate.setUser(jv.toString());
+                    break;
             }
         }
         songUpdate.setMomentNumber(songUpdate.momentNumber);
@@ -314,6 +326,9 @@ public class SongUpdate {
                 .append("\"beat\": ")
                 .append(getBeat())
                 .append(",\n")
+                .append("\"user\": \"")
+                .append(getUser())
+                .append("\",\n")
                 .append("\"beatsPerMeasure\": ")
                 .append(getBeatsPerMeasure())
                 .append(",\n")
@@ -334,6 +349,7 @@ public class SongUpdate {
         hash = (83 * hash + this.beat) % (1 << 31);
         hash = (83 * hash + this.beatsPerMeasure) % (1 << 31);
         hash = (83 * hash + this.currentBeatsPerMinute) % (1 << 31);
+        hash = (83 * hash + Objects.hashCode(this.user)) % (1 << 31);
         return hash;
     }
 
@@ -374,11 +390,15 @@ public class SongUpdate {
         if (this.momentNumber != other.momentNumber) {
             return false;
         }
+        if (!this.user.equals(other.user)) {
+            return false;
+        }
         return true;
     }
 
     private State state = State.idle;
     private Song song;
+    private String user = "no one";
     private int momentNumber;
     private SongMoment songMoment;
 
