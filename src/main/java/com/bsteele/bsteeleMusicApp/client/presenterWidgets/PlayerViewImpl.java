@@ -6,7 +6,6 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
-import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
@@ -25,7 +24,6 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -33,7 +31,7 @@ import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -146,6 +144,13 @@ public class PlayerViewImpl
 
         initWidget(binder.createAndBindUi(this));
 
+
+        {
+            int min = Math.min(Window.getClientWidth(),Window.getClientHeight());
+            logger.info("window width: " + min);
+            chordsFontSize = (min >= 1000) ? chordsMaxFontSize : chordsMaxFontSize/2;
+            lyricsfontSize = (min >= 1000) ? lyricsMaxFontSize: lyricsMaxFontSize/3;
+        }
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
@@ -837,7 +842,11 @@ public class PlayerViewImpl
                     for (int c = flexTable.getCellCount(r); c < lyricsCol; c++)
                         flexTable.setHTML(r, c, "");
 
-                flexTable.setHTML(firstRow, lyricsCol, sb.toString());
+                flexTable.setHTML(firstRow, lyricsCol,
+                        "<span style=\"font-size: " + lyricsfontSize + "px;\">"
+                                + sb.toString()
+                                + "</span>"
+                );
                 formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
                         .getSectionVersion().getSection().getAbbreviation() + "Class");
                 formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
@@ -970,11 +979,11 @@ public class PlayerViewImpl
 
     public static final String highlightColor = "#e4c9ff";
     private static final int chordsMinFontSize = 8;
-    private static final int chordsMaxFontSize = 52;
-    private static int chordsFontSize = 42;
+    private static final int chordsMaxFontSize = 42;
+    private static int chordsFontSize = chordsMaxFontSize;
     private static final int lyricsMinFontSize = 8;
-    private static final int lyricsMaxFontSize = 28;
-    private static final int lyricsDefaultFontSize = lyricsMaxFontSize;
+    private static final int lyricsMaxFontSize = 27;
+    private static int lyricsfontSize = lyricsMaxFontSize;
     private boolean isActive = false;
     private static final Scheduler scheduler = Scheduler.get();
     private static final AppOptions appOptions = GWTAppOptions.getInstance();
