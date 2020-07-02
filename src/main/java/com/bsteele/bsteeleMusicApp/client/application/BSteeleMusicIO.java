@@ -77,7 +77,7 @@ public class BSteeleMusicIO {
         @Override
         public Object call(Object event) {
             if (socket != null)
-                logger.info("error: socket readyState: " + socket.readyState);
+                logger.info("warning: socket readyState: " + socket.readyState);
             isSocketOpen = isSocketOpen();
             return event;
         }

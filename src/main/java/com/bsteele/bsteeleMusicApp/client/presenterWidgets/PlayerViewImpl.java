@@ -503,6 +503,7 @@ public class PlayerViewImpl
                 || songUpdate.getCurrentBeatsPerMinute() != getCurrentBpm()
         ) {
             song = songUpdate.getSong();
+            lastPlayerFlexTableRow = Integer.MIN_VALUE;     //  force song moment update
 
             //  load new data even if the identity has not changed
             setAnchors(title, artist);
