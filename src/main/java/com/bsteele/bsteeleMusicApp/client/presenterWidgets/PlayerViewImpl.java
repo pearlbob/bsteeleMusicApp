@@ -980,10 +980,10 @@ public class PlayerViewImpl
 
 
     public static final String highlightColor = "#e4c9ff";
-    private static final int chordsMinFontSize = 8;
+    private static final int chordsMinFontSize = 11;
     private static final int chordsMaxFontSize = 42;
     private static int chordsFontSize = chordsMaxFontSize;
-    private static final int lyricsMinFontSize = 8;
+    private static final int lyricsMinFontSize = 11;
     private static final int lyricsMaxFontSize = 27;
     private static int lyricsfontSize = lyricsMaxFontSize;
     private boolean isActive = false;
