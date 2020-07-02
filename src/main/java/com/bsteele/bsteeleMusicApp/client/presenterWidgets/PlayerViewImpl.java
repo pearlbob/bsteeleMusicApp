@@ -148,8 +148,8 @@ public class PlayerViewImpl
         {
             int max = Math.max(Window.getClientWidth(),Window.getClientHeight());
             logger.info("window max: " + max);
-            chordsFontSize = (max >= 1000) ? chordsMaxFontSize : chordsMaxFontSize/2;
-            lyricsfontSize = (max >= 1000) ? lyricsMaxFontSize: lyricsMaxFontSize/3;
+            chordsFontSize = (max >= 1000) ? chordsMaxFontSize : chordsMinFontSize;
+            lyricsfontSize = (max >= 1000) ? lyricsMaxFontSize: lyricsMinFontSize;
         }
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);

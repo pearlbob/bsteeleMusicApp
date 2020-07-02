@@ -162,7 +162,7 @@ iframe {
 .lyricsOClass,
 .lyricsCoClass,
 .lyricsTClass {
-    font-size: 32px;
+    /*font-size: 32px;*/
     white-space: pre-wrap;
 }
 
@@ -182,7 +182,7 @@ iframe {
 }
 
 table {
-    margin: 5px;
+    margin: 2px;
     border-spacing: 12px;
 }
 
@@ -202,7 +202,7 @@ table.lyricsTable {
 .chordTable th,
 .chordTable td {
     /*border-right: 2px solid black;*/
-    padding: 10px;
+    padding: 2px;
 }
 .sectionLabel
 {
