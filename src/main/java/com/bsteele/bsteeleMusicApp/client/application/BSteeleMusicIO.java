@@ -104,8 +104,10 @@ public class BSteeleMusicIO {
             return false;
         }
 
-        if (!isSocketOpen())
+        if (!isSocketOpen()) {
+            logger.fine("socket is closed");
             return false;
+        }
 
         logger.fine("socket send: " + message.substring(0,Math.min(30,message.length()))
                 + " at " + dateTimeFormat.format(new Date()));

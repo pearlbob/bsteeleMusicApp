@@ -279,13 +279,15 @@ public class SongPlayMasterImpl
     @Override
     public void onMessage(double systemT, String data) {
         try {
-            isLeader = false;
             SongUpdate songInUpdate = SongUpdate.fromJson(data);
             if (songInUpdate == null) {
-                logger.fine("PlayMaster null songInUpdate");
+                logger.info("PlayMaster null songInUpdate");
                 return;
             }
             logger.fine("onMessage(): update diff: " + songInUpdate.diff(songOutUpdate));
+            if (!songInUpdate.getUser().equals(GwtLocalStorage.instance().getUserName())) {
+                isLeader = false;
+            }
 
             eventBus.fireEvent(new SongUpdateEvent(songInUpdate));
 
@@ -312,10 +314,10 @@ public class SongPlayMasterImpl
     }
 
     public final void issueSongUpdate(SongUpdate songUpdate) {
-        if (isLeader() ){
-            songUpdate.setUser(            GwtLocalStorage.instance().getUserName());
+        if (isLeader()) {
+            songUpdate.setUser(GwtLocalStorage.instance().getUserName());
             bSteeleMusicIO.sendMessage(songUpdate.toJson());
-            logger.fine("leader "+songUpdate.getUser()+" issueSongUpdate: " + songUpdate.toString());
+            logger.fine("leader " + songUpdate.getUser() + " issueSongUpdate: " + songUpdate.toString());
         }
         eventBus.fireEvent(new SongUpdateEvent(songUpdate));
     }

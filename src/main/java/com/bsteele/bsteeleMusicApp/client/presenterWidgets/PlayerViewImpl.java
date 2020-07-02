@@ -6,6 +6,7 @@ package com.bsteele.bsteeleMusicApp.client.presenterWidgets;
 import com.bsteele.bsteeleMusicApp.client.AudioBeatDisplay;
 import com.bsteele.bsteeleMusicApp.client.SongPlayMaster;
 import com.bsteele.bsteeleMusicApp.client.application.GWTAppOptions;
+import com.bsteele.bsteeleMusicApp.client.application.GwtLocalStorage;
 import com.bsteele.bsteeleMusicApp.client.application.events.MusicAnimationEvent;
 import com.bsteele.bsteeleMusicApp.client.application.events.NextSongEvent;
 import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
@@ -146,10 +147,10 @@ public class PlayerViewImpl
 
 
         {
-            int max = Math.max(Window.getClientWidth(),Window.getClientHeight());
+            int max = Math.max(Window.getClientWidth(), Window.getClientHeight());
             logger.info("window max: " + max);
             chordsFontSize = (max >= 1000) ? chordsMaxFontSize : chordsMinFontSize;
-            lyricsfontSize = (max >= 1000) ? lyricsMaxFontSize: lyricsMinFontSize;
+            lyricsfontSize = (max >= 1000) ? lyricsMaxFontSize : lyricsMinFontSize;
         }
 
         audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
@@ -461,7 +462,7 @@ public class PlayerViewImpl
 
         labelPlayStop();
         leaderLabel.setText(songPlayMaster.isLeader()
-                ? "Leader"
+                ? "i'm the leader \"" + GwtLocalStorage.instance().getUserName() + "\""
                 : (songPlayMaster.isConnectedWithServer() ? "following " + songUpdate.getUser() : ""));
 
         if (lastRepeatElement != null) {

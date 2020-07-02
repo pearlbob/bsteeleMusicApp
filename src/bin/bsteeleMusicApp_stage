@@ -92,7 +92,7 @@ rm -f $CATALINA_HOME/webapps/$finalWar:t	#	avoid permission issues on the war fi
 cp $finalWar $CATALINA_HOME/webapps
 
 #	deploy on mac tomcat
-scp $finalWar ${mac}:/Library/Tomcat/webapps
+#or not: scp $finalWar ${mac}:/Library/Tomcat/webapps
 
 #	deploy on web
 rm -rf $dst/$app/WEB-INF/classes
