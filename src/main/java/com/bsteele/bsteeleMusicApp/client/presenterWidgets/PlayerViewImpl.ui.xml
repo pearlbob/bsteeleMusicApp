@@ -9,46 +9,48 @@
 
     <g:DockLayoutPanel unit="PX">
 
-        <g:north size='120'>
+        <g:north size='60'>
             <g:HTMLPanel>
 
-                <g:Button ui:field="playStopButton">Play</g:Button>
-                Key:
-                <span ui:field="keyLabel"/>
-                <g:Button ui:field="originalKeyButton">Original</g:Button>
-                <g:Button ui:field="keyUpButton">&#x25b2;</g:Button>
-                <g:Button ui:field="keyDownButton">&#x25bc;</g:Button>
-                BPM:
-                <g:TextBox ui:field="currentBpmEntry" styleName="{resources.style.smallIntEntry}"/>
-                <g:Button ui:field="bpmUpButton">&#x25b2;</g:Button>
-                <g:Button ui:field="bpmDownButton">&#x25bc;</g:Button>
-                Time:
-                <span ui:field="timeSignature"/>
-                &nbsp;&nbsp;
-                <g:Anchor ui:field="title" styleName="{resources.style.songTitle}" target="_blank"/>
-                by
-                <g:Anchor ui:field="artist" target="_blank"/>
+                <div style="font-size: 1vw">
+                    <g:Button ui:field="playStopButton">Play</g:Button>
+                    Key:
+                    <span ui:field="keyLabel"/>
+                    <g:Button ui:field="originalKeyButton">Original</g:Button>
+                    <g:Button ui:field="keyUpButton">&#x25b2;</g:Button>
+                    <g:Button ui:field="keyDownButton">&#x25bc;</g:Button>
+                    BPM:
+                    <g:TextBox ui:field="currentBpmEntry" styleName="{resources.style.smallIntEntry}"/>
+                    <g:Button ui:field="bpmUpButton">&#x25b2;</g:Button>
+                    <g:Button ui:field="bpmDownButton">&#x25bc;</g:Button>
+                    Time:
+                    <span ui:field="timeSignature"/>
+                    &nbsp;&nbsp;
+                    <g:Anchor ui:field="title" styleName="{resources.style.songTitle}" target="_blank"/>
+                    by
+                    <g:Anchor ui:field="artist" target="_blank"/>
 
 
-                <!--    note the reverse order due to right justification of the last item  -->
-                <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"
-                          title="Click for next song in filtered song list.">&#x25B6;
-                </g:Button>
-                <g:Button ui:field="prevSongButton" styleName="{resources.style.rightJustified}"
-                          title="Click for previous song in filtered song list.">&#x25C0;
-                </g:Button>
-                <br/>
-                <div ui:field="playDivElement">
-                    <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250"
-                            style="display: inline-block; margin: 10px;"
-                            title="Beat display of audio.">
-                        Your browser does not support the HTML5 canvas tag.
-                    </canvas>
-                    <g:Label ui:field="playMeasureLabel" styleName="{resources.style.playMeasureLabel}"/>
-                    <g:Label ui:field="playNextMeasureLabel" styleName="{resources.style.playNextMeasureLabel}"/>
-                    <g:Label ui:field="playStatusLabel" styleName="{resources.style.label}"/>
+                    <!--    note the reverse order due to right justification of the last item  -->
+<!--                    <g:Button ui:field="nextSongButton" styleName="{resources.style.rightJustified}"-->
+<!--                              title="Click for next song in filtered song list.">&#x25B6;-->
+<!--                    </g:Button>-->
+<!--                    <g:Button ui:field="prevSongButton" styleName="{resources.style.rightJustified}"-->
+<!--                              title="Click for previous song in filtered song list.">&#x25C0;-->
+<!--                    </g:Button>-->
+<!--                    <br/>-->
                     <g:Label ui:field="leaderLabel" styleName="{resources.style.label}"/>
                 </div>
+                <!--                <div ui:field="playDivElement" hidden="hidden">-->
+                <!--                    <canvas ui:field="audioBeatDisplayCanvas" height="60" width="250"-->
+                <!--                            style="display: inline-block; margin: 10px;"-->
+                <!--                            title="Beat display of audio.">-->
+                <!--                        Your browser does not support the HTML5 canvas tag.-->
+                <!--                    </canvas>-->
+                <!--                    <g:Label ui:field="playMeasureLabel" styleName="{resources.style.playMeasureLabel}"/>-->
+                <!--                    <g:Label ui:field="playNextMeasureLabel" styleName="{resources.style.playNextMeasureLabel}"/>-->
+                <!--                    <g:Label ui:field="playStatusLabel" styleName="{resources.style.label}"/>-->
+                <!--                </div>-->
             </g:HTMLPanel>
 
         </g:north>
@@ -67,7 +69,7 @@
                                        styleName="{resources.style.playTopCover}"/>
                             <g:HTMLPanel>
                                 <g:HTMLPanel ui:field="player" styleName="{resources.style.playChordsForeground}"/>
-                                <p>
+                                <p style="font-size: 1vw">
                                     Copyright
                                     <span ui:field="copyright"/>
                                 </p>

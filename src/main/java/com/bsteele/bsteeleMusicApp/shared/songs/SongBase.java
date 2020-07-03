@@ -2225,13 +2225,13 @@ public class SongBase {
         clearCachedValues();
     }
 
-    public final void transpose(FlexTable flexTable, int halfSteps, int fontSize) {
+    public final void transpose(FlexTable flexTable, int halfSteps, String fontSize) {
         transpose(flexTable, halfSteps, fontSize, false);
     }
 
-    public final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize,
+    public final void transpose(ChordSection chordSection, FlexTable flexTable, int halfSteps, String fontSize,
                                 boolean append) {
-        if (chordSection == null || flexTable == null || fontSize <= 0)
+        if (chordSection == null || flexTable == null )
             return;
         logger.fine("tran: cs: " + chordSection.toMarkup());
         transpose(chordSection, flexTable, halfSteps, fontSize, append, true);
@@ -2245,7 +2245,7 @@ public class SongBase {
      * @param fontSize  the pixel size of the font
      * @param append    true if the chord sections are to be added to an existing flex table data
      */
-    private final void transpose(FlexTable flexTable, int halfSteps, int fontSize, boolean append) {
+    private final void transpose(FlexTable flexTable, int halfSteps, String fontSize, boolean append) {
         halfSteps = Util.mod(halfSteps, MusicConstant.halfStepsPerOctave);
 
         if (!append)
@@ -2267,7 +2267,7 @@ public class SongBase {
      * @param append          true if the chord section is to be added to existing flex table data
      * @param isSingleSection true if the chord section the only one of this section
      */
-    private final void transpose(final ChordSection chordSection, FlexTable flexTable, int halfSteps, int fontSize,
+    private final void transpose(final ChordSection chordSection, FlexTable flexTable, int halfSteps, String fontSize,
                                  boolean append, boolean isSingleSection) {
         if (chordSection == null)
             return;
@@ -2370,9 +2370,11 @@ public class SongBase {
 
                 //formatter.setAlignment(flexRow, c, ALIGN_CENTER, ALIGN_BOTTOM);   //  as per Shari, comment out
                 flexTable.setHTML(flexRow, c,
-                        "<span style=\"font-size: " + fontSize + "px;\">"
+                        (fontSize != null ?
+                        "<span style=\"font-size: " + fontSize + ";\">"
                                 + s
                                 + "</span>"
+                                : s)
                 );
                 formatter.addStyleName(flexRow, c, CssConstants.style
                         + (measureNode.isComment() && !measureNode.isRepeat()

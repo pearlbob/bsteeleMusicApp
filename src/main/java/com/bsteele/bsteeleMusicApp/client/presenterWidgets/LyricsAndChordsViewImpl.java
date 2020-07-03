@@ -347,7 +347,7 @@ public class LyricsAndChordsViewImpl
         if (song == null)
             return;
 
-        song.transpose(chordsFlexTable, halfStepOffset, chordsFontSize);
+        song.transpose(chordsFlexTable, halfStepOffset, chordsFontSize + " px");
 
         resizeChords();
     }
@@ -383,7 +383,7 @@ public class LyricsAndChordsViewImpl
                 int rLimit = grid.getRowCount();
                 if (forceChordsFontSize || chordsFontSize != size) {
                     //  fixme: demands all chord fonts be the same size
-                    song.transpose(chordsFlexTable, halfStepOffset, chordsFontSize);
+                    song.transpose(chordsFlexTable, halfStepOffset, chordsFontSize + " px");
 
                     for (int r = 0; r < rLimit; r++) {
                         ArrayList<ChordSectionLocation> row = grid.getRow(r);
@@ -404,8 +404,8 @@ public class LyricsAndChordsViewImpl
 
                 double maxRatio = 1.1;//(1 + 3.0 / chordsFontSize);
                 logger.fine("ratio: " + ratio
-                        +" <= maxRatio: " + maxRatio
-                        +", chordsFontSize: " + chordsFontSize
+                        + " <= maxRatio: " + maxRatio
+                        + ", chordsFontSize: " + chordsFontSize
                 );
 
                 chordsDirty = !((ratio >= 1 && ratio <= maxRatio)

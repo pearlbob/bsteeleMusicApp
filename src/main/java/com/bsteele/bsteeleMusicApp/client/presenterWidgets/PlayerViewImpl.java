@@ -87,28 +87,28 @@ public class PlayerViewImpl
     @UiField
     Anchor artist;
 
-    @UiField
-    Button nextSongButton;
-    @UiField
-    Button prevSongButton;
-
-    @UiField
-    Label playMeasureLabel;
-
-    @UiField
-    Label playNextMeasureLabel;
-
-    @UiField
-    Label playStatusLabel;
+//    @UiField
+//    Button nextSongButton;
+//    @UiField
+//    Button prevSongButton;
 
     @UiField
     Label leaderLabel;
 
-    @UiField
-    DivElement playDivElement;
-
-    @UiField
-    CanvasElement audioBeatDisplayCanvas;
+//    @UiField
+//    Label playMeasureLabel;
+//
+//    @UiField
+//    Label playNextMeasureLabel;
+//
+//    @UiField
+//    Label playStatusLabel;
+//
+//    @UiField
+//    DivElement playDivElement;
+//
+//    @UiField
+//    CanvasElement audioBeatDisplayCanvas;
 
     @UiField
     ScrollPanel chordsScrollPanel;
@@ -145,15 +145,8 @@ public class PlayerViewImpl
 
         initWidget(binder.createAndBindUi(this));
 
+        playStopButton.setVisible(false);   //  fixme: temp disable!
 
-        {
-            int max = Math.max(Window.getClientWidth(), Window.getClientHeight());
-            logger.info("window max: " + max);
-            chordsFontSize = (max >= 1000) ? chordsMaxFontSize : chordsMinFontSize;
-            lyricsfontSize = (max >= 1000) ? lyricsMaxFontSize : lyricsMinFontSize;
-        }
-
-        audioBeatDisplay = new AudioBeatDisplay(audioBeatDisplayCanvas);
         labelPlayStop();
 
         playStopButton.addClickHandler((ClickEvent event) -> {
@@ -213,15 +206,15 @@ public class PlayerViewImpl
             }
         });
 
-        prevSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent(false)));
-        nextSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent()));
+//        prevSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent(false)));
+//        nextSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent()));
 
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
         keyLabel.getStyle().setWidth(3, Style.Unit.EM);
 
         // playStatusLabel.setVisible(false);
         leaderLabel.setText("");
-        playDivElement.getStyle().setDisplay(Style.Display.NONE);
+        //playDivElement.getStyle().setDisplay(Style.Display.NONE);
 
         playerFocusPanel.addKeyDownHandler(handler -> {
             if (songUpdate == null || song == null)
@@ -422,9 +415,9 @@ public class PlayerViewImpl
                 case playing:
                     //  get set for a stop
                     songPlayMaster.stopSong();
-                    playMeasureLabel.setText("");
-                    playNextMeasureLabel.setText("");
-                    playStatusLabel.setText("");
+//                    playMeasureLabel.setText("");
+//                    playNextMeasureLabel.setText("");
+//                    playStatusLabel.setText("");
                     break;
                 case idle:
                     //  ask for a play
@@ -593,8 +586,8 @@ public class PlayerViewImpl
         keyDownButton.setEnabled(enable);
         currentBpmEntry.setEnabled(enable);
 
-        nextSongButton.setEnabled(enable);
-        prevSongButton.setEnabled(enable);
+//        nextSongButton.setEnabled(enable);
+//        prevSongButton.setEnabled(enable);
 
         if (enable) {
             bpmUpButton.setEnabled(enable);
@@ -627,9 +620,9 @@ public class PlayerViewImpl
         }
 
         //  a better location for this?
-        playDivElement.getStyle().setDisplay(appOptions.isPlayWithBouncingBall()
-                ? Style.Display.INLINE_BLOCK
-                : Style.Display.NONE);
+//        playDivElement.getStyle().setDisplay(appOptions.isPlayWithBouncingBall()
+//                ? Style.Display.INLINE_BLOCK
+//                : Style.Display.NONE);
     }
 
     @Override
@@ -641,10 +634,11 @@ public class PlayerViewImpl
             return;
 
         try {
-            if (appOptions.isPlayWithBouncingBall())
-                audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction());
-            else
-                audioBeatDisplay.clear();
+            if (audioBeatDisplay != null)
+                if (appOptions.isPlayWithBouncingBall())
+                    audioBeatDisplay.update(songUpdate, event.getBeatCount(), event.getBeatNumber(), event.getBeatFraction());
+                else
+                    audioBeatDisplay.clear();
 
             {
                 Widget parent = player.getParent();
@@ -733,15 +727,15 @@ public class PlayerViewImpl
                 case playing:
                     if (appOptions.isPlayWithMeasureLabel()) {
                         int tran = currentKey.getHalfStep() - songUpdate.getSong().getKey().getHalfStep();
-                        playMeasureLabel.setText(song.songMomentMeasure(songUpdate.getMomentNumber(),
-                                currentKey, tran));
-                        playNextMeasureLabel.setText(song.songNextMomentMeasure(songUpdate.getMomentNumber(),
-                                currentKey, tran));
+//                        playMeasureLabel.setText(song.songMomentMeasure(songUpdate.getMomentNumber(),
+//                                currentKey, tran));
+//                        playNextMeasureLabel.setText(song.songNextMomentMeasure(songUpdate.getMomentNumber(),
+//                                currentKey, tran));
                     }
 
                     String status = song.songMomentStatus(event.getBeatNumber(), songUpdate.getMomentNumber());
                     if (!status.equals(lastStatus)) {
-                        playStatusLabel.setText(status);
+//                        playStatusLabel.setText(status);
                         logger.finer(status);
                         lastStatus = status;
                     }
@@ -831,7 +825,7 @@ public class PlayerViewImpl
                 logger.finest("pre  tran: " + flexTable.getRowCount()
                         + (firstRow > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
                 song.transpose(song.getChordSection(lyricSection.getSectionVersion()),
-                        flexTable, tran, chordsFontSize, true);
+                        flexTable, tran, null, true);
                 logger.finest("post tran: " + flexTable.getRowCount()
                         + (flexTable.getRowCount() > 0 ? " last row col: " + flexTable.getCellCount(flexTable.getRowCount() - 1) : ""));
                 StringBuilder sb = new StringBuilder();
@@ -844,11 +838,7 @@ public class PlayerViewImpl
                     for (int c = flexTable.getCellCount(r); c < lyricsCol; c++)
                         flexTable.setHTML(r, c, "");
 
-                flexTable.setHTML(firstRow, lyricsCol,
-                        "<span style=\"font-size: " + lyricsfontSize + "px;\">"
-                                + sb.toString()
-                                + "</span>"
-                );
+                flexTable.setHTML(firstRow, lyricsCol, sb.toString());
                 formatter.setStyleName(firstRow, lyricsCol, CssConstants.style + "lyrics" + lyricSection
                         .getSectionVersion().getSection().getAbbreviation() + "Class");
                 formatter.setRowSpan(firstRow, lyricsCol, flexTable.getRowCount() - firstRow);
@@ -980,12 +970,12 @@ public class PlayerViewImpl
 
 
     public static final String highlightColor = "#e4c9ff";
-    private static final int chordsMinFontSize = 11;
-    private static final int chordsMaxFontSize = 42;
-    private static int chordsFontSize = chordsMaxFontSize;
-    private static final int lyricsMinFontSize = 11;
-    private static final int lyricsMaxFontSize = 27;
-    private static int lyricsfontSize = lyricsMaxFontSize;
+    //    private static final int chordsMinFontSize = 11;
+//    private static final int chordsMaxFontSize = 42;
+//    private static int chordsFontSize = chordsMaxFontSize;
+//    private static final int lyricsMinFontSize = 11;
+//    private static final int lyricsMaxFontSize = 27;
+//    private static int lyricsfontSize = lyricsMaxFontSize;
     private boolean isActive = false;
     private static final Scheduler scheduler = Scheduler.get();
     private static final AppOptions appOptions = GWTAppOptions.getInstance();

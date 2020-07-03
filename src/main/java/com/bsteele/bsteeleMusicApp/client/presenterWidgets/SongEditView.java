@@ -835,7 +835,7 @@ public class SongEditView
     }
 
     private void displaySong() {
-        song.transpose(chordsFlexTable, 0, fontsize);
+        song.transpose(chordsFlexTable, 0, null);
         logger.finer(song.toMarkup());
     }
 

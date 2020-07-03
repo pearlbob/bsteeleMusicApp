@@ -37,12 +37,14 @@ h2,
     cursor: pointer;
     text-decoration: underline;
     border-bottom: 1px solid black;
+    font-size: 1vw;
 }
 .songListItem:hover {
     background-color: #fff;
 }
 .songListItemData {
     border-bottom: 1px solid black;
+    font-size: 1vw;
 }
 .songListItemData:hover {
     background-color: #fff;
@@ -149,6 +151,7 @@ iframe {
 .sectionTClass,
 .sectionVClass
 {
+    font-size: 2vw;
     font-weight: bold;
 }
 
@@ -162,7 +165,7 @@ iframe {
 .lyricsOClass,
 .lyricsCoClass,
 .lyricsTClass {
-    /*font-size: 32px;*/
+    font-size: 1.4vw;
     white-space: pre-wrap;
 }
 
@@ -177,7 +180,7 @@ iframe {
 
 .songTitle
 {
-    font-size: 32px;
+    font-size: 1.2vw;
     font-weight: bold;
 }
 
@@ -187,7 +190,7 @@ table {
 }
 
 th, td {
-    padding: 2px;
+    padding: 0.1vw;
 }
 
 
@@ -197,17 +200,18 @@ table.lyricsTable {
 }
 
 .chordTable  {
-    border-spacing: 14px;
+    border-spacing: 1vw;
 }
 .chordTable th,
 .chordTable td {
     /*border-right: 2px solid black;*/
-    padding: 2px;
+    padding: 0.2vw;
 }
 .sectionLabel
 {
-    border-right: 1.5px solid black;
-    font-size: 32px;
+    border-right: 2px solid black;
+    font-size: 2vw;
+    font-weight: bold;
 }
 .errorLabel
 {
@@ -251,24 +255,24 @@ td[id*="L."]{
 }
 
 .label {
-    font-size: 26px;
+    font-size: 2vw;
     font-weight: bold;
     display: inline-block;
     vertical-align: bottom;
     margin: 10px;
  }
 .playMeasureLabel {
-    font-size: 52px;
+    font-size: 4vw;
     font-weight: bold;
     display: inline-block;
-    width: 280px;
+    width: 10vw;
     vertical-align: bottom;
     margin: 10px;
 }
 .playNextMeasureLabel {
-    font-size: 28px;
+    font-size: 2vw;
     font-weight: bold;
-    width: 150px;
+    width: 5vw;
     display: inline-block;
     vertical-align: bottom;
     margin: 10px;
