@@ -131,6 +131,9 @@ public class PlayerViewImpl
     @UiField
     SpanElement copyright;
 
+    @UiField
+    DivElement bottomSpacer;
+
 
     interface Binder extends UiBinder<Widget, PlayerViewImpl> {
     }
@@ -457,6 +460,9 @@ public class PlayerViewImpl
         leaderLabel.setText(songPlayMaster.isLeader()
                 ? "i'm the leader \"" + GwtLocalStorage.instance().getUserName() + "\""
                 : (songPlayMaster.isConnectedWithServer() ? "following " + songUpdate.getUser() : ""));
+
+        //  space the bottom if leading... so that shallow depth followers can get to the bottom
+        bottomSpacer.getStyle().setHeight(songPlayMaster.isLeader()? 500:0, Style.Unit.PX);
 
         if (lastRepeatElement != null) {
             lastRepeatElement.setInnerText("x" + lastRepeatTotal);

@@ -73,6 +73,7 @@
                                     Copyright
                                     <span ui:field="copyright"/>
                                 </p>
+                                <div ui:field="bottomSpacer" style="height: 500px"></div>
                             </g:HTMLPanel>
                         </g:AbsolutePanel>
                     </g:ScrollPanel>
