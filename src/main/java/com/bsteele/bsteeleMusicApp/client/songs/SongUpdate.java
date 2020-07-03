@@ -30,6 +30,7 @@ public class SongUpdate {
     }
 
     public enum State {
+        none,
         playing,
         idle;
     }

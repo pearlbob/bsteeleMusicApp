@@ -99,10 +99,10 @@ class CommonPlayViewImpl
     }
 
     private void issueSongUpdate() {
-        songUpdate.setCurrentBeatsPerMinute(currentBpm);
-        songUpdate.setCurrentKey(currentKey);
-        songUpdate.setSong(song);
-        songPlayMaster.issueSongUpdate(songUpdate);
+        SongUpdate newSongUpdate = SongUpdate.createSongUpdate(song);
+        newSongUpdate.setCurrentBeatsPerMinute(currentBpm);
+        newSongUpdate.setCurrentKey(currentKey);
+        songPlayMaster.issueSongUpdate(newSongUpdate);
     }
 
 
@@ -137,7 +137,7 @@ class CommonPlayViewImpl
     protected int halfStepOffset = 0;
 
     protected SongUpdate songUpdate = new SongUpdate();
-    protected SongUpdate.State lastState = SongUpdate.State.idle;
+    protected SongUpdate.State lastState = SongUpdate.State.none;
     protected final EventBus eventBus;
     protected final SongPlayMaster songPlayMaster;
     protected static final String anchorUrlStart = "https://www.youtube.com/results?search_query=";

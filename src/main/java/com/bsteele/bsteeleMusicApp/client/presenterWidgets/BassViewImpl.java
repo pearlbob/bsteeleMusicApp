@@ -177,9 +177,10 @@ public class BassViewImpl
             lastRepeatElement = null;
         }
 
-        if (songUpdate.getState() != lastState) {
+        if ( songUpdate.getState() != lastState) {
             switch (lastState) {
                 case idle:
+                case none:
                     resetScroll(chordsScrollPanel);
                     break;
             }
