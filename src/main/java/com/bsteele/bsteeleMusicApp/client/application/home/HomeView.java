@@ -58,17 +58,19 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     @UiField
     DockLayoutPanel player;
 
-    @UiField
-    DockLayoutPanel bass;
-
-    @UiField
-    DockLayoutPanel singer;
 
     @UiField
     SimplePanel songEdit;
 
-    @UiField
-    SimplePanel drumOptions;
+//    @UiField
+//    DockLayoutPanel bass;
+//
+//    @UiField
+//    DockLayoutPanel singer;
+//
+//
+//    @UiField
+//    SimplePanel drumOptions;
 
     @UiField
     CheckBox countIn;
@@ -128,10 +130,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         bindSlot(HomePresenter.SLOT_SONGLIST_CONTENT, songList);
         bindSlot(HomePresenter.SLOT_LYRICS_AND_CHORDS_CONTENT, lyricsAndChords);
         bindSlot(HomePresenter.SLOT_PLAYER_CONTENT, player);
-        bindSlot(HomePresenter.SLOT_BASS_CONTENT, bass);
-        bindSlot(HomePresenter.SLOT_SINGER_CONTENT, singer);
         bindSlot(HomePresenter.SLOT_SONG_EDIT_CONTENT, songEdit);
-        bindSlot(HomePresenter.SLOT_DRUM_OPTIONS_CONTENT, drumOptions);
+//        bindSlot(HomePresenter.SLOT_BASS_CONTENT, bass);
+//        bindSlot(HomePresenter.SLOT_SINGER_CONTENT, singer);
+//        bindSlot(HomePresenter.SLOT_DRUM_OPTIONS_CONTENT, drumOptions);
 
         handlerManager = new HandlerManager(this);
 

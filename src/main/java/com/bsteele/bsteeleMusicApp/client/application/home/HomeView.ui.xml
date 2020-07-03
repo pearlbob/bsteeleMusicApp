@@ -6,11 +6,11 @@
     <g:RootLayoutPanel>
         <g:layer>
             <g:DockLayoutPanel unit='PX'>
-                <g:north size='30'>
+                <g:north size='34'>
                     <my:AppTitleWidget/>
                 </g:north>
-                <g:center size='350' height='200'>
-                    <g:TabLayoutPanel ui:field="homeTabs" barUnit='EM' barHeight='2.5'>
+                <g:center>
+                    <g:TabLayoutPanel ui:field="homeTabs" barUnit='EM' barHeight='2'>
                         <g:tab>
                             <g:header size='3'>Songs</g:header>
                             <g:SimpleLayoutPanel ui:field="songList"/>
@@ -35,22 +35,22 @@
                                 <g:SplitLayoutPanel ui:field="lyricsAndChords"/>
                             </g:ResizeLayoutPanel>
                         </g:tab>
-                        <g:tab>
-                            <g:header size='3'>Bass</g:header>
-                            <g:ResizeLayoutPanel>
-                                <g:DockLayoutPanel ui:field="bass"/>
-                            </g:ResizeLayoutPanel>
-                        </g:tab>
-                        <g:tab>
-                            <g:header size='3'>Singer</g:header>
-                            <g:ResizeLayoutPanel>
-                                <g:DockLayoutPanel ui:field="singer"/>
-                            </g:ResizeLayoutPanel>
-                        </g:tab>
-                        <g:tab>
-                            <g:header size='3'>Drums</g:header>
-                            <g:SimplePanel ui:field="drumOptions"/>
-                        </g:tab>
+<!--                        <g:tab>-->
+<!--                            <g:header size='3'>Bass</g:header>-->
+<!--                            <g:ResizeLayoutPanel>-->
+<!--                                <g:DockLayoutPanel ui:field="bass"/>-->
+<!--                            </g:ResizeLayoutPanel>-->
+<!--                        </g:tab>-->
+<!--                        <g:tab>-->
+<!--                            <g:header size='3'>Singer</g:header>-->
+<!--                            <g:ResizeLayoutPanel>-->
+<!--                                <g:DockLayoutPanel ui:field="singer"/>-->
+<!--                            </g:ResizeLayoutPanel>-->
+<!--                        </g:tab>-->
+<!--                        <g:tab>-->
+<!--                            <g:header size='3'>Drums</g:header>-->
+<!--                            <g:SimplePanel ui:field="drumOptions"/>-->
+<!--                        </g:tab>-->
                         <!--<g:tab>-->
                         <!--<g:header size='3'>Bass Study</g:header>-->
                         <!--<g:ResizeLayoutPanel>-->

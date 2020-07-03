@@ -4,50 +4,53 @@
 >
     <g:HTMLPanel>
         <my:AppTitleWidget/>
-        <table>
-            <tr>
-                <td>
-                    Login:
-                </td>
-                <td>
-                    <g:TextBox ui:field="username"></g:TextBox>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Password:
-                </td>
-                <td>
-                    <g:TextBox ui:field="password">No password required yet!</g:TextBox>
-                </td>
-            </tr>
-        </table>
-        <p>
-            No password currently required, just supply a user name and click login.
-        </p>
-        <p>By logging in, you are giving app permission to play
-            audio output on your device.
-        </p>
-        <p>
-            <g:Button ui:field="confirm" text="Login"/>
-        </p>
-        <ul>
-            <li>
-                Please note that the web application will not store songs on the server but instead they will be files
-                in your local machine with the file extension ".songlyrics". They can be read later with:
-                Songs, Choose Files.
-            </li>
-            <li>
-                The best functionality will be using the latest Chrome browser on a desktop. All other environments
-                may be limited in functionality.
-            </li>
-            <li>
-                Android trick: try forcing the desktop site. See options, "Desktop site" check box.
-            </li>
-        </ul>
-        <span style="color:red;">
-            <g:Label ui:field="errorLabel"></g:Label>
-        </span>
+        <div style="font-size: 1vw">
+            <table style="font-size: 1vw">
+                <tr>
+                    <td>
+                        Login:
+                    </td>
+                    <td>
+                        <g:TextBox ui:field="username"></g:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Password:
+                    </td>
+                    <td>
+                        <g:TextBox ui:field="password">No password required yet!</g:TextBox>
+                    </td>
+                </tr>
+            </table>
+            <p>
+                No password currently required, just supply a user name and click login.
+            </p>
+            <p>By logging in, you are giving app permission to play
+                audio output on your device.
+            </p>
+            <p>
+                <g:Button ui:field="confirm" text="Login"/>
+            </p>
+            <ul>
+                <li>
+                    Please note that the web application will not store songs on the server but instead they will be
+                    files
+                    in your local machine with the file extension ".songlyrics". They can be read later with:
+                    Songs, Choose Files.
+                </li>
+                <li>
+                    The best functionality will be using the latest Chrome browser on a desktop. All other environments
+                    may be limited in functionality.
+                </li>
+                <li>
+                    Android trick: try forcing the desktop site. See options, "Desktop site" check box.
+                </li>
+            </ul>
+            <span style="color:red;">
+                <g:Label ui:field="errorLabel"></g:Label>
+            </span>
+        </div>
 
     </g:HTMLPanel>
 </ui:UiBinder>
