@@ -7,8 +7,8 @@ public enum AppTab {
         player,
         edit,
         lyricsAndChords,
-        bass,
-        singer,
-        drums,
+//        bass,
+//        singer,
+//        drums,
         options;
 }

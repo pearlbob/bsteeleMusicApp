@@ -185,8 +185,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             switch (tab) {           // fixme: very weak tab selection mechanism!
                 case lyricsAndChords:
                 case player:     //  fixme: edit tab for now
-                case bass:
-                case singer:
+//                case bass:
+//                case singer:
                     lastPlayTab = tab;
                     break;
             }
@@ -225,8 +225,8 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
                         switch (appTab) {
                             case player:
                             case lyricsAndChords:
-                            case bass:
-                            case singer:
+//                            case bass:
+//                            case singer:
                                 homeTabs.selectTab(appTab.ordinal()); // fixme: very weak tab selection mechanism!
                                 break;
                         }

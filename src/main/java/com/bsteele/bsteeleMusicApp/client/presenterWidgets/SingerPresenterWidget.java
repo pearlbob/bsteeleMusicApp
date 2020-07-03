@@ -64,7 +64,7 @@ public class SingerPresenterWidget extends PresenterWidget<SingerPresenterWidget
 
     @Override
     public void onHomeTab(HomeTabEvent event) {
-        view.setActive(event.getTab() == AppTab.singer);
+       // view.setActive(event.getTab() == AppTab.singer);
     }
 
     private final EventBus eventBus;
