@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
+import com.google.gwt.dom.client.Document;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -73,7 +74,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 //    @UiField
 //    SimplePanel drumOptions;
 
-//    @UiField
+    //    @UiField
 //    CheckBox countIn;
     @UiField
     CheckBox dashAllMeasureRepetitions;
@@ -125,6 +126,9 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 
     @UiField
     Button claimRemoteLeadership;
+
+    @UiField
+    Button fullscreen;
 
     @Inject
     HomeView(Binder uiBinder, SongPlayMaster songPlayMaster) {
@@ -218,6 +222,10 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             claimRemoteLeadershipRefresh();
         });
 
+        fullscreen.addClickHandler((ClickEvent event) -> {
+            requestFullscreen();
+        });
+
         buildId.setText(AppResources.INSTANCE.buildId().getText());
 
         {
@@ -274,7 +282,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         Event.sinkEvents(keyOffsetSelect, Event.ONCHANGE);
         Event.setEventListener(keyOffsetSelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
-                logger.info("keyOffset: "+ keyOffsetSelect.getValue());
+                logger.info("keyOffset: " + keyOffsetSelect.getValue());
                 appOptions.setKeyOffeset(Integer.parseInt(keyOffsetSelect.getValue()));
             }
         });
@@ -294,6 +302,20 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         if (GWT.getHostPageBaseURL().matches(".*127.0.0.1:8888"))
             debug.setVisible(false);
     }
+
+    private native void requestFullscreen() /*-{
+        var element = $doc.documentElement;
+
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullscreen) {
+            element.webkitRequestFullscreen();
+        } else if (element.msRequestFullscreen) {
+            element.msRequestFullscreen();
+        }
+    }-*/;
 
     private void claimRemoteLeadershipRefresh() {
         if (songPlayMaster.isConnectedWithServer()) {

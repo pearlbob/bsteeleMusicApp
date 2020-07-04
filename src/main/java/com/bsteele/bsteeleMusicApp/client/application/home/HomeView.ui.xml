@@ -133,6 +133,9 @@
                                         <g:Button ui:field="claimRemoteLeadership">Make me the leader</g:Button>
                                     </p>
                                     <p>
+                                        <g:Button ui:field="fullscreen">Full screen</g:Button>
+                                    </p>
+                                    <p>
                                         <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
                                     </p>
                                     <p>
