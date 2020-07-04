@@ -159,7 +159,7 @@ iframe {
 .sectionTClass,
 .sectionVClass
 {
-    font-size: 2vw;
+    font-size: 2.3vw;
     font-weight: bold;
 }
 
@@ -173,7 +173,7 @@ iframe {
 .lyricsOClass,
 .lyricsCoClass,
 .lyricsTClass {
-    font-size: 1.6vw;
+    font-size: 2vw;
     white-space: pre-wrap;
 }
 
