@@ -11,6 +11,7 @@ import com.bsteele.bsteeleMusicApp.client.resources.AppResources;
 import com.bsteele.bsteeleMusicApp.client.songs.GenerateSongHtml;
 import com.bsteele.bsteeleMusicApp.shared.songs.AppOptions;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.event.shared.HandlerManager;
@@ -18,18 +19,17 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.event.shared.HasHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
-import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 public class HomeView extends ViewImpl implements HomePresenter.MyView,
         HasHandlers {
@@ -72,18 +73,22 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
 //    @UiField
 //    SimplePanel drumOptions;
 
-    @UiField
-    CheckBox countIn;
+//    @UiField
+//    CheckBox countIn;
     @UiField
     CheckBox dashAllMeasureRepetitions;
+//    @UiField
+//    CheckBox playWithLineIndicator;
+//    @UiField
+//    CheckBox playWithMeasureIndicator;
+//    @UiField
+//    CheckBox playWithBouncingBall;
+//    @UiField
+//    CheckBox playWithMeasureLabel;
+
     @UiField
-    CheckBox playWithLineIndicator;
-    @UiField
-    CheckBox playWithMeasureIndicator;
-    @UiField
-    CheckBox playWithBouncingBall;
-    @UiField
-    CheckBox playWithMeasureLabel;
+    SelectElement keyOffsetSelect;
+
     @UiField
     CheckBox alwaysUseTheNewestSongOnReadLabel;
 
@@ -235,36 +240,45 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
             }
         }
 
-        countIn.setValue(appOptions.isCountIn());
-        countIn.addClickHandler((ClickEvent e) -> {
-            appOptions.setCountIn(!appOptions.isCountIn());
-            countIn.setValue(appOptions.isCountIn());
+//        countIn.setValue(appOptions.isCountIn());
+//        countIn.addClickHandler((ClickEvent e) -> {
+//            appOptions.setCountIn(!appOptions.isCountIn());
+//            countIn.setValue(appOptions.isCountIn());
+//        });
+//        dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
+//        dashAllMeasureRepetitions.addClickHandler((ClickEvent e) -> {
+//            appOptions.setDashAllMeasureRepetitions(!appOptions.isDashAllMeasureRepetitions());
+//            dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
+//        });
+//        playWithLineIndicator.setValue(appOptions.isPlayWithLineIndicator());
+//        playWithLineIndicator.addClickHandler((ClickEvent e) -> {
+//            appOptions.setPlayWithLineIndicator(!appOptions.isPlayWithLineIndicator());
+//            playWithLineIndicator.setValue(appOptions.isPlayWithLineIndicator());
+//        });
+//        playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
+//        playWithMeasureIndicator.addClickHandler((ClickEvent e) -> {
+//            appOptions.setPlayWithMeasureIndicator(!appOptions.isPlayWithMeasureIndicator());
+//            playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
+//        });
+//        playWithBouncingBall.setValue(appOptions.isPlayWithBouncingBall());
+//        playWithBouncingBall.addClickHandler((ClickEvent e) -> {
+//            appOptions.setPlayWithBouncingBall(!appOptions.isPlayWithBouncingBall());
+//            playWithBouncingBall.setValue(appOptions.isPlayWithBouncingBall());
+//        });
+//        playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
+//        playWithMeasureLabel.addClickHandler((ClickEvent e) -> {
+//            appOptions.setPlayWithMeasureLabel(!appOptions.isPlayWithMeasureLabel());
+//            playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
+//        });
+
+        Event.sinkEvents(keyOffsetSelect, Event.ONCHANGE);
+        Event.setEventListener(keyOffsetSelect, (Event event) -> {
+            if (Event.ONCHANGE == event.getTypeInt()) {
+                logger.info("keyOffset: "+ keyOffsetSelect.getValue());
+                appOptions.setKeyOffeset(Integer.parseInt(keyOffsetSelect.getValue()));
+            }
         });
-        dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
-        dashAllMeasureRepetitions.addClickHandler((ClickEvent e) -> {
-            appOptions.setDashAllMeasureRepetitions(!appOptions.isDashAllMeasureRepetitions());
-            dashAllMeasureRepetitions.setValue(appOptions.isDashAllMeasureRepetitions());
-        });
-        playWithLineIndicator.setValue(appOptions.isPlayWithLineIndicator());
-        playWithLineIndicator.addClickHandler((ClickEvent e) -> {
-            appOptions.setPlayWithLineIndicator(!appOptions.isPlayWithLineIndicator());
-            playWithLineIndicator.setValue(appOptions.isPlayWithLineIndicator());
-        });
-        playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
-        playWithMeasureIndicator.addClickHandler((ClickEvent e) -> {
-            appOptions.setPlayWithMeasureIndicator(!appOptions.isPlayWithMeasureIndicator());
-            playWithMeasureIndicator.setValue(appOptions.isPlayWithMeasureIndicator());
-        });
-        playWithBouncingBall.setValue(appOptions.isPlayWithBouncingBall());
-        playWithBouncingBall.addClickHandler((ClickEvent e) -> {
-            appOptions.setPlayWithBouncingBall(!appOptions.isPlayWithBouncingBall());
-            playWithBouncingBall.setValue(appOptions.isPlayWithBouncingBall());
-        });
-        playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
-        playWithMeasureLabel.addClickHandler((ClickEvent e) -> {
-            appOptions.setPlayWithMeasureLabel(!appOptions.isPlayWithMeasureLabel());
-            playWithMeasureLabel.setValue(appOptions.isPlayWithMeasureLabel());
-        });
+
         alwaysUseTheNewestSongOnReadLabel.setValue(appOptions.isAlwaysUseTheNewestSongOnRead());
         alwaysUseTheNewestSongOnReadLabel.addClickHandler((ClickEvent e) -> {
             appOptions.setAlwaysUseTheNewestSongOnRead(!appOptions.isAlwaysUseTheNewestSongOnRead());
@@ -345,4 +359,5 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
     private HashMap<String, String> statusMap = new HashMap<>();
     private AppTab lastPlayTab = AppTab.player;
     private static final AppOptions appOptions = GWTAppOptions.getInstance();
+    private static final Logger logger = Logger.getLogger(HomeView.class.getName());
 }

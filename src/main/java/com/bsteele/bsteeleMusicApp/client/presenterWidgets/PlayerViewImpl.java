@@ -19,6 +19,7 @@ import com.bsteele.bsteeleMusicApp.shared.songs.LyricSection;
 import com.bsteele.bsteeleMusicApp.shared.songs.LyricsLine;
 import com.bsteele.bsteeleMusicApp.shared.songs.MusicConstant;
 import com.bsteele.bsteeleMusicApp.shared.songs.SongMoment;
+import com.bsteele.bsteeleMusicApp.shared.util.Util;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.Scheduler;
@@ -464,7 +465,7 @@ public class PlayerViewImpl
                 : (songPlayMaster.isConnectedWithServer() ? "following " + songUpdate.getUser() : ""));
 
         //  space the bottom if leading... so that shallow depth followers can get to the bottom
-        bottomSpacer.getStyle().setHeight(songPlayMaster.isLeader()? 500:0, Style.Unit.PX);
+        bottomSpacer.getStyle().setHeight(songPlayMaster.isLeader() ? 500 : 0, Style.Unit.PX);
 
         if (lastRepeatElement != null) {
             lastRepeatElement.setInnerText("x" + lastRepeatTotal);
@@ -609,7 +610,7 @@ public class PlayerViewImpl
 
     private void syncCurrentBpm(int bpm) {
         setCurrentBpm(bpm);
-       // currentBpmEntry.setValue(Integer.toString(bpm));
+        // currentBpmEntry.setValue(Integer.toString(bpm));
         currentBpmLabel.setInnerText(Integer.toString(bpm));
     }
 
@@ -809,6 +810,8 @@ public class PlayerViewImpl
     }
 
     private void syncKey(int tran) {
+
+        tran = Util.mod(tran + appOptions.getKeyOffeset(), MusicConstant.halfStepsPerOctave);
 
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
         keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());

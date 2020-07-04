@@ -179,6 +179,14 @@ public class AppOptions {
         save();
     }
 
+    public int getKeyOffeset() {
+        return keyOffeset;
+    }
+
+    public void setKeyOffeset(int keyOffeset) {
+        this.keyOffeset = keyOffeset;
+    }
+
     public interface SaveCallback {
         void save();
     }
@@ -192,6 +200,7 @@ public class AppOptions {
     private boolean playWithMeasureLabel = true;
     private boolean debug = false;
     private boolean alwaysUseTheNewestSongOnRead = false;
+    private int keyOffeset = 0;     //  never remembered!
 
     //  logger doesn't seem appropriate here  private static final Logger logger = Logger.getLogger(AppOptions.class.getName());
 }
