@@ -63,6 +63,9 @@
                             <g:header size='3'>Options</g:header>
                             <g:ScrollPanel>
                                 <g:HTMLPanel>
+                                    <p>
+                                        <g:Button ui:field="fullscreen">Go full screen</g:Button>
+                                    </p>
                                     <!--                                    <br/>-->
                                     <!--                                    <g:CheckBox ui:field="countIn"-->
                                     <!--                                                name="countIn">Count In-->
@@ -132,9 +135,7 @@
                                     <p>
                                         <g:Button ui:field="claimRemoteLeadership">Make me the leader</g:Button>
                                     </p>
-                                    <p>
-                                        <g:Button ui:field="fullscreen">Full screen</g:Button>
-                                    </p>
+
                                     <p>
                                         <g:Button ui:field="writeAllSongs">Write All Songs</g:Button>
                                     </p>

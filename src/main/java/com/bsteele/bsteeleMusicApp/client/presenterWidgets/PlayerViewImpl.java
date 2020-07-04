@@ -529,11 +529,12 @@ public class PlayerViewImpl
                         playerFocusPanel.setFocus(true);
                     }
                 });
-        } else if (songUpdate.getMomentNumber() != idleMomentNumber) {
+        }
+        if (songUpdate.getMomentNumber() != idleMomentNumber) {
             idleMomentNumber = songUpdate.getMomentNumber();
             int row = song.getMomentGridCoordinate(idleMomentNumber).getRow();
             int displayY = findDisplayY(row);
-            logger.fine("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
+            logger.info("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
             chordsScrollPanel.setVerticalScrollPosition(displayY);
         }
 
