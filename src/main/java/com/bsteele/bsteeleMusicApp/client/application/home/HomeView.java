@@ -321,7 +321,7 @@ public class HomeView extends ViewImpl implements HomePresenter.MyView,
         if (songPlayMaster.isConnectedWithServer()) {
             claimRemoteLeadership.setText(songPlayMaster.isLeader() ? "Abdicate my leadership" : "Make me the leader");
         } else {
-            claimRemoteLeadership.setText("Sever not found");
+            claimRemoteLeadership.setText("Server not found");
         }
     }
 

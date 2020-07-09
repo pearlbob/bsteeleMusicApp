@@ -53,7 +53,7 @@ public class BSteeleMusicIO {
         url = url.replaceFirst("^http\\:", "ws:");
         url = url.replaceFirst("^https\\:", "wss:");
         url += "bsteeleMusicApp/bsteeleMusic";
-        url = url.replaceFirst("8888", "8080");//  fixme: devmode uses tomcat at 127.0.0.1:8080
+      //  url = url.replaceFirst("8888", "8080");//  fixme: devmode uses tomcat at 127.0.0.1:8080
         logger.fine("final url: " + url);
         return url;
     }

@@ -27,6 +27,7 @@ public class BSteeleMusicAppServer {
         logger.log(Level.INFO, "BSteeleMusicAppServer()");
         System.out.println("BSteeleMusicAppServer()");
         logger.info("logger info()");
+        logger.log(Level.SEVERE,"BSteeleMusicAppServer SEVERE");
     }
 
     @OnOpen
@@ -60,7 +61,7 @@ public class BSteeleMusicAppServer {
 
     @OnError
     public void onError(final Session session, Throwable t) {
-        logger.log(Level.INFO, "onError({0})", session.getId());
+        logger.log(Level.SEVERE, "onError({0}) from {1}", new Object[]{ t.getMessage(), session.getId()});
         //t.printStackTrace();
     }
 
@@ -68,6 +69,6 @@ public class BSteeleMusicAppServer {
     private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 
     static {
-//         logger.setLevel(Level.FINER);
+         logger.setLevel(Level.FINER);
     }
 }

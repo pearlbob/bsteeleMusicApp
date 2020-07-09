@@ -106,24 +106,27 @@ zip -q -r $app.zip $app
 mv $app.zip $dst/$app
 
 #	send to beta web location
-cd $cwd
-set gs=gs://www.bsteele.com/beta/$app
-gsutil -m -q rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
-gsutil -m -q setmeta -h "Cache-Control:public, max-age=60" -r $gs
-gsutil -m -q acl -r ch -u AllUsers:R $gs
+if ( $debug == 0 ) then
+	cd $cwd
+	set gs=gs://www.bsteele.com/beta/$app
+	gsutil -m -q rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
+	gsutil -m -q setmeta -h "Cache-Control:public, max-age=60" -r $gs
+	gsutil -m -q acl -r ch -u AllUsers:R $gs
 
-if ( $isBeta != 0 ) then
-	echo test local version of $app at:
-	echo	http://localhost/public_html/beta/$app
-	echo	http://bsteele.com/beta/bsteeleMusicApp
-else
-	echo test local version of $app at:
-	echo	http://localhost/public_html/$app
-	echo	http://localhost:8082/bsteeleMusicApp
-	echo ... and deploy with bsteele_upload
+	if ( $isBeta != 0 ) then
+		echo test local version of $app at:
+		echo	http://localhost/public_html/beta/$app
+		echo	http://bsteele.com/beta/bsteeleMusicApp
+	else
+		echo test local version of $app at:
+		echo	http://localhost/public_html/$app
+		echo	http://localhost:8082/bsteeleMusicApp
+		echo ... and deploy with bsteele_upload
+	endif
+
+	cd $git
+	cat ./src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt
 endif
 
-cd $git
-cat ./src/main/java/com/bsteele/bsteeleMusicApp/client/resources/buildId.txt
 
 exit 0
