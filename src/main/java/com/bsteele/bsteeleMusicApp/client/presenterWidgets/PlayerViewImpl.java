@@ -534,7 +534,7 @@ public class PlayerViewImpl
             idleMomentNumber = songUpdate.getMomentNumber();
             int row = song.getMomentGridCoordinate(idleMomentNumber).getRow();
             int displayY = findDisplayY(row);
-            logger.info("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
+            logger.finer("scroll to momentNumber: " + idleMomentNumber + " => " + row + " => " + displayY);
             chordsScrollPanel.setVerticalScrollPosition(displayY);
         }
 

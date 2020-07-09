@@ -27,7 +27,8 @@ public class BSteeleMusicAppServer {
         logger.log(Level.INFO, "BSteeleMusicAppServer()");
         System.out.println("BSteeleMusicAppServer()");
         logger.info("logger info()");
-        logger.log(Level.SEVERE,"BSteeleMusicAppServer SEVERE here");
+
+        logger.log(Level.SEVERE,"BSteeleMusicAppServer on thread: "+Thread.currentThread().getId());
     }
 
     @OnOpen
@@ -50,7 +51,7 @@ public class BSteeleMusicAppServer {
         logger.log(Level.FINER, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
                 message.substring(0,Math.min(message.length(),40)).replaceAll("\n"," "),
                 peers.size(),
-                System.currentTimeMillis()});
+                Thread.currentThread().getId()});
     }
 
     @OnClose
