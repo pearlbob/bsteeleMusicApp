@@ -213,7 +213,7 @@ public class PlayerViewImpl
 //        nextSongButton.addClickHandler((ClickEvent event) -> eventBus.fireEvent(new NextSongEvent()));
 
         keyLabel.getStyle().setDisplay(Style.Display.INLINE_BLOCK);
-        keyLabel.getStyle().setWidth(3, Style.Unit.EM);
+        keyLabel.getStyle().setWidth(6, Style.Unit.EM);
 
         // playStatusLabel.setVisible(false);
         leaderLabel.setText("");
@@ -445,7 +445,7 @@ public class PlayerViewImpl
         if (songUpdate == null || songUpdate.getSong() == null)
             return;     //  defense
 
-        if (!force && songUpdate.equals(this.songUpdate)) {
+        if (!force && songUpdate.equals(this.songUpdate) && halfStepOffset == appOptions.getKeyOffeset()) {
             return;
         }
 
@@ -501,6 +501,7 @@ public class PlayerViewImpl
         if (isSongDiff
                 || !songUpdate.getCurrentKey().equals(lastKey)
                 || songUpdate.getCurrentBeatsPerMinute() != getCurrentBpm()
+                || halfStepOffset != appOptions.getKeyOffeset()
         ) {
             song = songUpdate.getSong();
             lastPlayerFlexTableRow = Integer.MIN_VALUE;     //  force song moment update
@@ -807,12 +808,19 @@ public class PlayerViewImpl
         syncKey(tran);
     }
 
-    private void syncKey(int tran) {
+    private void syncKey(int aTran) {
 
-        tran = Util.mod(tran + appOptions.getKeyOffeset(), MusicConstant.halfStepsPerOctave);
-
+        halfStepOffset = appOptions.getKeyOffeset();
+        int tran = Util.mod(aTran + halfStepOffset, MusicConstant.halfStepsPerOctave);
         currentKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + tran);
-        keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
+
+        if (halfStepOffset == 0) {
+            keyLabel.setInnerHTML(currentKey.toString() + " " + currentKey.sharpsFlatsToString());
+        } else {
+            int rootTran = Util.mod(aTran, MusicConstant.halfStepsPerOctave);
+            Key rootKey = Key.getKeyByHalfStep(song.getKey().getHalfStep() + rootTran);
+            keyLabel.setInnerHTML(currentKey.toString() + "  (" + rootKey.toString() + "+" + halfStepOffset + ")");
+        }
 
         if (currentKey == lastKey) {
             return;

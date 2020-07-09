@@ -44,7 +44,7 @@ public class BSteeleMusicIO {
                 confirmSocketConnection();
                 return true;
             }
-        }, 15 * 1000);
+        }, 10 * 1000);
     }
 
     private static String getWebSocketURL() {

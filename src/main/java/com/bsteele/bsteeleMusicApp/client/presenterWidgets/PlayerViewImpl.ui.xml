@@ -15,7 +15,7 @@
                 <div style="font-size: 1.2vw">
                     <g:Button ui:field="playStopButton">Play</g:Button>
                     Key:
-                    <span ui:field="keyLabel" style="width: 5em;"/>
+                    <span ui:field="keyLabel"/>
                     <g:Button ui:field="originalKeyButton">Original</g:Button>
                     <g:Button ui:field="keyUpButton">&#x25b2;</g:Button>
                     <g:Button ui:field="keyDownButton">&#x25bc;</g:Button>

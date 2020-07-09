@@ -49,10 +49,9 @@ class CommonPlayViewImpl
     }
 
     protected void setCurrentKey(Key key) {
-        if (currentKey == null || !currentKey.equals(key)) {
-            currentKey = key;
-            issueSongUpdate();
-        }
+        //  worry about key offsets... later
+        currentKey = key;
+        issueSongUpdate();
     }
 
     protected void stepCurrentKey(int halfStep) {
