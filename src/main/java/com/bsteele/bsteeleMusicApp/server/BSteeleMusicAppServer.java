@@ -33,7 +33,7 @@ public class BSteeleMusicAppServer {
 
     @OnOpen
     public void onOpen(final Session session) throws IOException {
-        logger.log(Level.INFO, "onOpen({0})", session.getId());
+        logger.log(Level.INFO, "onOpen({0}) of {1}", new Object[]{ peers.size(), session.getId() });
         peers.add(session);
     }
 
@@ -56,8 +56,8 @@ public class BSteeleMusicAppServer {
 
     @OnClose
     public void onClose(final Session session) {
-        logger.log(Level.INFO, "onClose(" + session.getId() + "): ");
         peers.remove(session);
+        logger.log(Level.INFO, "onClose(" + session.getId() + "): of "+peers.size());
     }
 
     @OnError
