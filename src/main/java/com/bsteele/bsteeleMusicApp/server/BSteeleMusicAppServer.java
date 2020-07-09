@@ -27,7 +27,7 @@ public class BSteeleMusicAppServer {
         logger.log(Level.INFO, "BSteeleMusicAppServer()");
         System.out.println("BSteeleMusicAppServer()");
         logger.info("logger info()");
-        logger.log(Level.SEVERE,"BSteeleMusicAppServer SEVERE");
+        logger.log(Level.SEVERE,"BSteeleMusicAppServer SEVERE here");
     }
 
     @OnOpen
@@ -47,7 +47,7 @@ public class BSteeleMusicAppServer {
                 peer.getAsyncRemote().sendText(message);
         }
 
-        logger.log(Level.FINE, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
+        logger.log(Level.FINER, "onMessage(\"{0}...\") to {1} by {2}", new Object[]{
                 message.substring(0,Math.min(message.length(),40)).replaceAll("\n"," "),
                 peers.size(),
                 System.currentTimeMillis()});
@@ -69,6 +69,6 @@ public class BSteeleMusicAppServer {
     private static final Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 
     static {
-         logger.setLevel(Level.FINER);
+         logger.setLevel(Level.FINE);
     }
 }
