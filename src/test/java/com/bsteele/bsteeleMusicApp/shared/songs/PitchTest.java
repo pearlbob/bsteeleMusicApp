@@ -106,6 +106,21 @@ public class PitchTest
         assertEquals(80, naturals);
         assertEquals(49, flats);
     }
+
+
+    @Test
+    public void testfromFrequency() {
+
+        assertEquals(Pitch.A0, Pitch.findPitchFromFrequency(1) );
+        assertEquals(Pitch.E1, Pitch.findPitchFromFrequency(41));
+        assertEquals(Pitch.E1, Pitch.findPitchFromFrequency(42));
+        assertEquals(Pitch.Es1, Pitch.findPitchFromFrequency(43));
+        assertEquals(Pitch.A5, Pitch.findPitchFromFrequency(880));
+        assertEquals(Pitch.A5, Pitch.findPitchFromFrequency(906));
+        assertEquals(Pitch.As5, Pitch.findPitchFromFrequency(907));
+        assertEquals(Pitch.Bb5, Pitch.findPitchFromFrequency(933)); //  fixme: improve the response
+        assertEquals(Pitch.C8, Pitch.findPitchFromFrequency(7030));
+    }
 }
 /*
 A0   0 27.5

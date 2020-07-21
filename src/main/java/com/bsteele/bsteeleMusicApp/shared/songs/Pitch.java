@@ -238,6 +238,20 @@ public enum Pitch {
         return null;
     }
 
+    public static final Pitch findPitchFromFrequency(double frequency ) {
+        Pitch ret = Pitch.A0;
+        double bestError = Math.abs(ret.frequency - frequency);
+        for (Pitch p : Pitch.values()) {
+            if (p.frequency > frequency) {
+                double e = Math.abs(p.frequency - frequency);
+                return bestError < e ? ret : p;
+            }
+            ret = p;
+            bestError = Math.abs(ret.frequency - frequency);
+        }
+        return ret;
+    }
+
     public final int getLabelNumber() {
         return labelNumber;
     }

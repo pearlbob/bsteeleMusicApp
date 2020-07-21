@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>bob's Pi5</title>
+</head>
+<body>
+<h1>Yeah! you've found bob's Raspberry Pi 5</h1>
+<p>Welcome. It's here to serve the bsteele Music App used by CommunityJams.org in a live environment.
+</p>
+<h2>Notes:</h2>
+<ul>
+    <li>It might be useful on a cell phone but you're much better off with a tablet or larger.</li>
+    <li>Be sure to set the screen timeout as long as possible to avoid re-starting the tablet often.</li>
+    <li>For best performance, close all other apps on your tablet/phone.
+        This is particularly true on an ipad. Use Chrome (preferred) or Safari, and close the other
+        (double-click home button, flick up on all apps but Chrome.
+    </li>
+    <li>Bookmark this page or the bsteele Music App page itself.</li>
+    <li>Try the full screen button under the Options tab.</li>
+    <li>I would suggest you plug it into a power supply if you have one... you might be here a while!</li>
+</ul>
+
+<h2>Try:
+    <a id="trans">bsteeleMusicApp</a>
+    <script>
+        document.getElementById('trans').href = window.location.origin + ':8080/bsteeleMusicApp';
+    </script>
+</h2>
+<p>
+    That is:
+    <script>
+        document.write(`${window.location.origin}:8080/bsteeleMusicApp`);
+    </script>
+</p>
+<h2>Initial Setup:</h2>
+<p>Note that you won't find this page until you've done the below!
+    Share this page with friends how haven't got the setup yet.
+<ol>
+    <li>On your tablet, go to Settings, Wifi</li>
+    <li>Choose either "bob5" or "bob" Wifi. There will not be a password required. The bob5 wifi will be faster.
+        You will likely be warned that there is no internet connection.
+        Choose the options to allow no internet access for this wifi.
+    </li>
+    <li>Open your Chrome browser. Other browsers will likely work.</li>
+    <li>Now the hard part:
+        type: <a href="http://192.168.0.205">192.168.0.205</a> into the URL location.
+    </li>
+    <li>You should now have this page. Click the bsteeleMusicApp link above.</li>
+</ol>
+</body>
+</html>
+
