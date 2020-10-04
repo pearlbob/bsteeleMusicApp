@@ -72,7 +72,7 @@ cd ..
 
 
 #	generate javadoc
-mvn javadoc:aggregate
+#mvn javadoc:aggregate
 
 
 #	generate app on localhost web
