@@ -88,8 +88,8 @@ cd $cwd
 cp $finalWar $dst
 
 #	deploy on tomcat
-rm -f $CATALINA_HOME/webapps/$finalWar:t	#	avoid permission issues on the war file
-cp $finalWar $CATALINA_HOME/webapps
+rm -f $CATALINA_BASE/webapps/$finalWar:t	#	avoid permission issues on the war file
+cp $finalWar $CATALINA_BASE/webapps
 
 #	deploy on mac tomcat
 #or not: scp $finalWar ${mac}:/Library/Tomcat/webapps
