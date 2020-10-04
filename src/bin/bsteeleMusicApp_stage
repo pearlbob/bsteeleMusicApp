@@ -32,7 +32,7 @@ set dst=/var/www/html/public_html
 if ( $isBeta != 0 ) then
 	set dst=$dst/beta
 endif
-set git=~/GitHub/bsteeleMusicApp
+set git=~/github/bsteeleMusicApp
 set target=$git/target
 
 set app=$git:t:r
