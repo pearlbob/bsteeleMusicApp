@@ -27,7 +27,7 @@
         <compiler.style>DETAILED</compiler.style>
 
         <!-- GWT -->
-        <gwt.version>2.9.0</gwt.version>
+        <gwt.version>2.8.2</gwt.version>
         <gwtp.version>1.6</gwtp.version>
         <gwt-material.version>2.2</gwt-material.version>
 
@@ -39,7 +39,7 @@
             <dependency>
                 <groupId>com.google.gwt</groupId>
                 <artifactId>gwt</artifactId>
-                <version>2.9.0</version>
+                <version>2.8.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -97,7 +97,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -179,20 +179,20 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <!--    works for tomcat 8 as well  http://www.baeldung.com/tomcat-deploy-war -->
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <url>http://localhost:8082/manager/text</url>
-                    <server>Tomcat8Server</server>
-                    <port>8082</port>
-                    <path>/${project.artifactId}</path>
-                    <username>admin</username>
-                    <password>adminadmin</password>
-                </configuration>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.tomcat.maven</groupId>-->
+<!--                &lt;!&ndash;    works for tomcat 8 as well  http://www.baeldung.com/tomcat-deploy-war &ndash;&gt;-->
+<!--                <artifactId>tomcat7-maven-plugin</artifactId>-->
+<!--                <version>2.2</version>-->
+<!--                <configuration>-->
+<!--                    <url>http://localhost:8082/manager/text</url>-->
+<!--                    <server>Tomcat8Server</server>-->
+<!--                    <port>8082</port>-->
+<!--                    <path>/${project.artifactId}</path>-->
+<!--                    <username>admin</username>-->
+<!--                    <password>adminadmin</password>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
