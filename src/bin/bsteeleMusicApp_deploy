@@ -19,6 +19,7 @@ mkdir $localdst
 cp -r $localbeta/* $localdst
 
 #	copy local beta to distribution point for raspberry pi's
+bsteele_auth
 gsutil cp $www/$betaDir/${app}.war $lyricsDst/$lyricsWar
 gsutil -q acl -r ch -u AllUsers:R $lyricsDst/$lyricsWar
 

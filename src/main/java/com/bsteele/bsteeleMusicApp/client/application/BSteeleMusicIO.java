@@ -117,8 +117,8 @@ public class BSteeleMusicIO {
             return false;
         }
 
-        logger.fine("socket send: " + message.substring(0, Math.min(30, message.length()))
-                + " at " + dateTimeFormat.format(new Date()));
+        logger.fine("socket send: " + message.substring(0, Math.min(100, message.length()))
+                + "\n   at t = " + dateTimeFormat.format(new Date()));
 
         socket.send(message);
         return true;

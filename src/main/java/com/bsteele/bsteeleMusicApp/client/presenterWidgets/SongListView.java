@@ -138,6 +138,8 @@ public class SongListView
         Event.setEventListener(listBySelect, (Event event) -> {
             if (Event.ONCHANGE == event.getTypeInt()) {
                 songComparator = Song.getComparatorByType(Song.ComparatorType.valueOf(listBySelect.getValue()));
+                songListScrollOffset = 0;
+                songListScrollPanel.setVerticalScrollPosition(songListScrollOffset);// in pixels
                 searchSongs();
             }
         });

@@ -22,6 +22,7 @@ while ( $#argv > 0 )
 	endsw
 end
 
+bsteele_auth
 
 set bsteeleMusicAppHome=~bob/GitHub/bsteeleMusicApp
 

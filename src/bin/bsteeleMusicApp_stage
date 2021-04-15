@@ -109,6 +109,7 @@ mv $app.zip $dst/$app
 if ( $debug == 0 ) then
 	cd $cwd
 	set gs=gs://www.bsteele.com/beta/$app
+	bsteele_auth
 	gsutil -m -q rsync -d -R -x '.*\.songlyrics$' $dst/$app/ $gs 	#	source needs the /
 	gsutil -m -q setmeta -h "Cache-Control:public, max-age=60" -r $gs
 	gsutil -m -q acl -r ch -u AllUsers:R $gs
